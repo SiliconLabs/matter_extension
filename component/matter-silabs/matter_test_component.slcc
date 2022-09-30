@@ -1,0 +1,11 @@
+id: matter_test_component
+label: Matter Test Component
+package: matter
+description: Test component to try with the Matter SDK extension
+category:  Matter
+quality: experimental
+
+source:
+  - path: component/matter-silabs/MatterTestFile.cpp
+include:
+  - path: component/matter-silabs/
