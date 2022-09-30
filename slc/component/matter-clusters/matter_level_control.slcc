@@ -1,0 +1,16 @@
+category: Matter|Clusters
+description: Implementation of the Level Control server cluster
+label: Level Control Server Cluster
+quality: production
+id: matter_level_control
+provides:
+  - name: matter_level_control
+source:
+  - path: src/app/clusters/level-control/level-control.cpp
+include:
+  - path: src/app/clusters/level-control/
+    file_list:
+      - path: level-control.h
+template_contribution:
+  - name: component_catalog
+    value: matter_level_control

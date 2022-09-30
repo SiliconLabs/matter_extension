@@ -1,0 +1,16 @@
+category: Matter|Clusters
+description: Implementation of the On/Off server cluster
+id: matter_on_off
+label: On/Off Server Cluster
+quality: production
+provides:
+  - name: matter_on_off
+source:
+  - path: src/app/clusters/on-off-server/on-off-server.cpp
+include:
+  - path: src/app/clusters/on-off-server/
+    file_list:
+      - path: on-off-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_on_off

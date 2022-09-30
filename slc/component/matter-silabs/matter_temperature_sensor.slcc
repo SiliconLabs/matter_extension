@@ -1,0 +1,13 @@
+id: matter_temperature_sensor
+label: Temperature sensor support
+description: Temperature Sensor Support for Matter applications
+package: "Matter"
+category: "Matter|Platform"
+quality: production
+
+provides:
+  - name: matter_temperature_sensor
+include:
+  - path: examples/platform/efr32
+source:
+  - path: examples/platform/efr32/TemperatureSensor.cpp

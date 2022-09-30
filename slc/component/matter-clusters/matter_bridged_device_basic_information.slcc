@@ -1,0 +1,13 @@
+
+category: Matter|Clusters
+description: Implementation of the Bridged Device Basic Information Server Cluster
+id: matter_bridged_device_basic_information
+label: Bridged Device Basic Information Server Cluster
+quality: production
+provides:
+  - name: matter_bridged_device_basic_information
+source:
+  - path: src/app/clusters/bridged-device-basic-information-server/bridged-device-basic-information-server.cpp
+template_contribution:
+  - name: component_catalog
+    value: matter_bridged_device_basic_information

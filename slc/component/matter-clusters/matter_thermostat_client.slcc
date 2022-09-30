@@ -1,0 +1,13 @@
+
+category: Matter|Clusters
+description: Implementation of the Thermostat Client Cluster
+id: matter_thermostat_client
+label: Thermostat Client Cluster
+quality: production
+provides:
+  - name: matter_thermostat_client
+source:
+  - path: src/app/clusters/thermostat-client/thermostat-client.cpp
+template_contribution:
+  - name: component_catalog
+    value: matter_thermostat_client

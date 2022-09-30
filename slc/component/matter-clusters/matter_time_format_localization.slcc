@@ -1,0 +1,13 @@
+
+category: Matter|Clusters
+description: Implementation of the Time Format Localization Server Cluster
+id: matter_time_format_localization
+label: Time Format Localization Server Cluster
+quality: production
+provides:
+  - name: matter_time_format_localization
+source:
+  - path: src/app/clusters/time-format-localization-server/time-format-localization-server.cpp
+template_contribution:
+  - name: component_catalog
+    value: matter_time_format_localization

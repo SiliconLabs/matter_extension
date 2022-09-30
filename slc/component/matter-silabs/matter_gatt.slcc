@@ -1,0 +1,17 @@
+id: matter_gatt
+label: Gatt Configurations
+description: >
+  Add Gatt Configurations for Matter.
+package: "Matter"
+category: "Matter|Example"
+quality: production
+config_file:
+-   directory: btconf
+    path: src/platform/EFR32/btconf/gatt_configuration.btconf
+provides:
+-   name: gatt_configuration
+conflicts:
+-   name: matter_gatt_additional_advertising
+template_contribution:
+-   name: component_catalog
+    value: gatt_configuration

@@ -1,0 +1,13 @@
+
+category: Matter|Clusters
+description: Implementation of the Pump Configuration And Control Server Cluster
+id: matter_pump_configuration_and_control
+label: Pump Configuration And Control Server Cluster
+quality: production
+provides:
+  - name: matter_pump_configuration_and_control
+source:
+  - path: src/app/clusters/pump-configuration-and-control-server/pump-configuration-and-control-server.cpp
+template_contribution:
+  - name: component_catalog
+    value: matter_pump_configuration_and_control

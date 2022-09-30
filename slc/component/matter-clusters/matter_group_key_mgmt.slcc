@@ -1,0 +1,13 @@
+
+category: Matter|Clusters
+description: Implementation of the Group Key Mgmt Server Cluster
+id: matter_group_key_mgmt
+label: Group Key Mgmt Server Cluster
+quality: production
+provides:
+  - name: matter_group_key_mgmt
+source:
+  - path: src/app/clusters/group-key-mgmt-server/group-key-mgmt-server.cpp
+template_contribution:
+  - name: component_catalog
+    value: matter_group_key_mgmt

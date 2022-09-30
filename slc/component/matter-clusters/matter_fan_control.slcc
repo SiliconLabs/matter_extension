@@ -1,0 +1,13 @@
+
+category: Matter|Clusters
+description: Implementation of the Fan Control Server Cluster
+id: matter_fan_control
+label: Fan Control Server Cluster
+quality: production
+provides:
+  - name: matter_fan_control
+source:
+  - path: src/app/clusters/fan-control-server/fan-control-server.cpp
+template_contribution:
+  - name: component_catalog
+    value: matter_fan_control

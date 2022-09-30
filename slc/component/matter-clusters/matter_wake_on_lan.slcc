@@ -1,0 +1,18 @@
+
+category: Matter|Clusters
+description: Implementation of the Wake On Lan Server Cluster
+id: matter_wake_on_lan
+label: Wake On Lan Server Cluster
+quality: production
+provides:
+  - name: matter_wake_on_lan
+source:
+  - path: src/app/clusters/wake-on-lan-server/wake-on-lan-server.cpp
+include:
+  - path: src/app/clusters/wake-on-lan-server/
+    file_list:
+      - path: wake-on-lan-server.h
+      - path: wake-on-lan-delegate.h
+template_contribution:
+  - name: component_catalog
+    value: matter_wake_on_lan

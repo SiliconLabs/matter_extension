@@ -1,0 +1,13 @@
+
+category: Matter|Clusters
+description: Implementation of the Thermostat Server Cluster
+id: matter_thermostat
+label: Thermostat Server Cluster
+quality: production
+provides:
+  - name: matter_thermostat
+source:
+  - path: src/app/clusters/thermostat-server/thermostat-server.cpp
+template_contribution:
+  - name: component_catalog
+    value: matter_thermostat

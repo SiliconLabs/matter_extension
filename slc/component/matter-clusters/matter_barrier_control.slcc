@@ -1,0 +1,17 @@
+
+category: Matter|Clusters
+description: Implementation of the Barrier Control Server Cluster
+id: matter_barrier_control
+label: Barrier Control Server Cluster
+quality: production
+provides:
+  - name: matter_barrier_control
+source:
+  - path: src/app/clusters/barrier-control-server/barrier-control-server.cpp
+include:
+  - path: src/app/clusters/barrier-control-server/
+    file_list:
+      - path: barrier-control-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_barrier_control

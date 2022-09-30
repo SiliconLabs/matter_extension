@@ -1,0 +1,47 @@
+category: Matter|Core
+define:
+-   name: HARD_FAULT_LOG_ENABLE
+-   name: OPENTHREAD_CORE_CONFIG_PLATFORM_CHECK_FILE
+    value: \"openthread-core-efr32-config-check.h\"
+-   name: OPENTHREAD_FTD
+    value: '1'
+-   name: OPENTHREAD_MTD
+    value: '0'
+-   name: OPENTHREAD_PROJECT_CORE_CONFIG_FILE
+    value: \"OpenThreadConfig.h\"
+-   name: OPENTHREAD_RADIO
+    value: '0'
+-   name: PACKAGE_NAME
+    value: \"OPENTHREAD\"
+-   name: PACKAGE_VERSION
+    value: \"1.0.0\"
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
+description: libopenthread_cli_ftd
+id: libopenthread_cli_ftd
+include:
+-   path: examples/platform/efr32
+-   path: examples/platform/efr32/project_include
+-   path: src/lib
+-   path: src/platform/EFR32
+label: libopenthread_cli_ftd
+package: Matter
+provides:
+-   name: matter_libopenthread_cli_ftd
+quality: production
+source:
+-   path: third_party/openthread/ot-efr32/openthread/src/cli/cli.cpp
+-   path: third_party/openthread/ot-efr32/openthread/src/cli/cli_coap.cpp
+-   path: third_party/openthread/ot-efr32/openthread/src/cli/cli_coap_secure.cpp
+-   path: third_party/openthread/ot-efr32/openthread/src/cli/cli_commissioner.cpp
+-   path: third_party/openthread/ot-efr32/openthread/src/cli/cli_dataset.cpp
+-   path: third_party/openthread/ot-efr32/openthread/src/cli/cli_history.cpp
+-   path: third_party/openthread/ot-efr32/openthread/src/cli/cli_joiner.cpp
+-   path: third_party/openthread/ot-efr32/openthread/src/cli/cli_network_data.cpp
+-   path: third_party/openthread/ot-efr32/openthread/src/cli/cli_output.cpp
+-   path: third_party/openthread/ot-efr32/openthread/src/cli/cli_srp_client.cpp
+-   path: third_party/openthread/ot-efr32/openthread/src/cli/cli_srp_server.cpp
+-   path: third_party/openthread/ot-efr32/openthread/src/cli/cli_tcp.cpp
+-   path: third_party/openthread/ot-efr32/openthread/src/cli/cli_udp.cpp
+ui_hints:
+ visibility: never

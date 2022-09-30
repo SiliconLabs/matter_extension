@@ -1,0 +1,35 @@
+
+category: Matter|Clusters
+description: Implementation of the Ota Requestor Server Cluster
+id: matter_ota_requestor
+label: OTA Requestor Server Cluster
+quality: production
+provides:
+  - name: matter_ota_requestor
+source:
+  - path: src/app/clusters/ota-requestor/ota-requestor-server.cpp
+  - path: src/app/clusters/ota-requestor/BDXDownloader.cpp
+  - path: src/app/clusters/ota-requestor/DefaultOTARequestor.cpp
+  - path: src/app/clusters/ota-requestor/DefaultOTARequestorDriver.cpp
+  - path: src/app/clusters/ota-requestor/DefaultOTARequestorStorage.cpp
+  - path: src/app/clusters/ota-requestor/ExtendedOTARequestorDriver.cpp 
+  - path: src/app/clusters/ota-requestor/OTATestEventTriggerDelegate.cpp
+include:
+  - path: src/app/clusters/ota-requestor/
+    file_list:
+      - path: ota-requestor-server.h
+      - path: BDXDownloader.h
+      - path: DefaultOTARequestor.h
+      - path: DefaultOTARequestorDriver.h
+      - path: DefaultOTARequestorStorage.h
+      - path: DefaultOTARequestorUserConsent.h
+      - path: ExtendedOTARequestorDriver.h
+      - path: OTADownloader.h
+      - path: OTARequestorDriver.h
+      - path: OTARequestorInterface.h
+      - path: OTARequestorStorage.h
+      - path: OTARequestorUserConsentDelegate.h
+      - path: OTATestEventTriggerDelegate.h
+template_contribution:
+  - name: component_catalog
+    value: matter_ota_requestor

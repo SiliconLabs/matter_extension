@@ -1,0 +1,13 @@
+
+category: Matter|Clusters
+description: Implementation of the Fault Injection Server Cluster
+id: matter_fault_injection
+label: Fault Injection Server Cluster
+quality: production
+provides:
+  - name: matter_fault_injection
+source:
+  - path: src/app/clusters/fault-injection-server/fault-injection-server.cpp
+template_contribution:
+  - name: component_catalog
+    value: matter_fault_injection

@@ -1,0 +1,17 @@
+
+category: Matter|Clusters
+description: Implementation of the Network Commissioning Cluster
+id: matter_network_commissioning
+label: Network Commissioning Cluster
+quality: production
+provides:
+  - name: matter_network_commissioning
+source:
+  - path: src/app/clusters/network-commissioning/network-commissioning.cpp
+include:
+  - path: src/app/clusters/network-commissioning/
+    file_list:
+      - path: network-commissioning.h
+template_contribution:
+  - name: component_catalog
+    value: matter_network_commissioning

@@ -1,0 +1,18 @@
+
+category: Matter|Clusters
+description: Implementation of the Scenes Cluster
+id: matter_scenes
+label: Scenes Cluster
+quality: production
+provides:
+  - name: matter_scenes
+source:
+  - path: src/app/clusters/scenes/scenes.cpp
+include:
+  - path: src/app/clusters/scenes/
+    file_list:
+      - path: scenes.h
+      - path: scenes-tokens.h
+template_contribution:
+  - name: component_catalog
+    value: matter_scenes

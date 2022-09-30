@@ -1,0 +1,17 @@
+
+category: Matter|Clusters
+description: Implementation of the Color Control Server Cluster
+id: matter_color_control
+label: Color Control Server Cluster
+quality: production
+provides:
+  - name: matter_color_control
+source:
+  - path: src/app/clusters/color-control-server/color-control-server.cpp
+include:
+  - path: src/app/clusters/color-control-server/
+    file_list:
+      - path: color-control-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_color_control

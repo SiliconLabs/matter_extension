@@ -1,0 +1,18 @@
+
+category: Matter|Clusters
+description: Implementation of the Door Lock Server Callback Cluster
+id: matter_door_lock
+label: Door Lock Server Callback Cluster
+quality: production
+provides:
+  - name: matter_door_lock
+source:
+  - path: src/app/clusters/door-lock-server/door-lock-server-callback.cpp
+  - path: src/app/clusters/door-lock-server/door-lock-server.cpp
+include:
+  - path: src/app/clusters/door-lock-server/
+    file_list:
+      - path: door-lock-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_door_lock

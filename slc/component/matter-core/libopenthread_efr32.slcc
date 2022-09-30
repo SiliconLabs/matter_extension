@@ -1,0 +1,38 @@
+category: Matter|Core
+define:
+-   name: HARD_FAULT_LOG_ENABLE
+-   name: OPENTHREAD_CORE_CONFIG_PLATFORM_CHECK_FILE
+    value: \"openthread-core-efr32-config-check.h\"
+-   name: OPENTHREAD_PROJECT_CORE_CONFIG_FILE
+    value: \"OpenThreadConfig.h\"
+-   name: PACKAGE_NAME
+    value: \"OPENTHREAD\"
+-   name: PACKAGE_VERSION
+    value: \"1.0.0\"
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
+description: libopenthread_efr32
+id: libopenthread_efr32
+include:
+-   path: examples/platform/efr32
+-   path: examples/platform/efr32/project_include
+-   path: src/lib
+-   path: src/platform/EFR32
+label: libopenthread_efr32
+package: Matter
+provides:
+-   name: matter_libopenthread_efr32
+quality: production
+source:
+-   path: third_party/openthread/ot-efr32/openthread/examples/apps/cli/cli_uart.cpp
+-   path: third_party/openthread/ot-efr32/src/src/alarm.c
+-   path: third_party/openthread/ot-efr32/src/src/crypto.c
+-   path: third_party/openthread/ot-efr32/src/src/entropy.c
+-   path: third_party/openthread/ot-efr32/src/src/flash.c
+-   path: third_party/openthread/ot-efr32/src/src/misc.c
+-   path: third_party/openthread/ot-efr32/src/src/radio.c
+-   path: third_party/openthread/ot-efr32/src/src/security_manager.c
+-   path: third_party/openthread/ot-efr32/src/src/sleep.c
+-   path: third_party/openthread/ot-efr32/src/src/system.c
+ui_hints:
+ visibility: never

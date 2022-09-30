@@ -1,0 +1,13 @@
+
+category: Matter|Clusters
+description: Implementation of the Thermostat User Interface Configuration Server Cluster
+id: matter_thermostat_user_interface_configuration
+label: Thermostat User Interface Configuration Server Cluster
+quality: production
+provides:
+  - name: matter_thermostat_user_interface_configuration
+source:
+  - path: src/app/clusters/thermostat-user-interface-configuration-server/thermostat-user-interface-configuration-server.cpp
+template_contribution:
+  - name: component_catalog
+    value: matter_thermostat_user_interface_configuration

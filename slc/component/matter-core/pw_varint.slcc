@@ -1,0 +1,19 @@
+category: Matter|Core
+define: []
+description: pw_varint
+id: pw_varint
+include:
+-   path: third_party/pigweed/repo/pw_polyfill/public
+-   path: third_party/pigweed/repo/pw_polyfill/standard_library_public
+-   path: third_party/pigweed/repo/pw_preprocessor/public
+-   path: third_party/pigweed/repo/pw_span/public
+-   path: third_party/pigweed/repo/pw_varint/public
+label: pw_varint
+package: Matter
+provides:
+-   name: matter_pw_varint
+quality: production
+source:
+-   path: third_party/pigweed/repo/pw_varint/varint.cc
+ui_hints:
+ visibility: never

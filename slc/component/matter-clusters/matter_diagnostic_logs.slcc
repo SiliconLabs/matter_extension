@@ -1,0 +1,17 @@
+
+category: Matter|Clusters
+description: Implementation of the Diagnostic Logs Server Cluster
+id: matter_diagnostic_logs
+label: Diagnostic Logs Server Cluster
+quality: production
+provides:
+  - name: matter_diagnostic_logs
+source:
+  - path: src/app/clusters/diagnostic-logs-server/diagnostic-logs-server.cpp
+include:
+  - path: src/app/clusters/diagnostic-logs-server/
+    file_list:
+      - path: diagnostic-logs-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_diagnostic_logs

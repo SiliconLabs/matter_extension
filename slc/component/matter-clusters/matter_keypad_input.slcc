@@ -1,0 +1,18 @@
+
+category: Matter|Clusters
+description: Implementation of the Keypad Input Server Cluster
+id: matter_keypad_input
+label: Keypad Input Server Cluster
+quality: production
+provides:
+  - name: matter_keypad_input
+source:
+  - path: src/app/clusters/keypad-input-server/keypad-input-server.cpp
+include:
+  - path: src/app/clusters/keypad-input-server/
+    file_list:
+      - path: keypad-input-server.h
+      - path: keypad-input-delegate.h
+template_contribution:
+  - name: component_catalog
+    value: matter_keypad_input
