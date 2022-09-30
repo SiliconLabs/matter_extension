@@ -1,11 +1,12 @@
 # Properties file for Simplicity Studio metadata
 id=com.silabs.sdk.matter
 
-version=0.4.0
+version=0.2.0
 
 label=Matter
 description=Matter
 
+prop.file.templatesFile=matter_templates.xml
 #prop.file.docsFile=matter_docs.xml
 #prop.file.demosFile=matter_demos.xml
 prop.subLabel=Matter
