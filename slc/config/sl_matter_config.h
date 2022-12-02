@@ -1,0 +1,33 @@
+#ifndef SL_MATTER_CONFIG_H
+#define SL_MATTER_CONFIG_H
+
+// <<< Use Configuration Wizard in Context Menu >>>
+
+// <o SL_MATTER_STACK_LOCK_TRACKING_MODE> Stack Lock Tracking Mode
+// <SL_MATTER_STACK_LOCK_TRACKING_NONE=> None
+// <SL_MATTER_STACK_LOCK_TRACKING_LOG=> Log
+// <SL_MATTER_STACK_LOCK_TRACKING_FATAL=> Fatal
+// <d> SL_MATTER_STACK_LOCK_TRACKING_FATAL
+#define SL_MATTER_STACK_LOCK_TRACKING_MODE  SL_MATTER_STACK_LOCK_TRACKING_FATAL
+
+// <o SL_MATTER_LOG_LEVEL> Log Level
+// <SL_MATTER_LOG_NONE=> None
+// <SL_MATTER_LOG_ERROR=> Error
+// <SL_MATTER_LOG_PROGRESS=> Progress
+// <SL_MATTER_LOG_DEBUG=> Debug
+// <SL_MATTER_LOG_AUTOMATION=> Automation
+// <d> SL_MATTER_LOG_ERROR
+#define SL_MATTER_LOG_LEVEL SL_MATTER_LOG_ERROR
+
+// <q SL_MATTER_EFR32_LOG> Enable EFR32 specific log used in matter
+#define EFR32_LOG_ENABLED 1
+
+// <q SL_MATTER_HARD_FAULT_LOG> Enable HARD fault logging
+#define HARD_FAULT_LOG_ENABLE 1
+
+// <q SL_MATTER_CLI_ARG_PARSER> Enable CLI Argument Parser
+#define SL_MATTER_CLI_ARG_PARSER 1
+
+// <<< end of configuration section >>>
+
+#endif // SL_MATTER_CONFIG_H

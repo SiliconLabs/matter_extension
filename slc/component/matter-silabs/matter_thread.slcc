@@ -1,0 +1,15 @@
+id: matter_thread
+label: Thread Network Layer
+description: >
+  Add Thread network layer for Matter.
+package: "Matter"
+category: "Matter|Network"
+ui_hints:
+  visibility: never
+quality: production
+requires:
+  - name: matter
+  - name: ot_stack
+  - name: matter_thread_variant
+provides:
+  - name: matter_thread

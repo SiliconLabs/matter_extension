@@ -1,0 +1,14 @@
+id: matter_low_power
+label: Lower power mode component
+description: >
+  Component that dictates exclusion of files to enable low-power mode
+package: "Matter"
+category: "Matter|Network"
+quality: production
+provides:
+  - name: matter_low_power
+conflicts:
+  - name: matter_lcd
+  - name: matter_qr_code
+  - name: matter_shell
+  - name: matter_thread_cli

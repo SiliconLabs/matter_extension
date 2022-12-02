@@ -1,0 +1,23 @@
+category: Matter|Core
+define:
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: ENABLE_WSTK_LEDS
+-   name: HARD_FAULT_LOG_ENABLE
+-   name: OTA_PERIODIC_TIMEOUT
+    value: '86400'
+description: stdio
+id: stdio
+include:
+-   path: examples/platform/efr32
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: src/platform/EFR32
+-   path: zzz_generated/app-common
+package: Matter
+provides:
+-   name: matter_stdio
+quality: production
+source:
+-   path: src/platform/logging/impl/stdio/Logging.cpp

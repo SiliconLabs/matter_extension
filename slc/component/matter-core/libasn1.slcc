@@ -1,0 +1,29 @@
+category: Matter|Core
+define:
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: ENABLE_WSTK_LEDS
+-   name: HARD_FAULT_LOG_ENABLE
+-   name: OTA_PERIODIC_TIMEOUT
+    value: '86400'
+description: libasn1
+id: libasn1
+include:
+-   path: examples/platform/efr32
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: src/platform/EFR32
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+-   path: zzz_generated/app-common
+package: Matter
+provides:
+-   name: matter_libasn1
+quality: production
+source:
+-   path: src/lib/asn1/ASN1Error.cpp
+-   path: src/lib/asn1/ASN1OID.cpp
+-   path: src/lib/asn1/ASN1Reader.cpp
+-   path: src/lib/asn1/ASN1Time.cpp
+-   path: src/lib/asn1/ASN1Writer.cpp

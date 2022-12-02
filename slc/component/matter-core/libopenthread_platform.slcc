@@ -1,0 +1,11 @@
+category: Matter|Core
+define: []
+description: libopenthread_platform
+id: libopenthread_platform
+include: []
+package: Matter
+provides:
+-   name: matter_libopenthread_platform
+quality: production
+source:
+-   path: third_party/openthread/ot-efr32/openthread/src/lib/platform/exit_code.c

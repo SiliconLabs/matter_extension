@@ -1,0 +1,11 @@
+category: Matter|Core
+define: []
+description: trace
+id: trace
+include: []
+package: Matter
+provides:
+-   name: matter_trace
+quality: production
+source:
+-   path: src/trace/trace.cpp

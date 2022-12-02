@@ -1,0 +1,21 @@
+id: matter_sed
+label: Sleepy end device component
+description: >
+  Add Thread network layer for matter sleepy end device.
+package: "Matter"
+category: "Matter|Network"
+quality: production
+source:
+  - path: third_party/silabs/gecko_sdk/util/third_party/freertos/kernel/portable/SiliconLabs/tick_power_manager.c
+define:
+  - name: CHIP_DEVICE_CONFIG_ENABLE_SED
+    value: 1
+  - name: SL_CATALOG_POWER_MANAGER_PRESENT
+  - name: SL_CATALOG_SLEEPTIMER_PRESENT
+requires:
+  - name: matter_thread_mtd
+provides:
+  - name: matter_sed
+conflicts:
+  - name: matter_thread_ftd
+  - name: matter_wifi

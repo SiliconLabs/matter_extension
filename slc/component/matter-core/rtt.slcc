@@ -1,0 +1,11 @@
+category: Matter|Core
+define: []
+description: rtt
+id: rtt
+include: []
+package: Matter
+provides:
+-   name: matter_rtt
+quality: production
+source:
+-   path: third_party/jlink/segger_rtt/RTT/SEGGER_RTT.c

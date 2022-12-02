@@ -1,0 +1,102 @@
+id: matter
+label: Matter
+description: >
+  Matter core.
+package: "Matter"
+category: "Matter"
+quality: production
+config_file:
+  - path: slc/config/sl_matter_config.h
+    file_id: matter_config
+  - path: "examples/platform/efr32/FreeRTOSConfig.h"
+    override:
+      component: freertos
+      file_id: freertos_config
+
+include:
+  - path: slc/inc
+
+toolchain_settings:
+  - option: gcc_compiler_option
+    value: -Wno-deprecated-declarations
+  - option: gcc_compiler_option
+    value: -Wno-maybe-uninitialized
+  - option: gcc_compiler_option
+    value: -Wno-missing-field-initializers
+  - option: gcc_compiler_option
+    value: -Wno-unused-parameter
+  - option: gcc_compiler_option
+    value: -Wno-cast-function-type
+  - option: gcc_compiler_option
+    value: -Wno-psabi
+
+  - option: gcc_compiler_option
+    value: -fno-strict-aliasing
+  - option: gcc_compiler_option
+    value: -fno-unwind-tables
+  - option: gcc_compiler_option
+    value: -fno-asynchronous-unwind-tables
+  - option: gcc_compiler_option
+    value: -fno-common
+
+provides:
+  # Set provide used by SDK to suppress content that Matter provides
+  - name: matter_integration
+  - name: matter
+
+requires:
+  - name: bootloader_interface
+  - name: cpp_support
+  - name: sl_system
+  - name: freertos
+  - name: power_manager
+  - name: sleeptimer
+  - name: dmadrv
+  - name: gpiointerrupt
+  - name: nvm3_default
+  - name: mpu
+  - name: udelay
+  - name: component_catalog
+  - name: rail_lib_multiprotocol
+  - name: rail_util_pti
+  - name: emlib
+
+  # BT stack is always needed due to API header CHIPError.h -> CHIPConfig.h -> BleConfig.h -> sl_bt_api.h
+  - name: bluetooth_stack
+  - name: bluetooth_feature_system
+  - name: bluetooth_feature_scanner
+  - name: bluetooth_feature_connection
+
+  - name: matter_platform_efr32
+    condition: [device_series_1]
+  - name: matter_platform_efr32
+    condition: [device_series_2]
+
+  - name: matter_address_resolve
+  - name: matter_dnssd
+  - name: matter_libaccess
+  - name: matter_libasn1
+  - name: matter_libbdx
+  # - name: matter_libblelayer     --- use matter_ble wrapper instead
+  - name: matter_libchipappserver
+  - name: matter_libchipcontroller
+  - name: matter_libchipcore
+  - name: matter_libchipcrypto
+  - name: matter_libchipdatamodel
+  - name: matter_libchipprotocols
+  - name: matter_libclusterobjects
+  - name: matter_libcredentials
+  - name: matter_libdevicelayer
+  - name: matter_libinetlayer
+  - name: matter_libmatterdeviceinfoproviderexample
+  - name: matter_libmessaginglayer
+  # - name: matter_libopenthread-cli-ftd    --- use OT from GSDK instead
+  # - name: matter_libopenthread-ftd
+  # - name: matter_libopenthread-platform-utils
+  # - name: matter_libqrcode_common         --- use matter_qr_code wrapper instead
+  - name: matter_librawtransport
+  - name: matter_libsecurechannel
+  - name: matter_libsetuppayload
+  - name: matter_libsupportlayer
+  - name: matter_libsystemlayer
+  - name: matter_libtransportlayer

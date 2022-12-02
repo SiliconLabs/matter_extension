@@ -1,0 +1,17 @@
+id: matter_ota_support
+label: OTA Requestor
+description: >
+  OTA Requestor for Matter
+package: "Matter"
+category: "Matter|Platform"
+quality: production
+requires:
+  - name: matter
+  - name: matter_platform_efr32
+  - name: bootloader_interface
+provides:
+  - name: matter_ota_support
+source:
+  - path: examples/platform/efr32/OTAConfig.cpp
+define:
+  - name: EFR32_OTA_ENABLED

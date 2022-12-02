@@ -1,0 +1,12 @@
+category: Matter|Core
+define: []
+description: libqrcode_common
+id: libqrcode_common
+include:
+-   path: examples/common/QRCode/repo/c
+package: Matter
+provides:
+-   name: matter_libqrcode_common
+quality: production
+source:
+-   path: examples/common/QRCode/repo/c/qrcodegen.c
