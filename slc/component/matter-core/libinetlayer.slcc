@@ -1,0 +1,33 @@
+category: Matter|Core
+define:
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: ENABLE_WSTK_LEDS
+-   name: HARD_FAULT_LOG_ENABLE
+-   name: OTA_PERIODIC_TIMEOUT
+    value: '86400'
+description: libinetlayer
+id: libinetlayer
+include:
+-   path: examples/platform/efr32
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: src/platform/EFR32
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+-   path: zzz_generated/app-common
+package: Matter
+provides:
+-   name: matter_libinetlayer
+quality: production
+source:
+-   path: src/inet/IPAddress-StringFuncts.cpp
+-   path: src/inet/IPAddress.cpp
+-   path: src/inet/IPPacketInfo.cpp
+-   path: src/inet/IPPrefix.cpp
+-   path: src/inet/InetArgParser.cpp
+-   path: src/inet/InetError.cpp
+-   path: src/inet/InetInterface.cpp
+-   path: src/inet/UDPEndPoint.cpp
+-   path: src/inet/UDPEndPointImplOpenThread.cpp

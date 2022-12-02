@@ -1,0 +1,21 @@
+id: matter_thread_cli
+label: OpenThread CLI
+description: >
+  Enables OpenThread CLI for matter projects
+package: "Matter"
+category: "Matter|Core"
+quality: production
+requires:
+  - name: matter_uart
+  - name: matter_thread
+  - name: ot_cli
+provides:
+  - name: matter_thread_cli
+recommends:
+  - id: ot_cli_source
+conflicts:
+  - name: matter_low_power
+  - name: matter_wifi
+define:
+  - name: CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
+    value: '1'

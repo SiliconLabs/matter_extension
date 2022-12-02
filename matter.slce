@@ -1,0 +1,10 @@
+id: matter
+version: 0.0.2
+description: "Matter extension for Gecko SDK Suite"
+label: "Silicon Labs Matter"
+sdk:
+  id: gecko_sdk
+  version: 4.2.0
+component_path:
+  - path: slc/component/matter-core
+  - path: slc/component/matter-silabs

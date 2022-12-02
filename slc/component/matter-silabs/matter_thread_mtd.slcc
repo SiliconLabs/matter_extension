@@ -1,0 +1,15 @@
+id: matter_thread_mtd
+label: Thread Network Layer (MTD)
+description: >
+  Add Thread network layer for minimal thread device.
+package: "Matter"
+category: "Matter|Network"
+quality: production
+requires:
+  - name: matter_thread
+  - name: ot_stack_mtd
+provides:
+  - name: matter_thread_variant
+  - name: matter_thread_mtd
+conflicts:
+  - name: matter_thread_ftd

@@ -1,0 +1,49 @@
+category: Matter|Core
+define:
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: ENABLE_WSTK_LEDS
+-   name: HARD_FAULT_LOG_ENABLE
+-   name: OTA_PERIODIC_TIMEOUT
+    value: '86400'
+description: libsupportlayer
+id: libsupportlayer
+include:
+-   path: examples/platform/efr32
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: src/platform/EFR32
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+-   path: zzz_generated/app-common
+package: Matter
+provides:
+-   name: matter_libsupportlayer
+quality: production
+source:
+-   path: src/lib/support/Base64.cpp
+-   path: src/lib/support/BufferReader.cpp
+-   path: src/lib/support/BufferWriter.cpp
+-   path: src/lib/support/BytesCircularBuffer.cpp
+-   path: src/lib/support/BytesToHex.cpp
+-   path: src/lib/support/CHIPArgParser.cpp
+-   path: src/lib/support/CHIPMem.cpp
+-   path: src/lib/support/CHIPPlatformMemory.cpp
+-   path: src/lib/support/ErrorStr.cpp
+-   path: src/lib/support/FibonacciUtils.cpp
+-   path: src/lib/support/FixedBufferAllocator.cpp
+-   path: src/lib/support/IniEscaping.cpp
+-   path: src/lib/support/PersistentStorageAudit.cpp
+-   path: src/lib/support/Pool.cpp
+-   path: src/lib/support/PrivateHeap.cpp
+-   path: src/lib/support/SerializableIntegerSet.cpp
+-   path: src/lib/support/ThreadOperationalDataset.cpp
+-   path: src/lib/support/TimeUtils.cpp
+-   path: src/lib/support/ZclString.cpp
+-   path: src/lib/support/logging/CHIPLogging.cpp
+-   path: src/lib/support/verhoeff/Verhoeff.cpp
+-   path: src/lib/support/verhoeff/Verhoeff10.cpp
+-   path: src/lib/support/verhoeff/Verhoeff16.cpp
+-   path: src/lib/support/verhoeff/Verhoeff32.cpp
+-   path: src/lib/support/verhoeff/Verhoeff36.cpp

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ASCII"?>
+<model:MDescriptors xmlns:model="http://www.silabs.com/ss/Studio.ecore"> 
+  <descriptors name="MatterLockOverThread" label="Matter - Lock over Thread"
+               description="This project builds a Matter Lock that can be developed inside Simplicity Studio">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.lock-app.lock-app.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/lock-app/lock-app.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/lock-app/readme.html"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a brd4319a brd4161a brd4162a brd4163a brd4164a brd4166a brd4170a brd4186a brd4186c brd4187a brd4187c brd2703a brd2601b"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
+    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="EXPERIMENTAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+  </descriptors>
+</model:MDescriptors>

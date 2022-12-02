@@ -1,0 +1,15 @@
+id: matter_uart
+label: Uart
+description: >
+  Enable sources and define for uart as used by matter components
+package: "Matter"
+category: "Matter|Example"
+quality: production
+requires:
+  - name: uartdrv_usart
+provides:
+  - name: matter_uart
+source:
+  - path: examples/platform/efr32/uart.cpp
+define:
+  - name: CONFIG_ENABLE_UART

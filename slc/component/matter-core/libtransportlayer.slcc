@@ -1,0 +1,54 @@
+category: Matter|Core
+define:
+-   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: ENABLE_WSTK_LEDS
+-   name: HARD_FAULT_LOG_ENABLE
+-   name: OTA_PERIODIC_TIMEOUT
+    value: '86400'
+description: libtransportlayer
+id: libtransportlayer
+include:
+-   path: examples/platform/efr32
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: src/lib/support/pw_log_chip/public
+-   path: src/lib/support/pw_log_chip/public_overrides
+-   path: src/platform/EFR32
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+-   path: third_party/pigweed/repo/pw_assert/assert_compatibility_public_overrides
+-   path: third_party/pigweed/repo/pw_assert/public
+-   path: third_party/pigweed/repo/pw_assert_log/check_backend_public_overrides
+-   path: third_party/pigweed/repo/pw_assert_log/public
+-   path: third_party/pigweed/repo/pw_bytes/public
+-   path: third_party/pigweed/repo/pw_checksum/public
+-   path: third_party/pigweed/repo/pw_containers/public
+-   path: third_party/pigweed/repo/pw_kvs/public
+-   path: third_party/pigweed/repo/pw_log/public
+-   path: third_party/pigweed/repo/pw_polyfill/public
+-   path: third_party/pigweed/repo/pw_polyfill/standard_library_public
+-   path: third_party/pigweed/repo/pw_preprocessor/public
+-   path: third_party/pigweed/repo/pw_result/public
+-   path: third_party/pigweed/repo/pw_span/public
+-   path: third_party/pigweed/repo/pw_status/public
+-   path: third_party/pigweed/repo/pw_stream/public
+-   path: zzz_generated/app-common
+package: Matter
+provides:
+-   name: matter_libtransportlayer
+quality: production
+source:
+-   path: src/transport/CryptoContext.cpp
+-   path: src/transport/GroupPeerMessageCounter.cpp
+-   path: src/transport/SecureMessageCodec.cpp
+-   path: src/transport/SecureSession.cpp
+-   path: src/transport/SecureSessionTable.cpp
+-   path: src/transport/Session.cpp
+-   path: src/transport/SessionHandle.cpp
+-   path: src/transport/SessionHolder.cpp
+-   path: src/transport/SessionManager.cpp
+-   path: src/transport/TransportMgrBase.cpp

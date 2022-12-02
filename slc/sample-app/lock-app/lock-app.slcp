@@ -1,0 +1,87 @@
+project_name: lock-app
+label: Matter Lock
+description: >
+  Matter Lock App
+quality: production
+
+sdk_extension:
+  - id: matter
+    version: "0.0.2"
+
+component:
+  - id: device_init
+  - id: simple_button
+    instance: [btn0, btn1]
+  - id: simple_led
+    instance: [led0, led1]
+  - id: uartdrv_usart
+    instance: [vcom]
+
+  - id: matter
+    from: matter
+  - id: matter_ble
+    from: matter
+  - id: matter_thread_ftd
+    from: matter
+  - id: matter_lcd
+    from: matter
+  - id: matter_qr_code
+    from: matter
+  - id: matter_ota_support
+    from: matter
+  - id: matter_mbedtls
+    from: matter
+  - id: matter_thread_cli
+    from: matter
+    
+  - id: lock_common
+    from: matter
+
+  - id: efr32_factory_data_provider
+    from: matter
+config_file:
+  - path: common/lock-app.zap
+    directory: zap
+
+include:
+  - path: include
+
+source:
+  - path: src/AppTask.cpp
+  - path: src/LockManager.cpp
+  - path: src/main.cpp
+  - path: src/ZclCallbacks.cpp
+  - path: src/EventHandlerLibShell.cpp
+    condition: [matter_shell]
+  - path: include/AppConfig.h
+  - path: include/AppEvent.h
+  - path: include/AppTask.h
+  - path: include/LockManager.h
+  - path: include/CHIPProjectConfig.h
+
+define:
+  - name: KVS_MAX_ENTRIES
+    value: "75"
+  - name: CHIP_CRYPTO_PLATFORM
+    value: "1"
+  - name: OPENTHREAD_CONFIG_LOG_OUTPUT
+    value: OPENTHREAD_CONFIG_LOG_OUTPUT_APP
+  - name: _WANT_REENT_SMALL
+    value: "1"
+  - name: IS_DEMO_LOCK
+    value: "1"
+configuration:
+  - name: SL_BOARD_ENABLE_VCOM
+    value: "1"
+  - name: SL_BOARD_ENABLE_DISPLAY
+    value: "1"
+    condition: [glib]
+toolchain_settings:
+  - option: gcc_c++_compiler_option
+    value: -std=gnu++17
+readme:
+  - path: ./readme.html
+ui_hints:
+  highlight:
+    - path: readme.html
+      focus: false

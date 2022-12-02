@@ -1,0 +1,20 @@
+category: Matter|Core
+define: []
+description: pw_checksum
+id: pw_checksum
+include:
+-   path: third_party/pigweed/repo/pw_bytes/public
+-   path: third_party/pigweed/repo/pw_checksum/public
+-   path: third_party/pigweed/repo/pw_containers/public
+-   path: third_party/pigweed/repo/pw_polyfill/public
+-   path: third_party/pigweed/repo/pw_polyfill/standard_library_public
+-   path: third_party/pigweed/repo/pw_preprocessor/public
+-   path: third_party/pigweed/repo/pw_span/public
+-   path: third_party/pigweed/repo/pw_status/public
+package: Matter
+provides:
+-   name: matter_pw_checksum
+quality: production
+source:
+-   path: third_party/pigweed/repo/pw_checksum/crc16_ccitt.cc
+-   path: third_party/pigweed/repo/pw_checksum/crc32.cc

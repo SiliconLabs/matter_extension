@@ -1,0 +1,11 @@
+category: Matter|Core
+define: []
+description: syscalls
+id: syscalls
+include: []
+package: Matter
+provides:
+-   name: matter_syscalls
+quality: production
+source:
+-   path: third_party/jlink/segger_rtt/Syscalls/SEGGER_RTT_Syscalls_GCC.c
