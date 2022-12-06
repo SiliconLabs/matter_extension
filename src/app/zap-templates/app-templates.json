@@ -105,5 +105,17 @@
             "name": "Matter access definitions",
             "output": "access.h"
         }
-    ]
+    ],
+    "zcl": {
+    "cluster": {
+      "component": {
+        "type": "text",
+        "configurability": "hidden",
+        "globalDefault": null,
+        "label": "Cluster to Component dependency mapping",
+        "defaults": "cluster-to-component-dependencies.json",
+        "autoEnableComponents": true
+      }
+    }
+  }
 }

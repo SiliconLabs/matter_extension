@@ -14,6 +14,9 @@ import pathlib
 PIGWEED_ALLOW_LIST = ['check_backend', 'intrusive_list']
 
 if __name__ == '__main__':
+
+    MATTER_APP = sys.argv[1].split("/")[1]
+
     root = pathlib.Path(sys.argv[1]).parent.absolute() # doesn't seem like "root" is being used anywhere else in the script
     with open(sys.argv[1]) as f:
         compile_commands = json.load(f) # returns a list of dictionaries, parses the json file, breaks it down into three fields, directory, file and command
@@ -106,7 +109,7 @@ if __name__ == '__main__':
             component['provides'] = [{'name': f'matter_{name}'}] # creates a 'provides' entry in the component dict and assigns it to a list of dicts
             component['source'] = []
             for src in sorted(data['src']): # loops the 'src' set in data pertaining to the library 'name'
-                if any(path in src for path in ['zzz_generated/lock-app', 'freertos_bluetooth.c']):
+                if any(path in src for path in ["zzz_generated/" + MATTER_APP, 'freertos_bluetooth.c']):
                     # Skip sources related to sample apps
                     continue
 
@@ -121,7 +124,7 @@ if __name__ == '__main__':
             component['include'] = [] # creates an 'includes' entry in the component dict and assigns it an empty list 
             for inc in sorted(data['inc']): # sorts the 'inc' set entry in the data dict and loops it
                 # Skip includes related to Gecko SDK and sample apps
-                if any(path in inc for path in ['openthread', sys.argv[1].removesuffix('compile_commands.json')+'gen/include', sys.argv[1].removesuffix('compile_commands.json')+'protocol_buffer', 'RTT', 'zzz_generated/lock-app', 'examples/lock-app/efr32/include']):
+                if any(path in inc for path in ['openthread', sys.argv[1].removesuffix('compile_commands.json')+'gen/include', sys.argv[1].removesuffix('compile_commands.json')+'protocol_buffer', 'RTT', "zzz_generated/" + MATTER_APP, "examples/" + MATTER_APP + "/efr32/include"]):
                     continue
                 # Skip any references to third_party/silabs
                 if 'third_party/silabs' in inc:

@@ -60,7 +60,7 @@ void initAntenna(void);
 
 void init_efrPlatform(void)
 {
-    sl_system_init();
+    // sl_system_init() call moved to main.cpp for Matter GSDK integration
     sl_mbedtls_init();
 
 #if EFR32_LOG_ENABLED

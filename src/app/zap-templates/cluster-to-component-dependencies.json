@@ -1,0 +1,14 @@
+[
+ {
+    "clusterCode": "level control-server",
+    "value": [
+      "%extension-matter%matter_level_control"
+    ]
+  },
+ {
+    "clusterCode": "on/off-server",
+    "value": [
+      "%extension-matter%matter_on_off"
+    ]
+  }
+]

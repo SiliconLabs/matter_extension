@@ -17,37 +17,14 @@
  *    limitations under the License.
  */
 
-#include <AppTask.h>
+#include "sl_component_catalog.h"
+#include "sl_system_init.h"
+#include "sl_power_manager.h"
+#include "app.h"
 
-#include "AppConfig.h"
-#include "init_efrPlatform.h"
-#include "sl_simple_button_instances.h"
 #include "sl_system_kernel.h"
-#include <DeviceInfoProviderImpl.h>
-#include <app/server/Server.h>
-#include <credentials/DeviceAttestationCredsProvider.h>
-#include <matter_config.h>
-#ifdef EFR32_ATTESTATION_CREDENTIALS
-#include <examples/platform/efr32/EFR32DeviceAttestationCreds.h>
-#else
-#include <credentials/examples/DeviceAttestationCredsExample.h>
-#endif
 
-#define BLE_DEV_NAME "SiLabs-Door-Lock"
-using namespace ::chip;
-using namespace ::chip::Inet;
-using namespace ::chip::DeviceLayer;
-using namespace ::chip::Credentials;
-
-#define UNUSED_PARAMETER(a) (a = a)
-
-volatile int apperror_cnt;
-static chip::DeviceLayer::DeviceInfoProviderImpl gExampleDeviceInfoProvider;
-
-// ================================================================================
-// Main Code
-// ================================================================================
-int main(void)
+void app_init(void)
 {
     init_efrPlatform();
     if (EFR32MatterConfig::InitMatter(BLE_DEV_NAME) != CHIP_NO_ERROR)
@@ -70,6 +47,20 @@ int main(void)
         appError(CHIP_ERROR_INTERNAL);
 
     EFR32_LOG("Starting FreeRTOS scheduler");
+}
+
+int main(void)
+{
+    // Initialize Silicon Labs device, system, service(s) and protocol stack(s).
+    // Note that if the kernel is present, processing task(s) will be created by
+    // this call.
+    sl_system_init();
+
+    // Initialize the application. For example, create periodic timer(s) or
+    // task(s) if the kernel is present.
+    app_init();
+
+    // Start the kernel. Task(s) created in app_init() will start running.
     sl_system_kernel_start();
 
     // Should never get here.
