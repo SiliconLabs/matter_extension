@@ -1,0 +1,13 @@
+
+category: Matter|Clusters
+description: Implementation of TODO
+id: matter_localization_configuration
+label: TODO Cluster
+quality: production
+provides:
+   - name: "matter_localization_configuration"
+source:
+  - path: src/app/clusters/localization-configuration-server/localization-configuration-server.cpp
+template_contribution:
+  - name: component_catalog
+    value: matter_localization_configuration

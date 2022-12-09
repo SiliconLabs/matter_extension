@@ -1,0 +1,17 @@
+
+category: Matter|Clusters
+description: Implementation of TODO
+id: matter_general_commissioning
+label: TODO Cluster
+quality: production
+provides:
+   - name: "matter_general_commissioning"
+source:
+  - path: src/app/clusters/general-commissioning-server/general-commissioning-server.cpp
+include:
+  - path: src/app/clusters/general-commissioning-server/
+    file_list:
+      - path: general-commissioning-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_general_commissioning

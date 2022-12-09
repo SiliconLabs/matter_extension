@@ -1,0 +1,13 @@
+
+category: Matter|Clusters
+description: Implementation of TODO
+id: matter_descriptor
+label: TODO Cluster
+quality: production
+provides:
+   - name: "matter_descriptor"
+source:
+  - path: src/app/clusters/descriptor/descriptor.cpp
+template_contribution:
+  - name: component_catalog
+    value: matter_descriptor

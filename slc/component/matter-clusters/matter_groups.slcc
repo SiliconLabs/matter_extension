@@ -1,0 +1,17 @@
+
+category: Matter|Clusters
+description: Implementation of TODO
+id: matter_groups
+label: TODO Cluster
+quality: production
+provides:
+   - name: "matter_groups"
+source:
+  - path: src/app/clusters/groups-server/groups-server.cpp
+include:
+  - path: src/app/clusters/groups-server/
+    file_list:
+      - path: groups-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_groups

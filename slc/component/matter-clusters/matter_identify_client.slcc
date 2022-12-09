@@ -1,0 +1,13 @@
+
+category: Matter|Clusters
+description: Implementation of TODO
+id: matter_identify_client
+label: TODO Cluster
+quality: production
+provides:
+   - name: "matter_identify_client"
+source:
+  - path: src/app/clusters/identify-client/identify-client.cpp
+template_contribution:
+  - name: component_catalog
+    value: matter_identify_client

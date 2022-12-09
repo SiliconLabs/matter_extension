@@ -1,0 +1,18 @@
+
+category: Matter|Clusters
+description: Implementation of TODO
+id: matter_occupancy_sensor
+label: TODO Cluster
+quality: production
+provides:
+   - name: "matter_occupancy_sensor"
+source:
+  - path: src/app/clusters/occupancy-sensor-server/occupancy-sensor-server.cpp
+include:
+  - path: src/app/clusters/occupancy-sensor-server/
+    file_list:
+      - path: occupancy-sensor-server.h
+      - path: occupancy-hal.h
+template_contribution:
+  - name: component_catalog
+    value: matter_occupancy_sensor

@@ -1,0 +1,13 @@
+
+category: Matter|Clusters
+description: Implementation of TODO
+id: matter_power_source_configuration
+label: TODO Cluster
+quality: production
+provides:
+   - name: "matter_power_source_configuration"
+source:
+  - path: src/app/clusters/power-source-configuration-server/power-source-configuration-server.cpp
+template_contribution:
+  - name: component_catalog
+    value: matter_power_source_configuration

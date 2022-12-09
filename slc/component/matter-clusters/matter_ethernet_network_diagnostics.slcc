@@ -1,0 +1,13 @@
+
+category: Matter|Clusters
+description: Implementation of TODO
+id: matter_ethernet_network_diagnostics
+label: TODO Cluster
+quality: production
+provides:
+   - name: "matter_ethernet_network_diagnostics"
+source:
+  - path: src/app/clusters/ethernet-network-diagnostics-server/ethernet-network-diagnostics-server.cpp
+template_contribution:
+  - name: component_catalog
+    value: matter_ethernet_network_diagnostics

@@ -1,0 +1,18 @@
+
+category: Matter|Clusters
+description: Implementation of TODO
+id: matter_ias_zone
+label: TODO Cluster
+quality: production
+provides:
+   - name: "matter_ias_zone"
+source:
+  - path: src/app/clusters/ias-zone-server/ias-zone-server.cpp
+include:
+  - path: src/app/clusters/ias-zone-server/
+    file_list:
+      - path: ias-zone-server.h
+      - path: ias-zone-server-tokens.h
+template_contribution:
+  - name: component_catalog
+    value: matter_ias_zone

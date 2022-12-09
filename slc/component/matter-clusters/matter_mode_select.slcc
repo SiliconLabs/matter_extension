@@ -1,0 +1,13 @@
+
+category: Matter|Clusters
+description: Implementation of TODO
+id: matter_mode_select
+label: TODO Cluster
+quality: production
+provides:
+   - name: "matter_mode_select"
+source:
+  - path: src/app/clusters/mode-select-server/mode-select-server.cpp
+template_contribution:
+  - name: component_catalog
+    value: matter_mode_select

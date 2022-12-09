@@ -1,0 +1,18 @@
+
+category: Matter|Clusters
+description: Implementation of TODO
+id: matter_media_input
+label: TODO Cluster
+quality: production
+provides:
+   - name: "matter_media_input"
+source:
+  - path: src/app/clusters/media-input-server/media-input-server.cpp
+include:
+  - path: src/app/clusters/media-input-server/
+    file_list:
+      - path: media-input-server.h
+      - path: media-input-delegate.h
+template_contribution:
+  - name: component_catalog
+    value: matter_media_input

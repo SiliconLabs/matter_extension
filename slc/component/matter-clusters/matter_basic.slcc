@@ -1,0 +1,17 @@
+
+category: Matter|Clusters
+description: Implementation of TODO
+id: matter_basic
+label: TODO Cluster
+quality: production
+provides:
+   - name: "matter_basic"
+source:
+  - path: src/app/clusters/basic/basic.cpp
+include:
+  - path: src/app/clusters/basic/
+    file_list:
+      - path: basic.h
+template_contribution:
+  - name: component_catalog
+    value: matter_basic

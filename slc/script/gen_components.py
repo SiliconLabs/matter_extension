@@ -48,6 +48,10 @@ if __name__ == '__main__':
         if 'chip-efr32-' in lib and 'example' in lib:
             continue
 
+        # Skip clusters
+        if 'src' in file.parts and 'app' in file.parts and 'clusters' in file.parts:
+            continue        
+
         # creates a dictionary with the following entries, checks if lib entry exists, if not, its added
         if lib not in libs:
             libs[lib] = {

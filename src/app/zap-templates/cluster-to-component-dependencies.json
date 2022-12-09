@@ -1,14 +1,367 @@
-[
- {
-    "clusterCode": "level control-server",
-    "value": [
-      "%extension-matter%matter_level_control"
-    ]
-  },
- {
-    "clusterCode": "on/off-server",
-    "value": [
-      "%extension-matter%matter_on_off"
-    ]
-  }
+[  {
+  "clusterCode": "diagnostic-logs-server",
+  "value": [
+    "%extension-matter%matter_diagnostic_logs"
+  ]
+},
+{
+  "clusterCode": "color-control-server",
+  "value": [
+    "%extension-matter%matter_color_control"
+  ]
+},
+{
+  "clusterCode": "thermostat-user-interface-configuration-server",
+  "value": [
+    "%extension-matter%matter_thermostat_user_interface_configuration"
+  ]
+},
+{
+  "clusterCode": "general-commissioning-server",
+  "value": [
+    "%extension-matter%matter_general_commissioning"
+  ]
+},
+{
+  "clusterCode": "group-key-mgmt-server",
+  "value": [
+    "%extension-matter%matter_group_key_mgmt"
+  ]
+},
+{
+  "clusterCode": "test-cluster-server",
+  "value": [
+    "%extension-matter%matter_test_cluster"
+  ]
+},
+{
+  "clusterCode": "content-launch-server",
+  "value": [
+    "%extension-matter%matter_content_launch"
+  ]
+},
+{
+  "clusterCode": "scenes",
+  "value": [
+    "%extension-matter%matter_scenes"
+  ]
+},
+{
+  "clusterCode": "fan-control-server",
+  "value": [
+    "%extension-matter%matter_fan_control"
+  ]
+},
+{
+  "clusterCode": "audio-output-server",
+  "value": [
+    "%extension-matter%matter_audio_output"
+  ]
+},
+{
+  "clusterCode": "power-source-configuration-server",
+  "value": [
+    "%extension-matter%matter_power_source_configuration"
+  ]
+},
+{
+  "clusterCode": "ias-zone-client",
+  "value": [
+    "%extension-matter%matter_ias_zone_client"
+  ]
+},
+{
+  "clusterCode": "software-diagnostics-server",
+  "value": [
+    "%extension-matter%matter_software_diagnostics"
+  ]
+},
+{
+  "clusterCode": "pump-configuration-and-control-server",
+  "value": [
+    "%extension-matter%matter_pump_configuration_and_control"
+  ]
+},
+{
+  "clusterCode": "mode-select-server",
+  "value": [
+    "%extension-matter%matter_mode_select"
+  ]
+},
+{
+  "clusterCode": "user-label-server",
+  "value": [
+    "%extension-matter%matter_user_label"
+  ]
+},
+{
+  "clusterCode": "door-lock-server",
+  "value": [
+    "%extension-matter%matter_door_lock"
+  ]
+},
+{
+  "clusterCode": "level control-server",
+  "value": [
+    "%extension-matter%matter_level_control"
+  ]
+},
+{
+  "clusterCode": "identify-server",
+  "value": [
+    "%extension-matter%matter_identify"
+  ]
+},
+{
+  "clusterCode": "groups-server",
+  "value": [
+    "%extension-matter%matter_groups"
+  ]
+},
+{
+  "clusterCode": "media-playback-server",
+  "value": [
+    "%extension-matter%matter_media_playback"
+  ]
+},
+{
+  "clusterCode": "basic",
+  "value": [
+    "%extension-matter%matter_basic"
+  ]
+},
+{
+  "clusterCode": "fault-injection-server",
+  "value": [
+    "%extension-matter%matter_fault_injection"
+  ]
+},
+{
+  "clusterCode": "operational-credentials-server",
+  "value": [
+    "%extension-matter%matter_operational_credentials"
+  ]
+},
+{
+  "clusterCode": "channel-server",
+  "value": [
+    "%extension-matter%matter_channel"
+  ]
+},
+{
+  "clusterCode": "thermostat-client",
+  "value": [
+    "%extension-matter%matter_thermostat_client"
+  ]
+},
+{
+  "clusterCode": "thread-network-diagnostics-server",
+  "value": [
+    "%extension-matter%matter_thread_network_diagnostics"
+  ]
+},
+{
+  "clusterCode": "ota-provider",
+  "value": [
+    "%extension-matter%matter_ota_provider"
+  ]
+},
+{
+  "clusterCode": "network-commissioning",
+  "value": [
+    "%extension-matter%matter_network_commissioning"
+  ]
+},
+{
+  "clusterCode": "ota-requestor-server",
+  "value": [
+    "%extension-matter%matter_ota_requestor"
+  ]
+},
+{
+  "clusterCode": "application-basic-server",
+  "value": [
+    "%extension-matter%matter_application_basic"
+  ]
+},
+{
+  "clusterCode": "switch-server",
+  "value": [
+    "%extension-matter%matter_switch"
+  ]
+},
+{
+  "clusterCode": "ethernet-network-diagnostics-server",
+  "value": [
+    "%extension-matter%matter_ethernet_network_diagnostics"
+  ]
+},
+{
+  "clusterCode": "general-diagnostics-server",
+  "value": [
+    "%extension-matter%matter_general_diagnostics"
+  ]
+},
+{
+  "clusterCode": "administrator-commissioning-server",
+  "value": [
+    "%extension-matter%matter_administrator_commissioning"
+  ]
+},
+{
+  "clusterCode": "time-format-localization-server",
+  "value": [
+    "%extension-matter%matter_time_format_localization"
+  ]
+},
+{
+  "clusterCode": "media-input-server",
+  "value": [
+    "%extension-matter%matter_media_input"
+  ]
+},
+{
+  "clusterCode": "on/off-server",
+  "value": [
+    "%extension-matter%matter_on_off"
+  ]
+},
+{
+  "clusterCode": "fixed-label-server",
+  "value": [
+    "%extension-matter%matter_fixed_label"
+  ]
+},
+{
+  "clusterCode": "application-launcher-server",
+  "value": [
+    "%extension-matter%matter_application_launcher"
+  ]
+},
+{
+  "clusterCode": "ias-zone-server",
+  "value": [
+    "%extension-matter%matter_ias_zone"
+  ]
+},
+{
+  "clusterCode": "wifi-network-diagnostics-server",
+  "value": [
+    "%extension-matter%matter_wifi_network_diagnostics"
+  ]
+},
+{
+  "clusterCode": "descriptor",
+  "value": [
+    "%extension-matter%matter_descriptor"
+  ]
+},
+{
+  "clusterCode": "barrier-control-server",
+  "value": [
+    "%extension-matter%matter_barrier_control"
+  ]
+},
+{
+  "clusterCode": "scenes-client",
+  "value": [
+    "%extension-matter%matter_scenes_client"
+  ]
+},
+{
+  "clusterCode": "pump-configuration-and-control-client",
+  "value": [
+    "%extension-matter%matter_pump_configuration_and_control_client"
+  ]
+},
+{
+  "clusterCode": "window-covering-server",
+  "value": [
+    "%extension-matter%matter_window_covering"
+  ]
+},
+{
+  "clusterCode": "power-source-server",
+  "value": [
+    "%extension-matter%matter_power_source"
+  ]
+},
+{
+  "clusterCode": "bindings",
+  "value": [
+    "%extension-matter%matter_bindings"
+  ]
+},
+{
+  "clusterCode": "occupancy-sensor-server",
+  "value": [
+    "%extension-matter%matter_occupancy_sensor"
+  ]
+},
+{
+  "clusterCode": "identify-client",
+  "value": [
+    "%extension-matter%matter_identify_client"
+  ]
+},
+{
+  "clusterCode": "groups-client",
+  "value": [
+    "%extension-matter%matter_groups_client"
+  ]
+},
+{
+  "clusterCode": "low-power-server",
+  "value": [
+    "%extension-matter%matter_low_power"
+  ]
+},
+{
+  "clusterCode": "keypad-input-server",
+  "value": [
+    "%extension-matter%matter_keypad_input"
+  ]
+},
+{
+  "clusterCode": "access-control-server",
+  "value": [
+    "%extension-matter%matter_access_control"
+  ]
+},
+{
+  "clusterCode": "bridged-device-basic-information-server",
+  "value": [
+    "%extension-matter%matter_bridged_device_basic_information"
+  ]
+},
+{
+  "clusterCode": "account-login-server",
+  "value": [
+    "%extension-matter%matter_account_login"
+  ]
+},
+{
+  "clusterCode": "thermostat-server",
+  "value": [
+    "%extension-matter%matter_thermostat"
+  ]
+},
+{
+  "clusterCode": "wake-on-lan-server",
+  "value": [
+    "%extension-matter%matter_wake_on_lan"
+  ]
+},
+{
+  "clusterCode": "target-navigator-server",
+  "value": [
+    "%extension-matter%matter_target_navigator"
+  ]
+},
+{
+  "clusterCode": "localization-configuration-server",
+  "value": [
+    "%extension-matter%matter_localization_configuration"
+  ]
+}
 ]

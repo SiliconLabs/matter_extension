@@ -1,0 +1,17 @@
+
+category: Matter|Clusters
+description: Implementation of TODO
+id: matter_switch
+label: TODO Cluster
+quality: production
+provides:
+   - name: "matter_switch"
+source:
+  - path: src/app/clusters/switch-server/switch-server.cpp
+include:
+  - path: src/app/clusters/switch-server/
+    file_list:
+      - path: switch-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_switch

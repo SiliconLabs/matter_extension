@@ -1,0 +1,13 @@
+
+category: Matter|Clusters
+description: Implementation of TODO
+id: matter_user_label
+label: TODO Cluster
+quality: production
+provides:
+   - name: "matter_user_label"
+source:
+  - path: src/app/clusters/user-label-server/user-label-server.cpp
+template_contribution:
+  - name: component_catalog
+    value: matter_user_label

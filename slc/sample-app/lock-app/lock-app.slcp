@@ -6,7 +6,7 @@ quality: production
 
 sdk_extension:
   - id: matter
-    version: "0.0.3"
+    version: "0.0.4"
 
 component:
   - id: device_init
@@ -34,11 +34,63 @@ component:
   - id: matter_thread_cli
     from: matter
     
-  - id: lock_common
-    from: matter
-
   - id: efr32_factory_data_provider
     from: matter
+
+  - id: app_common
+    from: matter
+    
+  - id: matter_access_control
+    from: matter
+  - id: matter_administrator_commissioning
+    from: matter
+  - id: matter_basic
+    from: matter
+  - id: matter_descriptor
+    from: matter
+  - id: matter_diagnostic_logs
+    from: matter
+  - id: matter_door_lock
+    from: matter
+  - id: matter_ethernet_network_diagnostics
+    from: matter
+  - id: matter_fixed_label
+    from: matter
+  - id: matter_general_commissioning
+    from: matter
+  - id: matter_general_diagnostics
+    from: matter
+  - id: matter_group_key_mgmt
+    from: matter
+  - id: matter_groups
+    from: matter
+  - id: matter_identify
+    from: matter
+  - id: matter_localization_configuration
+    from: matter
+  - id: matter_network_commissioning
+    from: matter
+  - id: matter_on_off
+    from: matter
+  - id: matter_operational_credentials
+    from: matter
+  - id: matter_ota_requestor
+    from: matter
+  - id: matter_power_source_configuration
+    from: matter
+  - id: matter_power_source
+    from: matter
+  - id: matter_software_diagnostics
+    from: matter
+  - id: matter_thread_network_diagnostics
+    from: matter
+  - id: matter_time_format_localization
+    from: matter
+  - id: matter_user_label
+    from: matter
+  - id: matter_wifi_network_diagnostics
+    from: matter
+
 config_file:
   - path: common/lock-app.zap
     directory: zap
@@ -71,6 +123,10 @@ define:
     value: "1"
   - name: IS_DEMO_LOCK
     value: "1"
+  - name: NVM3_DEFAULT_NVM_SIZE
+    value: "40960"
+  - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
+    value: "4092"
 configuration:
   - name: SL_BOARD_ENABLE_VCOM
     value: "1"
@@ -80,6 +136,19 @@ configuration:
 toolchain_settings:
   - option: gcc_c++_compiler_option
     value: -std=gnu++17
+template_contribution:
+  - name: memory_flash_start
+    value: 0x0
+    condition: [device_series_1]
+  - name: memory_flash_size
+    value: 0x000FF800
+    condition: [device_series_1] 
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_series_2]
+  - name: memory_flash_size
+    value: 0x00178000
+    condition: [device_series_2] 
 readme:
   - path: ./readme.html
 ui_hints:

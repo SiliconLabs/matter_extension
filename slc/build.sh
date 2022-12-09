@@ -1,9 +1,14 @@
 #!/bin/bash
 
-SILABS_BOARD=${1:-brd4161a}
-echo "Building for $SILABS_BOARD"
+# Example usage:
+# ./build.sh lighting-app brd4161a
 
-MATTER_ROOT=$( cd "../../.." ; pwd -P )
+SILABS_APP=$1
+SILABS_BOARD=$2
+
+echo "Building $SILABS_APP for $SILABS_BOARD"
+
+MATTER_ROOT=$( cd "../" ; pwd -P )
 GSDK_ROOT=$MATTER_ROOT/third_party/silabs/gecko_sdk
 
 # Ensure Matter repo is registered as SDK extension
@@ -36,6 +41,6 @@ while [ $# -gt 0 ]; do
 done
 
 # Generate project
-slc generate -d $SILABS_BOARD -p lock-app.slcp -s $GSDK_ROOT --with $SILABS_BOARD
+slc generate -d sample-app/$SILABS_APP/$SILABS_BOARD -p sample-app/$SILABS_APP/$SILABS_APP.slcp -s $GSDK_ROOT --with $SILABS_BOARD
 
-make -C $SILABS_BOARD -f lock-app.Makefile -j4
+make -C sample-app/$SILABS_APP/$SILABS_BOARD -f $SILABS_APP.Makefile -j4

@@ -44,6 +44,7 @@ cp $MATTER_ROOT/matter_templates.xml $DEST_DIR/matter
 
 # Remove unnecessary directories
 rm -fr $DEST_DIR/matter/src/test_driver/
+rm -fr $DEST_DIR/matter/slc/sample-app/*/brd*/
 
 echo "Matter extension code copied to $DEST_DIR"
 
