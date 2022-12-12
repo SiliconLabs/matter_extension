@@ -7,6 +7,7 @@ include:
 -   path: third_party/pigweed/repo/pw_polyfill/public
 -   path: third_party/pigweed/repo/pw_polyfill/standard_library_public
 -   path: third_party/pigweed/repo/pw_span/public
+label: pw_base64
 package: Matter
 provides:
 -   name: matter_pw_base64

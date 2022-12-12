@@ -3,6 +3,7 @@ define: []
 description: syscalls
 id: syscalls
 include: []
+label: syscalls
 package: Matter
 provides:
 -   name: matter_syscalls

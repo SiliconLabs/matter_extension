@@ -10,6 +10,7 @@ include:
 -   path: third_party/pigweed/repo/pw_preprocessor/public
 -   path: third_party/pigweed/repo/pw_span/public
 -   path: third_party/pigweed/repo/pw_status/public
+label: pw_bytes
 package: Matter
 provides:
 -   name: matter_pw_bytes

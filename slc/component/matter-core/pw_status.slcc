@@ -4,6 +4,7 @@ description: pw_status
 id: pw_status
 include:
 -   path: third_party/pigweed/repo/pw_status/public
+label: pw_status
 package: Matter
 provides:
 -   name: matter_pw_status

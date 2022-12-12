@@ -2,7 +2,6 @@ category: Matter|Core
 define:
 -   name: CHIP_HAVE_CONFIG_H
     value: '1'
--   name: ENABLE_WSTK_LEDS
 -   name: HARD_FAULT_LOG_ENABLE
 -   name: OTA_PERIODIC_TIMEOUT
     value: '86400'
@@ -36,6 +35,7 @@ include:
 -   path: third_party/pigweed/repo/pw_stream/public
 -   path: third_party/pigweed/repo/pw_varint/public
 -   path: zzz_generated/app-common
+label: pw_protobuf
 package: Matter
 provides:
 -   name: matter_pw_protobuf

@@ -1,4 +1,4 @@
-project_name: thermostat
+project_name: thermostat-no-led
 label: Matter Thermostat
 description: >
   Matter Thermostat
@@ -13,13 +13,8 @@ component:
   - id: device_init
   - id: simple_button
     instance: [btn0, btn1]
-  - id: simple_led
-    instance: [led0, led1]
   - id: uartdrv_usart
     instance: [vcom]
-
-  - id: matter_wstk_leds
-    from: matter
 
   - id: matter
     from: matter
@@ -95,47 +90,17 @@ component:
 requires:
   - name: matter_lcd
     condition:
-    - brd4161a
+    - brd4316a
   - name: matter_lcd
     condition:
-    - brd4162a
-  - name: matter_lcd
-    condition:
-    - brd4163a
-  - name: matter_lcd
-    condition:
-    - brd4164a
-  - name: matter_lcd
-    condition:
-    - brd4170a
-  - name: matter_lcd
-    condition:
-    - brd4186a
-  - name: matter_lcd
-    condition:
-    - brd4187a
+    - brd4317a
   - name: matter_qr_code
     condition:
-    - brd4161a
+    - brd4316a
   - name: matter_qr_code
     condition:
-    - brd4162a
-  - name: matter_qr_code
-    condition:
-    - brd4163a
-  - name: matter_qr_code
-    condition:
-    - brd4164a
-  - name: matter_qr_code
-    condition:
-    - brd4170a
-  - name: matter_qr_code
-    condition:
-    - brd4186a
-  - name: matter_qr_code
-    condition:
-    - brd4187a
-    
+    - brd4317a
+
 config_file:
   - path: common/thermostat.zap
     directory: zap
@@ -201,4 +166,4 @@ template_contribution:
     condition: [device_series_2]
 
 tag:
-  - hardware:component:led:2+
+  - hardware:component:!led

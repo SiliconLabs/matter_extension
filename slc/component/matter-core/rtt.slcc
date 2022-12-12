@@ -3,6 +3,7 @@ define: []
 description: rtt
 id: rtt
 include: []
+label: rtt
 package: Matter
 provides:
 -   name: matter_rtt

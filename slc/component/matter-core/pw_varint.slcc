@@ -8,6 +8,7 @@ include:
 -   path: third_party/pigweed/repo/pw_preprocessor/public
 -   path: third_party/pigweed/repo/pw_span/public
 -   path: third_party/pigweed/repo/pw_varint/public
+label: pw_varint
 package: Matter
 provides:
 -   name: matter_pw_varint

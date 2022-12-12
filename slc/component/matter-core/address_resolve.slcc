@@ -4,7 +4,6 @@ define:
     value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
 -   name: CHIP_HAVE_CONFIG_H
     value: '1'
--   name: ENABLE_WSTK_LEDS
 -   name: HARD_FAULT_LOG_ENABLE
 -   name: OTA_PERIODIC_TIMEOUT
     value: '86400'
@@ -37,6 +36,7 @@ include:
 -   path: third_party/pigweed/repo/pw_status/public
 -   path: third_party/pigweed/repo/pw_stream/public
 -   path: zzz_generated/app-common
+label: address_resolve
 package: Matter
 provides:
 -   name: matter_address_resolve

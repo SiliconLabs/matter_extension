@@ -1,6 +1,5 @@
 category: Matter|Core
 define:
--   name: ENABLE_WSTK_LEDS
 -   name: HARD_FAULT_LOG_ENABLE
 -   name: OPENTHREAD_CORE_CONFIG_PLATFORM_CHECK_FILE
     value: \"openthread-core-efr32-config-check.h\"
@@ -27,6 +26,7 @@ include:
 -   path: examples/platform/efr32/project_include
 -   path: src/lib
 -   path: src/platform/EFR32
+label: libopenthread_radio
 package: Matter
 provides:
 -   name: matter_libopenthread_radio

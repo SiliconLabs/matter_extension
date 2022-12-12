@@ -15,7 +15,6 @@ include:
   - path: examples/platform/efr32
 source:
   - path: examples/platform/efr32/BaseApplication.cpp
-  - path: examples/platform/efr32/LEDWidget.cpp
   - path: examples/platform/efr32/efr32_utils.cpp
   - path: examples/platform/efr32/heap_4_silabs.c
   - path: examples/platform/efr32/init_efrPlatform.cpp

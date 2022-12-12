@@ -3,6 +3,7 @@ define: []
 description: trace
 id: trace
 include: []
+label: trace
 package: Matter
 provides:
 -   name: matter_trace

@@ -3,6 +3,7 @@ define: []
 description: printf
 id: printf
 include: []
+label: printf
 package: Matter
 provides:
 -   name: matter_printf

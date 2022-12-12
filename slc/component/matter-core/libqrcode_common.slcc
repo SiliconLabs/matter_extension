@@ -4,6 +4,7 @@ description: libqrcode_common
 id: libqrcode_common
 include:
 -   path: examples/common/QRCode/repo/c
+label: libqrcode_common
 package: Matter
 provides:
 -   name: matter_libqrcode_common
