@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Media Input Server Cluster
 id: matter_media_input
-label: TODO Cluster
+label: Media Input Server Cluster
 quality: production
 provides:
-   - name: "matter_media_input"
+  - name: matter_media_input
 source:
   - path: src/app/clusters/media-input-server/media-input-server.cpp
 include:

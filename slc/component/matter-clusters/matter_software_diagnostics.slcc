@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Software Diagnostics Server Cluster
 id: matter_software_diagnostics
-label: TODO Cluster
+label: Software Diagnostics Server Cluster
 quality: production
 provides:
-   - name: "matter_software_diagnostics"
+  - name: matter_software_diagnostics
 source:
   - path: src/app/clusters/software-diagnostics-server/software-diagnostics-server.cpp
 include:

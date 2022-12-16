@@ -1,9 +1,8 @@
 id: matter_lcd
 label: Display
-description: >
-  SUpport for liquid crystal display on matter devboards
+description: Support for liquid crystal display on matter devboards
 package: "Matter"
-category: "Matter|Example"
+category: "Matter|Platform"
 quality: production
 requires:
   - name: matter
@@ -15,7 +14,7 @@ provides:
 conflicts:
   - name: matter_low_power
 include:
--   path: examples/platform/efr32/display/
+  - path: examples/platform/efr32/display/
 source:
   - path: examples/platform/efr32/display/demo-ui.c
   - path: examples/platform/efr32/display/lcd.cpp

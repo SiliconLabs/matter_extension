@@ -1,7 +1,6 @@
 id: matter_wstk_leds
 label: WSTK LED support
-description: >
-  WSTK LED Support for Matter applications
+description: WSTK LED Support for Matter applications
 package: "Matter"
 category: "Matter|Platform"
 quality: production

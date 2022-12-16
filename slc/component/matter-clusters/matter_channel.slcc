@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Channel Server Cluster
 id: matter_channel
-label: TODO Cluster
+label: Channel Server Cluster
 quality: production
 provides:
-   - name: "matter_channel"
+  - name: matter_channel
 source:
   - path: src/app/clusters/channel-server/channel-server.cpp
 include:

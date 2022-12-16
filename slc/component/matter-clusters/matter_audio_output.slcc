@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Audio Output Server Cluster
 id: matter_audio_output
-label: TODO Cluster
+label: Audio Output Server Cluster
 quality: production
 provides:
-   - name: "matter_audio_output"
+  - name: matter_audio_output
 source:
   - path: src/app/clusters/audio-output-server/audio-output-server.cpp
 include:

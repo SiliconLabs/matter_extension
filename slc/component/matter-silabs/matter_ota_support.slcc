@@ -1,7 +1,6 @@
 id: matter_ota_support
 label: OTA Requestor
-description: >
-  OTA Requestor for Matter
+description: OTA Requestor for Matter
 package: "Matter"
 category: "Matter|Platform"
 quality: production
@@ -13,5 +12,8 @@ provides:
   - name: matter_ota_support
 source:
   - path: examples/platform/efr32/OTAConfig.cpp
+config_file:
+  - path: slc/config/sl_matter_ota_config.h
+    file_id: matter_ota_config
 define:
   - name: EFR32_OTA_ENABLED

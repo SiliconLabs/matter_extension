@@ -1,9 +1,8 @@
 id: matter_thread_ftd
 label: Thread Network Layer (Full)
-description: >
-  Add Thread network layer for full thread device
+description: Adds Thread network layer for full thread device
 package: "Matter"
-category: "Matter|Network"
+category: "Matter|Platform"
 quality: production
 requires:
   - name: matter_thread

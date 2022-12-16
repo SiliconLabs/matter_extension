@@ -14,15 +14,15 @@
 // <SL_MATTER_LOG_NONE=> None
 // <SL_MATTER_LOG_ERROR=> Error
 // <SL_MATTER_LOG_PROGRESS=> Progress
-// <SL_MATTER_LOG_DEBUG=> Debug
+// <SL_MATTER_LOG_DETAIL=> Detailed log (debug)
 // <SL_MATTER_LOG_AUTOMATION=> Automation
 // <d> SL_MATTER_LOG_ERROR
 #define SL_MATTER_LOG_LEVEL SL_MATTER_LOG_ERROR
 
-// <q SL_MATTER_EFR32_LOG> Enable EFR32 specific log used in matter
+// <q EFR32_LOG_ENABLED> Enable EFR32 specific log used in matter
 #define EFR32_LOG_ENABLED 1
 
-// <q SL_MATTER_HARD_FAULT_LOG> Enable HARD fault logging
+// <q HARD_FAULT_LOG_ENABLE> Enable HARD fault logging
 #define HARD_FAULT_LOG_ENABLE 1
 
 // <q SL_MATTER_CLI_ARG_PARSER> Enable CLI Argument Parser

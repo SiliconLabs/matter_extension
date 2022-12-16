@@ -17,23 +17,54 @@
  *    limitations under the License.
  */
 
-#include "sl_component_catalog.h"
-#include "sl_system_init.h"
-#include "sl_power_manager.h"
-#include "app.h"
+#include <AppConfig.h>
+#include <WindowApp.h>
 
+#include "init_efrPlatform.h"
+#include "sl_simple_button_instances.h"
 #include "sl_system_kernel.h"
+#include <DeviceInfoProviderImpl.h>
+#include <app/server/Server.h>
+#include <credentials/DeviceAttestationCredsProvider.h>
+#include <matter_config.h>
+#ifdef EFR32_ATTESTATION_CREDENTIALS
+#include <examples/platform/efr32/EFR32DeviceAttestationCreds.h>
+#else
+#include <credentials/examples/DeviceAttestationCredsExample.h>
+#endif
 
-void app_init(void)
+#include "sl_system_init.h"
+
+#define BLE_DEV_NAME "Silabs-Window"
+using namespace ::chip::DeviceLayer;
+using namespace ::chip::Credentials;
+
+#define UNUSED_PARAMETER(a) (a = a)
+
+volatile int apperror_cnt;
+static chip::DeviceLayer::DeviceInfoProviderImpl gExampleDeviceInfoProvider;
+
+// ================================================================================
+// Main Code
+// ================================================================================
+int main(void)
 {
+    CHIP_ERROR err = CHIP_NO_ERROR;
+
+    sl_system_init();
+
     init_efrPlatform();
     if (EFR32MatterConfig::InitMatter(BLE_DEV_NAME) != CHIP_NO_ERROR)
         appError(CHIP_ERROR_INTERNAL);
 
-    gExampleDeviceInfoProvider.SetStorageDelegate(&Server::GetInstance().GetPersistentStorage());
+    gExampleDeviceInfoProvider.SetStorageDelegate(&chip::Server::GetInstance().GetPersistentStorage());
     chip::DeviceLayer::SetDeviceInfoProvider(&gExampleDeviceInfoProvider);
 
+    WindowApp & app = WindowApp::Instance();
+
+    EFR32_LOG("Starting App");
     chip::DeviceLayer::PlatformMgr().LockChipStack();
+    err = app.Init();
     // Initialize device attestation config
 #ifdef EFR32_ATTESTATION_CREDENTIALS
     SetDeviceAttestationCredentialsProvider(EFR32::GetEFR32DacProvider());
@@ -42,34 +73,19 @@ void app_init(void)
 #endif
     chip::DeviceLayer::PlatformMgr().UnlockChipStack();
 
-    EFR32_LOG("Starting App Task");
-    if (AppTask::GetAppTask().StartAppTask() != CHIP_NO_ERROR)
-        appError(CHIP_ERROR_INTERNAL);
+    if (err != CHIP_NO_ERROR)
+    {
+        EFR32_LOG("App Init failed");
+        appError(err);
+    }
 
-    EFR32_LOG("Starting FreeRTOS scheduler");
-}
+    err = app.Start();
+    if (err != CHIP_NO_ERROR)
+    {
+        EFR32_LOG("App Start failed");
+        appError(err);
+    }
 
-int main(void)
-{
-    // Initialize Silicon Labs device, system, service(s) and protocol stack(s).
-    // Note that if the kernel is present, processing task(s) will be created by
-    // this call.
-    sl_system_init();
-
-    // Initialize the application. For example, create periodic timer(s) or
-    // task(s) if the kernel is present.
-    app_init();
-
-    // Start the kernel. Task(s) created in app_init() will start running.
-    sl_system_kernel_start();
-
-    // Should never get here.
-    chip::Platform::MemoryShutdown();
-    EFR32_LOG("vTaskStartScheduler() failed");
-    appError(CHIP_ERROR_INTERNAL);
-}
-
-void sl_button_on_change(const sl_button_t * handle)
-{
-    AppTask::GetAppTask().ButtonEventHandler(handle, sl_button_get_state(handle));
+    app.Finish();
+    return err.AsInteger();
 }

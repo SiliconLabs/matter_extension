@@ -1,5 +1,5 @@
 id: matter
-version: 0.0.5
+version: 0.0.6
 description: "Matter extension for Gecko SDK Suite"
 label: "Silicon Labs Matter"
 sdk:
@@ -9,3 +9,6 @@ component_path:
   - path: slc/component/matter-core
   - path: slc/component/matter-silabs
   - path: slc/component/matter-clusters
+  - path: slc/component/matter-wifi
+  - path: slc/component/matter-wifi/rs911x
+  - path: slc/component/matter-wifi/wf200

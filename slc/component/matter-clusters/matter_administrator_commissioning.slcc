@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Administrator Commissioning Server Cluster
 id: matter_administrator_commissioning
-label: TODO Cluster
+label: Administrator Commissioning Server Cluster
 quality: production
 provides:
-   - name: "matter_administrator_commissioning"
+  - name: matter_administrator_commissioning
 source:
   - path: src/app/clusters/administrator-commissioning-server/administrator-commissioning-server.cpp
 template_contribution:

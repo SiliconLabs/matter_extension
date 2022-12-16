@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Identify Server Cluster
 id: matter_identify
-label: TODO Cluster
+label: Identify Server Cluster
 quality: production
 provides:
-   - name: "matter_identify"
+  - name: matter_identify
 source:
   - path: src/app/clusters/identify-server/identify-server.cpp
 include:

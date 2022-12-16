@@ -1,9 +1,8 @@
 id: matter_thread
 label: Thread Network Layer
-description: >
-  Add Thread network layer for Matter.
+description: Adds Thread network layer for Matter
 package: "Matter"
-category: "Matter|Network"
+category: "Matter|Platform"
 ui_hints:
   visibility: never
 quality: production

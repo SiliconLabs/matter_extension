@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Test Cluster Server Cluster
 id: matter_test_cluster
-label: TODO Cluster
+label: Test Cluster Server Cluster
 quality: production
 provides:
-   - name: "matter_test_cluster"
+  - name: matter_test_cluster
 source:
   - path: src/app/clusters/test-cluster-server/test-cluster-server.cpp
 template_contribution:

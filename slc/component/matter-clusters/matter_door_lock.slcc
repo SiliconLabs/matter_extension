@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Door Lock Server Callback Cluster
 id: matter_door_lock
-label: TODO Cluster
+label: Door Lock Server Callback Cluster
 quality: production
 provides:
-   - name: "matter_door_lock"
+  - name: matter_door_lock
 source:
   - path: src/app/clusters/door-lock-server/door-lock-server-callback.cpp
   - path: src/app/clusters/door-lock-server/door-lock-server.cpp

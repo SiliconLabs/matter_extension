@@ -280,7 +280,7 @@ void BLEManagerImpl::bluetoothStackEventHandler(void * p_arg)
 #if CHIP_ENABLE_ADDITIONAL_DATA_ADVERTISING
                 if (bluetooth_evt->data.evt_gatt_server_user_read_request.characteristic == gattdb_CHIPoBLEChar_C3)
                 {
-                    HandleC3ReadRequest(bluetooth_evt);
+                    chip::DeviceLayer::Internal::BLEMgrImpl().HandleC3ReadRequest(bluetooth_evt);
                 }
 #endif // CHIP_ENABLE_ADDITIONAL_DATA_ADVERTISING
             }

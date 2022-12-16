@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Pump Configuration And Control Client Cluster
 id: matter_pump_configuration_and_control_client
-label: TODO Cluster
+label: Pump Configuration And Control Client Cluster
 quality: production
 provides:
-   - name: "matter_pump_configuration_and_control_client"
+  - name: matter_pump_configuration_and_control_client
 source:
   - path: src/app/clusters/pump-configuration-and-control-client/pump-configuration-and-control-client.cpp
 template_contribution:

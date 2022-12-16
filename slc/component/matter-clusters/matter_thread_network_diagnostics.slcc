@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Thread Network Diagnostics Server Cluster
 id: matter_thread_network_diagnostics
-label: TODO Cluster
+label: Thread Network Diagnostics Server Cluster
 quality: production
 provides:
-   - name: "matter_thread_network_diagnostics"
+  - name: matter_thread_network_diagnostics
 source:
   - path: src/app/clusters/thread-network-diagnostics-server/thread-network-diagnostics-server.cpp
 template_contribution:

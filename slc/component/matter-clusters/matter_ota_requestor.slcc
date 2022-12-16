@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Ota Requestor Server Cluster
 id: matter_ota_requestor
-label: TODO Cluster
+label: OTA Requestor Server Cluster
 quality: production
 provides:
-   - name: "matter_ota_requestor"
+  - name: matter_ota_requestor
 source:
   - path: src/app/clusters/ota-requestor/ota-requestor-server.cpp
   - path: src/app/clusters/ota-requestor/BDXDownloader.cpp

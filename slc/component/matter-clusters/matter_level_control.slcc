@@ -4,7 +4,7 @@ label: Level Control Server Cluster
 quality: production
 id: matter_level_control
 provides:
-   - name: "matter_level_control"
+  - name: matter_level_control
 source:
   - path: src/app/clusters/level-control/level-control.cpp
 include:

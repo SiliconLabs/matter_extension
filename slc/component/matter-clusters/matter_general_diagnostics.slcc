@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the General Diagnostics Server Cluster
 id: matter_general_diagnostics
-label: TODO Cluster
+label: General Diagnostics Server Cluster
 quality: production
 provides:
-   - name: "matter_general_diagnostics"
+  - name: matter_general_diagnostics
 source:
   - path: src/app/clusters/general-diagnostics-server/general-diagnostics-server.cpp
 include:

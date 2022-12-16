@@ -1,9 +1,8 @@
 id: matter_mbedtls
 label: Matter mbedtls integration
-description: >
-  Add mbedtls rerquired for matter functionnality
+description: Adds mbedtls required for matter functionality
 package: "Matter"
-category: "Matter|Core"
+category: "Matter|Platform"
 quality: production
 requires:
   - name: mbedtls_aes

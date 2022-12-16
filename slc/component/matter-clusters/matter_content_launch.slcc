@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Content Launch Server Cluster
 id: matter_content_launch
-label: TODO Cluster
+label: Content Launch Server Cluster
 quality: production
 provides:
-   - name: "matter_content_launch"
+  - name: matter_content_launch
 source:
   - path: src/app/clusters/content-launch-server/content-launch-server.cpp
 include:

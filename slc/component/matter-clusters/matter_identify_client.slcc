@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Identify Client Cluster
 id: matter_identify_client
-label: TODO Cluster
+label: Identify Client Cluster
 quality: production
 provides:
-   - name: "matter_identify_client"
+  - name: matter_identify_client
 source:
   - path: src/app/clusters/identify-client/identify-client.cpp
 template_contribution:

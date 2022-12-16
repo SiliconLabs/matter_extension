@@ -1,9 +1,8 @@
 id: matter_thread_cli
 label: OpenThread CLI
-description: >
-  Enables OpenThread CLI for matter projects
+description: Enables OpenThread CLI for matter projects
 package: "Matter"
-category: "Matter|Core"
+category: "Matter|Platform"
 quality: production
 requires:
   - name: matter_uart

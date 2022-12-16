@@ -15,3 +15,5 @@ provides:
 quality: production
 source:
 -   path: third_party/pigweed/repo/pw_varint/varint.cc
+ui_hints:
+ visibility: never

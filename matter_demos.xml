@@ -1,0 +1,703 @@
+<?xml version="1.0" ?>
+<demos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.silabs.com/ss/Demo.ecore">
+	<demo name="brd4162a.demo.thermostat_app_thread" label="Matter - Thermostat over Thread">
+		<property key="demos.blurb" value="Matter - Thermostat app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4162a"/>
+		<property key="demos.imageFile" value="demos/thermostat-app-thread/thermostat-app-thread-led/BRD4162A/chip-efr32-thermostat-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Thermostat Application over Thread for BRD4162A</description>
+	</demo>
+	<demo name="brd4187c.demo.thermostat_app_thread" label="Matter - Thermostat over Thread">
+		<property key="demos.blurb" value="Matter - Thermostat app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4187c"/>
+		<property key="demos.imageFile" value="demos/thermostat-app-thread/thermostat-app-thread-led/BRD4187C/chip-efr32-thermostat-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Thermostat Application over Thread for BRD4187C</description>
+	</demo>
+	<demo name="brd4161a.demo.thermostat_app_thread" label="Matter - Thermostat over Thread">
+		<property key="demos.blurb" value="Matter - Thermostat app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4161a"/>
+		<property key="demos.imageFile" value="demos/thermostat-app-thread/thermostat-app-thread-led/BRD4161A/chip-efr32-thermostat-example.s37"/>
+		<property key="core.readmeFiles" value="ht22tps://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Thermostat Application over Thread for BRD4161A</description>
+	</demo>
+	<demo name="brd4166a.demo.thermostat_app_thread" label="Matter - Thermostat over Thread">
+		<property key="demos.blurb" value="Matter - Thermostat app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4166a"/>
+		<property key="demos.imageFile" value="demos/thermostat-app-thread/thermostat-app-thread-led/BRD4166A/chip-efr32-thermostat-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Thermostat Application over Thread for BRD4166A</description>
+	</demo>
+	<demo name="brd4164a.demo.thermostat_app_thread" label="Matter - Thermostat over Thread">
+		<property key="demos.blurb" value="Matter - Thermostat app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4164a"/>
+		<property key="demos.imageFile" value="demos/thermostat-app-thread/thermostat-app-thread-led/BRD4164A/chip-efr32-thermostat-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Thermostat Application over Thread for BRD4164A</description>
+	</demo>
+	<demo name="brd4163a.demo.thermostat_app_thread" label="Matter - Thermostat over Thread">
+		<property key="demos.blurb" value="Matter - Thermostat app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4163a"/>
+		<property key="demos.imageFile" value="demos/thermostat-app-thread/thermostat-app-thread-led/BRD4163A/chip-efr32-thermostat-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Thermostat Application over Thread for BRD4163A</description>
+	</demo>
+	<demo name="brd4186c.demo.thermostat_app_thread" label="Matter - Thermostat over Thread">
+		<property key="demos.blurb" value="Matter - Thermostat app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4186c"/>
+		<property key="demos.imageFile" value="demos/thermostat-app-thread/thermostat-app-thread-led/BRD4186C/chip-efr32-thermostat-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Thermostat Application over Thread for BRD4186C</description>
+	</demo>
+	<demo name="brd4317a.demo.thermostat_app_thread" label="Matter - Thermostat over Thread">
+		<property key="demos.blurb" value="Matter - Thermostat app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4317a"/>
+		<property key="demos.imageFile" value="demos/thermostat-app-thread/thermostat-app-thread-no-led/BRD4317A/chip-efr32-thermostat-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Thermostat Application over Thread for BRD4317A</description>
+	</demo>
+	<demo name="brd4316a.demo.thermostat_app_thread" label="Matter - Thermostat over Thread">
+		<property key="demos.blurb" value="Matter - Thermostat app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4316a"/>
+		<property key="demos.imageFile" value="demos/thermostat-app-thread/thermostat-app-thread-no-led/BRD4316A/chip-efr32-thermostat-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Thermostat Application over Thread for BRD4316A</description>
+	</demo>
+	<demo name="brd4162a.demo.window_app_thread" label="Matter - Window over Thread">
+		<property key="demos.blurb" value="Matter - Window app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4162a"/>
+		<property key="demos.imageFile" value="demos/window-app-thread/window-app-thread-led/BRD4162A/chip-efr32-window-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Window Application over Thread for BRD4162A</description>
+	</demo>
+	<demo name="brd4187c.demo.window_app_thread" label="Matter - Window over Thread">
+		<property key="demos.blurb" value="Matter - Window app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4187c"/>
+		<property key="demos.imageFile" value="demos/window-app-thread/window-app-thread-led/BRD4187C/chip-efr32-window-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Window Application over Thread for BRD4187C</description>
+	</demo>
+	<demo name="brd4161a.demo.window_app_thread" label="Matter - Window over Thread">
+		<property key="demos.blurb" value="Matter - Window app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4161a"/>
+		<property key="demos.imageFile" value="demos/window-app-thread/window-app-thread-led/BRD4161A/chip-efr32-window-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Window Application over Thread for BRD4161A</description>
+	</demo>
+	<demo name="brd4166a.demo.window_app_thread" label="Matter - Window over Thread">
+		<property key="demos.blurb" value="Matter - Window app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4166a"/>
+		<property key="demos.imageFile" value="demos/window-app-thread/window-app-thread-led/BRD4166A/chip-efr32-window-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Window Application over Thread for BRD4166A</description>
+	</demo>
+	<demo name="brd2703a.demo.window_app_thread" label="Matter - Window over Thread">
+		<property key="demos.blurb" value="Matter - Window app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd2703a"/>
+		<property key="demos.imageFile" value="demos/window-app-thread/window-app-thread-led/BRD2703A/chip-efr32-window-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Window Application over Thread for BRD2703A</description>
+	</demo>
+	<demo name="brd4164a.demo.window_app_thread" label="Matter - Window over Thread">
+		<property key="demos.blurb" value="Matter - Window app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4164a"/>
+		<property key="demos.imageFile" value="demos/window-app-thread/window-app-thread-led/BRD4164A/chip-efr32-window-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Window Application over Thread for BRD4164A</description>
+	</demo>
+	<demo name="brd4163a.demo.window_app_thread" label="Matter - Window over Thread">
+		<property key="demos.blurb" value="Matter - Window app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4163a"/>
+		<property key="demos.imageFile" value="demos/window-app-thread/window-app-thread-led/BRD4163A/chip-efr32-window-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Window Application over Thread for BRD4163A</description>
+	</demo>
+	<demo name="brd4186c.demo.window_app_thread" label="Matter - Window over Thread">
+		<property key="demos.blurb" value="Matter - Window app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4186c"/>
+		<property key="demos.imageFile" value="demos/window-app-thread/window-app-thread-led/BRD4186C/chip-efr32-window-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Window Application over Thread for BRD4186C</description>
+	</demo>
+	<demo name="brd2601b.demo.window_app_thread" label="Matter - Window over Thread">
+		<property key="demos.blurb" value="Matter - Window app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd2601b"/>
+		<property key="demos.imageFile" value="demos/window-app-thread/window-app-thread-led/BRD2601B/chip-efr32-window-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Window Application over Thread for BRD2601B</description>
+	</demo>
+	<demo name="brd4317a.demo.window_app_thread" label="Matter - Window over Thread">
+		<property key="demos.blurb" value="Matter - Window app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4317a"/>
+		<property key="demos.imageFile" value="demos/window-app-thread/window-app-thread-no-led/BRD4317A/chip-efr32-window-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Window Application over Thread for BRD4317A</description>
+	</demo>
+	<demo name="brd4319a.demo.window_app_thread" label="Matter - Window over Thread">
+		<property key="demos.blurb" value="Matter - Window app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4319a"/>
+		<property key="demos.imageFile" value="demos/window-app-thread/window-app-thread-no-led/BRD4319A/chip-efr32-window-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Window Application over Thread for BRD4319A</description>
+	</demo>
+	<demo name="brd4316a.demo.window_app_thread" label="Matter - Window over Thread">
+		<property key="demos.blurb" value="Matter - Window app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4316a"/>
+		<property key="demos.imageFile" value="demos/window-app-thread/window-app-thread-no-led/BRD4316A/chip-efr32-window-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Window Application over Thread for BRD4316A</description>
+	</demo>
+	<demo name="brd4162a.demo.lighting_app_thread" label="Matter - Lighting over Thread">
+		<property key="demos.blurb" value="Matter - Lighting app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4162a"/>
+		<property key="demos.imageFile" value="demos/lighting-app-thread/lighting-app-thread-led/BRD4162A/chip-efr32-lighting-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lighting Application over Thread for BRD4162A</description>
+	</demo>
+	<demo name="brd4187c.demo.lighting_app_thread" label="Matter - Lighting over Thread">
+		<property key="demos.blurb" value="Matter - Lighting app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4187c"/>
+		<property key="demos.imageFile" value="demos/lighting-app-thread/lighting-app-thread-led/BRD4187C/chip-efr32-lighting-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lighting Application over Thread for BRD4187C</description>
+	</demo>
+	<demo name="brd4161a.demo.lighting_app_thread" label="Matter - Lighting over Thread">
+		<property key="demos.blurb" value="Matter - Lighting app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4161a"/>
+		<property key="demos.imageFile" value="demos/lighting-app-thread/lighting-app-thread-led/BRD4161A/chip-efr32-lighting-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lighting Application over Thread for BRD4161A</description>
+	</demo>
+	<demo name="brd4166a.demo.lighting_app_thread" label="Matter - Lighting over Thread">
+		<property key="demos.blurb" value="Matter - Lighting app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4166a"/>
+		<property key="demos.imageFile" value="demos/lighting-app-thread/lighting-app-thread-led/BRD4166A/chip-efr32-lighting-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lighting Application over Thread for BRD4166A</description>
+	</demo>
+	<demo name="brd2703a.demo.lighting_app_thread" label="Matter - Lighting over Thread">
+		<property key="demos.blurb" value="Matter - Lighting app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd2703a"/>
+		<property key="demos.imageFile" value="demos/lighting-app-thread/lighting-app-thread-led/BRD2703A/chip-efr32-lighting-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lighting Application over Thread for BRD2703A</description>
+	</demo>
+	<demo name="brd4164a.demo.lighting_app_thread" label="Matter - Lighting over Thread">
+		<property key="demos.blurb" value="Matter - Lighting app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4164a"/>
+		<property key="demos.imageFile" value="demos/lighting-app-thread/lighting-app-thread-led/BRD4164A/chip-efr32-lighting-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lighting Application over Thread for BRD4164A</description>
+	</demo>
+	<demo name="brd4163a.demo.lighting_app_thread" label="Matter - Lighting over Thread">
+		<property key="demos.blurb" value="Matter - Lighting app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4163a"/>
+		<property key="demos.imageFile" value="demos/lighting-app-thread/lighting-app-thread-led/BRD4163A/chip-efr32-lighting-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lighting Application over Thread for BRD4163A</description>
+	</demo>
+	<demo name="brd4186c.demo.lighting_app_thread" label="Matter - Lighting over Thread">
+		<property key="demos.blurb" value="Matter - Lighting app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4186c"/>
+		<property key="demos.imageFile" value="demos/lighting-app-thread/lighting-app-thread-led/BRD4186C/chip-efr32-lighting-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lighting Application over Thread for BRD4186C</description>
+	</demo>
+	<demo name="brd2601b.demo.lighting_app_thread" label="Matter - Lighting over Thread">
+		<property key="demos.blurb" value="Matter - Lighting app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd2601b"/>
+		<property key="demos.imageFile" value="demos/lighting-app-thread/lighting-app-thread-led/BRD2601B/chip-efr32-lighting-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lighting Application over Thread for BRD2601B</description>
+	</demo>
+	<demo name="brd4317a.demo.lighting_app_thread" label="Matter - Lighting over Thread">
+		<property key="demos.blurb" value="Matter - Lighting app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4317a"/>
+		<property key="demos.imageFile" value="demos/lighting-app-thread/lighting-app-thread-no-led/BRD4317A/chip-efr32-lighting-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lighting Application over Thread for BRD4317A</description>
+	</demo>
+	<demo name="brd4319a.demo.lighting_app_thread" label="Matter - Lighting over Thread">
+		<property key="demos.blurb" value="Matter - Lighting app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4319a"/>
+		<property key="demos.imageFile" value="demos/lighting-app-thread/lighting-app-thread-no-led/BRD4319A/chip-efr32-lighting-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lighting Application over Thread for BRD4319A</description>
+	</demo>
+	<demo name="brd4316a.demo.lighting_app_thread" label="Matter - Lighting over Thread">
+		<property key="demos.blurb" value="Matter - Lighting app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4316a"/>
+		<property key="demos.imageFile" value="demos/lighting-app-thread/lighting-app-thread-no-led/BRD4316A/chip-efr32-lighting-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lighting Application over Thread for BRD4316A</description>
+	</demo>
+	<demo name="brd4162a.demo.lock_app_thread" label="Matter - Lock over Thread">
+		<property key="demos.blurb" value="Matter - Lock app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4162a"/>
+		<property key="demos.imageFile" value="demos/lock-app-thread/lock-app-thread-led/BRD4162A/chip-efr32-lock-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lock Application over Thread for BRD4162A</description>
+	</demo>
+	<demo name="brd4317a.demo.lock_app_thread" label="Matter - Lock over Thread">
+		<property key="demos.blurb" value="Matter - Lock app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4317a"/>
+		<property key="demos.imageFile" value="demos/lock-app-thread/lock-app-thread-led/BRD4317A/chip-efr32-lock-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lock Application over Thread for BRD4317A</description>
+	</demo>
+	<demo name="brd4187c.demo.lock_app_thread" label="Matter - Lock over Thread">
+		<property key="demos.blurb" value="Matter - Lock app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4187c"/>
+		<property key="demos.imageFile" value="demos/lock-app-thread/lock-app-thread-led/BRD4187C/chip-efr32-lock-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lock Application over Thread for BRD4187C</description>
+	</demo>
+	<demo name="brd4161a.demo.lock_app_thread" label="Matter - Lock over Thread">
+		<property key="demos.blurb" value="Matter - Lock app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4161a"/>
+		<property key="demos.imageFile" value="demos/lock-app-thread/lock-app-thread-led/BRD4161A/chip-efr32-lock-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lock Application over Thread for BRD4161A</description>
+	</demo>
+	<demo name="brd4166a.demo.lock_app_thread" label="Matter - Lock over Thread">
+		<property key="demos.blurb" value="Matter - Lock app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4166a"/>
+		<property key="demos.imageFile" value="demos/lock-app-thread/lock-app-thread-led/BRD4166A/chip-efr32-lock-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lock Application over Thread for BRD4166A</description>
+	</demo>
+	<demo name="brd4319a.demo.lock_app_thread" label="Matter - Lock over Thread">
+		<property key="demos.blurb" value="Matter - Lock app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4319a"/>
+		<property key="demos.imageFile" value="demos/lock-app-thread/lock-app-thread-led/BRD4319A/chip-efr32-lock-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lock Application over Thread for BRD4319A</description>
+	</demo>
+	<demo name="brd2703a.demo.lock_app_thread" label="Matter - Lock over Thread">
+		<property key="demos.blurb" value="Matter - Lock app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd2703a"/>
+		<property key="demos.imageFile" value="demos/lock-app-thread/lock-app-thread-led/BRD2703A/chip-efr32-lock-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lock Application over Thread for BRD2703A</description>
+	</demo>
+	<demo name="brd4164a.demo.lock_app_thread" label="Matter - Lock over Thread">
+		<property key="demos.blurb" value="Matter - Lock app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4164a"/>
+		<property key="demos.imageFile" value="demos/lock-app-thread/lock-app-thread-led/BRD4164A/chip-efr32-lock-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lock Application over Thread for BRD4164A</description>
+	</demo>
+	<demo name="brd4163a.demo.lock_app_thread" label="Matter - Lock over Thread">
+		<property key="demos.blurb" value="Matter - Lock app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4163a"/>
+		<property key="demos.imageFile" value="demos/lock-app-thread/lock-app-thread-led/BRD4163A/chip-efr32-lock-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lock Application over Thread for BRD4163A</description>
+	</demo>
+	<demo name="brd4186c.demo.lock_app_thread" label="Matter - Lock over Thread">
+		<property key="demos.blurb" value="Matter - Lock app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4186c"/>
+		<property key="demos.imageFile" value="demos/lock-app-thread/lock-app-thread-led/BRD4186C/chip-efr32-lock-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lock Application over Thread for BRD4186C</description>
+	</demo>
+	<demo name="brd4316a.demo.lock_app_thread" label="Matter - Lock over Thread">
+		<property key="demos.blurb" value="Matter - Lock app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4316a"/>
+		<property key="demos.imageFile" value="demos/lock-app-thread/lock-app-thread-led/BRD4316A/chip-efr32-lock-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lock Application over Thread for BRD4316A</description>
+	</demo>
+	<demo name="brd2601b.demo.lock_app_thread" label="Matter - Lock over Thread">
+		<property key="demos.blurb" value="Matter - Lock app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd2601b"/>
+		<property key="demos.imageFile" value="demos/lock-app-thread/lock-app-thread-led/BRD2601B/chip-efr32-lock-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lock Application over Thread for BRD2601B</description>
+	</demo>
+	<demo name="brd4317a.demo.lock_app_thread" label="Matter - Lock over Thread">
+		<property key="demos.blurb" value="Matter - Lock app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4317a"/>
+		<property key="demos.imageFile" value="demos/lock-app-thread/lock-app-thread-no-led/BRD4317A/chip-efr32-lock-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lock Application over Thread for BRD4317A</description>
+	</demo>
+	<demo name="brd4319a.demo.lock_app_thread" label="Matter - Lock over Thread">
+		<property key="demos.blurb" value="Matter - Lock app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4319a"/>
+		<property key="demos.imageFile" value="demos/lock-app-thread/lock-app-thread-no-led/BRD4319A/chip-efr32-lock-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lock Application over Thread for BRD4319A</description>
+	</demo>
+	<demo name="brd4316a.demo.lock_app_thread" label="Matter - Lock over Thread">
+		<property key="demos.blurb" value="Matter - Lock app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4316a"/>
+		<property key="demos.imageFile" value="demos/lock-app-thread/lock-app-thread-no-led/BRD4316A/chip-efr32-lock-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lock Application over Thread for BRD4316A</description>
+	</demo>
+	<demo name="brd4162a.demo.light_switch_app_thread" label="Matter - Light switch over Thread">
+		<property key="demos.blurb" value="Matter - Light switch app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4162a"/>
+		<property key="demos.imageFile" value="demos/light-switch-app-thread/light-switch-app-thread-led/BRD4162A/chip-efr32-light-switch-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Light switch Application over Thread for BRD4162A</description>
+	</demo>
+	<demo name="brd4187c.demo.light_switch_app_thread" label="Matter - Light switch over Thread">
+		<property key="demos.blurb" value="Matter - Light switch app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4187c"/>
+		<property key="demos.imageFile" value="demos/light-switch-app-thread/light-switch-app-thread-led/BRD4187C/chip-efr32-light-switch-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Light switch Application over Thread for BRD4187C</description>
+	</demo>
+	<demo name="brd4161a.demo.light_switch_app_thread" label="Matter - Light switch over Thread">
+		<property key="demos.blurb" value="Matter - Light switch app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4161a"/>
+		<property key="demos.imageFile" value="demos/light-switch-app-thread/light-switch-app-thread-led/BRD4161A/chip-efr32-light-switch-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Light switch Application over Thread for BRD4161A</description>
+	</demo>
+	<demo name="brd4166a.demo.light_switch_app_thread" label="Matter - Light switch over Thread">
+		<property key="demos.blurb" value="Matter - Light switch app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4166a"/>
+		<property key="demos.imageFile" value="demos/light-switch-app-thread/light-switch-app-thread-led/BRD4166A/chip-efr32-light-switch-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Light switch Application over Thread for BRD4166A</description>
+	</demo>
+	<demo name="brd2703a.demo.light_switch_app_thread" label="Matter - Light switch over Thread">
+		<property key="demos.blurb" value="Matter - Light switch app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd2703a"/>
+		<property key="demos.imageFile" value="demos/light-switch-app-thread/light-switch-app-thread-led/BRD2703A/chip-efr32-light-switch-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Light switch Application over Thread for BRD2703A</description>
+	</demo>
+	<demo name="brd4164a.demo.light_switch_app_thread" label="Matter - Light switch over Thread">
+		<property key="demos.blurb" value="Matter - Light switch app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4164a"/>
+		<property key="demos.imageFile" value="demos/light-switch-app-thread/light-switch-app-thread-led/BRD4164A/chip-efr32-light-switch-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Light switch Application over Thread for BRD4164A</description>
+	</demo>
+	<demo name="brd4163a.demo.light_switch_app_thread" label="Matter - Light switch over Thread">
+		<property key="demos.blurb" value="Matter - Light switch app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4163a"/>
+		<property key="demos.imageFile" value="demos/light-switch-app-thread/light-switch-app-thread-led/BRD4163A/chip-efr32-light-switch-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Light switch Application over Thread for BRD4163A</description>
+	</demo>
+	<demo name="brd4186c.demo.light_switch_app_thread" label="Matter - Light switch over Thread">
+		<property key="demos.blurb" value="Matter - Light switch app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4186c"/>
+		<property key="demos.imageFile" value="demos/light-switch-app-thread/light-switch-app-thread-led/BRD4186C/chip-efr32-light-switch-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Light switch Application over Thread for BRD4186C</description>
+	</demo>
+	<demo name="brd2601b.demo.light_switch_app_thread" label="Matter - Light switch over Thread">
+		<property key="demos.blurb" value="Matter - Light switch app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd2601b"/>
+		<property key="demos.imageFile" value="demos/light-switch-app-thread/light-switch-app-thread-led/BRD2601B/chip-efr32-light-switch-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Light switch Application over Thread for BRD2601B</description>
+	</demo>
+	<demo name="brd4317a.demo.light_switch_app_thread" label="Matter - Light switch over Thread">
+		<property key="demos.blurb" value="Matter - Light switch app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4317a"/>
+		<property key="demos.imageFile" value="demos/light-switch-app-thread/light-switch-app-thread-no-led/BRD4317A/chip-efr32-light-switch-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Light switch Application over Thread for BRD4317A</description>
+	</demo>
+	<demo name="brd4319a.demo.light_switch_app_thread" label="Matter - Light switch over Thread">
+		<property key="demos.blurb" value="Matter - Light switch app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4319a"/>
+		<property key="demos.imageFile" value="demos/light-switch-app-thread/light-switch-app-thread-no-led/BRD4319A/chip-efr32-light-switch-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Light switch Application over Thread for BRD4319A</description>
+	</demo>
+	<demo name="brd4316a.demo.light_switch_app_thread" label="Matter - Light switch over Thread">
+		<property key="demos.blurb" value="Matter - Light switch app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4316a"/>
+		<property key="demos.imageFile" value="demos/light-switch-app-thread/light-switch-app-thread-no-led/BRD4316A/chip-efr32-light-switch-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Light switch Application over Thread for BRD4316A</description>
+	</demo>
+	<demo name="brd4161a.demo.window_app_wifi_rs9116" label="Matter - Window over Wi-Fi">
+		<property key="demos.blurb" value="Matter - Window app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4161a"/>
+		<property key="demos.imageFile" value="demos/window-app-wifi/rs9116/BRD4161A/chip-efr32-window-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-wifi/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="EXPERIMENTAL"/>
+		<description>This is a Matter Window Application for BRD4161A to be used with RS9116 Wi-Fi Evaluation kit</description>
+	</demo>
+	<demo name="brd4186c.demo.window_app_wifi_rs9116" label="Matter - Window over Wi-Fi">
+		<property key="demos.blurb" value="Matter - Window app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4186c"/>
+		<property key="demos.imageFile" value="demos/window-app-wifi/rs9116/BRD4186C/chip-efr32-window-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-wifi/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="EXPERIMENTAL"/>
+		<description>This is a Matter Window Application for BRD4186C to be used with RS9116 Wi-Fi Evaluation kit</description>
+	</demo>
+	<demo name="brd4186c.demo.light_switch_app_wifi_rs9116" label="Matter - Light switch over Wi-Fi">
+		<property key="demos.blurb" value="Matter - Light switch app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4186c"/>
+		<property key="demos.imageFile" value="demos/light-switch-app-wifi/rs9116/BRD4186C/chip-efr32-light-switch-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-wifi/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="EXPERIMENTAL"/>
+		<description>This is a Matter Light switch Application for BRD4186C to be used with RS9116 Wi-Fi Evaluation kit</description>
+	</demo>
+	<demo name="brd4161a.demo.light_switch_app_wifi_rs9116" label="Matter - Light switch over Wi-Fi">
+		<property key="demos.blurb" value="Matter - Light switch app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4161a"/>
+		<property key="demos.imageFile" value="demos/light-switch-app-wifi/rs9116/BRD4161A/chip-efr32-light-switch-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-wifi/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="EXPERIMENTAL"/>
+		<description>This is a Matter Light switch Application for BRD4161A to be used with RS9116 Wi-Fi Evaluation kit</description>
+	</demo>
+	<demo name="brd4186c.demo.thermostat_app_wifi_rs9116" label="Matter - Thermostat over Wi-Fi">
+		<property key="demos.blurb" value="Matter - Thermostat app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4186c"/>
+		<property key="demos.imageFile" value="demos/thermostat-app-wifi/rs9116/BRD4186C/chip-efr32-thermostat-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-wifi/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="EXPERIMENTAL"/>
+		<description>This is a Matter Thermostat Application for BRD4186C to be used with RS9116 Wi-Fi Evaluation kit</description>
+	</demo>
+	<demo name="brd4161a.demo.thermostat_app_wifi_rs9116" label="Matter - Thermostat over Wi-Fi">
+		<property key="demos.blurb" value="Matter - Thermostat app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4161a"/>
+		<property key="demos.imageFile" value="demos/thermostat-app-wifi/rs9116/BRD4161A/chip-efr32-thermostat-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-wifi/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="EXPERIMENTAL"/>
+		<description>This is a Matter Thermostat Application for BRD4161A to be used with RS9116 Wi-Fi Evaluation kit</description>
+	</demo>
+	<demo name="brd4186c.demo.lock_app_wifi_rs9116" label="Matter - Lock over Wi-Fi">
+		<property key="demos.blurb" value="Matter - Lock app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4186c"/>
+		<property key="demos.imageFile" value="demos/lock-app-wifi/rs9116/BRD4186C/chip-efr32-lock-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-wifi/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="EXPERIMENTAL"/>
+		<description>This is a Matter Lock Application for BRD4186C to be used with RS9116 Wi-Fi Evaluation kit</description>
+	</demo>
+	<demo name="brd4161a.demo.lock_app_wifi_rs9116" label="Matter - Lock over Wi-Fi">
+		<property key="demos.blurb" value="Matter - Lock app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4161a"/>
+		<property key="demos.imageFile" value="demos/lock-app-wifi/rs9116/BRD4161A/chip-efr32-lock-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-wifi/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="EXPERIMENTAL"/>
+		<description>This is a Matter Lock Application for BRD4161A to be used with RS9116 Wi-Fi Evaluation kit</description>
+	</demo>
+	<demo name="brd4186c.demo.lighting_app_wifi_rs9116" label="Matter - Lighting over Wi-Fi">
+		<property key="demos.blurb" value="Matter - Lighting app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4186c"/>
+		<property key="demos.imageFile" value="demos/lighting-app-wifi/rs9116/BRD4186C/chip-efr32-lighting-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-wifi/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="EXPERIMENTAL"/>
+		<description>This is a Matter Lighting Application for BRD4186C to be used with RS9116 Wi-Fi Evaluation kit</description>
+	</demo>
+	<demo name="brd4161a.demo.lighting_app_wifi_rs9116" label="Matter - Lighting over Wi-Fi">
+		<property key="demos.blurb" value="Matter - Lighting app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4161a"/>
+		<property key="demos.imageFile" value="demos/lighting-app-wifi/rs9116/BRD4161A/chip-efr32-lighting-example.s37"/>
+		<property key="core.readmeFiles" value="https://docs.silabs.com/matter/1.0.1/matter-wifi/demo-overview"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="EXPERIMENTAL"/>
+		<description>This is a Matter Lighting Application for BRD4161A to be used with RS9116 Wi-Fi Evaluation kit</description>
+	</demo>
+</demos>

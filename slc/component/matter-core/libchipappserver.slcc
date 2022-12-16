@@ -5,8 +5,6 @@ define:
 -   name: CHIP_HAVE_CONFIG_H
     value: '1'
 -   name: HARD_FAULT_LOG_ENABLE
--   name: OTA_PERIODIC_TIMEOUT
-    value: '86400'
 description: libchipappserver
 id: libchipappserver
 include:
@@ -49,3 +47,5 @@ source:
 -   path: src/app/server/EchoHandler.cpp
 -   path: src/app/server/OnboardingCodesUtil.cpp
 -   path: src/app/server/Server.cpp
+ui_hints:
+ visibility: never

@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Keypad Input Server Cluster
 id: matter_keypad_input
-label: TODO Cluster
+label: Keypad Input Server Cluster
 quality: production
 provides:
-   - name: "matter_keypad_input"
+  - name: matter_keypad_input
 source:
   - path: src/app/clusters/keypad-input-server/keypad-input-server.cpp
 include:

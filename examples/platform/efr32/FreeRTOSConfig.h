@@ -106,6 +106,7 @@ extern "C" {
 #include <CHIPProjectConfig.h>
 
 #include <stdint.h>
+#include <stdio.h>                  // MATTER_GSDK_INTEGRATION
 
 #include "RTE_Components.h"
 #include CMSIS_device_header

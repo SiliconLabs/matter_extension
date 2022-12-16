@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Ias Zone Server Cluster
 id: matter_ias_zone
-label: TODO Cluster
+label: Ias Zone Server Cluster
 quality: production
 provides:
-   - name: "matter_ias_zone"
+  - name: matter_ias_zone
 source:
   - path: src/app/clusters/ias-zone-server/ias-zone-server.cpp
 include:

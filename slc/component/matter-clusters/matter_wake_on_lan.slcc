@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Wake On Lan Server Cluster
 id: matter_wake_on_lan
-label: TODO Cluster
+label: Wake On Lan Server Cluster
 quality: production
 provides:
-   - name: "matter_wake_on_lan"
+  - name: matter_wake_on_lan
 source:
   - path: src/app/clusters/wake-on-lan-server/wake-on-lan-server.cpp
 include:

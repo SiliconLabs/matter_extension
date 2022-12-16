@@ -3,8 +3,6 @@ define:
 -   name: CHIP_HAVE_CONFIG_H
     value: '1'
 -   name: HARD_FAULT_LOG_ENABLE
--   name: OTA_PERIODIC_TIMEOUT
-    value: '86400'
 description: pw_protobuf
 id: pw_protobuf
 include:
@@ -47,3 +45,5 @@ source:
 -   path: third_party/pigweed/repo/pw_protobuf/map_utils.cc
 -   path: third_party/pigweed/repo/pw_protobuf/message.cc
 -   path: third_party/pigweed/repo/pw_protobuf/stream_decoder.cc
+ui_hints:
+ visibility: never

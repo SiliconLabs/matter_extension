@@ -19,3 +19,5 @@ source:
 -   path: third_party/pigweed/repo/pw_tokenizer/encode_args.cc
 -   path: third_party/pigweed/repo/pw_tokenizer/hash.cc
 -   path: third_party/pigweed/repo/pw_tokenizer/tokenize.cc
+ui_hints:
+ visibility: never

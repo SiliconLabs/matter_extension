@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Network Commissioning Cluster
 id: matter_network_commissioning
-label: TODO Cluster
+label: Network Commissioning Cluster
 quality: production
 provides:
-   - name: "matter_network_commissioning"
+  - name: matter_network_commissioning
 source:
   - path: src/app/clusters/network-commissioning/network-commissioning.cpp
 include:

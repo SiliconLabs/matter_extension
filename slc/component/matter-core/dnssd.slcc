@@ -7,6 +7,15 @@ define:
 -   name: HARD_FAULT_LOG_ENABLE
 -   name: OTA_PERIODIC_TIMEOUT
     value: '86400'
+-   name: CHIP_MINMDNS_USE_EPHEMERAL_UNICAST_PORT
+    value: 0
+    condition: [matter_lwip]
+-   name: CHIP_MINMDNS_HIGH_VERBOSITY
+    value: 0
+    condition: [matter_lwip]
+-   name: CHIP_MINMDNS_DEFAULT_POLICY
+    value: 1
+    condition: [matter_lwip]
 description: dnssd
 id: dnssd
 include:
@@ -36,6 +45,8 @@ include:
 -   path: third_party/pigweed/repo/pw_status/public
 -   path: third_party/pigweed/repo/pw_stream/public
 -   path: zzz_generated/app-common
+-   path: src/lib/dnssd/minimal_mdns
+    condition: [matter_lwip]
 label: dnssd
 package: Matter
 provides:
@@ -43,5 +54,46 @@ provides:
 quality: production
 source:
 -   path: src/lib/dnssd/Discovery_ImplPlatform.cpp
+    condition: [matter_thread]
 -   path: src/lib/dnssd/ServiceNaming.cpp
 -   path: src/lib/dnssd/TxtFields.cpp
+-   path: src/lib/dnssd/ActiveResolveAttempts.cpp
+    condition: [matter_lwip]
+-   path: src/lib/dnssd/Advertiser_ImplMinimalMdns.cpp
+    condition: [matter_lwip]
+-   path: src/lib/dnssd/IncrementalResolve.cpp
+    condition: [matter_lwip]
+-   path: src/lib/dnssd/MinimalMdnsServer.cpp
+    condition: [matter_lwip]
+-   path: src/lib/dnssd/Resolver_ImplMinimalMdns.cpp
+    condition: [matter_lwip]
+-   path: src/lib/dnssd/minimal_mdns/AddressPolicy.cpp
+    condition: [matter_lwip]
+-   path: src/lib/dnssd/minimal_mdns/AddressPolicy.h
+    condition: [matter_lwip]
+-   path: src/lib/dnssd/minimal_mdns/AddressPolicy_DefaultImpl.cpp
+    condition: [matter_lwip]
+-   path: src/lib/dnssd/minimal_mdns/Parser.cpp
+    condition: [matter_lwip]
+-   path: src/lib/dnssd/minimal_mdns/RecordData.cpp
+    condition: [matter_lwip]
+-   path: src/lib/dnssd/minimal_mdns/ResponseSender.cpp
+    condition: [matter_lwip]
+-   path: src/lib/dnssd/minimal_mdns/Server.cpp
+    condition: [matter_lwip]
+-   path: src/lib/dnssd/minimal_mdns/core/QName.cpp
+    condition: [matter_lwip]
+-   path: src/lib/dnssd/minimal_mdns/core/QNameString.cpp
+    condition: [matter_lwip]
+-   path: src/lib/dnssd/minimal_mdns/core/RecordWriter.cpp
+    condition: [matter_lwip]
+-   path: src/lib/dnssd/minimal_mdns/records/IP.cpp
+    condition: [matter_lwip]
+-   path: src/lib/dnssd/minimal_mdns/records/ResourceRecord.cpp
+    condition: [matter_lwip]
+-   path: src/lib/dnssd/minimal_mdns/responders/IP.cpp
+    condition: [matter_lwip]
+-   path: src/lib/dnssd/minimal_mdns/responders/QueryResponder.cpp
+    condition: [matter_lwip]
+ui_hints:
+ visibility: never

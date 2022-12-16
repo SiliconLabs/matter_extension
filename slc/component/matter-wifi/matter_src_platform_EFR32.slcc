@@ -1,0 +1,45 @@
+id: matter_src_platform_efr32
+package: Matter
+description: >
+  src platform EFR32 components
+label: src platform efr32
+category: wifi|platform
+quality: production
+provides:
+  - name: matter_src_platform_efr32
+  - name: wifi_sdk_efr32
+requires:
+  - name: segger_rtt
+  - name: matter_lwip  
+include:
+  - path: src/include/platform
+  - path: src/lwip/freertos
+  - path: src/platform/EFR32
+  - path: src/platform/EFR32/wifi
+source:
+-   path: src/platform/EFR32/BLEManagerImpl.cpp
+-   path: src/platform/EFR32/CHIPCryptoPALPsaEfr32.cpp
+-   path: src/platform/EFR32/CHIPMem-Platform.cpp
+-   path: src/platform/EFR32/ConfigurationManagerImpl.cpp
+#-   path: src/platform/EFR32/ConnectivityManagerImpl.cpp
+-   path: src/platform/EFR32/ConnectivityManagerImpl_WIFI.cpp
+-   path: src/platform/EFR32/DeviceNetworkProvisioningDelegateImpl.cpp
+-   path: src/platform/EFR32/DiagnosticDataProviderImpl.cpp
+-   path: src/platform/EFR32/EFR32Config.cpp
+-   path: src/platform/EFR32/Efr32PsaOpaqueKeypair.cpp
+-   path: src/platform/EFR32/Efr32PsaOperationalKeystore.cpp
+#-   path: src/platform/EFR32/freertos_bluetooth.c
+#-   path: src/platform/EFR32/gatt_db.c
+-   path: src/platform/EFR32/KeyValueStoreManagerImpl.cpp
+-   path: src/platform/EFR32/Logging.cpp
+-   path: src/platform/EFR32/NetworkCommissioningWiFiDriver.cpp
+-   path: src/platform/EFR32/OTAImageProcessorImpl.cpp
+-   path: src/platform/EFR32/PlatformManagerImpl.cpp
+#-   path: src/platform/EFR32/ThreadStackManagerImpl.cpp  
+-   path: src/platform/EFR32/wifi/dhcp_client.cpp
+-   path: src/platform/EFR32/wifi/ethernetif.cpp
+-   path: src/platform/EFR32/wifi/lwip_netif.cpp
+-   path: src/platform/EFR32/wifi/wfx_notify.cpp
+#define:
+#  - name: INET_UDP_END_POINT_IMPL_CONFIG_FILE
+#    value: "<inet/UDPEndPointImplLwIP.h>"

@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Groups Client Cluster
 id: matter_groups_client
-label: TODO Cluster
+label: Groups Client Cluster
 quality: production
 provides:
-   - name: "matter_groups_client"
+  - name: matter_groups_client
 source:
   - path: src/app/clusters/groups-client/groups-client.cpp
 template_contribution:

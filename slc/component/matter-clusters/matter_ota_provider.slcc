@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Ota Provider Cluster
 id: matter_ota_provider
-label: TODO Cluster
+label: OTA Provider Cluster
 quality: production
 provides:
-   - name: "matter_ota_provider"
+  - name: matter_ota_provider
 source:
   - path: src/app/clusters/ota-provider/ota-provider.cpp
 include:

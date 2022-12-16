@@ -1,0 +1,95 @@
+id: matter_lwip
+package: Matter
+description: >
+  matter lwip for wifi
+label: lwip
+category: wifi|lwip
+quality: production
+provides:
+  - name: matter_lwip
+  - name: lwip
+include:
+  - path: src/lwip/efr32
+  - path: src/lwip/freertos/arch
+  - path: third_party/lwip/repo/lwip/src/include
+  - path: third_party/lwip/repo/lwip/src/include/lwip
+  - path: third_party/lwip/repo/lwip/src/include/lwip/apps
+  - path: third_party/lwip/repo/lwip/src/include/lwip/priv
+  - path: third_party/lwip/repo/lwip/src/include/lwip/prot
+  - path: third_party/lwip/repo/lwip/src/include/netif
+  - path: third_party/lwip/repo/lwip/src/include/netif/ppp
+  - path: third_party/lwip/repo/lwip/src/include/netif/ppp/polarssl
+  - path: third_party/lwip/repo/lwip/src/include/posix
+  - path: third_party/lwip/repo/lwip/src/include/posix/net
+  - path: third_party/lwip/repo/lwip/src/include/posix/sys
+source:
+  - path: src/lwip/freertos/sys_arch.c
+  - path: third_party/lwip/repo/lwip/src
+  - path: third_party/lwip/repo/lwip/src/api/tcpip.c
+  - path: third_party/lwip/repo/lwip/src/core/def.c
+  - path: third_party/lwip/repo/lwip/src/core/dns.c
+  - path: third_party/lwip/repo/lwip/src/core/inet_chksum.c
+  - path: third_party/lwip/repo/lwip/src/core/init.c
+  - path: third_party/lwip/repo/lwip/src/core/ip.c
+  - path: third_party/lwip/repo/lwip/src/core/mem.c
+  - path: third_party/lwip/repo/lwip/src/core/memp.c
+  - path: third_party/lwip/repo/lwip/src/core/netif.c
+  - path: third_party/lwip/repo/lwip/src/core/pbuf.c
+  - path: third_party/lwip/repo/lwip/src/core/raw.c
+  - path: third_party/lwip/repo/lwip/src/core/stats.c
+  - path: third_party/lwip/repo/lwip/src/core/sys.c
+  - path: third_party/lwip/repo/lwip/src/core/tcp.c
+  - path: third_party/lwip/repo/lwip/src/core/tcp_in.c
+  - path: third_party/lwip/repo/lwip/src/core/tcp_out.c
+  - path: third_party/lwip/repo/lwip/src/core/timeouts.c
+  - path: third_party/lwip/repo/lwip/src/core/udp.c
+  - path: third_party/lwip/repo/lwip/src/core/ipv4/autoip.c
+  - path: third_party/lwip/repo/lwip/src/core/ipv4/dhcp.c
+  - path: third_party/lwip/repo/lwip/src/core/ipv4/etharp.c
+  - path: third_party/lwip/repo/lwip/src/core/ipv4/icmp.c
+  - path: third_party/lwip/repo/lwip/src/core/ipv4/igmp.c
+  - path: third_party/lwip/repo/lwip/src/core/ipv4/ip4.c
+  - path: third_party/lwip/repo/lwip/src/core/ipv4/ip4_addr.c
+  - path: third_party/lwip/repo/lwip/src/core/ipv4/ip4_frag.c
+  - path: third_party/lwip/repo/lwip/src/core/ipv6/dhcp6.c
+  - path: third_party/lwip/repo/lwip/src/core/ipv6/ethip6.c
+  - path: third_party/lwip/repo/lwip/src/core/ipv6/icmp6.c
+  - path: third_party/lwip/repo/lwip/src/core/ipv6/inet6.c
+  - path: third_party/lwip/repo/lwip/src/core/ipv6/ip6.c
+  - path: third_party/lwip/repo/lwip/src/core/ipv6/ip6_addr.c
+  - path: third_party/lwip/repo/lwip/src/core/ipv6/ip6_frag.c
+  - path: third_party/lwip/repo/lwip/src/core/ipv6/ip6_route_table.c
+  - path: third_party/lwip/repo/lwip/src/core/ipv6/mld6.c
+  - path: third_party/lwip/repo/lwip/src/core/ipv6/nd6.c
+  - path: third_party/lwip/repo/lwip/src/api/api_lib.c
+  - path: third_party/lwip/repo/lwip/src/api/api_msg.c
+  - path: third_party/lwip/repo/lwip/src/api/err.c
+  - path: third_party/lwip/repo/lwip/src/api/if.c
+  - path: third_party/lwip/repo/lwip/src/api/netbuf.c
+  - path: third_party/lwip/repo/lwip/src/api/netdb.c
+  - path: third_party/lwip/repo/lwip/src/api/netifapi.c
+  - path: third_party/lwip/repo/lwip/src/api/sockets.c
+  - path: third_party/lwip/repo/lwip/src/api/tcpip.c
+  - path: third_party/lwip/repo/lwip/src/netif/ethernet.c
+  - path: third_party/silabs/gecko_sdk/platform/common/errno/inc
+define:
+  - name: LWIP_IPV6
+    value: 1
+  - name: LWIP_PROVIDE_ERRNO
+    value: 1
+  - name: LWIP_NETIF_API
+    value: 1
+  - name: LWIP_IPV4
+    value: 1
+  - name: LWIP_IPV6
+    value: 1
+  - name: LWIP_ARP
+    value: 1
+  - name: LWIP_ICMP
+    value: 1
+  - name: LWIP_IGMP
+    value: 1
+  - name: LWIP_DHCP
+    value: 1
+  - name: LWIP_DNS
+    value: 0  

@@ -1,0 +1,27 @@
+id: example_platform_efr32_wf200
+label: example_platform_efr32_wf200
+package: Matter
+description: >
+  WiSeConnect Wi-Fi and BLE extension for the Gecko SDK
+category: Wifi
+provides:
+  - name: example_platform_efr32_wf200
+requires:
+   - name: wfx_fmac_driver
+   - name: spidrv_core
+   - name: spidrv_usart
+   - name: spidrv
+   - name: freertos
+source:
+  - path: examples/platform/efr32/wf200/host_if.cpp
+  - path: examples/platform/efr32/wf200/efr_spi.c
+  - path: examples/platform/efr32/wf200/sl_wfx_crypto.c
+  - path: examples/platform/efr32/wf200/sl_wfx_securelink_task.c
+  - path: examples/platform/efr32/wf200/sl_wfx_task.c
+  - path: examples/platform/efr32/wf200/wf200_init.c
+include:
+  - path: examples/platform/efr32/wf200/sl_wfx_board.h
+  - path: examples/platform/efr32/wf200/sl_wfx_configuration.h
+  - path: examples/platform/efr32/wf200/sl_wfx_host.h
+  - path: examples/platform/efr32/wf200/sl_wfx_task.h
+  - path: slc/sample-app/lock-app/brd4161a/config

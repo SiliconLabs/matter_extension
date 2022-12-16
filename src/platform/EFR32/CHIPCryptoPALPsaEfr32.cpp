@@ -98,9 +98,7 @@ static void _log_mbedTLS_error(int error_code)
 {
     if (error_code != 0)
     {
-// MATTER_GSDK_TODO
-// #if defined(MBEDTLS_ERROR_C)
-#if 0
+#if defined(MBEDTLS_ERROR_C)
         char error_str[MAX_ERROR_STR_LEN];
         mbedtls_strerror(error_code, error_str, sizeof(error_str));
         ChipLogError(Crypto, "mbedTLS error: %s", error_str);
@@ -314,8 +312,6 @@ static_assert(kMAX_Hash_SHA256_Context_Size >= sizeof(psa_hash_operation_t),
 
 static inline psa_hash_operation_t * to_inner_hash_sha256_context(HashSHA256OpaqueContext * context)
 {
-    // MATTER_GSDK_TODO temporary to allow compilation, use  reinterpret_cast<>
-    // return SafePointerCast<psa_hash_operation_t *>(context);
     return reinterpret_cast<psa_hash_operation_t *>(context);
 }
 

@@ -1,9 +1,8 @@
 id: matter_thread_mtd
 label: Thread Network Layer (MTD)
-description: >
-  Add Thread network layer for minimal thread device.
+description: Adds Thread network layer for minimal thread device.
 package: "Matter"
-category: "Matter|Network"
+category: "Matter|Platform"
 quality: production
 requires:
   - name: matter_thread

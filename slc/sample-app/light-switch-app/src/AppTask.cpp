@@ -162,7 +162,6 @@ CHIP_ERROR AppTask::Init()
         appError(err);
     }
 
-    // Configure Bindings - TODO ERROR PROCESSING
     err = InitBindingHandler();
     if (err != CHIP_NO_ERROR)
     {

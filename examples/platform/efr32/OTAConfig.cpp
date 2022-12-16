@@ -21,6 +21,8 @@
 #include "application_properties.h"
 #include <app/server/Server.h>
 
+#include "sl_matter_ota_config.h" // MATTER_GSDK_INTEGRATION
+
 #if defined(SL_COMPONENT_CATALOG_PRESENT)
 #include "sl_component_catalog.h"
 #endif

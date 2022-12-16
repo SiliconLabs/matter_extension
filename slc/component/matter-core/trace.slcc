@@ -10,3 +10,5 @@ provides:
 quality: production
 source:
 -   path: src/trace/trace.cpp
+ui_hints:
+ visibility: never

@@ -17,3 +17,5 @@ provides:
 quality: production
 source:
 -   path: third_party/pigweed/repo/pw_bytes/byte_builder.cc
+ui_hints:
+ visibility: never

@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Fixed Label Server Cluster
 id: matter_fixed_label
-label: TODO Cluster
+label: Fixed Label Server Cluster
 quality: production
 provides:
-   - name: "matter_fixed_label"
+  - name: matter_fixed_label
 source:
   - path: src/app/clusters/fixed-label-server/fixed-label-server.cpp
 template_contribution:

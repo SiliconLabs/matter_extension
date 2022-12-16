@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Occupancy Sensor Server Cluster
 id: matter_occupancy_sensor
-label: TODO Cluster
+label: Occupancy Sensor Server Cluster
 quality: production
 provides:
-   - name: "matter_occupancy_sensor"
+  - name: matter_occupancy_sensor
 source:
   - path: src/app/clusters/occupancy-sensor-server/occupancy-sensor-server.cpp
 include:

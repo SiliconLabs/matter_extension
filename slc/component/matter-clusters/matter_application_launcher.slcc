@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Application Launcher Server Cluster
 id: matter_application_launcher
-label: TODO Cluster
+label: Application Launcher Server Cluster
 quality: production
 provides:
-   - name: "matter_application_launcher"
+  - name: matter_application_launcher
 source:
   - path: src/app/clusters/application-launcher-server/application-launcher-server.cpp
 include:

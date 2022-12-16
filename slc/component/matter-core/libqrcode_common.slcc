@@ -11,3 +11,5 @@ provides:
 quality: production
 source:
 -   path: examples/common/QRCode/repo/c/qrcodegen.c
+ui_hints:
+ visibility: never

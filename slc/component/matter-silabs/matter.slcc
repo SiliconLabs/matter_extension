@@ -1,7 +1,6 @@
 id: matter
 label: Matter
-description: >
-  Matter core.
+description: Bundles all necessary core Matter components
 package: "Matter"
 category: "Matter"
 quality: production
@@ -49,7 +48,6 @@ requires:
   - name: cpp_support
   - name: sl_system
   - name: freertos
-  - name: power_manager
   - name: sleeptimer
   - name: dmadrv
   - name: gpiointerrupt
@@ -90,10 +88,6 @@ requires:
   - name: matter_libinetlayer
   - name: matter_libmatterdeviceinfoproviderexample
   - name: matter_libmessaginglayer
-  # - name: matter_libopenthread-cli-ftd    --- use OT from GSDK instead
-  # - name: matter_libopenthread-ftd
-  # - name: matter_libopenthread-platform-utils
-  # - name: matter_libqrcode_common         --- use matter_qr_code wrapper instead
   - name: matter_librawtransport
   - name: matter_libsecurechannel
   - name: matter_libsetuppayload

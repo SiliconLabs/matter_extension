@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Scenes Client Cluster
 id: matter_scenes_client
-label: TODO Cluster
+label: Scenes Client Cluster
 quality: production
 provides:
-   - name: "matter_scenes_client"
+  - name: matter_scenes_client
 source:
   - path: src/app/clusters/scenes-client/scenes-client.cpp
 include:

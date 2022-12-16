@@ -1,9 +1,8 @@
 id: matter_qr_code
 label: QR Code
-description: >
-  Show QR Code
+description: Enables QR Code
 package: "Matter"
-category: "Matter|Example"
+category: "Matter|Platform"
 quality: production
 requires:
   - name: matter_lcd

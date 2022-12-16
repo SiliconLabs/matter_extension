@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Access Control Server Cluster
 id: matter_access_control
-label: TODO Cluster
+label: Access Control Server Cluster
 quality: production
 provides:
-   - name: "matter_access_control"
+  - name: matter_access_control
 source:
   - path: src/app/clusters/access-control-server/access-control-server.cpp
 template_contribution:

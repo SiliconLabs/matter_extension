@@ -60,6 +60,10 @@ class BLEManagerImpl final : public BLEManager, private BleLayer, private BlePla
     void _OnPlatformEvent(const ChipDeviceEvent * event);
     BleLayer * _GetBleLayer(void);
 
+#if CHIP_ENABLE_ADDITIONAL_DATA_ADVERTISING
+    void HandleC3ReadRequest(const sl_bt_msg_t * evt);
+#endif
+
     // ===== Members that implement virtual methods on BlePlatformDelegate.
 
     bool SubscribeCharacteristic(BLE_CONNECTION_OBJECT conId, const Ble::ChipBleUUID * svcId,
@@ -125,12 +129,18 @@ class BLEManagerImpl final : public BLEManager, private BleLayer, private BlePla
     char mDeviceName[kMaxDeviceNameLength + 1];
     // The advertising set handle allocated from Bluetooth stack.
     uint8_t advertising_set_handle = 0xff;
+#if CHIP_ENABLE_ADDITIONAL_DATA_ADVERTISING
+    PacketBufferHandle c3AdditionalDataBufferHandle;
+#endif
 
     CHIP_ERROR MapBLEError(int bleErr);
     void DriveBLEState(void);
     CHIP_ERROR ConfigureAdvertisingData(void);
     CHIP_ERROR StartAdvertising(void);
     CHIP_ERROR StopAdvertising(void);
+#if CHIP_ENABLE_ADDITIONAL_DATA_ADVERTISING
+    CHIP_ERROR EncodeAdditionalDataTlv();
+#endif
     void UpdateMtu(const sl_bt_msg_t * evt);
     void HandleBootEvent(void);
     void HandleConnectEvent(const sl_bt_msg_t * evt);

@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Application Basic Server Cluster
 id: matter_application_basic
-label: TODO Cluster
+label: Application Basic Server Cluster
 quality: production
 provides:
-   - name: "matter_application_basic"
+  - name: matter_application_basic
 source:
   - path: src/app/clusters/application-basic-server/application-basic-server.cpp
 include:

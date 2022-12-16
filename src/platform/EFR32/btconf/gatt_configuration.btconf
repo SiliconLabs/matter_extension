@@ -83,14 +83,5 @@
         <indicate authenticated="false" bonded="false" encrypted="false"/>
       </properties>
     </characteristic>
-    
-    <!--CHIPoBLEChar_C3-->
-    <characteristic const="false" id="CHIPoBLEChar_C3" name="CHIPoBLEChar_C3" sourceId="custom.type" uuid="64630238-8772-45F2-B87D-748A83218F04">
-      <informativeText>Custom characteristic (Additional commissioning- related data) </informativeText>
-      <value length="0" type="user" variable_length="false"/>
-      <properties>
-        <read authenticated="false" bonded="false" encrypted="false"/>
-      </properties>
-    </characteristic>
   </service>
 </gatt>

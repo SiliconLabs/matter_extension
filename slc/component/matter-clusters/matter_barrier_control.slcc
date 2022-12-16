@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Barrier Control Server Cluster
 id: matter_barrier_control
-label: TODO Cluster
+label: Barrier Control Server Cluster
 quality: production
 provides:
-   - name: "matter_barrier_control"
+  - name: matter_barrier_control
 source:
   - path: src/app/clusters/barrier-control-server/barrier-control-server.cpp
 include:

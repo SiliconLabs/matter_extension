@@ -3,8 +3,6 @@ define:
 -   name: CHIP_HAVE_CONFIG_H
     value: '1'
 -   name: HARD_FAULT_LOG_ENABLE
--   name: OTA_PERIODIC_TIMEOUT
-    value: '86400'
 description: im_status
 id: im_status
 include:
@@ -23,3 +21,5 @@ provides:
 quality: production
 source:
 -   path: src/protocols/interaction_model/StatusCode.cpp
+ui_hints:
+ visibility: never

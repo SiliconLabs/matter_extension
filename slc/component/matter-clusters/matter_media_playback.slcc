@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Media Playback Server Cluster
 id: matter_media_playback
-label: TODO Cluster
+label: Media Playback Server Cluster
 quality: production
 provides:
-   - name: "matter_media_playback"
+  - name: matter_media_playback
 source:
   - path: src/app/clusters/media-playback-server/media-playback-server.cpp
 include:

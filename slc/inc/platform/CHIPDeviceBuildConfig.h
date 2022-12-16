@@ -12,10 +12,8 @@
 // inferred options
 #include "sl_component_catalog.h"
 
-// TODO: infer from wifi stack component
 #define SL_MATTER_ENABLE_WIFI               0
 
-// TODO: infer from OTA requestor component (split from generated matter efr32 platform component)
 #define SL_MATTER_ENABLE_OTA                1
 
 #if defined(SL_CATALOG_OPENTHREAD_STACK_PRESENT)
@@ -32,7 +30,6 @@
 #define OPENTHREAD_CONFIG_ENABLE_TOBLE          0
 #define CHIP_STACK_LOCK_TRACKING_ENABLED        (SL_MATTER_STACK_LOCK_TRACKING_MODE != SL_MATTER_STACK_LOCK_TRACKING_NONE)
 #define CHIP_STACK_LOCK_TRACKING_ERROR_FATAL    (SL_MATTER_STACK_LOCK_TRACKING_MODE == SL_MATTER_STACK_LOCK_TRACKING_FATAL)
-#define CHIP_ENABLE_ADDITIONAL_DATA_ADVERTISING 0 // todo? configurable on nrf and esp32
 #define CHIP_DEVICE_CONFIG_RUN_AS_ROOT          1
 #define CHIP_DISABLE_PLATFORM_KVS               0
 #define CHIP_DEVICE_CONFIG_ENABLE_OTA_REQUESTOR SL_MATTER_ENABLE_OTA

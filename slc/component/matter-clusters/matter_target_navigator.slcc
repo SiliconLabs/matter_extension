@@ -1,11 +1,11 @@
 
 category: Matter|Clusters
-description: Implementation of TODO
+description: Implementation of the Target Navigator Server Cluster
 id: matter_target_navigator
-label: TODO Cluster
+label: Target Navigator Server Cluster
 quality: production
 provides:
-   - name: "matter_target_navigator"
+  - name: matter_target_navigator
 source:
   - path: src/app/clusters/target-navigator-server/target-navigator-server.cpp
 include:

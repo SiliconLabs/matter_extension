@@ -1,0 +1,18 @@
+id: matter_drivers_series_2
+label: Matter UART and clock selection for Series 2 boards
+description: >
+  Matter UART and clock selection for Series 2 boards
+package: "Matter"
+category: "Matter|Platform"
+quality: production
+provides:
+  - name: matter_drivers_series_2
+recommends:
+  - id: uartdrv_eusart
+    instance: [vcom]
+
+# Crypto operations on Series 2 need these clock settings
+requires:
+  - name: device_init_dpll
+    condition:
+     - device_series_2
