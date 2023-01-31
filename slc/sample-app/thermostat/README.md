@@ -2,7 +2,7 @@
 
 The EFR32 Thermostat example provides a baseline demonstration of a thermostat
 device, built using Matter and the Silicon Labs Gecko SDK. It can be controlled
-by a Chip controller over an Openthread or Wifi network.
+by a Chip controller over an Openthread network.
 
 The EFR32 device can be commissioned over Bluetooth Low Energy where the device
 and the Chip controller will exchange security information with the Rendez-vous
@@ -18,9 +18,8 @@ workings of Matter as well as a template for creating real products based on the
 Silicon Labs platform.
 
 For more general information on running matter applications and pre-requisites please look at online 
-documentation for Matter available on docs.silabs.com. Follow Wi-Fi or Thread demo instructions depending on the example you are running.
-* [Demo instructions for Thread](https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview)
-* [Demo instructions for Wi-Fi](https://docs.silabs.com/matter/1.0.1/matter-wifi/demo-overview)
+documentation for Matter available on docs.silabs.com. Follow Thread demo instructions depending on the example you are running.
+[Demo instructions for Thread](https://docs.silabs.com/matter/1.0.3/matter-thread/demo-overview)
 
 ## Thermostat Application User Interface
 
@@ -53,9 +52,19 @@ LED 0 shows the overall state of the device and its connectivity. The following 
 
 -   _Pressed and hold for 6 s_ : Initiates the factory reset of the device. Releasing the button within the 6-second window cancels the factory reset procedure. **LEDs** blink in unison when the factory reset procedure is initiated.
 
+## Enabling LCD and LEDs in a Project
+
+If an LCD is supported by the board but not enabled in a project it can be enabled in Studio by installing the _Display_ component under _Silicon Labs Matter->Matter->Platform->Display_
+
+To enable the QR Code install the _QR Code_ component under _Silicon Labs Matter->Matter->Platform->QR Code_. (All the dependencies including LCD are installed automatically, there is no need to explicitly install the _Display_ component in this case.)
+
+If LEDs are supported by the board but not enabled in a project they can be enabled as follows:
+-   Install instances (led0 and led1) of the _Simple LED_ component under _Platform->Driver->LED->Simple LED_
+-   Install the WSTK LED Support component under _Silicon Labs Matter->Matter->Platform->WSTK LED Support_
+
 ## Provision and Control
 
-You can provision and control the Matter device using the python controller, Chip tool standalone, Android, iOS app or the Matter Hub provided by Silicon Labs. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview)
+You can provision and control the Matter device using the python controller, Chip tool standalone, Android, iOS app or the Matter Hub provided by Silicon Labs. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/1.0.3/matter-thread/demo-overview)
 
 The pre-built chip-tool instance ships with the Matter Hub image which is available from Silicon Labs here: [Silicon Labs Matter Hub](https://www.silabs.com/documents/public/software/SilabsMatterPi.zip)
     

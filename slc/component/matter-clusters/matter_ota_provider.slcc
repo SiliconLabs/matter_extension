@@ -1,5 +1,5 @@
 
-category: Matter|Clusters
+category: Clusters
 description: Implementation of the Ota Provider Cluster
 id: matter_ota_provider
 label: OTA Provider Cluster

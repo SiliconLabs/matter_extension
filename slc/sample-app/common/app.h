@@ -31,7 +31,7 @@
 #include <credentials/examples/DeviceAttestationCredsExample.h>
 #endif
 
-
+// TODO Define this per example
 #define BLE_DEV_NAME "SiLabs-Door-Lock"
 using namespace ::chip;
 using namespace ::chip::Inet;

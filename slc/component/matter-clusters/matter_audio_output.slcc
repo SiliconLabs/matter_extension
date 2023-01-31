@@ -1,5 +1,5 @@
 
-category: Matter|Clusters
+category: Clusters
 description: Implementation of the Audio Output Server Cluster
 id: matter_audio_output
 label: Audio Output Server Cluster

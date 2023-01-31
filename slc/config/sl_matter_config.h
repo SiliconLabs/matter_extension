@@ -17,7 +17,9 @@
 // <SL_MATTER_LOG_DETAIL=> Detailed log (debug)
 // <SL_MATTER_LOG_AUTOMATION=> Automation
 // <d> SL_MATTER_LOG_ERROR
-#define SL_MATTER_LOG_LEVEL SL_MATTER_LOG_ERROR
+#ifndef SL_MATTER_LOG_LEVEL
+#define SL_MATTER_LOG_LEVEL SL_MATTER_LOG_DETAIL
+#endif
 
 // <q EFR32_LOG_ENABLED> Enable EFR32 specific log used in matter
 #define EFR32_LOG_ENABLED 1

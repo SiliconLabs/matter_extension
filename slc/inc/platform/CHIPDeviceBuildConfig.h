@@ -12,11 +12,13 @@
 // inferred options
 #include "sl_component_catalog.h"
 
+// TODO: infer from wifi stack component
 #define SL_MATTER_ENABLE_WIFI               0
 
+// TODO: infer from OTA requestor component (split from generated matter efr32 platform component)
 #define SL_MATTER_ENABLE_OTA                1
 
-#if defined(SL_CATALOG_OPENTHREAD_STACK_PRESENT)
+#if defined(SL_CATALOG_OPENTHREAD_STACK_PRESENT) || SL_OPENTHREAD_CERT_LIB
 #define CHIP_ENABLE_OPENTHREAD                  1
 #if defined(OPENTHREAD_FTD)
 #define CHIP_DEVICE_CONFIG_THREAD_FTD           1

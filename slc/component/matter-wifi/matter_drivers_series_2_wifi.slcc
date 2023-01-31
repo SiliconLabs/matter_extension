@@ -1,0 +1,20 @@
+id: matter_drivers_series_2_wifi
+label: Matter UART selection for Series 2 boards (RS911x)
+description: >
+  Matter UART selection for Series 2 boards
+package: "Matter"
+category: "Matter-WiFi|Platform"
+quality: production
+provides:
+  - name: matter_drivers_series_2_wifi
+recommends:
+  - id: uartdrv_eusart
+    instance: [vcom]
+  - id: spidrv_eusart
+    instance: [exp]
+
+# Crypto operations on Series 2 need these clock settings
+requires:
+  - name: device_init_dpll
+    condition:
+     - device_series_2

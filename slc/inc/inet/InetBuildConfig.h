@@ -1,6 +1,7 @@
 #ifndef INET_INETBUILDCONFIG_H_
 #define INET_INETBUILDCONFIG_H_
 
+// TODO: enable IPv4 and TCP if using wifi
 #define INET_CONFIG_TEST                    0
 #define INET_CONFIG_ENABLE_UDP_ENDPOINT     1
 #define HAVE_LWIP_RAW_BIND_NETIF            1

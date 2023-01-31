@@ -1,9 +1,9 @@
 id: matter_gatt_additional_advertising
-label: Gatt Configurations
+label: GATT Additional Advertising
 description: >
-  Add Gatt Configurations for Matter.
+  GATT Additional Advertising Configurations for Matter.
 package: "Matter"
-category: "Matter|Example"
+category: Platform
 quality: production
 define: 
   - name: CHIP_ENABLE_ROTATING_DEVICE_ID

@@ -7,7 +7,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.lock-app.lock-app-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/lock-app/lock-app-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/lock-app/README.md"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4166a brd4170a brd4186c brd4187c brd2601b brd2703a"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a brd4186c brd4187c"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -20,10 +20,10 @@
                description="This project builds a Matter Lock that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.sample-app.lock-app.lock-app-no-led-thread.slcp"/>
-    <properties key="projectFilePaths" value="slc/sample-app/lock-app/lock-app-no-led-thread.slcp"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.lock-app.lock-app-minimal-thread.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/lock-app/lock-app-minimal-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/lock-app/README.md"/>
-    <properties key="boardCompatibility" value="brd4316a brd4317a brd4319a"/>
+    <properties key="boardCompatibility" value="brd4166a brd4316a brd4317a brd4319a brd2601b brd2703a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -39,7 +39,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.lighting-app.lighting-app-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/lighting-app/lighting-app-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/README.md"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4166a brd4170a brd4186c brd4187c brd2601b brd2703a"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -52,10 +52,26 @@
                description="This project builds a Matter Light that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.sample-app.lighting-app.lighting-app-no-led-thread.slcp"/>
-    <properties key="projectFilePaths" value="slc/sample-app/lighting-app/lighting-app-no-led-thread.slcp"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.lighting-app.lighting-app-minimal-thread.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/lighting-app/lighting-app-minimal-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/README.md"/>
-    <properties key="boardCompatibility" value="brd4316a brd4317a brd4319a"/>
+    <properties key="boardCompatibility" value="brd4166a brd4316a brd4317a brd4319a brd2601b brd2703a"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
+    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+  </descriptors>
+    <descriptors name="MatterLightOverThread" label="Matter - Light over Thread"
+               description="This project builds a Matter Light that can be developed inside Simplicity Studio">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.lighting-app.lighting-app-2704.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/lighting-app/lighting-app-2704.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/lighting-app/README.md"/>
+    <properties key="boardCompatibility" value="brd2704a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -71,7 +87,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.thermostat.thermostat-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/thermostat/thermostat-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/thermostat/README.md"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4166a brd4170a brd4186c brd4187c"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -84,10 +100,10 @@
                description="This project builds a Matter Thermostat that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.sample-app.thermostat.thermostat-no-led-thread.slcp"/>
-    <properties key="projectFilePaths" value="slc/sample-app/thermostat/thermostat-no-led-thread.slcp"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.thermostat.thermostat-minimal-thread.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/thermostat/thermostat-minimal-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/thermostat/README.md"/>
-    <properties key="boardCompatibility" value="brd4316a brd4317a"/>
+    <properties key="boardCompatibility" value="brd4166a brd4316a brd4317a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -103,7 +119,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.light-switch-app.light-switch-app-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/light-switch-app/light-switch-app-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/README.md"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4166a brd4170a brd4186c brd4187c brd2601b brd2703a"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -116,10 +132,10 @@
                description="This project builds a Matter Light Switch that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.sample-app.light-switch-app.light-switch-app-no-led-thread.slcp"/>
-    <properties key="projectFilePaths" value="slc/sample-app/light-switch-app/light-switch-app-no-led-thread.slcp"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.light-switch-app.light-switch-app-minimal-thread.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/light-switch-app/light-switch-app-minimal-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/README.md"/>
-    <properties key="boardCompatibility" value="brd4316a brd4317a brd4319a"/>
+    <properties key="boardCompatibility" value="brd4166a brd4316a brd4317a brd4319a brd2601b brd2703a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -135,7 +151,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.window-app.window-app-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/window-app/window-app-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/window-app/README.md"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4166a brd4170a brd4186c brd4187c brd2601b brd2703a"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -148,10 +164,10 @@
                description="This project builds a Matter Window Cover that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.sample-app.window-app.window-app-no-led-thread.slcp"/>
-    <properties key="projectFilePaths" value="slc/sample-app/window-app/window-app-no-led-thread.slcp"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.window-app.window-app-minimal-thread.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/window-app/window-app-minimal-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/window-app/README.md"/>
-    <properties key="boardCompatibility" value="brd4316a brd4317a brd4319a"/>
+    <properties key="boardCompatibility" value="brd4166a brd4316a brd4317a brd4319a brd2601b brd2703a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -160,14 +176,15 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
   </descriptors>
-  <descriptors name="MatterLockOverWiFi" label="Matter - Lock over WiFi"
-               description="This project builds a Matter Lock for WiFi MG12+RS9116 that can be developed inside Simplicity Studio">
+    <descriptors name="MatterLockOverWiFi" label="Matter - Lock over WiFi RS9116"
+               description="This project builds a Matter Lock for WiFi RS9116 that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.sample-app.lock-app.lock-app-mg12-rs911x.slcp"/>
-    <properties key="projectFilePaths" value="slc/sample-app/lock-app/lock-app-mg12-rs911x.slcp"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a"/>
-    <properties key="partCompatibility" value=".*efr32mg12p.*"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.lock-app.lock-app-rs911x.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/lock-app/lock-app-rs911x.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/lock-app/README_WiFi.md"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -175,14 +192,14 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
   </descriptors>
-  <descriptors name="MatterLightOverWiFi" label="Matter - Light over WiFi"
-               description="This project builds a Matter Light for WiFi MG12+RS9116 that can be developed inside Simplicity Studio">
+  <descriptors name="MatterLockOverWiFi" label="Matter - Lock over WiFi WF200"
+               description="This project builds a Matter Lock for WiFi WF200 that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.sample-app.lighting-app.lighting-app-mg12-rs911x.slcp"/>
-    <properties key="projectFilePaths" value="slc/sample-app/lighting-app/lighting-app-mg12-rs911x.slcp"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a"/>
-    <properties key="partCompatibility" value=".*efr32mg12p.*"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.lock-app.lock-app-wf200.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/lock-app/lock-app-wf200.slcp"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -190,14 +207,15 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
   </descriptors>
-  <descriptors name="MatterLightSwitchOverWiFi" label="Matter - Light Switch over WiFi"
-               description="This project builds a Matter Light Switch for WiFi MG12+RS9116 that can be developed inside Simplicity Studio">
+  <descriptors name="MatterLightOverWiFi" label="Matter - Light over WiFi RS9116"
+               description="This project builds a Matter Light for WiFi RS9116 that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.sample-app.light-switch-app.light-switch-app-mg12-rs911x.slcp"/>
-    <properties key="projectFilePaths" value="slc/sample-app/light-switch-app/light-switch-app-mg12-rs911x.slcp"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a"/>
-    <properties key="partCompatibility" value=".*efr32mg12p.*"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.lighting-app.lighting-app-rs911x.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/lighting-app/lighting-app-rs911x.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/lighting-app/README_WiFi.md"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -205,14 +223,14 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
   </descriptors>
-  <descriptors name="MatterLockOverWiFi" label="Matter - Lock over WiFi"
-               description="This project builds a Matter Lock for WiFi MG24+RS9116 that can be developed inside Simplicity Studio">
+  <descriptors name="MatterLightOverWiFi" label="Matter - Light over WiFi WF200"
+               description="This project builds a Matter Light for WiFi WF200 that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.sample-app.lock-app.lock-app-mg24-rs911x.slcp"/>
-    <properties key="projectFilePaths" value="slc/sample-app/lock-app/lock-app-mg24-rs911x.slcp"/>
-    <properties key="boardCompatibility" value="brd4186c"/>
-    <properties key="partCompatibility" value=".*efr32mg24.*"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.lighting-app.lighting-app-wf200.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/lighting-app/lighting-app-wf200.slcp"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -220,14 +238,15 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
   </descriptors>
-  <descriptors name="MatterLightOverWiFi" label="Matter - Light over WiFi"
-               description="This project builds a Matter Light for WiFi MG24+RS9116 that can be developed inside Simplicity Studio">
+  <descriptors name="MatterLightSwitchOverWiFi" label="Matter - Light Switch over WiFi RS9116"
+               description="This project builds a Matter Light Switch for WiFi RS9116 that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.sample-app.lighting-app.lighting-app-mg24-rs911x.slcp"/>
-    <properties key="projectFilePaths" value="slc/sample-app/lighting-app/lighting-app-mg24-rs911x.slcp"/>
-    <properties key="boardCompatibility" value="brd4186c"/>
-    <properties key="partCompatibility" value=".*efr32mg24.*"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.light-switch-app.light-switch-app-rs911x.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/light-switch-app/light-switch-app-rs911x.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/light-switch-app/README_WiFi.md"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -235,14 +254,14 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
   </descriptors>
-  <descriptors name="MatterLightSwitchOverWiFi" label="Matter - Light Switch over WiFi"
-               description="This project builds a Matter Light Switch for WiFi MG24+RS9116 that can be developed inside Simplicity Studio">
+  <descriptors name="MatterLightSwitchOverWiFi" label="Matter - Light Switch over WiFi WF200"
+               description="This project builds a Matter Light Switch for WiFi WF200 that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.sample-app.light-switch-app.light-switch-app-mg24-rs911x.slcp"/>
-    <properties key="projectFilePaths" value="slc/sample-app/light-switch-app/light-switch-app-mg24-rs911x.slcp"/>
-    <properties key="boardCompatibility" value="brd4186c"/>
-    <properties key="partCompatibility" value=".*efr32mg24.*"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.light-switch-app.light-switch-app-wf200.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/light-switch-app/light-switch-app-wf200.slcp"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -250,14 +269,16 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
   </descriptors>
-  <descriptors name="MatterThermostatOverWiFi" label="Matter - Thermostat over WiFi"
-               description="This project builds a Matter Thermostat for WiFi MG12+RS9116 that can be developed inside Simplicity Studio">
+
+  <descriptors name="MatterThermostatOverWiFi" label="Matter - Thermostat over WiFi RS9116"
+               description="This project builds a Matter Thermostat for WiFi RS9116 that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.sample-app.thermostat.thermostat-mg12-rs911x.slcp"/>
-    <properties key="projectFilePaths" value="slc/sample-app/thermostat/thermostat-mg12-rs911x.slcp"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a"/>
-    <properties key="partCompatibility" value=".*efr32mg12p.*"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.thermostat.thermostat-rs911x.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/thermostat/thermostat-rs911x.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/thermostat/README_WiFi.md"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -265,14 +286,14 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
   </descriptors>
-  <descriptors name="MatterWindowCoverOverWiFi" label="Matter - Window Cover over WiFi"
-               description="This project builds a Matter Window Cover for WiFi MG12+RS9116 that can be developed inside Simplicity Studio">
+  <descriptors name="MatterThermostatOverWiFi" label="Matter - Thermostat over WiFi WF200"
+               description="This project builds a Matter Thermostat for WiFi WF200 that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.sample-app.window-app.window-app-mg12-rs911x.slcp"/>
-    <properties key="projectFilePaths" value="slc/sample-app/window-app/window-app-mg12-rs911x.slcp"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a"/>
-    <properties key="partCompatibility" value=".*efr32mg12p.*"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.thermostat.thermostat-wf200.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/thermostat/thermostat-wf200.slcp"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -280,14 +301,15 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
   </descriptors>
-  <descriptors name="MatterThermostatOverWiFi" label="Matter - Thermostat over WiFi"
-               description="This project builds a Matter Thermostat for WiFi MG24+RS9116 that can be developed inside Simplicity Studio">
+  <descriptors name="MatterWindowCoverOverWiFi" label="Matter - Window Cover over WiFi RS9116"
+               description="This project builds a Matter Window Cover for WiFi RS9116 that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.sample-app.thermostat.thermostat-mg24-rs911x.slcp"/>
-    <properties key="projectFilePaths" value="slc/sample-app/thermostat/thermostat-mg24-rs911x.slcp"/>
-    <properties key="boardCompatibility" value="brd4186c"/>
-    <properties key="partCompatibility" value=".*efr32mg24.*"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.window-app.window-app-rs911x.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/window-app/window-app-rs911x.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/window-app/README_WiFi.md"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -295,14 +317,14 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
   </descriptors>
-  <descriptors name="MatterWindowCoverOverWiFi" label="Matter - Window Cover over WiFi"
-               description="This project builds a Matter Window Cover for WiFi MG24+RS9116 that can be developed inside Simplicity Studio">
+  <descriptors name="MatterWindowCoverOverWiFi" label="Matter - Window Cover over WiFi WF200"
+               description="This project builds a Matter Window Cover for WiFi WF200 that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.sample-app.window-app.window-app-mg24-rs911x.slcp"/>
-    <properties key="projectFilePaths" value="slc/sample-app/window-app/window-app-mg24-rs911x.slcp"/>
-    <properties key="boardCompatibility" value="brd4186c"/>
-    <properties key="partCompatibility" value=".*efr32mg24.*"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.window-app.window-app-wf200.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/window-app/window-app-wf200.slcp"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>

@@ -1,5 +1,5 @@
 
-category: Matter|Clusters
+category: Clusters
 description: Implementation of the Localization Configuration Server Cluster
 id: matter_localization_configuration
 label: Localization Configuration Server Cluster

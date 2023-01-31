@@ -253,6 +253,7 @@ sl_status_t sl_wfx_host_process_event(sl_wfx_generic_message_t * event_payload)
         sl_wfx_error_ind_t * firmware_error = (sl_wfx_error_ind_t *) event_payload;
         uint8_t * error_tmp                 = (uint8_t *) firmware_error;
         EFR32_LOG("firmware error %lu\r\n", firmware_error->body.type);
+
         for (uint16_t i = 0; i < firmware_error->header.length; i += 16)
         {
             EFR32_LOG("hif: %.8x:", i);
@@ -610,6 +611,8 @@ static void sl_wfx_ap_client_rejected_callback(uint32_t status, uint8_t * mac)
                 EFR32_LOG("WIFI: Connected to AP");
                 wifi_extra |= WE_ST_STA_CONN;
                 wfx_lwip_set_sta_link_up();
+
+#ifndef GSDK_WF200_BUILD
 #ifdef SLEEP_ENABLED
                 if (!(wfx_get_wifi_state() & SL_WFX_AP_INTERFACE_UP))
                 {
@@ -618,6 +621,7 @@ static void sl_wfx_ap_client_rejected_callback(uint32_t status, uint8_t * mac)
                     sl_wfx_enable_device_power_save();
                 }
 #endif // SLEEP_ENABLED
+#endif // GSDK_WF200_BUILD
             }
 
             if (flags & SL_WFX_DISCONNECT)

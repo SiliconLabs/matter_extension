@@ -1,5 +1,5 @@
 
-category: Matter|Clusters
+category: Clusters
 description: Implementation of the Ias Zone Server Cluster
 id: matter_ias_zone
 label: Ias Zone Server Cluster

@@ -1,5 +1,5 @@
 
-category: Matter|Clusters
+category: Clusters
 description: Implementation of the Diagnostic Logs Server Cluster
 id: matter_diagnostic_logs
 label: Diagnostic Logs Server Cluster

@@ -1,5 +1,5 @@
 
-category: Matter|Clusters
+category: Clusters
 description: Implementation of the Barrier Control Server Cluster
 id: matter_barrier_control
 label: Barrier Control Server Cluster

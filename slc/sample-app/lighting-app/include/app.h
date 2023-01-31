@@ -20,7 +20,9 @@
 
 #include "AppConfig.h"
 #include "init_efrPlatform.h"
+#ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
 #include "sl_simple_button_instances.h"
+#endif
 #include <DeviceInfoProviderImpl.h>
 #include <app/server/Server.h>
 #include <credentials/DeviceAttestationCredsProvider.h>

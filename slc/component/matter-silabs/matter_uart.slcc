@@ -1,8 +1,8 @@
 id: matter_uart
-label: Uart
-description: Enable sources and define for uart as used by matter components
+label: Matter UART
+description: Enables sources and defines for UART as used by Matter components
 package: "Matter"
-category: "Matter|Platform"
+category: Platform
 quality: production
 requires:
    - name: uartdrv_usart
@@ -24,8 +24,10 @@ define:
      - device_series_2
   - name: EFR32MG12
     condition:
-    - device_series_1
-# For examples/platform/efr32/uart.cpp EFR32MG24 and MGM24 follow the same logic
+    - device_family_efr32mg12
   - name: EFR32MG24
     condition:
-    - device_series_2
+    - device_family_efr32mg24
+  - name: MGM24
+    condition:
+    - device_family_mgm24

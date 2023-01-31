@@ -1,5 +1,5 @@
 
-category: Matter|Clusters
+category: Clusters
 description: Implementation of the Identify Server Cluster
 id: matter_identify
 label: Identify Server Cluster

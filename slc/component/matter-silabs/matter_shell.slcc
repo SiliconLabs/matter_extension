@@ -1,8 +1,8 @@
 id: matter_shell
-label: Chip Build Libshell
-description: Provides defines and path to use chip libshell in matter projects
+label: Matter Shell
+description: Enables the Matter Shell (CHIP Shell) functionality
 package: "Matter"
-category: "Matter|Platform"
+category: Stack
 quality: production
 requires:
   - name: matter_thread

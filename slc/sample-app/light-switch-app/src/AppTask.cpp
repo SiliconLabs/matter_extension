@@ -161,7 +161,7 @@ CHIP_ERROR AppTask::Init()
         EFR32_LOG("BaseApplication::Init() failed");
         appError(err);
     }
-
+    // Configure Bindings - TODO ERROR PROCESSING
     err = InitBindingHandler();
     if (err != CHIP_NO_ERROR)
     {

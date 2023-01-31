@@ -1,8 +1,8 @@
 id: matter_platform_low_power
-label: Lower power mode component
+label: Lower Power Mode 
 description: Dictates exclusion of files to enable low-power mode
 package: "Matter"
-category: "Matter|Platform"
+category: Platform
 quality: production
 provides:
   - name: matter_platform_low_power

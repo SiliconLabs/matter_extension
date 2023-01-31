@@ -1,5 +1,5 @@
 
-category: Matter|Clusters
+category: Clusters
 description: Implementation of the Descriptor Cluster
 id: matter_descriptor
 label: Descriptor Cluster

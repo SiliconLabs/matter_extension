@@ -59,6 +59,11 @@ void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & 
  *
  * @param endpoint   Ver.: always
  *
+ * TODO Issue #3841 
+ * emberAfOnOffClusterInitCallback heappens before the stack initialize the cluster 
+ * attributes to the default value
+ * The logic here expects something similair to the deprecated Plugins callback
+ * emberAfPluginOnOffClusterServerPostInitCallback
  */
 void emberAfOnOffClusterInitCallback(EndpointId endpoint)
 {

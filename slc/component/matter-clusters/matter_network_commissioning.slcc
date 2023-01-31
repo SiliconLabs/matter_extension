@@ -1,5 +1,5 @@
 
-category: Matter|Clusters
+category: Clusters
 description: Implementation of the Network Commissioning Cluster
 id: matter_network_commissioning
 label: Network Commissioning Cluster

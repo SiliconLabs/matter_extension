@@ -1,5 +1,5 @@
 
-category: Matter|Clusters
+category: Clusters
 description: Implementation of the Time Format Localization Server Cluster
 id: matter_time_format_localization
 label: Time Format Localization Server Cluster

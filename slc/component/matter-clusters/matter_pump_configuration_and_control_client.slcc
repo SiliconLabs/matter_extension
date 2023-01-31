@@ -1,5 +1,5 @@
 
-category: Matter|Clusters
+category: Clusters
 description: Implementation of the Pump Configuration And Control Client Cluster
 id: matter_pump_configuration_and_control_client
 label: Pump Configuration And Control Client Cluster

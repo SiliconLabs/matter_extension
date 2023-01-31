@@ -1,9 +1,9 @@
 id: matter_gatt
-label: Gatt Configurations
+label: GATT Configuration
 description: >
-  Add Gatt Configurations for Matter.
+  Adds GATT Configuration for Matter.
 package: "Matter"
-category: "Matter|Example"
+category: Platform
 quality: production
 config_file:
 -   directory: btconf

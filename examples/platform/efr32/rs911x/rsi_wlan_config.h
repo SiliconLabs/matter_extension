@@ -19,7 +19,7 @@
 #define RSI_CONFIG_H
 
 #include "rsi_wlan_defines.h"
-
+#include "sl_matter_wifi_config.h"
 //! Enable feature
 #define RSI_ENABLE 1
 //! Disable feature

@@ -1,8 +1,8 @@
 id: matter_temperature_sensor
-label: Temperature sensor support
-description: Temperature Sensor Support for Matter applications
+label: Temperature Sensor Support
+description: Temperature Sensor support for Matter applications
 package: "Matter"
-category: "Matter|Platform"
+category: Stack
 quality: production
 
 provides:

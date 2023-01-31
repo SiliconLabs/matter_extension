@@ -1,8 +1,8 @@
 id: matter
-label: Matter
+label: Matter Core Components
 description: Bundles all necessary core Matter components
 package: "Matter"
-category: "Matter"
+category: Stack
 quality: production
 config_file:
   - path: slc/config/sl_matter_config.h
@@ -94,3 +94,8 @@ requires:
   - name: matter_libsupportlayer
   - name: matter_libsystemlayer
   - name: matter_libtransportlayer
+  - name: configuration_over_swo
+
+recommends:
+  - id: matter_configuration_over_swo
+  - id: matter_segger_rtt

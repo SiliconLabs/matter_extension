@@ -1,5 +1,5 @@
 
-category: Matter|Clusters
+category: Clusters
 description: Implementation of the Thread Network Diagnostics Server Cluster
 id: matter_thread_network_diagnostics
 label: Thread Network Diagnostics Server Cluster
