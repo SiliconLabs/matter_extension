@@ -1,8 +1,8 @@
 id: matter_platform_efr32
 label: Platform for EFR32
-description: EFR32 platform for Matter
+description: EFR32 platform support for Matter
 package: "Matter"
-category: "Matter|Platform"
+category: Platform
 quality: production
 requires:
   - name: matter

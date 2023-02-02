@@ -19,7 +19,7 @@ Silicon Labs platform.
 
 For more general information on running matter applications and pre-requisites please look at online 
 documentation for Matter available on docs.silabs.com. Follow Thread demo instructions depending on the example you are running.
-[Demo instructions for Thread](https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview)
+[Demo instructions for Thread](https://docs.silabs.com/matter/1.0.3/matter-thread/demo-overview)
 
 ## Light Switch Specific Interface
 
@@ -74,5 +74,16 @@ application to connect.
 
 **_Binding Cluster_**
 
-- 'switch binding unicast  <fabric index> <node id> <endpoint>' : Creates a unicast binding
-- 'switch binding group <fabric index> <group id>'              : Creates a group binding
+- 'switch binding unicast  [*fabric index*] [*node id*] [*endpoint*]' : Creates a unicast binding
+- 'switch binding group [*fabric index*] [*group id*]'              : Creates a group binding
+
+
+## Enabling LCD and LEDs in a Project
+
+If an LCD is supported by the board but not enabled in a project it can be enabled in Studio by installing the _Display_ component under _Silicon Labs Matter->Matter->Platform->Display_
+
+To enable the QR Code install the _QR Code_ component under _Silicon Labs Matter->Matter->Platform->QR Code_. (All the dependencies including LCD are installed automatically, there is no need to explicitly install the _Display_ component in this case.)
+
+If LEDs are supported by the board but not enabled in a project they can be enabled as follows:
+-   Install instances (led0 and led1) of the _Simple LED_ component under _Platform->Driver->LED->Simple LED_
+-   Install the WSTK LED Support component under _Silicon Labs Matter->Matter->Platform->WSTK LED Support_

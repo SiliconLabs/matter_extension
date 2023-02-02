@@ -1,5 +1,5 @@
 
-category: Matter|Clusters
+category: Clusters
 description: Implementation of the General Diagnostics Server Cluster
 id: matter_general_diagnostics
 label: General Diagnostics Server Cluster

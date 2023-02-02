@@ -17,7 +17,7 @@ Silicon Labs platform.
 
 For more general information on running matter applications and pre-requisites please look at online 
 documentation for Matter available on docs.silabs.com. Follow Wi-Fi instructions depending on the example you are running.
-[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/1.0.1/matter-wifi/demo-overview)
+[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/1.0.3/matter-wifi/demo-overview)
 
 ## Lock Application User Interface
 
@@ -66,7 +66,7 @@ Simulates the Lock The following states are possible:
 
 ## Provision and Control
 
-You can provision and control the Matter device using the python controller, Chip tool standalone, Android, iOS app or the Matter Hub provided by Silicon Labs. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/1.0.1/matter-thread/demo-overview)
+You can provision and control the Matter device using the python controller, Chip tool standalone, Android, iOS app or the Matter Hub provided by Silicon Labs. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/1.0.3/matter-thread/demo-overview)
 
 The pre-built chip-tool instance ships with the Matter Hub image which is available from Silicon Labs here: [Silicon Labs Matter Hub](https://www.silabs.com/documents/public/software/SilabsMatterPi.zip)
     

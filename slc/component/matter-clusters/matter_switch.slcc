@@ -1,5 +1,5 @@
 
-category: Matter|Clusters
+category: Clusters
 description: Implementation of the Switch Server Cluster
 id: matter_switch
 label: Switch Server Cluster

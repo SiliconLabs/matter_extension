@@ -2,7 +2,7 @@ id: matter_ble
 label: Bluetooth Network Layer
 description: Adds Bluetooth network layer for Matter. This component wraps libBleLayer.
 package: "Matter"
-category: "Matter|Platform"
+category: Stack
 quality: production
 requires:
   - name: matter_libblelayer

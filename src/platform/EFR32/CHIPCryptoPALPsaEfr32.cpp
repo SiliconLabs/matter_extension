@@ -312,7 +312,7 @@ static_assert(kMAX_Hash_SHA256_Context_Size >= sizeof(psa_hash_operation_t),
 
 static inline psa_hash_operation_t * to_inner_hash_sha256_context(HashSHA256OpaqueContext * context)
 {
-    return reinterpret_cast<psa_hash_operation_t *>(context);
+    return SafePointerCast<psa_hash_operation_t *>(context);
 }
 
 Hash_SHA256_stream::Hash_SHA256_stream(void)

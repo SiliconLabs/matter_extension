@@ -1,0 +1,17 @@
+id: matter_drivers_series_1_wifi_wf200
+label: Matter UART selection for Series 1 boards (WF200)
+description: >
+  Matter UART selection for Series 1 boards
+package: "Matter"
+category: "Matter-WiFi|Platform"
+quality: production
+provides:
+  - name: matter_drivers_series_1_wifi_wf200
+recommends:
+  - id: uartdrv_usart
+    instance: [vcom]
+  - id: spidrv
+    instance: [exp]
+
+define:
+  - name: GSDK_WF200_MG12_BUILD

@@ -124,6 +124,10 @@ void SensorManager::SensorTimerEventHandler(TimerHandle_t xTimer)
     {
         lastTemperature = temperature;
         PlatformMgr().LockChipStack();
+        
+        // The SensorManager Shouldn't be aware of the Endpoint ID TODO Fix this.
+        // TODO Per Spec we should also apply the Offset stored in the same cluster before saving the temp
+
         app::Clusters::Thermostat::Attributes::LocalTemperature::Set(kThermostatEndpoint, temperature);
         PlatformMgr().UnlockChipStack();
     }

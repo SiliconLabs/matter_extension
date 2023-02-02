@@ -2,8 +2,8 @@ id: matter_src_platform_efr32
 package: Matter
 description: >
   src platform EFR32 components
-label: src platform efr32
-category: wifi|platform
+label: "src_platform_EFR32_Components"
+category: Matter-WiFi|Platform
 quality: production
 provides:
   - name: matter_src_platform_efr32

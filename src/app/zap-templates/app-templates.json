@@ -54,6 +54,7 @@
             "path": "partials/idl/command_response_struct.zapt"
         }
     ],
+    "requiredFeatureLevel": 89,
     "templates": [
         {
             "path": "templates/app/callbacks/PluginApplicationCallbacks.zapt",

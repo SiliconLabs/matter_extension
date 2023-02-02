@@ -37,7 +37,7 @@
 #define WFX_RSI_SSID_SIZE 64
 
 #endif /* WF200 */
-
+#include "sl_matter_wifi_config.h"
 #ifndef RS911X_SOCKETS
 /* LwIP includes. */
 #include "lwip/apps/httpd.h"

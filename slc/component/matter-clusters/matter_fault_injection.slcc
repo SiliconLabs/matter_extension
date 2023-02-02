@@ -1,5 +1,5 @@
 
-category: Matter|Clusters
+category: Clusters
 description: Implementation of the Fault Injection Server Cluster
 id: matter_fault_injection
 label: Fault Injection Server Cluster

@@ -27,8 +27,6 @@ extern "C" {
 #include <assert.h>
 #include <string.h>
 
-#include <mbedtls/platform.h>
-
 #if CHIP_ENABLE_OPENTHREAD
 #include <openthread-core-config.h>
 #include <openthread/cli.h>
@@ -53,24 +51,15 @@ extern "C" {
 
 #include "init_efrPlatform.h"
 #include "sl_component_catalog.h"
-#include "sl_mbedtls.h"
-#include "sl_system_init.h"
 
 void initAntenna(void);
 
 void init_efrPlatform(void)
 {
-    // sl_system_init() call moved to main.cpp for Matter GSDK integration
-    sl_mbedtls_init();
 
 #if EFR32_LOG_ENABLED
     efr32InitLog();
 #endif
-
-#if CHIP_ENABLE_OPENTHREAD
-    efr32RadioInit();
-    efr32AlarmInit();
-#endif // CHIP_ENABLE_OPENTHREAD
 }
 
 #ifdef __cplusplus

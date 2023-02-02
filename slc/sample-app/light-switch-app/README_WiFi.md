@@ -18,7 +18,7 @@ Silicon Labs platform.
 
 For more general information on running matter applications and pre-requisites please look at online 
 documentation for Matter available on docs.silabs.com. Follow Wi-Fi instructions depending on the example you are running.
-[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/1.0.1/matter-wifi/demo-overview)
+[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/1.0.3/matter-wifi/demo-overview)
 
 ## Light Switch Specific Interface
 
@@ -73,5 +73,5 @@ application to connect.
 
 **_Binding Cluster_**
 
-- 'switch binding unicast  <fabric index> <node id> <endpoint>' : Creates a unicast binding
-- 'switch binding group <fabric index> <group id>'              : Creates a group binding
+- 'switch binding unicast  [*fabric index*] [*node id*] [*endpoint*]' : Creates a unicast binding
+- 'switch binding group [*fabric index*] [*group id*]'              : Creates a group binding

@@ -1,5 +1,5 @@
 
-category: Matter|Clusters
+category: Clusters
 description: Implementation of the Wake On Lan Server Cluster
 id: matter_wake_on_lan
 label: Wake On Lan Server Cluster

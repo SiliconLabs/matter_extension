@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "1.0.1"
+    version: "1.0.3"
 
 component:
   - id: device_init
@@ -25,11 +25,12 @@ component:
     from: matter
   - id: matter_thread_ftd
     from: matter
+  - id: rail_util_pti
   - id: matter_ota_support
     from: matter
   - id: matter_mbedtls
     from: matter
-  - id: matter_thread_cli
+  - id: matter_shell
     from: matter
   - id: matter_gatt
     from: matter
@@ -86,61 +87,20 @@ component:
     from: matter
   - id: matter_wifi_network_diagnostics
     from: matter
+  - id: matter_lcd
+    from: matter
+  - id: matter_qr_code
+    from: matter
+    
+  # Override configuration for JTAG use
+  - id: matter_configuration_over_swo
+    from: matter
+  # Override RTT
+  - id: matter_segger_rtt
+    from: matter
 
-# Require LCD and QR Code components only on the boards that support LCD
 requires:
-  - name: matter_lcd
-    condition:
-    - brd4161a
-  - name: matter_lcd
-    condition:
-    - brd4162a
-  - name: matter_lcd
-    condition:
-    - brd4163a
-  - name: matter_lcd
-    condition:
-    - brd4164a
-  - name: matter_lcd
-    condition:
-    - brd4170a
-  - name: matter_lcd
-    condition:
-    - brd4186c
-  - name: matter_lcd
-    condition:
-    - brd4187c
-  - name: matter_qr_code
-    condition:
-    - brd4161a
-  - name: matter_qr_code
-    condition:
-    - brd4162a
-  - name: matter_qr_code
-    condition:
-    - brd4163a
-  - name: matter_qr_code
-    condition:
-    - brd4164a
-  - name: matter_qr_code
-    condition:
-    - brd4170a
-  - name: matter_qr_code
-    condition:
-    - brd4186c
-  - name: matter_qr_code
-    condition:
-    - brd4187c
-
 # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
-# Enable memlcd_usart for boards that have LCD and LED
-  - name: memlcd_usart
-    condition:
-    - brd4186c
-  - name: memlcd_usart
-    condition:
-    - brd4187c
-
 # Select UART/EUART drivers based on device series
   - name: matter_drivers_series_1
     condition:
@@ -167,6 +127,7 @@ source:
   - path: include/binding-handler.h
   - path: include/CHIPProjectConfig.h
   - path: include/app.h
+  - path: include/binding-handler.h 
 
 define:
   - name: KVS_MAX_ENTRIES
@@ -187,6 +148,21 @@ configuration:
   - name: SL_BOARD_ENABLE_DISPLAY
     value: "1"
     condition: [glib]
+  - name: SL_MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED
+    value: 1
+    condition: [matter_thread_cert_libs]
+  - name: SL_MBEDTLS_KEY_EXCHANGE_PSK_ENABLED
+    value: 1
+    condition: [matter_thread_cert_libs]
+  - name: OPENTHREAD_CONFIG_COAP_API_ENABLE
+    value: 1
+    condition: [matter_thread_coap_cert_libs]
+  - name: OPENTHREAD_CONFIG_COAP_OBSERVE_API_ENABLE
+    value: 1
+    condition: [matter_thread_coap_cert_libs]
+  - name: OPENTHREAD_CONFIG_COAP_SECURE_API_ENABLE
+    value: 1
+    condition: [matter_thread_coap_cert_libs]
 toolchain_settings:
   - option: gcc_c++_compiler_option
     value: -std=gnu++17
@@ -210,6 +186,3 @@ ui_hints:
   highlight:
     - path: README.md
       focus: false
-
-tag:
-  - hardware:component:led:2+

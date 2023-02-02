@@ -1,0 +1,20 @@
+id: "matter_segger_rtt"
+label: "Matter Segger RTT"
+package: "Matter"
+description: "Matter-specific version of the platform's Segger RTT component"
+category: Platform
+quality: "production"
+config_file:
+  - path: "third_party/silabs/gecko_sdk/util/third_party/segger/systemview/Config/SEGGER_RTT_Conf.h"
+source:
+  - path: "third_party/silabs/gecko_sdk/util/third_party/segger/systemview/SEGGER/SEGGER_RTT.c"
+include:
+  - path: "third_party/silabs/gecko_sdk/util/third_party/segger/systemview/SEGGER"
+    file_list:
+      - path: "SEGGER.h"
+      - path: "SEGGER_RTT.h"
+provides:
+  - name: "segger_rtt"
+define:
+  - name: "RTT_USE_ASM"
+    value: "0"

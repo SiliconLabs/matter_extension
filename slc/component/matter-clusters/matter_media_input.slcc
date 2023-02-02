@@ -1,5 +1,5 @@
 
-category: Matter|Clusters
+category: Clusters
 description: Implementation of the Media Input Server Cluster
 id: matter_media_input
 label: Media Input Server Cluster

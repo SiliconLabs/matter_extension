@@ -1,8 +1,8 @@
 id: matter_thread
 label: Thread Network Layer
-description: Adds Thread network layer for Matter
+description: Adds Thread network layer for Matter devices
 package: "Matter"
-category: "Matter|Platform"
+category: Matter-Thread
 ui_hints:
   visibility: never
 quality: production
@@ -10,5 +10,6 @@ requires:
   - name: matter
   - name: ot_stack
   - name: matter_thread_variant
+  - name: mbedtls_dtls
 provides:
   - name: matter_thread

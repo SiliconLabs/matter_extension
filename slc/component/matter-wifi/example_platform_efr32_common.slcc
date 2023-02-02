@@ -3,16 +3,19 @@ label: example_platform_efr32_common
 description: >
   efr32 common components for wifi
 package: "Matter"
-category: "Matter|Platform"
+category: "Matter-WiFi|Platform"
 quality: production
+config_file:
+  - path: slc/config/sl_matter_wifi_config.h
 provides:
   - name: example_platform_efr32_common
 requires:
   - name: matter
   - name: matter_efr32
-  - name: example_platform_efr32_rs911x
   - name: device_init_dpll
     condition: [brd4186c]
+  - name: device_init_dpll
+    condition: [brd4187c]
 include:
   - path: examples/platform/efr32
   - path: third_party/pigweed/repo/pw_hdlc/public
@@ -51,6 +54,7 @@ toolchain_settings:
 define:
   - name: __STARTUP_CLEAR_BSS
   - name: CORTEXM3_EFM32_MICRO
+  - name: EFR32_SERIES2_CONFIG4_MICRO
   - name: SILABS_LOG_ENABLED
     value: 1
   - name: NVM3_DEFAULT_NVM_SIZE
@@ -65,30 +69,73 @@ define:
     value: EMBER_MICRO_CORTEXM3_EFR32
   - name: SL_SUPRESS_DEPRECATION_WARNINGS_SDK_3_1
   - name: SL_COMPONENT_CATALOG_PRESENT
-  - name: ENABLE_WSTK_LEDS
   - name: CONFIG_ENABLE_UART
   - name: CONFIG_USE_EXTERNAL_FLASH
     unless: [brd4186c]
+  - name: CONFIG_USE_EXTERNAL_FLASH
+    unless: [brd4187c]    
   - name: EFR32_SERIES2_CONFIG4_MICRO
     condition: [brd4186c]
+  - name: EFR32_SERIES2_CONFIG4_MICRO
+    condition: [brd4187c]
   - name: EFR32MG12
     condition: [brd4161a]
+  - name: EFR32MG12
+    condition: [brd4162a]
+  - name: EFR32MG12
+    condition: [brd4163a]
+  - name: EFR32MG12
+    condition: [brd4164a]
+  - name: EFR32MG12
+    condition: [brd4170a]
   - name: EFR32MG12_BRD4161A
     value: "1"
     condition: [brd4161a]
+  - name: EFR32MG12_BRD4162A
+    value: "1"
+    condition: [brd4162a]
+  - name: EFR32MG12_BRD4163A
+    value: "1"
+    condition: [brd4163a]
+  - name: EFR32MG12_BRD4164A
+    value: "1"
+    condition: [brd4164a]
+  - name: EFR32MG12_BRD4170A
+    value: "1"
+    condition: [brd4170a]
   - name: EFR32MG24
     condition: [brd4186c]
+  - name: EFR32MG24
+    condition: [brd4187c]
   - name: EFR32MG24_BRD4186C
     value: "1"
     condition: [brd4186c]
+  - name: EFR32MG24_BRD4187C
+    value: "1"
+    condition: [brd4187c]
   - name: USE_NVM3
     value: 1
   - name: BOARD_ID
     value: BRD4161A
     condition: [brd4161a]
   - name: BOARD_ID
+    value: BRD4162A
+    condition: [brd4162a]
+  - name: BOARD_ID
+    value: BRD4163A
+    condition: [brd4163a]
+  - name: BOARD_ID
+    value: BRD4164A
+    condition: [brd4164a]
+  - name: BOARD_ID
+    value: BRD4170A
+    condition: [brd4170a]
+  - name: BOARD_ID
     value: BRD4186C
     condition: [brd4186c]
+  - name: BOARD_ID
+    value: BRD4187C
+    condition: [brd4187c]
   - name: OTA_PERIODIC_TIMEOUT
     value: 86400
   - name: SL_HEAP_SIZE
@@ -99,3 +146,7 @@ define:
     value: 1
   - name: PLATFORM_HEADER
     value: "platform-header.h"
+  - name: SL_POWER_MANAGER_LOWEST_EM_ALLOWED
+    value: "1"
+  - name: SL_POWER_MANAGER_CONFIG_VOLTAGE_SCALING_FAST_WAKEUP
+    value: "1"

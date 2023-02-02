@@ -1,0 +1,40 @@
+id: matter_uart_wifi
+label: Uart_wifi_rs911x
+description: Enable sources and define for uart as used by matter components RS911x
+package: "Matter"
+category: "Matter-WiFi|Platform"
+quality: production
+requires:
+  - name: uartdrv_usart
+    condition:
+     - device_series_1
+  - name: spidrv
+    condition:
+     - device_series_1
+  - name: uartdrv_eusart
+    condition:
+     - device_series_2
+  - name: spidrv_eusart
+    condition:
+     - device_series_2
+  - name: uartdrv_usart
+    condition:
+     - device_series_2
+provides:
+  - name: matter_uart_wifi
+source:
+  - path: examples/platform/efr32/uart.cpp
+define:
+  - name: CONFIG_ENABLE_UART
+    condition:
+     - device_series_1
+  - name: CONFIG_ENABLE_EUART
+    condition:
+     - device_series_2
+  - name: EFR32MG12
+    condition:
+     - device_series_1
+# For examples/platform/efr32/uart.cpp EFR32MG24 and MGM24 follow the same logic
+  - name: EFR32MG24
+    condition:
+     - device_series_2
