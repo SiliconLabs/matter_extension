@@ -19,7 +19,7 @@ Silicon Labs platform.
 
 For more general information on running matter applications and pre-requisites please look at online 
 documentation for Matter available on docs.silabs.com. Follow Thread demo instructions depending on the example you are running.
-[Demo instructions for Thread](https://docs.silabs.com/matter/1.0.3/matter-thread/demo-overview)
+[Demo instructions for Thread](https://docs.silabs.com/matter/1.0.4/matter-thread/demo-overview)
 
 ## Light Switch Specific Interface
 

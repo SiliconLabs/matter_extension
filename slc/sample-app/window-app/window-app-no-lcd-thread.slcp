@@ -1,0 +1,191 @@
+project_name: window-app-no-lcd-thread
+label: Matter Window App
+description: >
+  Matter window-app. This example does not use LCD.
+quality: production
+package: Matter
+
+sdk_extension:
+  - id: matter
+    version: "1.0.4"
+
+provides:
+  - name: window_app
+
+component:
+  - id: device_init
+  - id: simple_button
+    instance: [btn0, btn1]
+  - id: simple_led
+    instance: [led0, led1]
+
+  - id: matter_wstk_leds
+    from: matter
+
+  - id: matter
+    from: matter
+  - id: matter_ble
+    from: matter
+  - id: matter_thread_ftd
+    from: matter
+  - id: rail_util_pti
+  - id: matter_ota_support
+    from: matter
+  - id: matter_mbedtls
+    from: matter
+  - id: matter_shell
+    from: matter
+  - id: matter_gatt
+    from: matter
+
+  - id: app_common
+    from: matter
+
+  - id: efr32_factory_data_provider
+    from: matter
+
+  - id: matter_access_control
+    from: matter
+  - id: matter_administrator_commissioning
+    from: matter
+  - id: matter_basic
+    from: matter
+  - id: matter_descriptor
+    from: matter
+  - id: matter_ethernet_network_diagnostics
+    from: matter
+  - id: matter_fixed_label
+    from: matter
+  - id: matter_general_commissioning
+    from: matter
+  - id: matter_general_diagnostics
+    from: matter
+  - id: matter_group_key_mgmt
+    from: matter
+  - id: matter_groups
+    from: matter
+  - id: matter_identify
+    from: matter
+  - id: matter_localization_configuration
+    from: matter
+  - id: matter_network_commissioning
+    from: matter
+  - id: matter_operational_credentials
+    from: matter
+  - id: matter_ota_requestor
+    from: matter
+  - id: matter_power_source
+    from: matter
+  - id: matter_scenes
+    from: matter
+  - id: matter_software_diagnostics
+    from: matter
+  - id: matter_thread_network_diagnostics
+    from: matter
+  - id: matter_time_format_localization
+    from: matter
+  - id: matter_user_label
+    from: matter
+  - id: matter_wifi_network_diagnostics
+    from: matter
+  - id: matter_window_covering
+    from: matter
+
+  # Override configuration for JTAG use
+  - id: matter_configuration_over_swo
+    from: matter
+  # Override RTT
+  - id: matter_segger_rtt
+    from: matter
+
+requires:
+# On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
+# Select UART/EUART drivers based on device series
+  - name: matter_drivers_series_1
+    condition:
+     - device_series_1
+  - name: matter_drivers_series_2
+    condition:
+     - device_series_2
+
+config_file:
+  - path: common/window-app.zap
+    directory: zap
+
+include:
+  - path: include
+
+source:
+  - path: src/LcdPainter.cpp
+    condition:
+    - matter_lcd
+  - path: src/WindowAppImpl.cpp
+  - path: src/WindowApp.cpp
+  - path: src/ZclCallbacks.cpp
+  - path: src/main.cpp
+
+  - path: include/AppConfig.h
+  - path: include/CHIPProjectConfig.h
+  - path: include/LcdPainter.h
+    condition:
+    - matter_lcd
+  - path: include/WindowAppImpl.h
+  - path: include/WindowApp.h
+
+define:
+  - name: KVS_MAX_ENTRIES
+    value: "75"
+  - name: CHIP_CRYPTO_PLATFORM
+    value: "1"
+  - name: OPENTHREAD_CONFIG_LOG_OUTPUT
+    value: OPENTHREAD_CONFIG_LOG_OUTPUT_APP
+  - name: _WANT_REENT_SMALL
+    value: "1"
+  - name: NVM3_DEFAULT_NVM_SIZE
+    value: "40960"
+  - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
+    value: "4092"
+configuration:
+  - name: SL_BOARD_ENABLE_VCOM
+    value: "1"
+  - name: SL_BOARD_ENABLE_DISPLAY
+    value: "1"
+    condition: [glib]
+  - name: SL_MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED
+    value: 1
+    condition: [matter_thread_cert_libs]
+  - name: SL_MBEDTLS_KEY_EXCHANGE_PSK_ENABLED
+    value: 1
+    condition: [matter_thread_cert_libs]
+  - name: OPENTHREAD_CONFIG_COAP_API_ENABLE
+    value: 1
+    condition: [matter_thread_coap_cert_libs]
+  - name: OPENTHREAD_CONFIG_COAP_OBSERVE_API_ENABLE
+    value: 1
+    condition: [matter_thread_coap_cert_libs]
+  - name: OPENTHREAD_CONFIG_COAP_SECURE_API_ENABLE
+    value: 1
+    condition: [matter_thread_coap_cert_libs]
+toolchain_settings:
+  - option: gcc_c++_compiler_option
+    value: -std=gnu++17
+template_contribution:
+  - name: memory_flash_start
+    value: 0x0
+    condition: [device_series_1]
+  - name: memory_flash_size
+    value: 0x000FF800
+    condition: [device_series_1]
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_series_2]
+  - name: memory_flash_size
+    value: 0x00178000
+    condition: [device_series_2]
+
+readme:
+  - path: ./README.md
+ui_hints:
+  highlight:
+    - path: README.md
+      focus: false

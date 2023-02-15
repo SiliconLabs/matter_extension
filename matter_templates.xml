@@ -17,13 +17,45 @@
     <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
   </descriptors>
   <descriptors name="MatterLockOverThread" label="Matter - SoC Lock over Thread"
-               description="This project builds a Matter Lock that can be developed inside Simplicity Studio">
+               description="This project builds a Matter Lock that can be developed inside Simplicity Studio. This example does not use LCD">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.lock-app.lock-app-no-lcd-thread.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/lock-app/lock-app-no-lcd-thread.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/lock-app/README.md"/>
+    <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
+    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+  </descriptors>
+  <descriptors name="MatterLockOverThread" label="Matter - SoC Lock over Thread"
+               description="This project builds a Matter Lock that can be developed inside Simplicity Studio. This example does not use LEDs">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.lock-app.lock-app-no-led-thread.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/lock-app/lock-app-no-led-thread.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/lock-app/README.md"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
+    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+  </descriptors>
+  <descriptors name="MatterLockOverThread" label="Matter - SoC Lock over Thread"
+               description="This project builds a Matter Lock that can be developed inside Simplicity Studio. This example does not use LCD or LED.">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.sample-app.lock-app.lock-app-minimal-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/lock-app/lock-app-minimal-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/lock-app/README.md"/>
-    <properties key="boardCompatibility" value="brd4166a brd4316a brd4317a brd4319a brd2601b brd2703a"/>
+    <properties key="boardCompatibility" value="brd4319a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -49,13 +81,45 @@
     <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
   </descriptors>
   <descriptors name="MatterLightOverThread" label="Matter - SoC Light over Thread"
-               description="This project builds a Matter Light that can be developed inside Simplicity Studio">
+               description="This project builds a Matter Light that can be developed inside Simplicity Studio. This example does not use LCD">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.lighting-app.lighting-app-no-lcd-thread.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/lighting-app/lighting-app-no-lcd-thread.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/lighting-app/README.md"/>
+    <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
+    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+  </descriptors>
+  <descriptors name="MatterLightOverThread" label="Matter - SoC Light over Thread"
+               description="This project builds a Matter Light that can be developed inside Simplicity Studio. This example does not use LEDs">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.lighting-app.lighting-app-no-led-thread.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/lighting-app/lighting-app-no-led-thread.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/lighting-app/README.md"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
+    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+  </descriptors>
+  <descriptors name="MatterLightOverThread" label="Matter - SoC Light over Thread"
+               description="This project builds a Matter Light that can be developed inside Simplicity Studio. This example does not use LCD or LED.">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.sample-app.lighting-app.lighting-app-minimal-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/lighting-app/lighting-app-minimal-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/README.md"/>
-    <properties key="boardCompatibility" value="brd4166a brd4316a brd4317a brd4319a brd2601b brd2703a"/>
+    <properties key="boardCompatibility" value="brd4319a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -97,13 +161,45 @@
     <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
   </descriptors>
   <descriptors name="MatterThermostatOverThread" label="Matter - SoC Thermostat over Thread"
-               description="This project builds a Matter Thermostat that can be developed inside Simplicity Studio">
+               description="This project builds a Matter Thermostat that can be developed inside Simplicity Studio. This example does not use LCD.">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.thermostat.thermostat-no-lcd-thread.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/thermostat/thermostat-no-lcd-thread.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/thermostat/README.md"/>
+    <properties key="boardCompatibility" value="brd4166a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
+    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+  </descriptors>
+  <descriptors name="MatterThermostatOverThread" label="Matter - SoC Thermostat over Thread"
+               description="This project builds a Matter Thermostat that can be developed inside Simplicity Studio. This example does not use LEDs.">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.thermostat.thermostat-no-led-thread.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/thermostat/thermostat-no-led-thread.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/thermostat/README.md"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
+    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+  </descriptors>
+  <descriptors name="MatterThermostatOverThread" label="Matter - SoC Thermostat over Thread"
+               description="This project builds a Matter Thermostat that can be developed inside Simplicity Studio. This example does not use LCD or LED.">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.sample-app.thermostat.thermostat-minimal-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/thermostat/thermostat-minimal-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/thermostat/README.md"/>
-    <properties key="boardCompatibility" value="brd4166a brd4316a brd4317a"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -129,13 +225,45 @@
     <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
   </descriptors>
   <descriptors name="MatterLightSwitchOverThread" label="Matter - SoC Light Switch over Thread"
-               description="This project builds a Matter Light Switch that can be developed inside Simplicity Studio">
+               description="This project builds a Matter Light Switch that can be developed inside Simplicity Studio. This example does not use LCD">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.light-switch-app.light-switch-app-no-lcd-thread.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/light-switch-app/light-switch-app-no-lcd-thread.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/light-switch-app/README.md"/>
+    <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
+    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+  </descriptors>
+  <descriptors name="MatterLightSwitchOverThread" label="Matter - SoC Light Switch over Thread"
+               description="This project builds a Matter Light Switch that can be developed inside Simplicity Studio. This example does not use LEDs">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.light-switch-app.light-switch-app-no-led-thread.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/light-switch-app/light-switch-app-no-led-thread.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/light-switch-app/README.md"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
+    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+  </descriptors>
+  <descriptors name="MatterLightSwitchOverThread" label="Matter - SoC Light Switch over Thread"
+               description="This project builds a Matter Light Switch that can be developed inside Simplicity Studio. This example does not use LCD or LED.">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.sample-app.light-switch-app.light-switch-app-minimal-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/light-switch-app/light-switch-app-minimal-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/README.md"/>
-    <properties key="boardCompatibility" value="brd4166a brd4316a brd4317a brd4319a brd2601b brd2703a"/>
+    <properties key="boardCompatibility" value="brd4319a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -161,13 +289,45 @@
     <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
   </descriptors>
   <descriptors name="MatterWindowCoverOverThread" label="Matter - SoC Window Cover over Thread"
-               description="This project builds a Matter Window Cover that can be developed inside Simplicity Studio">
+               description="This project builds a Matter Window Cover that can be developed inside Simplicity Studio. This example does not use LCD">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.window-app.window-app-no-lcd-thread.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/window-app/window-app-no-lcd-thread.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/window-app/README.md"/>
+    <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
+    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+  </descriptors>
+  <descriptors name="MatterWindowCoverOverThread" label="Matter - SoC Window Cover over Thread"
+               description="This project builds a Matter Window Cover that can be developed inside Simplicity Studio. This example does not use LEDs">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.window-app.window-app-no-led-thread.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/window-app/window-app-no-led-thread.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/window-app/README.md"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
+    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+  </descriptors>
+  <descriptors name="MatterWindowCoverOverThread" label="Matter - SoC Window Cover over Thread"
+               description="This project builds a Matter Window Cover that can be developed inside Simplicity Studio. This example does not use LCD or LED.">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.sample-app.window-app.window-app-minimal-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/window-app/window-app-minimal-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/window-app/README.md"/>
-    <properties key="boardCompatibility" value="brd4166a brd4316a brd4317a brd4319a brd2601b brd2703a"/>
+    <properties key="boardCompatibility" value="brd4319a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>

@@ -1,6 +1,6 @@
 id: matter_qr_code
-label: QR Code
-description: Enables QR Code support
+label: QR Code Display
+description: Enables showing the QR Code on the LCD
 package: "Matter"
 category: Stack
 quality: production

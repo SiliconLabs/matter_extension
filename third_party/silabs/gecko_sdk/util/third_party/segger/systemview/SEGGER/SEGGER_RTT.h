@@ -42,7 +42,7 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       SystemView version: 3.32                                    *
+*       SystemView version: 3.30                                    *
 *                                                                    *
 **********************************************************************
 ---------------------------END-OF-HEADER------------------------------
@@ -50,7 +50,7 @@ File    : SEGGER_RTT.h
 Purpose : Implementation of SEGGER real-time transfer which allows
           real-time communication on targets which support debugger 
           memory accesses while the CPU is running.
-Revision: $Rev: 25842 $
+Revision: $Rev: 20869 $
 ----------------------------------------------------------------------
 */
 
@@ -65,103 +65,30 @@ Revision: $Rev: 25842 $
 *
 **********************************************************************
 */
-
 #ifndef RTT_USE_ASM
-  //
-  // Some cores support out-of-order memory accesses (reordering of memory accesses in the core)
-  // For such cores, we need to define a memory barrier to guarantee the order of certain accesses to the RTT ring buffers.
-  // Needed for:
-  //   Cortex-M7 (ARMv7-M)
-  //   Cortex-M23 (ARM-v8M)
-  //   Cortex-M33 (ARM-v8M)
-  //   Cortex-A/R (ARM-v7A/R)
-  //
-  // We do not explicitly check for "Embedded Studio" as the compiler in use determines what we support.
-  // You can use an external toolchain like IAR inside ES. So there is no point in checking for "Embedded Studio"
-  //
-  #if (defined __CROSSWORKS_ARM)                  // Rowley Crossworks
+  #if (defined __SES_ARM)                       // SEGGER Embedded Studio
     #define _CC_HAS_RTT_ASM_SUPPORT 1
-    #if (defined __ARM_ARCH_7M__)                 // Cortex-M3
-      #define _CORE_HAS_RTT_ASM_SUPPORT 1
-    #elif (defined __ARM_ARCH_7EM__)              // Cortex-M4/M7
-      #define _CORE_HAS_RTT_ASM_SUPPORT 1
-      #define _CORE_NEEDS_DMB           1
-      #define RTT__DMB() __asm volatile ("dmb\n" : : :);
-    #elif (defined __ARM_ARCH_8M_BASE__)          // Cortex-M23
-      #define _CORE_HAS_RTT_ASM_SUPPORT 0
-      #define _CORE_NEEDS_DMB           1
-      #define RTT__DMB() __asm volatile ("dmb\n" : : :);
-    #elif (defined __ARM_ARCH_8M_MAIN__)          // Cortex-M33
-      #define _CORE_HAS_RTT_ASM_SUPPORT 1
-      #define _CORE_NEEDS_DMB           1
-      #define RTT__DMB() __asm volatile ("dmb\n" : : :);
-    #else
-      #define _CORE_HAS_RTT_ASM_SUPPORT 0
-    #endif
-  #elif (defined __ARMCC_VERSION)
-    //
-    // ARM compiler
-    // ARM compiler V6.0 and later is clang based.
-    // Our ASM part is compatible to clang.
-    //
-    #if (__ARMCC_VERSION >= 6000000)
+  #elif (defined __CROSSWORKS_ARM)              // Rowley Crossworks
+    #define _CC_HAS_RTT_ASM_SUPPORT 1
+  #elif (defined __ARMCC_VERSION)               // ARM compiler
+		#if (__ARMCC_VERSION >= 6000000)						// ARM compiler V6.0 and later is clang based
       #define _CC_HAS_RTT_ASM_SUPPORT 1
-    #else
+		#else
       #define _CC_HAS_RTT_ASM_SUPPORT 0
-    #endif
-    #if (defined __ARM_ARCH_6M__)                 // Cortex-M0 / M1
-      #define _CORE_HAS_RTT_ASM_SUPPORT 0         // No ASM support for this architecture
-    #elif (defined __ARM_ARCH_7M__)               // Cortex-M3
-      #define _CORE_HAS_RTT_ASM_SUPPORT 1
-    #elif (defined __ARM_ARCH_7EM__)              // Cortex-M4/M7
-      #define _CORE_HAS_RTT_ASM_SUPPORT 1
-      #define _CORE_NEEDS_DMB           1
-      #define RTT__DMB() __asm volatile ("dmb\n" : : :);
-    #elif (defined __ARM_ARCH_8M_BASE__)          // Cortex-M23
-      #define _CORE_HAS_RTT_ASM_SUPPORT 0
-      #define _CORE_NEEDS_DMB           1
-      #define RTT__DMB() __asm volatile ("dmb\n" : : :);
-    #elif (defined __ARM_ARCH_8M_MAIN__)          // Cortex-M33
-      #define _CORE_HAS_RTT_ASM_SUPPORT 1
-      #define _CORE_NEEDS_DMB           1
-      #define RTT__DMB() __asm volatile ("dmb\n" : : :);
-    #elif ((defined __ARM_ARCH_7A__) || (defined __ARM_ARCH_7R__))  // Cortex-A/R 32-bit ARMv7-A/R
-      #define _CORE_NEEDS_DMB           1
-      #define RTT__DMB() __asm volatile ("dmb\n" : : :);
-    #else
-      #define _CORE_HAS_RTT_ASM_SUPPORT 0
-    #endif
-  #elif ((defined __GNUC__) || (defined __clang__))
-    //
-    // GCC / Clang
-    //
+		#endif
+  #elif (defined __GNUC__)                      // GCC
     #define _CC_HAS_RTT_ASM_SUPPORT 1
-    // ARM 7/9: __ARM_ARCH_5__ / __ARM_ARCH_5E__ / __ARM_ARCH_5T__ / __ARM_ARCH_5T__ / __ARM_ARCH_5TE__
-    #if (defined __ARM_ARCH_7M__)                 // Cortex-M3
-      #define _CORE_HAS_RTT_ASM_SUPPORT 1
-    #elif (defined __ARM_ARCH_7EM__)              // Cortex-M4/M7
-      #define _CORE_HAS_RTT_ASM_SUPPORT 1
-      #define _CORE_NEEDS_DMB           1         // Only Cortex-M7 needs a DMB but we cannot distinguish M4 and M7 here...
-      #define RTT__DMB() __asm volatile ("dmb\n" : : :);
-    #elif (defined __ARM_ARCH_8M_BASE__)          // Cortex-M23
-      #define _CORE_HAS_RTT_ASM_SUPPORT 0
-      #define _CORE_NEEDS_DMB           1
-      #define RTT__DMB() __asm volatile ("dmb\n" : : :);
-    #elif (defined __ARM_ARCH_8M_MAIN__)          // Cortex-M33
-      #define _CORE_HAS_RTT_ASM_SUPPORT 1
-      #define _CORE_NEEDS_DMB           1
-      #define RTT__DMB() __asm volatile ("dmb\n" : : :);
-    #elif ((defined __ARM_ARCH_7A__) || (defined __ARM_ARCH_7R__))  // Cortex-A/R 32-bit ARMv7-A/R
-      #define _CORE_NEEDS_DMB           1
-      #define RTT__DMB() __asm volatile ("dmb\n" : : :);
-    #else
-      #define _CORE_HAS_RTT_ASM_SUPPORT 0
-    #endif
-  #elif ((defined __IASMARM__) || (defined __ICCARM__))
-    //
-    // IAR assembler/compiler
-    //
+  #elif (defined __clang__)                     // Clang compiler
     #define _CC_HAS_RTT_ASM_SUPPORT 1
+  #elif ((defined __IASMARM__) || (defined __ICCARM__))  // IAR assembler/compiler
+    #define _CC_HAS_RTT_ASM_SUPPORT 1
+  #else
+    #define _CC_HAS_RTT_ASM_SUPPORT 0
+  #endif
+  #if ((defined __IASMARM__) || (defined __ICCARM__))  // IAR assembler/compiler
+    //
+    // IAR assembler / compiler
+    //
     #if (__VER__ < 6300000)
       #define VOLATILE
     #else
@@ -172,54 +99,48 @@ Revision: $Rev: 25842 $
         #define _CORE_HAS_RTT_ASM_SUPPORT 1
       #endif
     #endif
-    #if (defined __ARM7EM__)
+    #if (defined __ARM7EM__)                           // Needed for old versions that do not know the define yet
       #if (__CORE__ == __ARM7EM__)                     // Cortex-M4/M7
         #define _CORE_HAS_RTT_ASM_SUPPORT 1
         #define _CORE_NEEDS_DMB 1
         #define RTT__DMB() asm VOLATILE ("DMB");
       #endif
     #endif
-    #if (defined __ARM8M_BASELINE__)
+    #if (defined __ARM8M_BASELINE__)                   // Needed for old versions that do not know the define yet
       #if (__CORE__ == __ARM8M_BASELINE__)             // Cortex-M23
         #define _CORE_HAS_RTT_ASM_SUPPORT 0
         #define _CORE_NEEDS_DMB 1
         #define RTT__DMB() asm VOLATILE ("DMB");
       #endif
     #endif
-    #if (defined __ARM8M_MAINLINE__)
+    #if (defined __ARM8M_MAINLINE__)                   // Needed for old versions that do not know the define yet
       #if (__CORE__ == __ARM8M_MAINLINE__)             // Cortex-M33
         #define _CORE_HAS_RTT_ASM_SUPPORT 1
         #define _CORE_NEEDS_DMB 1
         #define RTT__DMB() asm VOLATILE ("DMB");
       #endif
     #endif
-    #if (defined __ARM8EM_MAINLINE__)
-      #if (__CORE__ == __ARM8EM_MAINLINE__)            // Cortex-???
-        #define _CORE_HAS_RTT_ASM_SUPPORT 1
-        #define _CORE_NEEDS_DMB 1
-        #define RTT__DMB() asm VOLATILE ("DMB");
-      #endif
-    #endif
-    #if (defined __ARM7A__)
-      #if (__CORE__ == __ARM7A__)                      // Cortex-A 32-bit ARMv7-A
-        #define _CORE_NEEDS_DMB 1
-        #define RTT__DMB() asm VOLATILE ("DMB");
-      #endif
-    #endif
-    #if (defined __ARM7R__)
-      #if (__CORE__ == __ARM7R__)                      // Cortex-R 32-bit ARMv7-R
-        #define _CORE_NEEDS_DMB 1
-        #define RTT__DMB() asm VOLATILE ("DMB");
-      #endif
-    #endif
-// TBD: __ARM8A__ => Cortex-A 64-bit ARMv8-A
-// TBD: __ARM8R__ => Cortex-R 64-bit ARMv8-R
   #else
     //
-    // Other compilers
+    // GCC / Clang
     //
-    #define _CC_HAS_RTT_ASM_SUPPORT   0
-    #define _CORE_HAS_RTT_ASM_SUPPORT 0
+    #if (defined __ARM_ARCH_7M__)                 // Cortex-M3
+      #define _CORE_HAS_RTT_ASM_SUPPORT 1
+    #elif (defined __ARM_ARCH_7EM__)              // Cortex-M4/M7
+      #define _CORE_HAS_RTT_ASM_SUPPORT 1
+      #define _CORE_NEEDS_DMB           1
+      #define RTT__DMB() __asm volatile ("dmb\n" : : :);
+    #elif (defined __ARM_ARCH_8M_BASE__)          // Cortex-M23
+      #define _CORE_HAS_RTT_ASM_SUPPORT 0
+      #define _CORE_NEEDS_DMB           1
+      #define RTT__DMB() __asm volatile ("dmb\n" : : :);
+    #elif (defined __ARM_ARCH_8M_MAIN__)          // Cortex-M33
+      #define _CORE_HAS_RTT_ASM_SUPPORT 1
+      #define _CORE_NEEDS_DMB           1
+      #define RTT__DMB() __asm volatile ("dmb\n" : : :);
+    #else
+      #define _CORE_HAS_RTT_ASM_SUPPORT 0
+    #endif
   #endif
   //
   // If IDE and core support the ASM version, enable ASM version by default
@@ -234,6 +155,11 @@ Revision: $Rev: 25842 $
   #endif
 #endif
 
+//
+// We need to know if a DMB is needed to make sure that on Cortex-M7 etc.
+// the order of accesses to the ring buffers is guaranteed
+// Needed for: Cortex-M7, Cortex-M23, Cortex-M33
+//
 #ifndef _CORE_NEEDS_DMB
   #define _CORE_NEEDS_DMB 0
 #endif
@@ -306,7 +232,7 @@ typedef struct {
             unsigned SizeOfBuffer;  // Buffer size in bytes. Note that one byte is lost, as this implementation does not fill up the buffer in order to avoid the problem of being unable to distinguish between full and empty.
             unsigned WrOff;         // Position of next item to be written by either target.
   volatile  unsigned RdOff;         // Position of next item to be read by host. Must be volatile since it may be modified by host.
-            unsigned Flags;         // Contains configuration flags. Flags[31:24] are used for validity check and must be zero. Flags[23:2] are reserved for future use. Flags[1:0] = RTT operating mode.
+            unsigned Flags;         // Contains configuration flags
 } SEGGER_RTT_BUFFER_UP;
 
 //
@@ -319,7 +245,7 @@ typedef struct {
             unsigned SizeOfBuffer;  // Buffer size in bytes. Note that one byte is lost, as this implementation does not fill up the buffer in order to avoid the problem of being unable to distinguish between full and empty.
   volatile  unsigned WrOff;         // Position of next item to be written by host. Must be volatile since it may be modified by host.
             unsigned RdOff;         // Position of next item to be read by target (down-buffer).
-            unsigned Flags;         // Contains configuration flags. Flags[31:24] are used for validity check and must be zero. Flags[23:2] are reserved for future use. Flags[1:0] = RTT operating mode. 
+            unsigned Flags;         // Contains configuration flags
 } SEGGER_RTT_BUFFER_DOWN;
 
 //

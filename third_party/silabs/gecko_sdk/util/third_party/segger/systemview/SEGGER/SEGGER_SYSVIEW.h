@@ -42,13 +42,13 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       SystemView version: 3.32                                    *
+*       SystemView version: 3.30                                    *
 *                                                                    *
 **********************************************************************
 -------------------------- END-OF-HEADER -----------------------------
 File    : SEGGER_SYSVIEW.h
 Purpose : System visualization API.
-Revision: $Rev: 26226 $
+Revision: $Rev: 21292 $
 */
 
 #ifndef SEGGER_SYSVIEW_H
@@ -77,7 +77,7 @@ extern "C" {
 */
 
 #define SEGGER_SYSVIEW_MAJOR          3
-#define SEGGER_SYSVIEW_MINOR          32
+#define SEGGER_SYSVIEW_MINOR          10
 #define SEGGER_SYSVIEW_REV            0
 #define SEGGER_SYSVIEW_VERSION        ((SEGGER_SYSVIEW_MAJOR * 10000) + (SEGGER_SYSVIEW_MINOR * 100) + SEGGER_SYSVIEW_REV)
 
