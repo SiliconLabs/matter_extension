@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "1.0.4"
+    version: "1.0.5"
 
 provides:
   - name: window_app
@@ -101,15 +101,15 @@ requires:
   - name: matter_lcd
     condition:
     - device_series_1
-#  - name: matter_lcd // TODO: We need enable this feature after CSA changes merged
-#    condition:
-#    - device_series_2
+  - name: matter_lcd
+    condition:
+    - device_series_2
   - name: matter_qr_code
     condition:
     - device_series_1
-#  - name: matter_qr_code // TODO: We need enable this feature after CSA changes merged
-#    condition:
-#    - device_series_2
+  - name: matter_qr_code
+    condition:
+    - device_series_2
   - name: spidrv_instance
   - name: uartdrv_instance
     condition:
@@ -169,11 +169,6 @@ define:
   - name: _REENT_SMALL
     value: 1
 configuration:
-  - name: SL_BOARD_ENABLE_VCOM
-    value: "1"
-  - name: SL_BOARD_ENABLE_DISPLAY
-    value: "1"
-    condition: [glib]
   - name: SL_SPIDRV_EXP_BITRATE
     value: "10000000"
   - name: SL_POWER_MANAGER_LOWEST_EM_ALLOWED

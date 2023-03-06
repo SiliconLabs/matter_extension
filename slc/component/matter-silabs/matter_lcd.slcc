@@ -9,6 +9,7 @@ requires:
   - name: matter_platform_efr32
   - name: matter_uart
   - name: glib
+  - name: memlcd_usart
 provides:
   - name: matter_lcd
 conflicts:
@@ -20,6 +21,3 @@ source:
   - path: examples/platform/efr32/display/lcd.cpp
 define:
   - name: DISPLAY_ENABLED
-recommends:
-  - name: memlcd_eusart
-  - name: memlcd_usart

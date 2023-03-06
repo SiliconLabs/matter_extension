@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "1.0.4"
+    version: "1.0.5"
 
 provides:
   - name: window_app
@@ -166,11 +166,6 @@ define:
     value: "1"
     condition: [brd4161a]
 configuration:
-  - name: SL_BOARD_ENABLE_VCOM
-    value: "1"
-  - name: SL_BOARD_ENABLE_DISPLAY
-    value: "1"
-    condition: [glib]
   - name: SL_SPIDRV_EXP_BITRATE
     value: "10000000"
   - name: SL_SPIDRV_EUSART_EXP_BITRATE

@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "1.0.4"
+    version: "1.0.5"
 
 component:
   - id: device_init
@@ -15,9 +15,6 @@ component:
     instance: [btn0, btn1]
   - id: simple_led
     instance: [led0, led1]
-
-  - id: uartdrv_usart
-    instance: [vcom]
   - id: i2cspm
     instance: [sensor]
 

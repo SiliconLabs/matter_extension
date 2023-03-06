@@ -7,15 +7,12 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "1.0.4"
+    version: "1.0.5"
 
 component:
   - id: device_init
   - id: simple_button
     instance: [btn0, btn1]
-
-  - id: uartdrv_usart
-    instance: [vcom]
   - id: i2cspm
     instance: [sensor]
 
@@ -162,11 +159,6 @@ define:
   - name: USE_TEMP_SENSOR
     value: "1"
 configuration:
-  - name: SL_BOARD_ENABLE_VCOM
-    value: "1"
-  - name: SL_BOARD_ENABLE_DISPLAY
-    value: "1"
-    condition: [glib]
   - name: SL_MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED
     value: 1
     condition: [matter_thread_cert_libs]

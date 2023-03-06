@@ -3,7 +3,7 @@
 *                        The Embedded Experts                        *
 **********************************************************************
 *                                                                    *
-*            (c) 1995 - 2019 SEGGER Microcontroller GmbH             *
+*            (c) 1995 - 2021 SEGGER Microcontroller GmbH             *
 *                                                                    *
 *       www.segger.com     Support: support@segger.com               *
 *                                                                    *
@@ -42,23 +42,44 @@
 *                                                                    *
 **********************************************************************
 *                                                                    *
-*       SystemView version: 3.10                                    *
+*       SystemView version: 3.32                                    *
 *                                                                    *
 **********************************************************************
--------------------------- END-OF-HEADER -----------------------------
+----------------------------------------------------------------------
+File    : Global.h
+Purpose : Global types
+          In case your application already has a Global.h, you should
+          merge the files. In order to use Segger code, the types
+          U8, U16, U32, I8, I16, I32 need to be defined in Global.h;
+          additional definitions do not hurt.
+Revision: $Rev: 12501 $
+---------------------------END-OF-HEADER------------------------------
 */
 
 #ifndef GLOBAL_H            // Guard against multiple inclusion
 #define GLOBAL_H
 
 #define U8    unsigned char
-#define U16   unsigned short
-#define U32   unsigned long
 #define I8    signed char
+#define U16   unsigned short
 #define I16   signed short
+#ifdef __x86_64__
+#define U32   unsigned
+#define I32   int
+#else
+#define U32   unsigned long
 #define I32   signed long
+#endif
 
-#ifdef _WIN32
+//
+// CC_NO_LONG_SUPPORT can be defined to compile test
+// without long support for compilers that do not
+// support C99 and its long type.
+//
+#ifdef CC_NO_LONG_SUPPORT
+  #define PTR_ADDR  U32
+#else  // Supports long type.
+#if defined(_WIN32) && !defined(__clang__) && !defined(__MINGW32__)
   //
   // Microsoft VC6 compiler related
   //
@@ -71,7 +92,7 @@
   #else
     #define U64_C(x) x##ULL
   #endif
-#else 
+#else
   //
   // C99 compliant compiler
   //
@@ -79,6 +100,13 @@
   #define I64   signed long long
   #define U64_C(x) x##ULL
 #endif
+
+#if (defined(_WIN64) || defined(__LP64__))  // 64-bit symbols used by Visual Studio and GCC, maybe others as well.
+  #define PTR_ADDR  U64
+#else
+  #define PTR_ADDR  U32
+#endif
+#endif  // Supports long type.
 
 #endif                      // Avoid multiple inclusion
 
