@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <contentItems xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.silabs.com/ss/ContentItem.ecore">
-  <contentItemData label="Matter Release Notes" itemURI="https://github.com/SiliconLabs/matter/releases/tag/v1.0.3-1.0" category="Release Notes" priority="40">
+  <contentItemData label="Matter Release Notes" itemURI="https://github.com/SiliconLabs/matter/releases/tag/v1.0.5-1.0" category="Release Notes" priority="40">
     <property key="core.category" value="Release Notes"/>
     <property key="core.priority" value="40"/>
     <property key="core.boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4166a brd4170a brd4186c brd4187c brd2601b brd2703a brd2704a brd4316a brd4317a brd4319a"/>
     <property key="core.partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <property key="core.sdkAndProtocolTags" value="Matter"/>
-    <description>Release Notes for the Silicon Labs Matter v1.0.3-1.0. These release notes provide information on the release including part compatibility, changes and added/deleted/deprecated features/API.</description>
+    <description>Release Notes for the Silicon Labs Matter v1.0.5-1.0. These release notes provide information on the release including part compatibility, changes and added/deleted/deprecated features/API.</description>
   </contentItemData>
 </contentItems>

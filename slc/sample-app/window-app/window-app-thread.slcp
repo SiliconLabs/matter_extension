@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "0.0.7"
+    version: "1.0.5"
 
 provides:
   - name: window_app
@@ -150,11 +150,6 @@ define:
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
     value: "4092"
 configuration:
-  - name: SL_BOARD_ENABLE_VCOM
-    value: "1"
-  - name: SL_BOARD_ENABLE_DISPLAY
-    value: "1"
-    condition: [glib]
   - name: SL_MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED
     value: 1
     condition: [matter_thread_cert_libs]

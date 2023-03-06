@@ -18,6 +18,12 @@ requires:
   - name: device_init_dpll
     condition:
      - device_series_2
+  - name: mx25_flash_shutdown_usart
+    condition:
+    - device_series_2
+  - name: memlcd_usart
+    condition:
+    - device_series_2
 
 define:
   - name: ENABLE_WSTK_LEDS

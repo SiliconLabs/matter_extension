@@ -3,6 +3,6 @@
 This is an OpenThread Border Router Project not intended to be compiled or flashed.
 
 For more information on downloading and flashing the OpenThread Border Router image please follow the link to the 
-[OpenThread Border Router Documentation](https://docs.silabs.com/matter/1.0.3/matter-thread/raspi-img)
+[OpenThread Border Router Documentation](https://docs.silabs.com/matter/1.0.5/matter-thread/raspi-img)
     
     

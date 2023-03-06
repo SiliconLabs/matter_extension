@@ -2,7 +2,7 @@ id: matter_thread_coap_cert_ftd_lib
 label: Thread Network COAP FTD certified library
 description: Adds Thread network layer certified library for COAP full thread device
 package: "Matter"
-category: "Matter|Platform"
+category: Matter-Thread
 quality: production
 define:
   - name: SL_OPENTHREAD_CERT_LIB

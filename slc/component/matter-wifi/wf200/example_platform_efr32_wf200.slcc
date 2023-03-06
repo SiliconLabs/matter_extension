@@ -26,7 +26,7 @@ source:
   - path: examples/platform/efr32/wf200/sl_wfx_securelink_task.c
   - path: examples/platform/efr32/wf200/sl_wfx_task.c
   - path: examples/platform/efr32/wf200/wf200_init.c
-#  - path: examples/platform/efr32/spi_multiplex.c
+  - path: examples/platform/efr32/spi_multiplex.c
   - path: third_party/silabs/gecko_sdk/platform/radio/wifi/wfx_fmac_driver/bus/sl_wfx_bus.c
   - path: third_party/silabs/gecko_sdk/platform/radio/wifi/wfx_fmac_driver/bus/sl_wfx_bus_spi.c
   - path: third_party/silabs/gecko_sdk/platform/radio/wifi/wfx_fmac_driver/sl_wfx.c

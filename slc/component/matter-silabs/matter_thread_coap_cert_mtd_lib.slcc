@@ -2,7 +2,7 @@ id: matter_thread_coap_cert_mtd_lib
 label: Thread Network COAP MTD certified library
 description: Adds Thread network layer certified library for COAP minimal thread device
 package: "Matter"
-category: "Matter|Platform"
+category: Matter-Thread
 quality: production
 define:
   - name: SL_OPENTHREAD_CERT_LIB
