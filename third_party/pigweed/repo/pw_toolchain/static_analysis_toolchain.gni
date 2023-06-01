@@ -1,4 +1,4 @@
-# Copyright 2021 The Pigweed Authors
+# Copyright 2022 The Pigweed Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License. You may obtain a copy of
@@ -14,6 +14,10 @@
 
 import("//build_overrides/pigweed.gni")
 
+import("$dir_pw_compilation_testing/negative_compilation_test.gni")
+import("$dir_pw_third_party/boringssl/boringssl.gni")
+import("$dir_pw_third_party/googletest/googletest.gni")
+import("$dir_pw_third_party/mbedtls/mbedtls.gni")
 import("$dir_pw_toolchain/universal_tools.gni")
 
 declare_args() {
@@ -32,9 +36,9 @@ declare_args() {
   # are switched from -I to -isystem, which causes clang-tidy to ignore them.
   # Unfortunately, clang-tidy provides no other way to filter header files.
   #
-  # For example, the following ignores header files in "mbedtls/include":
+  # For example, the following ignores header files in "repo/include":
   #
-  #   pw_toolchain_STATIC_ANALYSIS_SKIP_INCLUDE_PATHS = ["mbedtls/include"]
+  #   pw_toolchain_STATIC_ANALYSIS_SKIP_INCLUDE_PATHS = ["repo/include"]
   #
   # While the following ignores all third-party header files:
   #
@@ -42,6 +46,14 @@ declare_args() {
   #
   pw_toolchain_STATIC_ANALYSIS_SKIP_INCLUDE_PATHS = []
 }
+
+# Third-party software with Pigweed-supported build files that do not pass all
+# clang-tidy checks.
+_excluded_third_party_dirs = [
+  dir_pw_third_party_mbedtls,
+  dir_pw_third_party_boringssl,
+  dir_pw_third_party_googletest,
+]
 
 # Creates a toolchain target for static analysis.
 #
@@ -52,8 +64,41 @@ declare_args() {
 # Args:
 #   cc: (required) String indicating the C compiler to use.
 #   cxx: (required) String indicating the C++ compiler to use.
+#   static_analysis: (required) A scope defining args to apply to the
+#     static_analysis toolchain.
+#   static_analysis.enabled: (required) Bool used to indicate whether
+#       static_analysis should be enabled for the toolchain where scope is
+#       applied to. Note that static_analysis.enabled must be set in order to
+#       use this toolchain.
+#   static_analysis.clang_tidy_path: (optional) String indicating clang-tidy bin
+#       to use.
+#   static_analysis.cc_post: (optional) String defining additional commands to
+#       append to cc tool's command list (i.e command(s) to run after cc command
+#       chain).
+#   static_analysis.cxx_post: (optional) String defining additional commands to
+#       append to cxx tool's command list (i.e command(s) to run after cxx
+#       command chain).
 template("pw_static_analysis_toolchain") {
   invoker_toolchain_args = invoker.defaults
+  assert(defined(invoker.static_analysis), "static_analysis scope missing.")
+  _static_analysis_args = invoker.static_analysis
+  assert(defined(_static_analysis_args.enabled),
+         "static_analysis.enabled is missing")
+  assert(_static_analysis_args.enabled,
+         "static_analysis.enabled must be true to use this toolchain.")
+
+  _skipped_regexps = []
+  _skipped_include_paths = []
+  foreach(third_party_dir, _excluded_third_party_dirs) {
+    if (third_party_dir != "") {
+      _skipped_include_paths += [
+        third_party_dir + "/include",
+        third_party_dir,
+      ]
+    }
+  }
+  _skipped_regexps += pw_toolchain_STATIC_ANALYSIS_SKIP_SOURCES_RES
+  _skipped_include_paths += pw_toolchain_STATIC_ANALYSIS_SKIP_INCLUDE_PATHS
 
   # Clang tidy is invoked by a wrapper script which implements the missing
   # option --source-filter.
@@ -63,13 +108,19 @@ template("pw_static_analysis_toolchain") {
   _clang_tidy_py = "${python_path} ${_clang_tidy_py_path}"
   _source_root = rebase_path("//", root_build_dir)
   _source_exclude = ""
-  foreach(pattern, pw_toolchain_STATIC_ANALYSIS_SKIP_SOURCES_RES) {
+  foreach(pattern, _skipped_regexps) {
     _source_exclude = _source_exclude + " --source-exclude '${pattern}'"
   }
   _skip_include_path = ""
-  foreach(pattern, pw_toolchain_STATIC_ANALYSIS_SKIP_INCLUDE_PATHS) {
+  foreach(pattern, _skipped_include_paths) {
     _skip_include_path =
         _skip_include_path + " --skip-include-path '${pattern}'"
+  }
+  _clang_tidy_path = ""
+  if (defined(_static_analysis_args.clang_tidy_path)) {
+    _clang_tidy_path =
+        "--clang-tidy " +
+        rebase_path(_static_analysis_args.clang_tidy_path, root_build_dir)
   }
 
   toolchain(target_name) {
@@ -91,12 +142,19 @@ template("pw_static_analysis_toolchain") {
 
     assert(defined(invoker.cc), "toolchain is missing 'cc'")
     tool("cc") {
+      _post_command_hook = ""
+      if (defined(_static_analysis_args.cc_post) &&
+          _static_analysis_args.cc_post != "") {
+        _post_command_hook += " && " + _static_analysis_args.cc_post
+      }
+
       depfile = "{{output}}.d"
       command = string_join(" ",
                             [
                               _clang_tidy_py,
                               _source_exclude,
                               _skip_include_path,
+                              _clang_tidy_path,
                               "--source-file {{source}}",
                               "--source-root '${_source_root}'",
                               "--export-fixes {{output}}.yaml",
@@ -110,7 +168,7 @@ template("pw_static_analysis_toolchain") {
                               "{{include_dirs}}",
                               "-c {{source}}",
                               "-o {{output}}",
-                            ]) + " && touch {{output}}"
+                            ]) + " && touch {{output}}" + _post_command_hook
       depsformat = "gcc"
       description = "clang-tidy {{source}}"
       outputs =
@@ -119,12 +177,19 @@ template("pw_static_analysis_toolchain") {
 
     assert(defined(invoker.cxx), "toolchain is missing 'cxx'")
     tool("cxx") {
+      _post_command_hook = ""
+      if (defined(_static_analysis_args.cxx_post) &&
+          _static_analysis_args.cxx_post != "") {
+        _post_command_hook += " && " + _static_analysis_args.cxx_post
+      }
+
       depfile = "{{output}}.d"
       command = string_join(" ",
                             [
                               _clang_tidy_py,
                               _source_exclude,
                               _skip_include_path,
+                              _clang_tidy_path,
                               "--source-file {{source}}",
                               "--source-root '${_source_root}'",
                               "--export-fixes {{output}}.yaml",
@@ -138,7 +203,7 @@ template("pw_static_analysis_toolchain") {
                               "{{include_dirs}}",
                               "-c {{source}}",
                               "-o {{output}}",
-                            ]) + " && touch {{output}}"
+                            ]) + " && touch {{output}}" + _post_command_hook
       depsformat = "gcc"
       description = "clang-tidy {{source}}"
       outputs =
@@ -211,6 +276,14 @@ template("pw_static_analysis_toolchain") {
       forward_variables_from(_copy, "*")
     }
 
+    tool("rust_bin") {
+      _output = "{{output_dir}}/{{target_output_name}}{{output_extension}}"
+      command = pw_universal_stamp.command
+      description = "rustc {{output}}"
+      outputs = [ _output ]
+      default_output_dir = "{{target_out_dir}}/bin"
+    }
+
     # Build arguments to be overridden when compiling cross-toolchain:
     #
     #   pw_toolchain_defaults: A scope setting defaults to apply to GN targets
@@ -228,6 +301,13 @@ template("pw_static_analysis_toolchain") {
         name = target_name
       }
       forward_variables_from(invoker_toolchain_args, "*")
+
+      # Disable compilation testing for static analysis toolchains.
+      pw_compilation_testing_NEGATIVE_COMPILATION_ENABLED = false
+
+      # Always disable coverage generation since we will not actually run the
+      # instrumented binaries to produce a profraw file.
+      pw_toolchain_COVERAGE_ENABLED = false
     }
   }
 }

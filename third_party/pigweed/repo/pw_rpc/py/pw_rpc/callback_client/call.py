@@ -17,8 +17,17 @@ import enum
 import logging
 import math
 import queue
-from typing import (Any, Callable, Iterable, Iterator, NamedTuple, Union,
-                    Optional, Sequence, TypeVar)
+from typing import (
+    Any,
+    Callable,
+    Iterable,
+    Iterator,
+    NamedTuple,
+    Union,
+    Optional,
+    Sequence,
+    TypeVar,
+)
 
 from pw_protobuf_compiler.python_protos import proto_repr
 from pw_status import Status
@@ -33,45 +42,61 @@ _LOG = logging.getLogger(__package__)
 
 class UseDefault(enum.Enum):
     """Marker for args that should use a default value, when None is valid."""
+
     VALUE = 0
 
 
-CallType = TypeVar('CallType', 'UnaryCall', 'ServerStreamingCall',
-                   'ClientStreamingCall', 'BidirectionalStreamingCall')
+CallTypeT = TypeVar(
+    'CallTypeT',
+    'UnaryCall',
+    'ServerStreamingCall',
+    'ClientStreamingCall',
+    'BidirectionalStreamingCall',
+)
 
-OnNextCallback = Callable[[CallType, Any], Any]
-OnCompletedCallback = Callable[[CallType, Any], Any]
-OnErrorCallback = Callable[[CallType, Any], Any]
+OnNextCallback = Callable[[CallTypeT, Any], Any]
+OnCompletedCallback = Callable[[CallTypeT, Any], Any]
+OnErrorCallback = Callable[[CallTypeT, Any], Any]
 
 OptionalTimeout = Union[UseDefault, float, None]
 
 
 class UnaryResponse(NamedTuple):
     """Result from a unary or client streaming RPC: status and response."""
+
     status: Status
     response: Any
 
     def __repr__(self) -> str:
-        return f'({self.status}, {proto_repr(self.response)})'
+        reply = proto_repr(self.response) if self.response else self.response
+        return f'({self.status}, {reply})'
 
 
 class StreamResponse(NamedTuple):
     """Results from a server or bidirectional streaming RPC."""
+
     status: Status
     responses: Sequence[Any]
 
     def __repr__(self) -> str:
-        return (f'({self.status}, '
-                f'[{", ".join(proto_repr(r) for r in self.responses)}])')
+        return (
+            f'({self.status}, '
+            f'[{", ".join(proto_repr(r) for r in self.responses)}])'
+        )
 
 
 class Call:
     """Represents an in-progress or completed RPC call."""
-    def __init__(self, rpcs: PendingRpcs, rpc: PendingRpc,
-                 default_timeout_s: Optional[float],
-                 on_next: Optional[OnNextCallback],
-                 on_completed: Optional[OnCompletedCallback],
-                 on_error: Optional[OnErrorCallback]) -> None:
+
+    def __init__(
+        self,
+        rpcs: PendingRpcs,
+        rpc: PendingRpc,
+        default_timeout_s: Optional[float],
+        on_next: Optional[OnNextCallback],
+        on_completed: Optional[OnCompletedCallback],
+        on_error: Optional[OnErrorCallback],
+    ) -> None:
         self._rpcs = rpcs
         self._rpc = rpc
         self.default_timeout_s = default_timeout_s
@@ -88,16 +113,23 @@ class Call:
 
     def _invoke(self, request: Optional[Message], ignore_errors: bool) -> None:
         """Calls the RPC. This must be called immediately after __init__."""
-        previous = self._rpcs.send_request(self._rpc,
-                                           request,
-                                           self,
-                                           ignore_errors=ignore_errors,
-                                           override_pending=True)
+        previous = self._rpcs.send_request(
+            self._rpc,
+            request,
+            self,
+            ignore_errors=ignore_errors,
+            override_pending=True,
+        )
 
         # TODO(hepler): Remove the cancel_duplicate_calls option.
-        if (self._rpcs.cancel_duplicate_calls and  # type: ignore[attr-defined]
-                previous is not None and not previous.completed()):
-            previous._handle_error(Status.CANCELLED)  # pylint: disable=protected-access
+        if (
+            self._rpcs.cancel_duplicate_calls  # type: ignore[attr-defined]
+            and previous is not None
+            and not previous.completed()
+        ):
+            previous._handle_error(  # pylint: disable=protected-access
+                Status.CANCELLED
+            )
 
     def _default_response(self, response: Message) -> None:
         _LOG.debug('%s received response: %s', self._rpc, response)
@@ -109,6 +141,10 @@ class Call:
         _LOG.warning('%s terminated due to an error: %s', self._rpc, error)
 
     @property
+    def call_id(self) -> int:
+        return self._rpc.call_id
+
+    @property
     def method(self) -> Method:
         return self._rpc.method
 
@@ -116,8 +152,9 @@ class Call:
         """True if the RPC call has completed, successfully or from an error."""
         return self.status is not None or self.error is not None
 
-    def _send_client_stream(self, request_proto: Optional[Message],
-                            request_fields: dict) -> None:
+    def _send_client_stream(
+        self, request_proto: Optional[Message], request_fields: dict
+    ) -> None:
         """Sends a client to the server in the client stream.
 
         Sending a client stream packet on a closed RPC raises an exception.
@@ -128,7 +165,8 @@ class Call:
             raise RpcError(self._rpc, Status.FAILED_PRECONDITION)
 
         self._rpcs.send_client_stream(
-            self._rpc, self.method.get_request(request_proto, request_fields))
+            self._rpc, self.method.get_request(request_proto, request_fields)
+        )
 
     def _finish_client_stream(self, requests: Iterable[Message]) -> None:
         for request in requests:
@@ -153,10 +191,9 @@ class Call:
         assert self.status is not None
         return StreamResponse(self.status, self._responses)
 
-    def _get_responses(self,
-                       *,
-                       count: int = None,
-                       timeout_s: OptionalTimeout) -> Iterator:
+    def _get_responses(
+        self, *, count: Optional[int] = None, timeout_s: OptionalTimeout
+    ) -> Iterator:
         """Returns an iterator of stream responses.
 
         Args:
@@ -233,8 +270,10 @@ class Call:
         try:
             callback(self, arg)
         except Exception as callback_exception:  # pylint: disable=broad-except
-            msg = (f'The {callback_name} callback ({callback}) for '
-                   f'{self._rpc} raised an exception')
+            msg = (
+                f'The {callback_name} callback ({callback}) for '
+                f'{self._rpc} raised an exception'
+            )
             _LOG.exception(msg)
 
             self._callback_exception = RuntimeError(msg)
@@ -252,30 +291,35 @@ class Call:
 
 class UnaryCall(Call):
     """Tracks the state of a unary RPC call."""
+
     @property
     def response(self) -> Any:
         return self._responses[-1] if self._responses else None
 
-    def wait(self,
-             timeout_s: OptionalTimeout = UseDefault.VALUE) -> UnaryResponse:
+    def wait(
+        self, timeout_s: OptionalTimeout = UseDefault.VALUE
+    ) -> UnaryResponse:
         return self._unary_wait(timeout_s)
 
 
 class ServerStreamingCall(Call):
     """Tracks the state of a server streaming RPC call."""
+
     @property
     def responses(self) -> Sequence:
         return self._responses
 
-    def wait(self,
-             timeout_s: OptionalTimeout = UseDefault.VALUE) -> StreamResponse:
+    def wait(
+        self, timeout_s: OptionalTimeout = UseDefault.VALUE
+    ) -> StreamResponse:
         return self._stream_wait(timeout_s)
 
     def get_responses(
-            self,
-            *,
-            count: int = None,
-            timeout_s: OptionalTimeout = UseDefault.VALUE) -> Iterator:
+        self,
+        *,
+        count: Optional[int] = None,
+        timeout_s: OptionalTimeout = UseDefault.VALUE,
+    ) -> Iterator:
         return self._get_responses(count=count, timeout_s=timeout_s)
 
     def __iter__(self) -> Iterator:
@@ -284,23 +328,25 @@ class ServerStreamingCall(Call):
 
 class ClientStreamingCall(Call):
     """Tracks the state of a client streaming RPC call."""
+
     @property
     def response(self) -> Any:
         return self._responses[-1] if self._responses else None
 
     # TODO(hepler): Use / to mark the first arg as positional-only
     #     when when Python 3.7 support is no longer required.
-    def send(self,
-             _rpc_request_proto: Message = None,
-             **request_fields) -> None:
+    def send(
+        self, _rpc_request_proto: Optional[Message] = None, **request_fields
+    ) -> None:
         """Sends client stream request to the server."""
         self._send_client_stream(_rpc_request_proto, request_fields)
 
     def finish_and_wait(
-            self,
-            requests: Iterable[Message] = (),
-            *,
-            timeout_s: OptionalTimeout = UseDefault.VALUE) -> UnaryResponse:
+        self,
+        requests: Iterable[Message] = (),
+        *,
+        timeout_s: OptionalTimeout = UseDefault.VALUE,
+    ) -> UnaryResponse:
         """Ends the client stream and waits for the RPC to complete."""
         self._finish_client_stream(requests)
         return self._unary_wait(timeout_s)
@@ -308,32 +354,35 @@ class ClientStreamingCall(Call):
 
 class BidirectionalStreamingCall(Call):
     """Tracks the state of a bidirectional streaming RPC call."""
+
     @property
     def responses(self) -> Sequence:
         return self._responses
 
     # TODO(hepler): Use / to mark the first arg as positional-only
     #     when when Python 3.7 support is no longer required.
-    def send(self,
-             _rpc_request_proto: Message = None,
-             **request_fields) -> None:
+    def send(
+        self, _rpc_request_proto: Optional[Message] = None, **request_fields
+    ) -> None:
         """Sends a message to the server in the client stream."""
         self._send_client_stream(_rpc_request_proto, request_fields)
 
     def finish_and_wait(
-            self,
-            requests: Iterable[Message] = (),
-            *,
-            timeout_s: OptionalTimeout = UseDefault.VALUE) -> StreamResponse:
+        self,
+        requests: Iterable[Message] = (),
+        *,
+        timeout_s: OptionalTimeout = UseDefault.VALUE,
+    ) -> StreamResponse:
         """Ends the client stream and waits for the RPC to complete."""
         self._finish_client_stream(requests)
         return self._stream_wait(timeout_s)
 
     def get_responses(
-            self,
-            *,
-            count: int = None,
-            timeout_s: OptionalTimeout = UseDefault.VALUE) -> Iterator:
+        self,
+        *,
+        count: Optional[int] = None,
+        timeout_s: OptionalTimeout = UseDefault.VALUE,
+    ) -> Iterator:
         return self._get_responses(count=count, timeout_s=timeout_s)
 
     def __iter__(self) -> Iterator:

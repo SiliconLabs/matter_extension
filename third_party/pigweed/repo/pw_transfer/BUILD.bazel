@@ -117,6 +117,28 @@ pw_cc_library(
 )
 
 pw_cc_library(
+    name = "atomic_file_transfer_handler",
+    srcs = ["atomic_file_transfer_handler.cc"],
+    hdrs = [
+        "public/pw_transfer/atomic_file_transfer_handler.h",
+    ],
+    includes = ["public"],
+    deps = [
+        ":atomic_file_transfer_handler_internal",
+        ":core",
+        "//pw_log",
+        "//pw_stream:std_file_stream",
+    ],
+)
+
+pw_cc_library(
+    name = "atomic_file_transfer_handler_internal",
+    srcs = [
+        "pw_transfer_private/filename_generator.h",
+    ],
+)
+
+pw_cc_library(
     name = "test_helpers",
     srcs = [
         "pw_transfer_private/chunk_testing.h",
@@ -127,10 +149,13 @@ pw_cc_library(
     ],
 )
 
-# TODO(pwbug/507): Add the client integration test to the build.
-filegroup(
-    name = "integration_test",
-    srcs = ["integration_test.cc"],
+pw_cc_test(
+    name = "chunk_test",
+    srcs = ["chunk_test.cc"],
+    deps = [
+        ":core",
+        "//pw_unit_test",
+    ],
 )
 
 pw_cc_test(
@@ -138,6 +163,19 @@ pw_cc_test(
     srcs = ["handler_test.cc"],
     deps = [
         ":pw_transfer",
+        "//pw_unit_test",
+    ],
+)
+
+pw_cc_test(
+    name = "atomic_file_transfer_handler_test",
+    srcs = ["atomic_file_transfer_handler_test.cc"],
+    deps = [
+        ":atomic_file_transfer_handler",
+        ":atomic_file_transfer_handler_internal",
+        ":pw_transfer",
+        "//pw_random",
+        "//pw_string",
         "//pw_unit_test",
     ],
 )
@@ -189,6 +227,7 @@ pw_cc_binary(
     name = "test_rpc_server",
     srcs = ["test_rpc_server.cc"],
     deps = [
+        ":atomic_file_transfer_handler",
         ":pw_transfer",
         ":test_server_pwpb.raw_rpc",
         "//pw_log",
@@ -227,7 +266,7 @@ proto_library(
         "test_server.proto",
     ],
     import_prefix = "pw_transfer_test",
-    strip_import_prefix = "//pw_transfer",
+    strip_import_prefix = "/pw_transfer",
     deps = [
         "//pw_protobuf:common_proto",
     ],

@@ -44,8 +44,8 @@ class EmptyInitializedKvs : public ::testing::Test {
   // human readable 4 bytes. See pw_kvs/format.h for more information.
   EmptyInitializedKvs()
       : kvs_(&test_partition, {.magic = 0x873a9b50, .checksum = &checksum}) {
-    test_partition.Erase(0, test_partition.sector_count())
-        .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+    EXPECT_EQ(OkStatus(),
+              test_partition.Erase(0, test_partition.sector_count()));
     PW_CHECK_OK(kvs_.Init());
   }
 
@@ -70,8 +70,10 @@ TEST_F(EmptyInitializedKvs, Put_VaryingKeysAndValues) {
     }
   }
 
+  // Ignore error to allow test to pass on platforms where writing out the stats
+  // is not possible.
   test_partition.SaveStorageStats(kvs_, "Put_VaryingKeysAndValues")
-      .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+      .IgnoreError();
 }
 
 }  // namespace

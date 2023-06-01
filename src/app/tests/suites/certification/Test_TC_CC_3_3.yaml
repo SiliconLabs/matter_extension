@@ -50,7 +50,7 @@ tests:
       command: "MoveToHue"
       arguments:
           values:
-              - name: "hue"
+              - name: "Hue"
                 value: 200
               - name: "Direction"
                 value: 0
@@ -62,6 +62,7 @@ tests:
                 value: 0
 
     - label: "Wait 100ms"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -88,6 +89,7 @@ tests:
                 value: 0
 
     - label: "Wait 10s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -105,6 +107,7 @@ tests:
               maxValue: 254
 
     - label: "Wait 10s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -118,10 +121,11 @@ tests:
       attribute: "CurrentHue"
       response:
           constraints:
-              minValue: 0
-              maxValue: 10
+              minValue: 4
+              maxValue: 6
 
     - label: "Wait 5s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -134,7 +138,9 @@ tests:
       command: "readAttribute"
       attribute: "CurrentHue"
       response:
-          value: 5
+          constraints:
+              minValue: 4
+              maxValue: 6
 
     - label:
           "TH sends MoveToHue command to DUT with Hue=50, Direction=0x00
@@ -143,7 +149,7 @@ tests:
       command: "MoveToHue"
       arguments:
           values:
-              - name: "hue"
+              - name: "Hue"
                 value: 50
               - name: "Direction"
                 value: 0
@@ -155,6 +161,7 @@ tests:
                 value: 0
 
     - label: "Wait 100ms"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -181,6 +188,7 @@ tests:
                 value: 0
 
     - label: "Wait 10s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -198,6 +206,7 @@ tests:
               maxValue: 23
 
     - label: "Wait 10s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -215,6 +224,7 @@ tests:
               maxValue: 255
 
     - label: "Wait 5s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -227,7 +237,9 @@ tests:
       command: "readAttribute"
       attribute: "CurrentHue"
       response:
-          value: 245
+          constraints:
+              minValue: 208
+              maxValue: 255
 
     - label: "TH reads ColorMode attribute from DUT"
       PICS: CC.S.F00 && CC.S.A0008

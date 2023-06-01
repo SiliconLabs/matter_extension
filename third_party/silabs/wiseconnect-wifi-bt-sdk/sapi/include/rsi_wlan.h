@@ -92,6 +92,33 @@
 #define RSI_AUTO_CONFIG_DONE BIT(3)
 
 #define RSI_USER_STORE_CFG_STATUS 0x5a5a
+
+// frame type of raw data packets for host stack
+#define DUAL_HOST_RAW_DATA_PACKET 1
+
+// AKM suite types
+#define RSN_SELECTOR(d, c, b, a) \
+  ((((uint32_t)(a)) << 24) | (((uint32_t)(b)) << 16) | (((uint32_t)(c)) << 8) | (uint32_t)(d))
+#define RSN_AKM_OFFSET                         12
+#define RSN_SELECTOR_LEN                       4
+#define WPA_DRIVER_CAPA_KEY_MGMT_WPA           0x00000001
+#define WPA_DRIVER_CAPA_KEY_MGMT_WPA2          0x00000002
+#define WPA_DRIVER_CAPA_KEY_MGMT_WPA_PSK       0x00000004
+#define WPA_DRIVER_CAPA_KEY_MGMT_WPA2_PSK      0x00000008
+#define WPA_DRIVER_CAPA_KEY_MGMT_WPA_NONE      0x00000010
+#define WPA_DRIVER_CAPA_KEY_MGMT_SAE           0x00010000
+#define WPA_DRIVER_CAPA_KEY_MGMT_802_1X_SHA256 0x00020000
+#define WPA_DRIVER_CAPA_KEY_MGMT_PSK_SHA256    0x00040000
+
+#define RSN_AUTH_KEY_MGMT_UNSPEC_802_1X   RSN_SELECTOR(0x00, 0x0f, 0xac, 1)
+#define RSN_AUTH_KEY_MGMT_PSK_OVER_802_1X RSN_SELECTOR(0x00, 0x0f, 0xac, 2)
+#define RSN_AUTH_KEY_MGMT_FT_802_1X       RSN_SELECTOR(0x00, 0x0f, 0xac, 3)
+#define RSN_AUTH_KEY_MGMT_FT_PSK          RSN_SELECTOR(0x00, 0x0f, 0xac, 4)
+#define RSN_AUTH_KEY_MGMT_802_1X_SHA256   RSN_SELECTOR(0x00, 0x0f, 0xac, 5)
+#define RSN_AUTH_KEY_MGMT_PSK_SHA256      RSN_SELECTOR(0x00, 0x0f, 0xac, 6)
+#define RSN_AUTH_KEY_MGMT_TPK_HANDSHAKE   RSN_SELECTOR(0x00, 0x0f, 0xac, 7)
+#define RSN_AUTH_KEY_MGMT_SAE             RSN_SELECTOR(0x00, 0x0f, 0xac, 8)
+
 /******************************************************
  * *                    Constants
  * ******************************************************/
@@ -229,7 +256,10 @@ typedef enum rsi_wlan_cmd_response_e {
   RSI_WLAN_RSP_GET_STATS             = 0xF1,
   RSI_WLAN_RSP_HTTP_OTAF             = 0xF4,
   RSI_WLAN_RSP_UPDATE_TCP_WINDOW     = 0xF5,
+  RSI_WLAN_RATE_RSP_STATS            = 0x88,
+  RSI_WLAN_RSP_GET_CSI_DATA          = 0xB9,
   RSI_WLAN_RSP_EXT_STATS             = 0x68
+
 } rsi_wlan_cmd_response_t;
 
 // enumeration for WLAN command request codes
@@ -327,7 +357,9 @@ typedef enum rsi_wlan_cmd_request_e {
   RSI_WLAN_REQ_HTTP_OTAF            = 0xF4,
   RSI_WLAN_REQ_UPDATE_TCP_WINDOW    = 0xF5,
   RSI_WLAN_REQ_11AX_PARAMS          = 0xFF,
+  RSI_WLAN_REQ_GET_CSI_DATA         = 0xB9,
   RSI_WLAN_REQ_EXT_STATS            = 0x68
+
 } rsi_wlan_cmd_request_t;
 
 typedef enum rsi_wlan_opermode_e {
@@ -387,6 +419,12 @@ typedef struct rsi_wlan_cb_s {
 
   // opermode
   uint16_t opermode;
+
+  // wlan station state
+  volatile rsi_wlan_state_t sta_state;
+
+  // wlan ap state
+  volatile rsi_wlan_state_t ap_state;
 } rsi_wlan_cb_t;
 
 // Band command request structure
@@ -828,7 +866,7 @@ typedef struct rsi_req_cert_valid_s {
 
 } rsi_req_cert_valid_t;
 #endif
-#define RSI_CERT_MAX_DATA_SIZE (RSI_MAX_CERT_SEND_SIZE – (sizeof(struct rsi_cert_info_s)))
+#define RSI_CERT_MAX_DATA_SIZE (RSI_MAX_CERT_SEND_SIZE - (sizeof(struct rsi_cert_info_s)))
 // Set certificate command request structure
 typedef struct rsi_req_set_certificate_s {
   // certificate information structure
@@ -1165,6 +1203,9 @@ typedef struct rsi_req_socket_s {
   uint16_t no_of_tls_extensions;
   uint16_t total_extension_length;
   uint8_t tls_extension_data[MAX_SIZE_OF_EXTENSION_DATA];
+#ifdef CHIP_9117
+  uint16_t recv_buff_len;
+#endif
 
 } __attribute__((__packed__)) rsi_req_socket_t;
 
@@ -1581,10 +1622,10 @@ typedef struct rsi_cfgGetFrameRcv {
   uint8_t join_ssid[RSI_SSID_LEN];
   uint8_t uRate;
   uint8_t uTxPower;
-  uint8_t join_feature_bitmap;
   uint8_t reserved_1;
-  uint8_t scan_ssid_len;
   uint8_t reserved_2;
+  uint8_t scan_ssid_len;
+  uint8_t reserved_3;
   uint8_t csec_mode;
   uint8_t psk[RSI_PSK_LEN];
   uint8_t scan_ssid[RSI_SSID_LEN];
@@ -1606,7 +1647,7 @@ typedef struct rsi_cfgGetFrameRcv {
   rsi_apconfig apconfig;
   uint8_t module_mac[6];
   uint8_t antenna_select[2];
-  uint8_t reserved_3[2];
+  uint8_t reserved_4[2];
   rsi_wepkey wep_key;
   uint8_t dhcp6_enable[2];
   uint8_t prefix_length[2];
@@ -1631,7 +1672,7 @@ typedef struct rsi_cfgGetFrameRcv {
   uint8_t region_request_from_host;
   uint8_t rsi_region_code_from_host;
   uint8_t region_code;
-  uint8_t reserved_4[43];
+  uint8_t reserved_5[43];
   uint8_t multicast_magic_code[2];
   uint8_t multicast_bitmap[2];
   uint8_t powermode_magic_code[2];
@@ -1647,13 +1688,14 @@ typedef struct rsi_cfgGetFrameRcv {
   uint8_t ext_custom_feature_bit_map[4];
   uint8_t private_key_password[82];
   uint8_t join_bssid[6];
-  uint8_t fast_psp_enable;
-  uint8_t monitor_interval[2];
-  uint8_t timeout_value[2];
-  uint8_t timeout_bitmap[4];
-  uint8_t request_timeout_magic_word[2];
+  uint8_t join_feature_bitmap;
   rsi_uHtCaps ht_caps;
   uint8_t ht_caps_magic_word[2];
+  uint8_t fast_psp_enable;
+  uint8_t monitor_interval[2];
+  uint8_t request_timeout_magic_word[2];
+  uint8_t timeout_value[2];
+  uint8_t timeout_bitmap[4];
   // AP IP parameters in Concurrent mode
   uint8_t dhcp_ap_enable;
   uint8_t ap_ip[4];
@@ -1711,6 +1753,14 @@ typedef struct rsi_calib_write_s {
   uint8_t reserved1[2];
 } rsi_calib_write_t;
 
+// csi config structure
+typedef struct rsi_csi_config_s {
+  // enable/disable CSI data retrieval
+  uint32_t csi_enable;
+  // periodicity of CSI data retrieval
+  uint32_t periodicity;
+} rsi_csi_config_t;
+
 /******************************************************
  * *                    Structures
  * ******************************************************/
@@ -1749,7 +1799,8 @@ int32_t rsi_post_waiting_semaphore(void);
 void rsi_call_asynchronous_callback(void);
 void rsi_assertion_cb(uint16_t assert_val, uint8_t *buffer, const uint32_t length);
 void rsi_max_available_rx_window(uint16_t status, uint8_t *buffer, const uint32_t length);
-
+int32_t send_timeout(uint32_t timeout_bitmap, uint16_t timeout_value);
+int32_t rsi_config_timeout(uint32_t timeout_type, uint16_t timeout_value);
 #ifdef RSI_ENABLE_DEMOS
 void rsi_wlan_app_callbacks_init(void);
 void rsi_join_fail_handler(uint16_t status, uint8_t *buffer, const uint32_t length);

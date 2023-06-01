@@ -15,7 +15,10 @@
 import("//build_overrides/pigweed.gni")
 
 import("$dir_pw_build/target_types.gni")
+import("$dir_pw_compilation_testing/negative_compilation_test.gni")
 import("$dir_pw_docgen/docs.gni")
+import("$dir_pw_sync/backend.gni")
+import("$dir_pw_thread/backend.gni")
 import("$dir_pw_unit_test/test.gni")
 
 config("public") {
@@ -84,6 +87,7 @@ pw_test_group("tests") {
     ":method_union_test",
     ":server_reader_writer_test",
     ":stub_generation_test",
+    ":synchronous_call_test",
   ]
 }
 
@@ -119,6 +123,7 @@ pw_test("client_reader_writer_test") {
 pw_test("method_test") {
   deps = [
     ":server_api",
+    ":service_nc_test",  # Pull in the service NC test through this test
     "$dir_pw_containers",
     "..:test_protos.pwpb",
     "..:test_protos.raw_rpc",
@@ -159,4 +164,22 @@ pw_test("server_reader_writer_test") {
 pw_test("stub_generation_test") {
   deps = [ "..:test_protos.raw_rpc" ]
   sources = [ "stub_generation_test.cc" ]
+}
+
+pw_test("synchronous_call_test") {
+  deps = [
+    ":test_method_context",
+    "$dir_pw_work_queue:pw_work_queue",
+    "$dir_pw_work_queue:stl_test_thread",
+    "$dir_pw_work_queue:test_thread",
+    "..:synchronous_client_api",
+    "..:test_protos.raw_rpc",
+  ]
+  sources = [ "synchronous_call_test.cc" ]
+  enable_if = pw_sync_TIMED_THREAD_NOTIFICATION_BACKEND != ""
+}
+
+pw_cc_negative_compilation_test("service_nc_test") {
+  sources = [ "service_nc_test.cc" ]
+  deps = [ "..:test_protos.raw_rpc" ]
 }

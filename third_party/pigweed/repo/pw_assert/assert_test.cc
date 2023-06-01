@@ -15,6 +15,7 @@
 #include "pw_assert/assert.h"
 
 #include "gtest/gtest.h"
+#include "pw_status/status.h"
 
 // PW_ASSERT() should always be enabled, and always evaluate the expression.
 TEST(Assert, AssertTrue) {
@@ -32,6 +33,15 @@ TEST(Assert, DebugAssertTrue) {
   } else {
     EXPECT_EQ(evaluated, 1);
   }
+}
+
+TEST(Assert, AssertOkEvaluatesExpressionAndDoesNotCrashOnOk) {
+  int evaluated = 1;
+  PW_ASSERT_OK(([&]() {
+    ++evaluated;
+    return pw::OkStatus();
+  })());
+  EXPECT_EQ(evaluated, 2);
 }
 
 // Unfortunately, we don't have the infrastructure to test failure handling

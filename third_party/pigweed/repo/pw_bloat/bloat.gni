@@ -1,4 +1,4 @@
-# Copyright 2019 The Pigweed Authors
+# Copyright 2023 The Pigweed Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License. You may obtain a copy of
@@ -14,6 +14,7 @@
 
 import("//build_overrides/pigweed.gni")
 
+import("$dir_pw_build/evaluate_path_expressions.gni")
 import("$dir_pw_build/python_action.gni")
 
 declare_args() {
@@ -21,7 +22,7 @@ declare_args() {
   # capacities for the target binaries.
   pw_bloat_BLOATY_CONFIG = ""
 
-  # List of toolchains to use in pw_toolchain_size_report templates.
+  # List of toolchains to use in pw_toolchain_size_diff templates.
   #
   # Each entry is a scope containing the following variables:
   #
@@ -32,11 +33,187 @@ declare_args() {
   #   bloaty_config: Optional Bloaty confirugation file defining the memory
   #     layout of the binaries as specified in the linker script.
   #
-  # If this list is empty, pw_toolchain_size_report targets become no-ops.
+  # If this list is empty, pw_toolchain_size_diff targets become no-ops.
   pw_bloat_TOOLCHAINS = []
 
   # Controls whether to display size reports in the build output.
   pw_bloat_SHOW_SIZE_REPORTS = false
+}
+
+# Creates a size report for a single binary.
+#
+# Args:
+#   target: Build target for executable. Required.
+#   data_sources: List of datasources from bloaty config file
+#     or built-in datasources. Order of sources determines hierarchical
+#     output. Optional.
+#     github.com/google/bloaty/blob/a1bbc93f5f6f969242046dffd9deb379f6735020/doc/using.md
+#   source_filter: Regex to filter data source names in Bloaty. Optional.
+#
+# Example:
+#   pw_size_report("foo_bloat") {
+#      target = ":foo_static"
+#      datasources = "symbols,segment_names"
+#      source_filter = "foo"
+#   }
+#
+template("pw_size_report") {
+  if (pw_bloat_BLOATY_CONFIG != "") {
+    assert(defined(invoker.target),
+           "Size report must defined a 'target' variable")
+    _all_target_dependencies = [ invoker.target ]
+    _binary_args = []
+
+    if (defined(invoker.source_filter)) {
+      curr_source_filter = invoker.source_filter
+    } else {
+      curr_source_filter = ""
+    }
+
+    if (defined(invoker.data_sources)) {
+      curr_data_sources = string_split(invoker.data_sources, ",")
+    } else {
+      curr_data_sources = ""
+    }
+    _binary_args = [
+      {
+        bloaty_config = rebase_path(pw_bloat_BLOATY_CONFIG, root_build_dir)
+        out_dir = rebase_path(target_gen_dir, root_build_dir)
+        target = "<TARGET_FILE(${invoker.target})>"
+        source_filter = curr_source_filter
+        data_sources = curr_data_sources
+      },
+    ]
+
+    _file_name = "${target_name}_single_binary.json"
+
+    _args_src = "$target_gen_dir/${_file_name}.in"
+    _args_path = "$target_gen_dir/${_file_name}"
+
+    write_file(_args_src,
+               {
+                 binaries = _binary_args
+                 target_name = target_name
+                 out_dir = rebase_path(target_gen_dir, root_build_dir)
+                 root = rebase_path("//", root_build_dir)
+                 toolchain = current_toolchain
+                 default_toolchain = default_toolchain
+                 cwd = rebase_path(".", root_build_dir)
+               },
+               "json")
+
+    pw_evaluate_path_expressions("${target_name}.evaluate") {
+      files = [
+        {
+          source = _args_src
+          dest = _args_path
+        },
+      ]
+    }
+
+    _bloat_script_args = [
+      "--gn-arg-path",
+      rebase_path(_args_path, root_build_dir),
+      "--single-report",
+    ]
+
+    _doc_rst_output = "$target_gen_dir/${target_name}"
+    _binary_sizes_output = "$target_gen_dir/${target_name}.binary_sizes.json"
+
+    if (host_os == "win") {
+      # Bloaty is not yet packaged for Windows systems; display a message
+      # indicating this.
+      not_needed("*")
+      not_needed(invoker, "*")
+
+      pw_python_action(target_name) {
+        metadata = {
+          pw_doc_sources = rebase_path([ _doc_rst_output ], root_build_dir)
+        }
+        script = "$dir_pw_bloat/py/pw_bloat/no_bloaty.py"
+        python_deps = [ "$dir_pw_bloat/py" ]
+        args = [ rebase_path(_doc_rst_output, root_build_dir) ]
+        outputs = [ _doc_rst_output ]
+      }
+
+      group(target_name + "_UNUSED_DEPS") {
+        deps = _all_target_dependencies
+      }
+    } else {
+      # Create an action which runs the size report script on the provided
+      # targets.
+      pw_python_action(target_name) {
+        metadata = {
+          pw_doc_sources = rebase_path([ _doc_rst_output ], root_build_dir)
+        }
+        script = "$dir_pw_bloat/py/pw_bloat/bloat.py"
+        python_deps = [ "$dir_pw_bloat/py" ]
+        inputs = [
+          pw_bloat_BLOATY_CONFIG,
+          _args_path,
+        ]
+        outputs = [
+          "${_doc_rst_output}.txt",
+          _binary_sizes_output,
+          _doc_rst_output,
+        ]
+        deps = _all_target_dependencies + [ ":${target_name}.evaluate" ]
+        args = _bloat_script_args
+
+        # Print size reports to stdout when they are generated, if requested.
+        capture_output = !pw_bloat_SHOW_SIZE_REPORTS
+      }
+    }
+  } else {
+    not_needed(invoker, "*")
+    group(target_name) {
+    }
+  }
+}
+
+# Aggregates JSON size report data from several pw_size_report targets into a
+# single output file.
+#
+# Args:
+#   deps: List of pw_size_report targets whose data to collect.
+#   output: Path to the output JSON file.
+#
+# Example:
+#   pw_size_report_aggregation("image_sizes") {
+#      deps = [
+#        ":app_image_size_report",
+#        ":bootloader_image_size_report",
+#      ]
+#      output = "$root_gen_dir/artifacts/image_sizes.json"
+#   }
+#
+template("pw_size_report_aggregation") {
+  assert(defined(invoker.deps) && invoker.deps != [],
+         "pw_size_report_aggregation requires size report dependencies")
+  assert(defined(invoker.output),
+         "pw_size_report_aggregation requires an output file path")
+
+  _input_json_files = []
+
+  foreach(_dep, invoker.deps) {
+    _gen_dir = get_label_info(_dep, "target_gen_dir")
+    _dep_name = get_label_info(_dep, "name")
+    _input_json_files +=
+        [ rebase_path("$_gen_dir/${_dep_name}.binary_sizes.json",
+                      root_build_dir) ]
+  }
+
+  pw_python_action(target_name) {
+    script = "$dir_pw_bloat/py/pw_bloat/binary_size_aggregator.py"
+    python_deps = [ "$dir_pw_bloat/py" ]
+    args = [
+             "--output",
+             rebase_path(invoker.output, root_build_dir),
+           ] + _input_json_files
+    outputs = [ invoker.output ]
+    deps = invoker.deps
+    forward_variables_from(invoker, [ "visibility" ])
+  }
 }
 
 # Creates a target which runs a size report diff on a set of executables.
@@ -44,19 +221,26 @@ declare_args() {
 # Args:
 #   base: The default base executable target to run the diff against. May be
 #     omitted if all binaries provide their own base.
+#   source_filter: Optional global regex to filter data source names in Bloaty.
+#   data_sources: List of datasources from bloaty config file
+#     or built-in datasources. Order of sources determines hierarchical
+#     output. Optional.
+#     github.com/google/bloaty/blob/a1bbc93f5f6f969242046dffd9deb379f6735020/doc/using.md
 #   binaries: List of executables to compare in the diff.
 #     Each binary in the list is a scope containing up to three variables:
 #       label: Descriptive name for the executable. Required.
 #       target: Build target for the executable. Required.
 #       base: Optional base diff target. Overrides global base argument.
-#   source_filter: Optional regex to filter data source names in Bloaty.
-#   title: Optional title string to display with the size report.
-#   full_report: Optional boolean flag indicating whether to produce a full
-#     symbol size breakdown or a summary.
+#       source_filter: Optional regex to filter data source names.
+#         Overrides global source_filter argument.
+#       data_sources: Optional List of datasources from bloaty config file
+#         Overrides global data_sources argument.
+#
 #
 # Example:
-#   pw_size_report("foo_bloat") {
+#   pw_size_diff("foo_bloat") {
 #     base = ":foo_base"
+#     data_sources = "segment,symbols"
 #     binaries = [
 #       {
 #         target = ":foo_static"
@@ -65,12 +249,12 @@ declare_args() {
 #       {
 #         target = ":foo_dynamic"
 #         label = "Dynamic"
+#         data_sources = "segment_names"
 #       },
 #     ]
-#     title = "static vs. dynamic foo"
 #   }
 #
-template("pw_size_report") {
+template("pw_size_diff") {
   if (pw_bloat_BLOATY_CONFIG != "") {
     if (defined(invoker.base)) {
       _global_base = invoker.base
@@ -79,10 +263,17 @@ template("pw_size_report") {
       _all_target_dependencies = []
     }
 
+    if (defined(invoker.source_filter)) {
+      _global_source_filter = invoker.source_filter
+    }
+
+    if (defined(invoker.data_sources)) {
+      _global_data_sources = string_split(invoker.data_sources, ",")
+    }
+
+    # TODO(brandonvu): Remove once all downstream projects are updated
     if (defined(invoker.title)) {
-      _title = invoker.title
-    } else {
-      _title = target_name
+      not_needed(invoker, [ "title" ])
     }
 
     # This template creates an action which invokes a Python script to run a
@@ -91,18 +282,15 @@ template("pw_size_report") {
     # anything is changed. Most of the code below builds the command-line
     # arguments to pass each of the targets into the script.
 
-    _binary_paths = []
-    _binary_labels = []
+    # Process each of the binaries, creating an object and storing all the
+    # needed variables into a json. Json is parsed in bloat.py
+    _binaries_args = []
     _bloaty_configs = []
 
-    # Process each of the binaries, resolving their full output paths and
-    # building them into a list of command-line arguments to the bloat script.
     foreach(binary, invoker.binaries) {
       assert(defined(binary.label) && defined(binary.target),
              "Size report binaries must define 'label' and 'target' variables")
       _all_target_dependencies += [ binary.target ]
-
-      _binary_path = "<TARGET_FILE(${binary.target})>"
 
       # If the binary defines its own base, use that instead of the global base.
       if (defined(binary.base)) {
@@ -111,44 +299,79 @@ template("pw_size_report") {
       } else if (defined(_global_base)) {
         _binary_base = _global_base
       } else {
-        assert(false, "pw_size_report requires a 'base' file")
+        assert(false, "pw_size_diff requires a 'base' file")
+      }
+
+      if (defined(binary.source_filter)) {
+        _binary_source_filter = binary.source_filter
+      } else if (defined(_global_source_filter)) {
+        _binary_source_filter = _global_source_filter
+      } else {
+        _binary_source_filter = ""
+      }
+
+      _binary_data_sources = []
+      if (defined(binary.data_sources)) {
+        _binary_data_sources = string_split(binary.data_sources, ",")
+      } else if (defined(_global_data_sources)) {
+        _binary_data_sources = _global_data_sources
+      } else {
+        _binary_data_sources = ""
       }
 
       # Allow each binary to override the global bloaty config.
       if (defined(binary.bloaty_config)) {
+        _binary_bloaty_config = binary.bloaty_config
         _bloaty_configs += [ binary.bloaty_config ]
       } else {
+        _binary_bloaty_config = pw_bloat_BLOATY_CONFIG
         _bloaty_configs += [ pw_bloat_BLOATY_CONFIG ]
       }
 
-      _binary_path += ";" + "<TARGET_FILE($_binary_base)>"
+      _binaries_args += [
+        {
+          bloaty_config = rebase_path(_binary_bloaty_config, root_build_dir)
+          target = "<TARGET_FILE(${binary.target})>"
+          base = "<TARGET_FILE($_binary_base)>"
+          source_filter = _binary_source_filter
+          label = binary.label
+          data_sources = _binary_data_sources
+        },
+      ]
+    }
 
-      _binary_paths += [ _binary_path ]
-      _binary_labels += [ binary.label ]
+    _file_name = "${target_name}_binaries.json"
+    _diff_source = "$target_gen_dir/${_file_name}.in"
+    _diff_path = "$target_gen_dir/${_file_name}"
+    write_file(_diff_source,
+               {
+                 binaries = _binaries_args
+                 target_name = target_name
+                 out_dir = rebase_path(target_gen_dir, root_build_dir)
+                 root = rebase_path("//", root_build_dir)
+                 toolchain = current_toolchain
+                 default_toolchain = default_toolchain
+                 cwd = rebase_path(".", root_build_dir)
+               },
+               "json")
+
+    pw_evaluate_path_expressions("${target_name}.evaluate") {
+      files = [
+        {
+          source = _diff_source
+          dest = _diff_path
+        },
+      ]
     }
 
     _bloat_script_args = [
-      "--bloaty-config",
-      string_join(";", rebase_path(_bloaty_configs, root_build_dir)),
-      "--out-dir",
-      rebase_path(target_gen_dir, root_build_dir),
-      "--target",
-      target_name,
-      "--title",
-      _title,
-      "--labels",
-      string_join(";", _binary_labels),
+      "--gn-arg-path",
+      rebase_path(_diff_path, root_build_dir),
     ]
 
-    if (defined(invoker.full_report) && invoker.full_report) {
-      _bloat_script_args += [ "--full" ]
-    }
-
-    if (defined(invoker.source_filter)) {
-      _bloat_script_args += [
-        "--source-filter",
-        invoker.source_filter,
-      ]
+    # TODO(brandonvu): Remove once all downstream projects are updated
+    if (defined(invoker.full_report)) {
+      not_needed(invoker, [ "full_report" ])
     }
 
     _doc_rst_output = "$target_gen_dir/${target_name}"
@@ -181,13 +404,13 @@ template("pw_size_report") {
         }
         script = "$dir_pw_bloat/py/pw_bloat/bloat.py"
         python_deps = [ "$dir_pw_bloat/py" ]
-        inputs = _bloaty_configs
+        inputs = _bloaty_configs + [ _diff_path ]
         outputs = [
           "${_doc_rst_output}.txt",
           _doc_rst_output,
         ]
-        deps = _all_target_dependencies
-        args = _bloat_script_args + _binary_paths
+        deps = _all_target_dependencies + [ ":${target_name}.evaluate" ]
+        args = _bloat_script_args
 
         # Print size reports to stdout when they are generated, if requested.
         capture_output = !pw_bloat_SHOW_SIZE_REPORTS
@@ -216,7 +439,7 @@ template("pw_size_report") {
 #
 # Example:
 #
-#   pw_toolchain_size_report("my_size_report") {
+#   pw_toolchain_size_diff("my_size_report") {
 #     base_executable = {
 #       sources = [ "base.cc" ]
 #     }
@@ -227,11 +450,11 @@ template("pw_size_report") {
 #     }
 #   }
 #
-template("pw_toolchain_size_report") {
+template("pw_toolchain_size_diff") {
   assert(defined(invoker.base_executable),
-         "pw_toolchain_size_report requires a base_executable")
+         "pw_toolchain_size_diff requires a base_executable")
   assert(defined(invoker.diff_executable),
-         "pw_toolchain_size_report requires a diff_executable")
+         "pw_toolchain_size_diff requires a diff_executable")
 
   _size_report_binaries = []
 
@@ -241,7 +464,7 @@ template("pw_toolchain_size_report") {
 
   # Create a base and diff executable for each toolchain, adding the toolchain's
   # linker script to the link flags for the executable, and add them all to a
-  # list of binaries for the pw_size_report template.
+  # list of binaries for the pw_size_diff template.
   foreach(_toolchain, pw_bloat_TOOLCHAINS) {
     _prefix = "_${target_name}_${i}_pw_size"
 
@@ -290,7 +513,7 @@ template("pw_toolchain_size_report") {
     _diff_label = get_label_info(":$_diff_target_name", "label_no_toolchain")
     _diff_with_toolchain = "$_diff_label(${_toolchain.target})"
 
-    # Append a pw_size_report binary scope to the list comparing the toolchain's
+    # Append a pw_size_diff binary scope to the list comparing the toolchain's
     # diff and base executables.
     _size_report_binaries += [
       {
@@ -310,7 +533,7 @@ template("pw_toolchain_size_report") {
   # TODO(frolv): Have a way of indicating that a toolchain should build docs.
   if (current_toolchain == default_toolchain && _size_report_binaries != []) {
     # Create the size report which runs on the binaries.
-    pw_size_report(target_name) {
+    pw_size_diff(target_name) {
       forward_variables_from(invoker, [ "title" ])
       binaries = _size_report_binaries
     }
@@ -334,7 +557,7 @@ template("pw_toolchain_size_report") {
   }
 }
 
-# A base_executable for the pw_toolchain_size_report template which contains a
+# A base_executable for the pw_toolchain_size_diff template which contains a
 # main() function that loads the bloat_this_binary library and does nothing
 # else.
 pw_bloat_empty_base = {

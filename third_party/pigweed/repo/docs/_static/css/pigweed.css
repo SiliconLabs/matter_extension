@@ -25,7 +25,7 @@
   text-transform: uppercase;
 }
 .sidebar-brand-text {
-    font-size: 2.5rem;
+  font-size: 2.5rem;
 }
 
 /********** General document coloring ***********/
@@ -93,6 +93,16 @@ code.literal {
   background: var(--color-text-selection-background);
 }
 
+
+/* Make dark mode 'code-block:: :emphasize-lines:' background color readable. */
+body[data-theme="dark"] .highlight .hll {
+  background-color: var(--color-code-hll-background);
+}
+
+body[data-theme="light"] .highlight .hll {
+  background-color: var(--color-code-hll-background);
+}
+
 /* Use normal mixed-case for h4, h5, and h6 */
 h4, h5, h6 {
     text-transform: none;
@@ -114,4 +124,55 @@ h4, h5, h6 {
   background-color: var(--color-admonition-title--tip);
   -webkit-mask-image: var(--icon--check-circle-fill);
           mask-image: var(--icon--check-circle-fill);
+}
+
+/* Sub sections in breathe doxygen output.
+   E.g 'Public Functions' or 'Public Static Functions' in a class. */
+.breathe-sectiondef > p.breathe-sectiondef-title {
+  font-weight: bold;
+  font-size: var(--font-size--normal);
+}
+
+/* Support taglines inline with page titles */
+section.with-subtitle > h1 {
+  display: inline;
+}
+
+/* Restore the padding to the top of the page that was removed by making the
+   h1 element inline */
+section.with-subtitle {
+  padding-top: 1.5em;
+}
+
+.section-subtitle {
+  display: inline;
+  font-size: larger;
+  font-weight: bold;
+}
+
+/* Styling for module doc section buttons */
+ul.pw-module-section-buttons {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+
+li.pw-module-section-button {
+  display: inline;
+  list-style-type: none;
+  padding: 0 4px;
+}
+
+li.pw-module-section-button p {
+  display: inline;
+}
+
+li.pw-module-section-button p a {
+  background-color: var(--color-section-button) !important;
+  border-color: var(--color-section-button) !important;
+}
+
+li.pw-module-section-button p a:hover {
+  background-color: var(--color-section-button-hover) !important;
+  border-color: var(--color-section-button-hover) !important;
 }

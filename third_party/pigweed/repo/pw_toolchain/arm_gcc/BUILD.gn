@@ -13,6 +13,9 @@
 # the License.
 
 import("//build_overrides/pigweed.gni")
+import("//build_overrides/pigweed_environment.gni")
+
+import("$dir_pw_build/target_types.gni")
 
 # Disable obnoxious ABI warning.
 #
@@ -31,12 +34,23 @@ config("disable_psabi_warning") {
   cflags = [ "-Wno-psabi" ]
 }
 
+# binutils 2.39 introduced new warnings that trigger on embedded ARM GCC builds:
+#
+#   warning: *.elf has a LOAD segment with RWX permissions
+#
+# Disable these warnings --no-warn-rwx-segment. For details see:
+# https://www.redhat.com/en/blog/linkers-warnings-about-executable-stacks-and-segments
+config("disable_rwx_segment_warning") {
+  ldflags = [ "-Wl,--no-warn-rwx-segment" ]
+}
+
 config("cortex_common") {
   asmflags = [
     "-mabi=aapcs",
     "-mthumb",
   ]
   cflags = asmflags + [
+             "--sysroot=" + rebase_path(pw_env_setup_CIPD_ARM, root_build_dir),
              "-specs=nano.specs",
              "-specs=nosys.specs",
            ]
@@ -115,4 +129,30 @@ config("cortex_hardware_fpu_v5_sp") {
   asmflags = cflags
   defines = [ "PW_ARMV7M_ENABLE_FPU=1" ]
   ldflags = cflags
+}
+
+config("wrap_newlib_stdio_functions") {
+  ldflags = [
+    "-Wl,--wrap=__sread",
+    "-Wl,--wrap=__swrite",
+    "-Wl,--wrap=__sseek",
+    "-Wl,--wrap=__sclose",
+  ]
+  visibility = [ ":*" ]
+}
+
+pw_source_set("newlib_os_interface_stubs") {
+  all_dependent_configs = [ ":wrap_newlib_stdio_functions" ]
+  sources = [ "newlib_os_interface_stubs.cc" ]
+  deps = [ dir_pw_assert ]
+  visibility = [ ":*" ]
+}
+
+# Basic libraries any arm-none-eabi-gcc target should use. This library should
+# be included in pw_build_LINK_DEPS.
+group("arm_none_eabi_gcc_support") {
+  deps = [
+    ":newlib_os_interface_stubs",
+    "$dir_pw_toolchain:wrap_abort",
+  ]
 }

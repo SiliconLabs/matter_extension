@@ -45,6 +45,7 @@ pw_cc_library(
     includes = ["public"],
     deps = [
         ":format",
+        ":string",
         ":to_string",
         ":util",
         "//pw_preprocessor",
@@ -58,9 +59,24 @@ pw_cc_library(
     hdrs = ["public/pw_string/format.h"],
     includes = ["public"],
     deps = [
+        ":string",
         "//pw_preprocessor",
         "//pw_span",
         "//pw_status",
+    ],
+)
+
+pw_cc_library(
+    name = "string",
+    srcs = [
+        "public/pw_string/internal/string_common_functions.inc",
+        "public/pw_string/internal/string_impl.h",
+    ],
+    hdrs = ["public/pw_string/string.h"],
+    includes = ["public"],
+    deps = [
+        "//pw_assert:facade",
+        "//pw_polyfill",
     ],
 )
 
@@ -77,6 +93,7 @@ pw_cc_library(
         ":format",
         ":util",
         "//pw_status",
+        "//third_party/fuchsia:stdcompat",
     ],
 )
 
@@ -86,22 +103,10 @@ pw_cc_library(
     hdrs = ["public/pw_string/util.h"],
     includes = ["public"],
     deps = [
+        ":string",
         "//pw_assert:facade",
         "//pw_result",
         "//pw_span",
-        "//pw_status",
-    ],
-)
-
-pw_cc_library(
-    name = "vector",
-    hdrs = [
-        "public/pw_string/vector.h",
-    ],
-    includes = ["public"],
-    deps = [
-        ":pw_string",
-        "//pw_containers:vector",
         "//pw_status",
     ],
 )
@@ -112,6 +117,16 @@ pw_cc_test(
     deps = [
         ":format",
         "//pw_span",
+        "//pw_unit_test",
+    ],
+)
+
+pw_cc_test(
+    name = "string_test",
+    srcs = ["string_test.cc"],
+    deps = [
+        ":string",
+        "//pw_compilation_testing:negative_compilation_testing",
         "//pw_unit_test",
     ],
 )
@@ -136,11 +151,9 @@ pw_cc_test(
 
 pw_cc_test(
     name = "to_string_test",
-    srcs = [
-        "public/pw_string/internal/config.h",
-        "to_string_test.cc",
-    ],
+    srcs = ["to_string_test.cc"],
     deps = [
+        ":config",
         ":to_string",
         "//pw_status",
         "//pw_unit_test",
@@ -152,16 +165,6 @@ pw_cc_test(
     srcs = ["util_test.cc"],
     deps = [
         ":util",
-        "//pw_unit_test",
-    ],
-)
-
-pw_cc_test(
-    name = "vector_test",
-    srcs = ["vector_test.cc"],
-    deps = [
-        ":vector",
-        "//pw_containers:vector",
         "//pw_unit_test",
     ],
 )

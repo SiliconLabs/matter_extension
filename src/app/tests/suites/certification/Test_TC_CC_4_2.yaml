@@ -44,7 +44,7 @@ tests:
       command: "On"
 
     - label:
-          "TH sends MoveToSaturation command to DUT with Saturation=60 and
+          "TH sends MoveToSaturation command to DUT with Saturation=150 and
           TransitionTime=0 (immediately)"
       PICS: CC.S.F00 && CC.S.C03.Rsp
       command: "MoveToSaturation"
@@ -60,6 +60,7 @@ tests:
                 value: 0
 
     - label: "Wait 100ms"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -84,6 +85,7 @@ tests:
                 value: 0
 
     - label: "Wait 10s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -101,6 +103,7 @@ tests:
               maxValue: 230
 
     - label: "Wait 10s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -114,10 +117,11 @@ tests:
       attribute: "CurrentSaturation"
       response:
           constraints:
-              minValue: 212
+              minValue: 216
               maxValue: 254
 
     - label: "Wait 5s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -130,7 +134,9 @@ tests:
       command: "readAttribute"
       attribute: "CurrentSaturation"
       response:
-          value: 254
+          constraints:
+              minValue: 216
+              maxValue: 254
 
     - label:
           "TH sends MoveToSaturation command to DUT with Saturation=120 and
@@ -149,6 +155,7 @@ tests:
                 value: 0
 
     - label: "Wait 100ms"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -173,6 +180,7 @@ tests:
                 value: 0
 
     - label: "Wait 10s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -190,6 +198,7 @@ tests:
               maxValue: 81
 
     - label: "Wait 10s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -197,6 +206,8 @@ tests:
               - name: "ms"
                 value: 10000
 
+    #Tolerance to be computed from the range
+    #Start value 120, expected value 20, 120 - 20 = 100, 100 % 15 = 15 , So 20+/-15
     - label: "TH reads CurrentSaturation attribute from DUT"
       PICS: CC.S.F00 && CC.S.A0001
       command: "readAttribute"
@@ -207,6 +218,7 @@ tests:
               maxValue: 35
 
     - label: "Wait 10s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -240,6 +252,7 @@ tests:
                 value: 0
 
     - label: "Wait 100ms"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -264,6 +277,7 @@ tests:
                 value: 0
 
     - label: "Wait 10s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -301,12 +315,12 @@ tests:
       command: "readAttribute"
       attribute: "CurrentSaturation"
       response:
-          saveAs: CurrentSaturationValueStep4e
           constraints:
               minValue: 170
               maxValue: 230
 
     - label: "Wait 2s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -319,7 +333,9 @@ tests:
       command: "readAttribute"
       attribute: "CurrentSaturation"
       response:
-          value: CurrentSaturationValueStep4e
+          constraints:
+              minValue: 170
+              maxValue: 230
 
     - label: "TH reads ColorMode attribute from DUT"
       PICS: CC.S.F00 && CC.S.A0008
@@ -344,7 +360,7 @@ tests:
     - label: "Turn off light that we turned on"
       PICS: OO.S.C00.Rsp
       cluster: "On/Off"
-      command: "off"
+      command: "Off"
 
     - label: "Check on/off attribute value is false after off command"
       cluster: "On/Off"

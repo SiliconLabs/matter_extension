@@ -134,6 +134,7 @@ function(pw_cc_blob_library NAME)
       python3
       "$ENV{PW_ROOT}/pw_build/py/pw_build/generate_cc_blob_library.py"
       --blob-file "${blob_json_file}"
+      --header-include "${arg_HEADER}"
       --out-header "${generated_header}"
       --out-source "${generated_source}"
       --namespace "${arg_NAMESPACE}"
@@ -152,7 +153,7 @@ function(pw_cc_blob_library NAME)
       "${generated_source}"
   )
 
-  pw_add_library("${NAME}" STATIC
+  pw_add_library_generic("${NAME}" OBJECT
     SOURCES
       "${generated_source}"
     PUBLIC_INCLUDES

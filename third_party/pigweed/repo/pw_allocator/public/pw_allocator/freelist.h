@@ -81,14 +81,14 @@ class FreeList {
  private:
   // For a given size, find which index into chunks_ the node should be written
   // to.
-  size_t FindChunkPtrForSize(size_t size, bool non_null) const;
+  unsigned short FindChunkPtrForSize(size_t size, bool non_null) const;
 
  private:
   template <size_t kNumBuckets>
   friend class FreeListBuffer;
 
   struct FreeListNode {
-    // TODO: Double-link this? It'll make removal easier/quicker.
+    // TODO(jgarside): Double-link this? It'll make removal easier/quicker.
     FreeListNode* next;
     size_t size;
   };

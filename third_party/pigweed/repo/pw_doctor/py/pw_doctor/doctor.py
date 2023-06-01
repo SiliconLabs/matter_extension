@@ -24,7 +24,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from typing import Callable, Iterable, List, Set
+from typing import Callable, Iterable, List, Optional, Set
 
 import pw_cli.pw_command_plugins
 import pw_env_setup.cipd_setup.update as cipd_update
@@ -41,16 +41,18 @@ class _Fatal(Exception):
 
 
 class Doctor:
-    def __init__(self, *, log: logging.Logger = None, strict: bool = False):
+    def __init__(
+        self, *, log: Optional[logging.Logger] = None, strict: bool = False
+    ):
         self.strict = strict
         self.log = log or logging.getLogger(__name__)
         self.failures: Set[str] = set()
 
     def run(self, checks: Iterable[Callable]):
         with futures.ThreadPoolExecutor() as executor:
-            futures.wait([
-                executor.submit(self._run_check, c, executor) for c in checks
-            ])
+            futures.wait(
+                [executor.submit(self._run_check, c, executor) for c in checks]
+            )
 
     def _run_check(self, check, executor):
         ctx = DoctorContext(self, check.__name__, executor)
@@ -62,14 +64,16 @@ class Doctor:
             pass
         except:  # pylint: disable=bare-except
             self.failures.add(ctx.check)
-            self.log.exception('%s failed with an unexpected exception',
-                               check.__name__)
+            self.log.exception(
+                '%s failed with an unexpected exception', check.__name__
+            )
 
         self.log.debug('Completed check %s', ctx.check)
 
 
 class DoctorContext:
     """The context object provided to each context function."""
+
     def __init__(self, doctor: Doctor, check: str, executor: futures.Executor):
         self._doctor = doctor
         self.check = check
@@ -79,7 +83,8 @@ class DoctorContext:
     def submit(self, function, *args, **kwargs):
         """Starts running the provided function in parallel."""
         self._futures.append(
-            self._executor.submit(self._run_job, function, *args, **kwargs))
+            self._executor.submit(self._run_job, function, *args, **kwargs)
+        )
 
     def wait(self):
         """Waits for all parallel tasks started with submit() to complete."""
@@ -94,7 +99,8 @@ class DoctorContext:
         except:  # pylint: disable=bare-except
             self._doctor.failures.add(self.check)
             self._doctor.log.exception(
-                '%s failed with an unexpected exception', self.check)
+                '%s failed with an unexpected exception', self.check
+            )
 
     def fatal(self, fmt, *args, **kwargs):
         """Same as error() but terminates the check early."""
@@ -135,14 +141,16 @@ def pw_plugins(ctx: DoctorContext):
         ctx.error('Not all pw plugins loaded successfully')
 
 
-def unames_are_equivalent(uname_actual: str, uname_expected: str) -> bool:
+def unames_are_equivalent(
+    uname_actual: str, uname_expected: str, rosetta: bool = False
+) -> bool:
     """Determine if uname values are equivalent for this tool's purposes."""
 
     # Support `mac-arm64` through Rosetta until `mac-arm64` binaries are ready
     # Expected and actual unames will not literally match on M1 Macs because
     # they pretend to be Intel Macs for the purpose of environment setup. But
     # that's intentional and doesn't require any user action.
-    if "Darwin" in uname_expected and "arm64" in uname_expected:
+    if rosetta and "Darwin" in uname_expected and "arm64" in uname_expected:
         uname_expected = uname_expected.replace("arm64", "x86_64")
 
     return uname_actual == uname_expected
@@ -161,19 +169,26 @@ def env_os(ctx: DoctorContext):
     with open(config, 'r') as ins:
         data = json.load(ins)
     if data['os'] != os.name:
-        ctx.error('Current OS (%s) does not match bootstrapped OS (%s)',
-                  os.name, data['os'])
+        ctx.error(
+            'Current OS (%s) does not match bootstrapped OS (%s)',
+            os.name,
+            data['os'],
+        )
 
     # Skipping sysname and nodename in os.uname(). nodename could change
     # based on the current network. sysname won't change, but is
     # redundant because it's contained in release or version, and
     # skipping it here simplifies logic.
     uname = ' '.join(getattr(os, 'uname', lambda: ())()[2:])
-    if not unames_are_equivalent(uname, data['uname']):
+    rosetta_envvar = os.environ.get('_PW_ROSETTA', '0')
+    rosetta = rosetta_envvar.strip().lower() != '0'
+    if not unames_are_equivalent(uname, data['uname'], rosetta):
         ctx.warning(
             'Current uname (%s) does not match Bootstrap uname (%s), '
-            'you may need to rerun bootstrap on this system', uname,
-            data['uname'])
+            'you may need to rerun bootstrap on this system',
+            uname,
+            data['uname'],
+        )
 
 
 @register_into(CHECKS)
@@ -184,12 +199,22 @@ def pw_root(ctx: DoctorContext):
     except KeyError:
         ctx.fatal('PW_ROOT not set')
 
+    # If pigweed is intentionally vendored and not in a git repo or submodule,
+    # set PW_DISABLE_ROOT_GIT_REPO_CHECK=1 during bootstrap to suppress the
+    # following check.
+    if os.environ.get('PW_DISABLE_ROOT_GIT_REPO_CHECK', '0') == '1':
+        return
+
     git_root = pathlib.Path(
-        call_stdout(['git', 'rev-parse', '--show-toplevel'], cwd=root).strip())
+        call_stdout(['git', 'rev-parse', '--show-toplevel'], cwd=root).strip()
+    )
     git_root = git_root.resolve()
     if root != git_root:
-        ctx.error('PW_ROOT (%s) != `git rev-parse --show-toplevel` (%s)', root,
-                  git_root)
+        ctx.error(
+            'PW_ROOT (%s) != `git rev-parse --show-toplevel` (%s)',
+            root,
+            git_root,
+        )
 
 
 @register_into(CHECKS)
@@ -205,8 +230,10 @@ def git_hook(ctx: DoctorContext):
 
     hook = root / '.git' / 'hooks' / 'pre-push'
     if not os.path.isfile(hook):
-        ctx.info('Presubmit hook not installed, please run '
-                 "'pw presubmit --install' before pushing changes.")
+        ctx.info(
+            'Presubmit hook not installed, please run '
+            "'pw presubmit --install' before pushing changes."
+        )
 
 
 @register_into(CHECKS)
@@ -218,11 +245,17 @@ def python_version(ctx: DoctorContext):
         # If we get the wrong version but it still came from CIPD print a
         # warning but give it a pass.
         if 'chromium' in sys.version:
-            ctx.warning('Python %d.%d.x expected, got Python %d.%d.%d',
-                        *expected, *actual[0:3])
+            ctx.warning(
+                'Python %d.%d.x expected, got Python %d.%d.%d',
+                *expected,
+                *actual[0:3],
+            )
         else:
-            ctx.error('Python %d.%d.x required, got Python %d.%d.%d',
-                      *expected, *actual[0:3])
+            ctx.error(
+                'Python %d.%d.x required, got Python %d.%d.%d',
+                *expected,
+                *actual[0:3],
+            )
 
 
 @register_into(CHECKS)
@@ -262,12 +295,16 @@ def cipd(ctx: DoctorContext):
         ctx.fatal('cipd not in PATH (%s)', os.environ['PATH'])
 
     temp = tempfile.NamedTemporaryFile(prefix='cipd', delete=False)
-    subprocess.run(['cipd', 'acl-check', '-json-output', temp.name, cipd_path],
-                   stdout=subprocess.PIPE)
+    subprocess.run(
+        ['cipd', 'acl-check', '-json-output', temp.name, cipd_path],
+        stdout=subprocess.PIPE,
+    )
     if not json.load(temp)['result']:
         ctx.fatal(
             "can't access %s CIPD directory, have you run "
-            "'cipd auth-login'?", cipd_path)
+            "'cipd auth-login'?",
+            cipd_path,
+        )
 
     commands_expected_from_cipd = [
         'arm-none-eabi-gcc',
@@ -286,11 +323,16 @@ def cipd(ctx: DoctorContext):
     for command in commands_expected_from_cipd:
         path = shutil.which(command)
         if path is None:
-            ctx.error('could not find %s in PATH (%s)', command,
-                      os.environ['PATH'])
+            ctx.error(
+                'could not find %s in PATH (%s)', command, os.environ['PATH']
+            )
         elif 'cipd' not in path:
-            ctx.warning('not using %s from cipd, got %s (path is %s)', command,
-                        path, os.environ['PATH'])
+            ctx.warning(
+                'not using %s from cipd, got %s (path is %s)',
+                command,
+                path,
+                os.environ['PATH'],
+            )
 
 
 @register_into(CHECKS)
@@ -311,21 +353,27 @@ def cipd_versions(ctx: DoctorContext):
 
     def check_cipd(package, install_path):
         if platform not in package['platforms']:
-            ctx.debug("skipping %s because it doesn't apply to %s",
-                      package['path'], platform)
+            ctx.debug(
+                "skipping %s because it doesn't apply to %s",
+                package['path'],
+                platform,
+            )
             return
 
         tags_without_refs = [x for x in package['tags'] if ':' in x]
         if not tags_without_refs:
-            ctx.debug('skipping %s because it tracks a ref, not a tag (%s)',
-                      package['path'], ', '.join(package['tags']))
+            ctx.debug(
+                'skipping %s because it tracks a ref, not a tag (%s)',
+                package['path'],
+                ', '.join(package['tags']),
+            )
             return
 
         ctx.debug('checking version of %s', package['path'])
 
-        name = [
-            part for part in package['path'].split('/') if '{' not in part
-        ][-1]
+        name = [part for part in package['path'].split('/') if '{' not in part][
+            -1
+        ]
 
         # If the exact path is specified in the JSON file use it, and require it
         # exist.
@@ -367,23 +415,41 @@ def cipd_versions(ctx: DoctorContext):
             if tag not in output:
                 ctx.error(
                     'CIPD package %s in %s is out of date, please rerun '
-                    'bootstrap', installed['package_name'], install_path)
+                    'bootstrap',
+                    installed['package_name'],
+                    install_path,
+                )
 
             else:
-                ctx.debug('CIPD package %s in %s is current',
-                          installed['package_name'], install_path)
+                ctx.debug(
+                    'CIPD package %s in %s is current',
+                    installed['package_name'],
+                    install_path,
+                )
 
+    deduped_packages = cipd_update.deduplicate_packages(
+        cipd_update.all_packages(json_paths)
+    )
     for json_path in json_paths:
         ctx.debug(f'Checking packages in {json_path}')
         if not json_path.exists():
             ctx.error(
                 'CIPD package file %s may have been deleted, please '
-                'rerun bootstrap', json_path)
+                'rerun bootstrap',
+                json_path,
+            )
             continue
 
         install_path = pathlib.Path(
-            cipd_update.package_installation_path(cipd_dir, json_path))
+            cipd_update.package_installation_path(cipd_dir, json_path)
+        )
         for package in json.loads(json_path.read_text()).get('packages', ()):
+            if package not in deduped_packages:
+                ctx.debug(
+                    f'Skipping overridden package {package["path"]} '
+                    f'with tag(s) {package["tags"]}'
+                )
+                continue
             ctx.submit(check_cipd, package, install_path)
 
 
@@ -410,7 +476,8 @@ def symlinks(ctx: DoctorContext):
             ctx.warning(
                 'Symlinks are not supported or current user does not have '
                 'permission to use them. This may cause build issues. If on '
-                'Windows, turn on Development Mode to enable symlink support.')
+                'Windows, turn on Development Mode to enable symlink support.'
+            )
 
 
 def run_doctor(strict=False, checks=None):
@@ -430,7 +497,8 @@ def run_doctor(strict=False, checks=None):
             "Your environment setup has completed, but something isn't right "
             'and some things may not work correctly. You may continue with '
             'development, but please seek support at '
-            'https://bugs.pigweed.dev/new or by reaching out to your team.')
+            'https://issues.pigweed.dev/new or by reaching out to your team.'
+        )
     else:
         doctor.log.info('Environment passes all checks!')
     return len(doctor.failures)

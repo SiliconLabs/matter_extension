@@ -18,8 +18,24 @@ import("$dir_pw_toolchain/clang_tools.gni")
 
 declare_args() {
   # Sets the sanitizer to pass to clang. Valid values are "address", "memory",
-  # "thread", "undefined".
+  # "thread", "undefined", "undefined_heuristic".
   pw_toolchain_SANITIZERS = []
+
+  # Indicates if this toolchain supports generating coverage reports from
+  # pw_test targets.
+  #
+  # For example, the static analysis toolchains that run `clang-tidy` instead
+  # of the test binary itself cannot generate coverage reports.
+  #
+  # This is typically set by individual toolchains and not by GN args.
+  pw_toolchain_COVERAGE_ENABLED = false
+
+  # List of source files to selectively collect coverage.
+  pw_toolchain_PROFILE_SOURCE_FILES = []
+
+  # Indicates if this toolchain supports building fuzzers. This is typically
+  # set by individual toolchains and not by GN args.
+  pw_toolchain_FUZZING_ENABLED = false
 
   # Indicates if this build is a part of OSS-Fuzz, which needs to be able to
   # provide its own compiler and flags. This violates the build hermeticisim and
@@ -30,6 +46,9 @@ declare_args() {
 # Specifies the tools used by host Clang toolchains.
 _host_clang_toolchain = {
   if (pw_toolchain_OSS_FUZZ_ENABLED) {
+    # OSS-Fuzz sets compiler and linker paths. See
+    # google.github.io/oss-fuzz/getting-started/new-project-guide/#Requirements.
+
     # Just use the "llvm-ar" on the system path.
     ar = "llvm-ar"
     cc = getenv("CC")
@@ -40,9 +59,11 @@ _host_clang_toolchain = {
 
   is_host_toolchain = true
 
-  # Enable static analysis for host clang based toolchains,
-  # even with OSS-Fuzz enabled.
-  static_analysis = true
+  static_analysis = {
+    # Enable static analysis for host clang based toolchains,
+    # even with OSS-Fuzz enabled.
+    enabled = true
+  }
 }
 
 # Common default scope shared by all host Clang toolchains.
@@ -55,6 +76,12 @@ _defaults = {
     "$dir_pw_toolchain/host_clang:no_system_libcpp",
     "$dir_pw_toolchain/host_clang:xcode_sysroot",
   ]
+
+  # OSS-Fuzz uses -stdlib=libc++, which isn't included in the CIPD-provided
+  # Linux sysroot (it instead provides libstdc++).
+  if (!pw_toolchain_OSS_FUZZ_ENABLED) {
+    default_configs += [ "$dir_pw_toolchain/host_clang:linux_sysroot" ]
+  }
 }
 
 pw_toolchain_host_clang = {
@@ -89,7 +116,7 @@ pw_toolchain_host_clang = {
     forward_variables_from(_host_clang_toolchain, "*")
     defaults = {
       forward_variables_from(_defaults, "*")
-      default_configs += [ "$dir_pw_build:optimize_size" ]
+      default_configs += [ "$dir_pw_build:optimize_size_clang" ]
       foreach(sanitizer, pw_toolchain_SANITIZERS) {
         default_configs +=
             [ "$dir_pw_toolchain/host_clang:sanitize_$sanitizer" ]
@@ -103,6 +130,9 @@ pw_toolchain_host_clang = {
     defaults = {
       forward_variables_from(_defaults, "*")
 
+      pw_toolchain_FUZZING_ENABLED = true
+      default_configs += [ "$dir_pw_fuzzer:instrumentation" ]
+
       # Fuzz faster.
       default_configs += [ "$dir_pw_build:optimize_speed" ]
 
@@ -113,10 +143,6 @@ pw_toolchain_host_clang = {
       foreach(sanitizer, pw_toolchain_SANITIZERS) {
         default_configs +=
             [ "$dir_pw_toolchain/host_clang:sanitize_$sanitizer" ]
-      }
-
-      if (pw_toolchain_OSS_FUZZ_ENABLED) {
-        default_configs += [ "$dir_pw_fuzzer:oss_fuzz_extra" ]
       }
     }
   }
@@ -181,6 +207,22 @@ pw_toolchain_host_clang = {
       default_configs += [ "$dir_pw_toolchain/host_clang:sanitize_thread" ]
     }
   }
+
+  coverage = {
+    name = "host_clang_coverage"
+    forward_variables_from(_host_clang_toolchain, "*")
+    defaults = {
+      forward_variables_from(_defaults, "*")
+
+      # Use debug mode to get proper debug information.
+      default_configs += [ "$dir_pw_build:optimize_debugging" ]
+      default_configs += [ "$dir_pw_toolchain/host_clang:coverage" ]
+
+      # Enable PW toolchain arguments for coverage. This will only apply to
+      # binaries built using this toolchain.
+      pw_toolchain_COVERAGE_ENABLED = true
+    }
+  }
 }
 
 # Describes host clang toolchains.
@@ -194,4 +236,5 @@ pw_toolchain_host_clang_list = [
   pw_toolchain_host_clang.ubsan_heuristic,
   pw_toolchain_host_clang.msan,
   pw_toolchain_host_clang.tsan,
+  pw_toolchain_host_clang.coverage,
 ]

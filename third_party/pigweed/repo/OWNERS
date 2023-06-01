@@ -1,17 +1,20 @@
-akirabaruah@google.com
+# OWNERS for all modules. Please see individual modules for their OWNERS files.
+#
+# Note: a Pigweed core team member should be among the OWNERS for each module.
 alizhang@google.com
 amontanez@google.com
-davidrogers@google.com
+cachinchilla@google.com
+chadnorvell@google.com
+cramertj@google.com
 ewout@google.com
 frolv@google.com
 hepler@google.com
-jaredweinstein@google.com
-jethier@google.com
 keir@google.com
+konkers@google.com
 mohrr@google.com
-paulmathieu@google.com
 pigweed-integration-roller@pigweed.google.com.iam.gserviceaccount.com
 pigweed-roller@pigweed.google.com.iam.gserviceaccount.com
+prabhukr@google.com
 tonymd@google.com
 tpudlik@google.com
 zyecheng@google.com

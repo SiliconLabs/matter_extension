@@ -51,9 +51,11 @@ from prompt_toolkit.layout import (
 from prompt_toolkit.widgets import MenuItem
 from prompt_toolkit.widgets import TextArea
 
-import pw_console.widgets.border
-import pw_console.widgets.checkbox
-import pw_console.widgets.mouse_handlers
+from pw_console.widgets import (
+    create_border,
+    mouse_handlers,
+    to_keybind_indicator,
+)
 
 if TYPE_CHECKING:
     from pw_console.console_app import ConsoleApp
@@ -61,8 +63,9 @@ if TYPE_CHECKING:
 _LOG = logging.getLogger(__package__)
 
 
-def flatten_menu_items(items: List[MenuItem],
-                       prefix: str = '') -> Iterator[Tuple[str, Callable]]:
+def flatten_menu_items(
+    items: List[MenuItem], prefix: str = ''
+) -> Iterator[Tuple[str, Callable]]:
     """Flatten nested prompt_toolkit MenuItems into text and callable tuples."""
     for item in items:
         new_text = []
@@ -81,23 +84,22 @@ def flatten_menu_items(items: List[MenuItem],
 
 
 def highlight_matches(
-        regexes: Iterable[re.Pattern],
-        line_fragments: StyleAndTextTuples) -> StyleAndTextTuples:
+    regexes: Iterable[re.Pattern], line_fragments: StyleAndTextTuples
+) -> StyleAndTextTuples:
     """Highlight regex matches in prompt_toolkit FormattedTextTuples."""
     line_text = fragment_list_to_text(line_fragments)
     exploded_fragments = explode_text_fragments(line_fragments)
 
-    def apply_highlighting(fragments: StyleAndTextTuples,
-                           index: int,
-                           matching_regex_index: int = 0) -> None:
+    def apply_highlighting(
+        fragments: StyleAndTextTuples, index: int, matching_regex_index: int = 0
+    ) -> None:
         # Expand all fragments and apply the highlighting style.
         old_style, _text, *_ = fragments[index]
         # There are 6 fuzzy-highlight styles defined in style.py. Get an index
         # from 0-5 to use one style after the other in turn.
         style_index = matching_regex_index % 6
         fragments[index] = (
-            old_style +
-            f' class:command-runner-fuzzy-highlight-{style_index} ',
+            old_style + f' class:command-runner-fuzzy-highlight-{style_index} ',
             fragments[index][1],
         )
 
@@ -116,14 +118,15 @@ class CommandRunner:
     # pylint: disable=too-many-instance-attributes
 
     def __init__(
-            self,
-            application: ConsoleApp,
-            window_title: str = None,
-            load_completions: Optional[Callable[[],
-                                                List[Tuple[str,
-                                                           Callable]]]] = None,
-            width: int = 80,
-            height: int = 10):
+        self,
+        application: ConsoleApp,
+        window_title: Optional[str] = None,
+        load_completions: Optional[
+            Callable[[], List[Tuple[str, Callable]]]
+        ] = None,
+        width: int = 80,
+        height: int = 10,
+    ):
         # Parent pw_console application
         self.application = application
         # Visibility toggle
@@ -157,9 +160,14 @@ class CommandRunner:
         # Command runner text input field
         self.input_field = TextArea(
             prompt=[
-                ('class:command-runner-setting', '> ',
-                 functools.partial(pw_console.widgets.mouse_handlers.on_click,
-                                   self.focus_self))
+                (
+                    'class:command-runner-setting',
+                    '> ',
+                    functools.partial(
+                        mouse_handlers.on_click,
+                        self.focus_self,
+                    ),
+                )
             ],
             focusable=True,
             focus_on_click=True,
@@ -205,10 +213,12 @@ class CommandRunner:
         self.command_runner_content = HSplit(
             [
                 # Input field and buttons on the same line
-                VSplit([
-                    self.input_field,
-                    input_field_buttons_container,
-                ]),
+                VSplit(
+                    [
+                        self.input_field,
+                        input_field_buttons_container,
+                    ]
+                ),
                 # Completion items below
                 command_items_window,
             ],
@@ -229,7 +239,7 @@ class CommandRunner:
     def _create_bordered_content(self) -> None:
         """Wrap self.command_runner_content in a border."""
         # This should be called whenever the window_title changes.
-        self.bordered_content = pw_console.widgets.border.create_border(
+        self.bordered_content = create_border(
             self.command_runner_content,
             title=self.window_title,
             border_style='class:command-runner-border',
@@ -270,7 +280,8 @@ class CommandRunner:
     def content_width(self) -> int:
         """Return the smaller value of self.width and the available width."""
         window_manager_width = (
-            self.application.window_manager.current_window_manager_width)
+            self.application.window_manager.current_window_manager_width
+        )
         if not window_manager_width:
             window_manager_width = self.width
         return min(self.width, window_manager_width)
@@ -298,17 +309,19 @@ class CommandRunner:
 
     def set_completions(
         self,
-        window_title: str = None,
-        load_completions: Optional[Callable[[], List[Tuple[str,
-                                                           Callable]]]] = None,
+        window_title: Optional[str] = None,
+        load_completions: Optional[
+            Callable[[], List[Tuple[str, Callable]]]
+        ] = None,
     ) -> None:
         """Set window title and callable to fetch possible completions.
 
         Call this function whenever new completion items need to be loaded.
         """
         self.window_title = window_title if window_title else 'Menu Items'
-        self.load_completions = (load_completions
-                                 if load_completions else self.load_menu_items)
+        self.load_completions = (
+            load_completions if load_completions else self.load_menu_items
+        )
         self._reset_selected_item()
 
         self.completions = []
@@ -374,7 +387,8 @@ class CommandRunner:
                 self.selected_item_handler = handler
                 text = text.ljust(self.content_width())
             fragments: StyleAndTextTuples = highlight_matches(
-                regexes, [(style, text + '\n')])
+                regexes, [(style, text + '\n')]
+            )
             self.completion_fragments.append(fragments)
             i += 1
 
@@ -397,7 +411,8 @@ class CommandRunner:
             # Don't move past the height of the window or the length of possible
             # items.
             min(self.height, len(self.completion_fragments)) - 1,
-            self.selected_item + 1)
+            self.selected_item + 1,
+        )
         self.application.redraw_ui()
 
     def _previous_item(self) -> None:
@@ -407,13 +422,11 @@ class CommandRunner:
 
     def _get_input_field_button_fragments(self) -> StyleAndTextTuples:
         # Mouse handlers
-        focus = functools.partial(pw_console.widgets.mouse_handlers.on_click,
-                                  self.focus_self)
-        cancel = functools.partial(pw_console.widgets.mouse_handlers.on_click,
-                                   self.close_dialog)
+        focus = functools.partial(mouse_handlers.on_click, self.focus_self)
+        cancel = functools.partial(mouse_handlers.on_click, self.close_dialog)
         select_item = functools.partial(
-            pw_console.widgets.mouse_handlers.on_click,
-            self._run_selected_item)
+            mouse_handlers.on_click, self._run_selected_item
+        )
 
         separator_text = ('', ' ', focus)
 
@@ -424,18 +437,21 @@ class CommandRunner:
 
         # Cancel button
         fragments.extend(
-            pw_console.widgets.checkbox.to_keybind_indicator(
+            to_keybind_indicator(
                 key='Ctrl-c',
                 description='Cancel',
                 mouse_handler=cancel,
                 base_style=button_style,
-            ))
+            )
+        )
         fragments.append(separator_text)
 
         # Run button
         fragments.extend(
-            pw_console.widgets.checkbox.to_keybind_indicator(
-                'Enter', 'Run', select_item, base_style=button_style))
+            to_keybind_indicator(
+                'Enter', 'Run', select_item, base_style=button_style
+            )
+        )
         return fragments
 
     def render_completion_items(self) -> StyleAndTextTuples:
@@ -473,9 +489,9 @@ class CommandRunner:
 
         # Actions that launch new command runners, close_dialog should not run.
         for command_text in [
-                '[File] > Insert Repl Snippet',
-                '[File] > Insert Repl History',
-                '[File] > Open Logger',
+            '[File] > Insert Repl Snippet',
+            '[File] > Insert Repl History',
+            '[File] > Open Logger',
         ]:
             if command_text in self.selected_item_text:
                 close_dialog = False
@@ -484,13 +500,14 @@ class CommandRunner:
         # Actions that change what is in focus should be run after closing the
         # command runner dialog.
         for command_text in [
-                '[File] > Games > ',
-                '[View] > Focus Next Window/Tab',
-                '[View] > Focus Prev Window/Tab',
-                # All help menu entries open popup windows.
-                '[Help] > ',
-                # This focuses on a save dialog bor.
-                'Save/Export a copy',
+            '[File] > Games > ',
+            '[View] > Focus Next Window/Tab',
+            '[View] > Focus Prev Window/Tab',
+            # All help menu entries open popup windows.
+            '[Help] > ',
+            # This focuses on a save dialog bor.
+            'Save/Export a copy',
+            '[Windows] > Floating ',
         ]:
             if command_text in self.selected_item_text:
                 close_dialog_first = True

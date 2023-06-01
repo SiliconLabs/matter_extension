@@ -1,6 +1,5 @@
 /**
- *
- *    Copyright (c) 2022 Project CHIP Authors
+ *    Copyright (c) 2022-2023 Project CHIP Authors
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,27 +29,39 @@ NS_ASSUME_NONNULL_BEGIN
  * subscription returns.  Then reads can happen against the cache without going
  * out to the network.
  */
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
 @interface MTRClusterStateCacheContainer : NSObject
 
 /**
- * Reads the given attribute path from the cluster state cache inside
+ * Reads the given attributes from the cluster state cache inside
  * this cache container.
  *
- * @param endpointID  endpoint ID of the attribute.  nil means wildcard.
- * @param clusterID  cluster ID of the attribute  nil means wildcard.
- * @param attributeID  attribute ID of the attribute.  nil means wildcard.
+ * @param endpointID  endpoint ID of the attributes. Nil means wildcard.
+ * @param clusterID  cluster ID of the attributes. Nil means wildcard.
+ * @param attributeID  attribute ID of the attributes. Nil means wildcard.
  * @param queue  client queue to dispatch the completion handler through
  * @param completion  block to receive the result.
  *                   "values" received by the block will have the same format of object as the one received by the completion block
- *                   of the MTRBaseDevice readAttributePathWithEndpointID:clusterID:attributeID:queue:completion method.
+ *                   of the MTRBaseDevice readAttributesWithEndpointID:clusterID:attributeID:queue:completion method.
  *
  * @note: not all combinations of wildcards might be supported.
  */
-- (void)readAttributePathWithEndpointID:(NSNumber * _Nullable)endpointID
-                              clusterID:(NSNumber * _Nullable)clusterID
-                            attributeID:(NSNumber * _Nullable)attributeID
-                                  queue:(dispatch_queue_t)queue
-                             completion:(MTRDeviceResponseHandler)completion;
+- (void)readAttributesWithEndpointID:(NSNumber * _Nullable)endpointID
+                           clusterID:(NSNumber * _Nullable)clusterID
+                         attributeID:(NSNumber * _Nullable)attributeID
+                               queue:(dispatch_queue_t)queue
+                          completion:(MTRDeviceResponseHandler)completion;
+
+@end
+
+MTR_DEPRECATED("Please use MTRClusterStateCacheContainer", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRAttributeCacheContainer : NSObject
+
+- (void)readAttributeWithEndpointId:(NSNumber * _Nullable)endpointId
+                          clusterId:(NSNumber * _Nullable)clusterId
+                        attributeId:(NSNumber * _Nullable)attributeId
+                        clientQueue:(dispatch_queue_t)clientQueue
+                         completion:(MTRDeviceResponseHandler)completion;
 
 @end
 

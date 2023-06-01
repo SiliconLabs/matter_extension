@@ -14,9 +14,7 @@
 
 include($ENV{PW_ROOT}/pw_build/pigweed.cmake)
 
-pw_add_module_library(pw_interrupt_cortex_m.context
-  IMPLEMENTS_FACADES
-    pw_interrupt.context
+pw_add_library(pw_interrupt_cortex_m.context INTERFACE
   HEADERS
     public/pw_interrupt_cortex_m/context_inline.h
     public_overrides/pw_interrupt_backend/context_inline.h

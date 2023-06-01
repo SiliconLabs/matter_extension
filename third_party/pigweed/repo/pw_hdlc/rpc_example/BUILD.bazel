@@ -14,15 +14,16 @@
 
 load(
     "//pw_build:pigweed.bzl",
-    "pw_cc_library",
+    "pw_cc_binary",
 )
 
-pw_cc_library(
+pw_cc_binary(
     name = "rpc_example",
     srcs = [
         "hdlc_rpc_server.cc",
         "main.cc",
     ],
+    tags = ["manual"],  # TODO(b/241575924): Fix the Bazel build for rpc_example
     deps = [
         "//pw_hdlc",
         "//pw_hdlc:pw_rpc",

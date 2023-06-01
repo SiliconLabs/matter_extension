@@ -23,7 +23,7 @@ PICS:
 
 config:
     nodeId: 0x12344321
-    cluster: "Basic"
+    cluster: "Basic Information"
     endpoint: 0
 
 tests:
@@ -52,7 +52,7 @@ tests:
 
             Below are the example command for using single RPI as multiple controller. Vendor should have the provision to use the equivalent command in their DUT or use multiple commissioners/controllers
 
-          ./chip-tool administratorcommissioning open-basic-commissioning-window 500 1 0 --timedInteractionTimeoutMs 1000
+          ./chip-tool administratorcommissioning open-basic-commissioning-window 180 1 0 --timedInteractionTimeoutMs 1000
 
 
           Verify the Open commisioning window on the TH_CE(all-cluster-app) Log:
@@ -97,9 +97,11 @@ tests:
 
           Verify the below message in the TH_CR2(chip-tool) Log:
 
-          CHIP:SC: PASESession timed out while waiting for a response from the peer. Expected message type was 33
-          CHIP:TOO: Secure Pairing Failed
-          CHIP:TOO: Pairing Failure: ../../third_party/connectedhomeip/src/protocols/secure_channel/PASESession.cpp:324: CHIP Error 0x00000032: Timeout
+          [1663842366.887733][13938:13938] CHIP:DL: NVS set: chip-counters/total-operational-hours = 0 (0x0)
+          [1663842366.887797][13938:13938] CHIP:DL: Inet Layer shutdown
+          [1663842366.887851][13938:13938] CHIP:DL: BLE shutdown
+          [1663842366.887905][13938:13938] CHIP:DL: System Layer shutdown
+          [1663842366.888154][13938:13938] CHIP:TOO: Run command failure: ../../examples/chip-tool/commands/common/CHIPCommand.cpp:454: CHIP Error 0x00000032: Timeout
       disabled: true
 
     - label:
@@ -128,7 +130,7 @@ tests:
 
             Below are the example command for using single RPI as multiple controller. Vendor should have the provision to use the equivalent command in their DUT or use multiple commissioners/controllers
 
-          /chip-tool administratorcommissioning revoke-commissioning 1 0 --timedInteractionTimeoutMs 1000
+          ./chip-tool administratorcommissioning revoke-commissioning 1 0 --timedInteractionTimeoutMs 1000
 
 
           Verify the Commissioning window is closed in TH_CE(all-clusters-app) Log
@@ -160,7 +162,7 @@ tests:
 
             Below are the example command for using single RPI as multiple controller. Vendor should have the provision to use the equivalent command in their DUT or use multiple commissioners/controllers
 
-          /chip-tool administratorcommissioning revoke-commissioning 1 0 --timedInteractionTimeoutMs 1000
+          ./chip-tool administratorcommissioning revoke-commissioning 1 0 --timedInteractionTimeoutMs 1000
 
 
           Verify the Commissioning window is closed in TH_CE(all-clusters-app) Log
@@ -179,7 +181,7 @@ tests:
 
             Below are the example command for using single RPI as multiple controller. Vendor should have the provision to use the equivalent command in their DUT or use multiple commissioners/controllers
 
-          ./chip-tool basic write node-label te5new 1 0
+          ./chip-tool  basicinformation write node-label te5new 1 0
 
           Verify Write request on TH_CE(all-clusters-app) Log
 
@@ -204,7 +206,7 @@ tests:
           [1660894021.902912][2871:2871] CHIP:DMG:                         Data = "te5new" (6 chars),
           [1660894021.902985][2871:2871] CHIP:DMG:                 },
 
-          ./chip-tool basic read node-label 1 0
+          ./chip-tool  basicinformation read node-label 1 0
 
           Verify read request on TH_CE(all-clusters-app) Log
 

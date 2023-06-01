@@ -18,7 +18,7 @@ package pw.snapshot;
 option java_package = "pw.snapshot.proto";
 option java_outer_classname = "Snapshot";
 
-import "pw_chrono/chrono.proto";
+import "pw_chrono_protos/chrono.proto";
 import "pw_cpu_exception_cortex_m_protos/cpu_state.proto";
 import "pw_log/proto/log.proto";
 import "pw_thread_protos/thread.proto";
@@ -68,7 +68,7 @@ message Snapshot {
   // entries added to it during a decode.
   map<string, string> tags = 17;
 
-  repeated pw.thread.Thread threads = 18;
+  repeated pw.thread.proto.Thread threads = 18;
 
   // If a device has multiple cores, it may be useful to collect an associated
   // snapshot for attached cores when a snapshot collection is triggered on one

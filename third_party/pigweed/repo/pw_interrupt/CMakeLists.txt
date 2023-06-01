@@ -13,8 +13,11 @@
 # the License.
 
 include($ENV{PW_ROOT}/pw_build/pigweed.cmake)
+include($ENV{PW_ROOT}/pw_interrupt/backend.cmake)
 
-pw_add_facade(pw_interrupt.context
+pw_add_facade(pw_interrupt.context INTERFACE
+  BACKEND
+    pw_interrupt.context_BACKEND
   HEADERS
     public/pw_interrupt/context.h
   PUBLIC_INCLUDES

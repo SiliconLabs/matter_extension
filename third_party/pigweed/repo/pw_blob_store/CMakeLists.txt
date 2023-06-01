@@ -14,7 +14,7 @@
 
 include($ENV{PW_ROOT}/pw_build/pigweed.cmake)
 
-pw_add_module_library(pw_blob_store
+pw_add_library(pw_blob_store INTERFACE
   PUBLIC_DEPS
     pw_bytes
     pw_containers
@@ -30,7 +30,7 @@ pw_add_module_library(pw_blob_store
     pw_string
 )
 
-pw_add_module_library(pw_blob_store.flat_file_system_entry
+pw_add_library(pw_blob_store.flat_file_system_entry INTERFACE
   PUBLIC_DEPS
     pw_blob_store
     pw_bytes
@@ -52,7 +52,7 @@ pw_add_module_library(pw_blob_store.flat_file_system_entry
 pw_add_test(pw_blob_store.blob_store_chunk_write_test
   SOURCES
     blob_store_chunk_write_test.cc
-  DEPS
+  PRIVATE_DEPS
     pw_blob_store
   GROUPS
     pw_blob_store
@@ -61,7 +61,7 @@ pw_add_test(pw_blob_store.blob_store_chunk_write_test
 pw_add_test(pw_blob_store.blob_store_deferred_write_test
   SOURCES
     blob_store_deferred_write_test.cc
-  DEPS
+  PRIVATE_DEPS
     pw_blob_store
   GROUPS
     pw_blob_store
@@ -70,7 +70,7 @@ pw_add_test(pw_blob_store.blob_store_deferred_write_test
 pw_add_test(pw_blob_store.flat_file_system_entry_test
   SOURCES
     flat_file_system_entry_test.cc
-  DEPS
+  PRIVATE_DEPS
     pw_blob_store
     pw_blob_store.flat_file_system_entry
   GROUPS

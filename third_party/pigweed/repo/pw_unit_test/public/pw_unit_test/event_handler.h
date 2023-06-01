@@ -94,12 +94,49 @@ struct RunTestsSummary {
   int disabled_tests;
 };
 
+struct ProgramSummary {
+  // The total number of tests to run in the program.
+  int tests_to_run;
+
+  // The number of test suites included in the program.
+  int test_suites;
+
+  // Test summary for the program once complete.
+  RunTestsSummary tests_summary;
+};
+
+struct TestSuite {
+  // Name of the test suite.
+  const char* name;
+
+  // Total number of tests in suite to run.
+  int test_to_run_count;
+};
+
 // An event handler is responsible for collecting and processing the results of
 // a unit test run. Its interface is called by the unit test framework as tests
 // are executed and various test events occur.
 class EventHandler {
  public:
   virtual ~EventHandler() = default;
+
+  // Called before any test activity starts.
+  virtual void TestProgramStart(const ProgramSummary& program_summary) = 0;
+
+  // Called after environment set-up for each iteration of tests ends.
+  virtual void EnvironmentsSetUpEnd() = 0;
+
+  // Called before the test suite starts.
+  virtual void TestSuiteStart(const TestSuite& test_suite) = 0;
+
+  // Called after the test suite ends.
+  virtual void TestSuiteEnd(const TestSuite& test_suite) = 0;
+
+  // Called after environment tear-down for each iteration of tests ends.
+  virtual void EnvironmentsTearDownEnd() = 0;
+
+  // Called after all test activities have ended.
+  virtual void TestProgramEnd(const ProgramSummary& program_summary) = 0;
 
   // Called before all tests are run.
   virtual void RunAllTestsStart() = 0;
@@ -122,6 +159,11 @@ class EventHandler {
   virtual void TestCaseExpect(const TestCase& test_case,
                               const TestExpectation& expectation) = 0;
 };
+
+// Sets the event handler for a test run. Must be called before RUN_ALL_TESTS()
+// to receive test output. If `event_handler` is null, this will disable event
+// handling. This method is not thread-safe.
+void RegisterEventHandler(EventHandler* event_handler);
 
 }  // namespace unit_test
 }  // namespace pw

@@ -1,0 +1,163 @@
+category: Matter|Core
+define:
+- name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+  value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
+- name: CHIP_HAVE_CONFIG_H
+  value: '1'
+- name: HARD_FAULT_LOG_ENABLE
+- name: SILABS_LOG_ENABLED
+  value: 'true'
+description: app_common
+id: app_common
+include:
+- path: examples/platform/silabs
+  file_list:
+  - path: display//lcd.h
+  - path: display//demo-ui.h
+  - path: display//demo-ui-bitmaps.h
+- path: examples/platform/silabs/efr32
+  file_list:
+  - path: uart.h
+  - path: spi_multiplex.h
+  - path: init_efrPlatform.h
+  - path: efr32_utils.h
+  - path: TemperatureSensor.h
+  - path: wf200/sl_wfx_board.h
+  - path: wf200/sl_wfx_host.h
+  - path: wf200/sl_wfx_task.h
+- path: src
+  file_list:
+  - path: app/util/basic-types.h
+  - path: app/ConcreteAttributePath.h
+  - path: app/EventLoggingTypes.h
+  - path: app/ConcreteClusterPath.h
+  - path: app/EventPathParams.h
+  - path: app/ObjectList.h
+  - path: app/ConcreteEventPath.h
+  - path: app/util/attribute-storage-null-handling.h
+  - path: app/AttributeAccessInterface.h
+  - path: app/AttributePathParams.h
+  - path: app/DataVersionFilter.h
+  - path: app/InteractionModelTimeout.h
+  - path: app/CommandSender.h
+  - path: app/DeviceProxy.h
+  - path: app/CommandPathParams.h
+  - path: app/ConcreteCommandPath.h
+  - path: app/InteractionModelRevision.h
+  - path: app/CASEClientPool.h
+  - path: app/util/endpoint-config-defines.h
+  - path: app/CASESessionManager.h
+  - path: app/CASEClient.h
+  - path: app/OperationalSessionSetup.h
+  - path: app/OperationalSessionSetupPool.h
+  - path: app/ClusterStateCache.h
+  - path: app/BufferedReadCallback.h
+  - path: app/ReadClient.h
+  - path: app/EventHeader.h
+  - path: app/ReadPrepareParams.h
+  - path: app/util/error-mapping.h
+  - path: app/util/af-enums.h
+  - path: app/InteractionModelEngine.h
+  - path: app/CommandHandler.h
+  - path: app/CommandHandlerInterface.h
+  - path: app/ReadHandler.h
+  - path: app/StatusResponse.h
+  - path: app/TimedHandler.h
+  - path: app/WriteClient.h
+  - path: app/WriteHandler.h
+  - path: app/reporting/Engine.h
+  - path: app/util/attribute-metadata.h
+  - path: app/AttributePathExpandIterator.h
+  - path: app/EventManagement.h
+  - path: app/SubscriptionResumptionStorage.h
+  - path: app/AttributeAccessToken.h
+  - path: app/ChunkedWriteCallback.h
+  - path: app/util/DataModelHandler.h
+  - path: app/GlobalAttributes.h
+  - path: app/RequiredPrivilege.h
+  - path: app/util/MatterCallbacks.h
+  - path: app/util/privilege-storage.h
+  - path: app/TimedRequest.h
+  - path: app/DefaultAttributePersistenceProvider.h
+  - path: app/AttributePersistenceProvider.h
+  - path: app/DeferredAttributePersistenceProvider.h
+  - path: app/AppConfig.h
+  - path: app/InteractionModelHelper.h
+  - path: app/reporting/reporting.h
+  - path: app/FailSafeContext.h
+  - path: app/SimpleSubscriptionResumptionStorage.h
+  - path: app/TestEventTriggerDelegate.h
+  - path: app/util/af.h
+  - path: app/util/config.h
+  - path: app/util/af-types.h
+  - path: app/util/debug-printing.h
+  - path: app/util/ember-print.h
+  - path: app/util/types_stub.h
+  - path: app/util/attribute-storage.h
+  - path: app/util/util.h
+  - path: app/util/common.h
+  - path: app/util/generic-callbacks.h
+  - path: app/util/attribute-table.h
+  - path: app/util/odd-sized-integers.h
+  - path: app/util/binding-table.h
+  - path: app/EventLogging.h
+  - path: app/EventLoggingDelegate.h
+  - path: app/CommandResponseHelper.h
+  - path: app/DataModelRevision.h
+  - path: app/app-platform/ContentAppPlatform.h
+  - path: app/app-platform/ContentApp.h
+  - path: app/OTAUserConsentCommon.h
+  - path: app/util/debug-printing-test.h
+  - path: app/util/ClientMonitoringRegistrationTable.h
+  - path: trace/trace.h
+- path: src/include
+- path: src/lib
+- path: src/platform/silabs/efr32
+- path: third_party/nlassert/repo/include
+  file_list:
+  - path: nlassert.h
+  - path: nlassert-nonproduction.h
+  - path: nlassert-production.h
+  - path: nlassert-internal.h
+- path: third_party/nlio/repo/include
+- path: zzz_generated/app-common
+  file_list:
+  - path: app-common/zap-generated/cluster-objects.h
+  - path: app-common/zap-generated/enums.h
+  - path: app-common/zap-generated/ids/Attributes.h
+  - path: app-common/zap-generated/ids/Clusters.h
+  - path: app-common/zap-generated/ids/Commands.h
+  - path: app-common/zap-generated/ids/Events.h
+  - path: app-common/zap-generated/cluster-enums-check.h
+  - path: app-common/zap-generated/cluster-enums.h
+  - path: app-common/zap-generated/att-storage.h
+  - path: app-common/zap-generated/attributes/Accessors.h
+  - path: app-common/zap-generated/attribute-type.h
+  - path: app-common/zap-generated/attribute-size.h
+  - path: app-common/zap-generated/callback.h
+  - path: app-common/zap-generated/print-cluster.h
+- path: slc/inc
+  file_list:
+  - path: app/AppBuildConfig.h
+label: app_common
+package: Matter
+provides:
+- name: matter_app_common
+quality: production
+source:
+- path: src/app/util/ClientMonitoringRegistrationTable.cpp
+- path: src/app/util/DataModelHandler.cpp
+- path: src/app/util/attribute-size-util.cpp
+- path: src/app/util/attribute-storage.cpp
+- path: src/app/util/attribute-table.cpp
+- path: src/app/util/binding-table.cpp
+- path: src/app/util/ember-compatibility-functions.cpp
+- path: src/app/util/ember-print.cpp
+- path: src/app/util/error-mapping.cpp
+- path: src/app/util/generic-callback-stubs.cpp
+- path: src/app/util/message.cpp
+- path: src/app/util/privilege-storage.cpp
+- path: src/app/util/util.cpp
+- path: zzz_generated/app-common/app-common/zap-generated/attributes/Accessors.cpp
+ui_hints:
+  visibility: never

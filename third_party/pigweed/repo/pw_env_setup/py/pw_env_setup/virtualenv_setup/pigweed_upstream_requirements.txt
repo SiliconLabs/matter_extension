@@ -14,8 +14,11 @@
 
 # Pigweed upstream specific depenencies:
 # pigweed.dev Sphinx themes
-furo==2022.1.2
-sphinx-design==0.0.13
+furo==2022.12.7
+sphinx-copybutton==0.5.1
+sphinx-tabs==3.4.1
+myst-parser==0.18.1
+breathe==4.34.0
 # Renode requirements
-psutil==5.9.0
-robotframework==3.1
+psutil==5.9.4
+robotframework==6.0.2

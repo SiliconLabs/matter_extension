@@ -17,7 +17,8 @@
  */
 
 #include <credentials/GroupDataProviderImpl.h>
-#include <lib/core/CHIPTLV.h>
+#include <crypto/DefaultSessionKeystore.h>
+#include <lib/core/TLV.h>
 #include <lib/support/CHIPMem.h>
 #include <lib/support/TestPersistentStorageDelegate.h>
 #include <lib/support/UnitTestRegistration.h>
@@ -77,9 +78,9 @@ constexpr ByteSpan kCompressedFabricId1(kCompressedFabricIdBuffer1);
 static const uint8_t kCompressedFabricIdBuffer2[] = { 0x3f, 0xaa, 0xe2, 0x90, 0x93, 0xd5, 0xaf, 0x45 };
 constexpr ByteSpan kCompressedFabricId2(kCompressedFabricIdBuffer2);
 
-constexpr chip::GroupId kGroup1 = kMinFabricGroupId;
+constexpr chip::GroupId kGroup1 = kMinApplicationGroupId;
 constexpr chip::GroupId kGroup2 = 0x2222;
-constexpr chip::GroupId kGroup3 = kMaxFabricGroupId;
+constexpr chip::GroupId kGroup3 = kMaxApplicationGroupId;
 constexpr chip::GroupId kGroup4 = 0x4444;
 constexpr chip::GroupId kGroup5 = 0x5555;
 
@@ -165,16 +166,24 @@ void ResetProvider(GroupDataProvider * provider)
     provider->RemoveFabric(kFabric2);
 }
 
-bool CompareKeySets(const KeySet & keyset1, const KeySet & keyset2)
+bool CompareKeySets(const KeySet & retrievedKeySet, const KeySet & keyset2)
 {
-    VerifyOrReturnError(keyset1.policy == keyset2.policy, false);
-    VerifyOrReturnError(keyset1.num_keys_used == keyset2.num_keys_used, false);
-    VerifyOrReturnError(keyset1.epoch_keys[0].start_time == keyset2.epoch_keys[0].start_time, false);
-    VerifyOrReturnError(keyset1.epoch_keys[1].start_time == keyset2.epoch_keys[1].start_time, false);
-    VerifyOrReturnError(keyset1.epoch_keys[2].start_time == keyset2.epoch_keys[2].start_time, false);
-    VerifyOrReturnError(0 == memcmp(kZeroKey, keyset1.epoch_keys[0].key, EpochKey::kLengthBytes), false);
-    VerifyOrReturnError(0 == memcmp(kZeroKey, keyset1.epoch_keys[1].key, EpochKey::kLengthBytes), false);
-    VerifyOrReturnError(0 == memcmp(kZeroKey, keyset1.epoch_keys[2].key, EpochKey::kLengthBytes), false);
+    VerifyOrReturnError(retrievedKeySet.policy == keyset2.policy, false);
+    VerifyOrReturnError(retrievedKeySet.num_keys_used == keyset2.num_keys_used, false);
+
+    for (int i = 0; i < 3; i++)
+    {
+        if (i < retrievedKeySet.num_keys_used)
+        {
+            VerifyOrReturnError(retrievedKeySet.epoch_keys[i].start_time == keyset2.epoch_keys[i].start_time, false);
+        }
+        else
+        {
+            VerifyOrReturnError(retrievedKeySet.epoch_keys[i].start_time == 0, false);
+        }
+
+        VerifyOrReturnError(0 == memcmp(kZeroKey, retrievedKeySet.epoch_keys[i].key, EpochKey::kLengthBytes), false);
+    }
     return true;
 }
 
@@ -1164,13 +1173,13 @@ void TestGroupDecryption(nlTestSuite * apSuite, void * apContext)
         {
             std::pair<FabricIndex, GroupId> found(session.fabric_index, session.group_id);
             NL_TEST_ASSERT(apSuite, expected.count(found) > 0);
-            NL_TEST_ASSERT(apSuite, session.key != nullptr);
+            NL_TEST_ASSERT(apSuite, session.keyContext != nullptr);
 
             // Decrypt the ciphertext
             NL_TEST_ASSERT(apSuite,
                            CHIP_NO_ERROR ==
-                               session.key->MessageDecrypt(ciphertext, ByteSpan(aad, sizeof(aad)), ByteSpan(nonce, sizeof(nonce)),
-                                                           tag, plaintext));
+                               session.keyContext->MessageDecrypt(ciphertext, ByteSpan(aad, sizeof(aad)),
+                                                                  ByteSpan(nonce, sizeof(nonce)), tag, plaintext));
 
             // The new plaintext must match the original message
             NL_TEST_ASSERT(apSuite, 0 == memcmp(plaintext.data(), kMessage, sizeof(kMessage)));
@@ -1188,6 +1197,7 @@ void TestGroupDecryption(nlTestSuite * apSuite, void * apContext)
 namespace {
 
 static chip::TestPersistentStorageDelegate sDelegate;
+static chip::Crypto::DefaultSessionKeystore sSessionKeystore;
 static GroupDataProviderImpl sProvider(chip::app::TestGroups::kMaxGroupsPerFabric, chip::app::TestGroups::kMaxGroupKeysPerFabric);
 
 static EpochKey kEpochKeys0[] = {
@@ -1220,6 +1230,7 @@ int Test_Setup(void * inContext)
 
     // Initialize Group Data Provider
     sProvider.SetStorageDelegate(&sDelegate);
+    sProvider.SetSessionKeystore(&sSessionKeystore);
     sProvider.SetListener(&chip::app::TestGroups::sListener);
     VerifyOrReturnError(CHIP_NO_ERROR == sProvider.Init(), FAILURE);
     SetGroupDataProvider(&sProvider);

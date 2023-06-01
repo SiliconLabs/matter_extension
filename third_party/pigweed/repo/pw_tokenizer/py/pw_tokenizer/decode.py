@@ -21,9 +21,18 @@ in the resulting string with an error message.
 """
 
 from datetime import datetime
+import math
 import re
 import struct
-from typing import Iterable, List, NamedTuple, Match, Sequence, Tuple
+from typing import (
+    Iterable,
+    List,
+    NamedTuple,
+    Match,
+    Optional,
+    Sequence,
+    Tuple,
+)
 
 
 def zigzag_decode(value: int) -> int:
@@ -34,21 +43,206 @@ def zigzag_decode(value: int) -> int:
 
 
 class FormatSpec:
-    """Represents a format specifier parsed from a printf-style string."""
+    """Represents a format specifier parsed from a printf-style string.
+
+    This implementation is designed to align with the C99 specification,
+    section 7.19.6
+    (https://www.dii.uchile.cl/~daespino/files/Iso_C_1999_definition.pdf).
+    Notably, this specification is slightly different than what is implemented
+    in most compilers due to each compiler choosing to interpret undefined
+    behavior in slightly different ways. Treat the following description as the
+    source of truth.
+
+    This implementation supports:
+    - Overall Format: `%[flags][width][.precision][length][specifier]`
+    - Flags (Zero or More)
+      - `-`: Left-justify within the given field width; Right justification is
+             the default (see Width modifier).
+      - `+`: Forces to preceed the result with a plus or minus sign (`+` or `-`)
+             even for positive numbers. By default, only negative numbers are
+             preceded with a `-` sign.
+      - ` ` (space): If no sign is going to be written, a blank space is
+                     inserted before the value.
+      - `#`: Specifies an alternative print syntax should be used.
+        - Used with `o`, `x` or `X` specifiers the value is preceeded with `0`,
+          `0x`, or `0X`, respectively, for values different than zero.
+        - Used with `a`, `A`, `e`, `E`, `f`, `F`, `g`, or `G` it forces the
+          written output to contain a decimal point even if no more digits
+          follow. By default, if no digits follow, no decimal point is written.
+      - `0`: Left-pads the number with zeroes (`0`) instead of spaces when
+             padding is specified (see width sub-specifier).
+    - Width (Optional)
+      - ``(number)``: Minimum number of characters to be printed. If the value
+                      to be printed is shorter than this number, the result is
+                      padded with blank spaces or `0` if the `0` flag is
+                      present. The value is not truncated even if the result is
+                      larger. If the value is negative and the `0` flag is
+                      present, the `0`s are padded after the `-` symbol.
+      - `*`: The width is not specified in the format string, but as an
+             additional integer value argument preceding the argument that has
+             to be formatted.
+    - Precision (Optional)
+      - `.(number)`
+        - For `d`, `i`, `o`, `u`, `x`, `X`, specifies the minimum number of
+          digits to be written. If the value to be written is shorter than this
+          number, the result is padded with leading zeros. The value is not
+          truncated even if the result is longer.
+          - A precision of `0` means that no character is written for the value
+            `0`.
+        - For `a`, `A`, `e`, `E`, `f`, and `F`, specifies the number of digits
+          to be printed after the decimal point. By default, this is `6`.
+        - For `g` and `G`, specifies the maximum number of significant digits to
+          be printed.
+        - For `s`, specifies the maximum number of characters to be printed. By
+          default all characters are printed until the ending null character is
+          encountered.
+        - If the period is specified without an explicit value for precision,
+          `0` is assumed.
+      - `.*`: The precision is not specified in the format string, but as an
+              additional integer value argument preceding the argument that has
+              to be formatted.
+    - Length (Optional)
+      - `hh`: Usable with `d`, `i`, `o`, `u`, `x`, or `X` specifiers to convey
+              the argument will be a `signed char` or `unsigned char`. However,
+              this is largely ignored in the implementation due to it not being
+              necessary for Python or argument decoding (since the argument is
+              always encoded at least as a 32-bit integer).
+      - `h`: Usable with `d`, `i`, `o`, `u`, `x`, or `X` specifiers to convey
+             the argument will be a `signed short int` or `unsigned short int`.
+             However, this is largely ignored in the implementation due to it
+             not being necessary for Python or argument decoding (since the
+             argument is always encoded at least as a 32-bit integer).
+      - `l`: Usable with `d`, `i`, `o`, `u`, `x`, or `X` specifiers to convey
+             the argument will be a `signed long int` or `unsigned long int`.
+             Also is usable with `c` and `s` to specify that the arguments will
+             be encoded with `wchar_t` values (which isn't different from normal
+             `char` values). However, this is largely ignored in the
+             implementation due to it not being necessary for Python or argument
+             decoding (since the argument is always encoded at least as a 32-bit
+             integer).
+      - `ll`: Usable with `d`, `i`, `o`, `u`, `x`, or `X` specifiers to convey
+              the argument will be a `signed long long int` or
+              `unsigned long long int`. This is required to properly decode the
+              argument as a 64-bit integer.
+      - `L`: Usable with `a`, `A`, `e`, `E`, `f`, `F`, `g`, or `G` conversion
+             specifiers applies to a long double argument. However, this is
+             ignored in the implementation due to floating point value encoded
+             that is unaffected by bit width.
+      - `j`: Usable with `d`, `i`, `o`, `u`, `x`, or `X` specifiers to convey
+             the argument will be a `intmax_t` or `uintmax_t`.
+      - `z`: Usable with `d`, `i`, `o`, `u`, `x`, or `X` specifiers to convey
+             the argument will be a `size_t`. This will force the argument to be
+             decoded as an unsigned integer.
+      - `t`: Usable with `d`, `i`, `o`, `u`, `x`, or `X` specifiers to convey
+             the argument will be a `ptrdiff_t`.
+      - If a length modifier is provided for an incorrect specifier, it is
+        ignored.
+    - Specifier (Required)
+      - `d` / `i`: Used for signed decimal integers.
+      - `u`: Used for unsigned decimal integers.
+      - `o`: Used for unsigned decimal integers and specifies formatting should
+             be as an octal number.
+      - `x`: Used for unsigned decimal integers and specifies formatting should
+             be as a hexadecimal number using all lowercase letters.
+      - `X`: Used for unsigned decimal integers and specifies formatting should
+             be as a hexadecimal number using all uppercase letters.
+      - `f`: Used for floating-point values and specifies to use lowercase,
+             decimal floating point formatting.
+        - Default precision is `6` decimal places unless explicitly specified.
+      - `F`: Used for floating-point values and specifies to use uppercase,
+             decimal floating point formatting.
+        - Default precision is `6` decimal places unless explicitly specified.
+      - `e`: Used for floating-point values and specifies to use lowercase,
+             exponential (scientific) formatting.
+        - Default precision is `6` decimal places unless explicitly specified.
+      - `E`: Used for floating-point values and specifies to use uppercase,
+             exponential (scientific) formatting.
+        - Default precision is `6` decimal places unless explicitly specified.
+      - `g`: Used for floating-point values and specified to use `f` or `e`
+             formatting depending on which would be the shortest representation.
+        - Precision specifies the number of significant digits, not just digits
+          after the decimal place.
+        - If the precision is specified as `0`, it is interpreted to mean `1`.
+        - `e` formatting is used if the the exponent would be less than `-4` or
+          is greater than or equal to the precision.
+        - Trailing zeros are removed unless the `#` flag is set.
+        - A decimal point only appears if it is followed by a digit.
+        - `NaN` or infinities always follow `f` formatting.
+      - `G`: Used for floating-point values and specified to use `f` or `e`
+             formatting depending on which would be the shortest representation.
+        - Precision specifies the number of significant digits, not just digits
+          after the decimal place.
+        - If the precision is specified as `0`, it is interpreted to mean `1`.
+        - `E` formatting is used if the the exponent would be less than `-4` or
+          is greater than or equal to the precision.
+        - Trailing zeros are removed unless the `#` flag is set.
+        - A decimal point only appears if it is followed by a digit.
+        - `NaN` or infinities always follow `F` formatting.
+      - `c`: Used for formatting a `char` value.
+      - `s`: Used for formatting a string of `char` values.
+        - If width is specified, the null terminator character is included as a
+          character for width count.
+        - If precision is specified, no more `char`s than that value will be
+          written from the string (padding is used to fill additional width).
+      - `p`: Used for formatting a pointer address.
+      - `%`: Prints a single `%`. Only valid as `%%` (supports no flags, width,
+             precision, or length modifiers).
+
+    Underspecified details:
+    - If both `+` and ` ` flags appear, the ` ` is ignored.
+    - The `+` and ` ` flags will error if used with `c` or `s`.
+    - The `#` flag will error if used with `d`, `i`, `u`, `c`, `s`, or `p`.
+    - The `0` flag will error if used with `c`, `s`, or `p`.
+    - Both `+` and ` ` can work with the unsigned integer specifiers `u`, `o`,
+      `x`, and `X`.
+    - If a length modifier is provided for an incorrect specifier, it is
+      ignored.
+    - The `z` length modifier will decode arugments as signed as long as `d` or
+      `i` is used.
+    - `p` is implementation defined. For this implementation, it will print
+      with a `0x` prefix and then the pointer value was printed using `%08X`.
+      `p` supports the `+`, `-`, and ` ` flags, but not the `#` or `0` flags.
+      None of the length modifiers are usable with `p`. This implementation will
+      try to adhere to user-specified width (assuming the width provided is
+      larger than the guaranteed minimum of 10). Specifying precision for `p` is
+      considered an error.
+    - Only `%%` is allowed with no other modifiers. Things like `%+%` will fail
+      to decode. Some C stdlib implementations support any modifiers being
+      present between `%`, but ignore any for the output.
+    - If a width is specified with the `0` flag for a negative value, the padded
+      `0`s will appear after the `-` symbol.
+    - A precision of `0` for `d`, `i`, `u`, `o`, `x`, or `X` means that no
+      character is written for the value `0`.
+    - Precision cannot be specified for `c`.
+    - Using `*` or fixed precision with the `s` specifier still requires the
+      string argument to be null-terminated. This is due to argument encoding
+      happening on the C/C++-side while the precision value is not read or
+      otherwise used until decoding happens in this Python code.
+
+    Non-conformant details:
+    - `n` specifier: We do not support the `n` specifier since it is impossible
+                     for us to retroactively tell the original program how many
+                     characters have been printed since this decoding happens a
+                     great deal of time after the device sent it, usually on a
+                     separate processing device entirely.
+    """
 
     # Regular expression for finding format specifiers.
-    FORMAT_SPEC = re.compile(r'%(?:(?P<flags>[+\- #0]*\d*(?:\.\d+)?)'
-                             r'(?P<length>hh|h|ll|l|j|z|t|L)?'
-                             r'(?P<type>[csdioxXufFeEaAgGnp])|%)')
+    FORMAT_SPEC = re.compile(
+        r'%(?P<flags>[+\- #0]+)?'
+        r'(?P<width>\d+|\*)?'
+        r'(?P<precision>\.(?:\d*|\*))?'
+        r'(?P<length>hh|h|ll|l|j|z|t|L)?'
+        r'(?P<type>[csdioxXufFeEaAgGnp%])'
+    )
 
     # Conversions to make format strings Python compatible.
-    _UNSUPPORTED_LENGTH = frozenset(['hh', 'll', 'j', 'z', 't'])
-    _REMAP_TYPE = {'a': 'f', 'A': 'F'}
+    _REMAP_TYPE = {'a': 'f', 'A': 'F', 'p': 'X'}
 
     # Conversion specifiers by type; n is not supported.
-    _SIGNED_INT = 'di'
-    _UNSIGNED_INT = frozenset('oxXup')
-    _FLOATING_POINT = frozenset('fFeEaAgG')
+    SIGNED_INT = frozenset('di')
+    UNSIGNED_INT = frozenset('oxXup')
+    FLOATING_POINT = frozenset('fFeEaAgG')
 
     _PACKED_FLOAT = struct.Struct('<f')
 
@@ -60,7 +254,9 @@ class FormatSpec:
         if not match:
             raise ValueError(
                 '{!r} is not a valid single format specifier'.format(
-                    format_specifier))
+                    format_specifier
+                )
+            )
 
         return cls(match)
 
@@ -70,48 +266,204 @@ class FormatSpec:
         self.specifier: str = self.match.group()
 
         self.flags: str = self.match.group('flags') or ''
+        self.width: str = self.match.group('width') or ''
+        self.precision: str = self.match.group('precision') or ''
         self.length: str = self.match.group('length') or ''
+        self.type: str = self.match.group('type')
 
-        # If there is no type, the format spec is %%.
-        self.type: str = self.match.group('type') or '%'
+        self.error = None
+        if self.type == 'n':
+            self.error = 'Unsupported conversion specifier n.'
+        elif self.type == '%':
+            if self.flags or self.width or self.precision or self.length:
+                self.error = (
+                    '%% does not support any flags, width, precision,'
+                    'or length modifiers.'
+                )
+        elif self.type in 'csdiup' and '#' in self.flags:
+            self.error = (
+                '# is only supported with o, x, X, f, F, e, E, a, A, '
+                'g, and G specifiers.'
+            )
+        elif self.type in 'csp' and '0' in self.flags:
+            self.error = (
+                '0 is only supported with d, i, o, u, x, X, a, A, e, '
+                'E, f, F, g, and G specifiers.'
+            )
+        elif self.type in 'cs' and ('+' in self.flags or ' ' in self.flags):
+            self.error = (
+                '+ and space are only available for d, i, o, u, x, X,'
+                'a, A, e, E, f, F, g, and G specifiers.'
+            )
+        elif self.type == 'c':
+            if self.precision != '':
+                self.error = 'Precision is not supported for specifier c.'
+        elif self.type == 'p':
+            if self.length != '':
+                self.error = 'p does not support any length modifiers.'
+            elif self.precision != '':
+                self.error = 'p does not support precision modifiers.'
 
-        # %p prints as 0xFEEDBEEF; other specs may need length/type switched
+        # If we are going to add additional characters to the output, we add to
+        # width_bias to ensure user-provided widths are reduced by that amount.
+        self._width_bias = 0
+        # Some of our machinery requires that we maintain a minimum precision
+        # width to ensure a certain amount of digits gets printed. This
+        # increases the user-provided precision in these cases if it was not
+        # enough.
+        self._minimum_precision = 0
+        # Python's handling of %#o is non-standard and prepends a 0o
+        # instead of single 0.
+        if self.type == 'o' and '#' in self.flags:
+            self._width_bias = 1
+        # Python does not support %p natively.
         if self.type == 'p':
-            self.compatible = '0x%08X'
-        else:
-            self.compatible = ''.join([
-                '%', self.flags,
-                '' if self.length in self._UNSUPPORTED_LENGTH else '',
-                self._REMAP_TYPE.get(self.type, self.type)
-            ])
+            self._width_bias = 2
+            self._minimum_precision = 8
+
+        # If we have a concrete width, we reduce it by any width bias.
+        # Otherwise, we either have no width or width is *, where the decoding
+        # logic will handle the width bias.
+        parsed_width = int(self.width.replace('*', '') or '0')
+        if parsed_width > self._width_bias:
+            self.width = f'{parsed_width - self._width_bias}'
+
+        # Python %-operator does not support `.` without a
+        # trailing number. `.` is defined to be equivalent to `.0`.
+        if self.precision == '.':
+            self.precision = '.0'
+
+        # If we have a concrete precision that is not *, we check that it is at
+        # least minimum precision. If it is *, other parts of decoding will
+        # ensure the minimum is upheld.
+        if (
+            self.precision != '.*'
+            and int(self.precision.replace('.', '') or '0')
+            < self._minimum_precision
+        ):
+            self.precision = f'.{self._minimum_precision}'
+
+        # The Python %-format machinery never requires the length
+        # modifier to work correctly, and it doesn't support all of the
+        # C99 length format specifiers anyway. We remove it from the
+        # python-compaitble format string.
+        self.compatible = ''.join(
+            [
+                '%',
+                self.flags,
+                self.width,
+                self.precision,
+                self._REMAP_TYPE.get(self.type, self.type),
+            ]
+        )
 
     def decode(self, encoded_arg: bytes) -> 'DecodedArg':
         """Decodes the provided data according to this format specifier."""
-        if self.type == '%':  # literal %
-            return DecodedArg(self, (),
-                              b'')  # Use () as the value for % formatting.
+        if self.error is not None:
+            return DecodedArg(
+                self, None, b'', DecodedArg.DECODE_ERROR, self.error
+            )
 
-        if self.type == 's':  # string
-            return self._decode_string(encoded_arg)
+        width = None
+        if self.width == '*':
+            width = FormatSpec.from_string('%d').decode(encoded_arg)
+            encoded_arg = encoded_arg[len(width.raw_data) :]
 
-        if self.type == 'c':  # character
-            return self._decode_char(encoded_arg)
+        precision = None
+        if self.precision == '.*':
+            precision = FormatSpec.from_string('%d').decode(encoded_arg)
+            encoded_arg = encoded_arg[len(precision.raw_data) :]
 
-        if self.type in self._SIGNED_INT:
-            return self._decode_signed_integer(encoded_arg)
+        if self.type == '%':
+            return DecodedArg(
+                self, (), b''
+            )  # Use () as the value for % formatting.
 
-        if self.type in self._UNSIGNED_INT:
-            return self._decode_unsigned_integer(encoded_arg)
+        if self.type == 's':
+            return self._merge_decoded_args(
+                width, precision, self._decode_string(encoded_arg)
+            )
 
-        if self.type in self._FLOATING_POINT:
-            return self._decode_float(encoded_arg)
+        if self.type == 'c':
+            return self._merge_decoded_args(
+                width, precision, self._decode_char(encoded_arg)
+            )
 
-        # Unsupported specifier (e.g. %n)
-        return DecodedArg(
-            self, None, b'', DecodedArg.DECODE_ERROR,
-            'Unsupported conversion specifier "{}"'.format(self.type))
+        if self.type in self.SIGNED_INT:
+            return self._merge_decoded_args(
+                width, precision, self._decode_signed_integer(encoded_arg)
+            )
 
-    def _decode_signed_integer(self, encoded: bytes) -> 'DecodedArg':
+        if self.type in self.UNSIGNED_INT:
+            return self._merge_decoded_args(
+                width, precision, self._decode_unsigned_integer(encoded_arg)
+            )
+
+        if self.type in self.FLOATING_POINT:
+            return self._merge_decoded_args(
+                width, precision, self._decode_float(encoded_arg)
+            )
+
+        # Should be unreachable.
+        assert False, f'Unhandled format specifier: {self.type}'
+
+    def text_float_safe_compatible(self) -> str:
+        return ''.join(
+            [
+                '%',
+                self.flags.replace('0', ' '),
+                self.width,
+                self.precision,
+                self._REMAP_TYPE.get(self.type, self.type),
+            ]
+        )
+
+    def _merge_decoded_args(
+        self,
+        width: Optional['DecodedArg'],
+        precision: Optional['DecodedArg'],
+        main: 'DecodedArg',
+    ) -> 'DecodedArg':
+        def merge_optional_str(*args: Optional[str]) -> Optional[str]:
+            return ' '.join(a for a in args if a) or None
+
+        if width is not None and precision is not None:
+            return DecodedArg(
+                main.specifier,
+                (
+                    width.value - self._width_bias,
+                    max(precision.value, self._minimum_precision),
+                    main.value,
+                ),
+                width.raw_data + precision.raw_data + main.raw_data,
+                width.status | precision.status | main.status,
+                merge_optional_str(width.error, precision.error, main.error),
+            )
+
+        if width is not None:
+            return DecodedArg(
+                main.specifier,
+                (width.value - self._width_bias, main.value),
+                width.raw_data + main.raw_data,
+                width.status | main.status,
+                merge_optional_str(width.error, main.error),
+            )
+
+        if precision is not None:
+            return DecodedArg(
+                main.specifier,
+                (max(precision.value, self._minimum_precision), main.value),
+                precision.raw_data + main.raw_data,
+                precision.status | main.status,
+                merge_optional_str(precision.error, main.error),
+            )
+
+        return main
+
+    def _decode_signed_integer(
+        self,
+        encoded: bytes,
+    ) -> 'DecodedArg':
         """Decodes a signed variable-length integer."""
         if not encoded:
             return DecodedArg.missing(self)
@@ -122,21 +474,31 @@ class FormatSpec:
 
         for byte in encoded:
             count += 1
-            result |= (byte & 0x7f) << shift
+            result |= (byte & 0x7F) << shift
 
             if not byte & 0x80:
-                return DecodedArg(self, zigzag_decode(result), encoded[:count])
+                return DecodedArg(
+                    self,
+                    zigzag_decode(result),
+                    encoded[:count],
+                    DecodedArg.OK,
+                )
 
             shift += 7
             if shift >= 64:
                 break
 
-        return DecodedArg(self, None, encoded[:count], DecodedArg.DECODE_ERROR,
-                          'Unterminated variable-length integer')
+        return DecodedArg(
+            self,
+            None,
+            encoded[:count],
+            DecodedArg.DECODE_ERROR,
+            'Unterminated variable-length integer',
+        )
 
     def _decode_unsigned_integer(self, encoded: bytes) -> 'DecodedArg':
+        """Decodes an unsigned variable-length integer."""
         arg = self._decode_signed_integer(encoded)
-
         # Since ZigZag encoding is used, unsigned integers must be masked off to
         # their original bit length.
         if arg.value is not None:
@@ -148,9 +510,9 @@ class FormatSpec:
         if len(encoded) < 4:
             return DecodedArg.missing(self)
 
-        return DecodedArg(self,
-                          self._PACKED_FLOAT.unpack_from(encoded)[0],
-                          encoded[:4])
+        return DecodedArg(
+            self, self._PACKED_FLOAT.unpack_from(encoded)[0], encoded[:4]
+        )
 
     def _decode_string(self, encoded: bytes) -> 'DecodedArg':
         """Reads a unicode string from the encoded data."""
@@ -162,9 +524,9 @@ class FormatSpec:
 
         if size_and_status & 0x80:
             status |= DecodedArg.TRUNCATED
-            size_and_status &= 0x7f
+            size_and_status &= 0x7F
 
-        raw_data = encoded[0:size_and_status + 1]
+        raw_data = encoded[0 : size_and_status + 1]
         data = raw_data[1:]
 
         if len(data) < size_and_status:
@@ -173,9 +535,13 @@ class FormatSpec:
         try:
             decoded = data.decode()
         except UnicodeDecodeError as err:
-            return DecodedArg(self,
-                              repr(bytes(data)).lstrip('b'), raw_data,
-                              status | DecodedArg.DECODE_ERROR, err)
+            return DecodedArg(
+                self,
+                repr(bytes(data)).lstrip('b'),
+                raw_data,
+                status | DecodedArg.DECODE_ERROR,
+                err,
+            )
 
         return DecodedArg(self, decoded, raw_data, status)
 
@@ -219,16 +585,19 @@ class DecodedArg:
     def missing(cls, specifier: FormatSpec):
         return cls(specifier, None, b'', cls.MISSING)
 
-    def __init__(self,
-                 specifier: FormatSpec,
-                 value,
-                 raw_data: bytes,
-                 status: int = OK,
-                 error=None):
+    def __init__(
+        self,
+        specifier: FormatSpec,
+        value,
+        raw_data: bytes,
+        status: int = OK,
+        error=None,
+    ):
         self.specifier = specifier  # FormatSpec (e.g. to represent "%0.2f")
         self.value = value  # the decoded value, or None if decoding failed
         self.raw_data = bytes(
-            raw_data)  # the exact bytes used to decode this arg
+            raw_data
+        )  # the exact bytes used to decode this arg
         self._status = status
         self.error = error
 
@@ -251,10 +620,43 @@ class DecodedArg:
             return self.specifier.compatible % (self.value + '[...]')
 
         if self.ok():
+            # Check if we are effectively .0{diuoxX} with a 0 value (this
+            # includes .* with (0, 0)). C standard says a value of 0 with 0
+            # precision produces an empty string.
+            is_integer_specifier_type = self.specifier.type in 'diuoxX'
+            is_simple_0_precision_with_0_value = self.value == 0 and (
+                self.specifier.precision == '.0'
+                or self.specifier.precision == '.'
+            )
+            is_star_0_precision_with_0_value = (
+                self.value == (0, 0) and self.specifier.precision == '.*'
+            )
+            if is_integer_specifier_type and (
+                is_simple_0_precision_with_0_value
+                or is_star_0_precision_with_0_value
+            ):
+                return ''
+
             try:
+                # Python has a nonstandard alternative octal form.
+                if self.specifier.type == 'o' and '#' in self.specifier.flags:
+                    return self._format_alternative_octal()
+
+                # Python doesn't pad zeros correctly for inf/nan.
+                if self.specifier.type in FormatSpec.FLOATING_POINT and (
+                    self.value == math.inf
+                    or self.value == -math.inf
+                    or self.value == math.nan
+                ):
+                    return self._format_text_float()
+
+                # Python doesn't have a native pointer formatter.
+                if self.specifier.type == 'p':
+                    return self._format_pointer()
+
                 return self.specifier.compatible % self.value
             except (OverflowError, TypeError, ValueError) as err:
-                self.status |= self.DECODE_ERROR
+                self._status |= self.DECODE_ERROR
                 self.error = err
 
         if self.status & self.SKIPPED:
@@ -264,13 +666,59 @@ class DecodedArg:
         elif self.status & self.DECODE_ERROR:
             message = '{} ERROR'.format(self.specifier)
         else:
-            raise AssertionError('Unhandled DecodedArg status {:x}!'.format(
-                self.status))
+            raise AssertionError(
+                'Unhandled DecodedArg status {:x}!'.format(self.status)
+            )
 
         if self.value is None or not str(self.value):
             return '<[{}]>'.format(message)
 
         return '<[{} ({})]>'.format(message, self.value)
+
+    def _format_alternative_octal(self) -> str:
+        """Formats an alternative octal specifier.
+
+        This potentially throws OverflowError, TypeError, or ValueError.
+        """
+        compatible_specifier = self.specifier.compatible.replace('#', '')
+        result = compatible_specifier % self.value
+
+        # Find index of the first non-space, non-plus, and non-zero
+        # character. If we cannot find anything, we will simply
+        # prepend a 0 to the formatted string.
+        counter = 0
+        for i, value in enumerate(result):
+            if value not in ' +0':
+                counter = i
+                break
+        return result[:counter] + '0' + result[counter:]
+
+    def _format_text_float(self) -> str:
+        """Formats a float specifier with txt value (e.g. NAN, INF).
+
+        This potentially throws OverflowError, TypeError, or ValueError.
+        """
+        return self.specifier.text_float_safe_compatible() % self.value
+
+    def _format_pointer(self) -> str:
+        """Formats a pointer specifier.
+
+        This potentially throws OverflowError, TypeError, or ValueError.
+        """
+        result = self.specifier.compatible % self.value
+
+        # Find index of the first non-space, non-plus, and non-zero
+        # character (unless we hit the first of the 8 required hex
+        # digits).
+        counter = 0
+        for i, value in enumerate(result[:-7]):
+            if value not in ' +0' or i == len(result) - 8:
+                counter = i
+                break
+
+        # Insert the pointer 0x prefix in after the leading `+`,
+        # space, or `0`
+        return result[:counter] + '0x' + result[counter:]
 
     def __str__(self) -> str:
         return self.format()
@@ -293,7 +741,7 @@ class FormattedString(NamedTuple):
         """Arg data decoded successfully and all expected args were found."""
         return all(arg.ok() for arg in self.args) and not self.remaining
 
-    def score(self, date_removed: datetime = None) -> tuple:
+    def score(self, date_removed: Optional[datetime] = None) -> tuple:
         """Returns a key for sorting by how successful a decode was.
 
         Decoded strings are sorted by whether they
@@ -314,11 +762,13 @@ class FormattedString(NamedTuple):
             not self.remaining,  # decoded all data
             -sum(not arg.ok() for arg in self.args),  # fewest errors
             len(self.args),  # decoded the most arguments
-            date_removed or datetime.max)  # most recently present
+            date_removed or datetime.max,
+        )  # most recently present
 
 
 class FormatString:
     """Represents a printf-style format string."""
+
     def __init__(self, format_string: str):
         """Parses format specifiers in the format string."""
         self.format_string = format_string
@@ -335,13 +785,13 @@ class FormatString:
         spec_spans = [spec.match.span() for spec in self.specifiers]
 
         # Start with the part of the format string up to the first specifier.
-        string_pieces = [self.format_string[:spec_spans[0][0]]]
+        string_pieces = [self.format_string[: spec_spans[0][0]]]
 
-        for ((_, end1), (start2, _)) in zip(spec_spans[:-1], spec_spans[1:]):
+        for (_, end1), (start2, _) in zip(spec_spans[:-1], spec_spans[1:]):
             string_pieces.append(self.format_string[end1:start2])
 
         # Append the format string segment after the last format specifier.
-        string_pieces.append(self.format_string[spec_spans[-1][1]:])
+        string_pieces.append(self.format_string[spec_spans[-1][1] :])
 
         # Make a list with spots for the replacements between the string pieces.
         segments: List = [None] * (len(string_pieces) + len(self.specifiers))
@@ -379,9 +829,9 @@ class FormatString:
 
         return tuple(decoded_args), encoded[index:]
 
-    def format(self,
-               encoded_args: bytes,
-               show_errors: bool = False) -> FormattedString:
+    def format(
+        self, encoded_args: bytes, show_errors: bool = False
+    ) -> FormattedString:
         """Decodes arguments and formats the string with them.
 
         Args:
@@ -398,16 +848,17 @@ class FormatString:
         if show_errors:
             self._segments[1::2] = (arg.format() for arg in args)
         else:
-            self._segments[1::2] = (arg.format()
-                                    if arg.ok() else arg.specifier.specifier
-                                    for arg in args)
+            self._segments[1::2] = (
+                arg.format() if arg.ok() else arg.specifier.specifier
+                for arg in args
+            )
 
         return FormattedString(''.join(self._segments), args, remaining)
 
 
-def decode(format_string: str,
-           encoded_arguments: bytes,
-           show_errors: bool = False) -> str:
+def decode(
+    format_string: str, encoded_arguments: bytes, show_errors: bool = False
+) -> str:
     """Decodes arguments and formats them with the provided format string.
 
     Args:
@@ -420,5 +871,6 @@ def decode(format_string: str,
     Returns:
       the printf-style formatted string
     """
-    return FormatString(format_string).format(encoded_arguments,
-                                              show_errors).value
+    return (
+        FormatString(format_string).format(encoded_arguments, show_errors).value
+    )

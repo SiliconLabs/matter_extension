@@ -44,12 +44,18 @@ struct GenericContext
 
     virtual ~GenericContext() {}
 
+    CHIP_ERROR Finalize(CHIP_ERROR err);
     CHIP_ERROR Finalize(DNSServiceErrorType err = kDNSServiceErr_NoError);
-    virtual void DispatchFailure(DNSServiceErrorType err) = 0;
-    virtual void DispatchSuccess()                        = 0;
+
+    virtual void DispatchFailure(const char * errorStr, CHIP_ERROR err) = 0;
+    virtual void DispatchSuccess()                                      = 0;
+
+private:
+    CHIP_ERROR FinalizeInternal(const char * errorStr, CHIP_ERROR err);
 };
 
 struct RegisterContext;
+struct ResolveContext;
 
 class MdnsContexts
 {
@@ -81,7 +87,36 @@ public:
      */
     CHIP_ERROR GetRegisterContextOfType(const char * type, RegisterContext ** context);
 
+    /**
+     * Return a pointer to an existing ResolveContext for the given
+     * instanceName, if any.  Returns nullptr if there are none.
+     */
+    ResolveContext * GetExistingResolveForInstanceName(const char * instanceName);
+
+    /**
+     * Remove context from the list, if it's present in the list.  Return
+     * whether it was present.
+     */
+    bool RemoveWithoutDeleting(GenericContext * context);
+
     void Delete(GenericContext * context);
+
+    /**
+     * Fill the provided vector with all contexts for which the given predicate
+     * returns true.
+     */
+    template <typename F>
+    void FindAllMatchingPredicate(F predicate, std::vector<GenericContext *> & results)
+    {
+        results.clear();
+        for (auto & ctx : mContexts)
+        {
+            if (predicate(ctx))
+            {
+                results.push_back(ctx);
+            }
+        }
+    }
 
 private:
     MdnsContexts(){};
@@ -100,7 +135,7 @@ struct RegisterContext : public GenericContext
     RegisterContext(const char * sType, const char * instanceName, DnssdPublishCallback cb, void * cbContext);
     virtual ~RegisterContext() { mHostNameRegistrar.Unregister(); }
 
-    void DispatchFailure(DNSServiceErrorType err) override;
+    void DispatchFailure(const char * errorStr, CHIP_ERROR err) override;
     void DispatchSuccess() override;
 
     bool matches(const char * sType) { return mType.compare(sType) == 0; }
@@ -115,8 +150,25 @@ struct BrowseContext : public GenericContext
     BrowseContext(void * cbContext, DnssdBrowseCallback cb, DnssdServiceProtocol cbContextProtocol);
     virtual ~BrowseContext() {}
 
-    void DispatchFailure(DNSServiceErrorType err) override;
+    void DispatchFailure(const char * errorStr, CHIP_ERROR err) override;
     void DispatchSuccess() override;
+
+    // Dispatch what we have found so far, but don't stop browsing.
+    void DispatchPartialSuccess();
+
+    // While we are dispatching partial success, sContextDispatchingSuccess will
+    // be set to the BrowseContext doing the dispatch.  This allows resolves
+    // triggered by the browse dispatch to be associated with the browse.  This
+    // relies on our consumer starting the resolves synchronously from the
+    // partial success callback.
+    //
+    // The other option would be to do the resolve ourselves before signaling
+    // browse success, but that would only allow us to pass in one ip per
+    // discovered hostname, and we want to pass in all the IPs we resolve.
+    //
+    // TODO: Consider fixing the higher-level APIs to make it possible to pass
+    // in multiple IPs for a successful browse result.
+    static BrowseContext * sContextDispatchingSuccess;
 };
 
 struct InterfaceInfo
@@ -138,20 +190,26 @@ struct ResolveContext : public GenericContext
     DnssdResolveCallback callback;
     std::map<uint32_t, InterfaceInfo> interfaces;
     DNSServiceProtocol protocol;
+    std::string instanceName;
+    std::shared_ptr<uint32_t> consumerCounter;
+    BrowseContext * const browseThatCausedResolve; // Can be null
 
-    ResolveContext(void * cbContext, DnssdResolveCallback cb, chip::Inet::IPAddressType cbAddressType);
+    // browseCausingResolve can be null.
+    ResolveContext(void * cbContext, DnssdResolveCallback cb, chip::Inet::IPAddressType cbAddressType,
+                   const char * instanceNameToResolve, BrowseContext * browseCausingResolve,
+                   std::shared_ptr<uint32_t> && consumerCounterToUse);
     virtual ~ResolveContext();
 
-    void DispatchFailure(DNSServiceErrorType err) override;
+    void DispatchFailure(const char * errorStr, CHIP_ERROR err) override;
     void DispatchSuccess() override;
 
     CHIP_ERROR OnNewAddress(uint32_t interfaceId, const struct sockaddr * address);
-    CHIP_ERROR OnNewLocalOnlyAddress();
     bool HasAddress();
 
     void OnNewInterface(uint32_t interfaceId, const char * fullname, const char * hostname, uint16_t port, uint16_t txtLen,
                         const unsigned char * txtRecord);
     bool HasInterface();
+    bool Matches(const char * otherInstanceName) const { return instanceName == otherInstanceName; }
 };
 
 } // namespace Dnssd

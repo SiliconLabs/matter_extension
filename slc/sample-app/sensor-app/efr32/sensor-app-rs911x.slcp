@@ -1,0 +1,205 @@
+project_name: sensor-app-rs911x
+label: Matter sensor
+description: >
+  Matter Sensor App
+quality: production
+package: Matter
+
+sdk_extension:
+  - id: matter
+    version: "0.0.8"
+
+component:
+  - id: device_init
+  - id: simple_button
+    instance: [btn0, btn1]
+  - id: simple_led
+    instance: [led0, led1]
+  - id: uartdrv_usart
+    instance: [vcom]
+
+  - id: matter_wstk_leds
+    from: matter
+  - id: matter
+    from: matter
+  - id: matter_wifi_ble
+    from: matter
+  - id: matter_ota_support
+    from: matter
+  - id: matter_mbedtls
+    from: matter
+  - id: silabs_factory_data_provider
+    from: matter
+#  - id: matter_gatt
+#    from: matter
+
+  - id: matter_wifi
+    from: matter
+  - id: wiseconnect_sapi
+    from: matter
+  - id: rs911x_ncp_extension
+    from: matter
+
+  - id: app_common
+    from: matter
+
+  - id: matter_access_control
+    from: matter
+  - id: matter_administrator_commissioning
+    from: matter
+  - id: matter_basic
+    from: matter
+  - id: matter_descriptor
+    from: matter
+  - id: matter_diagnostic_logs
+    from: matter
+  - id: matter_ethernet_network_diagnostics
+    from: matter
+  - id: matter_fixed_label
+    from: matter
+  - id: matter_general_commissioning
+    from: matter
+  - id: matter_general_diagnostics
+    from: matter
+  - id: matter_group_key_mgmt
+    from: matter
+  - id: matter_groups
+    from: matter
+  - id: matter_identify
+    from: matter
+  - id: matter_localization_configuration
+    from: matter
+  - id: matter_network_commissioning
+    from: matter
+  - id: matter_occupancy_sensor
+    from: matter
+  - id: matter_operational_credentials
+    from: matter
+  - id: matter_ota_requestor
+    from: matter
+  - id: matter_software_diagnostics
+    from: matter
+  - id: matter_switch
+    from: matter
+  - id: matter_thread_network_diagnostics
+    from: matter
+  - id: matter_time_format_localization
+    from: matter
+  - id: matter_user_label
+    from: matter
+  - id: matter_wifi_network_diagnostics
+    from: matter
+  # Override configuration for JTAG use
+  - id: matter_configuration_over_swo
+    from: matter
+  # Override RTT
+  - id: matter_segger_rtt
+    from: matter
+  - id: matter_occupancy_sensor_type
+    from: matter
+
+# Require LCD and QR Code components only on the boards that support LCD
+requires:
+  - name: matter_lcd
+    condition:
+    - device_series_1
+#  - name: matter_lcd // TODO: We need enable this feature after CSA changes merged
+#    condition:
+#    - device_series_2
+  - name: matter_qr_code
+    condition:
+    - device_series_1
+#  - name: matter_qr_code // TODO: We need enable this feature after CSA changes merged
+#    condition:
+#    - device_series_2
+  - name: spidrv_instance
+  - name: uartdrv_eusart
+    condition:
+    - device_series_2
+# Select UART/EUART drivers based on device series
+  - name: matter_drivers_series_1_wifi_rs911x
+    condition:
+     - device_series_1
+  - name: matter_drivers_series_2_wifi_rs911x
+    condition:
+     - device_series_2
+
+include:
+  - path: ../../../../silabs_examples/silabs-sensors/efr32/include
+    file_list:
+      - path: AppConfig.h
+      - path: AppEvent.h
+      - path: AppTask.h
+      - path: SensorsCallbacks.h
+      - path: CHIPProjectConfig.h
+    directory: include
+
+source:
+  - path: ../../../../silabs_examples/silabs-sensors/efr32/src/AppTask.cpp
+    directory: src
+  - path: ../../../../silabs_examples/silabs-sensors/efr32/src/SensorsCallbacks.cpp
+    directory: src
+  - path: ../../../../silabs_examples/silabs-sensors/efr32/src/main.cpp
+    directory: src
+  - path: ../../../../silabs_examples/silabs-sensors/efr32/src/ZclCallbacks.cpp
+    directory: src
+
+define:
+  - name: KVS_MAX_ENTRIES
+    value: "75"
+  - name: CHIP_CRYPTO_PLATFORM
+    value: "1"
+  - name: _WANT_REENT_SMALL
+    value: "1"
+  - name: IS_DEMO_LIGHT
+    value: "1"
+  - name: NVM3_DEFAULT_NVM_SIZE
+    value: "40960"
+  - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
+    value: "4092"
+  - name: EFR32MG12_BRD4161A
+    value: "1"
+    condition: [brd4161a]
+
+configuration:
+  - name: SL_SPIDRV_EXP_BITRATE
+    value: "10000000"
+  - name: SL_SPIDRV_EUSART_EXP_BITRATE
+    value: "10000000"
+  - name: SL_POWER_MANAGER_LOWEST_EM_ALLOWED
+    value: "1"
+  - name: SL_POWER_MANAGER_CONFIG_VOLTAGE_SCALING_FAST_WAKEUP
+    value: "1"
+  - {name: SL_STACK_SIZE, value: '4608'} 
+
+toolchain_settings:
+  - option: gcc_c++_compiler_option
+    value: -std=gnu++17
+
+template_contribution:
+  - name: memory_flash_start
+    value: 0x0
+    condition: [device_series_1]
+  - name: memory_flash_size
+    value: 0x000FF800
+    condition: [device_series_1]
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_series_2]
+  - name: memory_flash_size
+    value: 0x00178000
+    condition: [device_series_2]
+  - name: memory_ram_start
+    value: 0x20000000
+  - name: memory_ram_size
+    value: 0x42000
+
+readme:
+  - path: ./README_WiFi.md
+ui_hints:
+  highlight:
+    - path: README_WiFi.md
+      focus: false
+
+tag:
+  - hardware:component:led:2+

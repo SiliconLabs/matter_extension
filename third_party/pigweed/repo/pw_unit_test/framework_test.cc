@@ -66,6 +66,9 @@ TEST(PigweedTest, ExpectStringEquality) {
 
   EXPECT_STRNE("NO", "no");
   ASSERT_STRNE("yes", no);
+
+  EXPECT_STREQ(nullptr, nullptr);
+  EXPECT_STRNE("abc", nullptr);
 }
 
 TEST(PigweedTest, SucceedAndFailMacros) {
@@ -206,6 +209,53 @@ class SetUpAndTearDown : public ::testing::Test {
 TEST_F(SetUpAndTearDown, MakeSureItIsSet) {
   EXPECT_EQ(value_, 1337);
   value_ = 3210;
+}
+
+TEST(UnknownTypeToString, SmallObjectDisplaysFullContents) {
+  struct {
+    char a = 0xa1;
+  } object;
+
+  StringBuffer<64> expected;
+  expected << "<1-byte object at 0x" << &object << " | a1>";
+  ASSERT_EQ(OkStatus(), expected.status());
+
+  StringBuffer<64> actual;
+  actual << object;
+  ASSERT_EQ(OkStatus(), actual.status());
+  EXPECT_STREQ(expected.c_str(), actual.c_str());
+}
+
+TEST(UnknownTypeToString, MaxSizeToDisplayFullContents) {
+  struct {
+    char a[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+  } object;
+
+  StringBuffer<64> expected;
+  expected << "<9-byte object at 0x" << &object
+           << " | 01 02 03 04 05 06 07 08 09>";
+  ASSERT_EQ(OkStatus(), expected.status());
+
+  StringBuffer<64> actual;
+  actual << object;
+  ASSERT_EQ(OkStatus(), actual.status());
+  EXPECT_STREQ(expected.c_str(), actual.c_str());
+}
+
+TEST(UnknownTypeToString, TruncatedContents) {
+  struct {
+    char a[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  } object;
+
+  StringBuffer<72> expected;
+  expected << "<10-byte object at 0x" << &object
+           << " | 01 02 03 04 05 06 07 08 …>";
+  ASSERT_EQ(OkStatus(), expected.status());
+
+  StringBuffer<72> actual;
+  actual << object;
+  ASSERT_EQ(OkStatus(), actual.status());
+  EXPECT_STREQ(expected.c_str(), actual.c_str());
 }
 
 }  // namespace

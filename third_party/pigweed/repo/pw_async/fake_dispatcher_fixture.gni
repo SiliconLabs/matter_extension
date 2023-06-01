@@ -1,0 +1,38 @@
+# Copyright 2023 The Pigweed Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not
+# use this file except in compliance with the License. You may obtain a copy of
+# the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under
+# the License.
+
+import("//build_overrides/pigweed.gni")
+import("$dir_pw_chrono/backend.gni")
+import("$dir_pw_sync/backend.gni")
+import("$dir_pw_thread/backend.gni")
+import("$dir_pw_unit_test/test.gni")
+
+# Creates a pw_source_set that provides a concrete FakeDispatcherFixture.
+#
+# Parameters
+#
+#   backend (required)
+#     [target] The FakeDispatcher backend to use.
+template("fake_dispatcher_fixture") {
+  assert(defined(invoker.backend))
+
+  pw_source_set(target_name) {
+    public = [ "$dir_pw_async/public/pw_async/fake_dispatcher_fixture.h" ]
+    public_deps = [
+      "$dir_pw_unit_test",
+      invoker.backend,
+    ]
+    forward_variables_from(invoker, [ "visibility" ])
+  }
+}

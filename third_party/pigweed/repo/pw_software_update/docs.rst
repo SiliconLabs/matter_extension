@@ -1,126 +1,93 @@
 .. _module-pw_software_update:
 
--------------------
+.. rst-class:: with-subtitle
+
+==================
 pw_software_update
--------------------
+==================
 
-This module provides the building blocks for trusted software update systems.
+.. pigweed-module::
+   :name: pw_software_update
+   :tagline: Secure software delivery
+   :status: experimental
+   :languages: Python, C++14, C++17
+   :get-started: module-pw_software_update-get-started
+   :design: module-pw_software_update-design
+   :guides: module-pw_software_update-guides
 
-Goals
-=====
+   The ``pw_software_update`` module offers the following building blocks for
+   setting up your own end-to-end software delivery system.
 
-**Software update** is any system that enables a product *vendor* to deliver
-some kind of *improvement* to a product *consumer*, in good faith.
+   - **TUF embedded**: An underlying TUF_-based security framework tailored
+     for embedded use cases that enable safe and resilient software delivery.
+   - **One bundle**: A standard update bundle format for assembling all build
+     artifacts and release information.
+   - **Two keys**: Each product has two keys dedicated to software updates. The
+     ``targets`` key directly signs a versioned manifest of target files and
+     can be regularly rotated by the ``root`` key. The ``root`` keys are in
+     turn rotated by verified boot. No provisioning is required.
+   - **Frameworked client**: An update client that takes care of all the logic
+     of checking, staging, verifying, and installing an incoming update. The
+     framework calls into the downstream backend only when needed.
+   - **Signing service**: Integration support for your favorite production
+     signing service.
+   - **Tooling**: Python modules that assemble, sign, and inspect bundles,
+     ready to be integrated into your build and release pipeline. Plus a CLI
+     with which you can try out ``pw_software_update`` before buying into it.
+   - **Extensive guidance**: All software update systems are not equal. We
+     are building out extensive guidance for representative scenarios.
 
-To that definition, a software update system should design toward the following
-goals.
+-------------
+Who is it for
+-------------
 
-1. The product receives feature, performance, stability, UX improvements with
-   minimum intervention from both the vendor and consumer. The product just
-   automatically gets **increasingly more useful**.
+The ``pw_software_update`` module is still in early stages. It works best if
+your software update needs checks the following boxes.
 
-2. The product receives timely security patches in response to newly discovered
-   vulnerabilities and/or expiring trust material etc. The product is
-   **self-healing**.
+✅ **I want security-by-design**!
 
-3. All software updates **require consumer approval**. The product vendor being
-   able to remotely modify a product's behavior is both fantastic and risky.
-   The system must mitigate insider attacks that may happen by mistake,
-   willingly, or when compelled. The product vendor should strive to help the
-   consumer make an informed decision over whether or not, when, and how to
-   check / install what updates, to the extent feasible and as required by local
-   regulations.
+The ``pw_software_update`` module is built with security in mind from
+day 0. It leverages the state-of-the-art and widely used TUF_ framework.
+With relatively little expertise, you can set up and operate a software
+building, release, and delivery pipeline that is resiliently secure and
+private.
 
-4. Software updates **liberate engineering workflows**. While security-heavy
-   systems tend to compete with consumer-facing features for attention and
-   resources and thus perceived as "necessary evil", it is often a
-   misconception. With careful design, security features can preserve and
-   enlarge flexibility in affected workflows. No law, no freedom.
+✅ **My project has verified boot.**
 
-System overview
-===============
+Software update is an extension of verified boot. Security measures in
+``pw_software_update`` CANNOT replace verified boot.
 
-At its core, software update is a system that allows a consumer to download some
-file provided by some vendor **by choice**. That choice might be "I want to be
-left alone. I will not check for updates and I wish not to be solicited", or
-"I want to sign my life away and never be bothered again. Please automatically
-check and install all updates as soon as they are available", or anything in
-between those two extremes.
+.. note::
 
-How a consumer approaches such a choice depends on many factors.
+   Verified boot, also known as secure boot, refers to the generic security
+   feature that ensures no software component is run without passing
+   integrity and authentication verification.  In particular, verified boot
+   ensures the software update stack has not been tampered with.
 
-1. The consumer's ability to authenticate the files, and by derivation, their
-   vendor. Authentication enables the consumer to identify the update vendor (
-   with cryptographic non-deniability) and assign some **baseline trust** to
-   it based on individual judgment and the public credibility of the vendor.
+✅ **My project DOES NOT require delta updates.**
 
-   .. note:: From the vendor's point of view, authentication also protects the
-     vendor's product from being tampered by attackers or consumers.
-     Traditionally that has been the main purpose of security in software update
-     systems.
+``pw_software_update`` packages every new software release in a single opaque
+bundle. The bundle is the smallest granularity transferred between endpoints.
 
-2. The consumer's ability to independently audit the update files. e.g. by
-   re-producing bitwise-identical binaries from available source code, hiring an
-   accredited security researcher / investigator, looking up the files from a
-   publicly available non-forgeable ledger etc.
+✅ **I can manage signing keys myself.**
 
-3. The consumer's ability to assess the "bomb radius" of allowing an update,
-   i.e. the worst possible fallout that may result from the vendor betraying the
-   consumer's baseline trust. On platforms with well designed trust structure,
-   it is easy for a generally informed consumer to reason that a misbehaving car
-   infotainment app won't be able to take control of "system" and drive the car
-   into a ditch, unless the application manages to escape its capabilities
-   sandbox set up by the governing system software, either by exploiting a bug
-   in the system or by colluding with the system vendor.
+We don't yet have a public-facing signing service.
 
-4. The consumer's situation. All else being equal, a developer evaluating a
-   smart speaker with a test account, a US senator carrying a smartphone,
-   and an airliner technician maintaining a fleet of passenger aircraft
-   will approach software update choices with drastically different discretion.
+✅ **I can store and serve my own updates.**
 
-It is in the best interests of both consumers and vendors to design and fit
-software update systems in various platforms in a way that bolsters mutual
-trust. So let's discuss this further in the "security model".
+We don't yet have a public-facing end-to-end software delivery solution.
 
-Security model
---------------
+If your project doesn't check all the boxes above but you still wish to use
+``pw_software_update``. Please `email <https://groups.google.com/g/pigweed>`_
+or `chat <https://discord.gg/M9NSeTA>`_ with us for potential workarounds.
 
-Authentication
-^^^^^^^^^^^^^^
+.. _TUF: https://theupdateframework.io/
 
-`pw_software_update` adopts `TUF <https://theupdateframework.io>`_ as the
-authentication framework. This framework is well-formulated in the TUF
-`specification <https://theupdateframework.github.io/specification/latest/>`_ (a
-leisure read). To help with context continuity, the most relevant points are
-captured below.
+.. toctree::
+   :hidden:
+   :maxdepth: 1
 
-.. attention:: 🚧🏗 This documentation is under construction. The trucks were
-  last seen here. 🏗🚧
-
-
-Authorization
-^^^^^^^^^^^^^
-
-Transparency
-^^^^^^^^^^^^
-
-Deployment model
-----------------
-
-Getting started
-===============
-
-Developer guides
-================
-
-POUF(Protocol, Operations, Usage and Format)
---------------------------------------------
-
-Update serving
---------------
-
-Update consumption
-------------------
-
-Requesting a security review
-----------------------------
+   get_started
+   design
+   guides
+   cli

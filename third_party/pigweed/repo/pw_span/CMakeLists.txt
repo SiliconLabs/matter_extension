@@ -15,30 +15,25 @@
 include($ENV{PW_ROOT}/pw_build/pigweed.cmake)
 
 # Provides pw::span in "pw_span/span.h".
-pw_add_module_library(pw_span
+pw_add_library(pw_span INTERFACE
   HEADERS
     public/pw_span/span.h
-    public/pw_span/internal/span_common.inc
+    public/pw_span/internal/config.h
+    public/pw_span/internal/span_impl.h
   PUBLIC_INCLUDES
     public
   PUBLIC_DEPS
-    pw_polyfill
+    pw_assert
     pw_polyfill.standard_library
 )
 
 pw_add_test(pw_span.pw_span_test
   SOURCES
     span_test.cc
-  DEPS
+  PRIVATE_DEPS
+    pw_polyfill
     pw_span
-  DEFINES
-    "PW_SPAN_TEST_INCLUDE=\"pw_span/span.h\""
-    "PW_SPAN_TEST_NAMESPACE=pw"
   GROUPS
     modules
     pw_span
 )
-
-if(Zephyr_FOUND AND CONFIG_PIGWEED_SPAN)
-  zephyr_link_libraries(pw_span)
-endif()

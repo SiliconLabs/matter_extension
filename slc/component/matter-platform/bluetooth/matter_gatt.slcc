@@ -1,0 +1,18 @@
+id: matter_gatt
+label: GATT Configuration
+description: >
+  Adds GATT Configuration for Matter.
+package: "Matter"
+category: Platform
+quality: production
+config_file:
+-   directory: btconf
+    path: src/platform/silabs/efr32/btconf/gatt_configuration.btconf
+provides:
+-   name: gatt_configuration
+-   name: "bluetooth_gatt_database"
+requires:
+  - name: "bluetooth_gattdb_definition"
+template_contribution:
+  - name: component_catalog
+    value: gatt_configuration

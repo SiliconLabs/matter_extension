@@ -14,6 +14,7 @@
 #pragma once
 
 #include <cstddef>
+#include <mutex>
 
 #include "pw_containers/wrapped_iterator.h"
 #include "pw_rpc/internal/fake_channel_output.h"
@@ -64,13 +65,12 @@ class PwpbPayloadsView {
    private:
     friend class PwpbPayloadsView;
 
-    constexpr iterator(const PayloadsView::iterator& it,
-                       const internal::PwpbSerde& serde)
+    constexpr iterator(const PayloadsView::iterator& it, const PwpbSerde& serde)
         : containers::
               WrappedIterator<iterator, PayloadsView::iterator, Payload>(it),
           serde_(serde) {}
 
-    internal::PwpbSerde serde_;
+    PwpbSerde serde_;
   };
 
   Payload operator[](size_t index) const {
@@ -94,11 +94,11 @@ class PwpbPayloadsView {
   friend class PwpbFakeChannelOutput;
 
   template <typename... Args>
-  PwpbPayloadsView(const internal::PwpbSerde& serde, Args&&... args)
+  PwpbPayloadsView(const PwpbSerde& serde, Args&&... args)
       : view_(args...), serde_(serde) {}
 
   PayloadsView view_;
-  internal::PwpbSerde serde_;
+  PwpbSerde serde_;
 };
 
 // A ChannelOutput implementation that stores the outgoing payloads and status.
@@ -126,10 +126,10 @@ class PwpbFakeChannelOutput final
   PwpbPayloadsView<Request<kMethod>> requests(
       uint32_t channel_id = Channel::kUnassignedChannelId) const
       PW_NO_LOCK_SAFETY_ANALYSIS {
-    constexpr internal::PacketType packet_type =
+    constexpr internal::pwpb::PacketType packet_type =
         HasClientStream(internal::MethodInfo<kMethod>::kType)
-            ? internal::PacketType::CLIENT_STREAM
-            : internal::PacketType::REQUEST;
+            ? internal::pwpb::PacketType::CLIENT_STREAM
+            : internal::pwpb::PacketType::REQUEST;
     return PwpbPayloadsView<Request<kMethod>>(
         internal::MethodInfo<kMethod>::serde().request(),
         internal::test::FakeChannelOutputBuffer<
@@ -153,10 +153,10 @@ class PwpbFakeChannelOutput final
   PwpbPayloadsView<Response<kMethod>> responses(
       uint32_t channel_id = Channel::kUnassignedChannelId) const
       PW_NO_LOCK_SAFETY_ANALYSIS {
-    constexpr internal::PacketType packet_type =
+    constexpr internal::pwpb::PacketType packet_type =
         HasServerStream(internal::MethodInfo<kMethod>::kType)
-            ? internal::PacketType::SERVER_STREAM
-            : internal::PacketType::RESPONSE;
+            ? internal::pwpb::PacketType::SERVER_STREAM
+            : internal::pwpb::PacketType::RESPONSE;
     return PwpbPayloadsView<Response<kMethod>>(
         internal::MethodInfo<kMethod>::serde().response(),
         internal::test::FakeChannelOutputBuffer<
@@ -171,7 +171,7 @@ class PwpbFakeChannelOutput final
 
   template <auto kMethod>
   Response<kMethod> last_response() const {
-    internal::LockGuard lock(internal::test::FakeChannelOutput::mutex());
+    std::lock_guard lock(internal::test::FakeChannelOutput::mutex());
     PwpbPayloadsView<Response<kMethod>> payloads = responses<kMethod>();
     PW_ASSERT(!payloads.empty());
     return payloads.back();
@@ -191,7 +191,7 @@ class PwpbFakeChannelOutput final
   // synchronized! The PwpbPayloadsView is immediately invalidated if any
   // thread accesses the FakeChannelOutput.
   template <typename T>
-  PwpbPayloadsView<T> payload_structs(const internal::PwpbSerde& serde,
+  PwpbPayloadsView<T> payload_structs(const PwpbSerde& serde,
                                       MethodType type,
                                       uint32_t channel_id,
                                       uint32_t service_id,

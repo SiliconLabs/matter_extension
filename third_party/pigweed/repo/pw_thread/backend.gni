@@ -25,8 +25,14 @@ declare_args() {
   # Backend for the pw_thread module's pw::thread::yield.
   pw_thread_YIELD_BACKEND = ""
 
+  # Backend for the pw_thread module's pw::thread::test_thread_context.
+  pw_thread_TEST_THREAD_CONTEXT_BACKEND = ""
+
   # Whether the GN asserts should be silenced in ensuring that a compatible
   # backend for pw_chrono_SYSTEM_CLOCK_BACKEND is chosen.
   # Set to true to disable the asserts.
   pw_thread_OVERRIDE_SYSTEM_CLOCK_BACKEND_CHECK = false
+
+  # Backend for the pw_thread module's pw::thread::thread_iteration.
+  pw_thread_THREAD_ITERATION_BACKEND = ""
 }

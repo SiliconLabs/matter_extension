@@ -18,6 +18,7 @@ load(
     "pw_cc_library",
     "pw_cc_test",
 )
+load("//pw_build/bazel_internal:py_proto_library.bzl", "py_proto_library")
 load("//pw_protobuf_compiler:proto.bzl", "pw_proto_library")
 
 package(default_visibility = ["//visibility:public"])
@@ -48,6 +49,51 @@ pw_cc_library(
         "//pw_build/constraints/rtos:freertos": ["//pw_thread_freertos:id"],
         "//pw_build/constraints/rtos:threadx": ["//pw_thread_threadx:id"],
         "//conditions:default": ["//pw_thread_stl:id"],
+    }),
+)
+
+pw_cc_library(
+    name = "config",
+    hdrs = ["public/pw_thread/config.h"],
+    includes = ["public"],
+)
+
+pw_cc_library(
+    name = "thread_info",
+    hdrs = ["public/pw_thread/thread_info.h"],
+    includes = ["public"],
+    deps = ["//pw_span"],
+)
+
+pw_cc_facade(
+    name = "thread_iteration_facade",
+    hdrs = [
+        "public/pw_thread/thread_iteration.h",
+    ],
+    includes = ["public"],
+    deps = [
+        ":thread_info",
+        "//pw_function",
+        "//pw_status",
+    ],
+)
+
+pw_cc_library(
+    name = "thread_iteration",
+    deps = [
+        ":thread_iteration_facade",
+        "@pigweed_config//:pw_thread_iteration_backend",
+    ],
+)
+
+pw_cc_library(
+    name = "iteration_backend_multiplexer",
+    visibility = ["@pigweed_config//:__pkg__"],
+    deps = select({
+        "//pw_build/constraints/rtos:embos": ["//pw_thread_embos:thread_iteration"],
+        "//pw_build/constraints/rtos:freertos": ["//pw_thread_freertos:thread_iteration"],
+        "//pw_build/constraints/rtos:threadx": ["//pw_thread_threadx:thread_iteration"],
+        "//conditions:default": ["//pw_thread_stl:thread_iteration"],
     }),
 )
 
@@ -95,6 +141,7 @@ pw_cc_facade(
     includes = ["public"],
     deps = [
         ":id_facade",
+        ":thread_core",
     ],
 )
 
@@ -130,6 +177,58 @@ pw_cc_library(
         "public/pw_thread/thread_core.h",
     ],
     includes = ["public"],
+    deps = [
+        "//pw_log",
+        "//pw_status",
+    ],
+)
+
+pw_cc_library(
+    name = "thread_snapshot_service",
+    srcs = [
+        "pw_thread_private/thread_snapshot_service.h",
+        "thread_snapshot_service.cc",
+    ],
+    hdrs = ["public/pw_thread/thread_snapshot_service.h"],
+    includes = ["public"],
+    deps = [
+        "//pw_protobuf",
+        "//pw_rpc/raw:server_api",
+        "//pw_span",
+        "//pw_status",
+        ":config",
+        ":thread_cc.pwpb",
+        ":thread_info",
+        ":thread_iteration",
+        ":thread_snapshot_service_cc.pwpb",
+        ":thread_snapshot_service_cc.raw_rpc",
+        # TODO(amontanez): This should depend on FreeRTOS but our third parties
+        # currently do not have Bazel support.
+    ],
+)
+
+pw_cc_library(
+    name = "test_thread_context_backend_multiplexer",
+    visibility = ["@pigweed_config//:__pkg__"],
+    deps = select({
+        "//conditions:default": ["//pw_thread_stl:test_thread_context"],
+    }),
+)
+
+pw_cc_facade(
+    name = "test_thread_context_facade",
+    hdrs = [
+        "public/pw_thread/test_thread_context.h",
+    ],
+    includes = ["public"],
+)
+
+pw_cc_library(
+    name = "test_thread_context",
+    deps = [
+        ":test_thread_context_facade",
+        "@pigweed_config//:pw_thread_test_thread_context_backend",
+    ],
 )
 
 pw_cc_facade(
@@ -214,6 +313,19 @@ pw_cc_library(
 )
 
 pw_cc_test(
+    name = "test_thread_context_facade_test",
+    srcs = [
+        "test_thread_context_facade_test.cc",
+    ],
+    deps = [
+        ":test_thread_context",
+        ":thread",
+        "//pw_sync:binary_semaphore",
+        "//pw_unit_test",
+    ],
+)
+
+pw_cc_test(
     name = "id_facade_test",
     srcs = [
         "id_facade_test.cc",
@@ -239,6 +351,35 @@ pw_cc_test(
 )
 
 pw_cc_test(
+    name = "thread_info_test",
+    srcs = [
+        "thread_info_test.cc",
+    ],
+    deps = [
+        ":thread_info",
+        "//pw_span",
+    ],
+)
+
+pw_cc_test(
+    name = "thread_snapshot_service_test",
+    srcs = [
+        "pw_thread_private/thread_snapshot_service.h",
+        "thread_snapshot_service_test.cc",
+    ],
+    deps = [
+        ":thread_cc.pwpb",
+        ":thread_info",
+        ":thread_iteration",
+        ":thread_snapshot_service",
+        ":thread_snapshot_service_cc.pwpb",
+        "//pw_protobuf",
+        "//pw_span",
+        "//pw_sync:thread_notification",
+    ],
+)
+
+pw_cc_test(
     name = "yield_facade_test",
     srcs = [
         "yield_facade_test.cc",
@@ -254,10 +395,38 @@ pw_cc_test(
 proto_library(
     name = "thread_proto",
     srcs = ["pw_thread_protos/thread.proto"],
-    strip_import_prefix = "//pw_thread",
+    strip_import_prefix = "/pw_thread",
     deps = [
         "//pw_tokenizer:tokenizer_proto",
     ],
+)
+
+# TODO(b/241456982): Not expected to build yet.
+py_proto_library(
+    name = "thread_proto_py_pb2",
+    tags = ["manual"],
+    deps = [":thread_proto"],
+)
+
+proto_library(
+    name = "thread_snapshot_service_proto",
+    srcs = ["pw_thread_protos/thread_snapshot_service.proto"],
+    strip_import_prefix = "/pw_thread",
+    deps = [
+        ":thread_proto",
+    ],
+)
+
+pw_proto_library(
+    name = "thread_snapshot_service_cc",
+    deps = [":thread_snapshot_service_proto"],
+)
+
+# TODO(b/241456982): Not expected to build yet.
+py_proto_library(
+    name = "thread_snapshot_service_py_pb2",
+    tags = ["manual"],
+    deps = [":thread_snapshot_service_proto"],
 )
 
 pw_proto_library(

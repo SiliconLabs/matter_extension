@@ -36,23 +36,31 @@ namespace pw::rpc::internal::test {
 //
 // Call's public API is intended for rpc::Server, so hide the public methods
 // with private inheritance.
-class FakeServerReaderWriter : private internal::ServerCall {
+class FakeServerReaderWriter : private ServerCall {
  public:
   constexpr FakeServerReaderWriter() = default;
 
+  ~FakeServerReaderWriter() { DestroyServerCall(); }
+
   // On a real reader/writer, this constructor would not be exposed.
-  FakeServerReaderWriter(const CallContext& context,
+  FakeServerReaderWriter(const LockedCallContext& context,
                          MethodType type = MethodType::kBidirectionalStreaming)
-      : ServerCall(context, type) {}
+      PW_EXCLUSIVE_LOCKS_REQUIRED(rpc_lock())
+      : ServerCall(context, CallProperties(type, kServerCall, kRawProto)) {}
 
   FakeServerReaderWriter(FakeServerReaderWriter&&) = default;
   FakeServerReaderWriter& operator=(FakeServerReaderWriter&&) = default;
 
   // Pull in protected functions from the hidden Call base as needed.
+  //
+  // Note: these functions all acquire `rpc_lock()`. However, the
+  // `PW_LOCKS_EXCLUDED(rpc_lock())` on their original definitions does not
+  // appear to carry through here.
   using Call::active;
   using Call::set_on_error;
   using Call::set_on_next;
-  using ServerCall::set_on_client_stream_end;
+  using ServerCall::set_on_completion_requested;
+  using ServerCall::set_on_completion_requested_if_enabled;
 
   Status Finish(Status status = OkStatus()) {
     return CloseAndSendResponse(status);
@@ -62,19 +70,26 @@ class FakeServerReaderWriter : private internal::ServerCall {
 
   // Expose a few additional methods for test use.
   ServerCall& as_server_call() { return *this; }
+  using Call::channel_id_locked;
+  using Call::id;
+  using Call::set_id;
 };
 
 class FakeServerWriter : private FakeServerReaderWriter {
  public:
   constexpr FakeServerWriter() = default;
 
-  FakeServerWriter(const CallContext& context)
+  FakeServerWriter(const LockedCallContext& context)
+      PW_EXCLUSIVE_LOCKS_REQUIRED(rpc_lock())
       : FakeServerReaderWriter(context, MethodType::kServerStreaming) {}
   FakeServerWriter(FakeServerWriter&&) = default;
+  FakeServerWriter& operator=(FakeServerWriter&&) = default;
 
   // Common reader/writer functions.
   using FakeServerReaderWriter::active;
   using FakeServerReaderWriter::Finish;
+  using FakeServerReaderWriter::set_on_completion_requested;
+  using FakeServerReaderWriter::set_on_completion_requested_if_enabled;
   using FakeServerReaderWriter::set_on_error;
   using FakeServerReaderWriter::Write;
 
@@ -86,10 +101,12 @@ class FakeServerReader : private FakeServerReaderWriter {
  public:
   constexpr FakeServerReader() = default;
 
-  FakeServerReader(const CallContext& context)
+  FakeServerReader(const LockedCallContext& context)
+      PW_EXCLUSIVE_LOCKS_REQUIRED(rpc_lock())
       : FakeServerReaderWriter(context, MethodType::kClientStreaming) {}
 
   FakeServerReader(FakeServerReader&&) = default;
+  FakeServerReader& operator=(FakeServerReader&&) = default;
 
   using FakeServerReaderWriter::active;
   using FakeServerReaderWriter::as_server_call;

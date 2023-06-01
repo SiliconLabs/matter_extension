@@ -14,8 +14,8 @@
 
 // This is a very basic direct output log implementation with no buffering.
 
-//#define PW_LOG_MODULE_NAME "ASRT"
-//#include "pw_log/log.h"
+// #define PW_LOG_MODULE_NAME "ASRT"
+// #include "pw_log/log.h"
 
 #include <cstdio>
 #include <cstring>
@@ -25,15 +25,6 @@
 #include "pw_preprocessor/util.h"
 #include "pw_string/string_builder.h"
 #include "pw_sys_io/sys_io.h"
-
-// If 1, call C's standard abort() function on assert failure.
-#ifndef PW_ASSERT_BASIC_ABORT
-#define PW_ASSERT_BASIC_ABORT 1
-#endif  // PW_ASSERT_BASIC_ABORT
-
-// TODO(pwbug/17): Expose these through the config system.
-#define PW_ASSERT_BASIC_SHOW_BANNER 1
-#define PW_ASSERT_BASIC_USE_COLORS 1
 
 // ANSI color constants to control the terminal. Not Windows compatible.
 // clang-format off
@@ -81,7 +72,7 @@ static const char* kCrashBanner[] = {
 
 static void WriteLine(const std::string_view& s) {
   pw::sys_io::WriteLine(s)
-      .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+      .IgnoreError();  // TODO(b/242598609): Handle Status properly
 }
 
 typedef pw::StringBuffer<150> Buffer;
@@ -141,21 +132,27 @@ extern "C" void pw_assert_basic_HandleFailure(const char* file_name,
   // device. At some point we'll have a reboot BSP function or similar, but for
   // now this is acceptable since no one is using this basic backend.
   if (!PW_ASSERT_BASIC_DISABLE_NORETURN) {
-    if (PW_ASSERT_BASIC_ABORT) {
-      // abort() doesn't flush stderr/stdout, so manually flush them before
-      // aborting. abort() is preferred to exit(1) because debuggers catch it.
-      std::fflush(stderr);
-      std::fflush(stdout);
-      std::abort();
-    } else {
-      WriteLine("");
-      WriteLine(MAGENTA "  HANG TIME" RESET);
-      WriteLine("");
-      WriteLine(
-          "     ... until a debugger joins. System is waiting in a while(1)");
-      while (true) {
-      }
+#if (PW_ASSERT_BASIC_ACTION == PW_ASSERT_BASIC_ACTION_ABORT)
+    // abort() doesn't flush stderr/stdout, so manually flush them before
+    // aborting. abort() is preferred to exit(1) because debuggers catch it.
+    std::fflush(stderr);
+    std::fflush(stdout);
+    std::abort();
+#elif (PW_ASSERT_BASIC_ACTION == PW_ASSERT_BASIC_ACTION_EXIT)
+    // Use _Exit to not run destructors or atexit hooks in case they cause
+    // further crashes.
+    std::_Exit(-1);
+#elif (PW_ASSERT_BASIC_ACTION == PW_ASSERT_BASIC_ACTION_LOOP)
+    WriteLine("");
+    WriteLine(MAGENTA "  HANG TIME" RESET);
+    WriteLine("");
+    WriteLine(
+        "     ... until a debugger joins. System is waiting in a while(1)");
+    while (true) {
     }
+#else
+#error PW_ASSERT_BASIC_ACTION Must be set to valid option.
+#endif
     PW_UNREACHABLE;
   } else {
     WriteLine("");

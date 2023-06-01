@@ -24,9 +24,8 @@ from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.key_binding.bindings.focus import focus_next, focus_previous
 from prompt_toolkit.key_binding.key_bindings import Binding
 
-import pw_console.pw_ptpython_repl
 
-__all__ = ('create_key_bindings', )
+__all__ = ('create_key_bindings',)
 
 _LOG = logging.getLogger(__package__)
 
@@ -46,11 +45,12 @@ DEFAULT_KEY_BINDINGS: Dict[str, List[str]] = {
     'log-pane.remove-duplicated-log-pane': ['delete'],
     'log-pane.clear-history': ['C'],
     'log-pane.toggle-follow': ['f'],
+    'log-pane.toggle-web-browser': ['O'],
     'log-pane.move-cursor-up': ['up', 'k'],
     'log-pane.move-cursor-down': ['down', 'j'],
     'log-pane.visual-select-up': ['s-up'],
     'log-pane.visual-select-down': ['s-down'],
-    'log-pane.visual-select-all': ['N', 'c-r'],
+    'log-pane.visual-select-all': ['c-r'],
     'log-pane.deselect-cancel-search': ['c-c'],
     'log-pane.scroll-page-up': ['pageup'],
     'log-pane.scroll-page-down': ['pagedown'],
@@ -73,8 +73,9 @@ DEFAULT_KEY_BINDINGS: Dict[str, List[str]] = {
     'window-manager.move-pane-down': ['escape c-up'],  # Alt-Ctrl-
     'window-manager.move-pane-up': ['escape c-down'],  # Alt-Ctrl-
     'window-manager.enlarge-pane': ['escape ='],  # Alt-= (mnemonic: Alt Plus)
-    'window-manager.shrink-pane':
-    ['escape -'],  # Alt-minus (mnemonic: Alt Minus)
+    'window-manager.shrink-pane': [
+        'escape -'
+    ],  # Alt-minus (mnemonic: Alt Minus)
     'window-manager.shrink-split': ['escape ,'],  # Alt-, (mnemonic: Alt <)
     'window-manager.enlarge-split': ['escape .'],  # Alt-. (mnemonic: Alt >)
     'window-manager.focus-prev-pane': ['escape c-p'],  # Ctrl-Alt-p
@@ -108,9 +109,11 @@ def create_key_bindings(console_app) -> KeyBindings:
     key_bindings = KeyBindings()
     register = console_app.prefs.register_keybinding
 
-    @register('global.open-user-guide',
-              key_bindings,
-              filter=Condition(lambda: not console_app.modal_window_is_open()))
+    @register(
+        'global.open-user-guide',
+        key_bindings,
+        filter=Condition(lambda: not console_app.modal_window_is_open()),
+    )
     def show_help(event):
         """Toggle user guide window."""
         console_app.user_guide_window.toggle_display()
@@ -118,9 +121,11 @@ def create_key_bindings(console_app) -> KeyBindings:
     # F2 is ptpython settings
     # F3 is ptpython history
 
-    @register('global.open-menu-search',
-              key_bindings,
-              filter=Condition(lambda: not console_app.modal_window_is_open()))
+    @register(
+        'global.open-menu-search',
+        key_bindings,
+        filter=Condition(lambda: not console_app.modal_window_is_open()),
+    )
     def show_command_runner(event):
         """Open command runner window."""
         console_app.open_command_runner_main_menu()
@@ -138,9 +143,11 @@ def create_key_bindings(console_app) -> KeyBindings:
     # Bindings for when the ReplPane input field is in focus.
     # These are hidden from help window global keyboard shortcuts since the
     # method names end with `_hidden`.
-    @register('python-repl.copy-clear-or-cancel',
-              key_bindings,
-              filter=has_focus(console_app.pw_ptpython_repl))
+    @register(
+        'python-repl.copy-clear-or-cancel',
+        key_bindings,
+        filter=has_focus(console_app.pw_ptpython_repl),
+    )
     def handle_ctrl_c_hidden(event):
         """Reset the python repl on Ctrl-c"""
         console_app.repl_pane.ctrl_c()
@@ -153,38 +160,47 @@ def create_key_bindings(console_app) -> KeyBindings:
     @register(
         'global.exit-with-confirmation',
         key_bindings,
-        filter=console_app.pw_ptpython_repl.input_empty_if_in_focus_condition(
-        ) | has_focus(console_app.quit_dialog))
+        filter=console_app.pw_ptpython_repl.input_empty_if_in_focus_condition()
+        | has_focus(console_app.quit_dialog),
+    )
     def quit(event):
         """Quit with confirmation dialog."""
         # If the python repl is in focus and has text input then Ctrl-d will
         # delete forward characters instead.
         console_app.quit_dialog.open_dialog()
 
-    @register('python-repl.paste-to-input',
-              key_bindings,
-              filter=has_focus(console_app.pw_ptpython_repl))
+    @register(
+        'python-repl.paste-to-input',
+        key_bindings,
+        filter=has_focus(console_app.pw_ptpython_repl),
+    )
     def paste_into_repl(event):
         """Reset the python repl on Ctrl-c"""
         console_app.repl_pane.paste_system_clipboard_to_input_buffer()
 
-    @register('python-repl.history-search',
-              key_bindings,
-              filter=has_focus(console_app.pw_ptpython_repl))
+    @register(
+        'python-repl.history-search',
+        key_bindings,
+        filter=has_focus(console_app.pw_ptpython_repl),
+    )
     def history_search(event):
         """Open the repl history search dialog."""
         console_app.open_command_runner_history()
 
-    @register('python-repl.snippet-search',
-              key_bindings,
-              filter=has_focus(console_app.pw_ptpython_repl))
+    @register(
+        'python-repl.snippet-search',
+        key_bindings,
+        filter=has_focus(console_app.pw_ptpython_repl),
+    )
     def insert_snippet(event):
         """Open the repl snippet search dialog."""
         console_app.open_command_runner_snippets()
 
-    @register('python-repl.copy-all-output',
-              key_bindings,
-              filter=console_app.repl_pane.input_or_output_has_focus())
+    @register(
+        'python-repl.copy-all-output',
+        key_bindings,
+        filter=console_app.repl_pane.input_or_output_has_focus(),
+    )
     def copy_repl_output_text(event):
         """Copy all Python output to the system clipboard."""
         console_app.repl_pane.copy_all_output_text()

@@ -14,6 +14,7 @@
 #pragma once
 
 #include <cstddef>
+#include <limits>
 
 #include "pw_containers/intrusive_list.h"
 #include "pw_result/result.h"
@@ -350,6 +351,9 @@ class PrefixedEntryRingBufferMulti {
   // including preamble and data chunk.
   size_t TotalUsedBytes() const { return buffer_bytes_ - RawAvailableBytes(); }
 
+  // Returns total size of ring buffer in bytes.
+  size_t TotalSizeBytes() const { return buffer_bytes_; }
+
   // Dering the buffer by reordering entries internally in the buffer by
   // rotating to have the oldest entry is at the lowest address/index with
   // newest entry at the highest address. If no readers are attached, the buffer
@@ -510,7 +514,7 @@ class PrefixedEntryRingBuffer : public PrefixedEntryRingBufferMulti,
   PrefixedEntryRingBuffer(bool user_preamble = false)
       : PrefixedEntryRingBufferMulti(user_preamble) {
     AttachReader(*this)
-        .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+        .IgnoreError();  // TODO(b/242598609): Handle Status properly
   }
 };
 

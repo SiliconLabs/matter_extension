@@ -15,6 +15,7 @@
 load(
     "//pw_build:pigweed.bzl",
     "pw_cc_library",
+    "pw_cc_perf_test",
     "pw_cc_test",
 )
 
@@ -31,6 +32,7 @@ pw_cc_library(
     hdrs = [
         "public/pw_checksum/crc16_ccitt.h",
         "public/pw_checksum/crc32.h",
+        "public/pw_checksum/internal/config.h",
     ],
     includes = ["public"],
     deps = [
@@ -62,5 +64,23 @@ pw_cc_test(
         ":pw_checksum",
         "//pw_bytes",
         "//pw_unit_test",
+    ],
+)
+
+pw_cc_perf_test(
+    name = "crc32_perf_test",
+    srcs = ["crc32_perf_test.cc"],
+    deps = [
+        ":pw_checksum",
+        "//pw_bytes",
+    ],
+)
+
+pw_cc_perf_test(
+    name = "crc16_perf_test",
+    srcs = ["crc16_ccitt_perf_test.cc"],
+    deps = [
+        ":pw_checksum",
+        "//pw_bytes",
     ],
 )

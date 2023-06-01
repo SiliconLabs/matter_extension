@@ -30,18 +30,35 @@ void TransferService::HandleChunk(ConstByteSpan message,
   }
 
   if (chunk->IsInitialChunk()) {
-    // TODO(frolv): Right now, session ID and resource ID are the same thing.
-    // The session ID should be assigned by the server in response to the
-    // initial chunk
+    uint32_t resource_id =
+        chunk->is_legacy() ? chunk->session_id() : chunk->resource_id().value();
+
+    uint32_t session_id;
+    if (chunk->is_legacy()) {
+      session_id = chunk->session_id();
+    } else if (chunk->desired_session_id().has_value()) {
+      session_id = chunk->desired_session_id().value();
+    } else {
+      // Non-legacy start chunks are required to use desired_session_id.
+      thread_.SendServerStatus(type,
+                               chunk->session_id(),
+                               chunk->protocol_version(),
+                               Status::DataLoss());
+      return;
+    }
+
     thread_.StartServerTransfer(type,
-                                chunk->session_id(),
-                                /*resource_id=*/chunk->session_id(),
+                                chunk->protocol_version(),
+                                session_id,
+                                resource_id,
+                                message,
                                 max_parameters_,
                                 chunk_timeout_,
-                                max_retries_);
+                                max_retries_,
+                                max_lifetime_retries_);
+  } else {
+    thread_.ProcessServerChunk(message);
   }
-
-  thread_.ProcessServerChunk(message);
 }
 
 }  // namespace pw::transfer

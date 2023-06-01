@@ -52,12 +52,11 @@ Status FlashPartition::Writer::DoWrite(ConstByteSpan data) {
 }
 
 StatusWithSize FlashPartition::Reader::DoRead(ByteSpan data) {
-  if (position_ >= partition_.size_bytes()) {
+  if (position_ >= read_limit_) {
     return StatusWithSize::OutOfRange();
   }
 
-  size_t bytes_to_read =
-      std::min(data.size_bytes(), partition_.size_bytes() - position_);
+  size_t bytes_to_read = std::min(data.size_bytes(), read_limit_ - position_);
 
   const StatusWithSize sws =
       partition_.Read(position_, data.first(bytes_to_read));
@@ -83,14 +82,14 @@ StatusWithSize FlashPartition::Input::DoRead(span<byte> data) {
 
 FlashPartition::FlashPartition(
     FlashMemory* flash,
-    uint32_t start_sector_index,
-    uint32_t sector_count,
+    uint32_t flash_start_sector_index,
+    uint32_t flash_sector_count,
     uint32_t alignment_bytes,  // Defaults to flash alignment
     PartitionPermission permission)
 
     : flash_(*flash),
-      start_sector_index_(start_sector_index),
-      sector_count_(sector_count),
+      flash_sector_count_(flash_sector_count),
+      flash_start_sector_index_(flash_start_sector_index),
       alignment_bytes_(
           alignment_bytes == 0
               ? flash_.alignment_bytes()

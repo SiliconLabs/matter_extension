@@ -33,42 +33,64 @@
 #include "pw_tokenizer/internal/argument_types.h"
 #include "pw_tokenizer/internal/tokenize_string.h"
 
-// The type of the token used in place of a format string. Also available as
-// pw::tokenizer::Token.
+/// The type of the 32-bit token used in place of a string. Also available as
+/// `pw::tokenizer::Token`.
 typedef uint32_t pw_tokenizer_Token;
 
-// Strings may optionally be tokenized to a domain. Strings in different domains
-// can be processed separately by the token database tools. Each domain in use
-// must have a corresponding section declared in the linker script. See
-// pw_tokenizer_linker_sections.ld for more details.
+// Strings may optionally be tokenized to a domain. Strings in different
+// domains can be processed separately by the token database tools. Each domain
+// in use must have a corresponding section declared in the linker script. See
+// `pw_tokenizer_linker_sections.ld` for more details.
 //
 // The default domain is an empty string.
 #define PW_TOKENIZER_DEFAULT_DOMAIN ""
 
-// Tokenizes a string and converts it to a pw_tokenizer_Token. In C++, the
-// string may be a literal or a constexpr char array. In C, the argument must be
-// a string literal. In either case, the string must be null terminated, but may
-// contain any characters (including '\0').
-//
-// This expression can be assigned to a local or global variable, but cannot be
-// used in another expression. For example:
-//
-//   constexpr uint32_t global = PW_TOKENIZE_STRING("Wow!");  // This works.
-//
-//   void SomeFunction() {
-//     constexpr uint32_t token = PW_TOKENIZE_STRING("Cool!");  // This works.
-//
-//     DoSomethingElse(PW_TOKENIZE_STRING("Lame!"));  // This does NOT work.
-//   }
-//
+/// Converts a string literal to a `pw_tokenizer_Token` (`uint32_t`) token in a
+/// standalone statement. C and C++ compatible. In C++, the string may be a
+/// literal or a constexpr char array, including function variables like
+/// `__func__`. In C, the argument must be a string literal. In either case, the
+/// string must be null terminated, but may contain any characters (including
+/// '\0').
+///
+/// @code
+///
+///   constexpr uint32_t token = PW_TOKENIZE_STRING("Any string literal!");
+///
+/// @endcode
 #define PW_TOKENIZE_STRING(string_literal) \
   PW_TOKENIZE_STRING_DOMAIN(PW_TOKENIZER_DEFAULT_DOMAIN, string_literal)
 
-// Same as PW_TOKENIZE_STRING, but tokenizes to the specified domain.
+/// Converts a string literal to a ``uint32_t`` token within an expression.
+/// Requires C++.
+///
+/// @code
+///
+///   DoSomething(PW_TOKENIZE_STRING_EXPR("Succeed"));
+///
+/// @endcode
+#define PW_TOKENIZE_STRING_EXPR(string_literal)                               \
+  [&] {                                                                       \
+    constexpr uint32_t lambda_ret_token = PW_TOKENIZE_STRING(string_literal); \
+    return lambda_ret_token;                                                  \
+  }()
+
+/// Tokenizes a string literal in a standalone statement using the specified
+/// @rstref{domain <module-pw_tokenizer-domains>}. C and C++ compatible.
 #define PW_TOKENIZE_STRING_DOMAIN(domain, string_literal) \
   PW_TOKENIZE_STRING_MASK(domain, UINT32_MAX, string_literal)
 
-// Same as PW_TOKENIZE_STRING_DOMAIN, but applies a mask to the token.
+/// Tokenizes a string literal using the specified @rstref{domain
+/// <module-pw_tokenizer-domains>} within an expression. Requires C++.
+#define PW_TOKENIZE_STRING_DOMAIN_EXPR(domain, string_literal) \
+  [&] {                                                        \
+    constexpr uint32_t lambda_ret_token =                      \
+        PW_TOKENIZE_STRING_DOMAIN(domain, string_literal);     \
+    return lambda_ret_token;                                   \
+  }()
+
+/// Tokenizes a string literal in a standalone statement using the specified
+/// @rstref{domain <module-pw_tokenizer-domains>} and @rstref{bit mask
+/// <module-pw_tokenizer-masks>}. C and C++ compatible.
 #define PW_TOKENIZE_STRING_MASK(domain, mask, string_literal)                \
   /* assign to a variable */ _PW_TOKENIZER_MASK_TOKEN(mask, string_literal); \
                                                                              \
@@ -78,29 +100,49 @@ typedef uint32_t pw_tokenizer_Token;
   _PW_TOKENIZER_RECORD_ORIGINAL_STRING(                                      \
       _PW_TOKENIZER_MASK_TOKEN(mask, string_literal), domain, string_literal)
 
+/// Tokenizes a string literal using the specified @rstref{domain
+/// <module-pw_tokenizer-domains>} and @rstref{bit mask
+/// <module-pw_tokenizer-masks>} within an expression. Requires C++.
+#define PW_TOKENIZE_STRING_MASK_EXPR(domain, mask, string_literal) \
+  [&] {                                                            \
+    constexpr uint32_t lambda_ret_token =                          \
+        PW_TOKENIZE_STRING_MASK(domain, mask, string_literal);     \
+    return lambda_ret_token;                                       \
+  }()
+
 #define _PW_TOKENIZER_MASK_TOKEN(mask, string_literal) \
   ((pw_tokenizer_Token)(mask)&PW_TOKENIZER_STRING_TOKEN(string_literal))
 
-// Encodes a tokenized string and arguments to the provided buffer. The size of
-// the buffer is passed via a pointer to a size_t. After encoding is complete,
-// the size_t is set to the number of bytes written to the buffer.
-//
-// The macro's arguments are equivalent to the following function signature:
-//
-//   TokenizeToBuffer(void* buffer,
-//                    size_t* buffer_size_pointer,
-//                    const char* format,
-//                    ...);  /* printf-style arguments */
-//
-// For example, the following encodes a tokenized string with a temperature to a
-// buffer. The buffer is passed to a function to send the message over a UART.
-//
-//   uint8_t buffer[32];
-//   size_t size_bytes = sizeof(buffer);
-//   PW_TOKENIZE_TO_BUFFER(
-//       buffer, &size_bytes, "Temperature (C): %0.2f", temperature_c);
-//   MyProject_EnqueueMessageForUart(buffer, size);
-//
+/// Encodes a tokenized string and arguments to the provided buffer. The size of
+/// the buffer is passed via a pointer to a `size_t`. After encoding is
+/// complete, the `size_t` is set to the number of bytes written to the buffer.
+///
+/// The macro's arguments are equivalent to the following function signature:
+///
+/// @code
+///
+///   TokenizeToBuffer(void* buffer,
+///                    size_t* buffer_size_pointer,
+///                    const char* format,
+///                    ...);  // printf-style arguments
+/// @endcode
+///
+/// For example, the following encodes a tokenized string with a temperature to
+/// a buffer. The buffer is passed to a function to send the message over a
+/// UART.
+///
+/// @code
+///
+///   uint8_t buffer[32];
+///   size_t size_bytes = sizeof(buffer);
+///   PW_TOKENIZE_TO_BUFFER(
+///       buffer, &size_bytes, "Temperature (C): %0.2f", temperature_c);
+///   MyProject_EnqueueMessageForUart(buffer, size);
+///
+/// @endcode
+///
+/// While `PW_TOKENIZE_TO_BUFFER` is very flexible, it must be passed a buffer,
+/// which increases its code size footprint at the call site.
 #define PW_TOKENIZE_TO_BUFFER(buffer, buffer_size_pointer, format, ...) \
   PW_TOKENIZE_TO_BUFFER_DOMAIN(PW_TOKENIZER_DEFAULT_DOMAIN,             \
                                buffer,                                  \
@@ -108,13 +150,15 @@ typedef uint32_t pw_tokenizer_Token;
                                format,                                  \
                                __VA_ARGS__)
 
-// Same as PW_TOKENIZE_TO_BUFFER, but tokenizes to the specified domain.
+/// Same as @c_macro{PW_TOKENIZE_TO_BUFFER}, but tokenizes to the specified
+/// @rstref{domain <module-pw_tokenizer-domains>}.
 #define PW_TOKENIZE_TO_BUFFER_DOMAIN(                 \
     domain, buffer, buffer_size_pointer, format, ...) \
   PW_TOKENIZE_TO_BUFFER_MASK(                         \
       domain, UINT32_MAX, buffer, buffer_size_pointer, format, __VA_ARGS__)
 
-// Same as PW_TOKENIZE_TO_BUFFER_DOMAIN, but applies a mask to the token.
+/// Same as @c_macro{PW_TOKENIZE_TO_BUFFER_DOMAIN}, but applies a
+/// @rstref{bit mask <module-pw_tokenizer-masks>} to the token.
 #define PW_TOKENIZE_TO_BUFFER_MASK(                               \
     domain, mask, buffer, buffer_size_pointer, format, ...)       \
   do {                                                            \
@@ -126,52 +170,14 @@ typedef uint32_t pw_tokenizer_Token;
                                PW_COMMA_ARGS(__VA_ARGS__));       \
   } while (0)
 
-// Encodes a tokenized string and arguments to a buffer on the stack. The
-// provided callback is called with the encoded data. The size of the
-// stack-allocated argument encoding buffer is set with the
-// PW_TOKENIZER_CFG_ENCODING_BUFFER_SIZE_BYTES option.
-//
-// The macro's arguments are equivalent to the following function signature:
-//
-//   TokenizeToCallback(void (*callback)(const uint8_t* data, size_t size),
-//                      const char* format,
-//                      ...);  /* printf-style arguments */
-//
-// For example, the following encodes a tokenized string with a sensor name and
-// floating point data. The encoded message is passed directly to the
-// MyProject_EnqueueMessageForUart function, which the caller provides as a
-// callback.
-//
-//   void MyProject_EnqueueMessageForUart(const uint8_t* buffer,
-//                                        size_t size_bytes) {
-//     uart_queue_write(uart_instance, buffer, size_bytes);
-//   }
-//
-//   void LogSensorValue(const char* sensor_name, float value) {
-//     PW_TOKENIZE_TO_CALLBACK(MyProject_EnqueueMessageForUart,
-//                             "%s: %f",
-//                             sensor_name,
-//                             value);
-//   }
-//
-#define PW_TOKENIZE_TO_CALLBACK(callback, format, ...) \
-  PW_TOKENIZE_TO_CALLBACK_DOMAIN(                      \
-      PW_TOKENIZER_DEFAULT_DOMAIN, callback, format, __VA_ARGS__)
-
-// Same as PW_TOKENIZE_TO_CALLBACK, but tokenizes to the specified domain.
-#define PW_TOKENIZE_TO_CALLBACK_DOMAIN(domain, callback, format, ...) \
-  PW_TOKENIZE_TO_CALLBACK_MASK(                                       \
-      domain, UINT32_MAX, callback, format, __VA_ARGS__)
-
-// Same as PW_TOKENIZE_TO_CALLBACK_DOMAIN, but applies a mask to the token.
-#define PW_TOKENIZE_TO_CALLBACK_MASK(domain, mask, callback, format, ...) \
-  do {                                                                    \
-    PW_TOKENIZE_FORMAT_STRING(domain, mask, format, __VA_ARGS__);         \
-    _pw_tokenizer_ToCallback(callback,                                    \
-                             _pw_tokenizer_token,                         \
-                             PW_TOKENIZER_ARG_TYPES(__VA_ARGS__)          \
-                                 PW_COMMA_ARGS(__VA_ARGS__));             \
-  } while (0)
+/// Converts a series of arguments to a compact format that replaces the format
+/// string literal. Evaluates to a `pw_tokenizer_ArgTypes` value.
+///
+/// Depending on the size of `pw_tokenizer_ArgTypes`, the bottom 4 or 6 bits
+/// store the number of arguments and the remaining bits store the types, two
+/// bits per type. The arguments are not evaluated; only their types are used.
+#define PW_TOKENIZER_ARG_TYPES(...) \
+  PW_DELEGATE_BY_ARG_COUNT(_PW_TOKENIZER_TYPES_, __VA_ARGS__)
 
 PW_EXTERN_C_START
 
@@ -183,12 +189,6 @@ void _pw_tokenizer_ToBuffer(void* buffer,
                             pw_tokenizer_ArgTypes types,
                             ...);
 
-void _pw_tokenizer_ToCallback(void (*callback)(const uint8_t* encoded_message,
-                                               size_t size_bytes),
-                              pw_tokenizer_Token token,
-                              pw_tokenizer_ArgTypes types,
-                              ...);
-
 // This empty function allows the compiler to check the format string.
 static inline void pw_tokenizer_CheckFormatString(const char* format, ...)
     PW_PRINTF_FORMAT(1, 2);
@@ -199,12 +199,17 @@ static inline void pw_tokenizer_CheckFormatString(const char* format, ...) {
 
 PW_EXTERN_C_END
 
-// These macros implement string tokenization. They should not be used directly;
-// use one of the PW_TOKENIZE_* macros above instead.
-
-// This macro takes a printf-style format string and corresponding arguments. It
-// checks that the arguments are correct, stores the format string in a special
-// section, and calculates the string's token at compile time. This
+/// Tokenizes a format string with optional arguments and sets the
+/// `_pw_tokenizer_token` variable to the token. Must be used in its own scope,
+/// since the same variable is used in every invocation.
+///
+/// The tokenized string uses the specified @rstref{tokenization domain
+/// <module-pw_tokenizer-domains>}.  Use `PW_TOKENIZER_DEFAULT_DOMAIN` for the
+/// default. The token also may be masked; use `UINT32_MAX` to keep all bits.
+///
+/// This macro checks that the printf-style format string matches the arguments,
+/// stores the format string in a special section, and calculates the string's
+/// token at compile time.
 // clang-format off
 #define PW_TOKENIZE_FORMAT_STRING(domain, mask, format, ...)                  \
   if (0) { /* Do not execute to prevent double evaluation of the arguments. */ \

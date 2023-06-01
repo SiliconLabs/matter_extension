@@ -1,0 +1,23 @@
+id: matter_lcd
+label: Matter Display
+description: Support for liquid crystal display on matter devboards
+package: "Matter"
+category: Platform
+quality: production
+requires:
+  - name: matter
+  - name: matter_platform_efr32
+  - name: matter_uart
+  - name: glib
+  - name: memlcd_usart
+provides:
+  - name: matter_lcd
+conflicts:
+  - name: matter_low_power
+include:
+  - path: examples/platform/silabs/display/
+source:
+  - path: examples/platform/silabs/display/demo-ui.c
+  - path: examples/platform/silabs/display/lcd.cpp
+define:
+  - name: DISPLAY_ENABLED

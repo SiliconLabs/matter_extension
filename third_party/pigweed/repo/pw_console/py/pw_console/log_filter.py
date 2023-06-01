@@ -34,6 +34,7 @@ _UPPERCASE_REGEX = re.compile(r'[A-Z]')
 
 class SearchMatcher(Enum):
     """Possible search match methods."""
+
     FUZZY = 'FUZZY'
     REGEX = 'REGEX'
     STRING = 'STRING'
@@ -42,8 +43,9 @@ class SearchMatcher(Enum):
 DEFAULT_SEARCH_MATCHER = SearchMatcher.REGEX
 
 
-def preprocess_search_regex(text,
-                            matcher: SearchMatcher = DEFAULT_SEARCH_MATCHER):
+def preprocess_search_regex(
+    text, matcher: SearchMatcher = DEFAULT_SEARCH_MATCHER
+):
     # Ignorecase unless the text has capital letters in it.
     regex_flags = re.IGNORECASE
     if _UPPERCASE_REGEX.search(text):
@@ -54,7 +56,8 @@ def preprocess_search_regex(text,
         text_tokens = text.split(' ')
         if len(text_tokens) > 1:
             text = '(.*?)'.join(
-                ['({})'.format(re.escape(text)) for text in text_tokens])
+                ['({})'.format(re.escape(text)) for text in text_tokens]
+            )
     elif matcher == SearchMatcher.STRING:
         # Escape any regex specific characters to match the string literal.
         text = re.escape(text)
@@ -67,50 +70,55 @@ def preprocess_search_regex(text,
 
 class RegexValidator(Validator):
     """Validation of regex input."""
+
     def validate(self, document):
         """Check search input for regex syntax errors."""
         regex_text, regex_flags = preprocess_search_regex(document.text)
         try:
             re.compile(regex_text, regex_flags)
         except re.error as error:
-            raise ValidationError(error.pos,
-                                  "Regex Error: %s" % error) from error
+            raise ValidationError(
+                error.pos, "Regex Error: %s" % error
+            ) from error
 
 
 @dataclass
 class LogFilter:
     """Log Filter Dataclass."""
+
     regex: re.Pattern
     input_text: Optional[str] = None
     invert: bool = False
     field: Optional[str] = None
 
     def pattern(self):
-        return self.regex.pattern
+        return self.regex.pattern  # pylint: disable=no-member
 
     def matches(self, log: LogLine):
         field = log.ansi_stripped_log
         if self.field:
             if hasattr(log, 'metadata') and hasattr(log.metadata, 'fields'):
-                field = log.metadata.fields.get(self.field,
-                                                log.ansi_stripped_log)
+                field = log.metadata.fields.get(
+                    self.field, log.ansi_stripped_log
+                )
             if hasattr(log.record, 'extra_metadata_fields'):  # type: ignore
                 field = log.record.extra_metadata_fields.get(  # type: ignore
-                    self.field, log.ansi_stripped_log)
+                    self.field, log.ansi_stripped_log
+                )
             if self.field == 'lvl':
                 field = log.record.levelname
             elif self.field == 'time':
                 field = log.record.asctime
 
-        match = self.regex.search(field)
+        match = self.regex.search(field)  # pylint: disable=no-member
 
         if self.invert:
             return not match
         return match
 
-    def highlight_search_matches(self,
-                                 line_fragments,
-                                 selected=False) -> StyleAndTextTuples:
+    def highlight_search_matches(
+        self, line_fragments, selected=False
+    ) -> StyleAndTextTuples:
         """Highlight search matches in the current line_fragment."""
         line_text = fragment_list_to_text(line_fragments)
         exploded_fragments = explode_text_fragments(line_fragments)
@@ -135,7 +143,9 @@ class LogFilter:
                 apply_highlighting(exploded_fragments, i)
         else:
             # Highlight each non-overlapping search match.
-            for match in self.regex.finditer(line_text):
+            for match in self.regex.finditer(  # pylint: disable=no-member
+                line_text
+            ):  # pylint: disable=no-member
                 for fragment_i in range(match.start(), match.end()):
                     apply_highlighting(exploded_fragments, fragment_i)
 

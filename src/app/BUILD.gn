@@ -14,13 +14,14 @@
 
 import("//build_overrides/chip.gni")
 import("//build_overrides/nlio.gni")
+import("${chip_root}/src/platform/device.gni")
 
 import("${chip_root}/build/chip/buildconfig_header.gni")
 import("common_flags.gni")
 
 declare_args() {
   # Enable strict schema checks.
-  chip_enable_schema_check =
+  enable_im_pretty_print =
       is_debug && (current_os == "linux" || current_os == "mac" ||
                    current_os == "ios" || current_os == "android")
 
@@ -39,6 +40,8 @@ declare_args() {
 
   # By default, the resources used by each fabric is unlimited if they are allocated on heap. This flag is for checking the resource usage even when they are allocated on heap to increase code coverage in integration tests.
   chip_im_force_fabric_quota_check = false
+
+  enable_eventlist_attribute = false
 }
 
 buildconfig_header("app_buildconfig") {
@@ -46,10 +49,12 @@ buildconfig_header("app_buildconfig") {
   header_dir = "app"
 
   defines = [
-    "CHIP_CONFIG_IM_ENABLE_SCHEMA_CHECK=${chip_enable_schema_check}",
+    "CHIP_CONFIG_IM_PRETTY_PRINT=${enable_im_pretty_print}",
     "CHIP_CONFIG_IM_FORCE_FABRIC_QUOTA_CHECK=${chip_im_force_fabric_quota_check}",
     "CHIP_CONFIG_ENABLE_SESSION_RESUMPTION=${chip_enable_session_resumption}",
     "CHIP_CONFIG_ACCESS_CONTROL_POLICY_LOGGING_VERBOSITY=${chip_access_control_policy_logging_verbosity}",
+    "CHIP_CONFIG_PERSIST_SUBSCRIPTIONS=${chip_persist_subscriptions}",
+    "CHIP_CONFIG_ENABLE_EVENTLIST_ATTRIBUTE=${enable_eventlist_attribute}",
   ]
 }
 
@@ -82,6 +87,7 @@ static_library("app") {
     "CommandResponseHelper.h",
     "CommandSender.cpp",
     "DefaultAttributePersistenceProvider.cpp",
+    "DeferredAttributePersistenceProvider.cpp",
     "DeviceProxy.cpp",
     "DeviceProxy.h",
     "EventManagement.cpp",
@@ -174,6 +180,7 @@ static_library("app") {
     "RequiredPrivilege.h",
     "StatusResponse.cpp",
     "StatusResponse.h",
+    "SubscriptionResumptionStorage.h",
     "TimedHandler.cpp",
     "TimedHandler.h",
     "TimedRequest.cpp",
@@ -182,7 +189,15 @@ static_library("app") {
     "WriteHandler.cpp",
     "reporting/Engine.cpp",
     "reporting/Engine.h",
+    "reporting/reporting.h",
   ]
+
+  if (chip_persist_subscriptions) {
+    sources += [
+      "SimpleSubscriptionResumptionStorage.cpp",
+      "SimpleSubscriptionResumptionStorage.h",
+    ]
+  }
 
   public_deps = [
     ":app_config",

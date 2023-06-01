@@ -30,6 +30,9 @@
 // <q SL_MATTER_CLI_ARG_PARSER> Enable CLI Argument Parser
 #define SL_MATTER_CLI_ARG_PARSER 1
 
+// Define the default number of ip addresses to discover
+#define CHIP_DEVICE_CONFIG_MAX_DISCOVERED_IP_ADDRESSES 5
+
 // <<< end of configuration section >>>
 
 #endif // SL_MATTER_CONFIG_H

@@ -1,0 +1,14 @@
+{
+    "version": "1.0",
+    "matter": {
+        "vendor_id": 4169,
+        "product_id": 32773,
+        "discriminator": 3841,
+        "attestation": {
+            "key_id": 0,
+            "pkcs12": "temp/certs.p12",
+            "key_pass": "cBiqGji1ARHKQ8gv6kiVh1uJQDn/dMXlTXbNOXwjNDE=",
+            "certification": "temp/cd.der"
+        }
+    }
+}

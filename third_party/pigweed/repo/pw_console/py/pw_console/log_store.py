@@ -16,15 +16,14 @@
 from __future__ import annotations
 import collections
 import logging
-import sys
 from datetime import datetime
 from typing import Dict, List, Optional, TYPE_CHECKING
 
-import pw_cli.color
+from pw_cli.color import colors as pw_cli_colors
 
 from pw_console.console_prefs import ConsolePrefs
 from pw_console.log_line import LogLine
-import pw_console.text_formatting
+from pw_console.text_formatting import strip_ansi
 from pw_console.widgets.table import TableView
 
 if TYPE_CHECKING:
@@ -77,22 +76,20 @@ class LogStore(logging.Handler):
         console.setup_python_logging()
         console.embed()
     """
+
     def __init__(self, prefs: Optional[ConsolePrefs] = None):
         """Initializes the LogStore instance."""
 
         # ConsolePrefs may not be passed on init. For example, if the user is
         # creating a LogStore to capture log messages before console startup.
         if not prefs:
-            prefs = ConsolePrefs(project_file=False,
-                                 project_user_file=False,
-                                 user_file=False)
+            prefs = ConsolePrefs(
+                project_file=False, project_user_file=False, user_file=False
+            )
         self.prefs = prefs
         # Log storage deque for fast addition and deletion from the beginning
         # and end of the iterable.
         self.logs: collections.deque = collections.deque()
-
-        # Estimate of the logs in memory.
-        self.byte_size: int = 0
 
         # Only allow this many log lines in memory.
         self.max_history_size: int = 1000000
@@ -130,7 +127,7 @@ class LogStore(logging.Handler):
     def set_formatting(self) -> None:
         """Setup log formatting."""
         # Copy of pw_cli log formatter
-        colors = pw_cli.color.colors(True)
+        colors = pw_cli_colors(True)
         timestamp_prefix = colors.black_on_white('%(asctime)s') + ' '
         timestamp_format = '%Y%m%d %H:%M:%S'
         format_string = timestamp_prefix + '%(levelname)s %(message)s'
@@ -146,16 +143,15 @@ class LogStore(logging.Handler):
     def clear_logs(self):
         """Erase all stored pane lines."""
         self.logs = collections.deque()
-        self.byte_size = 0
         self.channel_counts = {}
         self.channel_formatted_prefix_widths = {}
         self.line_index = 0
 
     def get_channel_counts(self):
         """Return the seen channel log counts for this conatiner."""
-        return ', '.join([
-            f'{name}: {count}' for name, count in self.channel_counts.items()
-        ])
+        return ', '.join(
+            [f'{name}: {count}' for name, count in self.channel_counts.items()]
+        )
 
     def get_total_count(self):
         """Total size of the logs store."""
@@ -171,10 +167,12 @@ class LogStore(logging.Handler):
         """Save the formatted prefix width if this is a new logger channel
         name."""
         if self.formatter and (
-                record.name
-                not in self.channel_formatted_prefix_widths.keys()):
+            record.name not in self.channel_formatted_prefix_widths.keys()
+        ):
             # Find the width of the formatted timestamp and level
-            format_string = self.formatter._fmt  # pylint: disable=protected-access
+            format_string = (
+                self.formatter._fmt  # pylint: disable=protected-access
+            )
 
             # There may not be a _fmt defined.
             if not format_string:
@@ -182,39 +180,48 @@ class LogStore(logging.Handler):
 
             format_without_message = format_string.replace('%(message)s', '')
             # If any other style parameters are left, get the width of them.
-            if (format_without_message and 'asctime' in format_without_message
-                    and 'levelname' in format_without_message):
+            if (
+                format_without_message
+                and 'asctime' in format_without_message
+                and 'levelname' in format_without_message
+            ):
                 formatted_time_and_level = format_without_message % dict(
-                    asctime=record.asctime, levelname=record.levelname)
+                    asctime=record.asctime, levelname=record.levelname
+                )
 
                 # Delete ANSI escape sequences.
-                ansi_stripped_time_and_level = (
-                    pw_console.text_formatting.strip_ansi(
-                        formatted_time_and_level))
+                ansi_stripped_time_and_level = strip_ansi(
+                    formatted_time_and_level
+                )
 
                 self.channel_formatted_prefix_widths[record.name] = len(
-                    ansi_stripped_time_and_level)
+                    ansi_stripped_time_and_level
+                )
             else:
                 self.channel_formatted_prefix_widths[record.name] = 0
 
             # Set the max width of all known formats so far.
             self.longest_channel_prefix_width = max(
-                self.channel_formatted_prefix_widths.values())
+                self.channel_formatted_prefix_widths.values()
+            )
 
     def _append_log(self, record: logging.LogRecord):
         """Add a new log event."""
         # Format incoming log line.
         formatted_log = self.format(record)
-        ansi_stripped_log = pw_console.text_formatting.strip_ansi(
-            formatted_log)
+        ansi_stripped_log = strip_ansi(formatted_log)
         # Save this log.
         self.logs.append(
-            LogLine(record=record,
-                    formatted_log=formatted_log,
-                    ansi_stripped_log=ansi_stripped_log))
+            LogLine(
+                record=record,
+                formatted_log=formatted_log,
+                ansi_stripped_log=ansi_stripped_log,
+            )
+        )
         # Increment this logger count
-        self.channel_counts[record.name] = self.channel_counts.get(
-            record.name, 0) + 1
+        self.channel_counts[record.name] = (
+            self.channel_counts.get(record.name, 0) + 1
+        )
 
         # TODO(b/235271486): Revisit calculating prefix widths automatically
         # when line wrapping indentation is supported.
@@ -226,12 +233,6 @@ class LogStore(logging.Handler):
 
         # Check for bigger column widths.
         self.table.update_metadata_column_widths(self.logs[-1])
-
-        # Update estimated byte_size.
-        self.byte_size += sys.getsizeof(self.logs[-1])
-        # If the total log lines is > max_history_size, delete the oldest line.
-        if self.get_total_count() > self.max_history_size:
-            self.byte_size -= sys.getsizeof(self.logs.popleft())
 
     def emit(self, record) -> None:
         """Process a new log record.

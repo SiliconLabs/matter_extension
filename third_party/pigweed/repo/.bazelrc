@@ -19,10 +19,29 @@ build --incompatible_enable_cc_toolchain_resolution
 coverage --experimental_generate_llvm_lcov
 coverage --combined_report=lcov
 
+# Suppress the DEBUG: log messages from bazel. We get lots of spammy DEBUG:
+# messages from our third-party dependencies.
+build --ui_event_filters=-debug
+
 # Enforces consistent action environment variables. This is important to
 # address Protobuf's rebuild sensitivity on changes to the environment
 # variables.
 build --incompatible_strict_action_env
+
+# Silence compiler warnings from external repositories.
+#
+# This is supported by Bazel's default C++ toolchain, but not yet by
+# rules_cc_toolchain
+# (https://github.com/bazelembedded/rules_cc_toolchain/issues/46).
+build --features=external_include_paths
+
+# TODO(b/269204725): Move the following flags to the toolchain configuration.
+# By default build with C++17.
+build --cxxopt='-std=c++17'
+build --cxxopt="-fno-rtti"
+build --cxxopt="-Wnon-virtual-dtor"
+# Allow uses of the register keyword, which may appear in C headers.
+build --cxxopt="-Wno-register"
 
 # This leaks the PATH variable into the Bazel build environment, which
 # enables the Python pw_protobuf plugins to find the Python version
@@ -32,6 +51,8 @@ build --incompatible_strict_action_env
 # Protobuf rebuild sensitivity to environment variable changes.
 # TODO(pwbug/437): Remove this once pwbug/437 is completely resolved.
 build --action_env=PATH
+
+build --@mbedtls//:mbedtls_config=//third_party/mbedtls:default_config
 
 # Define the --config=asan-libfuzzer configuration.
 build:asan-libfuzzer \

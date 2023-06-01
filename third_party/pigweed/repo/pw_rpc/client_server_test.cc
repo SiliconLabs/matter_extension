@@ -51,12 +51,12 @@ TEST(ClientServer, ProcessPacket_CallsServer) {
   client_server.server().RegisterService(service);
 
   Packet packet(
-      PacketType::REQUEST, kFakeChannelId, kFakeServiceId, kFakeMethodId);
+      pwpb::PacketType::REQUEST, kFakeChannelId, kFakeServiceId, kFakeMethodId);
   std::array<std::byte, 32> buffer;
   Result result = packet.Encode(buffer);
   EXPECT_EQ(result.status(), OkStatus());
 
-  EXPECT_EQ(client_server.ProcessPacket(result.value(), output), OkStatus());
+  EXPECT_EQ(client_server.ProcessPacket(result.value()), OkStatus());
 }
 
 TEST(ClientServer, ProcessPacket_CallsClient) {
@@ -65,20 +65,22 @@ TEST(ClientServer, ProcessPacket_CallsClient) {
 
   // Same packet as above, but type RESPONSE will skip the server and call into
   // the client.
-  Packet packet(
-      PacketType::RESPONSE, kFakeChannelId, kFakeServiceId, kFakeMethodId);
+  Packet packet(pwpb::PacketType::RESPONSE,
+                kFakeChannelId,
+                kFakeServiceId,
+                kFakeMethodId);
   std::array<std::byte, 32> buffer;
   Result result = packet.Encode(buffer);
   EXPECT_EQ(result.status(), OkStatus());
 
   // No calls are registered on the client, so nothing should happen. The
   // ProcessPacket call still returns OK since the client handled it.
-  EXPECT_EQ(client_server.ProcessPacket(result.value(), output), OkStatus());
+  EXPECT_EQ(client_server.ProcessPacket(result.value()), OkStatus());
 }
 
 TEST(ClientServer, ProcessPacket_BadData) {
   ClientServer client_server(channels);
-  EXPECT_EQ(client_server.ProcessPacket({}, output), Status::DataLoss());
+  EXPECT_EQ(client_server.ProcessPacket({}), Status::DataLoss());
 }
 
 }  // namespace

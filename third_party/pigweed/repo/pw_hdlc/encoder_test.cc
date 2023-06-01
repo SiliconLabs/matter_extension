@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <array>
 #include <cstddef>
+#include <cstring>
 
 #include "gtest/gtest.h"
 #include "pw_bytes/array.h"
@@ -45,11 +46,11 @@ constexpr uint8_t kEncodedAddress = (kAddress << 1) | 1;
 
 class WriteUnnumberedFrame : public ::testing::Test {
  protected:
-  WriteUnnumberedFrame() : writer_(buffer_) {}
+  WriteUnnumberedFrame() : buffer_{}, writer_(buffer_) {}
 
-  stream::MemoryWriter writer_;
   // Allocate a buffer that will fit any 7-byte payload.
   std::array<byte, MaxEncodedFrameSize(7)> buffer_;
+  stream::MemoryWriter writer_;
 };
 
 constexpr byte kUnnumberedControl = byte{0x3};

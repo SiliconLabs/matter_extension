@@ -17,16 +17,11 @@
 
 #include <app/util/af.h>
 
-#include <app/util/af-event.h>
 #include <app/util/attribute-storage.h>
 
-#include <app-common/zap-generated/attribute-id.h>
-#include <app-common/zap-generated/attribute-type.h>
 #include <app-common/zap-generated/attributes/Accessors.h>
 #include <app-common/zap-generated/callback.h>
-#include <app-common/zap-generated/cluster-id.h>
 #include <app-common/zap-generated/cluster-objects.h>
-#include <app-common/zap-generated/command-id.h>
 #include <app-common/zap-generated/enums.h>
 #include <app-common/zap-generated/ids/Attributes.h>
 #include <app/CommandHandler.h>
@@ -338,8 +333,7 @@ MatterThermostatClusterServerPreAttributeChangedCallback(const app::ConcreteAttr
         {
         case ThermostatControlSequence::kCoolingOnly:
         case ThermostatControlSequence::kCoolingWithReheat:
-            if (RequestedSystemMode == ThermostatSystemMode::kHeat ||
-                RequestedSystemMode == ThermostatSystemMode::kEmergencyHeating)
+            if (RequestedSystemMode == ThermostatSystemMode::kHeat || RequestedSystemMode == ThermostatSystemMode::kEmergencyHeat)
                 return imcode::InvalidValue;
             else
                 return imcode::Success;
@@ -383,8 +377,6 @@ bool emberAfThermostatClusterSetWeeklyScheduleCallback(app::CommandHandler * com
     return false;
 }
 
-using namespace chip::app::Clusters::Thermostat::Attributes;
-
 int16_t EnforceHeatingSetpointLimits(int16_t HeatingSetpoint, EndpointId endpoint)
 {
     // Optional Mfg supplied limits
@@ -400,7 +392,7 @@ int16_t EnforceHeatingSetpointLimits(int16_t HeatingSetpoint, EndpointId endpoin
     // min/max are user imposed min/max
 
     // Note that the limits are initialized above per the spec limits
-    // if they are not present emberAfReadAttribute() will not update the value so the defaults are used
+    // if they are not present Get() will not update the value so the defaults are used
     EmberAfStatus status;
 
     // https://github.com/CHIP-Specifications/connectedhomeip-spec/issues/3724
@@ -471,7 +463,7 @@ int16_t EnforceCoolingSetpointLimits(int16_t CoolingSetpoint, EndpointId endpoin
     // min/max are user imposed min/max
 
     // Note that the limits are initialized above per the spec limits
-    // if they are not present emberAfReadAttribute() will not update the value so the defaults are used
+    // if they are not present Get() will not update the value so the defaults are used
     EmberAfStatus status;
 
     // https://github.com/CHIP-Specifications/connectedhomeip-spec/issues/3724
@@ -567,7 +559,7 @@ bool emberAfThermostatClusterSetpointRaiseLowerCallback(app::CommandHandler * co
 
     switch (mode)
     {
-    case EMBER_ZCL_SETPOINT_ADJUST_MODE_HEAT_AND_COOL_SETPOINTS:
+    case SetpointAdjustMode::kBoth:
         if (HeatSupported && CoolSupported)
         {
             int16_t DesiredCoolingSetpoint, CoolLimit, DesiredHeatingSetpoint, HeatLimit;
@@ -647,7 +639,7 @@ bool emberAfThermostatClusterSetpointRaiseLowerCallback(app::CommandHandler * co
             status = EMBER_ZCL_STATUS_SUCCESS;
         break;
 
-    case EMBER_ZCL_SETPOINT_ADJUST_MODE_COOL_SETPOINT:
+    case SetpointAdjustMode::kCool:
         if (CoolSupported)
         {
             if (OccupiedCoolingSetpoint::Get(aEndpointId, &CoolingSetpoint) == EMBER_ZCL_STATUS_SUCCESS)
@@ -700,7 +692,7 @@ bool emberAfThermostatClusterSetpointRaiseLowerCallback(app::CommandHandler * co
             status = EMBER_ZCL_STATUS_INVALID_COMMAND;
         break;
 
-    case EMBER_ZCL_SETPOINT_ADJUST_MODE_HEAT_SETPOINT:
+    case SetpointAdjustMode::kHeat:
         if (HeatSupported)
         {
             if (OccupiedHeatingSetpoint::Get(aEndpointId, &HeatingSetpoint) == EMBER_ZCL_STATUS_SUCCESS)
@@ -758,7 +750,7 @@ bool emberAfThermostatClusterSetpointRaiseLowerCallback(app::CommandHandler * co
         break;
     }
 
-    emberAfSendImmediateDefaultResponse(status);
+    commandObj->AddStatus(commandPath, app::ToInteractionModelStatus(status));
     return true;
 }
 

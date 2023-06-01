@@ -1,0 +1,14 @@
+id: matter_wifi_ble
+label: Bluetooth Network Layer
+description: Adds Bluetooth network layer for Matter. This component is for rs9116 BLE.
+package: "Matter"
+category: Stack
+quality: production
+requires:
+  - name: matter_libblelayer
+  - name: matter
+provides:
+  - name: matter_wifi_ble
+template_contribution:
+  - name: component_catalog
+    value: matter_ble

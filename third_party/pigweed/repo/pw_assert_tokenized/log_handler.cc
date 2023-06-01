@@ -22,6 +22,7 @@
 #include "pw_bytes/endian.h"
 #include "pw_log/log.h"
 #include "pw_log_tokenized/config.h"
+#include "pw_log_tokenized/handler.h"
 #include "pw_log_tokenized/log_tokenized.h"
 #include "pw_log_tokenized/metadata.h"
 #include "pw_span/span.h"
@@ -40,12 +41,14 @@ extern "C" void pw_assert_tokenized_HandleAssertFailure(
   base64_buffer[len] = '\0';
 #if PW_ASSERT_ENABLE_DEBUG
   PW_LOG(PW_LOG_LEVEL_FATAL,
+         "pw_assert_tokenized",
          PW_LOG_FLAGS,
          "PW_ASSERT() or PW_DASSERT() failure at $%s:%d",
          base64_buffer,
          line_number);
 #else
   PW_LOG(PW_LOG_LEVEL_FATAL,
+         "pw_assert_tokenized",
          PW_LOG_FLAGS,
          "PW_ASSERT() failure. Note: PW_DASSERT disabled $%s:%d",
          base64_buffer,
@@ -61,14 +64,13 @@ extern "C" void pw_assert_tokenized_HandleCheckFailure(
   // number values that would cause the bit field to overflow.
   // See https://pigweed.dev/pw_log_tokenized/#c.PW_LOG_TOKENIZED_LINE_BITS for
   // more info.
-  const pw_tokenizer_Payload payload =
-      pw::log_tokenized::Metadata(
-          PW_LOG_LEVEL_FATAL, 0, PW_LOG_FLAGS, line_number)
-          .value();
+  const uint32_t payload = pw::log_tokenized::Metadata(
+                               PW_LOG_LEVEL_FATAL, 0, PW_LOG_FLAGS, line_number)
+                               .value();
   std::array<std::byte, sizeof(tokenized_message)> token_buffer =
       pw::bytes::CopyInOrder(pw::endian::little, tokenized_message);
 
-  pw_tokenizer_HandleEncodedMessageWithPayload(
+  pw_log_tokenized_HandleLog(
       payload,
       reinterpret_cast<const uint8_t*>(token_buffer.data()),
       token_buffer.size());

@@ -30,6 +30,9 @@
 #include "rsi_wlan_non_rom.h"
 extern rsi_socket_info_non_rom_t *rsi_socket_pool_non_rom;
 
+/* For Remove sapi Warnings */
+void vPortSetupTimerInterrupt(void);
+
 /** @addtogroup RTOS
 * @{
 */
@@ -50,9 +53,9 @@ rsi_reg_flags_t rsi_critical_section_entry()
   // hold interrupt status before entering critical section
   // disable interrupts
   xflags = 0;
-
+#ifndef RSI_M4_INTERFACE
   rsi_hal_intr_mask();
-
+#endif
   taskENTER_CRITICAL();
 
   // return stored interrupt status
@@ -76,8 +79,9 @@ void rsi_critical_section_exit(rsi_reg_flags_t xflags)
   UNUSED_PARAMETER(xflags);
   // restore interrupts while exiting critical section
   taskEXIT_CRITICAL();
-
+#ifndef RSI_M4_INTERFACE
   rsi_hal_intr_unmask();
+#endif
 }
 
 /*==============================================*/

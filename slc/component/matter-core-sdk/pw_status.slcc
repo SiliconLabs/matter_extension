@@ -1,0 +1,20 @@
+category: Matter|Core
+define: []
+description: pw_status
+id: pw_status
+include:
+- path: third_party/pigweed/repo/pw_status/public
+  file_list:
+  - path: pw_status/status.h
+  - path: pw_status/status_with_size.h
+  - path: pw_status/internal/config.h
+  - path: pw_status/try.h
+label: pw_status
+package: Matter
+provides:
+- name: matter_pw_status
+quality: production
+source:
+- path: third_party/pigweed/repo/pw_status/status.cc
+ui_hints:
+  visibility: never

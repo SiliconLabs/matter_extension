@@ -25,3 +25,7 @@ enum Status {
   NOT_OK = 1;
   OK = 2;
 }
+
+message Notice {
+  string message = 1;
+}

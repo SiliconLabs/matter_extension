@@ -275,12 +275,16 @@ public:
 
     ///// Resolver implementation
     CHIP_ERROR Init(chip::Inet::EndPointManager<chip::Inet::UDPEndPoint> * udpEndPointManager) override;
+    bool IsInitialized() override;
     void Shutdown() override;
     void SetOperationalDelegate(OperationalResolveDelegate * delegate) override { mOperationalDelegate = delegate; }
     void SetCommissioningDelegate(CommissioningResolveDelegate * delegate) override { mCommissioningDelegate = delegate; }
-    CHIP_ERROR ResolveNodeId(const PeerId & peerId, Inet::IPAddressType type) override;
+    CHIP_ERROR ResolveNodeId(const PeerId & peerId) override;
+    void NodeIdResolutionNoLongerNeeded(const PeerId & peerId) override;
     CHIP_ERROR DiscoverCommissionableNodes(DiscoveryFilter filter = DiscoveryFilter()) override;
     CHIP_ERROR DiscoverCommissioners(DiscoveryFilter filter = DiscoveryFilter()) override;
+    CHIP_ERROR StopDiscovery() override;
+    CHIP_ERROR ReconfirmRecord(const char * hostname, Inet::IPAddress address, Inet::InterfaceId interfaceId) override;
 
 private:
     OperationalResolveDelegate * mOperationalDelegate     = nullptr;
@@ -435,6 +439,11 @@ CHIP_ERROR MinMdnsResolver::Init(chip::Inet::EndPointManager<chip::Inet::UDPEndP
     }
 
     return GlobalMinimalMdnsServer::Instance().StartServer(udpEndPointManager, kMdnsPort);
+}
+
+bool MinMdnsResolver::IsInitialized()
+{
+    return GlobalMinimalMdnsServer::Server().IsListening();
 }
 
 void MinMdnsResolver::Shutdown()
@@ -633,6 +642,16 @@ CHIP_ERROR MinMdnsResolver::DiscoverCommissioners(DiscoveryFilter filter)
     return BrowseNodes(DiscoveryType::kCommissionerNode, filter);
 }
 
+CHIP_ERROR MinMdnsResolver::StopDiscovery()
+{
+    return mActiveResolves.CompleteAllBrowses();
+}
+
+CHIP_ERROR MinMdnsResolver::ReconfirmRecord(const char * hostname, Inet::IPAddress address, Inet::InterfaceId interfaceId)
+{
+    return CHIP_ERROR_NOT_IMPLEMENTED;
+}
+
 CHIP_ERROR MinMdnsResolver::BrowseNodes(DiscoveryType type, DiscoveryFilter filter)
 {
     mActiveResolves.MarkPending(filter, type);
@@ -640,11 +659,16 @@ CHIP_ERROR MinMdnsResolver::BrowseNodes(DiscoveryType type, DiscoveryFilter filt
     return SendAllPendingQueries();
 }
 
-CHIP_ERROR MinMdnsResolver::ResolveNodeId(const PeerId & peerId, Inet::IPAddressType type)
+CHIP_ERROR MinMdnsResolver::ResolveNodeId(const PeerId & peerId)
 {
     mActiveResolves.MarkPending(peerId);
 
     return SendAllPendingQueries();
+}
+
+void MinMdnsResolver::NodeIdResolutionNoLongerNeeded(const PeerId & peerId)
+{
+    mActiveResolves.NodeIdResolutionNoLongerNeeded(peerId);
 }
 
 CHIP_ERROR MinMdnsResolver::ScheduleRetries()
@@ -688,14 +712,19 @@ ResolverProxy::~ResolverProxy()
 // updating the delegate that ends up being used by the server by calling 'SetOperationalDelegate'.
 // This effectively allow minimal to have multiple controllers issuing requests as long the requests are serialized, but
 // it won't work well if requests are issued in parallel.
-CHIP_ERROR ResolverProxy::ResolveNodeId(const PeerId & peerId, Inet::IPAddressType type)
+CHIP_ERROR ResolverProxy::ResolveNodeId(const PeerId & peerId)
 {
     VerifyOrReturnError(mDelegate != nullptr, CHIP_ERROR_INCORRECT_STATE);
 
     ChipLogProgress(Discovery, "Resolving " ChipLogFormatX64 ":" ChipLogFormatX64 " ...",
                     ChipLogValueX64(peerId.GetCompressedFabricId()), ChipLogValueX64(peerId.GetNodeId()));
     chip::Dnssd::Resolver::Instance().SetOperationalDelegate(mDelegate);
-    return chip::Dnssd::Resolver::Instance().ResolveNodeId(peerId, type);
+    return chip::Dnssd::Resolver::Instance().ResolveNodeId(peerId);
+}
+
+void ResolverProxy::NodeIdResolutionNoLongerNeeded(const PeerId & peerId)
+{
+    return chip::Dnssd::Resolver::Instance().NodeIdResolutionNoLongerNeeded(peerId);
 }
 
 CHIP_ERROR ResolverProxy::DiscoverCommissionableNodes(DiscoveryFilter filter)
@@ -710,6 +739,16 @@ CHIP_ERROR ResolverProxy::DiscoverCommissioners(DiscoveryFilter filter)
     VerifyOrReturnError(mDelegate != nullptr, CHIP_ERROR_INCORRECT_STATE);
     chip::Dnssd::Resolver::Instance().SetCommissioningDelegate(mDelegate);
     return chip::Dnssd::Resolver::Instance().DiscoverCommissioners(filter);
+}
+
+CHIP_ERROR ResolverProxy::StopDiscovery()
+{
+    return CHIP_ERROR_NOT_IMPLEMENTED;
+}
+
+CHIP_ERROR ResolverProxy::ReconfirmRecord(const char * hostname, Inet::IPAddress address, Inet::InterfaceId interfaceId)
+{
+    return CHIP_ERROR_NOT_IMPLEMENTED;
 }
 
 } // namespace Dnssd

@@ -1,6 +1,6 @@
 /*
  *
- *    Copyright (c) 2020-2021 Project CHIP Authors
+ *    Copyright (c) 2020-2022 Project CHIP Authors
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -67,6 +67,7 @@
 #include <utility>
 
 #include <lib/support/CodeUtils.h>
+#include <platform/CHIPDeviceLayer.h>
 #include <platform/DeviceInstanceInfoProvider.h>
 #include <platform/Linux/BLEManagerImpl.h>
 #include <system/TLVPacketBufferBackingStore.h>
@@ -74,7 +75,6 @@
 #include "BluezObjectIterator.h"
 #include "BluezObjectList.h"
 #include "Helper.h"
-#include "MainLoop.h"
 
 using namespace ::nl;
 using namespace chip::Protocols;
@@ -155,7 +155,7 @@ static BluezLEAdvertisement1 * BluezAdvertisingCreate(BluezEndpoint * apEndpoint
     serviceUUID = g_variant_builder_end(&serviceUUIDsBuilder);
 
     debugStr = g_variant_print(serviceData, TRUE);
-    ChipLogDetail(DeviceLayer, "SET service data to %s", debugStr);
+    ChipLogDetail(DeviceLayer, "SET service data to %s", StringOrNullMarker(debugStr));
     g_free(debugStr);
 
     bluez_leadvertisement1_set_type_(adv, (apEndpoint->mType & BLUEZ_ADV_TYPE_CONNECTABLE) ? "peripheral" : "broadcast");
@@ -251,7 +251,7 @@ exit:
         g_error_free(error);
 }
 
-static gboolean BluezAdvSetup(BluezEndpoint * endpoint)
+static CHIP_ERROR BluezAdvSetup(BluezEndpoint * endpoint)
 {
     BluezLEAdvertisement1 * adv;
 
@@ -263,10 +263,10 @@ static gboolean BluezAdvSetup(BluezEndpoint * endpoint)
     VerifyOrExit(adv != nullptr, ChipLogError(DeviceLayer, "FAIL: NULL adv in %s", __func__));
 
 exit:
-    return G_SOURCE_REMOVE;
+    return CHIP_NO_ERROR;
 }
 
-static gboolean BluezAdvStart(BluezEndpoint * endpoint)
+static CHIP_ERROR BluezAdvStart(BluezEndpoint * endpoint)
 {
     GDBusObject * adapter;
     BluezLEAdvertisingManager1 * advMgr = nullptr;
@@ -291,10 +291,10 @@ static gboolean BluezAdvStart(BluezEndpoint * endpoint)
                                                              endpoint);
 
 exit:
-    return G_SOURCE_REMOVE;
+    return CHIP_NO_ERROR;
 }
 
-static gboolean BluezAdvStop(BluezEndpoint * endpoint)
+static CHIP_ERROR BluezAdvStop(BluezEndpoint * endpoint)
 {
     GDBusObject * adapter;
     BluezLEAdvertisingManager1 * advMgr = nullptr;
@@ -313,7 +313,7 @@ static gboolean BluezAdvStop(BluezEndpoint * endpoint)
     bluez_leadvertising_manager1_call_unregister_advertisement(advMgr, endpoint->mpAdvPath, nullptr, BluezAdvStopDone, endpoint);
 
 exit:
-    return G_SOURCE_REMOVE;
+    return CHIP_NO_ERROR;
 }
 
 static gboolean BluezCharacteristicReadValue(BluezGattCharacteristic1 * aChar, GDBusMethodInvocation * aInvocation,
@@ -401,7 +401,17 @@ static gboolean BluezCharacteristicWriteFD(GIOChannel * aChannel, GIOCondition a
     isSuccess = true;
 
 exit:
-    return isSuccess ? TRUE : FALSE;
+    if (!isSuccess && (conn != nullptr))
+    {
+        // Returning G_SOURCE_REMOVE from the source callback removes the source object
+        // from the context. Unset self source ID tag, so we will not call g_source_remove()
+        // in BluezOTConnectionDestroy() on already removed source.
+        //
+        // TODO: Investigate whether there is a batter way to handle this.
+        conn->mC1Channel.mWatch = 0;
+    }
+
+    return isSuccess ? G_SOURCE_CONTINUE : G_SOURCE_REMOVE;
 }
 
 static void Bluez_gatt_characteristic1_complete_acquire_write_with_fd(GDBusMethodInvocation * invocation, int fd, guint16 mtu)
@@ -417,6 +427,13 @@ static void Bluez_gatt_characteristic1_complete_acquire_write_with_fd(GDBusMetho
 
 static gboolean bluezCharacteristicDestroyFD(GIOChannel * aChannel, GIOCondition aCond, gpointer apClosure)
 {
+    BluezConnection * conn = static_cast<BluezConnection *>(apClosure);
+    // Returning G_SOURCE_REMOVE from the source callback removes the source object
+    // from the context. Unset self source ID tag, so we will not call g_source_remove()
+    // in BluezOTConnectionDestroy() on already removed source.
+    //
+    // TODO: Investigate whether there is a batter way to handle this.
+    conn->mC2Channel.mWatch = 0;
     return G_SOURCE_REMOVE;
 }
 
@@ -446,7 +463,7 @@ static gboolean BluezCharacteristicAcquireWrite(BluezGattCharacteristic1 * aChar
 #if CHIP_ERROR_LOGGING
         errStr = strerror(errno);
 #endif // CHIP_ERROR_LOGGING
-        ChipLogError(DeviceLayer, "FAIL: socketpair: %s in %s", errStr, __func__);
+        ChipLogError(DeviceLayer, "FAIL: socketpair: %s in %s", StringOrNullMarker(errStr), __func__);
         g_dbus_method_invocation_return_dbus_error(aInvocation, "org.bluez.Error.Failed", "FD creation failed");
         goto exit;
     }
@@ -527,7 +544,7 @@ static gboolean BluezCharacteristicAcquireNotify(BluezGattCharacteristic1 * aCha
 #if CHIP_ERROR_LOGGING
         errStr = strerror(errno);
 #endif // CHIP_ERROR_LOGGING
-        ChipLogError(DeviceLayer, "FAIL: socketpair: %s in %s", errStr, __func__);
+        ChipLogError(DeviceLayer, "FAIL: socketpair: %s in %s", StringOrNullMarker(errStr), __func__);
         g_dbus_method_invocation_return_dbus_error(aInvocation, "org.bluez.Error.Failed", "FD creation failed");
         goto exit;
     }
@@ -826,7 +843,7 @@ exit:
     }
 }
 
-gboolean BluezPeripheralRegisterApp(BluezEndpoint * endpoint)
+static CHIP_ERROR BluezPeripheralRegisterApp(BluezEndpoint * endpoint)
 {
     GDBusObject * adapter;
     BluezGattManager1 * gattMgr;
@@ -848,7 +865,7 @@ gboolean BluezPeripheralRegisterApp(BluezEndpoint * endpoint)
                                                   nullptr);
 
 exit:
-    return G_SOURCE_REMOVE;
+    return CHIP_NO_ERROR;
 }
 
 /// Update the table of open BLE connections whevener a new device is spotted or its attributes have changed.
@@ -1174,16 +1191,13 @@ void EndpointCleanup(BluezEndpoint * apEndpoint)
             g_free(apEndpoint->mpPeerDevicePath);
             apEndpoint->mpPeerDevicePath = nullptr;
         }
-        g_free(apEndpoint->mpConnectCancellable);
+        if (apEndpoint->mpConnectCancellable != nullptr)
+        {
+            g_object_unref(apEndpoint->mpConnectCancellable);
+            apEndpoint->mpConnectCancellable = nullptr;
+        }
         g_free(apEndpoint);
     }
-}
-
-int BluezObjectsCleanup(BluezEndpoint * apEndpoint)
-{
-    g_object_unref(apEndpoint->mpAdapter);
-    EndpointCleanup(apEndpoint);
-    return 0;
 }
 
 #if CHIP_ENABLE_ADDITIONAL_DATA_ADVERTISING
@@ -1329,7 +1343,7 @@ static void BluezOnNameLost(GDBusConnection * aConn, const gchar * aName, gpoint
 }
 #endif
 
-static int StartupEndpointBindings(BluezEndpoint * endpoint)
+static CHIP_ERROR StartupEndpointBindings(BluezEndpoint * endpoint)
 {
     GDBusObjectManager * manager;
     GError * error         = nullptr;
@@ -1360,19 +1374,14 @@ static int StartupEndpointBindings(BluezEndpoint * endpoint)
     g_signal_connect(manager, "object-removed", G_CALLBACK(BluezSignalOnObjectRemoved), endpoint);
     g_signal_connect(manager, "interface-proxy-properties-changed", G_CALLBACK(BluezSignalInterfacePropertiesChanged), endpoint);
 
-    if (!MainLoop::Instance().SetCleanupFunction(BluezObjectsCleanup, endpoint))
-    {
-        ChipLogError(DeviceLayer, "Failed to schedule cleanup function");
-    }
-
 exit:
     if (error != nullptr)
         g_error_free(error);
 
-    return 0;
+    return CHIP_NO_ERROR;
 }
 
-static gboolean BluezC2Indicate(ConnectionDataBundle * closure)
+static CHIP_ERROR BluezC2Indicate(ConnectionDataBundle * closure)
 {
     BluezConnection * conn = nullptr;
     GError * error         = nullptr;
@@ -1415,7 +1424,8 @@ exit:
 
     if (error != nullptr)
         g_error_free(error);
-    return G_SOURCE_REMOVE;
+
+    return CHIP_NO_ERROR;
 }
 
 static ConnectionDataBundle * MakeConnectionDataBundle(BLE_CONNECTION_OBJECT apConn, const chip::System::PacketBufferHandle & apBuf)
@@ -1427,19 +1437,13 @@ static ConnectionDataBundle * MakeConnectionDataBundle(BLE_CONNECTION_OBJECT apC
     return bundle;
 }
 
-bool SendBluezIndication(BLE_CONNECTION_OBJECT apConn, chip::System::PacketBufferHandle apBuf)
+CHIP_ERROR SendBluezIndication(BLE_CONNECTION_OBJECT apConn, chip::System::PacketBufferHandle apBuf)
 {
-    bool success = false;
-
-    VerifyOrExit(!apBuf.IsNull(), ChipLogError(DeviceLayer, "apBuf is NULL in %s", __func__));
-
-    success = MainLoop::Instance().Schedule(BluezC2Indicate, MakeConnectionDataBundle(apConn, apBuf));
-
-exit:
-    return success;
+    VerifyOrReturnError(!apBuf.IsNull(), CHIP_ERROR_INVALID_ARGUMENT, ChipLogError(DeviceLayer, "apBuf is NULL in %s", __func__));
+    return PlatformMgrImpl().GLibMatterContextInvokeSync(BluezC2Indicate, MakeConnectionDataBundle(apConn, apBuf));
 }
 
-static gboolean BluezDisconnect(void * apClosure)
+static CHIP_ERROR BluezDisconnect(void * apClosure)
 {
     BluezConnection * conn = static_cast<BluezConnection *>(apClosure);
     GError * error         = nullptr;
@@ -1456,61 +1460,48 @@ static gboolean BluezDisconnect(void * apClosure)
 exit:
     if (error != nullptr)
         g_error_free(error);
-    return G_SOURCE_REMOVE;
+    return CHIP_NO_ERROR;
 }
 
-static int CloseBleconnectionCB(void * apAppState)
+static CHIP_ERROR CloseBleconnectionCB(void * apAppState)
 {
-    BluezDisconnect(apAppState);
-    return G_SOURCE_REMOVE;
+    return BluezDisconnect(apAppState);
 }
 
-bool CloseBluezConnection(BLE_CONNECTION_OBJECT apConn)
+CHIP_ERROR CloseBluezConnection(BLE_CONNECTION_OBJECT apConn)
 {
-    return MainLoop::Instance().RunOnBluezThread(CloseBleconnectionCB, apConn);
+    return PlatformMgrImpl().GLibMatterContextInvokeSync(CloseBleconnectionCB, apConn);
 }
 
 CHIP_ERROR StartBluezAdv(BluezEndpoint * apEndpoint)
 {
-    CHIP_ERROR err = CHIP_NO_ERROR;
-    if (!MainLoop::Instance().Schedule(BluezAdvStart, apEndpoint))
-    {
-        err = CHIP_ERROR_INCORRECT_STATE;
-        ChipLogError(Ble, "Failed to schedule BluezAdvStart() on CHIPoBluez thread");
-    }
+    CHIP_ERROR err = PlatformMgrImpl().GLibMatterContextInvokeSync(BluezAdvStart, apEndpoint);
+    VerifyOrReturnError(err == CHIP_NO_ERROR, CHIP_ERROR_INCORRECT_STATE,
+                        ChipLogError(Ble, "Failed to schedule BluezAdvStart() on CHIPoBluez thread"));
     return err;
 }
 
 CHIP_ERROR StopBluezAdv(BluezEndpoint * apEndpoint)
 {
-    CHIP_ERROR err = CHIP_NO_ERROR;
-    if (!MainLoop::Instance().Schedule(BluezAdvStop, apEndpoint))
-    {
-        err = CHIP_ERROR_INCORRECT_STATE;
-        ChipLogError(Ble, "Failed to schedule BluezAdvStop() on CHIPoBluez thread");
-    }
+    CHIP_ERROR err = PlatformMgrImpl().GLibMatterContextInvokeSync(BluezAdvStop, apEndpoint);
+    VerifyOrReturnError(err == CHIP_NO_ERROR, CHIP_ERROR_INCORRECT_STATE,
+                        ChipLogError(Ble, "Failed to schedule BluezAdvStop() on CHIPoBluez thread"));
     return err;
 }
 
 CHIP_ERROR BluezAdvertisementSetup(BluezEndpoint * apEndpoint)
 {
-    CHIP_ERROR err = CHIP_NO_ERROR;
-    if (!MainLoop::Instance().Schedule(BluezAdvSetup, apEndpoint))
-    {
-        err = CHIP_ERROR_INCORRECT_STATE;
-        ChipLogError(Ble, "Failed to schedule BluezAdvertisementSetup() on CHIPoBluez thread");
-    }
+    CHIP_ERROR err = PlatformMgrImpl().GLibMatterContextInvokeSync(BluezAdvSetup, apEndpoint);
+    VerifyOrReturnError(err == CHIP_NO_ERROR, CHIP_ERROR_INCORRECT_STATE,
+                        ChipLogError(Ble, "Failed to schedule BluezAdvSetup() on CHIPoBluez thread"));
     return err;
 }
 
 CHIP_ERROR BluezGattsAppRegister(BluezEndpoint * apEndpoint)
 {
-    CHIP_ERROR err = CHIP_NO_ERROR;
-    if (!MainLoop::Instance().Schedule(BluezPeripheralRegisterApp, apEndpoint))
-    {
-        err = CHIP_ERROR_INCORRECT_STATE;
-        ChipLogError(Ble, "Failed to schedule BluezPeripheralRegisterApp() on CHIPoBluez thread");
-    }
+    CHIP_ERROR err = PlatformMgrImpl().GLibMatterContextInvokeSync(BluezPeripheralRegisterApp, apEndpoint);
+    VerifyOrReturnError(err == CHIP_NO_ERROR, CHIP_ERROR_INCORRECT_STATE,
+                        ChipLogError(Ble, "Failed to schedule BluezPeripheralRegisterApp() on CHIPoBluez thread"));
     return err;
 }
 
@@ -1573,14 +1564,8 @@ CHIP_ERROR InitBluezBleLayer(bool aIsCentral, char * apBleAddr, BLEAdvConfig & a
         endpoint->mpConnectCancellable = g_cancellable_new();
     }
 
-    err = MainLoop::Instance().EnsureStarted();
-    VerifyOrExit(err == CHIP_NO_ERROR, ChipLogError(DeviceLayer, "Failed to start BLE main loop"));
-
-    if (!MainLoop::Instance().ScheduleAndWait(StartupEndpointBindings, endpoint))
-    {
-        ChipLogError(DeviceLayer, "Failed to schedule endpoint initialization");
-        ExitNow();
-    }
+    err = PlatformMgrImpl().GLibMatterContextInvokeSync(StartupEndpointBindings, endpoint);
+    VerifyOrExit(err == CHIP_NO_ERROR, ChipLogError(DeviceLayer, "Failed to schedule endpoint initialization"));
 
     retval = TRUE;
 
@@ -1596,6 +1581,14 @@ exit:
     }
 
     return err;
+}
+
+CHIP_ERROR ShutdownBluezBleLayer(BluezEndpoint * apEndpoint)
+{
+    VerifyOrReturnError(apEndpoint != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
+    g_object_unref(apEndpoint->mpAdapter);
+    EndpointCleanup(apEndpoint);
+    return CHIP_NO_ERROR;
 }
 
 // BluezSendWriteRequest callbacks
@@ -1614,10 +1607,9 @@ exit:
         g_error_free(error);
 }
 
-static gboolean SendWriteRequestImpl(void * apConnectionData)
+static CHIP_ERROR SendWriteRequestImpl(ConnectionDataBundle * data)
 {
-    ConnectionDataBundle * data = static_cast<ConnectionDataBundle *>(apConnectionData);
-    GVariant * options          = nullptr;
+    GVariant * options = nullptr;
     GVariantBuilder optionsBuilder;
 
     VerifyOrExit(data != nullptr, ChipLogError(DeviceLayer, "ConnectionDataBundle is NULL in %s", __func__));
@@ -1633,19 +1625,13 @@ static gboolean SendWriteRequestImpl(void * apConnectionData)
 
 exit:
     g_free(data);
-    return G_SOURCE_REMOVE;
+    return CHIP_NO_ERROR;
 }
 
-bool BluezSendWriteRequest(BLE_CONNECTION_OBJECT apConn, chip::System::PacketBufferHandle apBuf)
+CHIP_ERROR BluezSendWriteRequest(BLE_CONNECTION_OBJECT apConn, chip::System::PacketBufferHandle apBuf)
 {
-    bool success = false;
-
-    VerifyOrExit(!apBuf.IsNull(), ChipLogError(DeviceLayer, "apBuf is NULL in %s", __func__));
-
-    success = MainLoop::Instance().RunOnBluezThread(SendWriteRequestImpl, MakeConnectionDataBundle(apConn, apBuf));
-
-exit:
-    return success;
+    VerifyOrReturnError(!apBuf.IsNull(), CHIP_ERROR_INVALID_ARGUMENT, ChipLogError(DeviceLayer, "apBuf is NULL in %s", __func__));
+    return PlatformMgrImpl().GLibMatterContextInvokeSync(SendWriteRequestImpl, MakeConnectionDataBundle(apConn, apBuf));
 }
 
 // BluezSubscribeCharacteristic callbacks
@@ -1679,7 +1665,7 @@ exit:
         g_error_free(error);
 }
 
-static gboolean SubscribeCharacteristicImpl(BluezConnection * connection)
+static CHIP_ERROR SubscribeCharacteristicImpl(BluezConnection * connection)
 {
     BluezGattCharacteristic1 * c2 = nullptr;
     VerifyOrExit(connection != nullptr, ChipLogError(DeviceLayer, "BluezConnection is NULL in %s", __func__));
@@ -1691,12 +1677,12 @@ static gboolean SubscribeCharacteristicImpl(BluezConnection * connection)
     bluez_gatt_characteristic1_call_start_notify(connection->mpC2, nullptr, SubscribeCharacteristicDone, connection);
 
 exit:
-    return G_SOURCE_REMOVE;
+    return CHIP_NO_ERROR;
 }
 
-bool BluezSubscribeCharacteristic(BLE_CONNECTION_OBJECT apConn)
+CHIP_ERROR BluezSubscribeCharacteristic(BLE_CONNECTION_OBJECT apConn)
 {
-    return MainLoop::Instance().Schedule(SubscribeCharacteristicImpl, static_cast<BluezConnection *>(apConn));
+    return PlatformMgrImpl().GLibMatterContextInvokeSync(SubscribeCharacteristicImpl, static_cast<BluezConnection *>(apConn));
 }
 
 // BluezUnsubscribeCharacteristic callbacks
@@ -1718,7 +1704,7 @@ exit:
         g_error_free(error);
 }
 
-static gboolean UnsubscribeCharacteristicImpl(BluezConnection * connection)
+static CHIP_ERROR UnsubscribeCharacteristicImpl(BluezConnection * connection)
 {
     VerifyOrExit(connection != nullptr, ChipLogError(DeviceLayer, "BluezConnection is NULL in %s", __func__));
     VerifyOrExit(connection->mpC2 != nullptr, ChipLogError(DeviceLayer, "C2 is NULL in %s", __func__));
@@ -1726,12 +1712,12 @@ static gboolean UnsubscribeCharacteristicImpl(BluezConnection * connection)
     bluez_gatt_characteristic1_call_stop_notify(connection->mpC2, nullptr, UnsubscribeCharacteristicDone, connection);
 
 exit:
-    return G_SOURCE_REMOVE;
+    return CHIP_NO_ERROR;
 }
 
-bool BluezUnsubscribeCharacteristic(BLE_CONNECTION_OBJECT apConn)
+CHIP_ERROR BluezUnsubscribeCharacteristic(BLE_CONNECTION_OBJECT apConn)
 {
-    return MainLoop::Instance().Schedule(UnsubscribeCharacteristicImpl, static_cast<BluezConnection *>(apConn));
+    return PlatformMgrImpl().GLibMatterContextInvokeSync(UnsubscribeCharacteristicImpl, static_cast<BluezConnection *>(apConn));
 }
 
 // ConnectDevice callbacks
@@ -1786,7 +1772,7 @@ exit:
         g_error_free(error);
 }
 
-static gboolean ConnectDeviceImpl(ConnectParams * apParams)
+static CHIP_ERROR ConnectDeviceImpl(ConnectParams * apParams)
 {
     BluezDevice1 * device    = apParams->mDevice;
     BluezEndpoint * endpoint = apParams->mEndpoint;
@@ -1798,7 +1784,7 @@ static gboolean ConnectDeviceImpl(ConnectParams * apParams)
     bluez_device1_call_connect(device, endpoint->mpConnectCancellable, ConnectDeviceDone, apParams);
     g_object_unref(device);
 
-    return G_SOURCE_REMOVE;
+    return CHIP_NO_ERROR;
 }
 
 CHIP_ERROR ConnectDevice(BluezDevice1 * apDevice, BluezEndpoint * apEndpoint)
@@ -1806,7 +1792,7 @@ CHIP_ERROR ConnectDevice(BluezDevice1 * apDevice, BluezEndpoint * apEndpoint)
     auto params = chip::Platform::New<ConnectParams>(apDevice, apEndpoint);
     g_object_ref(apDevice);
 
-    if (!MainLoop::Instance().Schedule(ConnectDeviceImpl, params))
+    if (PlatformMgrImpl().GLibMatterContextInvokeSync(ConnectDeviceImpl, params) != CHIP_NO_ERROR)
     {
         ChipLogError(Ble, "Failed to schedule ConnectDeviceImpl() on CHIPoBluez thread");
         g_object_unref(apDevice);

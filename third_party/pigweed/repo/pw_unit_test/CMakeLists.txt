@@ -16,12 +16,14 @@ include($ENV{PW_ROOT}/pw_build/pigweed.cmake)
 
 pw_add_module_config(pw_unit_test_CONFIG)
 
-pw_add_module_library(pw_unit_test.config
+pw_add_library(pw_unit_test.config INTERFACE
+  HEADERS
+    public/pw_unit_test/config.h
+  PUBLIC_INCLUDES
+    public
   PUBLIC_DEPS
     ${pw_unit_test_CONFIG}
     pw_polyfill
-  HEADERS
-    public/pw_unit_test/config.h
 )
 
 add_library(pw_unit_test INTERFACE)
@@ -30,7 +32,7 @@ target_link_libraries(pw_unit_test
     "${pw_unit_test_GOOGLETEST_BACKEND}"
 )
 
-pw_add_module_library(pw_unit_test.light
+pw_add_library(pw_unit_test.light STATIC
   SOURCES
     framework.cc
   PUBLIC_DEPS
@@ -42,31 +44,37 @@ pw_add_module_library(pw_unit_test.light
     public_overrides  # pw_unit_test overrides the gtest/gtest.h header.
 )
 
-pw_add_module_library(pw_unit_test.static_library_support
+pw_add_library(pw_unit_test.static_library_support STATIC
   HEADERS
     public/pw_unit_test/static_library_support.h
+  PUBLIC_INCLUDES
+    public
   SOURCES
     static_library_support.cc
   PUBLIC_DEPS
     pw_unit_test.light
 )
 
-pw_add_module_library(pw_unit_test.event_handler
+pw_add_library(pw_unit_test.event_handler INTERFACE
   HEADERS
     public/pw_unit_test/event_handler.h
+  PUBLIC_INCLUDES
+    public
 )
 
-pw_add_module_library(pw_unit_test.googletest_style_event_handler
+pw_add_library(pw_unit_test.googletest_style_event_handler STATIC
+  HEADERS
+    public/pw_unit_test/googletest_style_event_handler.h
+  PUBLIC_INCLUDES
+    public
   PUBLIC_DEPS
     pw_unit_test.event_handler
     pw_preprocessor
-  HEADERS
-    public/pw_unit_test/googletest_style_event_handler.h
   SOURCES
     googletest_style_event_handler.cc
 )
 
-pw_add_module_library(pw_unit_test.simple_printing_main
+pw_add_library(pw_unit_test.simple_printing_main STATIC
   SOURCES
     simple_printing_main.cc
     simple_printing_event_handler.cc
@@ -76,4 +84,24 @@ pw_add_module_library(pw_unit_test.simple_printing_main
     pw_preprocessor
     pw_string
     pw_sys_io
+)
+
+pw_add_library(pw_unit_test.logging_event_handler STATIC
+  HEADERS
+    public/pw_unit_test/logging_event_handler.h
+  PUBLIC_INCLUDES
+    public
+  PUBLIC_DEPS
+    pw_log
+    pw_unit_test.googletest_style_event_handler
+  SOURCES
+    logging_event_handler.cc
+)
+
+pw_add_library(pw_unit_test.logging_main STATIC
+  SOURCES
+    logging_main.cc
+  PRIVATE_DEPS
+    pw_unit_test.logging_event_handler
+    pw_unit_test
 )

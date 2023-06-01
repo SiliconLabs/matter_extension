@@ -14,16 +14,16 @@
 #    limitations under the License.
 #
 
-import logging
-import time
-import threading
 import enum
-
+import logging
+import threading
+import time
 from dataclasses import dataclass
-from typing import List, Dict, Set, Callable
+from typing import Callable, List, Optional, Set
 
 from chip.discovery.library_handle import _GetDiscoveryLibraryHandle
-from chip.discovery.types import DiscoverSuccessCallback_t, DiscoverFailureCallback_t
+from chip.discovery.types import DiscoverFailureCallback_t, DiscoverSuccessCallback_t
+from chip.native import PyChipError
 
 
 class FilterType(enum.IntEnum):
@@ -87,6 +87,7 @@ class CommissionableNode():
     mrpRetryIntervalActive: int = None
     supportsTcp: bool = None
     addresses: List[str] = None
+    rotatingId: Optional[str] = None
 
 
 # Milliseconds to wait for additional results onece a single result has
@@ -201,10 +202,10 @@ def _DiscoverSuccess(fabric: int, node: int, interface: int, ip: str,  port: int
 
 
 @DiscoverFailureCallback_t
-def _DiscoverFailure(fabric: int, node: int, errorCode: int):
+def _DiscoverFailure(fabric: int, node: int, errorCode: PyChipError):
     # Many discovery errors currently do not include a useful node/fabric id
     # hence we just log and rely on discovery timeouts to return 'no data'
-    logging.error("Discovery failure, error %d", errorCode)
+    logging.error("Discovery failure, error %d", errorCode.code)
 
 
 def FindAddressAsync(fabricid: int, nodeid: int, callback, timeout_ms=1000):

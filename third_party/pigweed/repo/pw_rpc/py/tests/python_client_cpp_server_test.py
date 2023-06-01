@@ -14,6 +14,7 @@
 # the License.
 """Tests using the callback client for pw_rpc."""
 
+import contextlib
 from typing import List, Tuple
 import unittest
 
@@ -26,12 +27,14 @@ ITERATIONS = 50
 
 class RpcIntegrationTest(unittest.TestCase):
     """Calls RPCs on an RPC server through a socket."""
+
     test_server_command: Tuple[str, ...] = ()
     port: int
 
     def setUp(self) -> None:
         self._context = pw_hdlc.rpc.HdlcRpcLocalServerAndClient(
-            self.test_server_command, self.port, [benchmark_pb2])
+            self.test_server_command, self.port, [benchmark_pb2]
+        )
         self.rpcs = self._context.client.channel(1).rpcs
 
     def tearDown(self) -> None:
@@ -41,7 +44,8 @@ class RpcIntegrationTest(unittest.TestCase):
         for i in range(ITERATIONS):
             payload = f'O_o #{i}'.encode()
             status, reply = self.rpcs.pw.rpc.Benchmark.UnaryEcho(
-                payload=payload)
+                payload=payload
+            )
             self.assertIs(status, Status.OK)
             self.assertEqual(reply.payload, payload)
 
@@ -59,28 +63,37 @@ class RpcIntegrationTest(unittest.TestCase):
         rpc = self.rpcs.pw.rpc.Benchmark.BidirectionalEcho
 
         for _ in range(ITERATIONS):
-            first_call = rpc.invoke()
-            first_call.send(payload=b'abc')
-            self.assertEqual(next(iter(first_call)),
-                             rpc.response(payload=b'abc'))
-            self.assertFalse(first_call.completed())
+            with contextlib.ExitStack() as stack:
+                first_call = stack.enter_context(rpc.invoke())
+                first_call_responses = first_call.get_responses()
+                first_call.send(payload=b'abc')
+                self.assertEqual(
+                    next(first_call_responses), rpc.response(payload=b'abc')
+                )
+                self.assertFalse(first_call.completed())
 
-            second_call = rpc.invoke()
-            second_call.send(payload=b'123')
-            self.assertEqual(next(iter(second_call)),
-                             rpc.response(payload=b'123'))
+                second_call = stack.enter_context(rpc.invoke())
+                second_call_responses = second_call.get_responses()
+                second_call.send(payload=b'123')
+                self.assertEqual(
+                    next(second_call_responses), rpc.response(payload=b'123')
+                )
+                self.assertFalse(second_call.completed())
 
-            self.assertIs(first_call.error, Status.CANCELLED)
-            self.assertEqual(first_call.responses,
-                             [rpc.response(payload=b'abc')])
+                # Check that issuing `second_call` did not cancel `first call`.
+                self.assertFalse(first_call.completed())
+                self.assertIs(first_call.error, None)
 
-            self.assertFalse(second_call.completed())
-            self.assertEqual(second_call.responses,
-                             [rpc.response(payload=b'123')])
+                # Send to `first_call` again and check for a response.
+                first_call.send(payload=b'def')
+                self.assertEqual(
+                    next(first_call_responses), rpc.response(payload=b'def')
+                )
 
 
-def _main(test_server_command: List[str], port: int,
-          unittest_args: List[str]) -> None:
+def _main(
+    test_server_command: List[str], port: int, unittest_args: List[str]
+) -> None:
     RpcIntegrationTest.test_server_command = tuple(test_server_command)
     RpcIntegrationTest.port = port
     unittest.main(argv=unittest_args)

@@ -31,8 +31,7 @@ from prompt_toolkit.layout import (
 )
 from prompt_toolkit.mouse_events import MouseEvent, MouseEventType, MouseButton
 
-import pw_console.style
-import pw_console.widgets.mouse_handlers
+from pw_console.widgets import mouse_handlers as pw_console_mouse_handlers
 
 if TYPE_CHECKING:
     # pylint: disable=ungrouped-imports
@@ -43,6 +42,7 @@ _LOG = logging.getLogger(__package__)
 
 class DisplayMode(Enum):
     """WindowList display modes."""
+
     STACK = 'Stacked'
     TABBED = 'Tabbed'
 
@@ -60,6 +60,7 @@ class WindowListHSplit(HSplit):
     of the container for the current render pass. It also handles overriding
     mouse handlers for triggering window resize adjustments.
     """
+
     def __init__(self, parent_window_list, *args, **kwargs):
         # Save a reference to the parent window pane.
         self.parent_window_list = parent_window_list
@@ -78,8 +79,7 @@ class WindowListHSplit(HSplit):
         # Is resize mode active?
         if self.parent_window_list.resize_mode:
             # Ignore future mouse_handler updates.
-            new_mouse_handlers = (
-                pw_console.widgets.mouse_handlers.EmptyMouseHandler())
+            new_mouse_handlers = pw_console_mouse_handlers.EmptyMouseHandler()
             # Set existing mouse_handlers to the parent_window_list's
             # mouse_handler. This will handle triggering resize events.
             mouse_handlers.set_mouse_handler_for_range(
@@ -87,15 +87,25 @@ class WindowListHSplit(HSplit):
                 write_position.xpos + write_position.width,
                 write_position.ypos,
                 write_position.ypos + write_position.height,
-                self.parent_window_list.mouse_handler)
+                self.parent_window_list.mouse_handler,
+            )
 
         # Save the width, height, and draw position for the current render pass.
         self.parent_window_list.update_window_list_size(
-            write_position.width, write_position.height, write_position.xpos,
-            write_position.ypos)
+            write_position.width,
+            write_position.height,
+            write_position.xpos,
+            write_position.ypos,
+        )
         # Continue writing content to the screen.
-        super().write_to_screen(screen, new_mouse_handlers, write_position,
-                                parent_style, erase_bg, z_index)
+        super().write_to_screen(
+            screen,
+            new_mouse_handlers,
+            write_position,
+            parent_style,
+            erase_bg,
+            z_index,
+        )
 
 
 class WindowList:
@@ -207,14 +217,16 @@ class WindowList:
         command_runner_focused_pane = None
         if self.application.command_runner_is_open():
             command_runner_focused_pane = (
-                self.application.command_runner_last_focused_pane())
+                self.application.command_runner_last_focused_pane()
+            )
 
         for index, pane in enumerate(self.active_panes):
             in_focus = False
             if has_focus(pane)():
                 in_focus = True
             elif command_runner_focused_pane and pane.has_child_container(
-                    command_runner_focused_pane):
+                command_runner_focused_pane
+            ):
                 in_focus = True
 
             if in_focus:
@@ -224,6 +236,7 @@ class WindowList:
         return focused_pane
 
     def get_pane_titles(self, omit_subtitles=False, use_menu_title=True):
+        """Return formatted text for the window pane tab bar."""
         fragments = []
         separator = ('', ' ')
         fragments.append(separator)
@@ -234,23 +247,38 @@ class WindowList:
             if omit_subtitles:
                 text = f' {title} '
 
-            fragments.append((
-                # Style
-                ('class:window-tab-active' if pane_index
-                 == self.focused_pane_index else 'class:window-tab-inactive'),
-                # Text
-                text,
-                # Mouse handler
-                functools.partial(
-                    pw_console.widgets.mouse_handlers.on_click,
-                    functools.partial(self.switch_to_tab, pane_index),
-                ),
-            ))
+            tab_style = (
+                'class:window-tab-active'
+                if pane_index == self.focused_pane_index
+                else 'class:window-tab-inactive'
+            )
+            if pane.extra_tab_style:
+                tab_style += ' ' + pane.extra_tab_style
+
+            fragments.append(
+                (
+                    # Style
+                    tab_style,
+                    # Text
+                    text,
+                    # Mouse handler
+                    functools.partial(
+                        pw_console_mouse_handlers.on_click,
+                        functools.partial(self.switch_to_tab, pane_index),
+                    ),
+                )
+            )
             fragments.append(separator)
         return fragments
 
     def switch_to_tab(self, index: int):
         self.focused_pane_index = index
+
+        # Make the selected tab visible and hide the rest.
+        for i, pane in enumerate(self.active_panes):
+            pane.show_pane = False
+            if i == index:
+                pane.show_pane = True
 
         # refresh_ui() will focus on the new tab container.
         self.refresh_ui()
@@ -259,8 +287,15 @@ class WindowList:
         self.display_mode = mode
 
         if self.display_mode == DisplayMode.TABBED:
+            # Default to focusing on the first window / tab.
             self.focused_pane_index = 0
-            # Un-hide all panes, they must be visible to switch between tabs.
+            # Hide all other panes so log redraw events are not triggered.
+            for pane in self.active_panes:
+                pane.show_pane = False
+            # Keep the selected tab visible
+            self.active_panes[self.focused_pane_index].show_pane = True
+        else:
+            # Un-hide all panes if switching from tabbed back to stacked.
             for pane in self.active_panes:
                 pane.show_pane = True
 
@@ -274,7 +309,8 @@ class WindowList:
 
         if self.display_mode == DisplayMode.TABBED:
             self.application.focus_on_container(
-                self.active_panes[self.focused_pane_index])
+                self.active_panes[self.focused_pane_index]
+            )
 
         self.application.redraw_ui()
 
@@ -300,8 +336,9 @@ class WindowList:
 
         self._set_window_heights(new_heights)
 
-    def update_window_list_size(self, width, height, xposition,
-                                yposition) -> None:
+    def update_window_list_size(
+        self, width, height, xposition, yposition
+    ) -> None:
         """Save width and height of the repl pane for the current UI render
         pass."""
         if width:
@@ -311,24 +348,25 @@ class WindowList:
             self.last_window_list_height = self.current_window_list_height
             self.current_window_list_height = height
         if xposition:
-            self.last_window_list_xposition = (
-                self.current_window_list_xposition)
+            self.last_window_list_xposition = self.current_window_list_xposition
             self.current_window_list_xposition = xposition
         if yposition:
-            self.last_window_list_yposition = (
-                self.current_window_list_yposition)
+            self.last_window_list_yposition = self.current_window_list_yposition
             self.current_window_list_yposition = yposition
 
-        if (self.current_window_list_width != self.last_window_list_width
-                or self.current_window_list_height !=
-                self.last_window_list_height):
+        if (
+            self.current_window_list_width != self.last_window_list_width
+            or self.current_window_list_height != self.last_window_list_height
+        ):
             self.rebalance_window_heights()
 
     def mouse_handler(self, mouse_event: MouseEvent):
         mouse_position = mouse_event.position
 
-        if (mouse_event.event_type == MouseEventType.MOUSE_MOVE
-                and mouse_event.button == MouseButton.LEFT):
+        if (
+            mouse_event.event_type == MouseEventType.MOUSE_MOVE
+            and mouse_event.button == MouseButton.LEFT
+        ):
             self.mouse_resize(mouse_position.x, mouse_position.y)
         elif mouse_event.event_type == MouseEventType.MOUSE_UP:
             self.stop_resize()
@@ -366,16 +404,21 @@ class WindowList:
 
     def _create_window_tab_toolbar(self):
         tab_bar_control = FormattedTextControl(
-            functools.partial(self.get_pane_titles,
-                              omit_subtitles=True,
-                              use_menu_title=False))
-        tab_bar_window = Window(content=tab_bar_control,
-                                align=WindowAlign.LEFT,
-                                dont_extend_width=True)
+            functools.partial(
+                self.get_pane_titles, omit_subtitles=True, use_menu_title=False
+            )
+        )
+        tab_bar_window = Window(
+            content=tab_bar_control,
+            align=WindowAlign.LEFT,
+            dont_extend_width=True,
+        )
 
-        spacer = Window(content=FormattedTextControl([('', '')]),
-                        align=WindowAlign.LEFT,
-                        dont_extend_width=False)
+        spacer = Window(
+            content=FormattedTextControl([('', '')]),
+            align=WindowAlign.LEFT,
+            dont_extend_width=False,
+        )
 
         tab_toolbar = VSplit(
             [
@@ -440,7 +483,8 @@ class WindowList:
             existing_pane_index -= 1
             try:
                 self.application.focus_on_container(
-                    self.active_panes[existing_pane_index])
+                    self.active_panes[existing_pane_index]
+                )
             except ValueError:
                 # ValueError will be raised if the the pane at
                 # existing_pane_index can't be accessed.
@@ -481,15 +525,13 @@ class WindowList:
         self._update_resize_current_row()
         self.application.redraw_ui()
 
-    def adjust_pane_size(self,
-                         pane,
-                         diff: int = _WINDOW_HEIGHT_ADJUST) -> None:
+    def adjust_pane_size(self, pane, diff: int = _WINDOW_HEIGHT_ADJUST) -> None:
         """Increase or decrease a given pane's height."""
         # Placeholder next_pane value to allow setting width and height without
         # any consequences if there is no next visible pane.
-        next_pane = HSplit([],
-                           height=Dimension(preferred=10),
-                           width=Dimension(preferred=10))  # type: ignore
+        next_pane = HSplit(
+            [], height=Dimension(preferred=10), width=Dimension(preferred=10)
+        )  # type: ignore
         # Try to get the next visible pane to subtract a weight value from.
         next_visible_pane = self._get_next_visible_pane_after(pane)
         if next_visible_pane:
@@ -498,8 +540,9 @@ class WindowList:
         # If the last pane is selected, and there are at least 2 panes, make
         # next_pane the previous pane.
         try:
-            if len(self.active_panes) >= 2 and (self.active_panes.index(pane)
-                                                == len(self.active_panes) - 1):
+            if len(self.active_panes) >= 2 and (
+                self.active_panes.index(pane) == len(self.active_panes) - 1
+            ):
                 next_pane = self.active_panes[-2]
         except ValueError:
             # Ignore ValueError raised if self.active_panes[-2] doesn't exist.
@@ -535,8 +578,9 @@ class WindowList:
         old_values = [
             p.height.preferred for p in self.active_panes if p.show_pane
         ]
-        new_heights = [int(available_height / len(old_values))
-                       ] * len(old_values)
+        new_heights = [int(available_height / len(old_values))] * len(
+            old_values
+        )
 
         self._set_window_heights(new_heights)
 
@@ -584,11 +628,3 @@ class WindowList:
             if next_pane.show_pane:
                 return next_pane
         return None
-
-    def focus_next_visible_pane(self, pane):
-        """Focus on the next visible window pane if possible."""
-        next_visible_pane = self._get_next_visible_pane_after(pane)
-        if next_visible_pane:
-            self.application.layout.focus(next_visible_pane)
-            return
-        self.application.focus_main_menu()

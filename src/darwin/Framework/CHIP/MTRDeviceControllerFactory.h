@@ -1,6 +1,6 @@
 /**
  *
- *    Copyright (c) 2022 Project CHIP Authors
+ *    Copyright (c) 2022-2023 Project CHIP Authors
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,16 +21,20 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <Matter/MTRCertificates.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol MTRStorage;
+@protocol MTRPersistentStorageDelegate;
 @protocol MTROTAProviderDelegate;
 @protocol MTRKeypair;
 
 @class MTRDeviceController;
 @class MTRDeviceControllerStartupParams;
+@class MTRFabricInfo;
 
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
 @interface MTRDeviceControllerFactoryParams : NSObject
 /*
  * Storage delegate must be provided for correct functioning of Matter
@@ -42,26 +46,37 @@ NS_ASSUME_NONNULL_BEGIN
 /*
  * OTA Provider delegate to be called when an OTA Requestor is requesting a software update.
  * Defaults to nil.
+ *
+ * Calls to this delegate can happen on an arbitrary thread, but will not happen
+ * concurrently.
  */
 @property (nonatomic, strong, nullable) id<MTROTAProviderDelegate> otaProviderDelegate;
 
 /*
  * The Product Attestation Authority certificates that are trusted to sign
- * device attestation information.  Defaults to nil.
+ * device attestation information (and in particular to sign Product Attestation
+ * Intermediate certificates, which then sign Device Attestation Certificates).
  *
+ * Defaults to nil.
  */
-@property (nonatomic, copy, nullable) NSArray<NSData *> * paaCerts;
+@property (nonatomic, copy, nullable) NSArray<MTRCertificateDERBytes> * productAttestationAuthorityCertificates;
+
 /*
- * The Certificate Declaration certificates that are trusted to sign
- * device attestation information.  Defaults to nil.
+ * The Certification Declaration certificates whose public keys correspond to
+ * private keys that are trusted to sign certification declarations.  Defaults
+ * to nil.
  *
+ * These certificates are used in addition to, not replacing, the default set of
+ * well-known certification declaration signing keys.
  */
-@property (nonatomic, copy, nullable) NSArray<NSData *> * cdCerts;
+@property (nonatomic, copy, nullable) NSArray<MTRCertificateDERBytes> * certificationDeclarationCertificates;
+
 /*
  * The network port to bind to.  If not specified, an ephemeral port will be
  * used.
  */
 @property (nonatomic, copy, nullable) NSNumber * port;
+
 /*
  * Whether to run a server capable of accepting incoming CASE
  * connections.  Defaults to NO.
@@ -72,7 +87,17 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithStorage:(id<MTRStorage>)storage;
 @end
 
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
 @interface MTRDeviceControllerFactory : NSObject
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
+/**
+ * Return the single MTRDeviceControllerFactory we support existing.  It starts off
+ * in a "not started" state.
+ */
++ (MTRDeviceControllerFactory *)sharedInstance;
 
 /**
  * If true, the factory is in a state where it can create controllers:
@@ -82,10 +107,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly, nonatomic, getter=isRunning) BOOL running;
 
 /**
- * Return the single MTRDeviceControllerFactory we support existing.  It starts off
- * in a "not started" state.
+ * Returns the list of MTRFabricInfo representing the fabrics the
+ * MTRDeviceControllerFactory knows about and the corresponding node identities
+ * of the controller factory on those fabrics.  Returns nil if the factory is
+ * not running or if there is an error reading fabric information.
+ *
+ * All entries in this list will have a non-nil rootCertificate.
  */
-+ (instancetype)sharedInstance;
+@property (readonly, nonatomic, nullable) NSArray<MTRFabricInfo *> * knownFabrics;
 
 /**
  * Start the controller factory. Repeated calls to startControllerFactory
@@ -131,9 +160,31 @@ NS_ASSUME_NONNULL_BEGIN
 - (MTRDeviceController * _Nullable)createControllerOnNewFabric:(MTRDeviceControllerStartupParams *)startupParams
                                                          error:(NSError * __autoreleasing *)error;
 
+@end
+
+MTR_DEPRECATED(
+    "Please use MTRDeviceControllerFactoryParams", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRControllerFactoryParams : MTRDeviceControllerFactoryParams
+@property (nonatomic, strong, readonly) id<MTRPersistentStorageDelegate> storageDelegate MTR_DEPRECATED(
+    "Please use the storage property", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4));
+@property (nonatomic, assign) BOOL startServer MTR_DEPRECATED(
+    "Please use shouldStartServer", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4));
+@property (nonatomic, copy, nullable) NSArray<NSData *> * paaCerts MTR_DEPRECATED(
+    "Please use productAttestationAuthorityCertificates", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4));
+@property (nonatomic, copy, nullable) NSArray<NSData *> * cdCerts MTR_DEPRECATED(
+    "Please use certificationDeclarationCertificates", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4));
+@end
+
+MTR_DEPRECATED("Please use MTRDeviceControllerFactory", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRControllerFactory : NSObject
+@property (readonly, nonatomic) BOOL isRunning;
++ (MTRControllerFactory *)sharedInstance;
+- (BOOL)startup:(MTRControllerFactoryParams *)startupParams;
+- (void)shutdown;
+- (MTRDeviceController * _Nullable)startControllerOnExistingFabric:(MTRDeviceControllerStartupParams *)startupParams;
+- (MTRDeviceController * _Nullable)startControllerOnNewFabric:(MTRDeviceControllerStartupParams *)startupParams;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
-
 @end
 
 NS_ASSUME_NONNULL_END

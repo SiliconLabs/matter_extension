@@ -38,6 +38,27 @@ constexpr char kWiFiCredentialsKeyName[] = "wifi-pass";
 static uint8_t WiFiSSIDStr[DeviceLayer::Internal::kMaxWiFiSSIDLength];
 } // namespace
 
+CHIP_ERROR GetConfiguredNetwork(Network & network)
+{
+    wifi_ap_record_t ap_info;
+    esp_err_t err;
+    err = esp_wifi_sta_get_ap_info(&ap_info);
+    if (err != ESP_OK)
+    {
+        return chip::DeviceLayer::Internal::ESP32Utils::MapError(err);
+    }
+    static_assert(chip::DeviceLayer::Internal::kMaxWiFiSSIDLength <= UINT8_MAX, "SSID length might not fit in length");
+    uint8_t length =
+        static_cast<uint8_t>(strnlen(reinterpret_cast<const char *>(ap_info.ssid), DeviceLayer::Internal::kMaxWiFiSSIDLength));
+    if (length > sizeof(network.networkID))
+    {
+        return CHIP_ERROR_INTERNAL;
+    }
+    memcpy(network.networkID, ap_info.ssid, length);
+    network.networkIDLen = length;
+    return CHIP_NO_ERROR;
+}
+
 CHIP_ERROR ESPWiFiDriver::Init(NetworkStatusChangeCallback * networkStatusChangeCallback)
 {
     CHIP_ERROR err;
@@ -56,8 +77,17 @@ CHIP_ERROR ESPWiFiDriver::Init(NetworkStatusChangeCallback * networkStatusChange
     {
         return CHIP_NO_ERROR;
     }
-    mSavedNetwork.credentialsLen = credentialsLen;
-    mSavedNetwork.ssidLen        = ssidLen;
+    if (!CanCastTo<uint8_t>(credentialsLen))
+    {
+        return CHIP_ERROR_INCORRECT_STATE;
+    }
+    mSavedNetwork.credentialsLen = static_cast<uint8_t>(credentialsLen);
+
+    if (!CanCastTo<uint8_t>(ssidLen))
+    {
+        return CHIP_ERROR_INCORRECT_STATE;
+    }
+    mSavedNetwork.ssidLen = static_cast<uint8_t>(ssidLen);
 
     mStagingNetwork        = mSavedNetwork;
     mpScanCallback         = nullptr;
@@ -203,21 +233,33 @@ void ESPWiFiDriver::OnConnectWiFiNetworkFailed(chip::System::Layer * aLayer, voi
 
 void ESPWiFiDriver::ConnectNetwork(ByteSpan networkId, ConnectCallback * callback)
 {
-    CHIP_ERROR err              = CHIP_NO_ERROR;
-    Status networkingStatus     = Status::kSuccess;
+    CHIP_ERROR err          = CHIP_NO_ERROR;
+    Status networkingStatus = Status::kSuccess;
+    Network configuredNetwork;
     const uint32_t secToMiliSec = 1000;
 
     VerifyOrExit(NetworkMatch(mStagingNetwork, networkId), networkingStatus = Status::kNetworkIDNotFound);
     VerifyOrExit(mpConnectCallback == nullptr, networkingStatus = Status::kUnknownError);
     ChipLogProgress(NetworkProvisioning, "ESP NetworkCommissioningDelegate: SSID: %.*s", static_cast<int>(networkId.size()),
                     networkId.data());
-
+    if (CHIP_NO_ERROR == GetConfiguredNetwork(configuredNetwork))
+    {
+        if (NetworkMatch(mStagingNetwork, ByteSpan(configuredNetwork.networkID, configuredNetwork.networkIDLen)))
+        {
+            if (callback)
+            {
+                callback->OnResult(Status::kSuccess, CharSpan(), 0);
+            }
+            return;
+        }
+    }
     err = ConnectWiFiNetwork(reinterpret_cast<const char *>(mStagingNetwork.ssid), mStagingNetwork.ssidLen,
                              reinterpret_cast<const char *>(mStagingNetwork.credentials), mStagingNetwork.credentialsLen);
 
     err = DeviceLayer::SystemLayer().StartTimer(
         static_cast<System::Clock::Timeout>(kWiFiConnectNetworkTimeoutSeconds * secToMiliSec), OnConnectWiFiNetworkFailed, NULL);
     mpConnectCallback = callback;
+
 exit:
     if (err != CHIP_NO_ERROR)
     {
@@ -309,25 +351,6 @@ void ESPWiFiDriver::OnScanWiFiNetworkDone()
     }
 }
 
-CHIP_ERROR GetConfiguredNetwork(Network & network)
-{
-    wifi_ap_record_t ap_info;
-    esp_err_t err;
-    err = esp_wifi_sta_get_ap_info(&ap_info);
-    if (err != ESP_OK)
-    {
-        return chip::DeviceLayer::Internal::ESP32Utils::MapError(err);
-    }
-    uint8_t length = strnlen(reinterpret_cast<const char *>(ap_info.ssid), DeviceLayer::Internal::kMaxWiFiSSIDLength);
-    if (length > sizeof(network.networkID))
-    {
-        return CHIP_ERROR_INTERNAL;
-    }
-    memcpy(network.networkID, ap_info.ssid, length);
-    network.networkIDLen = length;
-    return CHIP_NO_ERROR;
-}
-
 void ESPWiFiDriver::OnNetworkStatusChange()
 {
     Network configuredNetwork;
@@ -347,9 +370,14 @@ void ESPWiFiDriver::OnNetworkStatusChange()
             Status::kSuccess, MakeOptional(ByteSpan(configuredNetwork.networkID, configuredNetwork.networkIDLen)), NullOptional);
         return;
     }
+
+    // The disconnect reason for networking status changes is allowed to have
+    // manufacturer-specific values, which is why it's an int32_t, even though
+    // we just store a uint16_t value in it.
+    int32_t lastDisconnectReason = GetLastDisconnectReason();
     mpStatusChangeCallback->OnNetworkingStatusChange(
         Status::kUnknownError, MakeOptional(ByteSpan(configuredNetwork.networkID, configuredNetwork.networkIDLen)),
-        MakeOptional(GetLastDisconnectReason()));
+        MakeOptional(lastDisconnectReason));
 }
 
 void ESPWiFiDriver::ScanNetworks(ByteSpan ssid, WiFiDriver::ScanCallback * callback)
@@ -374,7 +402,7 @@ CHIP_ERROR ESPWiFiDriver::SetLastDisconnectReason(const ChipDeviceEvent * event)
     return CHIP_NO_ERROR;
 }
 
-int32_t ESPWiFiDriver::GetLastDisconnectReason()
+uint16_t ESPWiFiDriver::GetLastDisconnectReason()
 {
     return mLastDisconnectedReason;
 }

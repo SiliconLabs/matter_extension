@@ -1,4 +1,4 @@
-# Copyright 2019 The Pigweed Authors
+# Copyright 2022 The Pigweed Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License. You may obtain a copy of
@@ -16,68 +16,47 @@ bloat is a script which generates a size report card for binary files.
 """
 
 import argparse
+import json
 import logging
 import os
+from pathlib import Path
 import subprocess
 import sys
-from typing import List, Iterable, Optional
+import tempfile
+from typing import Iterable, Optional
 
 import pw_cli.log
 
-from pw_bloat.binary_diff import BinaryDiff
-from pw_bloat import bloat_output
+from pw_bloat.bloaty_config import generate_bloaty_config
+from pw_bloat.label import DataSourceMap, Label
+from pw_bloat.label_output import (
+    BloatTableOutput,
+    LineCharset,
+    RstOutput,
+    AsciiCharset,
+)
 
 _LOG = logging.getLogger(__name__)
+
+MAX_COL_WIDTH = 50
+BINARY_SIZES_EXTENSION = '.binary_sizes.json'
 
 
 def parse_args() -> argparse.Namespace:
     """Parses the script's arguments."""
-    def delimited_list(delimiter: str, items: Optional[int] = None):
-        def _parser(arg: str):
-            args = arg.split(delimiter)
 
-            if items and len(args) != items:
-                raise argparse.ArgumentTypeError(
-                    'Argument must be a '
-                    f'{delimiter}-delimited list with {items} items: "{arg}"')
-
-            return args
-
-        return _parser
-
-    parser = argparse.ArgumentParser(
-        'Generate a size report card for binaries')
-    parser.add_argument('--bloaty-config',
-                        type=delimited_list(';'),
-                        required=True,
-                        help='Data source configuration for Bloaty')
-    parser.add_argument('--full',
-                        action='store_true',
-                        help='Display full bloat breakdown by symbol')
-    parser.add_argument('--labels',
-                        type=delimited_list(';'),
-                        default='',
-                        help='Labels for output binaries')
-    parser.add_argument('--out-dir',
-                        type=str,
-                        required=True,
-                        help='Directory in which to write output files')
-    parser.add_argument('--target',
-                        type=str,
-                        required=True,
-                        help='Build target name')
-    parser.add_argument('--title',
-                        type=str,
-                        default='pw_bloat',
-                        help='Report title')
-    parser.add_argument('--source-filter',
-                        type=str,
-                        help='Bloaty data source filter')
-    parser.add_argument('diff_targets',
-                        type=delimited_list(';', 2),
-                        nargs='+',
-                        metavar='DIFF_TARGET',
-                        help='Binary;base pairs to process')
+    parser = argparse.ArgumentParser('Generate a size report card for binaries')
+    parser.add_argument(
+        '--gn-arg-path',
+        type=str,
+        required=True,
+        help='File path to json of binaries',
+    )
+    parser.add_argument(
+        '--single-report',
+        action="store_true",
+        help='Determine if calling single size report',
+    )
 
     return parser.parse_args()
 
@@ -87,7 +66,7 @@ def run_bloaty(
     config: str,
     base_file: Optional[str] = None,
     data_sources: Iterable[str] = (),
-    extra_args: Iterable[str] = ()
+    extra_args: Iterable[str] = (),
 ) -> bytes:
     """Executes a Bloaty size report on some binary file(s).
 
@@ -105,20 +84,22 @@ def run_bloaty(
         subprocess.CalledProcessError: The Bloaty invocation failed.
     """
 
-    # TODO(frolv): Point the default bloaty path to a prebuilt in Pigweed.
     default_bloaty = 'bloaty'
     bloaty_path = os.getenv('BLOATY_PATH', default_bloaty)
 
-    # yapf: disable
     cmd = [
         bloaty_path,
-        '-c', config,
-        '-d', ','.join(data_sources),
-        '--domain', 'vm',
+        '-c',
+        config,
+        '-d',
+        ','.join(data_sources),
+        '--domain',
+        'vm',
+        '-n',
+        '0',
         filename,
-        *extra_args
+        *extra_args,
     ]
-    # yapf: enable
 
     if base_file is not None:
         cmd.extend(['--', base_file])
@@ -126,82 +107,242 @@ def run_bloaty(
     return subprocess.check_output(cmd)
 
 
+class NoMemoryRegions(Exception):
+    """Exception raised if an ELF does not define any memory region symbols."""
+
+    def __init__(self, elf: Path):
+        super().__init__(f'ELF {elf} does not define memory region symbols')
+        self.elf = elf
+
+
+def memory_regions_size_report(
+    elf: Path,
+    data_sources: Iterable[str] = (),
+    extra_args: Iterable[str] = (),
+) -> Iterable[str]:
+    """Runs a size report on an ELF file using pw_bloat memory region symbols.
+
+    Arguments:
+        elf: The ELF binary on which to run.
+        data_sources: Hierarchical data sources to display.
+        extra_args: Additional command line arguments forwarded to bloaty.
+
+    Returns:
+        The bloaty TSV output detailing the size report.
+
+    Raises:
+        NoMemoryRegions: The ELF does not define memory region symbols.
+    """
+    with tempfile.NamedTemporaryFile() as bloaty_config:
+        with open(elf.resolve(), "rb") as infile, open(
+            bloaty_config.name, "w"
+        ) as outfile:
+            result = generate_bloaty_config(
+                infile,
+                enable_memoryregions=True,
+                enable_utilization=False,
+                out_file=outfile,
+            )
+
+            if not result.has_memoryregions:
+                raise NoMemoryRegions(elf)
+
+        return (
+            run_bloaty(
+                str(elf.resolve()),
+                bloaty_config.name,
+                data_sources=data_sources,
+                extra_args=extra_args,
+            )
+            .decode('utf-8')
+            .splitlines()
+        )
+
+
+def write_file(filename: str, contents: str, out_dir_file: str) -> None:
+    path = os.path.join(out_dir_file, filename)
+    with open(path, 'w') as output_file:
+        output_file.write(contents)
+    _LOG.debug('Output written to %s', path)
+
+
+def create_binary_sizes_json(binary_name: str, labels: Iterable[Label]) -> str:
+    """Creates a binary_sizes.json file content from a list of labels.
+
+    Args:
+      binary_name: the single binary name to attribute segment sizes to.
+      labels: the label.Label content to include
+
+    Returns:
+      a string of content to write to binary_sizes.json file.
+    """
+    json_content = {
+        f'{binary_name} {label.name}': label.size for label in labels
+    }
+    return json.dumps(json_content, sort_keys=True, indent=2)
+
+
+def single_target_output(
+    target: str,
+    bloaty_config: str,
+    target_out_file: str,
+    out_dir: str,
+    data_sources: Iterable[str],
+    extra_args: Iterable[str],
+) -> int:
+    """TODO(frolv) Add docstring."""
+
+    try:
+        single_output = run_bloaty(
+            target,
+            bloaty_config,
+            data_sources=data_sources,
+            extra_args=extra_args,
+        )
+
+    except subprocess.CalledProcessError:
+        _LOG.error('%s: failed to run size report on %s', sys.argv[0], target)
+        return 1
+
+    single_tsv = single_output.decode().splitlines()
+    single_report = BloatTableOutput(
+        DataSourceMap.from_bloaty_tsv(single_tsv), MAX_COL_WIDTH, LineCharset
+    )
+
+    data_source_map = DataSourceMap.from_bloaty_tsv(single_tsv)
+    rst_single_report = BloatTableOutput(
+        data_source_map,
+        MAX_COL_WIDTH,
+        AsciiCharset,
+        True,
+    )
+
+    single_report_table = single_report.create_table()
+
+    # Generates contents for top level summary for binary_sizes.json
+    binary_json_content = create_binary_sizes_json(
+        target, data_source_map.labels(ds_index=0)
+    )
+
+    print(single_report_table)
+    write_file(target_out_file, rst_single_report.create_table(), out_dir)
+    write_file(f'{target_out_file}.txt', single_report_table, out_dir)
+    write_file(
+        f'{target_out_file}{BINARY_SIZES_EXTENSION}',
+        binary_json_content,
+        out_dir,
+    )
+
+    return 0
+
+
 def main() -> int:
     """Program entry point."""
 
     args = parse_args()
+    extra_args = ['--tsv']
+    data_sources = ['segment_names', 'symbols']
+    gn_arg_dict = {}
+    json_file = open(args.gn_arg_path)
+    gn_arg_dict = json.load(json_file)
 
-    base_binaries: List[str] = []
-    diff_binaries: List[str] = []
+    if args.single_report:
+        single_binary_args = gn_arg_dict['binaries'][0]
+        if single_binary_args['source_filter']:
+            extra_args.extend(
+                ['--source-filter', single_binary_args['source_filter']]
+            )
+        if single_binary_args['data_sources']:
+            data_sources = single_binary_args['data_sources']
 
-    try:
-        for binary, base in args.diff_targets:
-            diff_binaries.append(binary)
-            base_binaries.append(base)
-    except RuntimeError as err:
-        _LOG.error('%s: %s', sys.argv[0], err)
-        return 1
+        return single_target_output(
+            single_binary_args['target'],
+            single_binary_args['bloaty_config'],
+            gn_arg_dict['target_name'],
+            gn_arg_dict['out_dir'],
+            data_sources,
+            extra_args,
+        )
 
-    data_sources = ['segment_names']
-    if args.full:
-        data_sources.append('fullsymbols')
+    default_data_sources = ['segment_names', 'symbols']
 
-    # TODO(frolv): CSV output is disabled for full reports as the default Bloaty
-    # breakdown is printed. This script should be modified to print a custom
-    # symbol breakdown in full reports.
-    extra_args = [] if args.full else ['--csv']
-    if args.source_filter:
-        extra_args.extend(['--source-filter', args.source_filter])
+    diff_report = ''
+    rst_diff_report = ''
+    for curr_diff_binary in gn_arg_dict['binaries']:
+        curr_extra_args = extra_args.copy()
+        data_sources = default_data_sources
 
-    diffs: List[BinaryDiff] = []
-    report = []
+        if curr_diff_binary['source_filter']:
+            curr_extra_args.extend(
+                ['--source-filter', curr_diff_binary['source_filter']]
+            )
 
-    for i, binary in enumerate(diff_binaries):
-        binary_name = (args.labels[i]
-                       if i < len(args.labels) else os.path.basename(binary))
+        if curr_diff_binary['data_sources']:
+            data_sources = curr_diff_binary['data_sources']
+
         try:
-            output = run_bloaty(binary, args.bloaty_config[i],
-                                base_binaries[i], data_sources, extra_args)
-            if not output:
-                continue
+            single_output_base = run_bloaty(
+                curr_diff_binary['base'],
+                curr_diff_binary['bloaty_config'],
+                data_sources=data_sources,
+                extra_args=curr_extra_args,
+            )
 
-            # TODO(frolv): Remove when custom output for full mode is added.
-            if args.full:
-                report.append(binary_name)
-                report.append('-' * len(binary_name))
-                report.append(output.decode())
-                continue
-
-            # Ignore the first row as it displays column names.
-            bloaty_csv = output.decode().splitlines()[1:]
-            diffs.append(BinaryDiff.from_csv(binary_name, bloaty_csv))
         except subprocess.CalledProcessError:
-            _LOG.error('%s: failed to run diff on %s', sys.argv[0], binary)
+            _LOG.error(
+                '%s: failed to run base size report on %s',
+                sys.argv[0],
+                curr_diff_binary["base"],
+            )
             return 1
 
-    def write_file(filename: str, contents: str) -> None:
-        path = os.path.join(args.out_dir, filename)
-        with open(path, 'w') as output_file:
-            output_file.write(contents)
-        _LOG.debug('Output written to %s', path)
+        try:
+            single_output_target = run_bloaty(
+                curr_diff_binary['target'],
+                curr_diff_binary['bloaty_config'],
+                data_sources=data_sources,
+                extra_args=curr_extra_args,
+            )
 
-    # TODO(frolv): Remove when custom output for full mode is added.
-    if not args.full:
-        out = bloat_output.TableOutput(args.title,
-                                       diffs,
-                                       charset=bloat_output.LineCharset)
-        report.append(out.diff())
+        except subprocess.CalledProcessError:
+            _LOG.error(
+                '%s: failed to run target size report on %s',
+                sys.argv[0],
+                curr_diff_binary['target'],
+            )
+            return 1
 
-        rst = bloat_output.RstOutput(diffs)
-        write_file(f'{args.target}', rst.diff())
+        if not single_output_target or not single_output_base:
+            continue
 
-    complete_output = '\n'.join(report) + '\n'
-    write_file(f'{args.target}.txt', complete_output)
-    print(complete_output)
+        base_dsm = DataSourceMap.from_bloaty_tsv(
+            single_output_base.decode().splitlines()
+        )
+        target_dsm = DataSourceMap.from_bloaty_tsv(
+            single_output_target.decode().splitlines()
+        )
+        diff_dsm = target_dsm.diff(base_dsm)
 
-    # TODO(frolv): Remove when custom output for full mode is added.
-    if args.full:
-        write_file(f'{args.target}', complete_output)
+        diff_report += BloatTableOutput(
+            diff_dsm,
+            MAX_COL_WIDTH,
+            LineCharset,
+            diff_label=curr_diff_binary['label'],
+        ).create_table()
+
+        curr_rst_report = RstOutput(diff_dsm, curr_diff_binary['label'])
+        if rst_diff_report == '':
+            rst_diff_report = curr_rst_report.create_table()
+        else:
+            rst_diff_report += f"{curr_rst_report.add_report_row()}\n"
+
+    print(diff_report)
+    write_file(
+        gn_arg_dict['target_name'], rst_diff_report, gn_arg_dict['out_dir']
+    )
+    write_file(
+        f"{gn_arg_dict['target_name']}.txt", diff_report, gn_arg_dict['out_dir']
+    )
 
     return 0
 

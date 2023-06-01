@@ -25,14 +25,18 @@ licenses(["notice"])
 pw_cc_library(
     name = "pw_bluetooth",
     hdrs = [
+        "public/pw_bluetooth/address.h",
+        "public/pw_bluetooth/assigned_uuids.h",
         "public/pw_bluetooth/constants.h",
+        "public/pw_bluetooth/controller.h",
         "public/pw_bluetooth/gatt/client.h",
         "public/pw_bluetooth/gatt/constants.h",
         "public/pw_bluetooth/gatt/error.h",
         "public/pw_bluetooth/gatt/server.h",
         "public/pw_bluetooth/gatt/types.h",
-        "public/pw_bluetooth/hci.h",
         "public/pw_bluetooth/host.h",
+        "public/pw_bluetooth/internal/hex.h",
+        "public/pw_bluetooth/internal/raii_ptr.h",
         "public/pw_bluetooth/low_energy/advertising_data.h",
         "public/pw_bluetooth/low_energy/bond_data.h",
         "public/pw_bluetooth/low_energy/central.h",
@@ -43,6 +47,8 @@ pw_cc_library(
         "public/pw_bluetooth/peer.h",
         "public/pw_bluetooth/result.h",
         "public/pw_bluetooth/types.h",
+        "public/pw_bluetooth/uuid.h",
+        "public/pw_bluetooth/vendor.h",
     ],
     includes = ["public"],
     deps = [
@@ -50,6 +56,17 @@ pw_cc_library(
         "//pw_containers",
         "//pw_function",
         "//pw_status",
+        "//pw_string:string",
+    ],
+)
+
+pw_cc_test(
+    name = "address_test",
+    srcs = [
+        "address_test.cc",
+    ],
+    deps = [
+        ":pw_bluetooth",
     ],
 )
 
@@ -69,6 +86,27 @@ pw_cc_test(
         "result_test.cc",
     ],
     deps = [
-        "pw_bluetooth",
+        ":pw_bluetooth",
+    ],
+)
+
+pw_cc_test(
+    name = "uuid_test",
+    srcs = [
+        "uuid_test.cc",
+    ],
+    deps = [
+        ":pw_bluetooth",
+    ],
+)
+
+# Bazel support for Emboss has not been configured yet, but we need to satisfy
+# presubmit.
+filegroup(
+    name = "emboss_files",
+    srcs = [
+        "emboss_test.cc",
+        "size_report/make_2_views_and_write.cc",
+        "size_report/make_view_and_write.cc",
     ],
 )

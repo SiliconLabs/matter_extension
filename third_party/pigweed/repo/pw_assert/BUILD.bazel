@@ -36,6 +36,16 @@ pw_cc_facade(
         "assert_compatibility_public_overrides",
         "public",
     ],
+    linkopts = select({
+        # Disable warnings about backrefs (b/275905282)...
+        "//conditions:default": ["-Wl,--warn-backrefs-exclude=*pigweed/pw_assert*"],
+        # ... but not for any platform that compiles with arm gcc, because arm
+        # gcc doesn't know this flag.
+        "@platforms//cpu:armv7-m": [],
+        "@platforms//cpu:armv7e-m": [],
+        "@platforms//cpu:armv7e-mf": [],
+        "@platforms//cpu:armv8-m": [],
+    }),
     deps = [
         ":config",
         "//pw_preprocessor",
@@ -53,6 +63,24 @@ pw_cc_library(
 pw_cc_library(
     name = "config",
     hdrs = ["public/pw_assert/config.h"],
+    includes = ["public"],
+)
+
+pw_cc_library(
+    name = "libc_assert",
+    hdrs = [
+        "libc_assert_public_overrides/assert.h",
+        "libc_assert_public_overrides/cassert",
+        "public/pw_assert/internal/libc_assert.h",
+    ],
+    includes = [
+        "libc_assert_public_overrides",
+        "public",
+    ],
+    deps = [
+        "//pw_assert",
+        "//pw_preprocessor",
+    ],
 )
 
 pw_cc_library(
@@ -101,8 +129,10 @@ pw_cc_test(
     deps = [
         ":facade",
         "//pw_assert",
+        "//pw_compilation_testing:negative_compilation_testing",
         "//pw_preprocessor",
         "//pw_span",
+        "//pw_status",
         "//pw_string",
         "//pw_unit_test",
     ],
@@ -116,6 +146,7 @@ pw_cc_test(
     ],
     deps = [
         "//pw_assert",
+        "//pw_status",
         "//pw_unit_test",
     ],
 )

@@ -69,9 +69,9 @@ class TestBundledUpdateBackend final : public BundledUpdateBackend {
 
   void SetManifestWriter(stream::Writer* writer) { manifest_writer_ = writer; }
 
-  virtual Result<stream::SeekableReader*> GetRootMetadataReader() override {
+  Result<stream::SeekableReader*> GetRootMetadataReader() override {
     return &trusted_root_reader_;
-  };
+  }
 
   Status BeforeManifestRead() override {
     before_manifest_read_called_ = true;
@@ -79,7 +79,7 @@ class TestBundledUpdateBackend final : public BundledUpdateBackend {
       return OkStatus();
     }
     return Status::NotFound();
-  };
+  }
 
   bool BeforeManifestReadCalled() { return before_manifest_read_called_; }
 
@@ -105,12 +105,12 @@ class TestBundledUpdateBackend final : public BundledUpdateBackend {
     return manifest_writer_;
   }
 
-  virtual Status SafelyPersistRootMetadata(
+  Status SafelyPersistRootMetadata(
       [[maybe_unused]] stream::IntervalReader root_metadata) override {
     new_root_persisted_ = true;
     trusted_root_reader_ = root_metadata;
     return OkStatus();
-  };
+  }
 
   bool IsNewRootPersisted() const { return new_root_persisted_; }
 
@@ -122,7 +122,6 @@ class TestBundledUpdateBackend final : public BundledUpdateBackend {
   bool before_manifest_write_called_ = false;
   bool after_manifest_write_called_ = false;
   bool new_root_persisted_ = false;
-  size_t backend_verified_files_ = 0;
 
   // A memory reader for buffer passed by SetTrustedRoot(). This will be used
   // to back `trusted_root_reader_`
@@ -274,7 +273,7 @@ TEST_F(UpdateBundleTest, PersistManifestFailIfNotVerified) {
 TEST_F(UpdateBundleTest, SelfVerificationWithIncomingRoot) {
   StageTestBundle(kTestDevBundleWithRoot);
   UpdateBundleAccessor update_bundle(
-      blob_reader(), backend(), /* disable_verification = */ true);
+      blob_reader(), backend(), /* self_verification = */ true);
 
   ASSERT_OK(update_bundle.OpenAndVerify());
   // Self verification must not persist anything.
@@ -294,7 +293,7 @@ TEST_F(UpdateBundleTest, SelfVerificationWithIncomingRoot) {
 TEST_F(UpdateBundleTest, SelfVerificationWithoutIncomingRoot) {
   StageTestBundle(kTestDevBundle);
   UpdateBundleAccessor update_bundle(
-      blob_reader(), backend(), /* disable_verification = */ true);
+      blob_reader(), backend(), /* self_verification = */ true);
 
   ASSERT_OK(update_bundle.OpenAndVerify());
 }
@@ -302,7 +301,7 @@ TEST_F(UpdateBundleTest, SelfVerificationWithoutIncomingRoot) {
 TEST_F(UpdateBundleTest, SelfVerificationWithMessedUpRoot) {
   StageTestBundle(kTestDevBundleWithProdRoot);
   UpdateBundleAccessor update_bundle(
-      blob_reader(), backend(), /* disable_verification = */ true);
+      blob_reader(), backend(), /* self_verification = */ true);
 
   ASSERT_FAIL(update_bundle.OpenAndVerify());
 }
@@ -310,7 +309,7 @@ TEST_F(UpdateBundleTest, SelfVerificationWithMessedUpRoot) {
 TEST_F(UpdateBundleTest, SelfVerificationChecksMissingHashes) {
   StageTestBundle(kTestBundleMissingTargetHashFile0);
   UpdateBundleAccessor update_bundle(
-      blob_reader(), backend(), /* disable_verification = */ true);
+      blob_reader(), backend(), /* self_verification = */ true);
 
   ASSERT_FAIL(update_bundle.OpenAndVerify());
 }
@@ -318,7 +317,7 @@ TEST_F(UpdateBundleTest, SelfVerificationChecksMissingHashes) {
 TEST_F(UpdateBundleTest, SelfVerificationChecksBadHashes) {
   StageTestBundle(kTestBundleMismatchedTargetHashFile0);
   UpdateBundleAccessor update_bundle(
-      blob_reader(), backend(), /* disable_verification = */ true);
+      blob_reader(), backend(), /* self_verification = */ true);
 
   ASSERT_FAIL(update_bundle.OpenAndVerify());
 }
@@ -326,7 +325,7 @@ TEST_F(UpdateBundleTest, SelfVerificationChecksBadHashes) {
 TEST_F(UpdateBundleTest, SelfVerificationIgnoresUnsignedBundle) {
   StageTestBundle(kTestUnsignedBundleWithRoot);
   UpdateBundleAccessor update_bundle(
-      blob_reader(), backend(), /* disable_verification = */ true);
+      blob_reader(), backend(), /* self_verification = */ true);
 
   ASSERT_OK(update_bundle.OpenAndVerify());
 }

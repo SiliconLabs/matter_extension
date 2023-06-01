@@ -13,6 +13,7 @@
 // the License.
 #pragma once
 
+#include <algorithm>
 #include <cstdint>
 #include <cstring>
 
@@ -37,16 +38,13 @@ class XorShiftStarRng64 : public RandomGenerator {
 
   // This generator uses entropy-seeded PRNG to never exhaust its random number
   // pool.
-  StatusWithSize Get(ByteSpan dest) final {
-    const size_t bytes_written = dest.size_bytes();
+  void Get(ByteSpan dest) final {
     while (!dest.empty()) {
       uint64_t random = Regenerate();
       size_t copy_size = std::min(dest.size_bytes(), sizeof(state_));
       std::memcpy(dest.data(), &random, copy_size);
       dest = dest.subspan(copy_size);
     }
-
-    return StatusWithSize(bytes_written);
   }
 
   // Entropy is injected by rotating the state by the number of entropy bits
@@ -64,7 +62,8 @@ class XorShiftStarRng64 : public RandomGenerator {
     uint64_t untouched_state = state_ >> (kNumStateBits - num_bits);
     state_ = untouched_state | (state_ << num_bits);
     // Zero-out all irrelevant bits, then XOR entropy into state.
-    uint32_t mask = (static_cast<uint64_t>(1) << num_bits) - 1;
+    uint32_t mask =
+        static_cast<uint32_t>((static_cast<uint64_t>(1) << num_bits) - 1);
     state_ ^= (data & mask);
   }
 

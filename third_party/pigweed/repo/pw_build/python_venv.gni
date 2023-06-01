@@ -41,10 +41,10 @@ import("$dir_pw_build/python_action.gni")
 #     output directory or "//" if it lives in elsewhere.
 #
 #   constraints: A list of constraint files used when performing pip install
-#     into this virtualenv.
+#     into this virtualenv. By default this is set to pw_build_PIP_CONSTRAINTS
 #
 #   requirements: A list of requirements files to install into this virtualenv
-#     on creation.
+#     on creation. By default this is set to pw_build_PIP_REQUIREMENTS
 #
 #   source_packages: A list of in-tree pw_python_package targets that will be
 #     checked for external third_party pip dependencies to install into this
@@ -62,8 +62,7 @@ template("pw_python_venv") {
   _generated_requirements_file =
       "$target_gen_dir/$target_name/generated_requirements.txt"
 
-  # pw_build/py is always needed for venv creation and Python lint checks.
-  _source_packages = [ "$dir_pw_build/py" ]
+  _source_packages = []
   if (defined(invoker.source_packages)) {
     _source_packages += invoker.source_packages
   } else {
@@ -78,14 +77,16 @@ template("pw_python_venv") {
     _source_package_labels += [ get_label_info(pkg, "label_no_toolchain") ]
   }
 
-  _requirements = []
   if (defined(invoker.requirements)) {
     _requirements = invoker.requirements
+  } else {
+    _requirements = pw_build_PIP_REQUIREMENTS
   }
 
-  _constraints = []
   if (defined(invoker.constraints)) {
     _constraints = invoker.constraints
+  } else {
+    _constraints = pw_build_PIP_CONSTRAINTS
   }
 
   _python_interpreter = _path + "/bin/python"
@@ -114,10 +115,17 @@ template("pw_python_venv") {
     # outputs and must stamp instead.
     stamp = true
 
+    # The virtualenv should depend on the version of Python currently in use.
+    stampfile = "$target_gen_dir/$target_name.pw_pystamp"
+    depfile = "$target_gen_dir/$target_name.d"
     script = "$dir_pw_build/py/pw_build/create_gn_venv.py"
     args = [
+      "--depfile",
+      rebase_path(depfile, root_build_dir),
       "--destination-dir",
       rebase_path(_path, root_build_dir),
+      "--stampfile",
+      rebase_path(stampfile, root_build_dir),
     ]
   }
 
@@ -134,10 +142,14 @@ template("pw_python_venv") {
       _pkg_gn_labels = []
       foreach(pkg, _source_packages) {
         _pkg_gn_labels += [ get_label_info(pkg, "label_no_toolchain") +
-                            "._package_metadata($pw_build_PYTHON_TOOLCHAIN)" ]
+                            "($pw_build_PYTHON_TOOLCHAIN)" ]
       }
 
-      python_metadata_deps = _pkg_gn_labels
+      # pw_build/py is always needed for venv creation and Python lint checks.
+      python_metadata_deps =
+          [ get_label_info("$dir_pw_build/py", "label_no_toolchain") +
+            "($pw_build_PYTHON_TOOLCHAIN)" ]
+      python_metadata_deps += _pkg_gn_labels
 
       args = [
         "--requirement",
@@ -149,7 +161,7 @@ template("pw_python_venv") {
       ]
 
       outputs = [ _generated_requirements_file ]
-      deps = _pkg_gn_labels + [ ":${invoker.target_name}._create_virtualenv($pw_build_PYTHON_TOOLCHAIN)" ]
+      deps = [ ":${invoker.target_name}._create_virtualenv($pw_build_PYTHON_TOOLCHAIN)" ]
     }
   } else {
     group("${target_name}._generate_3p_requirements") {
@@ -164,8 +176,12 @@ template("pw_python_venv") {
       # typically do this.
       pw_python_action("${target_name}._install_base_3p_deps") {
         module = "pip"
+
+        # Set the venv to run this pip install in.
         _pw_internal_run_in_venv = true
         _skip_installing_external_python_deps = true
+        venv = get_label_info(":${invoker.target_name}", "label_no_toolchain")
+
         args = [
           "install",
           "wheel",
@@ -187,8 +203,12 @@ template("pw_python_venv") {
       # Install all 3rd party Python dependencies.
       pw_python_action("${target_name}._install_3p_deps") {
         module = "pip"
+
+        # Set the venv to run this pip install in.
         _pw_internal_run_in_venv = true
         _skip_installing_external_python_deps = true
+        venv = get_label_info(":${invoker.target_name}", "label_no_toolchain")
+
         args = [ "install" ]
 
         # Note: --no-build-isolation should be avoided for installing 3rd party

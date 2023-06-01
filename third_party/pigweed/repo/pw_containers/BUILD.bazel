@@ -51,13 +51,40 @@ pw_cc_library(
         "public/pw_containers/intrusive_list.h",
     ],
     includes = ["public"],
-    deps = ["//pw_assert"],
+    deps = [
+        "//pw_assert",
+        "//pw_compilation_testing:negative_compilation_testing",
+    ],
 )
 
 pw_cc_library(
     name = "iterator",
     hdrs = ["public/pw_containers/iterator.h"],
     includes = ["public"],
+)
+
+pw_cc_library(
+    name = "inline_deque",
+    hdrs = [
+        "public/pw_containers/inline_deque.h",
+    ],
+    includes = ["public"],
+    deps = [
+        ":raw_storage",
+        "//pw_assert",
+        "//pw_span",
+    ],
+)
+
+pw_cc_library(
+    name = "inline_queue",
+    hdrs = [
+        "public/pw_containers/inline_queue.h",
+    ],
+    includes = ["public"],
+    deps = [
+        ":inline_deque",
+    ],
 )
 
 pw_cc_library(
@@ -76,13 +103,32 @@ pw_cc_library(
     name = "filtered_view",
     hdrs = ["public/pw_containers/filtered_view.h"],
     includes = ["public"],
-    deps = ["//pw_assert"],
+    deps = [
+        "//pw_assert",
+        "//pw_containers",
+    ],
 )
 
 pw_cc_library(
     name = "flat_map",
     hdrs = ["public/pw_containers/flat_map.h"],
     includes = ["public"],
+)
+
+pw_cc_library(
+    name = "raw_storage",
+    hdrs = [
+        "public/pw_containers/internal/raw_storage.h",
+    ],
+    includes = ["public"],
+    visibility = [":__subpackages__"],
+)
+
+pw_cc_library(
+    name = "test_helpers",
+    srcs = ["test_helpers.cc"],
+    hdrs = ["pw_containers_private/test_helpers.h"],
+    visibility = [":__subpackages__"],
 )
 
 pw_cc_library(
@@ -124,6 +170,7 @@ pw_cc_test(
     ],
     deps = [
         ":pw_containers",
+        "//pw_polyfill",
         "//pw_unit_test",
     ],
 )
@@ -135,6 +182,47 @@ pw_cc_test(
     ],
     deps = [
         ":pw_containers",
+        ":test_helpers",
+        "//pw_unit_test",
+    ],
+)
+
+pw_cc_test(
+    name = "inline_deque_test",
+    srcs = [
+        "inline_deque_test.cc",
+    ],
+    deps = [
+        ":algorithm",
+        ":inline_deque",
+        ":test_helpers",
+        "//pw_compilation_testing:negative_compilation_testing",
+        "//pw_unit_test",
+    ],
+)
+
+pw_cc_test(
+    name = "inline_queue_test",
+    srcs = [
+        "inline_queue_test.cc",
+    ],
+    deps = [
+        ":algorithm",
+        ":inline_queue",
+        ":test_helpers",
+        "//pw_compilation_testing:negative_compilation_testing",
+        "//pw_unit_test",
+    ],
+)
+
+pw_cc_test(
+    name = "raw_storage_test",
+    srcs = [
+        "raw_storage_test.cc",
+    ],
+    deps = [
+        ":raw_storage",
+        ":test_helpers",
         "//pw_unit_test",
     ],
 )

@@ -163,6 +163,8 @@ and finally Bazel.
   To avoid confusing the two, we refer to the former as "GN/Bazel targets" and the
   latter as "Pigweed targets".
 
+.. _docs-build-system-gn:
+
 GN
 --
 A perhaps unfamiliar name, `GN (Generate Ninja)`_ is a meta-build system that
@@ -306,10 +308,10 @@ present, Ninja will build this group when invoked without arguments.
 
 Optimization levels
 ^^^^^^^^^^^^^^^^^^^
-Pigweed's ``//BUILD.gn`` defines the ``pw_default_optimization_level`` build
+Pigweed's ``//BUILD.gn`` defines the ``pw_DEFAULT_C_OPTIMIZATION_LEVEL`` build
 arg, which specifies the optimization level to use for the default groups
 (``host``, ``stm32f429i``, etc.). The supported values for
-``pw_default_optimization_level`` are:
+``pw_DEFAULT_C_OPTIMIZATION_LEVEL`` are:
 
 * ``debug`` -- create debugging-friendly binaries (``-Og``)
 * ``size_optimized`` -- optimize for size (``-Os``)
@@ -317,10 +319,11 @@ arg, which specifies the optimization level to use for the default groups
   (``-O2``)
 
 Pigweed defines versions of its groups in ``//BUILD.gn`` for each optimization
-level. Rather than relying on ``pw_default_optimization_level``, you may
-directly build a group at the desired optimization level:
-``<group>_<optimization>``. Examples include ``host_clang_debug``,
-``host_gcc_size_optimized``, and ``stm32f429i_speed_optimized``.
+level specified in the ``pw_C_OPTIMIZATION_LEVELS`` list. Rather than relying
+on ``pw_DEFAULT_C_OPTIMIZATION_LEVEL``, you may directly build a group at the
+desired optimization level: ``<group>_<optimization>``. Examples include
+``host_clang_debug``, ``host_gcc_size_optimized``, and
+``stm32f429i_speed_optimized``.
 
 Upstream GN target groups
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -374,6 +377,10 @@ with ``pw_module_tests`` per supported sanitizer.
 .. _MemorySanitizer: https://clang.llvm.org/docs/MemorySanitizer.html
 .. _UndefinedBehaviorSanitizer: https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html
 .. _ThreadSanitizer: https://clang.llvm.org/docs/ThreadSanitizer.html
+
+coverage
+~~~~~~~~~~
+This group defines host-side build target for Clang source-based code coverage.
 
 pw_modules
 ~~~~~~~~~~
@@ -569,6 +576,8 @@ various proprietary projects. Its modular structure makes it a great fit for
   Bazel support is experimental and only for the brave for now. If you are
   looking for stable set of build API's please use GN.
 
+.. _docs-build-system-bazel:
+
 The Bazel build
 ===============
 This section describes Pigweed's Bazel build structure, how it is used upstream,
@@ -693,6 +702,7 @@ compatible with only a host os;
     target_compatible_with = select({
       "@platforms//os:windows": [],
       "@platforms//os:linux": [],
+      "@platforms//os:ios": [],
       "@platforms//os:macos": [],
       "//conditions:default": ["@platforms//:incompatible"],
     }),
@@ -764,9 +774,10 @@ however it is possible to override this from the command line. e.g.
 
 .. _Bazel config reference: https://docs.bazel.build/versions/main/skylark/config.html
 
+.. _docs-build_system-bazel_configuration:
 
-Pigweeds configuration
-^^^^^^^^^^^^^^^^^^^^^^
+Pigweed's Bazel configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Pigweeds Bazel configuration API is designed to be distributed across the
 Pigweed repository and/or your downstream repository. If you are coming from
 GN's centralized configuration API it might be useful to think about

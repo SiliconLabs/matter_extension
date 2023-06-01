@@ -46,9 +46,7 @@ pw_cc_library(
 
 pw_cc_library(
     name = "client_api",
-    hdrs = [
-        "public/pw_rpc/nanopb/client_reader_writer.h",
-    ],
+    hdrs = ["public/pw_rpc/nanopb/client_reader_writer.h"],
     includes = ["public"],
     deps = [
         ":common",
@@ -133,7 +131,22 @@ pw_cc_library(
     ],
 )
 
-# TODO(pwbug/507): Enable this library when logging_event_handler can be used.
+pw_cc_test(
+    name = "callback_test",
+    srcs = ["callback_test.cc"],
+    deps = [
+        ":client_testing",
+        "//pw_rpc",
+        "//pw_rpc:pw_rpc_test_cc.nanopb_rpc",
+        "//pw_sync:binary_semaphore",
+        "//pw_thread:sleep",
+        "//pw_thread:test_threads_header",
+        "//pw_thread:yield",
+        "//pw_thread_stl:test_threads",
+    ],
+)
+
+# TODO(b/242059613): Enable this library when logging_event_handler can be used.
 filegroup(
     name = "client_integration_test",
     srcs = [

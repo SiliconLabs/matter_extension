@@ -14,7 +14,7 @@
 
 include($ENV{PW_ROOT}/pw_build/pigweed.cmake)
 
-pw_add_module_library(pw_result
+pw_add_library(pw_result INTERFACE
   HEADERS
     public/pw_result/result.h
   PUBLIC_INCLUDES
@@ -24,16 +24,28 @@ pw_add_module_library(pw_result
     pw_status
     pw_preprocessor
 )
-if(Zephyr_FOUND AND CONFIG_PIGWEED_RESULT)
-  zephyr_link_libraries(pw_result)
-endif()
+
+pw_add_library(pw_result.expected INTERFACE
+  HEADERS
+    public/pw_result/expected.h
+  PUBLIC_INCLUDES
+    public
+)
 
 pw_add_test(pw_result.result_test
   SOURCES
     result_test.cc
-  DEPS
+  PRIVATE_DEPS
     pw_result
     pw_status
+  GROUPS
+    modules
+    pw_result
+)
+
+pw_add_test(pw_result.expected_test
+  SOURCES
+    expected_test.cc
   GROUPS
     modules
     pw_result

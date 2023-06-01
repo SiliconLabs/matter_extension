@@ -50,13 +50,13 @@ TEST(FakeChannelOutput, SendAndClear) {
   constexpr MethodType type = MethodType::kServerStreaming;
   TestFakeChannelOutput output;
   Channel channel(kChannelId, &output);
-  const internal::Packet server_stream_packet(PacketType::SERVER_STREAM,
+  const internal::Packet server_stream_packet(pwpb::PacketType::SERVER_STREAM,
                                               kChannelId,
                                               kServiceId,
                                               kMethodId,
                                               kCallId,
                                               kPayload);
-  LockGuard lock(rpc_lock());
+  RpcLockGuard lock;
   ASSERT_EQ(channel.Send(server_stream_packet), OkStatus());
   ASSERT_EQ(output.last_response(type).size(), kPayload.size());
   EXPECT_EQ(
@@ -77,13 +77,13 @@ TEST(FakeChannelOutput, SendAndFakeFutureResults) {
   constexpr MethodType type = MethodType::kUnary;
   TestFakeChannelOutput output;
   Channel channel(kChannelId, &output);
-  const internal::Packet response_packet(PacketType::RESPONSE,
+  const internal::Packet response_packet(pwpb::PacketType::RESPONSE,
                                          kChannelId,
                                          kServiceId,
                                          kMethodId,
                                          kCallId,
                                          kPayload);
-  LockGuard lock(rpc_lock());
+  RpcLockGuard lock;
   EXPECT_EQ(channel.Send(response_packet), OkStatus());
   EXPECT_EQ(output.total_payloads(type), 1u);
   EXPECT_EQ(output.total_packets(), 1u);
@@ -103,7 +103,7 @@ TEST(FakeChannelOutput, SendAndFakeFutureResults) {
   EXPECT_EQ(output.total_payloads(type), 2u);
   EXPECT_EQ(output.total_packets(), 2u);
 
-  const internal::Packet server_stream_packet(PacketType::SERVER_STREAM,
+  const internal::Packet server_stream_packet(pwpb::PacketType::SERVER_STREAM,
                                               kChannelId,
                                               kServiceId,
                                               kMethodId,
@@ -124,7 +124,7 @@ TEST(FakeChannelOutput, SendAndFakeSingleResult) {
   constexpr MethodType type = MethodType::kUnary;
   TestFakeChannelOutput output;
   Channel channel(kChannelId, &output);
-  const internal::Packet response_packet(PacketType::RESPONSE,
+  const internal::Packet response_packet(pwpb::PacketType::RESPONSE,
                                          kChannelId,
                                          kServiceId,
                                          kMethodId,
@@ -133,7 +133,7 @@ TEST(FakeChannelOutput, SendAndFakeSingleResult) {
   // Multiple calls will return the same error status.
   const int packet_count_fail = 4;
   output.set_send_status(Status::Unknown(), packet_count_fail);
-  LockGuard lock(rpc_lock());
+  RpcLockGuard lock;
 
   for (int i = 0; i < packet_count_fail; ++i) {
     EXPECT_EQ(channel.Send(response_packet), OkStatus());
@@ -158,13 +158,13 @@ TEST(FakeChannelOutput, SendAndFakeSingleResult) {
 TEST(FakeChannelOutput, SendResponseUpdated) {
   TestFakeChannelOutput output;
   Channel channel(kChannelId, &output);
-  const internal::Packet response_packet(PacketType::RESPONSE,
+  const internal::Packet response_packet(pwpb::PacketType::RESPONSE,
                                          kChannelId,
                                          kServiceId,
                                          kMethodId,
                                          kCallId,
                                          kPayload);
-  LockGuard lock(rpc_lock());
+  RpcLockGuard lock;
   ASSERT_EQ(channel.Send(response_packet), OkStatus());
   ASSERT_EQ(output.last_response(MethodType::kUnary).size(), kPayload.size());
   EXPECT_EQ(std::memcmp(output.last_response(MethodType::kUnary).data(),
@@ -176,15 +176,19 @@ TEST(FakeChannelOutput, SendResponseUpdated) {
   EXPECT_TRUE(output.done());
 
   output.clear();
-  const internal::Packet packet_empty_payload(
-      PacketType::RESPONSE, kChannelId, kServiceId, kMethodId, kCallId, {});
+  const internal::Packet packet_empty_payload(pwpb::PacketType::RESPONSE,
+                                              kChannelId,
+                                              kServiceId,
+                                              kMethodId,
+                                              kCallId,
+                                              {});
   EXPECT_EQ(channel.Send(packet_empty_payload), OkStatus());
   EXPECT_EQ(output.last_response(MethodType::kUnary).size(), 0u);
   EXPECT_EQ(output.total_payloads(MethodType::kUnary), 1u);
   EXPECT_EQ(output.total_packets(), 1u);
   EXPECT_TRUE(output.done());
 
-  const internal::Packet server_stream_packet(PacketType::SERVER_STREAM,
+  const internal::Packet server_stream_packet(pwpb::PacketType::SERVER_STREAM,
                                               kChannelId,
                                               kServiceId,
                                               kMethodId,

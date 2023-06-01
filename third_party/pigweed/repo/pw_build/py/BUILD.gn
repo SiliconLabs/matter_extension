@@ -24,6 +24,8 @@ pw_python_package("py") {
   ]
   sources = [
     "pw_build/__init__.py",
+    "pw_build/bazel_query.py",
+    "pw_build/build_recipe.py",
     "pw_build/collect_wheels.py",
     "pw_build/copy_from_cipd.py",
     "pw_build/create_gn_venv.py",
@@ -31,25 +33,46 @@ pw_python_package("py") {
     "pw_build/error.py",
     "pw_build/exec.py",
     "pw_build/file_prefix_map.py",
+    "pw_build/generate_3p_gn.py",
     "pw_build/generate_cc_blob_library.py",
     "pw_build/generate_modules_lists.py",
     "pw_build/generate_python_package.py",
     "pw_build/generate_python_package_gn.py",
     "pw_build/generate_python_requirements.py",
+    "pw_build/generate_report.py",
     "pw_build/generated_tests.py",
+    "pw_build/gn_config.py",
+    "pw_build/gn_resolver.py",
+    "pw_build/gn_target.py",
+    "pw_build/gn_utils.py",
+    "pw_build/gn_writer.py",
     "pw_build/host_tool.py",
+    "pw_build/merge_profraws.py",
     "pw_build/mirror_tree.py",
     "pw_build/nop.py",
     "pw_build/pip_install_python_deps.py",
+    "pw_build/project_builder.py",
+    "pw_build/project_builder_argparse.py",
+    "pw_build/project_builder_context.py",
+    "pw_build/project_builder_prefs.py",
     "pw_build/python_package.py",
     "pw_build/python_runner.py",
     "pw_build/python_wheels.py",
+    "pw_build/wrap_ninja.py",
     "pw_build/zip.py",
   ]
   tests = [
+    "bazel_query_test.py",
+    "build_recipe_test.py",
     "create_python_tree_test.py",
     "file_prefix_map_test.py",
+    "generate_3p_gn_test.py",
     "generate_cc_blob_library_test.py",
+    "gn_config_test.py",
+    "gn_target_test.py",
+    "gn_utils_test.py",
+    "gn_writer_test.py",
+    "project_builder_prefs_test.py",
     "python_runner_test.py",
     "zip_test.py",
   ]
@@ -59,4 +82,5 @@ pw_python_package("py") {
     "$dir_pw_presubmit/py",
   ]
   pylintrc = "$dir_pigweed/.pylintrc"
+  mypy_ini = "$dir_pigweed/.mypy.ini"
 }

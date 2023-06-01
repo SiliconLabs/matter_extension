@@ -16,14 +16,27 @@ import("//build_overrides/pigweed.gni")
 
 import("$dir_pigweed/targets/stm32f429i_disc1/target_toolchains.gni")
 import("$dir_pw_docgen/docs.gni")
+import("$dir_pw_log_tokenized/backend.gni")
 import("$dir_pw_protobuf_compiler/proto.gni")
 import("$dir_pw_third_party/nanopb/nanopb.gni")
 import("$dir_pw_toolchain/arm_gcc/toolchains.gni")
 import("$dir_pw_toolchain/generate_toolchain.gni")
+import("$dir_pw_toolchain/traits.gni")
+
+if (current_toolchain != default_toolchain) {
+  pw_source_set("tokenized_log_handler") {
+    deps = [
+      "$dir_pw_bytes",
+      "$dir_pw_log_tokenized:handler.facade",
+      "$dir_pw_sys_io",
+    ]
+    sources = [ "tokenized_log_handler.cc" ]
+  }
+}
 
 # Toolchain for generating upstream Pigweed documentation.
 generate_toolchain("docs") {
-  # Use the stm32f429i-disc1 toolchain for pw_size_report targets.
+  # Use the stm32f429i-disc1 toolchain for pw_size_diff targets.
   _base_toolchain = pw_target_toolchain_stm32f429i_disc1.size_optimized
   forward_variables_from(_base_toolchain,
                          "*",
@@ -36,6 +49,16 @@ generate_toolchain("docs") {
 
     # This is the docs target.
     pw_docgen_BUILD_DOCS = true
+
+    # Disable NC tests in case the base toolchain has them enabled.
+    pw_compilation_testing_NEGATIVE_COMPILATION_ENABLED = false
+
+    pw_assert_BACKEND = dir_pw_assert_log
+    pw_log_BACKEND = dir_pw_log_tokenized
+    pw_log_tokenized_HANDLER_BACKEND =
+        get_path_info(":tokenized_log_handler", "abspath")
+
+    pw_toolchain_CXX_STANDARD = pw_toolchain_STANDARD.CXX20
   }
 }
 

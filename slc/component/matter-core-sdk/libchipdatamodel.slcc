@@ -1,0 +1,158 @@
+category: Matter|Core
+define:
+- name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+  value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
+- name: CHIP_HAVE_CONFIG_H
+  value: '1'
+- name: HARD_FAULT_LOG_ENABLE
+- name: SILABS_LOG_ENABLED
+  value: 'true'
+description: libchipdatamodel
+id: libchipdatamodel
+include:
+- path: examples/platform/silabs
+- path: examples/platform/silabs/efr32
+- path: src
+  file_list:
+  - path: app/data-model/DecodableList.h
+  - path: app/data-model/Decode.h
+  - path: app/data-model/Encode.h
+  - path: app/data-model/List.h
+  - path: app/data-model/NullObject.h
+  - path: app/data-model/FabricScoped.h
+  - path: app/data-model/BasicTypes.h
+  - path: app/data-model/Nullable.h
+  - path: app/MessageDef/AttributeReportIBs.h
+  - path: app/data-model/TagBoundEncoder.h
+  - path: app/MessageDef/ArrayBuilder.h
+  - path: app/MessageDef/ArrayParser.h
+  - path: app/MessageDef/AttributeReportIB.h
+  - path: app/MessageDef/StatusIB.h
+  - path: app/MessageDef/Builder.h
+  - path: app/MessageDef/AttributeDataIB.h
+  - path: app/MessageDef/AttributeStatusIB.h
+  - path: app/MessageDef/StructBuilder.h
+  - path: app/MessageDef/StructParser.h
+  - path: app/MessageDef/AttributePathIB.h
+  - path: app/MessageDef/ListBuilder.h
+  - path: app/MessageDef/ListParser.h
+  - path: app/MessageDef/InvokeRequestMessage.h
+  - path: app/MessageDef/InvokeResponseMessage.h
+  - path: app/MessageDef/InvokeRequests.h
+  - path: app/MessageDef/MessageBuilder.h
+  - path: app/MessageDef/MessageParser.h
+  - path: app/MessageDef/CommandDataIB.h
+  - path: app/MessageDef/CommandPathIB.h
+  - path: app/MessageDef/InvokeResponseIBs.h
+  - path: app/MessageDef/InvokeResponseIB.h
+  - path: app/MessageDef/CommandStatusIB.h
+  - path: app/MessageDef/ReadRequestMessage.h
+  - path: app/MessageDef/StatusResponseMessage.h
+  - path: app/MessageDef/SubscribeRequestMessage.h
+  - path: app/MessageDef/SubscribeResponseMessage.h
+  - path: app/MessageDef/AttributePathIBs.h
+  - path: app/MessageDef/DataVersionFilterIBs.h
+  - path: app/MessageDef/EventFilterIBs.h
+  - path: app/MessageDef/EventPathIBs.h
+  - path: app/MessageDef/DataVersionFilterIB.h
+  - path: app/MessageDef/ClusterPathIB.h
+  - path: app/MessageDef/EventFilterIB.h
+  - path: app/MessageDef/EventPathIB.h
+  - path: app/MessageDef/ReportDataMessage.h
+  - path: app/MessageDef/EventReportIBs.h
+  - path: app/MessageDef/EventReportIB.h
+  - path: app/MessageDef/EventDataIB.h
+  - path: app/MessageDef/EventStatusIB.h
+  - path: app/MessageDef/AttributeDataIBs.h
+  - path: app/MessageDef/WriteRequestMessage.h
+  - path: app/MessageDef/WriteResponseMessage.h
+  - path: app/MessageDef/AttributeStatusIBs.h
+  - path: app/MessageDef/MessageDefHelper.h
+  - path: app/MessageDef/TimedRequestMessage.h
+  - path: app/MessageDef/Parser.h
+- path: src/include
+- path: src/lib
+- path: src/platform/silabs/efr32
+- path: third_party/nlassert/repo/include
+- path: third_party/nlio/repo/include
+- path: zzz_generated/app-common
+label: libchipdatamodel
+package: Matter
+provides:
+- name: matter_libchipdatamodel
+quality: production
+source:
+- path: src/app/AttributeAccessInterface.cpp
+- path: src/app/AttributePathExpandIterator.cpp
+- path: src/app/BufferedReadCallback.cpp
+- path: src/app/CASEClient.cpp
+- path: src/app/CASESessionManager.cpp
+- path: src/app/ChunkedWriteCallback.cpp
+- path: src/app/ClusterStateCache.cpp
+- path: src/app/CommandHandler.cpp
+- path: src/app/CommandSender.cpp
+- path: src/app/DefaultAttributePersistenceProvider.cpp
+- path: src/app/DeferredAttributePersistenceProvider.cpp
+- path: src/app/DeviceProxy.cpp
+- path: src/app/EventManagement.cpp
+- path: src/app/FailSafeContext.cpp
+- path: src/app/InteractionModelEngine.cpp
+- path: src/app/MessageDef/ArrayBuilder.cpp
+- path: src/app/MessageDef/ArrayParser.cpp
+- path: src/app/MessageDef/AttributeDataIB.cpp
+- path: src/app/MessageDef/AttributeDataIBs.cpp
+- path: src/app/MessageDef/AttributePathIB.cpp
+- path: src/app/MessageDef/AttributePathIBs.cpp
+- path: src/app/MessageDef/AttributeReportIB.cpp
+- path: src/app/MessageDef/AttributeReportIBs.cpp
+- path: src/app/MessageDef/AttributeStatusIB.cpp
+- path: src/app/MessageDef/AttributeStatusIBs.cpp
+- path: src/app/MessageDef/Builder.cpp
+- path: src/app/MessageDef/ClusterPathIB.cpp
+- path: src/app/MessageDef/CommandDataIB.cpp
+- path: src/app/MessageDef/CommandPathIB.cpp
+- path: src/app/MessageDef/CommandStatusIB.cpp
+- path: src/app/MessageDef/DataVersionFilterIB.cpp
+- path: src/app/MessageDef/DataVersionFilterIBs.cpp
+- path: src/app/MessageDef/EventDataIB.cpp
+- path: src/app/MessageDef/EventFilterIB.cpp
+- path: src/app/MessageDef/EventFilterIBs.cpp
+- path: src/app/MessageDef/EventPathIB.cpp
+- path: src/app/MessageDef/EventPathIBs.cpp
+- path: src/app/MessageDef/EventReportIB.cpp
+- path: src/app/MessageDef/EventReportIBs.cpp
+- path: src/app/MessageDef/EventStatusIB.cpp
+- path: src/app/MessageDef/InvokeRequestMessage.cpp
+- path: src/app/MessageDef/InvokeRequests.cpp
+- path: src/app/MessageDef/InvokeResponseIB.cpp
+- path: src/app/MessageDef/InvokeResponseIBs.cpp
+- path: src/app/MessageDef/InvokeResponseMessage.cpp
+- path: src/app/MessageDef/ListBuilder.cpp
+- path: src/app/MessageDef/ListParser.cpp
+- path: src/app/MessageDef/MessageBuilder.cpp
+- path: src/app/MessageDef/MessageDefHelper.cpp
+- path: src/app/MessageDef/MessageParser.cpp
+- path: src/app/MessageDef/Parser.cpp
+- path: src/app/MessageDef/ReadRequestMessage.cpp
+- path: src/app/MessageDef/ReportDataMessage.cpp
+- path: src/app/MessageDef/StatusIB.cpp
+- path: src/app/MessageDef/StatusResponseMessage.cpp
+- path: src/app/MessageDef/StructBuilder.cpp
+- path: src/app/MessageDef/StructParser.cpp
+- path: src/app/MessageDef/SubscribeRequestMessage.cpp
+- path: src/app/MessageDef/SubscribeResponseMessage.cpp
+- path: src/app/MessageDef/TimedRequestMessage.cpp
+- path: src/app/MessageDef/WriteRequestMessage.cpp
+- path: src/app/MessageDef/WriteResponseMessage.cpp
+- path: src/app/OperationalSessionSetup.cpp
+- path: src/app/ReadClient.cpp
+- path: src/app/ReadHandler.cpp
+- path: src/app/RequiredPrivilege.cpp
+- path: src/app/StatusResponse.cpp
+- path: src/app/TimedHandler.cpp
+- path: src/app/TimedRequest.cpp
+- path: src/app/WriteClient.cpp
+- path: src/app/WriteHandler.cpp
+- path: src/app/reporting/Engine.cpp
+ui_hints:
+  visibility: never

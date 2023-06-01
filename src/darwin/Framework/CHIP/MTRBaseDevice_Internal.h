@@ -18,22 +18,31 @@
 #import "MTRBaseDevice.h"
 #import <Foundation/Foundation.h>
 
+#include <app/AttributePathParams.h>
 #include <app/ConcreteAttributePath.h>
 #include <app/ConcreteCommandPath.h>
 #include <app/ConcreteEventPath.h>
 #include <app/DeviceProxy.h>
+#include <app/EventHeader.h>
+#include <app/EventLoggingTypes.h>
+#include <app/EventPathParams.h>
+
+@class MTRDeviceController;
 
 NS_ASSUME_NONNULL_BEGIN
+
+static inline MTRTransportType MTRMakeTransportType(chip::Transport::Type type)
+{
+    static_assert(MTRTransportTypeUndefined == (uint8_t) chip::Transport::Type::kUndefined, "MTRTransportType != Transport::Type");
+    static_assert(MTRTransportTypeUDP == (uint8_t) chip::Transport::Type::kUdp, "MTRTransportType != Transport::Type");
+    static_assert(MTRTransportTypeBLE == (uint8_t) chip::Transport::Type::kBle, "MTRTransportType != Transport::Type");
+    static_assert(MTRTransportTypeTCP == (uint8_t) chip::Transport::Type::kTcp, "MTRTransportType != Transport::Type");
+    return static_cast<MTRTransportType>(type);
+}
 
 @interface MTRBaseDevice ()
 
 - (instancetype)initWithPASEDevice:(chip::DeviceProxy *)device controller:(MTRDeviceController *)controller;
-
-/**
- * Only returns non-nil if the device is using a PASE session.  Otherwise, the
- * deviceController + nodeId should be used to get a CASE session.
- */
-- (chip::DeviceProxy * _Nullable)paseDevice;
 
 /**
  * Invalidate the CASE session, so an attempt to getConnectedDevice for this
@@ -43,30 +52,41 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)invalidateCASESession;
 
 /**
+ * Whether this device represents a PASE session or not.
+ */
+@property (nonatomic, assign, readonly) BOOL isPASEDevice;
+
+/**
  * Controller that that this MTRDevice was gotten from.
  */
 @property (nonatomic, strong, readonly) MTRDeviceController * deviceController;
 
 /**
- * Node id for this MTRDevice.  Only set to a usable value if this device
- * represents a CASE session.
+ * Node id for this MTRDevice.  If this device represents a CASE session, this
+ * is set to the node ID of the target node.  If this device represents a PASE
+ * session, this is set to the device id of the PASE device.
  */
 @property (nonatomic, assign, readonly) chip::NodeId nodeID;
 
 /**
- * Controllers are created via the MTRDeviceControllerFactory object.
- */
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-
-/**
- * Initialize the device object with the given node id and controller.  This
- * will always succeed, even if there is no such node id on the controller's
- * fabric, but attempts to actually use the MTRBaseDevice will fail
- * (asynchronously) in that case.
+ * Initialize the device object as a CASE device with the given node id and
+ * controller.  This will always succeed, even if there is no such node id on
+ * the controller's fabric, but attempts to actually use the MTRBaseDevice will
+ * fail (asynchronously) in that case.
  */
 - (instancetype)initWithNodeID:(NSNumber *)nodeID controller:(MTRDeviceController *)controller;
 
+/**
+ * Create a report, suitable in including in the sort of data structure that
+ * gets passed to MTRDeviceResponseHandler, from a given event header and
+ * already-decoded event data.  The data is allowed to be nil in error cases
+ * (e.g. when TLV decoding failed).
+ */
++ (NSDictionary *)eventReportForHeader:(const chip::app::EventHeader &)header andData:(id _Nullable)data;
+@end
+
+@interface MTRClusterPath ()
+- (instancetype)initWithPath:(const chip::app::ConcreteClusterPath &)path;
 @end
 
 @interface MTRAttributePath ()
@@ -90,10 +110,18 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MTREventReport ()
 - (instancetype)initWithPath:(const chip::app::ConcreteEventPath &)path
                  eventNumber:(NSNumber *)eventNumber
-                    priority:(NSNumber *)priority
-                   timestamp:(NSNumber *)timestamp
+                    priority:(chip::app::PriorityLevel)priority
+                   timestamp:(const chip::app::Timestamp &)timestamp
                        value:(id _Nullable)value
                        error:(NSError * _Nullable)error;
+@end
+
+@interface MTRAttributeRequestPath ()
+- (void)convertToAttributePathParams:(chip::app::AttributePathParams &)params;
+@end
+
+@interface MTREventRequestPath ()
+- (void)convertToEventPathParams:(chip::app::EventPathParams &)params;
 @end
 
 // Exported utility function

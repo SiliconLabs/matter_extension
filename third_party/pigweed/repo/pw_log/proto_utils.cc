@@ -34,14 +34,14 @@ Result<ConstByteSpan> EncodeLog(int level,
                                 std::string_view message,
                                 ByteSpan encode_buffer) {
   // Encode message to the LogEntry protobuf.
-  LogEntry::MemoryEncoder encoder(encode_buffer);
+  pwpb::LogEntry::MemoryEncoder encoder(encode_buffer);
 
   if (message.empty()) {
     return Status::InvalidArgument();
   }
 
   // Defer status checks until the end.
-  Status status = encoder.WriteMessage(as_bytes(span(message)));
+  Status status = encoder.WriteMessage(as_bytes(span<const char>(message)));
   status = encoder.WriteLineLevel(PackLineLevel(line_number, level));
   if (flags != 0) {
     status = encoder.WriteFlags(flags);
@@ -50,25 +50,25 @@ Result<ConstByteSpan> EncodeLog(int level,
 
   // Module name and file name may or may not be present.
   if (!module_name.empty()) {
-    status = encoder.WriteModule(as_bytes(span(module_name)));
+    status = encoder.WriteModule(as_bytes(span<const char>(module_name)));
   }
   if (!file_name.empty()) {
-    status = encoder.WriteFile(as_bytes(span(file_name)));
+    status = encoder.WriteFile(as_bytes(span<const char>(file_name)));
   }
   if (!thread_name.empty()) {
-    status = encoder.WriteThread(as_bytes(span(thread_name)));
+    status = encoder.WriteThread(as_bytes(span<const char>(thread_name)));
   }
   PW_TRY(encoder.status());
   return ConstByteSpan(encoder);
 }
 
-LogEntry::MemoryEncoder CreateEncoderAndEncodeTokenizedLog(
+pwpb::LogEntry::MemoryEncoder CreateEncoderAndEncodeTokenizedLog(
     pw::log_tokenized::Metadata metadata,
     ConstByteSpan tokenized_data,
     int64_t ticks_since_epoch,
     ByteSpan encode_buffer) {
   // Encode message to the LogEntry protobuf.
-  LogEntry::MemoryEncoder encoder(encode_buffer);
+  pwpb::LogEntry::MemoryEncoder encoder(encode_buffer);
 
   // Defer status checks until the end.
   Status status = encoder.WriteMessage(tokenized_data);

@@ -57,6 +57,10 @@ import("python_action.gni")
 #    not specified it will not be set and the subprocess will have whatever the
 #    parent current working directory is.
 #
+#  venv: Python virtualenv to pass along to the underlying pw_python_action.
+#
+#  visibility: GN visibility to apply to the underlying target.
+#
 # Example:
 #
 #   pw_exec("hello_world") {
@@ -138,6 +142,8 @@ template("pw_exec") {
                              "inputs",
                              "pool",
                              "public_deps",
+                             "venv",
+                             "visibility",
                            ])
 
     if (!defined(inputs)) {

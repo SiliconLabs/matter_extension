@@ -30,6 +30,7 @@ _LOG = logging.getLogger(__name__)
 # with a few changes to LossyChannel.
 class LossController(abc.ABC):
     """Interface for driving loss/corruption decisions of a LossyChannel."""
+
     @abc.abstractmethod
     def next_packet_duplicated(self) -> bool:
         """Returns true if the next packet should be duplicated."""
@@ -65,6 +66,7 @@ class LossController(abc.ABC):
 
 class ManualPacketFilter(LossController):
     """Determines if a packet should be kept or dropped for testing purposes."""
+
     _Action = Callable[[int], Tuple[bool, bool]]
     _KEEP = lambda _: (True, False)
     _DROP = lambda _: (False, False)
@@ -110,40 +112,38 @@ class ManualPacketFilter(LossController):
     def next_packet_duplicated(self) -> bool:
         return False
 
-    @staticmethod
-    def next_packet_out_of_order() -> bool:
+    def next_packet_out_of_order(self) -> bool:
         return False
 
-    @staticmethod
-    def next_packet_delayed() -> bool:
+    def next_packet_delayed(self) -> bool:
         return False
 
     def next_packet_dropped(self) -> bool:
         return not self.keep_packet()
 
-    @staticmethod
-    def next_packet_delay() -> int:
+    def next_packet_delay(self) -> int:
         return 0
 
-    @staticmethod
-    def next_num_dupes() -> int:
+    def next_num_dupes(self) -> int:
         return 0
 
-    @staticmethod
-    def choose_out_of_order_packet(max_idx) -> int:
+    def choose_out_of_order_packet(self, max_idx) -> int:
         return 0
 
 
 class RandomLossGenerator(LossController):
     """Parametrized random number generator that drives a LossyChannel."""
-    def __init__(self,
-                 duplicated_packet_probability: float,
-                 max_duplications_per_packet: int,
-                 out_of_order_probability: float,
-                 delayed_packet_probability: float,
-                 delayed_packet_range_ms: Tuple[int, int],
-                 dropped_packet_probability: float,
-                 seed: Optional[int] = None):
+
+    def __init__(
+        self,
+        duplicated_packet_probability: float,
+        max_duplications_per_packet: int,
+        out_of_order_probability: float,
+        delayed_packet_probability: float,
+        delayed_packet_range_ms: Tuple[int, int],
+        dropped_packet_probability: float,
+        seed: Optional[int] = None,
+    ):
         self.duplicated_packet_probability = duplicated_packet_probability
         self.max_duplications_per_packet = max_duplications_per_packet
         self.out_of_order_probability = out_of_order_probability
@@ -176,16 +176,17 @@ class RandomLossGenerator(LossController):
 
 class LossyChannel(pw_rpc.ChannelManipulator):
     """Introduces lossy behaviors into a channel."""
+
     class _Packet:
         """Container class to keep track of incoming packet sequence number."""
+
         def __init__(self, sequence_number: int, payload: bytes):
             self.sequence_number = sequence_number
             self.payload = payload
 
-    def __init__(self,
-                 name,
-                 loss_generator: LossController,
-                 max_num_old_packets=24):
+    def __init__(
+        self, name, loss_generator: LossController, max_num_old_packets=24
+    ):
         super().__init__()
         self.name = name
         self._packets: Deque[LossyChannel._Packet] = collections.deque()
@@ -208,8 +209,7 @@ class LossyChannel(pw_rpc.ChannelManipulator):
         self._enqueue_old_packet(packet)
         if self._rng.next_packet_duplicated():
             num_dupes = self._rng.next_num_dupes()
-            _LOG.debug('[%s] Duplicating packet %d times', self.name,
-                       num_dupes)
+            _LOG.debug('[%s] Duplicating packet %d times', self.name, num_dupes)
             for _ in range(num_dupes):
                 self._packets.append(packet)
 
@@ -219,9 +219,13 @@ class LossyChannel(pw_rpc.ChannelManipulator):
 
             if self._rng.next_packet_out_of_order():
                 idx = self._rng.choose_out_of_order_packet(
-                    len(self._old_packets) - 1)
-                _LOG.debug('[%s] Selecting out of order packet at index %d',
-                           self.name, idx)
+                    len(self._old_packets) - 1
+                )
+                _LOG.debug(
+                    '[%s] Selecting out of order packet at index %d',
+                    self.name,
+                    idx,
+                )
                 packet = copy.copy(self._old_packets[idx])
                 del self._old_packets[idx]
             else:
@@ -236,8 +240,13 @@ class LossyChannel(pw_rpc.ChannelManipulator):
             if not self._rng.next_packet_dropped():
                 action_msg = 'Sent'
                 self.send_packet(packet.payload)
-            _LOG.debug('[%s] %s packet #%d: %s', self.name, action_msg,
-                       packet.sequence_number, str(packet.payload))
+            _LOG.debug(
+                '[%s] %s packet #%d: %s',
+                self.name,
+                action_msg,
+                packet.sequence_number,
+                str(packet.payload),
+            )
 
     def process_and_send(self, packet: bytes):
         self._enqueue_packet(packet)

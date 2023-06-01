@@ -14,14 +14,14 @@
 
 include("$ENV{PW_ROOT}/pw_build/pigweed.cmake")
 
-pw_add_module_library(targets.host.system_rpc_server
-  IMPLEMENTS_FACADES
-    pw_rpc.system_server
+pw_add_library(targets.host.system_rpc_server STATIC
   SOURCES
     system_rpc_server.cc
   PRIVATE_DEPS
-    pw_hdlc
+    pw_assert.check
+    pw_hdlc.pw_rpc
+    pw_hdlc.rpc_channel_output
     pw_log
-    pw_rpc.server
+    pw_rpc.system_server.facade
     pw_stream.socket_stream
 )

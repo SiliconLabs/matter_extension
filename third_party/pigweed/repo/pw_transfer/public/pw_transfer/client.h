@@ -1,4 +1,4 @@
-// Copyright 2022 The Pigweed Authors
+// Copyright 2023 The Pigweed Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not
 // use this file except in compliance with the License. You may obtain a copy of
@@ -64,6 +64,8 @@ class Client {
                             : transfer_thread.max_chunk_size(),
                         transfer_thread.max_chunk_size(),
                         extend_window_divisor),
+        max_retries_(cfg::kDefaultMaxRetries),
+        max_lifetime_retries_(cfg::kDefaultMaxLifetimeRetries),
         has_read_stream_(false),
         has_write_stream_(false) {}
 
@@ -71,11 +73,13 @@ class Client {
   // the server is written to the provided writer. Returns OK if the transfer is
   // successfully started. When the transfer finishes (successfully or not), the
   // completion callback is invoked with the overall status.
-  Status Read(
-      uint32_t resource_id,
-      stream::Writer& output,
-      CompletionFunc&& on_completion,
-      chrono::SystemClock::duration timeout = cfg::kDefaultChunkTimeout);
+  Status Read(uint32_t resource_id,
+              stream::Writer& output,
+              CompletionFunc&& on_completion,
+              chrono::SystemClock::duration timeout = cfg::kDefaultChunkTimeout,
+              chrono::SystemClock::duration initial_chunk_timeout =
+                  cfg::kDefaultInitialChunkTimeout,
+              ProtocolVersion version = kDefaultProtocolVersion);
 
   // Begins a new write transfer for the given resource ID. Data from the
   // provided reader is sent to the server. When the transfer finishes
@@ -85,7 +89,10 @@ class Client {
       uint32_t resource_id,
       stream::Reader& input,
       CompletionFunc&& on_completion,
-      chrono::SystemClock::duration timeout = cfg::kDefaultChunkTimeout);
+      chrono::SystemClock::duration timeout = cfg::kDefaultChunkTimeout,
+      chrono::SystemClock::duration initial_chunk_timeout =
+          cfg::kDefaultInitialChunkTimeout,
+      ProtocolVersion version = kDefaultProtocolVersion);
 
   // Terminates an ongoing transfer for the specified resource ID.
   //
@@ -102,14 +109,36 @@ class Client {
     return OkStatus();
   }
 
+  constexpr Status set_max_retries(uint32_t max_retries) {
+    if (max_retries < 1 || max_retries > max_lifetime_retries_) {
+      return Status::InvalidArgument();
+    }
+    max_retries_ = max_retries;
+    return OkStatus();
+  }
+
+  constexpr Status set_max_lifetime_retries(uint32_t max_lifetime_retries) {
+    if (max_lifetime_retries < max_retries_) {
+      return Status::InvalidArgument();
+    }
+    max_lifetime_retries_ = max_lifetime_retries;
+    return OkStatus();
+  }
+
  private:
+  static constexpr ProtocolVersion kDefaultProtocolVersion =
+      ProtocolVersion::kLegacy;
+
   using Transfer = pw_rpc::raw::Transfer;
 
   void OnRpcError(Status status, internal::TransferType type);
 
   Transfer::Client client_;
   TransferThread& transfer_thread_;
+
   internal::TransferParameters max_parameters_;
+  uint32_t max_retries_;
+  uint32_t max_lifetime_retries_;
 
   bool has_read_stream_;
   bool has_write_stream_;

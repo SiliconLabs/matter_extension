@@ -60,6 +60,7 @@ tests:
                 value: 0
 
     - label: "Wait 100ms"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -86,6 +87,7 @@ tests:
                 value: 0
 
     - label: "Wait 10s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -103,6 +105,7 @@ tests:
               maxValue: 253
 
     - label: "Wait 10s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -120,6 +123,7 @@ tests:
               maxValue: 254
 
     - label: "Wait 5s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -132,7 +136,9 @@ tests:
       command: "readAttribute"
       attribute: "CurrentSaturation"
       response:
-          value: 240
+          constraints:
+              minValue: 204
+              maxValue: 254
 
     - label:
           "TH sends StepSaturation command to DUT with StepMode=0x01 (up),
@@ -153,6 +159,7 @@ tests:
                 value: 0
 
     - label: "Wait 10s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -165,7 +172,9 @@ tests:
       command: "readAttribute"
       attribute: "CurrentSaturation"
       response:
-          value: 254
+          constraints:
+              minValue: 216
+              maxValue: 254
 
     - label:
           "TH sends MoveToSaturation command to DUT with Saturation=50 and
@@ -184,6 +193,7 @@ tests:
                 value: 0
 
     - label: "Wait 100ms"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -210,6 +220,7 @@ tests:
                 value: 0
 
     - label: "Wait 10s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -227,6 +238,7 @@ tests:
               maxValue: 35
 
     - label: "Wait 10s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -240,10 +252,11 @@ tests:
       attribute: "CurrentSaturation"
       response:
           constraints:
-              minValue: 5
-              maxValue: 15
+              minValue: 8
+              maxValue: 12
 
     - label: "Wait 5s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -256,7 +269,9 @@ tests:
       command: "readAttribute"
       attribute: "CurrentSaturation"
       response:
-          value: 10
+          constraints:
+              minValue: 8
+              maxValue: 12
 
     - label:
           "TH sends StepSaturation command to DUT with StepMode=0x03 (down),
@@ -277,6 +292,7 @@ tests:
                 value: 0
 
     - label: "Wait 10s"
+      PICS: CC.S.F00
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:

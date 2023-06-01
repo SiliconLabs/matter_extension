@@ -21,9 +21,12 @@ import dev.pigweed.pw_log.Logger;
 import dev.pigweed.pw_rpc.Channel;
 import dev.pigweed.pw_rpc.ChannelOutputException;
 import dev.pigweed.pw_rpc.Client;
+import dev.pigweed.pw_rpc.Status;
+import dev.pigweed.pw_transfer.ProtocolVersion;
 import dev.pigweed.pw_transfer.TransferClient;
-import dev.pigweed.pw_transfer.TransferParameters;
+import dev.pigweed.pw_transfer.TransferError;
 import dev.pigweed.pw_transfer.TransferService;
+import dev.pigweed.pw_transfer.TransferTimeoutSettings;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -35,9 +38,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import pw.transfer.ConfigProtos;
+import pw.transfer.ConfigProtos.TransferAction;
 
 public class JavaClient {
   private static final String SERVICE = "pw.transfer.Transfer";
@@ -154,14 +156,25 @@ public class JavaClient {
     if (config_builder.getMaxRetries() == 0) {
       throw new AssertionError("max_retries may not be 0");
     }
+    if (config_builder.getMaxLifetimeRetries() == 0) {
+      throw new AssertionError("max_lifetime_retries may not be 0");
+    }
     return config_builder.build();
   }
 
-  public static void ReadFromServer(int resourceId, Path fileName, TransferClient client) {
+  public static void ReadFromServer(
+      int resourceId, Path fileName, TransferClient client, Status expected_status) {
     byte[] data;
     try {
       data = client.read(resourceId).get();
-    } catch (InterruptedException | ExecutionException e) {
+    } catch (ExecutionException e) {
+      if (((TransferError) e.getCause()).status() != expected_status) {
+        throw new AssertionError("Unexpected transfer read failure", e);
+      }
+      // Expected failure occurred, skip trying to write the data knowing that
+      // it is missing.
+      return;
+    } catch (InterruptedException e) {
       throw new AssertionError("Read from server failed", e);
     }
 
@@ -173,7 +186,8 @@ public class JavaClient {
     }
   }
 
-  public static void WriteToServer(int resourceId, Path fileName, TransferClient client) {
+  public static void WriteToServer(
+      int resourceId, Path fileName, TransferClient client, Status expected_status) {
     if (Files.notExists(fileName)) {
       logger.atSevere().log("Input file `%s` does not exist", fileName);
     }
@@ -188,7 +202,11 @@ public class JavaClient {
 
     try {
       client.write(resourceId, data).get();
-    } catch (InterruptedException | ExecutionException e) {
+    } catch (ExecutionException e) {
+      if (((TransferError) e.getCause()).status() != expected_status) {
+        throw new AssertionError("Unexpected transfer write failure", e);
+      }
+    } catch (InterruptedException e) {
       throw new AssertionError("Write to server failed", e);
     }
   }
@@ -239,20 +257,28 @@ public class JavaClient {
     TransferClient client = new TransferClient(
         hdlc_rpc_client.getRpcClient().method(CHANNEL_ID, TransferService.get().name() + "/Read"),
         hdlc_rpc_client.getRpcClient().method(CHANNEL_ID, TransferService.get().name() + "/Write"),
-        config.getChunkTimeoutMs(),
-        config.getInitialChunkTimeoutMs(),
-        config.getMaxRetries(),
-        () -> false);
+        TransferTimeoutSettings.builder()
+            .setTimeoutMillis(config.getChunkTimeoutMs())
+            .setInitialTimeoutMillis(config.getInitialChunkTimeoutMs())
+            .setMaxRetries(config.getMaxRetries())
+            .setMaxLifetimeRetries(config.getMaxLifetimeRetries())
+            .build());
 
     for (ConfigProtos.TransferAction action : config.getTransferActionsList()) {
       int resourceId = action.getResourceId();
       Path fileName = Paths.get(action.getFilePath());
 
+      if (action.getProtocolVersion() != TransferAction.ProtocolVersion.UNKNOWN_VERSION) {
+        client.setProtocolVersion(ProtocolVersion.values()[action.getProtocolVersionValue()]);
+      } else {
+        client.setProtocolVersion(ProtocolVersion.latest());
+      }
+
       if (action.getTransferType() == ConfigProtos.TransferAction.TransferType.WRITE_TO_SERVER) {
-        WriteToServer(resourceId, fileName, client);
+        WriteToServer(resourceId, fileName, client, Status.fromCode(action.getExpectedStatus()));
       } else if (action.getTransferType()
           == ConfigProtos.TransferAction.TransferType.READ_FROM_SERVER) {
-        ReadFromServer(resourceId, fileName, client);
+        ReadFromServer(resourceId, fileName, client, Status.fromCode(action.getExpectedStatus()));
       } else {
         throw new AssertionError("Unknown transfer action type");
       }

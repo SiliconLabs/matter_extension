@@ -52,6 +52,11 @@ declare_args() {
 #     default_toolchain.
 #   defaults: (required) A scope setting GN build arg values to apply to GN
 #     targets in this toolchain. These take precedence over args.gni settings.
+#   static_analysis: (optional) A scope defining args to apply to the
+#     static_analysis toolchain. If the scope is not defined, static analysis
+#     will be disabled. If provided, static_analysis will be enabled iff
+#     required enabled field in scope is declared true. See
+#     static_analysis_toolchain.gni for more information on scope members.
 #
 # The defaults scope should contain values for builtin GN arguments:
 #   current_cpu: The CPU of the toolchain.
@@ -370,11 +375,57 @@ template("generate_toolchain") {
         }
         forward_variables_from(invoker_toolchain_args, "*")
       }
+
+      _generate_rust_tools = defined(invoker.rustc)
+      if (_generate_rust_tools) {
+        _rustc_command = string_join(
+                " ",
+                [
+                  # TODO(b/234872510): Ensure this works with Windows.
+                  "RUST_BACKTRACE=1",
+                  "{{rustenv}}",
+                  invoker.rustc,
+                  "{{source}}",
+                  "--crate-name {{crate_name}}",
+                  "--crate-type {{crate_type}}",
+                  "{{externs}}",
+                  "{{rustdeps}}",
+                  "{{rustflags}}",
+                  "-D warnings",
+                  "--color always",
+                  "--emit=dep-info={{output}}.d,link",
+                  "-o {{output_dir}}/{{target_output_name}}{{output_extension}}",
+                ])
+
+        _output = "{{output_dir}}/{{target_output_name}}{{output_extension}}"
+
+        tool("rust_bin") {
+          description = "rustc {{output}}"
+          default_output_dir = "{{target_out_dir}}/bin"
+          depfile = "{{output}}.d"
+          command = _rustc_command
+          outputs = [ _output ]
+        }
+
+        tool("rust_rlib") {
+          description = "rustc {{output}}"
+          default_output_dir = "{{target_out_dir}}/lib"
+          depfile = "{{output}}.d"
+          output_prefix = "lib"
+          default_output_extension = ".rlib"
+          command = _rustc_command
+          outputs = [ _output ]
+        }
+      }
     }
 
-    _generate_static_analysis_toolchain =
-        defined(invoker.static_analysis) && invoker.static_analysis
-
+    _generate_static_analysis_toolchain = false
+    if (defined(invoker.static_analysis)) {
+      _static_analysis_args = invoker.static_analysis
+      assert(defined(_static_analysis_args.enabled),
+             "static_analysis.enabled missing from scope.")
+      _generate_static_analysis_toolchain = _static_analysis_args.enabled
+    }
     if (_generate_static_analysis_toolchain) {
       pw_static_analysis_toolchain(target_name + ".static_analysis") {
         forward_variables_from(invoker, "*")

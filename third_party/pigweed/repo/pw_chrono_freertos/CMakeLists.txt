@@ -16,7 +16,7 @@ include($ENV{PW_ROOT}/pw_build/pigweed.cmake)
 
 pw_add_module_config(pw_chrono_freertos_CONFIG)
 
-pw_add_module_library(pw_chrono_freertos.config
+pw_add_library(pw_chrono_freertos.config INTERFACE
   HEADERS
     public/pw_chrono_freertos/config.h
   PUBLIC_INCLUDES
@@ -27,9 +27,7 @@ pw_add_module_library(pw_chrono_freertos.config
 )
 
 # This target provides the backend for pw::chrono::SystemClock.
-pw_add_module_library(pw_chrono_freertos.system_clock
-  IMPLEMENTS_FACADES
-    pw_chrono.system_clock
+pw_add_library(pw_chrono_freertos.system_clock STATIC
   HEADERS
     public/pw_chrono_freertos/system_clock_config.h
     public/pw_chrono_freertos/system_clock_constants.h
@@ -38,8 +36,9 @@ pw_add_module_library(pw_chrono_freertos.system_clock
     public
     public_overrides
   PUBLIC_DEPS
-    pw_chrono_freertos.config
     pw_chrono.epoch
+    pw_chrono.system_clock.facade
+    pw_chrono_freertos.config
     pw_third_party.freertos
   SOURCES
     system_clock.cc
@@ -49,9 +48,7 @@ pw_add_module_library(pw_chrono_freertos.system_clock
 )
 
 # This target provides the backend for pw::chrono::SystemTimer.
-pw_add_module_library(pw_chrono_freertos.system_timer
-  IMPLEMENTS_FACADES
-    pw_chrono.system_timer
+pw_add_library(pw_chrono_freertos.system_timer STATIC
   HEADERS
     public/pw_chrono_freertos/system_timer_inline.h
     public/pw_chrono_freertos/system_timer_native.h
@@ -62,6 +59,7 @@ pw_add_module_library(pw_chrono_freertos.system_timer
     public_overrides
   PUBLIC_DEPS
     pw_chrono.system_clock
+    pw_chrono.system_timer.facade
     pw_third_party.freertos
   SOURCES
     system_timer.cc

@@ -18,8 +18,9 @@
 
 namespace pw::rpc::internal {
 
-PwpbServerCall::PwpbServerCall(const CallContext& context, MethodType type)
-    : internal::ServerCall(context, type),
+PwpbServerCall::PwpbServerCall(const LockedCallContext& context,
+                               MethodType type)
+    : ServerCall(context, CallProperties(type, kServerCall, kProtoStruct)),
       serde_(&static_cast<const PwpbMethod&>(context.method()).serde()) {}
 
 }  // namespace pw::rpc::internal

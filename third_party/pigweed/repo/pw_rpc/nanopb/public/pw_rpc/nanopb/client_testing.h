@@ -15,6 +15,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 
 #include "pw_bytes/span.h"
 #include "pw_rpc/client.h"
@@ -39,35 +40,40 @@ class NanopbFakeServer : public FakeServer {
   // Sends a response packet for a server or bidirectional streaming RPC to the
   // client.
   template <auto kMethod>
-  void SendResponse(Status status) const {
-    FakeServer::SendResponse<kMethod>(status);
+  void SendResponse(Status status,
+                    std::optional<uint32_t> call_id = std::nullopt) const {
+    FakeServer::SendResponse<kMethod>(status, call_id);
   }
 
   // Sends a response packet for a unary or client streaming streaming RPC to
   // the client.
   template <auto kMethod,
             size_t kEncodeBufferSizeBytes = 2 * sizeof(Response<kMethod>)>
-  void SendResponse(const Response<kMethod>& payload, Status status) const {
+  void SendResponse(const Response<kMethod>& payload,
+                    Status status,
+                    std::optional<uint32_t> call_id = std::nullopt) const {
     std::byte buffer[kEncodeBufferSizeBytes] = {};
-    FakeServer::SendResponse<kMethod>(EncodeResponse<kMethod>(&payload, buffer),
-                                      status);
+    FakeServer::SendResponse<kMethod>(
+        EncodeResponse<kMethod>(&payload, buffer), status, call_id);
   }
 
   // Sends a stream packet for a server or bidirectional streaming RPC to the
   // client.
   template <auto kMethod,
             size_t kEncodeBufferSizeBytes = 2 * sizeof(Response<kMethod>)>
-  void SendServerStream(const Response<kMethod>& payload) const {
+  void SendServerStream(const Response<kMethod>& payload,
+                        std::optional<uint32_t> call_id = std::nullopt) const {
     std::byte buffer[kEncodeBufferSizeBytes] = {};
     FakeServer::SendServerStream<kMethod>(
-        EncodeResponse<kMethod>(&payload, buffer));
+        EncodeResponse<kMethod>(&payload, buffer), call_id);
   }
 
  private:
   template <auto kMethod>
   static ConstByteSpan EncodeResponse(const void* payload, ByteSpan buffer) {
     const StatusWithSize result =
-        internal::MethodInfo<kMethod>::serde().EncodeResponse(payload, buffer);
+        internal::MethodInfo<kMethod>::serde().response().Encode(payload,
+                                                                 buffer);
     PW_ASSERT(result.ok());
     return span(buffer).first(result.size());
   }

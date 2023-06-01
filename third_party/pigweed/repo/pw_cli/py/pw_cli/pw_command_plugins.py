@@ -14,12 +14,12 @@
 """This module manages the global plugin registry for pw_cli."""
 
 import argparse
-import os
 from pathlib import Path
 import sys
 from typing import Iterable
 
-from pw_cli import arguments, plugins
+from pw_cli import arguments, env, plugins
+import pw_env_setup.config_file
 
 _plugin_registry = plugins.Registry(validator=plugins.callable_with_no_args)
 REGISTRY_FILE = 'PW_PLUGINS'
@@ -29,12 +29,15 @@ def _register_builtin_plugins(registry: plugins.Registry) -> None:
     """Registers the commands that are included with pw by default."""
 
     # Register these by name to avoid circular dependencies.
+    registry.register_by_name('bloat', 'pw_bloat.__main__', 'main')
     registry.register_by_name('doctor', 'pw_doctor.doctor', 'main')
-    registry.register_by_name('python-packages',
-                              'pw_env_setup.python_packages', 'main')
     registry.register_by_name('format', 'pw_presubmit.format_code', 'main')
+    registry.register_by_name('keep-sorted', 'pw_presubmit.keep_sorted', 'main')
     registry.register_by_name('logdemo', 'pw_cli.log', 'main')
-    registry.register_by_name('module-check', 'pw_module.check', 'main')
+    registry.register_by_name('module', 'pw_module.__main__', 'main')
+    registry.register_by_name(
+        'python-packages', 'pw_env_setup.python_packages', 'main'
+    )
     registry.register_by_name('test', 'pw_unit_test.test_runner', 'main')
     registry.register_by_name('watch', 'pw_watch.watch', 'main')
 
@@ -44,10 +47,12 @@ def _register_builtin_plugins(registry: plugins.Registry) -> None:
 def _help_command():
     """Display detailed information about pw commands."""
     parser = argparse.ArgumentParser(description=_help_command.__doc__)
-    parser.add_argument('plugins',
-                        metavar='plugin',
-                        nargs='*',
-                        help='command for which to display detailed info')
+    parser.add_argument(
+        'plugins',
+        metavar='plugin',
+        nargs='*',
+        help='command for which to display detailed info',
+    )
 
     print(arguments.format_help(_plugin_registry), file=sys.stderr)
 
@@ -55,10 +60,18 @@ def _help_command():
         print(line, file=sys.stderr)
 
 
-def register(directory: Path) -> None:
+def register() -> None:
     _register_builtin_plugins(_plugin_registry)
-    _plugin_registry.register_directory(
-        directory, REGISTRY_FILE, Path(os.environ.get('PW_PROJECT_ROOT', '')))
+    parsed_env = env.pigweed_environment()
+    pw_plugins_file: Path = parsed_env.PW_PROJECT_ROOT / REGISTRY_FILE
+
+    if pw_plugins_file.is_file():
+        _plugin_registry.register_file(pw_plugins_file)
+    else:
+        _plugin_registry.register_config(
+            config=pw_env_setup.config_file.load(),
+            path=pw_env_setup.config_file.path(),
+        )
 
 
 def errors() -> dict:

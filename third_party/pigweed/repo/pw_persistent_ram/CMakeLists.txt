@@ -14,7 +14,7 @@
 
 include($ENV{PW_ROOT}/pw_build/pigweed.cmake)
 
-pw_add_module_library(pw_persistent_ram
+pw_add_library(pw_persistent_ram STATIC
   HEADERS
     public/pw_persistent_ram/persistent.h
     public/pw_persistent_ram/persistent_buffer.h
@@ -34,7 +34,7 @@ pw_add_module_library(pw_persistent_ram
 pw_add_test(pw_persistent_ram.persistent_test
   SOURCES
     persistent_test.cc
-  DEPS
+  PRIVATE_DEPS
     pw_persistent_ram
     pw_random
   GROUPS
@@ -45,7 +45,7 @@ pw_add_test(pw_persistent_ram.persistent_test
 pw_add_test(pw_persistent_ram.persistent_buffer_test
   SOURCES
     persistent_buffer_test.cc
-  DEPS
+  PRIVATE_DEPS
     pw_persistent_ram
     pw_random
   GROUPS

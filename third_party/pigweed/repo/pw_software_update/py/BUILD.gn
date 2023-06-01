@@ -36,6 +36,7 @@ pw_python_package("py") {
 
   sources = [
     "pw_software_update/__init__.py",
+    "pw_software_update/cli.py",
     "pw_software_update/dev_sign.py",
     "pw_software_update/generate_test_bundle.py",
     "pw_software_update/keys.py",
@@ -47,6 +48,7 @@ pw_python_package("py") {
   ]
 
   tests = [
+    "cli_test.py",
     "dev_sign_test.py",
     "keys_test.py",
     "metadata_test.py",
@@ -57,6 +59,7 @@ pw_python_package("py") {
   ]
 
   pylintrc = "$dir_pigweed/.pylintrc"
+  mypy_ini = "$dir_pigweed/.mypy.ini"
 
   proto_library = "..:protos"
 }

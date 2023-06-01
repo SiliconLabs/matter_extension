@@ -81,13 +81,13 @@ Status VerifyMetadataSignatures(protobuf::Bytes message,
   // Gets the threshold -- at least `threshold` number of signatures must
   // pass verification in order to trust this metadata.
   protobuf::Uint32 threshold = signature_requirement.AsUint32(
-      static_cast<uint32_t>(SignatureRequirement::Fields::THRESHOLD));
+      static_cast<uint32_t>(SignatureRequirement::Fields::kThreshold));
   PW_TRY(threshold.status());
 
   // Gets the ids of keys that are allowed for verifying the signatures.
   protobuf::RepeatedBytes allowed_key_ids =
       signature_requirement.AsRepeatedBytes(
-          static_cast<uint32_t>(SignatureRequirement::Fields::KEY_IDS));
+          static_cast<uint32_t>(SignatureRequirement::Fields::kKeyIds));
   PW_TRY(allowed_key_ids.status());
 
   // Verifies the signatures. Check that at least `threshold` number of
@@ -97,7 +97,7 @@ Status VerifyMetadataSignatures(protobuf::Bytes message,
   for (protobuf::Message signature : signatures) {
     total_signatures++;
     protobuf::Bytes key_id =
-        signature.AsBytes(static_cast<uint32_t>(Signature::Fields::KEY_ID));
+        signature.AsBytes(static_cast<uint32_t>(Signature::Fields::kKeyId));
     PW_TRY(key_id.status());
 
     // Reads the key id into a buffer, so that we can check whether it is
@@ -131,7 +131,7 @@ Status VerifyMetadataSignatures(protobuf::Bytes message,
 
     // Retrieves the signature bytes.
     protobuf::Bytes sig =
-        signature.AsBytes(static_cast<uint32_t>(Signature::Fields::SIG));
+        signature.AsBytes(static_cast<uint32_t>(Signature::Fields::kSig));
     PW_TRY(sig.status());
 
     // Extracts the key type, scheme and value information.
@@ -141,7 +141,7 @@ Status VerifyMetadataSignatures(protobuf::Bytes message,
     PW_TRY(key_info.status());
 
     protobuf::Bytes key_val =
-        key_info.AsBytes(static_cast<uint32_t>(Key::Fields::KEYVAL));
+        key_info.AsBytes(static_cast<uint32_t>(Key::Fields::kKeyval));
     PW_TRY(key_val.status());
 
     // The function assume that all keys are ECDSA keys. This is guaranteed
@@ -166,8 +166,8 @@ Status VerifyMetadataSignatures(protobuf::Bytes message,
     return Status::NotFound();
   }
 
-  PW_LOG_ERROR("Insufficient signatures. Requires at least %u, verified %u",
-               threshold.value(),
+  PW_LOG_ERROR("Insufficient signatures. Requires at least %u, verified %zu",
+               static_cast<unsigned>(threshold.value()),
                verified_count);
   return Status::Unauthenticated();
 }
@@ -182,27 +182,27 @@ Result<bool> VerifyRootMetadataSignatures(protobuf::Message trusted_root,
                                           protobuf::Message new_root) {
   // Retrieves the trusted root metadata content message.
   protobuf::Message trusted = trusted_root.AsMessage(static_cast<uint32_t>(
-      SignedRootMetadata::Fields::SERIALIZED_ROOT_METADATA));
+      SignedRootMetadata::Fields::kSerializedRootMetadata));
   PW_TRY(trusted.status());
 
   // Retrieves the serialized new root metadata bytes.
   protobuf::Bytes serialized = new_root.AsBytes(static_cast<uint32_t>(
-      SignedRootMetadata::Fields::SERIALIZED_ROOT_METADATA));
+      SignedRootMetadata::Fields::kSerializedRootMetadata));
   PW_TRY(serialized.status());
 
   // Gets the key mapping from the trusted root metadata.
   protobuf::StringToMessageMap key_mapping = trusted.AsStringToMessageMap(
-      static_cast<uint32_t>(RootMetadata::Fields::KEYS));
+      static_cast<uint32_t>(RootMetadata::Fields::kKeys));
   PW_TRY(key_mapping.status());
 
   // Gets the signatures of the new root.
   protobuf::RepeatedMessages signatures = new_root.AsRepeatedMessages(
-      static_cast<uint32_t>(SignedRootMetadata::Fields::SIGNATURES));
+      static_cast<uint32_t>(SignedRootMetadata::Fields::kSignatures));
   PW_TRY(signatures.status());
 
   // Gets the signature requirement from the trusted root metadata.
   protobuf::Message signature_requirement = trusted.AsMessage(
-      static_cast<uint32_t>(RootMetadata::Fields::ROOT_SIGNATURE_REQUIREMENT));
+      static_cast<uint32_t>(RootMetadata::Fields::kRootSignatureRequirement));
   PW_TRY(signature_requirement.status());
 
   // Verifies the signatures.
@@ -228,7 +228,7 @@ Result<uint32_t> GetMetadataVersion(protobuf::Message& metadata,
       metadata.AsMessage(common_metatdata_field_number);
   PW_TRY(common_metadata.status());
   protobuf::Uint32 res = common_metadata.AsUint32(
-      static_cast<uint32_t>(software_update::CommonMetadata::Fields::VERSION));
+      static_cast<uint32_t>(software_update::CommonMetadata::Fields::kVersion));
   PW_TRY(res.status());
   return res.value();
 }
@@ -256,7 +256,7 @@ Status UpdateBundleAccessor::OpenAndVerify() {
 
   if (Status status = DoVerify(); !status.ok()) {
     PW_LOG_ERROR("Failed to verified staged bundle");
-    Close();
+    Close().IgnoreError();
     return status;
   }
 
@@ -269,14 +269,14 @@ Result<uint64_t> UpdateBundleAccessor::GetTotalPayloadSize() {
   PW_TRY(manifested_targets.status());
 
   protobuf::StringToBytesMap bundled_payloads = bundle_.AsStringToBytesMap(
-      static_cast<uint32_t>(UpdateBundle::Fields::TARGET_PAYLOADS));
+      static_cast<uint32_t>(UpdateBundle::Fields::kTargetPayloads));
   PW_TRY(bundled_payloads.status());
 
-  uint64_t total_bytes;
+  uint64_t total_bytes = 0;
   std::array<std::byte, MAX_TARGET_NAME_LENGTH> name_buffer = {};
   for (protobuf::Message target : manifested_targets) {
     protobuf::String target_name =
-        target.AsString(static_cast<uint32_t>(TargetFile::Fields::FILE_NAME));
+        target.AsString(static_cast<uint32_t>(TargetFile::Fields::kFileName));
 
     stream::IntervalReader name_reader = target_name.GetBytesReader();
     PW_TRY(name_reader.status());
@@ -295,7 +295,7 @@ Result<uint64_t> UpdateBundleAccessor::GetTotalPayloadSize() {
       continue;
     }
     protobuf::Uint64 target_length =
-        target.AsUint64(static_cast<uint32_t>(TargetFile::Fields::LENGTH));
+        target.AsUint64(static_cast<uint32_t>(TargetFile::Fields::kLength));
     PW_TRY(target_length.status());
     total_bytes += target_length.value();
   }
@@ -310,7 +310,7 @@ stream::IntervalReader UpdateBundleAccessor::GetTargetPayload(
   PW_TRY(manifest_entry.status());
 
   protobuf::StringToBytesMap payloads_map = bundle_.AsStringToBytesMap(
-      static_cast<uint32_t>(UpdateBundle::Fields::TARGET_PAYLOADS));
+      static_cast<uint32_t>(UpdateBundle::Fields::kTargetPayloads));
   return payloads_map[target_name].GetBytesReader();
 }
 
@@ -354,7 +354,7 @@ Status UpdateBundleAccessor::DoOpen() {
   bundle_ = protobuf::Message(update_reader_.reader(),
                               update_reader_.reader().ConservativeReadLimit());
   if (!bundle_.ok()) {
-    update_reader_.Close();
+    update_reader_.Close().IgnoreError();
     return bundle_.status();
   }
   return OkStatus();
@@ -373,7 +373,7 @@ Status UpdateBundleAccessor::DoVerify() {
     // metadata is optional and used opportunistically in the rest of the
     // verification flow.
     trusted_root_ = bundle_.AsMessage(
-        static_cast<uint32_t>(UpdateBundle::Fields::ROOT_METADATA));
+        static_cast<uint32_t>(UpdateBundle::Fields::kRootMetadata));
   } else {
     // A provisioned on-device root metadata is *required* for formal
     // verification.
@@ -438,7 +438,7 @@ ManifestAccessor UpdateBundleAccessor::GetOnDeviceManifest() {
 Status UpdateBundleAccessor::UpgradeRoot() {
 #if PW_SOFTWARE_UPDATE_WITH_ROOT_ROTATION
   protobuf::Message new_root = bundle_.AsMessage(
-      static_cast<uint32_t>(UpdateBundle::Fields::ROOT_METADATA));
+      static_cast<uint32_t>(UpdateBundle::Fields::kRootMetadata));
 
   if (!new_root.status().ok()) {
     // Don't bother upgrading if not found or invalid.
@@ -476,26 +476,26 @@ Status UpdateBundleAccessor::UpgradeRoot() {
   // Retrieves the trusted root metadata content message.
   protobuf::Message trusted_root_content =
       trusted_root_.AsMessage(static_cast<uint32_t>(
-          SignedRootMetadata::Fields::SERIALIZED_ROOT_METADATA));
+          SignedRootMetadata::Fields::kSerializedRootMetadata));
   PW_TRY(trusted_root_content.status());
   Result<uint32_t> trusted_root_version = GetMetadataVersion(
       trusted_root_content,
-      static_cast<uint32_t>(RootMetadata::Fields::COMMON_METADATA));
+      static_cast<uint32_t>(RootMetadata::Fields::kCommonMetadata));
   PW_TRY(trusted_root_version.status());
 
   // Retrieves the serialized new root metadata message.
   protobuf::Message new_root_content = new_root.AsMessage(static_cast<uint32_t>(
-      SignedRootMetadata::Fields::SERIALIZED_ROOT_METADATA));
+      SignedRootMetadata::Fields::kSerializedRootMetadata));
   PW_TRY(new_root_content.status());
   Result<uint32_t> new_root_version = GetMetadataVersion(
       new_root_content,
-      static_cast<uint32_t>(RootMetadata::Fields::COMMON_METADATA));
+      static_cast<uint32_t>(RootMetadata::Fields::kCommonMetadata));
   PW_TRY(new_root_version.status());
 
   if (trusted_root_version.value() > new_root_version.value()) {
     PW_LOG_ERROR("Root attempts to rollback from %u to %u",
-                 trusted_root_version.value(),
-                 new_root_version.value());
+                 static_cast<unsigned>(trusted_root_version.value()),
+                 static_cast<unsigned>(new_root_version.value()));
     return Status::Unauthenticated();
   }
 
@@ -546,7 +546,7 @@ Status UpdateBundleAccessor::VerifyTargetsMetadata() {
   // }
   protobuf::StringToMessageMap signed_targets_metadata_map =
       bundle_.AsStringToMessageMap(
-          static_cast<uint32_t>(UpdateBundle::Fields::TARGETS_METADATA));
+          static_cast<uint32_t>(UpdateBundle::Fields::kTargetsMetadata));
   PW_TRY(signed_targets_metadata_map.status());
 
   // The top-level targets metadata is identified by key name "targets" in the
@@ -564,29 +564,29 @@ Status UpdateBundleAccessor::VerifyTargetsMetadata() {
   // }
   protobuf::Message top_level_targets_metadata =
       signed_top_level_targets_metadata.AsMessage(static_cast<uint32_t>(
-          SignedTargetsMetadata::Fields::SERIALIZED_TARGETS_METADATA));
+          SignedTargetsMetadata::Fields::kSerializedTargetsMetadata));
 
   // Get the sigantures from the signed targets metadata.
   protobuf::RepeatedMessages signatures =
       signed_top_level_targets_metadata.AsRepeatedMessages(
-          static_cast<uint32_t>(SignedTargetsMetadata::Fields::SIGNATURES));
+          static_cast<uint32_t>(SignedTargetsMetadata::Fields::kSignatures));
   PW_TRY(signatures.status());
 
   // Retrieve the trusted root metadata message.
   protobuf::Message trusted_root =
       trusted_root_.AsMessage(static_cast<uint32_t>(
-          SignedRootMetadata::Fields::SERIALIZED_ROOT_METADATA));
+          SignedRootMetadata::Fields::kSerializedRootMetadata));
   PW_TRY(trusted_root.status());
 
   // Get the key_mapping from the trusted root metadata.
   protobuf::StringToMessageMap key_mapping = trusted_root.AsStringToMessageMap(
-      static_cast<uint32_t>(RootMetadata::Fields::KEYS));
+      static_cast<uint32_t>(RootMetadata::Fields::kKeys));
   PW_TRY(key_mapping.status());
 
   // Get the target metadtata signature requirement from the trusted root.
   protobuf::Message signature_requirement =
       trusted_root.AsMessage(static_cast<uint32_t>(
-          RootMetadata::Fields::TARGETS_SIGNATURE_REQUIREMENT));
+          RootMetadata::Fields::kTargetsSignatureRequirement));
   PW_TRY(signature_requirement.status());
 
   // Verify the sigantures
@@ -626,12 +626,12 @@ Status UpdateBundleAccessor::VerifyTargetsMetadata() {
   Result<uint32_t> new_version = GetMetadataVersion(
       top_level_targets_metadata,
       static_cast<uint32_t>(
-          software_update::TargetsMetadata::Fields::COMMON_METADATA));
+          software_update::TargetsMetadata::Fields::kCommonMetadata));
   PW_TRY(new_version.status());
   if (current_version.value() > new_version.value()) {
     PW_LOG_ERROR("Blocking Targets metadata rollback from %u to %u",
-                 current_version.value(),
-                 new_version.value());
+                 static_cast<unsigned>(current_version.value()),
+                 static_cast<unsigned>(new_version.value()));
     return Status::Unauthenticated();
   }
 
@@ -651,7 +651,7 @@ Status UpdateBundleAccessor::VerifyTargetsPayloads() {
   for (protobuf::Message target_file : target_files) {
     // Extract target file name in the form of a `std::string_view`.
     protobuf::String name_proto = target_file.AsString(
-        static_cast<uint32_t>(TargetFile::Fields::FILE_NAME));
+        static_cast<uint32_t>(TargetFile::Fields::kFileName));
     PW_TRY(name_proto.status());
     char name_buf[MAX_TARGET_NAME_LENGTH] = {0};
     Result<std::string_view> target_name =
@@ -659,11 +659,11 @@ Status UpdateBundleAccessor::VerifyTargetsPayloads() {
     PW_TRY(target_name.status());
 
     // Get target length.
-    protobuf::Uint64 target_length =
-        target_file.AsUint64(static_cast<uint32_t>(TargetFile::Fields::LENGTH));
+    protobuf::Uint64 target_length = target_file.AsUint64(
+        static_cast<uint32_t>(TargetFile::Fields::kLength));
     PW_TRY(target_length.status());
     if (target_length.value() > PW_SOFTWARE_UPDATE_MAX_TARGET_PAYLOAD_SIZE) {
-      PW_LOG_ERROR("Target payload too big. Maximum is %llu bytes",
+      PW_LOG_ERROR("Target payload too big. Maximum is %u bytes",
                    PW_SOFTWARE_UPDATE_MAX_TARGET_PAYLOAD_SIZE);
       return Status::OutOfRange();
     }
@@ -671,15 +671,16 @@ Status UpdateBundleAccessor::VerifyTargetsPayloads() {
     // Get target SHA256 hash.
     protobuf::Bytes target_sha256 = Status::NotFound();
     protobuf::RepeatedMessages hashes = target_file.AsRepeatedMessages(
-        static_cast<uint32_t>(TargetFile::Fields::HASHES));
+        static_cast<uint32_t>(TargetFile::Fields::kHashes));
     for (protobuf::Message hash : hashes) {
       protobuf::Uint32 hash_function =
-          hash.AsUint32(static_cast<uint32_t>(Hash::Fields::FUNCTION));
+          hash.AsUint32(static_cast<uint32_t>(Hash::Fields::kFunction));
       PW_TRY(hash_function.status());
 
       if (hash_function.value() ==
           static_cast<uint32_t>(HashFunction::SHA256)) {
-        target_sha256 = hash.AsBytes(static_cast<uint32_t>(Hash::Fields::HASH));
+        target_sha256 =
+            hash.AsBytes(static_cast<uint32_t>(Hash::Fields::kHash));
         break;
       }
     }
@@ -698,12 +699,12 @@ Status UpdateBundleAccessor::VerifyTargetsPayloads() {
 }
 
 Status UpdateBundleAccessor::VerifyTargetPayload(
-    ManifestAccessor manifest,
+    ManifestAccessor,
     std::string_view target_name,
     protobuf::Uint64 expected_length,
     protobuf::Bytes expected_sha256) {
   protobuf::StringToBytesMap payloads_map = bundle_.AsStringToBytesMap(
-      static_cast<uint32_t>(UpdateBundle::Fields::TARGET_PAYLOADS));
+      static_cast<uint32_t>(UpdateBundle::Fields::kTargetPayloads));
   stream::IntervalReader payload_reader =
       payloads_map[target_name].GetBytesReader();
 
@@ -725,8 +726,8 @@ Status UpdateBundleAccessor::VerifyTargetPayload(
 // TODO(alizhang): Add unit tests for all failure conditions.
 Status UpdateBundleAccessor::VerifyOutOfBundleTargetPayload(
     std::string_view target_name,
-    protobuf::Uint64 expected_length,
-    protobuf::Bytes expected_sha256) {
+    [[maybe_unused]] protobuf::Uint64 expected_length,
+    [[maybe_unused]] protobuf::Bytes expected_sha256) {
 #if PW_SOFTWARE_UPDATE_WITH_PERSONALIZATION
   // The target payload is "personalized out". We we can't take a measurement
   // without backend help. For now we will check against the device manifest
@@ -748,25 +749,25 @@ Status UpdateBundleAccessor::VerifyOutOfBundleTargetPayload(
   }
 
   protobuf::Uint64 cached_length =
-      cached.AsUint64(static_cast<uint32_t>(TargetFile::Fields::LENGTH));
+      cached.AsUint64(static_cast<uint32_t>(TargetFile::Fields::kLength));
   PW_TRY(cached_length.status());
   if (cached_length.value() != expected_length.value()) {
-    PW_LOG_ERROR("Personalized-out target has bad length: %llu, expected: %llu",
-                 cached_length.value(),
-                 expected_length.value());
+    PW_LOG_ERROR("Personalized-out target has bad length: %u, expected: %u",
+                 static_cast<unsigned>(cached_length.value()),
+                 static_cast<unsigned>(expected_length.value()));
     return Status::Unauthenticated();
   }
 
   protobuf::Bytes cached_sha256 = Status::NotFound();
   protobuf::RepeatedMessages hashes = cached.AsRepeatedMessages(
-      static_cast<uint32_t>(TargetFile::Fields::HASHES));
+      static_cast<uint32_t>(TargetFile::Fields::kHashes));
   for (protobuf::Message hash : hashes) {
     protobuf::Uint32 hash_function =
-        hash.AsUint32(static_cast<uint32_t>(Hash::Fields::FUNCTION));
+        hash.AsUint32(static_cast<uint32_t>(Hash::Fields::kFunction));
     PW_TRY(hash_function.status());
 
     if (hash_function.value() == static_cast<uint32_t>(HashFunction::SHA256)) {
-      cached_sha256 = hash.AsBytes(static_cast<uint32_t>(Hash::Fields::HASH));
+      cached_sha256 = hash.AsBytes(static_cast<uint32_t>(Hash::Fields::kHash));
       break;
     }
   }
@@ -782,7 +783,7 @@ Status UpdateBundleAccessor::VerifyOutOfBundleTargetPayload(
 
   return OkStatus();
 #else
-  PW_LOG_ERROR("Target file %s not found in bundle", target_name);
+  PW_LOG_ERROR("Target file %s not found in bundle", target_name.data());
   return Status::Unauthenticated();
 #endif  // PW_SOFTWARE_UPDATE_WITH_PERSONALIZATION
 }
@@ -795,9 +796,9 @@ Status UpdateBundleAccessor::VerifyInBundleTargetPayload(
   // measurement.
   uint64_t actual_length = payload_reader.interval_size();
   if (actual_length != expected_length.value()) {
-    PW_LOG_ERROR("Wrong payload length. Expected: %llu, actual: %llu",
-                 expected_length.value(),
-                 actual_length);
+    PW_LOG_ERROR("Wrong payload length. Expected: %u, actual: %u",
+                 static_cast<unsigned>(expected_length.value()),
+                 static_cast<unsigned>(actual_length));
     return Status::Unauthenticated();
   }
 

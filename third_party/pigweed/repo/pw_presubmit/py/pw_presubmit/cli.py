@@ -14,12 +14,14 @@
 """Argument parsing code for presubmit checks."""
 
 import argparse
+import fnmatch
 import logging
 import os
 from pathlib import Path
 import re
 import shutil
-from typing import Callable, Collection, Optional, Sequence
+import textwrap
+from typing import Callable, Collection, List, Optional, Sequence
 
 from pw_presubmit import git_repo, presubmit
 
@@ -40,9 +42,12 @@ def add_path_arguments(parser) -> None:
         'paths',
         metavar='pathspec',
         nargs='*',
-        help=('Paths or patterns to which to restrict the checks. These are '
-              'interpreted as Git pathspecs. If --base is provided, only '
-              'paths changed since that commit are checked.'))
+        help=(
+            'Paths or patterns to which to restrict the checks. These are '
+            'interpreted as Git pathspecs. If --base is provided, only '
+            'paths changed since that commit are checked.'
+        ),
+    )
 
     base = parser.add_mutually_exclusive_group()
     base.add_argument(
@@ -50,14 +55,20 @@ def add_path_arguments(parser) -> None:
         '--base',
         metavar='commit',
         default=git_repo.TRACKING_BRANCH_ALIAS,
-        help=('Git revision against which to diff for changed files. '
-              'Default is the tracking branch of the current branch.'))
+        help=(
+            'Git revision against which to diff for changed files. '
+            'Default is the tracking branch of the current branch.'
+        ),
+    )
+
     base.add_argument(
+        '--all',
         '--full',
         dest='base',
         action='store_const',
         const=None,
-        help='Run presubmit on all files, not just changed files.')
+        help='Run actions for all files, not just changed files.',
+    )
 
     parser.add_argument(
         '-e',
@@ -66,66 +77,161 @@ def add_path_arguments(parser) -> None:
         default=[],
         action='append',
         type=re.compile,
-        help=('Exclude paths matching any of these regular expressions, '
-              "which are interpreted relative to each Git repository's root."))
-
-
-def _add_programs_arguments(exclusive: argparse.ArgumentParser,
-                            programs: presubmit.Programs, default: str):
-    def presubmit_program(arg: str) -> presubmit.Program:
-        if arg not in programs:
-            raise argparse.ArgumentTypeError(
-                f'{arg} is not the name of a presubmit program')
-
-        return programs[arg]
-
-    exclusive.add_argument('-p',
-                           '--program',
-                           choices=programs.values(),
-                           type=presubmit_program,
-                           default=default,
-                           help='Which presubmit program to run')
-
-    all_steps = programs.all_steps()
-
-    # The step argument appends steps to a program. No "step" argument is
-    # created on the resulting argparse.Namespace.
-    class AddToCustomProgram(argparse.Action):
-        def __call__(self, parser, namespace, values, unused_option=None):
-            if not isinstance(namespace.program, list):
-                namespace.program = []
-
-            if values not in all_steps:
-                raise parser.error(
-                    f'argument --step: {values} is not the name of a '
-                    'presubmit check\n\nValid values for --step:\n'
-                    f'{{{",".join(sorted(all_steps))}}}')
-
-            namespace.program.append(all_steps[values])
-
-    exclusive.add_argument(
-        '--step',
-        action=AddToCustomProgram,
-        default=argparse.SUPPRESS,  # Don't create a "step" argument.
-        help='Provide explicit steps instead of running a predefined program.',
+        help=(
+            'Exclude paths matching any of these regular expressions, '
+            "which are interpreted relative to each Git repository's root."
+        ),
     )
 
 
-def add_arguments(parser: argparse.ArgumentParser,
-                  programs: Optional[presubmit.Programs] = None,
-                  default: str = '') -> None:
+def _add_programs_arguments(
+    parser: argparse.ArgumentParser, programs: presubmit.Programs, default: str
+):
+    def presubmit_program(arg: str) -> presubmit.Program:
+        if arg not in programs:
+            all_program_names = ', '.join(sorted(programs.keys()))
+            raise argparse.ArgumentTypeError(
+                f'{arg} is not the name of a presubmit program\n\n'
+                f'Valid Programs:\n{all_program_names}'
+            )
+
+        return programs[arg]
+
+    # This argument is used to copy the default program into the argparse
+    # namespace argument. It's not intended to be set by users.
+    parser.add_argument(
+        '--default-program',
+        default=[presubmit_program(default)],
+        help=argparse.SUPPRESS,
+    )
+
+    parser.add_argument(
+        '-p',
+        '--program',
+        choices=programs.values(),
+        type=presubmit_program,
+        action='append',
+        default=[],
+        help='Which presubmit program to run',
+    )
+
+    parser.add_argument(
+        '--list-steps-file',
+        dest='list_steps_file',
+        type=Path,
+        help=argparse.SUPPRESS,
+    )
+
+    all_steps = programs.all_steps()
+
+    def list_steps() -> None:
+        """List all available presubmit steps and their docstrings."""
+        for step in sorted(all_steps.values(), key=str):
+            _LOG.info('%s', step)
+            if step.doc:
+                first, *rest = step.doc.split('\n', 1)
+                _LOG.info('  %s', first)
+                if rest and _LOG.isEnabledFor(logging.DEBUG):
+                    for line in textwrap.dedent(*rest).splitlines():
+                        _LOG.debug('  %s', line)
+
+    parser.add_argument(
+        '--list-steps',
+        action='store_const',
+        const=list_steps,
+        default=None,
+        help='List all the available steps.',
+    )
+
+    def presubmit_step(arg: str) -> List[presubmit.Check]:
+        """Return a list of matching presubmit steps."""
+        filtered_step_names = fnmatch.filter(all_steps.keys(), arg)
+
+        if not filtered_step_names:
+            all_step_names = ', '.join(sorted(all_steps.keys()))
+            raise argparse.ArgumentTypeError(
+                f'"{arg}" does not match the name of a presubmit step.\n\n'
+                f'Valid Steps:\n{all_step_names}'
+            )
+
+        return list(all_steps[name] for name in filtered_step_names)
+
+    parser.add_argument(
+        '--step',
+        action='extend',
+        default=[],
+        help=(
+            'Run specific steps instead of running a full program. Include an '
+            'asterix to match more than one step name. For example: --step '
+            "'*_format'"
+        ),
+        type=presubmit_step,
+    )
+
+    parser.add_argument(
+        '--substep',
+        action='store',
+        help=(
+            "Run a specific substep of a step. Only supported if there's only "
+            'one --step argument and no --program arguments.'
+        ),
+    )
+
+    def gn_arg(argument):
+        key, value = argument.split('=', 1)
+        return (key, value)
+
+    # Recipe code for handling builds with pre-release toolchains requires the
+    # ability to pass through GN args. This ability is not expected to be used
+    # directly outside of this case, so the option is hidden. Values passed in
+    # to this argument should be of the form 'key=value'.
+    parser.add_argument(
+        '--override-gn-arg',
+        dest='override_gn_args',
+        action='append',
+        type=gn_arg,
+        help=argparse.SUPPRESS,
+    )
+
+
+def add_arguments(
+    parser: argparse.ArgumentParser,
+    programs: Optional[presubmit.Programs] = None,
+    default: str = '',
+) -> None:
     """Adds common presubmit check options to an argument parser."""
 
     add_path_arguments(parser)
-    parser.add_argument('-k',
-                        '--keep-going',
-                        action='store_true',
-                        help='Continue instead of aborting when errors occur.')
+
+    parser.add_argument(
+        '-k',
+        '--keep-going',
+        action='store_true',
+        help='Continue running presubmit steps after a failure.',
+    )
+
+    parser.add_argument(
+        '--continue-after-build-error',
+        action='store_true',
+        help=(
+            'Within presubmit steps, continue running build steps after a '
+            'failure.'
+        ),
+    )
+
+    parser.add_argument(
+        '--rng-seed',
+        type=int,
+        default=1,
+        help='Seed for random number generators.',
+    )
+
     parser.add_argument(
         '--output-directory',
         type=Path,
         help=f'Output directory (default: {"<repo root>" / DEFAULT_PATH})',
     )
+
     parser.add_argument(
         '--package-root',
         type=Path,
@@ -155,20 +261,27 @@ def add_arguments(parser: argparse.ArgumentParser,
         )
 
 
-def run(
-    program: Sequence[Callable],
+def run(  # pylint: disable=too-many-arguments
+    default_program: Optional[presubmit.Program],
+    program: Sequence[presubmit.Program],
+    step: Sequence[presubmit.Check],
+    substep: str,
     output_directory: Optional[Path],
     package_root: Path,
     clear: bool,
-    root: Path = None,
+    root: Optional[Path] = None,
     repositories: Collection[Path] = (),
     only_list_steps=False,
+    list_steps: Optional[Callable[[], None]] = None,
     **other_args,
 ) -> int:
     """Processes arguments from add_arguments and runs the presubmit.
 
     Args:
+      default_program: program to use if neither --program nor --step is used
       program: from the --program option
+      step: from the --step option
+      substep: from the --substep option
       output_directory: from --output-directory option
       package_root: from --package-root option
       clear: from the --clear option
@@ -178,10 +291,11 @@ def run(
           defaults to the root of the current directory's repository
       only_list_steps: list the steps that would be executed, one per line,
           instead of executing them
+      list_steps: list the steps that would be executed with their docstrings
       **other_args: remaining arguments defined by by add_arguments
 
     Returns:
-      exit code for sys.exit; 0 if succesful, 1 if an error occurred
+      exit code for sys.exit; 0 if successful, 1 if an error occurred
     """
     if root is None:
         root = git_repo.root()
@@ -194,11 +308,11 @@ def run(
 
     output_directory.mkdir(parents=True, exist_ok=True)
     output_directory.joinpath('README.txt').write_text(
-        _OUTPUT_PATH_README.format(repo=root))
+        _OUTPUT_PATH_README.format(repo=root)
+    )
 
     if not package_root:
-        package_root = Path(
-            os.environ['_PW_ACTUAL_ENVIRONMENT_ROOT']) / 'packages'
+        package_root = Path(os.environ['PW_PACKAGE_ROOT'])
 
     _LOG.debug('Using environment at %s', output_directory)
 
@@ -211,13 +325,47 @@ def run(
 
         return 0
 
-    if presubmit.run(program,
-                     root,
-                     repositories,
-                     only_list_steps=only_list_steps,
-                     output_directory=output_directory,
-                     package_root=package_root,
-                     **other_args):
+    if list_steps:
+        list_steps()
         return 0
+
+    final_program: Optional[presubmit.Program] = None
+    if not program and not step:
+        assert default_program  # Cast away Optional[].
+        final_program = default_program
+    elif len(program) == 1 and not step:
+        final_program = program[0]
+    else:
+        steps: List[presubmit.Check] = []
+        steps.extend(step)
+        for prog in program:
+            steps.extend(prog)
+        final_program = presubmit.Program('', steps)
+
+    if substep and len(final_program) > 1:
+        _LOG.error('--substep not supported if there are multiple steps')
+        return 1
+
+    if presubmit.run(
+        final_program,
+        root,
+        repositories,
+        only_list_steps=only_list_steps,
+        output_directory=output_directory,
+        package_root=package_root,
+        substep=substep,
+        **other_args,
+    ):
+        return 0
+
+    # Check if this failed presumbit was run as a Git hook by looking for GIT_*
+    # environment variables. Mention using --no-verify to skip if so.
+    for env_var in os.environ:
+        if env_var.startswith('GIT'):
+            _LOG.info(
+                'To skip these checks and continue with this push, '
+                'add --no-verify to the git command'
+            )
+            break
 
     return 1

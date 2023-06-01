@@ -50,9 +50,9 @@ tests:
       command: "MoveToColor"
       arguments:
           values:
-              - name: "colorX"
+              - name: "ColorX"
                 value: 32768
-              - name: "colorY"
+              - name: "ColorY"
                 value: 19660
               - name: "TransitionTime"
                 value: 0
@@ -62,6 +62,7 @@ tests:
                 value: 0
 
     - label: "Wait 100ms"
+      PICS: CC.S.F03
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -74,14 +75,18 @@ tests:
       command: "readAttribute"
       attribute: "CurrentX"
       response:
-          value: 32768
+          constraints:
+              minValue: 27853
+              maxValue: 37683
 
     - label: "TH reads CurrentY attribute from DUT"
       PICS: CC.S.F03 && CC.S.A0004
       command: "readAttribute"
       attribute: "CurrentY"
       response:
-          value: 19660
+          constraints:
+              minValue: 16711
+              maxValue: 22609
 
     - label:
           "TH sends MoveToColor command to DUT, with ColorX = 13107/0x3333
@@ -90,9 +95,9 @@ tests:
       command: "MoveToColor"
       arguments:
           values:
-              - name: "colorX"
+              - name: "ColorX"
                 value: 13107
-              - name: "colorY"
+              - name: "ColorY"
                 value: 13107
               - name: "TransitionTime"
                 value: 200
@@ -102,6 +107,7 @@ tests:
                 value: 0
 
     - label: "Wait 10s"
+      PICS: CC.S.F03
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -128,6 +134,7 @@ tests:
               maxValue: 19660
 
     - label: "Wait 10s"
+      PICS: CC.S.F03
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -154,6 +161,7 @@ tests:
               maxValue: 15073
 
     - label: "Wait 5s"
+      PICS: CC.S.F03
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -166,14 +174,18 @@ tests:
       command: "readAttribute"
       attribute: "CurrentX"
       response:
-          value: 13107
+          constraints:
+              minValue: 11141
+              maxValue: 15073
 
     - label: "TH reads CurrentY attribute from DUT"
       PICS: CC.S.F03 && CC.S.A0004 && CC.S.C07.Rsp
       command: "readAttribute"
       attribute: "CurrentY"
       response:
-          value: 13107
+          constraints:
+              minValue: 11141
+              maxValue: 15073
 
     - label: "TH writes 0 to the Options attribute"
       PICS: CC.S.A000f
@@ -202,9 +214,9 @@ tests:
       command: "MoveToColor"
       arguments:
           values:
-              - name: "colorX"
+              - name: "ColorX"
                 value: 32768
-              - name: "colorY"
+              - name: "ColorY"
                 value: 19660
               - name: "TransitionTime"
                 value: 0
@@ -214,6 +226,7 @@ tests:
                 value: 0
 
     - label: "Wait 100ms"
+      PICS: CC.S.F03
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -226,14 +239,18 @@ tests:
       command: "readAttribute"
       attribute: "CurrentX"
       response:
-          value: 32768
+          constraints:
+              minValue: 27853
+              maxValue: 37683
 
     - label: "TH reads CurrentY attribute from DUT"
       PICS: CC.S.F03 && CC.S.A0004 && CC.S.C07.Rsp
       command: "readAttribute"
       attribute: "CurrentY"
       response:
-          value: 19660
+          constraints:
+              minValue: 16711
+              maxValue: 22609
 
     - label: "TH sends Off command to DUT"
       PICS: OO.S.C00.Rsp
@@ -247,9 +264,9 @@ tests:
       command: "MoveToColor"
       arguments:
           values:
-              - name: "colorX"
+              - name: "ColorX"
                 value: 13107
-              - name: "colorY"
+              - name: "ColorY"
                 value: 13107
               - name: "TransitionTime"
                 value: 0
@@ -259,6 +276,7 @@ tests:
                 value: 0
 
     - label: "Wait 100ms"
+      PICS: CC.S.F03
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -287,9 +305,9 @@ tests:
       command: "MoveToColor"
       arguments:
           values:
-              - name: "colorX"
+              - name: "ColorX"
                 value: 13107
-              - name: "colorY"
+              - name: "ColorY"
                 value: 32768
               - name: "TransitionTime"
                 value: 0
@@ -299,6 +317,7 @@ tests:
                 value: 0
 
     - label: "Wait 100ms"
+      PICS: CC.S.F03
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -327,9 +346,9 @@ tests:
       command: "MoveToColor"
       arguments:
           values:
-              - name: "colorX"
+              - name: "ColorX"
                 value: 26214
-              - name: "colorY"
+              - name: "ColorY"
                 value: 32768
               - name: "TransitionTime"
                 value: 0
@@ -339,6 +358,7 @@ tests:
                 value: 1
 
     - label: "Wait 100ms"
+      PICS: CC.S.F03
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -351,14 +371,18 @@ tests:
       command: "readAttribute"
       attribute: "CurrentX"
       response:
-          value: 26214
+          constraints:
+              minValue: 22282
+              maxValue: 30146
 
     - label: "TH reads CurrentY attribute from DUT"
       PICS: CC.S.F03 && CC.S.A0004 && CC.S.C07.Rsp
       command: "readAttribute"
       attribute: "CurrentY"
       response:
-          value: 32768
+          constraints:
+              minValue: 27853
+              maxValue: 37683
 
     - label: "TH writes 1 to the Options attribute"
       PICS: CC.S.A000f
@@ -386,9 +410,9 @@ tests:
       command: "MoveToColor"
       arguments:
           values:
-              - name: "colorX"
+              - name: "ColorX"
                 value: 32768
-              - name: "colorY"
+              - name: "ColorY"
                 value: 19660
               - name: "TransitionTime"
                 value: 0
@@ -398,6 +422,7 @@ tests:
                 value: 0
 
     - label: "Wait 100ms"
+      PICS: CC.S.F03
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -410,14 +435,18 @@ tests:
       command: "readAttribute"
       attribute: "CurrentX"
       response:
-          value: 32768
+          constraints:
+              minValue: 27853
+              maxValue: 37683
 
     - label: "TH reads CurrentY attribute from DUT"
       PICS: CC.S.F03 && CC.S.A0004 && CC.S.C07.Rsp
       command: "readAttribute"
       attribute: "CurrentY"
       response:
-          value: 19660
+          constraints:
+              minValue: 16711
+              maxValue: 22609
 
     - label: "TH sends Off command to DUT"
       PICS: OO.S.C00.Rsp
@@ -431,9 +460,9 @@ tests:
       command: "MoveToColor"
       arguments:
           values:
-              - name: "colorX"
+              - name: "ColorX"
                 value: 13107
-              - name: "colorY"
+              - name: "ColorY"
                 value: 13107
               - name: "TransitionTime"
                 value: 0
@@ -443,6 +472,7 @@ tests:
                 value: 0
 
     - label: "Wait 100ms"
+      PICS: CC.S.F03
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -455,14 +485,18 @@ tests:
       command: "readAttribute"
       attribute: "CurrentX"
       response:
-          value: 13107
+          constraints:
+              minValue: 11141
+              maxValue: 15073
 
     - label: "TH reads CurrentY attribute from DUT"
       PICS: CC.S.F03 && CC.S.A0004 && CC.S.C07.Rsp
       command: "readAttribute"
       attribute: "CurrentY"
       response:
-          value: 13107
+          constraints:
+              minValue: 11141
+              maxValue: 15073
 
     - label:
           "TH sends MoveToColor command to DUT, with ColorX = 13107/0x3333
@@ -471,9 +505,9 @@ tests:
       command: "MoveToColor"
       arguments:
           values:
-              - name: "colorX"
+              - name: "ColorX"
                 value: 13107
-              - name: "colorY"
+              - name: "ColorY"
                 value: 32768
               - name: "TransitionTime"
                 value: 0
@@ -483,6 +517,7 @@ tests:
                 value: 0
 
     - label: "Wait 100ms"
+      PICS: CC.S.F03
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -511,9 +546,9 @@ tests:
       command: "MoveToColor"
       arguments:
           values:
-              - name: "colorX"
+              - name: "ColorX"
                 value: 26214
-              - name: "colorY"
+              - name: "ColorY"
                 value: 32768
               - name: "TransitionTime"
                 value: 0
@@ -523,6 +558,7 @@ tests:
                 value: 1
 
     - label: "Wait 100ms"
+      PICS: CC.S.F03
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -535,17 +571,21 @@ tests:
       command: "readAttribute"
       attribute: "CurrentX"
       response:
-          value: 26214
+          constraints:
+              minValue: 22282
+              maxValue: 30146
 
     - label: "TH reads CurrentY attribute from DUT"
       PICS: CC.S.F03 && CC.S.A0004 && CC.S.C07.Rsp
       command: "readAttribute"
       attribute: "CurrentY"
       response:
-          value: 32768
+          constraints:
+              minValue: 27853
+              maxValue: 37683
 
     - label: "TH reads ColorMode attribute from DUT"
-      PICS: CC.S.F00 && CC.S.A0008
+      PICS: CC.S.F03 && CC.S.A0008
       command: "readAttribute"
       attribute: "ColorMode"
       response:
@@ -555,7 +595,7 @@ tests:
               maxValue: 2
 
     - label: "TH reads EnhancedColorMode attribute from DUT"
-      PICS: CC.S.F00 && CC.S.A4001
+      PICS: CC.S.F03 && CC.S.A4001
       command: "readAttribute"
       attribute: "EnhancedColorMode"
       response:
@@ -563,3 +603,16 @@ tests:
           constraints:
               minValue: 0
               maxValue: 3
+
+    - label: "Turn off light that we turned on"
+      PICS: OO.S.C00.Rsp
+      cluster: "On/Off"
+      command: "Off"
+
+    - label: "Check on/off attribute value is false after off command"
+      cluster: "On/Off"
+      command: "readAttribute"
+      attribute: "OnOff"
+      PICS: OO.S.A0000
+      response:
+          value: 0

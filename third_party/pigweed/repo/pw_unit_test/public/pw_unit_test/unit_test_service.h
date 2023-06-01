@@ -37,11 +37,11 @@ class UnitTestService final
   // migrated to it.
   template <typename WriteFunction>
   void WriteEvent(WriteFunction event_writer) {
-    Event::MemoryEncoder event(encoding_buffer_);
+    pwpb::Event::MemoryEncoder event(encoding_buffer_);
     event_writer(event);
     if (event.status().ok()) {
       writer_.Write(event)
-          .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+          .IgnoreError();  // TODO(b/242598609): Handle Status properly
     }
   }
 

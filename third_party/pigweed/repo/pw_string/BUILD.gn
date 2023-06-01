@@ -59,12 +59,16 @@ pw_source_set("builder") {
   sources = [ "string_builder.cc" ]
   public_deps = [
     ":format",
+    ":string",
     ":to_string",
     ":util",
     dir_pw_preprocessor,
     dir_pw_span,
     dir_pw_status,
   ]
+
+  # TODO(b/259746255): Remove this when everything compiles with -Wconversion.
+  configs = [ "$dir_pw_build:conversion_warnings" ]
 }
 
 pw_source_set("format") {
@@ -72,10 +76,30 @@ pw_source_set("format") {
   public = [ "public/pw_string/format.h" ]
   sources = [ "format.cc" ]
   public_deps = [
+    ":string",
     dir_pw_preprocessor,
     dir_pw_span,
     dir_pw_status,
   ]
+
+  # TODO(b/259746255): Remove this when everything compiles with -Wconversion.
+  configs = [ "$dir_pw_build:conversion_warnings" ]
+}
+
+pw_source_set("string") {
+  public_configs = [ ":public_include_path" ]
+  public = [ "public/pw_string/string.h" ]
+  sources = [
+    "public/pw_string/internal/string_common_functions.inc",
+    "public/pw_string/internal/string_impl.h",
+  ]
+  public_deps = [
+    dir_pw_assert,
+    dir_pw_polyfill,
+  ]
+
+  # TODO(b/259746255): Remove this when everything compiles with -Wconversion.
+  configs = [ "$dir_pw_build:conversion_warnings" ]
 }
 
 pw_source_set("to_string") {
@@ -92,6 +116,10 @@ pw_source_set("to_string") {
     dir_pw_span,
     dir_pw_status,
   ]
+  deps = [ "$dir_pw_third_party/fuchsia:stdcompat" ]
+
+  # TODO(b/259746255): Remove this when everything compiles with -Wconversion.
+  configs = [ "$dir_pw_build:conversion_warnings" ]
 }
 
 pw_source_set("util") {
@@ -99,6 +127,7 @@ pw_source_set("util") {
   public = [ "public/pw_string/util.h" ]
   sources = [ "public/pw_string/internal/length.h" ]
   public_deps = [
+    ":string",
     dir_pw_assert,
     dir_pw_result,
     dir_pw_span,
@@ -106,25 +135,14 @@ pw_source_set("util") {
   ]
 }
 
-pw_source_set("vector") {
-  public_configs = [ ":public_include_path" ]
-  public = [ "public/pw_string/vector.h" ]
-  public_deps = [
-    ":pw_string",
-    "$dir_pw_containers:vector",
-    "$dir_pw_status",
-    dir_pw_span,
-  ]
-}
-
 pw_test_group("tests") {
   tests = [
+    ":string_test",
     ":format_test",
     ":string_builder_test",
     ":to_string_test",
     ":type_to_string_test",
     ":util_test",
-    ":vector_test",
   ]
   group_deps = [
     "$dir_pw_preprocessor:tests",
@@ -137,9 +155,21 @@ pw_test("format_test") {
   sources = [ "format_test.cc" ]
 }
 
+pw_test("string_test") {
+  deps = [ ":string" ]
+  sources = [ "string_test.cc" ]
+  negative_compilation_tests = true
+
+  # TODO(b/259746255): Remove this when everything compiles with -Wconversion.
+  configs = [ "$dir_pw_build:conversion_warnings" ]
+}
+
 pw_test("string_builder_test") {
   deps = [ ":builder" ]
   sources = [ "string_builder_test.cc" ]
+
+  # TODO(b/259746255): Remove this when everything compiles with -Wconversion.
+  configs = [ "$dir_pw_build:conversion_warnings" ]
 }
 
 pw_test("to_string_test") {
@@ -148,35 +178,41 @@ pw_test("to_string_test") {
     ":pw_string",
   ]
   sources = [ "to_string_test.cc" ]
+
+  # TODO(b/259746255): Remove this when everything compiles with -Wconversion.
+  configs = [ "$dir_pw_build:conversion_warnings" ]
 }
 
 pw_test("type_to_string_test") {
   deps = [ ":to_string" ]
   sources = [ "type_to_string_test.cc" ]
+
+  # TODO(b/259746255): Remove this when everything compiles with -Wconversion.
+  configs = [ "$dir_pw_build:conversion_warnings" ]
 }
 
 pw_test("util_test") {
   deps = [ ":util" ]
   sources = [ "util_test.cc" ]
-}
 
-pw_test("vector_test") {
-  deps = [
-    ":vector",
-    "$dir_pw_containers:vector",
-  ]
-  sources = [ "vector_test.cc" ]
+  # TODO(b/259746255): Remove this when everything compiles with -Wconversion.
+  configs = [ "$dir_pw_build:conversion_warnings" ]
 }
 
 pw_doc_group("docs") {
-  sources = [ "docs.rst" ]
+  sources = [
+    "api.rst",
+    "design.rst",
+    "docs.rst",
+    "guide.rst",
+  ]
   report_deps = [
     ":format_size_report",
     ":string_builder_size_report",
   ]
 }
 
-pw_size_report("format_size_report") {
+pw_size_diff("format_size_report") {
   title = "Using pw::string::Format instead of snprintf"
 
   binaries = [
@@ -198,7 +234,7 @@ pw_size_report("format_size_report") {
   ]
 }
 
-pw_size_report("string_builder_size_report") {
+pw_size_diff("string_builder_size_report") {
   title = "Using pw::StringBuilder instead of snprintf"
 
   binaries = [

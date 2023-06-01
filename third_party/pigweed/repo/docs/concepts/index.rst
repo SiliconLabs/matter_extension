@@ -117,13 +117,13 @@ C++
 ---
 Most Pigweed code requires C++17, but a few modules, such as
 :ref:`module-pw_kvs` and :ref:`module-pw_tokenizer`, work with C++14. All
-Pigweed code is compatible with C++20. Pigweed defines toolchains for testing
-with C++14 and C++20; see :ref:`target-host` target documentation for more
-information.
+Pigweed code is compatible with C++20. Pigweed defines GN toolchains for
+building with C++14 and C++20; see :ref:`target-host` target documentation for
+more information. For Bazel, the C++ standard version can be configured using
+the `--cxxopt flag <https://bazel.build/docs/user-manual#cxxopt>`_.
+
+.. _docs-concepts-python-version:
 
 Python
 ------
-We currently officially support Python 3.7.7, 3.8, and 3.9.
-
-.. note::
-   Python 3.10 is not yet supported (https://bugs.pigweed.dev/234874769).
+Pigweed officially supports Python 3.8, 3.9, 3.10, and 3.11.

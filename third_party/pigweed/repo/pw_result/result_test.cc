@@ -23,6 +23,7 @@
 #include "pw_result/result.h"
 
 #include "gtest/gtest.h"
+#include "pw_status/status.h"
 #include "pw_status/try.h"
 
 namespace pw {
@@ -124,10 +125,6 @@ Status TryResultAssign(Result<bool> result) {
   return result.status();
 }
 
-// TODO(pwbug/363): Once pw::Result has been refactored to properly support
-// non-default move and/or copy assignment operators and/or constructors, we
-// should add explicit tests to confirm this is properly handled by
-// PW_TRY_ASSIGN.
 TEST(Result, TryAssign) {
   EXPECT_EQ(TryResultAssign(Status::Cancelled()), Status::Cancelled());
   EXPECT_EQ(TryResultAssign(Status::DataLoss()), Status::DataLoss());
@@ -178,6 +175,368 @@ TEST(Result, ConstexprNotOkCopy) {
 
   static_assert(kResultCopy.value_or(Value{99}).number == 99);
   static_assert(std::move(kResultCopy).value_or(Value{99}).number == 99);
+}
+
+auto multiply = [](int x) -> Result<int> { return x * 2; };
+auto add_two = [](int x) -> Result<int> { return x + 2; };
+auto fail_unknown = [](int) -> Result<int> { return Status::Unknown(); };
+
+TEST(Result, AndThenNonConstLValueRefInvokeSuccess) {
+  Result<int> r = 32;
+  auto ret = r.and_then(multiply);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(*ret, 64);
+}
+
+TEST(Result, AndThenNonConstLValueRefInvokeFail) {
+  Result<int> r = 32;
+  auto ret = r.and_then(fail_unknown);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::Unknown());
+}
+
+TEST(Result, AndThenNonConstLValueRefSkips) {
+  Result<int> r = Status::NotFound();
+  auto ret = r.and_then(multiply);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::NotFound());
+}
+
+TEST(Result, AndThenNonConstRvalueRefInvokeSuccess) {
+  Result<int> r = 32;
+  auto ret = std::move(r).and_then(multiply);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(*ret, 64);
+}
+
+TEST(Result, AndThenNonConstRvalueRefInvokeFails) {
+  Result<int> r = 64;
+  auto ret = std::move(r).and_then(fail_unknown);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::Unknown());
+}
+
+TEST(Result, AndThenNonConstRvalueRefSkips) {
+  Result<int> r = Status::NotFound();
+  auto ret = std::move(r).and_then(multiply);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::NotFound());
+}
+
+TEST(Result, AndThenConstLValueRefInvokeSuccess) {
+  const Result<int> r = 32;
+  auto ret = r.and_then(multiply);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(*ret, 64);
+}
+
+TEST(Result, AndThenConstLValueRefInvokeFail) {
+  const Result<int> r = 32;
+  auto ret = r.and_then(fail_unknown);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::Unknown());
+}
+
+TEST(Result, AndThenConstLValueRefSkips) {
+  const Result<int> r = Status::NotFound();
+  auto ret = r.and_then(multiply);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::NotFound());
+}
+
+TEST(Result, AndThenConstRValueRefInvokeSuccess) {
+  const Result<int> r = 32;
+  auto ret = std::move(r).and_then(multiply);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(*ret, 64);
+}
+
+TEST(Result, AndThenConstRValueRefInvokeFail) {
+  const Result<int> r = 32;
+  auto ret = std::move(r).and_then(fail_unknown);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::Unknown());
+}
+
+TEST(Result, AndThenConstRValueRefSkips) {
+  const Result<int> r = Status::NotFound();
+  auto ret = std::move(r).and_then(multiply);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::NotFound());
+}
+
+TEST(Result, AndThenMultipleChained) {
+  Result<int> r = 32;
+  auto ret = r.and_then(multiply).and_then(add_two).and_then(multiply);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(*ret, 132);
+}
+
+auto return_status = [](Status) { return Status::Unknown(); };
+auto return_result = [](Status) { return Result<int>(Status::Internal()); };
+
+TEST(Result, OrElseNonConstLValueRefSkips) {
+  Result<int> r = 32;
+  auto ret = r.or_else(return_status);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(*ret, 32);
+}
+
+TEST(Result, OrElseNonConstLValueRefStatusInvokes) {
+  Result<int> r = Status::NotFound();
+  auto ret = r.or_else(return_status);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::Unknown());
+}
+
+TEST(Result, OrElseNonConstLValueRefResultInvokes) {
+  Result<int> r = Status::NotFound();
+  auto ret = r.or_else(return_result);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::Internal());
+}
+
+TEST(Result, OrElseNonConstLValueRefVoidSkips) {
+  Result<int> r = 32;
+  bool invoked = false;
+  auto ret = r.or_else([&invoked](Status) { invoked = true; });
+  EXPECT_FALSE(invoked);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(*ret, 32);
+}
+
+TEST(Result, OrElseNonConstLValueRefVoidInvokes) {
+  Result<int> r = Status::NotFound();
+  bool invoked = false;
+  auto ret = r.or_else([&invoked](Status) { invoked = true; });
+  EXPECT_TRUE(invoked);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::NotFound());
+}
+
+TEST(Result, OrElseNonConstRValueRefSkips) {
+  Result<int> r = 32;
+  auto ret = std::move(r).or_else(return_status);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(*ret, 32);
+}
+
+TEST(Result, OrElseNonConstRValueRefStatusInvokes) {
+  Result<int> r = Status::NotFound();
+  auto ret = std::move(r).or_else(return_status);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::Unknown());
+}
+
+TEST(Result, OrElseNonConstRValueRefResultInvokes) {
+  Result<int> r = Status::NotFound();
+  auto ret = std::move(r).or_else(return_result);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::Internal());
+}
+
+TEST(Result, OrElseNonConstRValueRefVoidSkips) {
+  Result<int> r = 32;
+  bool invoked = false;
+  auto ret = std::move(r).or_else([&invoked](Status) { invoked = true; });
+  EXPECT_FALSE(invoked);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(*ret, 32);
+}
+
+TEST(Result, OrElseNonConstRValueRefVoidInvokes) {
+  Result<int> r = Status::NotFound();
+  bool invoked = false;
+  auto ret = std::move(r).or_else([&invoked](Status) { invoked = true; });
+  EXPECT_TRUE(invoked);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::NotFound());
+}
+
+TEST(Result, OrElseConstLValueRefSkips) {
+  const Result<int> r = 32;
+  auto ret = r.or_else(return_status);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(*ret, 32);
+}
+
+TEST(Result, OrElseConstLValueRefStatusInvokes) {
+  const Result<int> r = Status::NotFound();
+  auto ret = r.or_else(return_status);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::Unknown());
+}
+
+TEST(Result, OrElseConstLValueRefResultInvokes) {
+  const Result<int> r = Status::NotFound();
+  auto ret = r.or_else(return_result);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::Internal());
+}
+
+TEST(Result, OrElseConstLValueRefVoidSkips) {
+  const Result<int> r = 32;
+  bool invoked = false;
+  auto ret = r.or_else([&invoked](Status) { invoked = true; });
+  EXPECT_FALSE(invoked);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(*ret, 32);
+}
+
+TEST(Result, OrElseConstLValueRefVoidInvokes) {
+  const Result<int> r = Status::NotFound();
+  bool invoked = false;
+  auto ret = r.or_else([&invoked](Status) { invoked = true; });
+  EXPECT_TRUE(invoked);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::NotFound());
+}
+
+TEST(Result, OrElseConstRValueRefSkips) {
+  const Result<int> r = 32;
+  auto ret = std::move(r).or_else(return_status);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(*ret, 32);
+}
+
+TEST(Result, OrElseConstRValueRefStatusInvokes) {
+  const Result<int> r = Status::NotFound();
+  auto ret = std::move(r).or_else(return_status);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::Unknown());
+}
+
+TEST(Result, OrElseConstRValueRefResultInvokes) {
+  const Result<int> r = Status::NotFound();
+  auto ret = std::move(r).or_else(return_result);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::Internal());
+}
+
+TEST(Result, OrElseConstRValueRefVoidSkips) {
+  const Result<int> r = 32;
+  bool invoked = false;
+  auto ret = std::move(r).or_else([&invoked](Status) { invoked = true; });
+  EXPECT_FALSE(invoked);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(*ret, 32);
+}
+
+TEST(Result, OrElseConstRValueRefVoidInvokes) {
+  const Result<int> r = Status::NotFound();
+  bool invoked = false;
+  auto ret = std::move(r).or_else([&invoked](Status) { invoked = true; });
+  EXPECT_TRUE(invoked);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::NotFound());
+}
+
+TEST(Result, OrElseMultipleChained) {
+  Result<int> r = Status::NotFound();
+  bool invoked = false;
+  auto ret =
+      r.or_else(return_result).or_else([&invoked](Status) { invoked = true; });
+  EXPECT_TRUE(invoked);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::Internal());
+}
+
+auto multiply_int = [](int x) { return x * 2; };
+auto add_two_int = [](int x) { return x + 2; };
+auto make_value = [](int x) { return Value{.number = x}; };
+
+TEST(Result, TransformNonConstLValueRefInvokeSuccess) {
+  Result<int> r = 32;
+  auto ret = r.transform(multiply_int);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(*ret, 64);
+}
+
+TEST(Result, TransformNonConstLValueRefInvokeDifferentType) {
+  Result<int> r = 32;
+  auto ret = r.transform(make_value);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(ret->number, 32);
+}
+
+TEST(Result, TransformNonConstLValueRefSkips) {
+  Result<int> r = Status::NotFound();
+  auto ret = r.transform(multiply_int);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::NotFound());
+}
+
+TEST(Result, TransformNonConstRValueRefInvokeSuccess) {
+  Result<int> r = 32;
+  auto ret = std::move(r).transform(multiply_int);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(*ret, 64);
+}
+
+TEST(Result, TransformNonConstRValueRefInvokeDifferentType) {
+  Result<int> r = 32;
+  auto ret = std::move(r).transform(make_value);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(ret->number, 32);
+}
+
+TEST(Result, TransformNonConstRValueRefSkips) {
+  Result<int> r = Status::NotFound();
+  auto ret = std::move(r).transform(multiply_int);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::NotFound());
+}
+
+TEST(Result, TransformConstLValueRefInvokeSuccess) {
+  const Result<int> r = 32;
+  auto ret = r.transform(multiply_int);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(*ret, 64);
+}
+
+TEST(Result, TransformConstLValueRefInvokeDifferentType) {
+  const Result<int> r = 32;
+  auto ret = r.transform(make_value);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(ret->number, 32);
+}
+
+TEST(Result, TransformConstLValueRefSkips) {
+  const Result<int> r = Status::NotFound();
+  auto ret = r.transform(multiply_int);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::NotFound());
+}
+
+TEST(Result, TransformConstRValueRefInvokeSuccess) {
+  const Result<int> r = 32;
+  auto ret = std::move(r).transform(multiply_int);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(*ret, 64);
+}
+
+TEST(Result, TransformConstRValueRefInvokeDifferentType) {
+  const Result<int> r = 32;
+  auto ret = std::move(r).transform(make_value);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(ret->number, 32);
+}
+
+TEST(Result, TransformConstRValueRefSkips) {
+  const Result<int> r = Status::NotFound();
+  auto ret = std::move(r).transform(multiply_int);
+  ASSERT_FALSE(ret.ok());
+  EXPECT_EQ(ret.status(), Status::NotFound());
+}
+
+TEST(Result, TransformMultipleChained) {
+  Result<int> r = 32;
+  auto ret = r.transform(multiply_int)
+                 .transform(add_two_int)
+                 .transform(multiply_int)
+                 .transform(make_value);
+  ASSERT_TRUE(ret.ok());
+  EXPECT_EQ(ret->number, 132);
 }
 
 }  // namespace

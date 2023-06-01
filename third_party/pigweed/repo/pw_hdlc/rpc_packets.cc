@@ -20,7 +20,6 @@
 namespace pw::hdlc {
 
 Status ReadAndProcessPackets(rpc::Server& server,
-                             rpc::ChannelOutput& output,
                              span<std::byte> decode_buffer,
                              unsigned rpc_address) {
   Decoder decoder(decode_buffer);
@@ -32,8 +31,8 @@ Status ReadAndProcessPackets(rpc::Server& server,
     if (auto result = decoder.Process(data); result.ok()) {
       Frame& frame = result.value();
       if (frame.address() == rpc_address) {
-        server.ProcessPacket(frame.data(), output)
-            .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+        server.ProcessPacket(frame.data())
+            .IgnoreError();  // TODO(b/242598609): Handle Status properly
       }
     }
   }

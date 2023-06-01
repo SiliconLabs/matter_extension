@@ -13,10 +13,11 @@
 # the License.
 
 include($ENV{PW_ROOT}/pw_build/pigweed.cmake)
+include($ENV{PW_ROOT}/pw_thread_freertos/backend.cmake)
 
 pw_add_module_config(pw_thread_freertos_CONFIG)
 
-pw_add_module_library(pw_thread_freertos.config
+pw_add_library(pw_thread_freertos.config INTERFACE
   HEADERS
     public/pw_thread_freertos/config.h
   PUBLIC_INCLUDES
@@ -27,35 +28,33 @@ pw_add_module_library(pw_thread_freertos.config
 )
 
 # This target provides the backend for pw::thread::Id & pw::this_thread::get_id.
-pw_add_module_library(pw_thread_freertos.id
-  IMPLEMENTS_FACADES
-    pw_thread.id
+pw_add_library(pw_thread_freertos.id INTERFACE
   HEADERS
     public/pw_thread_freertos/id_inline.h
     public/pw_thread_freertos/id_native.h
-    public_overrides/pw_thread_backend/id_inline.h
-    public_overrides/pw_thread_backend/id_native.h
+    id_public_overrides/pw_thread_backend/id_inline.h
+    id_public_overrides/pw_thread_backend/id_native.h
   PUBLIC_INCLUDES
     public
-    public_overrides
+    id_public_overrides
   PUBLIC_DEPS
     pw_assert
     pw_interrupt.context
     pw_third_party.freertos
+    pw_thread.id.facade
 )
 
 # This target provides the backend for pw::this_thread::sleep_{for,until}.
-pw_add_module_library(pw_thread_freertos.sleep
-  IMPLEMENTS_FACADES
-    pw_thread.sleep
+pw_add_library(pw_thread_freertos.sleep STATIC
   HEADERS
     public/pw_thread_freertos/sleep_inline.h
-    public_overrides/pw_thread_backend/sleep_inline.h
+    sleep_public_overrides/pw_thread_backend/sleep_inline.h
   PUBLIC_INCLUDES
     public
-    public_overrides
+    sleep_public_overrides
   PUBLIC_DEPS
     pw_chrono.system_clock
+    pw_thread.sleep.facade
   SOURCES
     sleep.cc
   PRIVATE_DEPS
@@ -67,47 +66,45 @@ pw_add_module_library(pw_thread_freertos.sleep
 
 # This target provides the backend for pw::thread::Thread and the headers needed
 # for thread creation.
-pw_add_module_library(pw_thread_freertos.thread
-  IMPLEMENTS_FACADES
-    pw_thread.thread
+pw_add_library(pw_thread_freertos.thread STATIC
   HEADERS
     public/pw_thread_freertos/context.h
     public/pw_thread_freertos/options.h
     public/pw_thread_freertos/thread_inline.h
     public/pw_thread_freertos/thread_native.h
-    public_overrides/pw_thread_backend/thread_inline.h
-    public_overrides/pw_thread_backend/thread_native.h
+    thread_public_overrides/pw_thread_backend/thread_inline.h
+    thread_public_overrides/pw_thread_backend/thread_native.h
   PUBLIC_INCLUDES
     public
-    public_overrides
+    thread_public_overrides
   PUBLIC_DEPS
     pw_assert
     pw_span
     pw_string
     pw_third_party.freertos
     pw_thread.id
+    pw_thread.thread.facade
     pw_thread_freertos.config
   SOURCES
     thread.cc
 )
 
 # This target provides the backend for pw::this_thread::yield.
-pw_add_module_library(pw_thread_freertos.yield
-  IMPLEMENTS_FACADES
-    pw_thread.yield
+pw_add_library(pw_thread_freertos.yield INTERFACE
   HEADERS
     public/pw_thread_freertos/yield_inline.h
-    public_overrides/pw_thread_backend/yield_inline.h
+    yield_public_overrides/pw_thread_backend/yield_inline.h
   PUBLIC_INCLUDES
     public
-    public_overrides
+    yield_public_overrides
   PUBLIC_DEPS
     pw_assert
     pw_third_party.freertos
     pw_thread.id
+    pw_thread.yield.facade
 )
 
-pw_add_module_library(pw_thread_freertos.util
+pw_add_library(pw_thread_freertos.util STATIC
   HEADERS
     public/pw_thread_freertos/util.h
   PUBLIC_INCLUDES
@@ -123,7 +120,7 @@ pw_add_module_library(pw_thread_freertos.util
     pw_log
 )
 
-pw_add_module_library(pw_thread_freertos.snapshot
+pw_add_library(pw_thread_freertos.snapshot STATIC
   HEADERS
     public/pw_thread_freertos/snapshot.h
   PUBLIC_INCLUDES
@@ -145,7 +142,9 @@ pw_add_module_library(pw_thread_freertos.snapshot
     pw_log
 )
 
-pw_add_facade(pw_thread_freertos.freertos_tsktcb
+pw_add_facade(pw_thread_freertos.freertos_tsktcb INTERFACE
+  BACKEND
+    pw_thread_freertos.freertos_tsktcb_BACKEND
   HEADERS
     public/pw_thread_freertos/freertos_tsktcb.h
   PUBLIC_INCLUDES

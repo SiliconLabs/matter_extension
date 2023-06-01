@@ -21,12 +21,14 @@ import pprint
 from dataclasses import dataclass
 from typing import (
     Any,
+    Awaitable,
     Callable,
     Dict,
     List,
     Optional,
     Tuple,
     TYPE_CHECKING,
+    Union,
 )
 
 from prompt_toolkit.filters import (
@@ -47,19 +49,19 @@ from prompt_toolkit.layout import (
 )
 from prompt_toolkit.lexers import PygmentsLexer  # type: ignore
 from pygments.lexers.python import PythonConsoleLexer  # type: ignore
+
 # Alternative Formatting
 # from IPython.lib.lexers import IPythonConsoleLexer  # type: ignore
 
 from pw_console.progress_bar.progress_bar_state import TASKS_CONTEXTVAR
 from pw_console.pw_ptpython_repl import PwPtPythonRepl
+from pw_console.style import get_pane_style
 from pw_console.widgets import (
     ToolbarButton,
     WindowPane,
     WindowPaneHSplit,
     WindowPaneToolbar,
 )
-import pw_console.mouse
-import pw_console.style
 
 if TYPE_CHECKING:
     from pw_console.console_app import ConsoleApp
@@ -75,13 +77,15 @@ _REPL_OUTPUT_SCROLL_AMOUNT = 5
 @dataclass
 class UserCodeExecution:
     """Class to hold a single user repl execution event."""
+
     input: str
     future: concurrent.futures.Future
     output: str
     stdout: str
     stderr: str
-    stdout_check_task: Optional[concurrent.futures.Future] = None
+    stdout_check_task: Optional[Awaitable] = None
     result_object: Optional[Any] = None
+    result_str: Optional[str] = None
     exception_text: Optional[str] = None
 
     @property
@@ -110,7 +114,7 @@ class ReplPane(WindowPane):
     ) -> None:
         super().__init__(application, pane_title)
 
-        self.executed_code: List = []
+        self.executed_code: List[UserCodeExecution] = []
         self.application = application
 
         self.pw_ptpython_repl = python_repl
@@ -142,9 +146,11 @@ class ReplPane(WindowPane):
 
         # Override output buffer mouse wheel scroll
         self.output_field.window._scroll_up = (  # type: ignore
-            self.scroll_output_up)
+            self.scroll_output_up
+        )
         self.output_field.window._scroll_down = (  # type: ignore
-            self.scroll_output_down)
+            self.scroll_output_down
+        )
 
         self.bottom_toolbar = self._create_input_toolbar()
         self.results_toolbar = self._create_output_toolbar()
@@ -165,10 +171,14 @@ class ReplPane(WindowPane):
                                 # 2. Progress bars if any
                                 ConditionalContainer(
                                     DynamicContainer(
-                                        self.get_progress_bar_task_container),
+                                        self.get_progress_bar_task_container
+                                    ),
                                     filter=Condition(
-                                        lambda: not self.progress_state.
-                                        all_tasks_complete)),
+                                        # pylint: disable=line-too-long
+                                        lambda: not self.progress_state.all_tasks_complete
+                                        # pylint: enable=line-too-long
+                                    ),
+                                ),
                                 # 3. Static separator toolbar.
                                 self.results_toolbar,
                             ],
@@ -189,11 +199,12 @@ class ReplPane(WindowPane):
                     # Repl pane dimensions
                     height=lambda: self.height,
                     width=lambda: self.width,
-                    style=functools.partial(pw_console.style.get_pane_style,
-                                            self),
+                    style=functools.partial(get_pane_style, self),
                 ),
-                floats=[]),
-            filter=Condition(lambda: self.show_pane))
+                floats=[],
+            ),
+            filter=Condition(lambda: self.show_pane),
+        )
 
     def toggle_wrap_output_lines(self):
         """Enable or disable output line wraping/truncation."""
@@ -255,11 +266,15 @@ class ReplPane(WindowPane):
             focus_check_container=self.pw_ptpython_repl,
         )
         bottom_toolbar.add_button(
-            ToolbarButton('Ctrl-v', 'Paste',
-                          self.paste_system_clipboard_to_input_buffer))
+            ToolbarButton(
+                'Ctrl-v', 'Paste', self.paste_system_clipboard_to_input_buffer
+            )
+        )
         bottom_toolbar.add_button(
-            ToolbarButton('Ctrl-c', 'Copy / Clear',
-                          self.copy_or_clear_input_buffer))
+            ToolbarButton(
+                'Ctrl-c', 'Copy / Clear', self.copy_or_clear_input_buffer
+            )
+        )
         bottom_toolbar.add_button(ToolbarButton('Enter', 'Run', self.run_code))
         bottom_toolbar.add_button(ToolbarButton('F2', 'Settings'))
         bottom_toolbar.add_button(ToolbarButton('F3', 'History'))
@@ -274,22 +289,32 @@ class ReplPane(WindowPane):
             include_resize_handle=False,
         )
         results_toolbar.add_button(
-            ToolbarButton(description='Wrap lines',
-                          mouse_handler=self.toggle_wrap_output_lines,
-                          is_checkbox=True,
-                          checked=lambda: self.wrap_output_lines))
+            ToolbarButton(
+                description='Wrap lines',
+                mouse_handler=self.toggle_wrap_output_lines,
+                is_checkbox=True,
+                checked=lambda: self.wrap_output_lines,
+            )
+        )
         results_toolbar.add_button(
-            ToolbarButton('Ctrl-Alt-c', 'Copy All Output',
-                          self.copy_all_output_text))
+            ToolbarButton(
+                'Ctrl-Alt-c', 'Copy All Output', self.copy_all_output_text
+            )
+        )
         results_toolbar.add_button(
-            ToolbarButton('Ctrl-c', 'Copy Selected Text',
-                          self.copy_output_selection))
+            ToolbarButton(
+                'Ctrl-c', 'Copy Selected Text', self.copy_output_selection
+            )
+        )
 
         results_toolbar.add_button(
-            ToolbarButton(description='Clear',
-                          mouse_handler=self.clear_output_buffer))
+            ToolbarButton(
+                description='Clear', mouse_handler=self.clear_output_buffer
+            )
+        )
         results_toolbar.add_button(
-            ToolbarButton('Shift+Arrows / Mouse Drag', 'Select Text'))
+            ToolbarButton('Shift+Arrows / Mouse Drag', 'Select Text')
+        )
 
         return results_toolbar
 
@@ -306,12 +331,14 @@ class ReplPane(WindowPane):
     def copy_all_output_text(self):
         """Copy all text in the Python output to the system clipboard."""
         self.application.application.clipboard.set_text(
-            self.output_field.buffer.text)
+            self.output_field.buffer.text
+        )
 
     def copy_all_input_text(self):
         """Copy all text in the Python input to the system clipboard."""
         self.application.application.clipboard.set_text(
-            self.pw_ptpython_repl.default_buffer.text)
+            self.pw_ptpython_repl.default_buffer.text
+        )
 
     # pylint: disable=no-self-use
     def get_all_key_bindings(self) -> List:
@@ -320,16 +347,36 @@ class ReplPane(WindowPane):
         # return [load_python_bindings(self.pw_ptpython_repl)]
 
         # Hand-crafted bindings for display in the HelpWindow:
-        return [{
-            'Execute code': ['Enter', 'Option-Enter', 'Alt-Enter'],
-            'Reverse search history': ['Ctrl-r'],
-            'Erase input buffer.': ['Ctrl-c'],
-            'Show settings.': ['F2'],
-            'Show history.': ['F3'],
-        }]
+        return [
+            {
+                'Execute code': ['Enter', 'Option-Enter', 'Alt-Enter'],
+                'Reverse search history': ['Ctrl-r'],
+                'Erase input buffer.': ['Ctrl-c'],
+                'Show settings.': ['F2'],
+                'Show history.': ['F3'],
+            }
+        ]
 
-    def get_all_menu_options(self):
-        return []
+    def get_window_menu_options(
+        self,
+    ) -> List[Tuple[str, Union[Callable, None]]]:
+        return [
+            (
+                'Python Input > Paste',
+                self.paste_system_clipboard_to_input_buffer,
+            ),
+            ('Python Input > Copy or Clear', self.copy_or_clear_input_buffer),
+            ('Python Input > Run', self.run_code),
+            # Menu separator
+            ('-', None),
+            (
+                'Python Output > Toggle Wrap lines',
+                self.toggle_wrap_output_lines,
+            ),
+            ('Python Output > Copy All', self.copy_all_output_text),
+            ('Python Output > Copy Selection', self.copy_output_selection),
+            ('Python Output > Clear', self.clear_output_buffer),
+        ]
 
     def run_code(self):
         """Trigger a repl code execution on mouse click."""
@@ -399,8 +446,9 @@ class ReplPane(WindowPane):
         for line in text.splitlines():
             _LOG.debug('[PYTHON %s]  %s', prefix, line.strip())
 
-    async def periodically_check_stdout(self, user_code: UserCodeExecution,
-                                        stdout_proxy, stderr_proxy):
+    async def periodically_check_stdout(
+        self, user_code: UserCodeExecution, stdout_proxy, stderr_proxy
+    ):
         while not user_code.future.done():
             await asyncio.sleep(0.3)
             stdout_text_so_far = stdout_proxy.getvalue()
@@ -414,15 +462,13 @@ class ReplPane(WindowPane):
             self.update_output_buffer('repl_pane.periodic_check')
 
     def append_executed_code(self, text, future, temp_stdout, temp_stderr):
-        user_code = UserCodeExecution(input=text,
-                                      future=future,
-                                      output=None,
-                                      stdout=None,
-                                      stderr=None)
+        user_code = UserCodeExecution(
+            input=text, future=future, output=None, stdout=None, stderr=None
+        )
 
         background_stdout_check = asyncio.create_task(
-            self.periodically_check_stdout(user_code, temp_stdout,
-                                           temp_stderr))
+            self.periodically_check_stdout(user_code, temp_stdout, temp_stderr)
+        )
         user_code.stdout_check_task = background_stdout_check
         self.executed_code.append(user_code)
         self._log_executed_code(user_code, prefix='START')
@@ -437,7 +483,6 @@ class ReplPane(WindowPane):
         exception_text='',
         result_object=None,
     ):
-
         code = self._get_executed_code(future)
         if code:
             code.output = result_text
@@ -445,21 +490,36 @@ class ReplPane(WindowPane):
             code.stderr = stderr_text
             code.exception_text = exception_text
             code.result_object = result_object
+            if result_object is not None:
+                code.result_str = self._format_result_object(result_object)
+
         self._log_executed_code(code, prefix='FINISH')
         self.update_output_buffer('repl_pane.append_result_to_executed_code')
 
-    def get_output_buffer_text(self, code_items=None, show_index=True):
-        content_width = (self.current_pane_width
-                         if self.current_pane_width else 80)
+    def _format_result_object(self, result_object: Any) -> str:
+        """Pretty print format a Python object respecting the window width."""
+        content_width = (
+            self.current_pane_width if self.current_pane_width else 80
+        )
         pprint_respecting_width = pprint.PrettyPrinter(
-            indent=2, width=content_width).pformat
+            indent=2, width=content_width
+        ).pformat
 
+        return pprint_respecting_width(result_object)
+
+    def get_output_buffer_text(
+        self,
+        code_items: Optional[List[UserCodeExecution]] = None,
+        show_index: bool = True,
+    ):
         executed_code = code_items or self.executed_code
 
         template = self.application.get_template('repl_output.jinja')
-        return template.render(code_items=executed_code,
-                               result_format=pprint_respecting_width,
-                               show_index=show_index)
+
+        return template.render(
+            code_items=executed_code,
+            show_index=show_index,
+        )
 
     def update_output_buffer(self, *unused_args):
         text = self.get_output_buffer_text()
@@ -467,15 +527,18 @@ class ReplPane(WindowPane):
         # instead of the end of the last line.
         text += '\n'
         self.output_field.buffer.set_document(
-            Document(text=text, cursor_position=len(text)))
+            Document(text=text, cursor_position=len(text))
+        )
 
         self.application.redraw_ui()
 
     def input_or_output_has_focus(self) -> Condition:
         @Condition
         def test() -> bool:
-            if has_focus(self.output_field)() or has_focus(
-                    self.pw_ptpython_repl)():
+            if (
+                has_focus(self.output_field)()
+                or has_focus(self.pw_ptpython_repl)()
+            ):
                 return True
             return False
 
@@ -487,6 +550,8 @@ class ReplPane(WindowPane):
                 ' '.join([line.lstrip() for line in text.splitlines()]),
                 # Pass original text as the completion result.
                 text,
-            ) for text in list(
-                self.pw_ptpython_repl.history.load_history_strings())
+            )
+            for text in list(
+                self.pw_ptpython_repl.history.load_history_strings()
+            )
         ]

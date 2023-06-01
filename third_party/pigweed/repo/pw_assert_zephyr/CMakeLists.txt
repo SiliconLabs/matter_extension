@@ -14,13 +14,7 @@
 
 include($ENV{PW_ROOT}/pw_build/pigweed.cmake)
 
-if(NOT CONFIG_PIGWEED_ASSERT)
-  return()
-endif()
-
-pw_add_module_library(pw_assert_zephyr.check
-  IMPLEMENTS_FACADES
-    pw_assert.check
+pw_add_library(pw_assert_zephyr.check INTERFACE
   HEADERS
     public/pw_assert_zephyr/check_zephyr.h
     public_overrides/pw_assert_backend/check_backend.h
@@ -28,20 +22,16 @@ pw_add_module_library(pw_assert_zephyr.check
     public
     public_overrides
   PUBLIC_DEPS
-    zephyr_interface
+    pw_preprocessor
 )
-zephyr_link_libraries(pw_assert_zephyr.check)
+pw_zephyrize_libraries_ifdef(CONFIG_PIGWEED_ASSERT pw_assert_zephyr.check)
 
-pw_add_module_library(pw_assert_zephyr.assert
-  IMPLEMENTS_FACADES
-    pw_assert.assert
+pw_add_library(pw_assert_zephyr.assert INTERFACE
   HEADERS
     public/pw_assert_zephyr/assert_zephyr.h
     public_overrides/pw_assert_backend/assert_backend.h
   PUBLIC_INCLUDES
     public
     public_overrides
-  PUBLIC_DEPS
-    zephyr_interface
 )
-zephyr_link_libraries(pw_assert_zephyr.assert)
+pw_zephyrize_libraries_ifdef(CONFIG_PIGWEED_ASSERT pw_assert_zephyr.assert)

@@ -37,13 +37,13 @@ namespace pw::file {
 using Entry = FlatFileSystemService::Entry;
 
 Status FlatFileSystemService::EnumerateFile(
-    Entry& entry, pw::file::ListResponse::StreamEncoder& output_encoder) {
+    Entry& entry, pwpb::ListResponse::StreamEncoder& output_encoder) {
   StatusWithSize sws = entry.Name(file_name_buffer_);
   if (!sws.ok()) {
     return sws.status();
   }
   {
-    pw::file::Path::StreamEncoder encoder = output_encoder.GetPathsEncoder();
+    pwpb::Path::StreamEncoder encoder = output_encoder.GetPathsEncoder();
 
     encoder
         .WritePath(reinterpret_cast<const char*>(file_name_buffer_.data()),
@@ -60,7 +60,7 @@ void FlatFileSystemService::EnumerateAllFiles(RawServerWriter& writer) {
   for (Entry* entry : entries_) {
     PW_DCHECK_NOTNULL(entry);
     // For now, don't try to pack entries.
-    pw::file::ListResponse::MemoryEncoder encoder(encoding_buffer_);
+    pwpb::ListResponse::MemoryEncoder encoder(encoding_buffer_);
     if (Status status = EnumerateFile(*entry, encoder); !status.ok()) {
       if (status != Status::NotFound()) {
         PW_LOG_ERROR("Failed to enumerate file (id: %u) with status %d",
@@ -73,12 +73,12 @@ void FlatFileSystemService::EnumerateAllFiles(RawServerWriter& writer) {
     Status write_status = writer.Write(encoder);
     if (!write_status.ok()) {
       writer.Finish(write_status)
-          .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+          .IgnoreError();  // TODO(b/242598609): Handle Status properly
       return;
     }
   }
   writer.Finish(OkStatus())
-      .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+      .IgnoreError();  // TODO(b/242598609): Handle Status properly
 }
 
 void FlatFileSystemService::List(ConstByteSpan request,
@@ -87,7 +87,7 @@ void FlatFileSystemService::List(ConstByteSpan request,
   // If a file name was provided, try and find and enumerate the file.
   while (decoder.Next().ok()) {
     if (decoder.FieldNumber() !=
-        static_cast<uint32_t>(pw::file::ListRequest::Fields::PATH)) {
+        static_cast<uint32_t>(pwpb::ListRequest::Fields::kPath)) {
       continue;
     }
 
@@ -95,7 +95,7 @@ void FlatFileSystemService::List(ConstByteSpan request,
     if (!decoder.ReadString(&file_name_view).ok() ||
         file_name_view.length() == 0) {
       writer.Finish(Status::DataLoss())
-          .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+          .IgnoreError();  // TODO(b/242598609): Handle Status properly
       return;
     }
 
@@ -103,20 +103,20 @@ void FlatFileSystemService::List(ConstByteSpan request,
     Result<Entry*> result = FindFile(file_name_view);
     if (!result.ok()) {
       writer.Finish(result.status())
-          .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+          .IgnoreError();  // TODO(b/242598609): Handle Status properly
       return;
     }
 
-    pw::file::ListResponse::MemoryEncoder encoder(encoding_buffer_);
+    pwpb::ListResponse::MemoryEncoder encoder(encoding_buffer_);
     Status proto_encode_status = EnumerateFile(*result.value(), encoder);
     if (!proto_encode_status.ok()) {
       writer.Finish(proto_encode_status)
-          .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+          .IgnoreError();  // TODO(b/242598609): Handle Status properly
       return;
     }
 
     writer.Finish(writer.Write(encoder))
-        .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+        .IgnoreError();  // TODO(b/242598609): Handle Status properly
     return;
   }
 
@@ -129,7 +129,7 @@ void FlatFileSystemService::Delete(ConstByteSpan request,
   protobuf::Decoder decoder(request);
   while (decoder.Next().ok()) {
     if (decoder.FieldNumber() !=
-        static_cast<uint32_t>(pw::file::DeleteRequest::Fields::PATH)) {
+        static_cast<uint32_t>(pwpb::DeleteRequest::Fields::kPath)) {
       continue;
     }
 

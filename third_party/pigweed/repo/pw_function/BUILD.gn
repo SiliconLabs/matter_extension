@@ -43,11 +43,22 @@ pw_source_set("pw_function") {
   public_configs = [ ":public_include_path" ]
   public_deps = [
     ":config",
+    "$dir_pw_third_party/fuchsia:fit",
     dir_pw_assert,
     dir_pw_preprocessor,
   ]
   public = [ "public/pw_function/function.h" ]
-  sources = [ "public/pw_function/internal/function.h" ]
+}
+
+pw_source_set("pointer") {
+  public_configs = [ ":public_include_path" ]
+  public = [ "public/pw_function/pointer.h" ]
+  sources = [ "public/pw_function/internal/static_invoker.h" ]
+}
+
+pw_source_set("scope_guard") {
+  public_configs = [ ":public_include_path" ]
+  public = [ "public/pw_function/scope_guard.h" ]
 }
 
 pw_doc_group("docs") {
@@ -59,7 +70,12 @@ pw_doc_group("docs") {
 }
 
 pw_test_group("tests") {
-  tests = [ ":function_test" ]
+  tests = [
+    ":function_test",
+    ":pointer_test",
+    ":scope_guard_test",
+    "$dir_pw_third_party/fuchsia:function_tests",
+  ]
 }
 
 pw_test("function_test") {
@@ -68,9 +84,26 @@ pw_test("function_test") {
     dir_pw_polyfill,
   ]
   sources = [ "function_test.cc" ]
+  negative_compilation_tests = true
 }
 
-pw_size_report("function_size") {
+pw_test("pointer_test") {
+  deps = [
+    ":pointer",
+    ":pw_function",
+  ]
+  sources = [ "pointer_test.cc" ]
+}
+
+pw_test("scope_guard_test") {
+  sources = [ "scope_guard_test.cc" ]
+  deps = [
+    ":pw_function",
+    ":scope_guard",
+  ]
+}
+
+pw_size_diff("function_size") {
   title = "Pigweed function size report"
 
   binaries = [
@@ -82,7 +115,7 @@ pw_size_report("function_size") {
   ]
 }
 
-pw_size_report("callable_size") {
+pw_size_diff("callable_size") {
   title = "Size comparison of callable objects"
 
   binaries = [

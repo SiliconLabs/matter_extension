@@ -103,6 +103,82 @@ such as a quick program for local use and a full program for automated use. The
 :ref:`example script <example-script>` uses ``pw_presubmit.Programs`` to define
 ``quick`` and ``full`` programs.
 
+``PresubmitContext`` has the following members:
+
+* ``root``: Source checkout root directory
+* ``repos``: Repositories (top-level and submodules) processed by
+  ``pw presubmit``
+* ``output_dir``: Output directory for this specific presubmit step
+* ``failure_summary_log``: File path where steps should write a brief summary
+  of any failures
+* ``paths``: Modified files for the presubmit step to check (often used in
+  formatting steps but ignored in compile steps)
+* ``all_paths``: All files in the repository tree.
+* ``package_root``: Root directory for ``pw package`` installations
+* ``override_gn_args``: Additional GN args processed by ``build.gn_gen()``
+* ``luci``: Information about the LUCI build or None if not running in LUCI
+* ``num_jobs``: Number of jobs to run in parallel
+* ``continue_after_build_error``: For steps that compile, don't exit on the
+  first compilation error
+* ``rng_seed``: Seed from ``--rng-seed`` or 1, for the few steps that need to
+  seed a random number generator
+
+The ``luci`` member is of type ``LuciContext`` and has the following members:
+
+* ``buildbucket_id``: The globally-unique buildbucket id of the build
+* ``build_number``: The builder-specific incrementing build number, if
+  configured for this builder
+* ``project``: The LUCI project under which this build is running (often
+  ``pigweed`` or ``pigweed-internal``)
+* ``bucket``: The LUCI bucket under which this build is running (often ends
+  with ``ci`` or ``try``)
+* ``builder``: The builder being run
+* ``swarming_server``: The swarming server on which this build is running
+* ``swarming_task_id``: The swarming task id of this build
+* ``cas_instance``: The CAS instance accessible from this build
+* ``pipeline``: Information about the build pipeline, if applicable.
+* ``triggers``: Information about triggering commits, if applicable.
+
+The ``pipeline`` member, if present, is of type ``LuciPipeline`` and has the
+following members:
+
+* ``round``: The zero-indexed round number.
+* ``builds_from_previous_iteration``: A list of the buildbucket ids from the
+  previous round, if any, encoded as strs.
+
+The ``triggers`` member is a sequence of ``LuciTrigger`` objects, which have the
+following members:
+
+* ``number``: The number of the change in Gerrit.
+* ``patchset``: The number of the patchset of the change.
+* ``remote``: The full URL of the remote.
+* ``branch``: The name of the branch on which this change is being/was
+  submitted.
+* ``ref``: The ``refs/changes/..`` path that can be used to reference the
+  patch for unsubmitted changes and the hash for submitted changes.
+* ``gerrit_name``: The name of the googlesource.com Gerrit host.
+* ``submitted``: Whether the change has been submitted or is still pending.
+
+Additional members can be added by subclassing ``PresubmitContext`` and
+``Presubmit``. Then override ``Presubmit._create_presubmit_context()`` to
+return the subclass of ``PresubmitContext``. Finally, add
+``presubmit_class=PresubmitSubClass`` when calling ``cli.run()``.
+
+Substeps
+--------
+Presubmit steps can define substeps that can run independently in other tooling.
+These steps should subclass ``SubStepCheck`` and must define a ``substeps()``
+method that yields ``SubStep`` objects. ``SubStep`` objects have the following
+members:
+
+* ``name``: Name of the substep
+* ``_func``: Substep code
+* ``args``: Positional arguments for ``_func``
+* ``kwargs``: Keyword arguments for ``_func``
+
+``SubStep`` objects must have unique names. For a detailed example of a
+``SubStepCheck`` subclass see ``GnGenNinja`` in ``build.py``.
+
 Existing Presubmit Checks
 -------------------------
 A small number of presubmit checks are made available through ``pw_presubmit``
@@ -114,15 +190,157 @@ Formatting checks for a variety of languages are available from
 ``pw_presubmit.format_code``. These include C/C++, Java, Go, Python, GN, and
 others. All of these checks can be included by adding
 ``pw_presubmit.format_code.presubmit_checks()`` to a presubmit program. These
-all use language-specific formatters like clang-format or yapf.
+all use language-specific formatters like clang-format or black.
 
 These will suggest fixes using ``pw format --fix``.
+
+Options for code formatting can be specified in the ``pigweed.json`` file
+(see also :ref:`SEED-0101 <seed-0101>`). These apply to both ``pw presubmit``
+steps that check code formatting and ``pw format`` commands that either check
+or fix code formatting.
+
+* ``python_formatter``: Choice of Python formatter. Options are ``black`` (used
+  by Pigweed itself) and ``yapf`` (the default).
+* ``black_path``: If ``python_formatter`` is ``black``, use this as the
+  executable instead of ``black``.
+* ``black_config_file``: Set the config file for the black formatter.
+* ``exclude``: List of path regular expressions to ignore. Will be evaluated
+  against paths relative to the checkout root using ``re.search``.
+
+Example section from a ``pigweed.json`` file:
+
+.. code-block::
+
+  {
+    "pw": {
+      "pw_presubmit": {
+        "format": {
+          "python_formatter": "black",
+          "black_config_file": "$pw_env{PW_PROJECT_ROOT}/config/.black.toml"
+          "black_path": "black",
+          "exclude": [
+            "\\bthird_party/foo/src"
+          ]
+        }
+      }
+    }
+  }
+
+Sorted Blocks
+^^^^^^^^^^^^^
+Blocks of code can be required to be kept in sorted order using comments like
+the following:
+
+.. code-block::
+
+  # keep-sorted: start
+  bar
+  baz
+  foo
+  # keep-sorted: end
+
+This can be included by adding ``pw_presubmit.keep_sorted.presubmit_check`` to a
+presubmit program. Adding ``ignore-case`` to the start line will use
+case-insensitive sorting.
+
+By default, duplicates will be removed. Lines that are identical except in case
+are preserved, even with ``ignore-case``. To allow duplicates, add
+``allow-dupes`` to the start line.
+
+Prefixes can be ignored by adding ``ignore-prefix=`` followed by a
+comma-separated list of prefixes. The list below will be kept in this order.
+Neither commas nor whitespace are supported in prefixes.
+
+.. code-block::
+
+  # keep-sorted: start ignore-prefix=',"
+  'bar',
+  "baz",
+  'foo',
+  # keep-sorted: end
+
+Inline comments are assumed to be associated with the following line. For
+example, the following is already sorted. This can be disabled with
+``sticky-comments=no``.
+
+.. todo-check: disable
+
+.. code-block::
+
+  # keep-sorted: start
+  # TODO(b/1234) Fix this.
+  bar,
+  # TODO(b/5678) Also fix this.
+  foo,
+  # keep-sorted: end
+
+.. todo-check: enable
+
+By default, the prefix of the keep-sorted line is assumed to be the comment
+marker used by any inline comments. This can be overridden by adding lines like
+``sticky-comments=%,#`` to the start line.
+
+Lines indented more than the preceding line are assumed to be continuations.
+Thus, the following block is already sorted. keep-sorted blocks can not be
+nested, so there's no ability to add a keep-sorted block for the sub-items.
+
+.. code-block::
+
+  # keep-sorted: start
+  * abc
+    * xyz
+    * uvw
+  * def
+  # keep-sorted: end
+
+The presubmit check will suggest fixes using ``pw keep-sorted --fix``.
+
+Future versions may support additional multiline list items.
+
+.gitmodules
+^^^^^^^^^^^
+Various rules can be applied to .gitmodules files. This check can be included
+by adding ``pw_presubmit.gitmodules.create()`` to a presubmit program. This
+function takes an optional argument of type ``pw_presubmit.gitmodules.Config``.
+``Config`` objects have several properties.
+
+* ``allow_submodules: bool = True`` — If false, don't allow any submodules.
+* ``allow_non_googlesource_hosts: bool = False`` — If false, all submodule URLs
+  must be on a Google-managed Gerrit server.
+* ``allowed_googlesource_hosts: Sequence[str] = ()`` — If set, any
+  Google-managed Gerrit URLs for submodules most be in this list. Entries
+  should be like ``pigweed`` for ``pigweed-review.googlesource.com``.
+* ``require_relative_urls: bool = False`` — If true, all submodules must be
+  relative to the superproject remote.
+* ``allow_sso: bool = True`` — If false, ``sso://`` and ``rpc://`` submodule
+  URLs are prohibited.
+* ``allow_git_corp_google_com: bool = True`` — If false, ``git.corp.google.com``
+  submodule URLs are prohibited.
+* ``require_branch: bool = False`` — If true, all submodules must reference a
+  branch.
+* ``validator: Callable[[PresubmitContext, Path, str, Dict[str, str]], None] = None``
+  — A function that can be used for arbitrary submodule validation. It's called
+  with the ``PresubmitContext``, the path to the ``.gitmodules`` file, the name
+  of the current submodule, and the properties of the current submodule.
 
 #pragma once
 ^^^^^^^^^^^^
 There's a ``pragma_once`` check that confirms the first non-comment line of
 C/C++ headers is ``#pragma once``. This is enabled by adding
-``pw_presubmit.pragma_once`` to a presubmit program.
+``pw_presubmit.cpp_checks.pragma_once`` to a presubmit program.
+
+.. todo-check: disable
+
+TODO(b/###) Formatting
+^^^^^^^^^^^^^^^^^^^^^^^^^
+There's a check that confirms ``TODO`` lines match a given format. Upstream
+Pigweed expects these to look like ``TODO(b/###): Explanation``, but makes it
+easy for projects to define their own pattern instead.
+
+To use this check add ``todo_check.create(todo_check.BUGS_OR_USERNAMES)`` to a
+presubmit program.
+
+.. todo-check: enable
 
 Python Checks
 ^^^^^^^^^^^^^
@@ -148,6 +366,29 @@ for entire blocks by using "inclusive-language: disable" before the block and
 
 .. In case things get moved around in the previous paragraphs the enable line
 .. is repeated here: inclusive-language: enable.
+
+OWNERS
+^^^^^^
+There's a check that requires folders matching specific patterns contain
+``OWNERS`` files. It can be included by adding
+``module_owners.presubmit_check()`` to a presubmit program. This function takes
+a callable as an argument that indicates, for a given file, where a controlling
+``OWNERS`` file should be, or returns None if no ``OWNERS`` file is necessary.
+Formatting of ``OWNERS`` files is handled similary to formatting of other
+source files and is discussed in `Code Formatting`.
+
+JSON
+^^^^
+The JSON check requires all ``*.json`` files to be valid JSON files. It can be
+included by adding ``json_check.presubmit_check()`` to a presubmit program.
+
+Source in Build
+^^^^^^^^^^^^^^^
+Pigweed provides checks that source files are configured as part of the build
+for GN, Bazel, and CMake. These can be included by adding
+``source_in_build.gn(filter)`` and similar functions to a presubmit check. The
+CMake check additionally requires a callable that invokes CMake with appropriate
+options.
 
 pw_presubmit
 ------------
@@ -228,13 +469,15 @@ See ``pigweed_presubmit.py`` for a more complex presubmit check script example.
   # Presubmit checks
   #
   def release_build(ctx: PresubmitContext):
-      build.gn_gen(PROJECT_ROOT, ctx.output_dir, build_type='release')
-      build.ninja(ctx.output_dir)
+      build.gn_gen(ctx, build_type='release')
+      build.ninja(ctx)
+      build.gn_check(ctx)  # Run after building to check generated files.
 
 
   def host_tests(ctx: PresubmitContext):
-      build.gn_gen(PROJECT_ROOT, ctx.output_dir, run_host_tests='true')
-      build.ninja(ctx.output_dir)
+      build.gn_gen(ctx, run_host_tests='true')
+      build.ninja(ctx)
+      build.gn_check(ctx)
 
 
   # Avoid running some checks on certain paths.
@@ -267,7 +510,7 @@ See ``pigweed_presubmit.py`` for a more complex presubmit check script example.
       # Use the upstream formatting checks, with custom path filters applied.
       format_code.presubmit_checks(exclude=PATH_EXCLUSIONS),
       # Include the upstream inclusive language check.
-      inclusive_language.inclusive_language,
+      inclusive_language.presubmit_check,
       # Include just the lint-related Python checks.
       python_checks.gn_pylint.with_filter(exclude=PATH_EXCLUSIONS),
   )

@@ -58,6 +58,7 @@ pw_cc_library(
     name = "common",
     hdrs = [
         "public/pw_rpc/pwpb/internal/common.h",
+        "public/pw_rpc/pwpb/serde.h",
         "public/pw_rpc/pwpb/server_reader_writer.h",
     ],
     includes = ["public"],
@@ -76,8 +77,10 @@ pw_cc_library(
     deps = [
         ":common",
         ":server_api",
+        "//pw_assert",
         "//pw_containers",
         "//pw_rpc:internal_test_utils",
+        "//pw_span",
     ],
 )
 
@@ -132,7 +135,7 @@ pw_cc_library(
     ],
 )
 
-# TODO(pwbug/507): Enable this library when logging_event_handler can be used.
+# TODO(b/242059613): Enable this library when logging_event_handler can be used.
 filegroup(
     name = "client_integration_test",
     srcs = [

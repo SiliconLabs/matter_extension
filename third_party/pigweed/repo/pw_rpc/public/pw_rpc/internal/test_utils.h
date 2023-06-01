@@ -35,6 +35,8 @@ namespace pw::rpc::internal {
 // Version of the Server with extra methods exposed for testing.
 class TestServer : public Server {
  public:
+  using Server::calls_end;
+  using Server::CloseCallAndMarkForCleanup;
   using Server::FindCall;
 };
 
@@ -48,14 +50,13 @@ class ServerContextForTest {
       : channel_(Channel::Create<kChannelId>(&output_)),
         server_(span(&channel_, 1)),
         service_(kServiceId),
-        context_(
-            static_cast<Server&>(server_), channel_.id(), service_, method, 0) {
+        context_(server_, channel_.id(), service_, method, 0) {
     server_.RegisterService(service_);
   }
 
   // Create packets for this context's channel, service, and method.
   internal::Packet request(span<const std::byte> payload) const {
-    return internal::Packet(internal::PacketType::REQUEST,
+    return internal::Packet(internal::pwpb::PacketType::REQUEST,
                             kChannelId,
                             kServiceId,
                             context_.method().id(),
@@ -65,7 +66,7 @@ class ServerContextForTest {
 
   internal::Packet response(Status status,
                             span<const std::byte> payload = {}) const {
-    return internal::Packet(internal::PacketType::RESPONSE,
+    return internal::Packet(internal::pwpb::PacketType::RESPONSE,
                             kChannelId,
                             kServiceId,
                             context_.method().id(),
@@ -75,7 +76,7 @@ class ServerContextForTest {
   }
 
   internal::Packet server_stream(span<const std::byte> payload) const {
-    return internal::Packet(internal::PacketType::SERVER_STREAM,
+    return internal::Packet(internal::pwpb::PacketType::SERVER_STREAM,
                             kChannelId,
                             kServiceId,
                             context_.method().id(),
@@ -84,7 +85,7 @@ class ServerContextForTest {
   }
 
   internal::Packet client_stream(span<const std::byte> payload) const {
-    return internal::Packet(internal::PacketType::CLIENT_STREAM,
+    return internal::Packet(internal::pwpb::PacketType::CLIENT_STREAM,
                             kChannelId,
                             kServiceId,
                             context_.method().id(),
@@ -92,7 +93,14 @@ class ServerContextForTest {
                             payload);
   }
 
-  const internal::CallContext& get() { return context_; }
+  CallContext get(uint32_t id = 0) const {
+    return CallContext(context_.server(),
+                       context_.channel_id(),
+                       context_.service(),
+                       context_.method(),
+                       id);
+  }
+
   internal::test::FakeChannelOutput& output() { return output_; }
   TestServer& server() { return static_cast<TestServer&>(server_); }
   Service& service() { return service_; }
@@ -126,7 +134,7 @@ class ClientContextForTest {
 
   // Sends a packet to be processed by the client. Returns the client's
   // ProcessPacket status.
-  Status SendPacket(internal::PacketType type,
+  Status SendPacket(internal::pwpb::PacketType type,
                     Status status = OkStatus(),
                     span<const std::byte> payload = {}) {
     uint32_t call_id =
@@ -141,11 +149,12 @@ class ClientContextForTest {
   }
 
   Status SendResponse(Status status, span<const std::byte> payload = {}) {
-    return SendPacket(internal::PacketType::RESPONSE, status, payload);
+    return SendPacket(internal::pwpb::PacketType::RESPONSE, status, payload);
   }
 
   Status SendServerStream(span<const std::byte> payload) {
-    return SendPacket(internal::PacketType::SERVER_STREAM, OkStatus(), payload);
+    return SendPacket(
+        internal::pwpb::PacketType::SERVER_STREAM, OkStatus(), payload);
   }
 
  private:

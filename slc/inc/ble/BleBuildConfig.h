@@ -10,6 +10,6 @@
 #endif
 #define CHIP_ENABLE_CHIPOBLE_TEST       0
 #define BLE_PROJECT_CONFIG_INCLUDE      <CHIPProjectConfig.h>
-#define BLE_PLATFORM_CONFIG_INCLUDE     <platform/EFR32/BlePlatformConfig.h>
+#define BLE_PLATFORM_CONFIG_INCLUDE     <platform/silabs/BlePlatformConfig.h>
 
 #endif  // BLE_BLEBUILDCONFIG_H_

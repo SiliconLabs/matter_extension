@@ -130,7 +130,7 @@ tests:
     - label:
           "TH reads Feature dependent attribute(DGTHREAD.S.F01(ERRCNT)) in
           attributeList"
-      PICS: DGTHREAD.C.A0006 && DGTHREAD.S.F01
+      PICS: DGTHREAD.S.A0006 && DGTHREAD.S.F01
       command: "readAttribute"
       attribute: "AttributeList"
       response:
@@ -138,8 +138,66 @@ tests:
               type: list
               contains: [6]
 
-    - label: "Read the optional attribute(ActiveTimestamp) in AttributeList"
-      PICS: DGTHREAD.S.A0039
+    - label:
+          "TH reads Feature dependent attribute (DGTHREAD.S.F02(MLECNT)) in
+          attributeList"
+      PICS: DGTHREAD.S.F02
+      command: "readAttribute"
+      attribute: "AttributeList"
+      response:
+          constraints:
+              type: list
+              contains: [14, 15, 16, 17, 18, 19, 20, 21]
+
+    - label:
+          "TH reads Feature dependent attribute (DGTHREAD.S.F03(MACCNT)) in
+          attributeList"
+      PICS: DGTHREAD.S.F03
+      command: "readAttribute"
+      attribute: "AttributeList"
+      response:
+          constraints:
+              type: list
+              contains:
+                  [
+                      22,
+                      23,
+                      24,
+                      25,
+                      26,
+                      27,
+                      28,
+                      29,
+                      30,
+                      31,
+                      32,
+                      33,
+                      34,
+                      35,
+                      36,
+                      37,
+                      38,
+                      39,
+                      40,
+                      41,
+                      42,
+                      43,
+                      44,
+                      45,
+                      46,
+                      47,
+                      48,
+                      49,
+                      50,
+                      51,
+                      52,
+                      53,
+                      54,
+                      55,
+                  ]
+
+    - label: "Read the optional attribute (ActiveTimestamp) in AttributeList"
+      PICS: DGTHREAD.S.A0038
       command: "readAttribute"
       attribute: "AttributeList"
       response:
@@ -147,8 +205,8 @@ tests:
               type: list
               contains: [56]
 
-    - label: "Read the optional attribute(PendingTimestamp) in AttributeList"
-      PICS: DGTHREAD.S.A003A
+    - label: "Read the optional attribute (PendingTimestamp) in AttributeList"
+      PICS: DGTHREAD.S.A0039
       command: "readAttribute"
       attribute: "AttributeList"
       response:
@@ -156,8 +214,8 @@ tests:
               type: list
               contains: [57]
 
-    - label: "Read the optional attribute(Delay) in AttributeList"
-      PICS: DGTHREAD.S.A003B
+    - label: "Read the optional attribute (Delay) in AttributeList"
+      PICS: DGTHREAD.S.A003a
       command: "readAttribute"
       attribute: "AttributeList"
       response:

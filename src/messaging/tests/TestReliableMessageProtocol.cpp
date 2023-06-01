@@ -266,9 +266,6 @@ struct BackoffComplianceTestVector theBackoffComplianceTestVector[] = {
     },
 };
 
-const unsigned theBackoffComplianceTestVectorLength =
-    sizeof(theBackoffComplianceTestVector) / sizeof(struct BackoffComplianceTestVector);
-
 void CheckAddClearRetrans(nlTestSuite * inSuite, void * inContext)
 {
     TestContext & ctx = *reinterpret_cast<TestContext *>(inContext);
@@ -369,7 +366,7 @@ void CheckResendApplicationMessage(nlTestSuite * inSuite, void * inContext)
     ctx.GetIOContext().DriveIOUntil(1000_ms32, [&] { return loopback.mSentMessageCount >= 2; });
     now         = System::SystemClock().GetMonotonicTimestamp();
     timeoutTime = now - startTime;
-    ChipLogProgress(Test, "Attempt #1  Timeout : %d ms", timeoutTime.count());
+    ChipLogProgress(Test, "Attempt #1  Timeout : %" PRIu32 "ms", timeoutTime.count());
     expectedBackoff = &theBackoffComplianceTestVector[0];
     NL_TEST_ASSERT(inSuite, timeoutTime >= expectedBackoff->backoffMin - margin);
 
@@ -386,7 +383,7 @@ void CheckResendApplicationMessage(nlTestSuite * inSuite, void * inContext)
     ctx.GetIOContext().DriveIOUntil(1000_ms32, [&] { return loopback.mSentMessageCount >= 3; });
     now         = System::SystemClock().GetMonotonicTimestamp();
     timeoutTime = now - startTime;
-    ChipLogProgress(Test, "Attempt #2  Timeout : %d ms", timeoutTime.count());
+    ChipLogProgress(Test, "Attempt #2  Timeout : %" PRIu32 "ms", timeoutTime.count());
     expectedBackoff = &theBackoffComplianceTestVector[1];
     NL_TEST_ASSERT(inSuite, timeoutTime >= expectedBackoff->backoffMin - margin);
 
@@ -403,7 +400,7 @@ void CheckResendApplicationMessage(nlTestSuite * inSuite, void * inContext)
     ctx.GetIOContext().DriveIOUntil(1000_ms32, [&] { return loopback.mSentMessageCount >= 4; });
     now         = System::SystemClock().GetMonotonicTimestamp();
     timeoutTime = now - startTime;
-    ChipLogProgress(Test, "Attempt #3  Timeout : %d ms", timeoutTime.count());
+    ChipLogProgress(Test, "Attempt #3  Timeout : %" PRIu32 "ms", timeoutTime.count());
     expectedBackoff = &theBackoffComplianceTestVector[2];
     NL_TEST_ASSERT(inSuite, timeoutTime >= expectedBackoff->backoffMin - margin);
 
@@ -420,7 +417,7 @@ void CheckResendApplicationMessage(nlTestSuite * inSuite, void * inContext)
     ctx.GetIOContext().DriveIOUntil(1500_ms32, [&] { return loopback.mSentMessageCount >= 5; });
     now         = System::SystemClock().GetMonotonicTimestamp();
     timeoutTime = now - startTime;
-    ChipLogProgress(Test, "Attempt #4  Timeout : %d ms", timeoutTime.count());
+    ChipLogProgress(Test, "Attempt #4  Timeout : %" PRIu32 "ms", timeoutTime.count());
     expectedBackoff = &theBackoffComplianceTestVector[3];
     NL_TEST_ASSERT(inSuite, timeoutTime >= expectedBackoff->backoffMin - margin);
 
@@ -1651,15 +1648,14 @@ void CheckGetBackoff(nlTestSuite * inSuite, void * inContext)
     // Run 3x iterations to thoroughly test random jitter always results in backoff within bounds.
     for (uint32_t j = 0; j < 3; j++)
     {
-        for (uint32_t i = 0; i < theBackoffComplianceTestVectorLength; i++)
+        for (const auto & test : theBackoffComplianceTestVector)
         {
-            struct BackoffComplianceTestVector * test = &theBackoffComplianceTestVector[i];
-            System::Clock::Timeout backoff            = ReliableMessageMgr::GetBackoff(test->backoffBase, test->sendCount);
-            ChipLogProgress(Test, "Backoff base %" PRIu32 " # %d: %" PRIu32, test->backoffBase.count(), test->sendCount,
+            System::Clock::Timeout backoff = ReliableMessageMgr::GetBackoff(test.backoffBase, test.sendCount);
+            ChipLogProgress(Test, "Backoff base %" PRIu32 " # %d: %" PRIu32, test.backoffBase.count(), test.sendCount,
                             backoff.count());
 
-            NL_TEST_ASSERT(inSuite, backoff >= test->backoffMin);
-            NL_TEST_ASSERT(inSuite, backoff <= test->backoffMax);
+            NL_TEST_ASSERT(inSuite, backoff >= test.backoffMin);
+            NL_TEST_ASSERT(inSuite, backoff <= test.backoffMax);
         }
     }
 }

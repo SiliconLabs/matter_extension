@@ -19,6 +19,7 @@ import("$dir_pw_build/facade.gni")
 import("$dir_pw_build/target_types.gni")
 import("$dir_pw_crypto/backend.gni")
 import("$dir_pw_docgen/docs.gni")
+import("$dir_pw_third_party/micro_ecc/micro_ecc.gni")
 import("$dir_pw_unit_test/test.gni")
 
 config("default_config") {
@@ -44,7 +45,7 @@ pw_doc_group("docs") {
   report_deps = [ ":size_report" ]
 }
 
-pw_size_report("size_report") {
+pw_size_diff("size_report") {
   title = "pw::crypto Size Report"
   base = "$dir_pw_bloat:bloat_base"
 
@@ -84,6 +85,9 @@ pw_test_group("tests") {
     ":sha256_mock_test",
     ":ecdsa_test",
   ]
+  if (dir_pw_third_party_micro_ecc != "") {
+    tests += [ ":ecdsa_uecc_little_endian_test" ]
+  }
 }
 
 # Sha256 tests against the selected real backend.
@@ -137,21 +141,16 @@ pw_source_set("sha256_mbedtls") {
   ]
 }
 
-config("boringssl_config") {
-  visibility = [ ":*" ]
-  include_dirs = [ "public_overrides/boringssl" ]
-}
-
-pw_source_set("sha256_boringssl") {
-  public_configs = [ ":boringssl_config" ]
+pw_source_set("sha256_mbedtls_v3") {
+  public_configs = [ ":mbedtls_config" ]
   public = [
-    "public/pw_crypto/sha256_boringssl.h",
-    "public_overrides/boringssl/pw_crypto/sha256_backend.h",
+    "public/pw_crypto/sha256_mbedtls.h",
+    "public_overrides/mbedtls/pw_crypto/sha256_backend.h",
   ]
-  sources = [ "sha256_boringssl.cc" ]
+  sources = [ "sha256_mbedtls.cc" ]
   public_deps = [
     ":sha256.facade",
-    "$dir_pw_third_party/boringssl",
+    "$dir_pw_third_party/mbedtls:mbedtls_v3",
   ]
 }
 
@@ -175,11 +174,12 @@ pw_source_set("ecdsa_mbedtls") {
   public_deps = [ ":ecdsa.facade" ]
 }
 
-pw_source_set("ecdsa_boringssl") {
-  sources = [ "ecdsa_boringssl.cc" ]
+pw_source_set("ecdsa_mbedtls_v3") {
+  sources = [ "ecdsa_mbedtls.cc" ]
   deps = [
+    "$dir_pw_function",
     "$dir_pw_log",
-    "$dir_pw_third_party/boringssl",
+    "$dir_pw_third_party/mbedtls:mbedtls_v3",
   ]
   public_deps = [ ":ecdsa.facade" ]
 }
@@ -193,6 +193,27 @@ pw_source_set("ecdsa_uecc") {
   public_deps = [ ":ecdsa.facade" ]
 }
 
+if (dir_pw_third_party_micro_ecc != "") {
+  pw_source_set("ecdsa_uecc_little_endian") {
+    sources = [ "ecdsa_uecc.cc" ]
+    deps = [
+      "$dir_pw_log",
+      "$dir_pw_third_party/micro_ecc:micro_ecc_little_endian",
+    ]
+    public_deps = [ ":ecdsa.facade" ]
+  }
+
+  # This test targets the micro_ecc little endian backend specifically.
+  #
+  # TODO(b/273819841) deduplicate all backend tests.
+  pw_test("ecdsa_uecc_little_endian_test") {
+    sources = [ "ecdsa_test.cc" ]
+    deps = [ ":ecdsa_uecc_little_endian" ]
+  }
+}
+
+# This test targets the specific backend pointed to by
+# pw_crypto_ECDSA_BACKEND.
 pw_test("ecdsa_test") {
   enable_if = pw_crypto_ECDSA_BACKEND != ""
   deps = [ ":ecdsa" ]

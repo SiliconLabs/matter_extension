@@ -24,14 +24,22 @@ PICS:
 
 config:
     nodeId: 0x12344321
-    cluster: "Basic"
+    cluster: "Basic Information"
     endpoint: 0
 
 tests:
-    - label:
-          "DUT reads all supported mandatory attributes from TH once at a time
-          in a manufacturer specific order"
+    - label: "Note"
       verification: |
+          For DUT as client test cases, Chip-tool command used below are an example to verify the functionality. For certification test, we expect DUT should have a capability or way to run the equivalent command.
+      disabled: true
+
+    - label:
+          "DUT reads all supported mandatory attributes from TH one at a time in
+          a manufacturer specific order."
+      PICS: PSCFG.C.AM-READ
+      verification: |
+          Product maker needs to provide instructions for how to trigger the command on the DUT. For comparison, the DUT behavior for this test step can be simulated using chip-tool (when DUT is a commissioner/Client)
+
           ./chip-tool powersourceconfiguration read sources 1 0
 
           verify the " sources response" on the TH (all-cluster-app) log:
@@ -60,56 +68,85 @@ tests:
       disabled: true
 
     - label:
-          "DUT reads all supported optional attributes from TH once at a time in
-          a manufacturer specific order"
+          "DUT reads all supported optional attributes from TH one at a time in
+          a manufacturer specific order."
+      PICS: PSCFG.C.AO-READ
       verification: |
           This cluster doesn"t have any  optional attribute
       disabled: true
 
     - label:
           "DUT writes a suitable value to all supported mandatory attributes on
-          the TH once at a time in a manufacturer specific order"
+          the TH one at a time in a manufacturer specific order."
+      PICS: PSCFG.C.AM-WRITE
       verification: |
           This cluster doesn"t have any writable attributes
       disabled: true
 
     - label:
           "DUT writes a suitable value to all supported optional attributes on
-          the TH once at a time in a manufacturer specific order"
+          the TH one at a time in a manufacturer specific order."
+      PICS: PSCFG.C.AO-WRITE
       verification: |
-          This cluster doesn"t have any writable attributes
+          This cluster doesn"t have any  optional attribute
       disabled: true
 
     - label:
           "Configure TH such that it implements mandatory and none of the
-          optional attributes of the server- side of the cluster, and that it
+          optional attributes of the server-side of the cluster, and that it
           also reflects this in global attributes such as FeatureMap and
-          AttributeList. Commission DUT to TH aga"
+          AttributeList. Commission DUT to TH again."
       verification: |
+          Product maker needs to provide instructions for how to trigger the command on the DUT. For comparison, the DUT behavior for this test step can be simulated using chip-tool (when DUT is a commissioner/Client)
+
+
           ./chip-tool powersourceconfiguration read attribute-list 1 0
 
-          Verify the ReadRequestMessage the TH (all-cluster-minimal-app) log:
+          Verify the attribute-list response the TH (all-cluster-minimal-app) log:
 
           [1663147271.622589][2750:2750] CHIP:IM: Received Read request
           [1663147271.622666][2750:2750] CHIP:DMG: ReadRequestMessage =
           [1663147271.622692][2750:2750] CHIP:DMG: {
-          [1663147271.622714][2750:2750] CHIP:DMG: 	AttributePathIBs =
-          [1663147271.622739][2750:2750] CHIP:DMG: 	[
-          [1663147271.622789][2750:2750] CHIP:DMG: 		AttributePathIB =
-          [1663147271.622821][2750:2750] CHIP:DMG: 		{
-          [1663147271.622849][2750:2750] CHIP:DMG: 			Endpoint = 0x0,
-          [1663147271.622880][2750:2750] CHIP:DMG: 			Cluster = 0x2e,
-          [1663147271.622914][2750:2750] CHIP:DMG: 			Attribute = 0x0000_FFFB,
-          [1663147271.622943][2750:2750] CHIP:DMG: 		}
+          [1663147271.622714][2750:2750] CHIP:DMG:         AttributePathIBs =
+          [1663147271.622739][2750:2750] CHIP:DMG:         [
+          [1663147271.622789][2750:2750] CHIP:DMG:                 AttributePathIB =
+          [1663147271.622821][2750:2750] CHIP:DMG:                 {
+          [1663147271.622849][2750:2750] CHIP:DMG:                         Endpoint = 0x0,
+          [1663147271.622880][2750:2750] CHIP:DMG:                         Cluster = 0x2e,
+          [1663147271.622914][2750:2750] CHIP:DMG:                         Attribute = 0x0000_FFFB,
+          [1663147271.622943][2750:2750] CHIP:DMG:                 }
           [1663147271.622971][2750:2750] CHIP:DMG:
-          [1663147271.622996][2750:2750] CHIP:DMG: 	],
+          [1663147271.622996][2750:2750] CHIP:DMG:         ],
           [1663147271.623023][2750:2750] CHIP:DMG:
-          [1663147271.623049][2750:2750] CHIP:DMG: 	isFabricFiltered = true,
-          [1663147271.623074][2750:2750] CHIP:DMG: 	InteractionModelRevision = 1
+          [1663147271.623049][2750:2750] CHIP:DMG:         isFabricFiltered = true,
+          [1663147271.623074][2750:2750] CHIP:DMG:         InteractionModelRevision = 1
           [1663147271.623097][2750:2750] CHIP:DMG: },
           [1663147271.623168][2750:2750] CHIP:DMG: IM RH moving to [GeneratingReports]
           [1663147271.623246][2750:2750] CHIP:DMG: Building Reports for ReadHandler with LastReportGeneration = 0 DirtyGeneration = 0
           [1663147271.623274][2750:2750] CHIP:DMG: <RE:Run> Cluster 2e, Attribute fffb is dirty
+
+          ./chip-tool powersourceconfiguration read feature-map 1 0
+
+          Verify the feature-map response  the TH (all-cluster-minimal-app) log:
+
+          [1676551043.650050][58234:58234] CHIP:IM: Received Read request
+          [1676551043.650118][58234:58234] CHIP:DMG: ReadRequestMessage =
+          [1676551043.650132][58234:58234] CHIP:DMG: {
+          [1676551043.650139][58234:58234] CHIP:DMG:         AttributePathIBs =
+          [1676551043.650148][58234:58234] CHIP:DMG:         [
+          [1676551043.650155][58234:58234] CHIP:DMG:                 AttributePathIB =
+          [1676551043.650164][58234:58234] CHIP:DMG:                 {
+          [1676551043.650174][58234:58234] CHIP:DMG:                         Endpoint = 0x0,
+          [1676551043.650183][58234:58234] CHIP:DMG:                         Cluster = 0x2e,
+          [1676551043.650193][58234:58234] CHIP:DMG:                         Attribute = 0x0000_FFFC,
+          [1676551043.650203][58234:58234] CHIP:DMG:                 }
+          [1676551043.650218][58234:58234] CHIP:DMG:
+          [1676551043.650227][58234:58234] CHIP:DMG:         ],
+          [1676551043.650241][58234:58234] CHIP:DMG:
+          [1676551043.650251][58234:58234] CHIP:DMG:         isFabricFiltered = true,
+          [1676551043.650261][58234:58234] CHIP:DMG:         InteractionModelRevision = 1
+          [1676551043.650269][58234:58234] CHIP:DMG: },
+
 
 
           ./chip-tool powersourceconfiguration read sources 1 0
@@ -141,14 +178,16 @@ tests:
 
     - label:
           "DUT reads all supported optional attributes from TH one at a time in
-          a manufacturer specific orde"
+          a manufacturer specific order."
+      PICS: PSCFG.C.AO-READ
       verification: |
           This cluster doesn"t have any  optional attribute
       disabled: true
 
     - label:
           "DUT writes a suitable value to all supported optional attributes on
-          the TH one at a time in a manufacturer specific orde"
+          the TH one at a time in a manufacturer specific order."
+      PICS: PSCFG.C.AO-WRITE
       verification: |
           This cluster doesn"t have any writable attributes
       disabled: true

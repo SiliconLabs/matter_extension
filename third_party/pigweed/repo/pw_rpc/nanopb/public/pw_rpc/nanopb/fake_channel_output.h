@@ -15,6 +15,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <mutex>
 
 #include "pw_assert/assert.h"
 #include "pw_bytes/span.h"
@@ -55,7 +56,7 @@ class NanopbPayloadsView {
     // Access the payload (rather than packet) with operator*.
     Payload operator*() const {
       Payload payload{};
-      PW_ASSERT(serde_.Decode(Base::value(), &payload));
+      PW_ASSERT_OK(serde_.Decode(Base::value(), payload));
       return payload;
     }
 
@@ -71,7 +72,7 @@ class NanopbPayloadsView {
 
   Payload operator[](size_t index) const {
     Payload payload{};
-    PW_ASSERT(serde_.Decode(view_[index], &payload));
+    PW_ASSERT_OK(serde_.Decode(view_[index], payload));
     return payload;
   }
 
@@ -125,10 +126,10 @@ class NanopbFakeChannelOutput final
   NanopbPayloadsView<Request<kMethod>> requests(
       uint32_t channel_id = Channel::kUnassignedChannelId) const
       PW_NO_LOCK_SAFETY_ANALYSIS {
-    constexpr internal::PacketType packet_type =
+    constexpr internal::pwpb::PacketType packet_type =
         HasClientStream(internal::MethodInfo<kMethod>::kType)
-            ? internal::PacketType::CLIENT_STREAM
-            : internal::PacketType::REQUEST;
+            ? internal::pwpb::PacketType::CLIENT_STREAM
+            : internal::pwpb::PacketType::REQUEST;
     return NanopbPayloadsView<Request<kMethod>>(
         internal::MethodInfo<kMethod>::serde().request(),
         Base::packets(),
@@ -150,10 +151,10 @@ class NanopbFakeChannelOutput final
   NanopbPayloadsView<Response<kMethod>> responses(
       uint32_t channel_id = Channel::kUnassignedChannelId) const
       PW_NO_LOCK_SAFETY_ANALYSIS {
-    constexpr internal::PacketType packet_type =
+    constexpr internal::pwpb::PacketType packet_type =
         HasServerStream(internal::MethodInfo<kMethod>::kType)
-            ? internal::PacketType::SERVER_STREAM
-            : internal::PacketType::RESPONSE;
+            ? internal::pwpb::PacketType::SERVER_STREAM
+            : internal::pwpb::PacketType::RESPONSE;
     return NanopbPayloadsView<Response<kMethod>>(
         internal::MethodInfo<kMethod>::serde().response(),
         Base::packets(),
@@ -166,7 +167,7 @@ class NanopbFakeChannelOutput final
 
   template <auto kMethod>
   Response<kMethod> last_response() const {
-    internal::LockGuard lock(internal::test::FakeChannelOutput::mutex());
+    std::lock_guard lock(internal::test::FakeChannelOutput::mutex());
     NanopbPayloadsView<Response<kMethod>> payloads = responses<kMethod>();
     PW_ASSERT(!payloads.empty());
     return payloads.back();

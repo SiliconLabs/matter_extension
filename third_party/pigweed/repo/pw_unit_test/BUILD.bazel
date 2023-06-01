@@ -12,6 +12,7 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
+load("@com_google_protobuf//:protobuf.bzl", "py_proto_library")
 load(
     "//pw_build:pigweed.bzl",
     "pw_cc_binary",
@@ -153,7 +154,12 @@ pw_cc_binary(
 proto_library(
     name = "unit_test_proto",
     srcs = ["pw_unit_test_proto/unit_test.proto"],
-    strip_import_prefix = "//pw_unit_test",
+    strip_import_prefix = "/pw_unit_test",
+)
+
+py_proto_library(
+    name = "unit_test_py_pb2",
+    srcs = ["pw_unit_test_proto/unit_test.proto"],
 )
 
 pw_proto_library(
@@ -248,8 +254,10 @@ filegroup(
 # GTest is not yet supported in the Bazel build. This filegroup silences
 # warnings about these files not being included in the Bazel build.
 filegroup(
-    name = "gtest_rpc_support",
+    name = "gtest_support",
     srcs = [
+        "googletest_handler_adapter.cc",
+        "public/pw_unit_test/googletest_handler_adapter.h",
         "rpc_gtest_event_handler.cc",
         "rpc_gtest_public/pw_unit_test/internal/rpc_event_handler.h",
     ],

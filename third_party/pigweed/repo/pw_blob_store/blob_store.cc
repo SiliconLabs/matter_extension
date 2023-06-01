@@ -90,7 +90,7 @@ Status BlobStore::LoadMetadata() {
                         metadata.v1_metadata.checksum)
            .ok()) {
     PW_LOG_ERROR("BlobStore init - Invalidating blob with invalid checksum");
-    Invalidate().IgnoreError();  // TODO(pwbug/387): Handle Status properly
+    Invalidate().IgnoreError();  // TODO(b/242598609): Handle Status properly
     return Status::DataLoss();
   }
 
@@ -120,7 +120,7 @@ Status BlobStore::OpenWrite() {
   writer_open_ = true;
 
   // Clear any existing contents.
-  Invalidate().IgnoreError();  // TODO(pwbug/387): Handle Status properly
+  Invalidate().IgnoreError();  // TODO(b/242598609): Handle Status properly
 
   return OkStatus();
 }
@@ -433,7 +433,7 @@ Result<ConstByteSpan> BlobStore::GetMemoryMappedBlob() const {
 }
 
 size_t BlobStore::ReadableDataBytes() const {
-  // TODO: clean up state related to readable bytes.
+  // TODO(davidrogers): clean up state related to readable bytes.
   return flash_address_;
 }
 
@@ -453,7 +453,7 @@ Status BlobStore::Erase() {
 
   // If any writes have been performed, reset the state.
   if (flash_address_ != 0) {
-    Invalidate().IgnoreError();  // TODO(pwbug/387): Handle Status properly
+    Invalidate().IgnoreError();  // TODO(b/242598609): Handle Status properly
   }
 
   PW_TRY(partition_.Erase());

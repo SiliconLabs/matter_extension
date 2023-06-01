@@ -86,6 +86,7 @@ CHIP_ERROR DeviceControllerFactory::InitSystemState()
         params.fabricIndependentStorage = mFabricIndependentStorage;
         params.enableServerInteractions = mEnableServerInteractions;
         params.groupDataProvider        = mSystemState->GetGroupDataProvider();
+        params.sessionKeystore          = mSystemState->GetSessionKeystore();
         params.fabricTable              = mSystemState->Fabrics();
         params.operationalKeystore      = mOperationalKeystore;
         params.opCertStore              = mOpCertStore;
@@ -129,6 +130,7 @@ CHIP_ERROR DeviceControllerFactory::InitSystemState(FactoryInitParams params)
     // OperationalCertificateStore needs to be provided to init the fabric table if fabric table is
     // not provided wholesale.
     ReturnErrorCodeIf((params.fabricTable == nullptr) && (params.opCertStore == nullptr), CHIP_ERROR_INVALID_ARGUMENT);
+    ReturnErrorCodeIf(params.sessionKeystore == nullptr, CHIP_ERROR_INVALID_ARGUMENT);
 
 #if CONFIG_NETWORK_LAYER_BLE
 #if CONFIG_DEVICE_LAYER
@@ -166,6 +168,7 @@ CHIP_ERROR DeviceControllerFactory::InitSystemState(FactoryInitParams params)
     stateParams.exchangeMgr               = chip::Platform::New<Messaging::ExchangeManager>();
     stateParams.messageCounterManager     = chip::Platform::New<secure_channel::MessageCounterManager>();
     stateParams.groupDataProvider         = params.groupDataProvider;
+    stateParams.sessionKeystore           = params.sessionKeystore;
 
     // if no fabricTable was provided, create one and track it in stateParams for cleanup
     stateParams.fabricTable = params.fabricTable;
@@ -198,12 +201,12 @@ CHIP_ERROR DeviceControllerFactory::InitSystemState(FactoryInitParams params)
 
     ReturnErrorOnFailure(stateParams.sessionMgr->Init(stateParams.systemLayer, stateParams.transportMgr,
                                                       stateParams.messageCounterManager, params.fabricIndependentStorage,
-                                                      stateParams.fabricTable));
+                                                      stateParams.fabricTable, *stateParams.sessionKeystore));
     ReturnErrorOnFailure(stateParams.exchangeMgr->Init(stateParams.sessionMgr));
     ReturnErrorOnFailure(stateParams.messageCounterManager->Init(stateParams.exchangeMgr));
     ReturnErrorOnFailure(stateParams.unsolicitedStatusHandler->Init(stateParams.exchangeMgr));
 
-    InitDataModelHandler(stateParams.exchangeMgr);
+    InitDataModelHandler();
 
     ReturnErrorOnFailure(Dnssd::Resolver::Instance().Init(stateParams.udpEndPointManager));
 
@@ -245,18 +248,18 @@ CHIP_ERROR DeviceControllerFactory::InitSystemState(FactoryInitParams params)
     stateParams.sessionSetupPool = Platform::New<DeviceControllerSystemStateParams::SessionSetupPool>();
     stateParams.caseClientPool   = Platform::New<DeviceControllerSystemStateParams::CASEClientPool>();
 
-    DeviceProxyInitParams deviceInitParams = {
+    CASEClientInitParams sessionInitParams = {
         .sessionManager           = stateParams.sessionMgr,
         .sessionResumptionStorage = stateParams.sessionResumptionStorage.get(),
         .exchangeMgr              = stateParams.exchangeMgr,
         .fabricTable              = stateParams.fabricTable,
-        .clientPool               = stateParams.caseClientPool,
         .groupDataProvider        = stateParams.groupDataProvider,
         .mrpLocalConfig           = GetLocalMRPConfig(),
     };
 
     CASESessionManagerConfig sessionManagerConfig = {
-        .sessionInitParams = deviceInitParams,
+        .sessionInitParams = sessionInitParams,
+        .clientPool        = stateParams.caseClientPool,
         .sessionSetupPool  = stateParams.sessionSetupPool,
     };
 
@@ -283,6 +286,7 @@ void DeviceControllerFactory::PopulateInitParams(ControllerInitParams & controll
     controllerParams.controllerICAC                       = params.controllerICAC;
     controllerParams.controllerRCAC                       = params.controllerRCAC;
     controllerParams.permitMultiControllerFabrics         = params.permitMultiControllerFabrics;
+    controllerParams.removeFromFabricTableOnShutdown      = params.removeFromFabricTableOnShutdown;
 
     controllerParams.systemState        = mSystemState;
     controllerParams.controllerVendorId = params.controllerVendorId;
@@ -334,6 +338,21 @@ CHIP_ERROR DeviceControllerFactory::ServiceEvents()
 #endif // CONFIG_DEVICE_LAYER
 
     return CHIP_NO_ERROR;
+}
+
+void DeviceControllerFactory::RetainSystemState()
+{
+    (void) mSystemState->Retain();
+}
+
+void DeviceControllerFactory::ReleaseSystemState()
+{
+    mSystemState->Release();
+
+    if (!mSystemState->IsInitialized() && mEnableServerInteractions)
+    {
+        app::DnssdServer::Instance().StopServer();
+    }
 }
 
 DeviceControllerFactory::~DeviceControllerFactory()
@@ -463,6 +482,7 @@ void DeviceControllerSystemState::Shutdown()
 
     if (mTempFabricTable != nullptr)
     {
+        mTempFabricTable->Shutdown();
         chip::Platform::Delete(mTempFabricTable);
         mTempFabricTable = nullptr;
         // if we created a temp fabric table, then mFabrics points to it.

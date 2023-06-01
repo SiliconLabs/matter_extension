@@ -19,6 +19,7 @@ import("$dir_pw_build/module_config.gni")
 import("$dir_pw_build/target_types.gni")
 import("$dir_pw_docgen/docs.gni")
 import("$dir_pw_fuzzer/fuzzer.gni")
+import("$dir_pw_perf_test/perf_test.gni")
 import("$dir_pw_protobuf_compiler/proto.gni")
 import("$dir_pw_unit_test/facade_test.gni")
 import("$dir_pw_unit_test/test.gni")
@@ -53,6 +54,7 @@ pw_source_set("pw_protobuf") {
     dir_pw_bytes,
     dir_pw_function,
     dir_pw_log,
+    dir_pw_preprocessor,
     dir_pw_result,
     dir_pw_span,
     dir_pw_status,
@@ -79,6 +81,7 @@ pw_source_set("pw_protobuf") {
     "message.cc",
     "stream_decoder.cc",
   ]
+  deps = [ "$dir_pw_string:string" ]
 }
 
 pw_source_set("bytes_utils") {
@@ -93,10 +96,20 @@ pw_source_set("bytes_utils") {
 }
 
 pw_doc_group("docs") {
-  sources = [ "docs.rst" ]
+  sources = [
+    "docs.rst",
+    "size_report.rst",
+  ]
+  inputs = [
+    "pw_protobuf_test_protos/size_report.options",
+    "pw_protobuf_test_protos/size_report.proto",
+  ]
   report_deps = [
-    "size_report:decoder_full",
     "size_report:decoder_incremental",
+    "size_report:decoder_partial",
+    "size_report:oneof_codegen_size_comparison",
+    "size_report:protobuf_overview",
+    "size_report:simple_codegen_size_comparison",
   ]
 }
 
@@ -107,13 +120,21 @@ pw_test_group("tests") {
     ":codegen_message_test",
     ":decoder_test",
     ":encoder_test",
-    ":encoder_fuzzer",
+    ":encoder_fuzzer_test",
+    ":decoder_fuzzer_test",
     ":find_test",
     ":map_utils_test",
     ":message_test",
     ":serialized_size_test",
     ":stream_decoder_test",
     ":varint_size_test",
+  ]
+}
+
+group("fuzzers") {
+  deps = [
+    ":decoder_fuzzer",
+    ":encoder_fuzzer",
   ]
 }
 
@@ -145,7 +166,6 @@ pw_test("codegen_encoder_test") {
 pw_test("codegen_message_test") {
   deps = [
     ":codegen_test_protos.pwpb",
-    "$dir_pw_string:vector",
     dir_pw_string,
   ]
   sources = [ "codegen_message_test.cc" ]
@@ -171,6 +191,16 @@ pw_test("message_test") {
   sources = [ "message_test.cc" ]
 }
 
+group("perf_tests") {
+  deps = [ ":encoder_perf_test" ]
+}
+
+pw_perf_test("encoder_perf_test") {
+  enable_if = pw_perf_test_TIMER_INTERFACE_BACKEND != ""
+  deps = [ ":pw_protobuf" ]
+  sources = [ "encoder_perf_test.cc" ]
+}
+
 config("one_byte_varint") {
   defines = [ "PW_PROTOBUF_CFG_MAX_VARINT_SIZE=1" ]
   visibility = [ ":*" ]
@@ -190,14 +220,20 @@ pw_facade_test("varint_size_test") {
 }
 
 pw_proto_library("codegen_protos") {
-  sources = [ "pw_protobuf_codegen_protos/options.proto" ]
+  sources = [ "pw_protobuf_codegen_protos/codegen_options.proto" ]
 }
 
 pw_proto_library("common_protos") {
   sources = [
     "pw_protobuf_protos/common.proto",
+    "pw_protobuf_protos/field_options.proto",
     "pw_protobuf_protos/status.proto",
   ]
+}
+
+pw_proto_library("codegen_test_deps_protos") {
+  sources = [ "pw_protobuf_test_deps_protos/imported.proto" ]
+  inputs = [ "pw_protobuf_test_deps_protos/imported.options" ]
 }
 
 pw_proto_library("codegen_test_protos") {
@@ -209,16 +245,54 @@ pw_proto_library("codegen_test_protos") {
     "pw_protobuf_test_protos/optional.proto",
     "pw_protobuf_test_protos/proto2.proto",
     "pw_protobuf_test_protos/repeated.proto",
+    "pw_protobuf_test_protos/size_report.proto",
   ]
   inputs = [
     "pw_protobuf_test_protos/full_test.options",
     "pw_protobuf_test_protos/optional.options",
+    "pw_protobuf_test_protos/imported.options",
     "pw_protobuf_test_protos/repeated.options",
   ]
-  deps = [ ":common_protos" ]
+  deps = [
+    ":codegen_test_deps_protos",
+    ":common_protos",
+  ]
 }
 
+# The tests below have a large amount of global and static data.
+# TODO(b/234883746): Replace this with a better size-based check.
+_small_executable_target_types = [
+  "stm32f429i_executable",
+  "lm3s6965evb_executable",
+]
+_supports_large_tests =
+    _small_executable_target_types + [ pw_build_EXECUTABLE_TARGET_TYPE ] -
+    _small_executable_target_types != []
+
 pw_fuzzer("encoder_fuzzer") {
-  sources = [ "encoder_fuzzer.cc" ]
-  deps = [ ":pw_protobuf" ]
+  sources = [
+    "encoder_fuzzer.cc",
+    "fuzz.h",
+  ]
+  deps = [
+    ":pw_protobuf",
+    dir_pw_fuzzer,
+    dir_pw_span,
+  ]
+  enable_test_if = _supports_large_tests
+}
+
+pw_fuzzer("decoder_fuzzer") {
+  sources = [
+    "decoder_fuzzer.cc",
+    "fuzz.h",
+  ]
+  deps = [
+    ":pw_protobuf",
+    dir_pw_fuzzer,
+    dir_pw_span,
+    dir_pw_status,
+    dir_pw_stream,
+  ]
+  enable_test_if = _supports_large_tests
 }

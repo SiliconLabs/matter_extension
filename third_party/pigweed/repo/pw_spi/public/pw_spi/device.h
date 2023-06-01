@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <optional>
+#include <utility>
 
 #include "pw_bytes/span.h"
 #include "pw_spi/chip_selector.h"
@@ -32,7 +32,7 @@ namespace pw::spi {
 // through the use of the `Borrowable` object.
 class Device {
  public:
-  Device(sync::Borrowable<Initiator>& initiator,
+  Device(sync::Borrowable<Initiator> initiator,
          const Config config,
          ChipSelector& selector)
       : initiator_(initiator), config_(config), selector_(selector) {}
@@ -41,7 +41,7 @@ class Device {
 
   // Synchronously read data from the SPI peripheral until the provided
   // `read_buffer` is full.
-  // This call will configure the bus and activate/deactive chip select
+  // This call will configure the bus and activate/deactivate chip select
   // for the transfer
   //
   // Note: This call will block in the event that other clients are currently
@@ -51,7 +51,7 @@ class Device {
   Status Read(ByteSpan read_buffer) { return WriteRead({}, read_buffer); }
 
   // Synchronously write the contents of `write_buffer` to the SPI peripheral.
-  // This call will configure the bus and activate/deactive chip select
+  // This call will configure the bus and activate/deactivate chip select
   // for the transfer
   //
   // Note: This call will block in the event that other clients are currently
@@ -69,7 +69,7 @@ class Device {
   // additional input bytes are discarded. In the event the write buffer is
   // smaller than the read buffer (or zero size), the output is padded with
   // 0-bits for the remainder of the transfer.
-  // This call will configure the bus and activate/deactive chip select
+  // This call will configure the bus and activate/deactivate chip select
   // for the transfer
   //
   // Note: This call will block in the event that other clients
@@ -93,7 +93,7 @@ class Device {
           (behavior_ == ChipSelectBehavior::kPerTransaction) &&
           (!first_write_read_)) {
         selector_->Deactivate()
-            .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+            .IgnoreError();  // TODO(b/242598609): Handle Status properly
       }
     }
 
@@ -192,7 +192,7 @@ class Device {
   // underlying SPI bus (Initiator) for the object's duration. The `behavior`
   // parameter provides a means for a client to select how the chip-select
   // signal will be applied on Read/Write/WriteRead calls taking place with the
-  // Transaction object. A value of `kPerWriteRead` will activate/deactive
+  // Transaction object. A value of `kPerWriteRead` will activate/deactivate
   // chip-select on each operation, while `kPerTransaction` will hold the
   // chip-select active for the duration of the Transaction object.
   Transaction StartTransaction(ChipSelectBehavior behavior) {
@@ -200,7 +200,7 @@ class Device {
   }
 
  private:
-  sync::Borrowable<Initiator>& initiator_;
+  sync::Borrowable<Initiator> initiator_;
   const Config config_;
   ChipSelector& selector_;
 };

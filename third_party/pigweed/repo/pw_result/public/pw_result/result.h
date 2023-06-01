@@ -35,6 +35,7 @@
 #pragma once
 
 #include <exception>
+#include <functional>
 #include <initializer_list>
 #include <new>
 #include <string>
@@ -547,6 +548,163 @@ class Result : private internal_result::StatusOrData<T>,
       this->status_ = OkStatus();
     }
     return this->data_;
+  }
+
+  // Result<T>::and_then()
+  //
+  // template <typename U>
+  // Result<U> and_then(Function<Result<U>(T)> func);
+  //
+  // Returns the Result from the invocation of the function on the contained
+  // value if it exists. Otherwise, returns the contained status in the Result.
+  //
+  //   Result<Foo> CreateFoo();
+  //   Result<Bar> CreateBarFromFoo(const Foo& foo);
+  //
+  //   Result<Bar> bar = CreateFoo().and_then(CreateBarFromFoo);
+  template <typename Fn,
+            typename Ret = internal_result::InvokeResultType<Fn, T&>,
+            std::enable_if_t<std::is_copy_constructible_v<Ret>, int> = 0>
+  constexpr Ret and_then(Fn&& function) & {
+    static_assert(internal_result::IsResult<Ret>,
+                  "Fn must return a pw::Result");
+    return ok() ? std::invoke(std::forward<Fn>(function), value())
+                : Ret(status());
+  }
+
+  template <typename Fn,
+            typename Ret = internal_result::InvokeResultType<Fn, T&&>,
+            std::enable_if_t<std::is_move_constructible_v<Ret>, int> = 0>
+  constexpr auto and_then(Fn&& function) && {
+    static_assert(internal_result::IsResult<Ret>,
+                  "Fn must return a pw::Result");
+    return ok() ? std::invoke(std::forward<Fn>(function), std::move(value()))
+                : Ret(status());
+  }
+
+  template <typename Fn,
+            typename Ret = internal_result::InvokeResultType<Fn, const T&>,
+            std::enable_if_t<std::is_copy_constructible_v<Ret>, int> = 0>
+  constexpr auto and_then(Fn&& function) const& {
+    static_assert(internal_result::IsResult<Ret>,
+                  "Fn must return a pw::Result");
+    return ok() ? std::invoke(std::forward<Fn>(function), value())
+                : Ret(status());
+  }
+
+  template <typename Fn,
+            typename Ret = internal_result::InvokeResultType<Fn, const T&&>,
+            std::enable_if_t<std::is_move_constructible_v<Ret>, int> = 0>
+  constexpr auto and_then(Fn&& function) const&& {
+    static_assert(internal_result::IsResult<Ret>,
+                  "Fn must return a pw::Result");
+    return ok() ? std::invoke(std::forward<Fn>(function), std::move(value()))
+                : Ret(status());
+  }
+
+  // Result<T>::or_else()
+  //
+  // template <typename U>
+  //   requires std::is_convertible_v<U, Result<T>>
+  // Result<T> or_else(Function<U(Status)> func);
+  //
+  // Result<T> or_else(Function<void(Status)> func);
+  //
+  // Returns a Result if it has a value, otherwise it invokes the given
+  // function. The function must return a type convertible to a Result<T> or a
+  // void.
+  //
+  //   Result<Foo> CreateFoo();
+  //
+  //   Result<Foo> foo = CreateFoo().or_else(
+  //       [](Status s) { PW_LOG_ERROR("Status: %d", s.code()); });
+  template <typename Fn,
+            typename Ret = internal_result::InvokeResultType<Fn, const Status&>,
+            std::enable_if_t<!std::is_void_v<Ret>, int> = 0>
+  constexpr Result<T> or_else(Fn&& function) const& {
+    static_assert(std::is_convertible_v<Ret, Result<T>>,
+                  "Fn must be convertible to a pw::Result");
+    return ok() ? *this : std::invoke(std::forward<Fn>(function), status());
+  }
+
+  template <typename Fn,
+            typename Ret = internal_result::InvokeResultType<Fn, const Status&>,
+            std::enable_if_t<std::is_void_v<Ret>, int> = 0>
+  constexpr Result<T> or_else(Fn&& function) const& {
+    if (ok()) {
+      return *this;
+    }
+    std::invoke(std::forward<Fn>(function), status());
+    return *this;
+  }
+
+  template <typename Fn,
+            typename Ret = internal_result::InvokeResultType<Fn, Status&&>,
+            std::enable_if_t<!std::is_void_v<Ret>, int> = 0>
+  constexpr Result<T> or_else(Fn&& function) && {
+    static_assert(std::is_convertible_v<Ret, Result<T>>,
+                  "Fn must be convertible to a pw::Result");
+    return ok() ? std::move(*this)
+                : std::invoke(std::forward<Fn>(function), std::move(status()));
+  }
+
+  template <typename Fn,
+            typename Ret = internal_result::InvokeResultType<Fn, Status&&>,
+            std::enable_if_t<std::is_void_v<Ret>, int> = 0>
+  constexpr Result<T> or_else(Fn&& function) && {
+    if (ok()) {
+      return *this;
+    }
+    std::invoke(std::forward<Fn>(function), status());
+    return std::move(*this);
+  }
+
+  // Result<T>::transform()
+  //
+  // template <typename U>
+  // Result<U> transform(Function<U(T)> func);
+  //
+  // Returns a Result<U> which contains the result of the invocation of the
+  // given function if *this contains a value. Otherwise, it returns a Result<U>
+  // with the same Status as *this.
+  template <typename Fn,
+            typename Ret = internal_result::InvokeResultType<Fn, T&>,
+            std::enable_if_t<std::is_copy_constructible_v<Ret>, int> = 0>
+  constexpr Result<Ret> transform(Fn&& function) & {
+    if (!ok()) {
+      return status();
+    }
+    return std::invoke(std::forward<Fn>(function), value());
+  }
+
+  template <typename Fn,
+            typename Ret = internal_result::InvokeResultType<Fn, T&&>,
+            std::enable_if_t<std::is_move_constructible_v<Ret>, int> = 0>
+  constexpr Result<Ret> transform(Fn&& function) && {
+    if (!ok()) {
+      return std::move(status());
+    }
+    return std::invoke(std::forward<Fn>(function), std::move(value()));
+  }
+
+  template <typename Fn,
+            typename Ret = internal_result::InvokeResultType<Fn, T&>,
+            std::enable_if_t<std::is_copy_constructible_v<Ret>, int> = 0>
+  constexpr Result<Ret> transform(Fn&& function) const& {
+    if (!ok()) {
+      return status();
+    }
+    return std::invoke(std::forward<Fn>(function), value());
+  }
+
+  template <typename Fn,
+            typename Ret = internal_result::InvokeResultType<Fn, T&&>,
+            std::enable_if_t<std::is_move_constructible_v<Ret>, int> = 0>
+  constexpr Result<Ret> transform(Fn&& function) const&& {
+    if (!ok()) {
+      return std::move(status());
+    }
+    return std::invoke(std::forward<Fn>(function), std::move(value()));
   }
 
  private:

@@ -1,4 +1,4 @@
-// Copyright 2022 The Pigweed Authors
+// Copyright 2023 The Pigweed Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not
 // use this file except in compliance with the License. You may obtain a copy of
@@ -16,11 +16,18 @@
 #include <cstdint>
 
 #include "pw_function/function.h"
+#include "pw_preprocessor/compiler.h"
 #include "pw_protobuf/wire_format.h"
 #include "pw_span/span.h"
 #include "pw_status/status.h"
 
+// TODO(b/259746255): Remove this manual application of -Wconversion when all of
+//     Pigweed builds with it.
+PW_MODIFY_DIAGNOSTICS_PUSH();
+PW_MODIFY_DIAGNOSTIC(error, "-Wconversion");
+
 namespace pw::protobuf {
+namespace internal {
 
 // Varints can be encoded as an unsigned type, a signed type with normal
 // encoding, or a signed type with zigzag encoding.
@@ -60,6 +67,7 @@ class MessageField {
                          WireType wire_type,
                          size_t elem_size,
                          VarintType varint_type,
+                         bool is_string,
                          bool is_fixed_size,
                          bool is_repeated,
                          bool is_optional,
@@ -68,13 +76,15 @@ class MessageField {
                          size_t field_size,
                          const span<const MessageField>* nested_message_fields)
       : field_number_(field_number),
-        field_info_(
-            static_cast<unsigned int>(wire_type) << kWireTypeShift |
-            elem_size << kElemSizeShift |
-            static_cast<unsigned int>(varint_type) << kVarintTypeShift |
-            is_fixed_size << kIsFixedSizeShift |
-            is_repeated << kIsRepeatedShift | is_optional << kIsOptionalShift |
-            use_callback << kUseCallbackShift | field_size << kFieldSizeShift),
+        field_info_(static_cast<uint32_t>(wire_type) << kWireTypeShift |
+                    static_cast<uint32_t>(elem_size) << kElemSizeShift |
+                    static_cast<uint32_t>(varint_type) << kVarintTypeShift |
+                    static_cast<uint32_t>(is_string) << kIsStringShift |
+                    static_cast<uint32_t>(is_fixed_size) << kIsFixedSizeShift |
+                    static_cast<uint32_t>(is_repeated) << kIsRepeatedShift |
+                    static_cast<uint32_t>(is_optional) << kIsOptionalShift |
+                    static_cast<uint32_t>(use_callback) << kUseCallbackShift |
+                    static_cast<uint32_t>(field_size) << kFieldSizeShift),
         field_offset_(field_offset),
         nested_message_fields_(nested_message_fields) {}
 
@@ -89,6 +99,9 @@ class MessageField {
   constexpr VarintType varint_type() const {
     return static_cast<VarintType>((field_info_ >> kVarintTypeShift) &
                                    kVarintTypeMask);
+  }
+  constexpr bool is_string() const {
+    return (field_info_ >> kIsStringShift) & 1;
   }
   constexpr bool is_fixed_size() const {
     return (field_info_ >> kIsFixedSizeShift) & 1;
@@ -116,25 +129,34 @@ class MessageField {
 
  private:
   // field_info_ packs multiple fields into a single word as follows:
+  //
   //   wire_type      : 3
   //   varint_type    : 2
+  //   is_string      : 1
   //   is_fixed_size  : 1
   //   is_repeated    : 1
   //   use_callback   : 1
   //   -
   //   elem_size      : 4
   //   is_optional    : 1
-  //   [unused space] : 3
+  //   [unused space] : 2
   //   -
   //   field_size     : 16
+  //
+  // The protobuf field type is spread among a few fields (wire_type,
+  // varint_type, is_string, elem_size). The exact field type (e.g. int32, bool,
+  // message, etc.), from which all of that information can be derived, can be
+  // represented in 4 bits. If more bits are needed in the future, these could
+  // be consolidated into a single field type enum.
   static constexpr unsigned int kWireTypeShift = 29u;
   static constexpr unsigned int kWireTypeMask = (1u << 3) - 1;
   static constexpr unsigned int kVarintTypeShift = 27u;
   static constexpr unsigned int kVarintTypeMask = (1u << 2) - 1;
-  static constexpr unsigned int kIsFixedSizeShift = 26u;
-  static constexpr unsigned int kIsRepeatedShift = 25u;
-  static constexpr unsigned int kUseCallbackShift = 24u;
-  static constexpr unsigned int kElemSizeShift = 20u;
+  static constexpr unsigned int kIsStringShift = 26u;
+  static constexpr unsigned int kIsFixedSizeShift = 25u;
+  static constexpr unsigned int kIsRepeatedShift = 24u;
+  static constexpr unsigned int kUseCallbackShift = 23u;
+  static constexpr unsigned int kElemSizeShift = 19u;
   static constexpr unsigned int kElemSizeMask = (1u << 4) - 1;
   static constexpr unsigned int kIsOptionalShift = 16u;
   static constexpr unsigned int kFieldSizeShift = 0u;
@@ -148,6 +170,11 @@ class MessageField {
 };
 static_assert(sizeof(MessageField) <= sizeof(size_t) * 4,
               "MessageField should be four words or less");
+
+template <typename...>
+constexpr std::false_type kInvalidMessageStruct{};
+
+}  // namespace internal
 
 // Callback for a structure member that cannot be represented by a data type.
 // Holds either a callback for encoding a field, or a callback for decoding
@@ -178,6 +205,9 @@ union Callback {
     return *this;
   }
 
+  // Evaluate to true if the encoder or decoder callback is set.
+  explicit operator bool() const { return encode_ || decode_; }
+
  private:
   friend StreamDecoder;
   friend StreamEncoder;
@@ -206,4 +236,13 @@ union Callback {
   Function<Status(StreamDecoder& decoder)> decode_;
 };
 
+template <typename T>
+constexpr bool IsTriviallyComparable() {
+  static_assert(internal::kInvalidMessageStruct<T>,
+                "Not a generated message struct");
+  return false;
+}
+
 }  // namespace pw::protobuf
+
+PW_MODIFY_DIAGNOSTICS_POP();

@@ -5,33 +5,121 @@ pw_bloat
 --------
 The bloat module provides tools and helpers around using
 `Bloaty McBloatface <https://github.com/google/bloaty>`_ including generating
-generate size report cards for output binaries through Pigweed's GN build
+size report cards for output binaries through Pigweed's GN build
 system.
 
 Bloat report cards allow tracking the memory usage of a system over time as code
 changes are made and provide a breakdown of which parts of the code have the
 largest size impact.
 
+``pw bloat`` CLI command
+========================
+``pw_bloat`` includes a plugin for the Pigweed command line capable of running
+size reports on ELF binaries.
+
+.. note::
+
+   The bloat CLI plugin is still experimental and only supports a small subset
+   of ``pw_bloat``'s capabilities. Notably, it currently only runs on binaries
+   which define memory region symbols; refer to the
+   :ref:`memoryregions documentation <module-pw_bloat-memoryregions>`
+   for details.
+
+Basic usage
+^^^^^^^^^^^
+
+**Running a size report on a single executable**
+
+.. code-block:: sh
+
+   $ pw bloat out/docs/obj/pw_result/size_report/bin/ladder_and_then.elf
+
+   ▒█████▄   █▓  ▄███▒  ▒█    ▒█ ░▓████▒ ░▓████▒ ▒▓████▄
+    ▒█░  █░ ░█▒ ██▒ ▀█▒ ▒█░ █ ▒█  ▒█   ▀  ▒█   ▀  ▒█  ▀█▌
+    ▒█▄▄▄█░ ░█▒ █▓░ ▄▄░ ▒█░ █ ▒█  ▒███    ▒███    ░█   █▌
+    ▒█▀     ░█░ ▓█   █▓ ░█░ █ ▒█  ▒█   ▄  ▒█   ▄  ░█  ▄█▌
+    ▒█      ░█░ ░▓███▀   ▒█▓▀▓█░ ░▓████▒ ░▓████▒ ▒▓████▀
+
+   +----------------------+---------+
+   |     memoryregions    |  sizes  |
+   +======================+=========+
+   |FLASH                 |1,048,064|
+   |RAM                   |  196,608|
+   |VECTOR_TABLE          |      512|
+   +======================+=========+
+   |Total                 |1,245,184|
+   +----------------------+---------+
+
+**Running a size report diff**
+
+.. code-block:: sh
+
+
+   $ pw bloat out/docs/obj/pw_metric/size_report/bin/one_metric.elf \
+         --diff out/docs/obj/pw_metric/size_report/bin/base.elf \
+         -d symbols
+
+   ▒█████▄   █▓  ▄███▒  ▒█    ▒█ ░▓████▒ ░▓████▒ ▒▓████▄
+    ▒█░  █░ ░█▒ ██▒ ▀█▒ ▒█░ █ ▒█  ▒█   ▀  ▒█   ▀  ▒█  ▀█▌
+    ▒█▄▄▄█░ ░█▒ █▓░ ▄▄░ ▒█░ █ ▒█  ▒███    ▒███    ░█   █▌
+    ▒█▀     ░█░ ▓█   █▓ ░█░ █ ▒█  ▒█   ▄  ▒█   ▄  ░█  ▄█▌
+    ▒█      ░█░ ░▓███▀   ▒█▓▀▓█░ ░▓████▒ ░▓████▒ ▒▓████▀
+
+   +-----------------------------------------------------------------------------------+
+   |                                                                                   |
+   +-----------------------------------------------------------------------------------+
+   | diff|     memoryregions    |                    symbols                    | sizes|
+   +=====+======================+===============================================+======+
+   |     |FLASH                 |                                               |    -4|
+   |     |                      |[section .FLASH.unused_space]                  |  -408|
+   |     |                      |main                                           |   +60|
+   |     |                      |__sf_fake_stdout                               |    +4|
+   |     |                      |pw_boot_PreStaticMemoryInit                    |    -2|
+   |     |                      |_isatty                                        |    -2|
+   |  NEW|                      |_GLOBAL__sub_I_group_foo                       |   +84|
+   |  NEW|                      |pw::metric::Group::~Group()                    |   +34|
+   |  NEW|                      |pw::intrusive_list_impl::List::insert_after()  |   +32|
+   |  NEW|                      |pw::metric::Metric::Increment()                |   +32|
+   |  NEW|                      |__cxa_atexit                                   |   +28|
+   |  NEW|                      |pw::metric::Metric::Metric()                   |   +28|
+   |  NEW|                      |pw::metric::Metric::as_int()                   |   +28|
+   |  NEW|                      |pw::intrusive_list_impl::List::Item::unlist()  |   +20|
+   |  NEW|                      |pw::metric::Group::Group()                     |   +18|
+   |  NEW|                      |pw::intrusive_list_impl::List::Item::previous()|   +14|
+   |  NEW|                      |pw::metric::TypedMetric<>::~TypedMetric()      |   +14|
+   |  NEW|                      |__aeabi_atexit                                 |   +12|
+   +-----+----------------------+-----------------------------------------------+------+
+   |     |RAM                   |                                               |     0|
+   |     |                      |[section .stack]                               |   -32|
+   |  NEW|                      |group_foo                                      |   +16|
+   |  NEW|                      |metric_x                                       |   +12|
+   |  NEW|                      |[section .static_init_ram]                     |    +4|
+   +=====+======================+===============================================+======+
+   |Total|                      |                                               |    -4|
+   +-----+----------------------+-----------------------------------------------+------+
+
+
 .. _bloat-howto:
 
-Defining size reports
-=====================
-Size reports are defined using the GN template ``pw_size_report``. The template
+Defining size reports in GN
+===========================
+
+Diff Size Reports
+^^^^^^^^^^^^^^^^^
+Size reports can be defined using the GN template ``pw_size_diff``. The template
 requires at least two executable targets on which to perform a size diff. The
 base for the size diff can be specified either globally through the top-level
 ``base`` argument, or individually per-binary within the ``binaries`` list.
 
 **Arguments**
 
-* ``title``: Title for the report card.
 * ``base``: Optional default base target for all listed binaries.
+* ``source_filter``: Optional global regex to filter labels in the diff output.
+* ``data_sources``: Optional global list of datasources from bloaty config file
 * ``binaries``: List of binaries to size diff. Each binary specifies a target,
-  a label for the diff, and optionally a base target that overrides the default
-  base.
-* ``source_filter``: Optional regex to filter labels in the diff output.
-* ``full_report``: Boolean flag indicating whether to output a full report of
-  all symbols in the binary, or a summary of the segment size changes. Default
-  false.
+  a label for the diff, and optionally a base target, source filter, and data
+  sources that override the global ones (if specified).
+
 
 .. code::
 
@@ -49,9 +137,9 @@ base for the size diff can be specified either globally through the top-level
     sources = [ "hello_iostream.cc" ]
   }
 
-  pw_size_report("my_size_report") {
-    title = "Hello world program using printf vs. iostream"
+  pw_size_diff("my_size_report") {
     base = ":empty_base"
+    data_sources = "symbols,segments"
     binaries = [
       {
         target = ":hello_world_printf"
@@ -60,21 +148,124 @@ base for the size diff can be specified either globally through the top-level
       {
         target = ":hello_world_iostream"
         label = "Hello world using iostream"
+        data_sources = "symbols"
       },
     ]
   }
 
+A sample ``pw_size_diff`` ReST size report table can be found within module
+docs. For example, see the :ref:`pw_checksum-size-report` section of the
+``pw_checksum`` module for more detail.
+
+
+Single Binary Size Reports
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Size reports can also be defined using ``pw_size_report``, which provides
+a size report for a single binary. The template requires a target binary.
+
+**Arguments**
+
+* ``target``: Binary target to run size report on.
+* ``data_sources``: Optional list of data sources to organize outputs.
+* ``source_filter``: Optional regex to filter labels in the output.
+
+.. code::
+
+  import("$dir_pw_bloat/bloat.gni")
+
+  executable("hello_world_iostream") {
+    sources = [ "hello_iostream.cc" ]
+  }
+
+  pw_size_report("hello_world_iostream_size_report") {
+    target = ":hello_iostream"
+    data_sources = "segments,symbols"
+    source_filter = "pw::hello"
+  }
+
+Sample Single Binary ASCII Table Generated
+
+.. code-block::
+
+  ┌─────────────┬──────────────────────────────────────────────────┬──────┐
+  │segment_names│                      symbols                     │ sizes│
+  ├═════════════┼══════════════════════════════════════════════════┼══════┤
+  │FLASH        │                                                  │12,072│
+  │             │pw::kvs::KeyValueStore::InitializeMetadata()      │   684│
+  │             │pw::kvs::KeyValueStore::Init()                    │   456│
+  │             │pw::kvs::internal::EntryCache::Find()             │   444│
+  │             │pw::kvs::FakeFlashMemory::Write()                 │   240│
+  │             │pw::kvs::internal::Entry::VerifyChecksumInFlash() │   228│
+  │             │pw::kvs::KeyValueStore::GarbageCollectSector()    │   220│
+  │             │pw::kvs::KeyValueStore::RemoveDeletedKeyEntries() │   220│
+  │             │pw::kvs::KeyValueStore::AppendEntry()             │   204│
+  │             │pw::kvs::KeyValueStore::Get()                     │   194│
+  │             │pw::kvs::internal::Entry::Read()                  │   188│
+  │             │pw::kvs::ChecksumAlgorithm::Finish()              │    26│
+  │             │pw::kvs::internal::Entry::ReadKey()               │    26│
+  │             │pw::kvs::internal::Sectors::BaseAddress()         │    24│
+  │             │pw::kvs::ChecksumAlgorithm::Update()              │    20│
+  │             │pw::kvs::FlashTestPartition()                     │     8│
+  │             │pw::kvs::FakeFlashMemory::Disable()               │     6│
+  │             │pw::kvs::FakeFlashMemory::Enable()                │     6│
+  │             │pw::kvs::FlashMemory::SelfTest()                  │     6│
+  │             │pw::kvs::FlashPartition::Init()                   │     6│
+  │             │pw::kvs::FlashPartition::sector_size_bytes()      │     6│
+  │             │pw::kvs::FakeFlashMemory::IsEnabled()             │     4│
+  ├─────────────┼──────────────────────────────────────────────────┼──────┤
+  │RAM          │                                                  │ 1,424│
+  │             │test_kvs                                          │   992│
+  │             │pw::kvs::(anonymous namespace)::test_flash        │   384│
+  │             │pw::kvs::(anonymous namespace)::test_partition    │    24│
+  │             │pw::kvs::FakeFlashMemory::no_errors_              │    12│
+  │             │borrowable_kvs                                    │     8│
+  │             │kvs_entry_count                                   │     4│
+  ├═════════════┼══════════════════════════════════════════════════┼══════┤
+  │Total        │                                                  │13,496│
+  └─────────────┴──────────────────────────────────────────────────┴──────┘
+
+
 Size reports are typically included in ReST documentation, as described in
 `Documentation integration`_. Size reports may also be printed in the build
-output if desired. To enable this in the GN build, set the
-``pw_bloat_SHOW_SIZE_REPORTS`` build arg to ``true``.
+output if desired. To enable this in the GN build
+(``pigweed/pw_bloat/bloat.gni``), set the ``pw_bloat_SHOW_SIZE_REPORTS``
+build arg to ``true``.
+
+Collecting size report data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Each ``pw_size_report`` target outputs a JSON file containing the sizes of all
+top-level labels in the binary. (By default, this represents "segments", i.e.
+ELF program headers.) If a build produces multiple images, it may be useful to
+collect all of their sizes into a single file to provide a snapshot of sizes at
+some point in time --- for example, to display per-commit size deltas through
+CI.
+
+The ``pw_size_report_aggregation`` template is provided to collect multiple size
+reports' data into a single JSON file.
+
+**Arguments**
+
+* ``deps``: List of ``pw_size_report`` targets whose data to collect.
+* ``output``: Path to the output JSON file.
+
+.. code::
+
+  import("$dir_pw_bloat/bloat.gni")
+
+  pw_size_report_aggregation("image_sizes") {
+     deps = [
+       ":app_image_size_report",
+       ":bootloader_image_size_report",
+     ]
+     output = "$root_gen_dir/artifacts/image_sizes.json"
+  }
 
 Documentation integration
 =========================
-Bloat reports are easy to add to documentation files. All ``pw_size_report``
-targets output a file containing a tabular report card. This file can be
-imported directly into a ReST documentation file using the ``include``
-directive.
+Bloat reports are easy to add to documentation files. All ``pw_size_diff``
+and ``pw_size_report`` targets output a file containing a tabular report card.
+This file can be imported directly into a ReST documentation file using the
+``include`` directive.
 
 For example, the ``simple_bloat_loop`` and ``simple_bloat_function`` size
 reports under ``//pw_bloat/examples`` are imported into this file as follows:
@@ -167,7 +358,7 @@ For example imagine this partial example GNU LD linker script:
   SECTIONS
   {
     /* Main executable code. */
-    .code : ALIGN(8)
+    .code : ALIGN(4)
     {
       /* Application code. */
       *(.text)
@@ -175,27 +366,27 @@ For example imagine this partial example GNU LD linker script:
       KEEP(*(.init))
       KEEP(*(.fini))
 
-      . = ALIGN(8);
+      . = ALIGN(4);
       /* Constants.*/
       *(.rodata)
       *(.rodata*)
     } >FLASH
 
     /* Explicitly initialized global and static data. (.data)*/
-    .static_init_ram : ALIGN(8)
+    .static_init_ram : ALIGN(4)
     {
       *(.data)
       *(.data*)
-      . = ALIGN(8);
+      . = ALIGN(4);
     } >RAM AT> FLASH
 
     /* Zero initialized global/static data. (.bss) */
-    .zero_init_ram : ALIGN(8)
+    .zero_init_ram (NOLOAD) : ALIGN(4)
     {
       *(.bss)
       *(.bss*)
       *(COMMON)
-      . = ALIGN(8);
+      . = ALIGN(4);
     } >RAM
   }
 
@@ -207,12 +398,32 @@ Could be modified as follows enable ``Free Space`` reporting:
   {
     FLASH(rx) : ORIGIN = PW_BOOT_FLASH_BEGIN, LENGTH = PW_BOOT_FLASH_SIZE
     RAM(rwx) : ORIGIN = PW_BOOT_RAM_BEGIN, LENGTH = PW_BOOT_RAM_SIZE
+
+    /* Each memory region above has an associated .*.unused_space section that
+     * overlays the unused space at the end of the memory segment. These
+     * segments are used by pw_bloat.bloaty_config to create the utilization
+     * data source for bloaty size reports.
+     *
+     * These sections MUST be located immediately after the last section that is
+     * placed in the respective memory region or lld will issue a warning like:
+     *
+     *   warning: ignoring memory region assignment for non-allocatable section
+     *      '.VECTOR_TABLE.unused_space'
+     *
+     * If this warning occurs, it's also likely that LLD will have created quite
+     * large padded regions in the ELF file due to bad cursor operations. This
+     * can cause ELF files to balloon from hundreds of kilobytes to hundreds of
+     * megabytes.
+     *
+     * Attempting to add sections to the memory region AFTER the unused_space
+     * section will cause the region to overflow.
+     */
   }
 
   SECTIONS
   {
     /* Main executable code. */
-    .code : ALIGN(8)
+    .code : ALIGN(4)
     {
       /* Application code. */
       *(.text)
@@ -220,45 +431,56 @@ Could be modified as follows enable ``Free Space`` reporting:
       KEEP(*(.init))
       KEEP(*(.fini))
 
-      . = ALIGN(8);
+      . = ALIGN(4);
       /* Constants.*/
       *(.rodata)
       *(.rodata*)
     } >FLASH
 
     /* Explicitly initialized global and static data. (.data)*/
-    .static_init_ram : ALIGN(8)
+    .static_init_ram : ALIGN(4)
     {
       *(.data)
       *(.data*)
-      . = ALIGN(8);
+      . = ALIGN(4);
     } >RAM AT> FLASH
 
+    /* Defines a section representing the unused space in the FLASH segment.
+     * This MUST be the last section assigned to the FLASH region.
+     */
+    PW_BLOAT_UNUSED_SPACE(FLASH)
+
     /* Zero initialized global/static data. (.bss). */
-    .zero_init_ram : ALIGN(8)
+    .zero_init_ram (NOLOAD) : ALIGN(4)
     {
       *(.bss)
       *(.bss*)
       *(COMMON)
-      . = ALIGN(8);
+      . = ALIGN(4);
     } >RAM
 
-    /*
-     * Do not declare any output sections after this comment. This area is
-     * reserved only for declaring unused sections of memory. These sections are
-     * used by pw_bloat.bloaty_config to create the utilization data source for
-     * bloaty.
+    /* Defines a section representing the unused space in the RAM segment. This
+     * MUST be the last section assigned to the RAM region.
      */
-    .FLASH.unused_space (NOLOAD) : ALIGN(8)
-    {
-      . = ABSOLUTE(ORIGIN(FLASH) + LENGTH(FLASH));
-    } >FLASH
-
-    .RAM.unused_space (NOLOAD) : ALIGN(8)
-    {
-      . = ABSOLUTE(ORIGIN(RAM) + LENGTH(RAM));
-    } >RAM
+    PW_BLOAT_UNUSED_SPACE(RAM)
   }
+
+The preprocessor macro ``PW_BLOAT_UNUSED_SPACE`` is defined in
+``pw_bloat/bloat_macros.ld``. To use these macros include this file in your
+``pw_linker_script`` as follows:
+
+.. code-block::
+
+   pw_linker_script("my_linker_script") {
+     includes = [ "$dir_pw_bloat/bloat_macros.ld" ]
+     linker_script = "my_project_linker_script.ld"
+   }
+
+Note that linker scripts are not natively supported by GN and can't be provided
+through ``deps``, the ``bloat_macros.ld`` must be passed in the ``includes``
+list.
+
+.. _module-pw_bloat-memoryregions:
 
 ``memoryregions`` data source
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -274,18 +496,29 @@ files, ``pw_bloat.bloaty_config`` consumes symbols which are defined in the
 linker script with a special format to extract this information from the ELF
 file: ``pw_bloat_config_memory_region_NAME_{start,end}{_N,}``.
 
+These symbols are defined by the preprocessor macros ``PW_BLOAT_MEMORY_REGION``
+and ``PW_BLOAT_MEMORY_REGION_MAP`` with the right address and size for the
+regions. To use these macros include the ``pw_bloat/bloat_macros.ld`` in your
+``pw_linker_script`` as follows:
+
+.. code-block::
+
+   pw_linker_script("my_linker_script") {
+     includes = [ "$dir_pw_bloat/bloat_macros.ld" ]
+     linker_script = "my_project_linker_script.ld"
+   }
+
 These symbols are then used to determine how to map segments to these memory
 regions. Note that segments must be used in order to account for inter-section
 padding which are not attributed against any sections.
 
 As an example, if you have a single view in the single memory region named
-``FLASH``, then you should produce the following two symbols in your linker
-script:
+``FLASH``, then you should include the following macro in your linker script to
+generate the symbols needed for the that region:
 
 .. code-block::
 
-  pw_bloat_config_memory_region_FLASH_start = ORIGIN(FLASH);
-  pw_bloat_config_memory_region_FLASH_end = ORIGIN(FLASH) + LENGTH(FLASH);
+  PW_BLOAT_MEMORY_REGION(FLASH)
 
 As another example, if you have two aliased memory regions (``DCTM`` and
 ``ITCM``) into the same effective memory named you'd like to call ``RAM``, then
@@ -293,7 +526,5 @@ you should produce the following four symbols in your linker script:
 
 .. code-block::
 
-  pw_bloat_config_memory_region_RAM_start_0 = ORIGIN(ITCM);
-  pw_bloat_config_memory_region_RAM_end_0 = ORIGIN(ITCM) + LENGTH(ITCM);
-  pw_bloat_config_memory_region_RAM_start_1 = ORIGIN(DTCM);
-  pw_bloat_config_memory_region_RAM_end_1 = ORIGIN(DTCM) + LENGTH(DTCM);
+  PW_BLOAT_MEMORY_REGION_MAP(RAM, ITCM)
+  PW_BLOAT_MEMORY_REGION_MAP(RAM, DTCM)

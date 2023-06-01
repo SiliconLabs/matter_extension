@@ -238,7 +238,7 @@ TEST(NanopbMethod, SyncUnaryRpc_InvalidPayload_SendsError) {
   kSyncUnary.Invoke(context.get(), context.request(bad_payload));
 
   const Packet& packet = context.output().last_packet();
-  EXPECT_EQ(PacketType::SERVER_ERROR, packet.type());
+  EXPECT_EQ(pwpb::PacketType::SERVER_ERROR, packet.type());
   EXPECT_EQ(Status::DataLoss(), packet.status());
   EXPECT_EQ(context.service_id(), packet.service_id());
   EXPECT_EQ(kSyncUnary.id(), packet.method_id());
@@ -256,7 +256,7 @@ TEST(NanopbMethod, AsyncUnaryRpc_ResponseEncodingFails_SendsInternalError) {
   kAsyncUnary.Invoke(context.get(), context.request(request));
 
   const Packet& packet = context.output().last_packet();
-  EXPECT_EQ(PacketType::SERVER_ERROR, packet.type());
+  EXPECT_EQ(pwpb::PacketType::SERVER_ERROR, packet.type());
   EXPECT_EQ(Status::Internal(), packet.status());
   EXPECT_EQ(context.service_id(), packet.service_id());
   EXPECT_EQ(kAsyncUnary.id(), packet.method_id());
@@ -355,8 +355,7 @@ TEST(NanopbMethod, ServerReader_HandlesRequests) {
   std::array<byte, 128> encoded_request = {};
   auto encoded = context.client_stream(request).Encode(encoded_request);
   ASSERT_EQ(OkStatus(), encoded.status());
-  ASSERT_EQ(OkStatus(),
-            context.server().ProcessPacket(*encoded, context.output()));
+  ASSERT_EQ(OkStatus(), context.server().ProcessPacket(*encoded));
 
   EXPECT_EQ(request_struct.integer, 1 << 30);
   EXPECT_EQ(request_struct.status_code, 9u);
@@ -397,8 +396,7 @@ TEST(NanopbMethod, ServerReaderWriter_HandlesRequests) {
   std::array<byte, 128> encoded_request = {};
   auto encoded = context.client_stream(request).Encode(encoded_request);
   ASSERT_EQ(OkStatus(), encoded.status());
-  ASSERT_EQ(OkStatus(),
-            context.server().ProcessPacket(*encoded, context.output()));
+  ASSERT_EQ(OkStatus(), context.server().ProcessPacket(*encoded));
 
   EXPECT_EQ(request_struct.integer, 1 << 29);
   EXPECT_EQ(request_struct.status_code, 8u);

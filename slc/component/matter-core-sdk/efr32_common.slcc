@@ -1,0 +1,46 @@
+category: Matter|Core
+define:
+-   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: HARD_FAULT_LOG_ENABLE
+-   name: SILABS_LOG_ENABLED
+    value: 'true'
+-   name: SILABS_OTA_ENABLED
+description: efr32_common
+id: efr32_common
+include:
+-   path: examples/platform/silabs
+-   path: examples/platform/silabs/efr32
+-   path: examples/providers
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: src/platform/silabs/efr32
+-   path: src/platform/silabs/efr32/rs911x
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+-   path: zzz_generated/app-common
+label: efr32_common
+package: Matter
+provides:
+-   name: matter_efr32_common
+quality: production
+source:
+-   path: examples/platform/silabs/LEDWidget.cpp
+-   path: examples/platform/silabs/OTAConfig.cpp
+-   path: examples/platform/silabs/efr32/BaseApplication.cpp
+-   path: examples/platform/silabs/efr32/efr32_utils.cpp
+-   path: examples/platform/silabs/efr32/init_efrPlatform.cpp
+-   path: examples/platform/silabs/efr32/matter_config.cpp
+-   path: examples/platform/silabs/efr32/spi_multiplex.c
+-   path: examples/platform/silabs/efr32/wf200/efr_spi.c
+-   path: examples/platform/silabs/efr32/wf200/host_if.cpp
+-   path: examples/platform/silabs/efr32/wf200/sl_wfx_task.c
+-   path: examples/platform/silabs/efr32/wf200/wf200_init.c
+-   path: examples/platform/silabs/heap_4_silabs.c
+-   path: examples/platform/silabs/syscalls_stubs.cpp
+-   path: src/platform/silabs/efr32/wifi/wfx_notify.cpp
+ui_hints:
+    visibility: never

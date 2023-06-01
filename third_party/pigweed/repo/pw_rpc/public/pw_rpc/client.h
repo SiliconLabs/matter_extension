@@ -26,8 +26,14 @@ namespace pw::rpc {
 
 class Client : public internal::Endpoint {
  public:
+  // If dynamic allocation is supported, it is not necessary to preallocate a
+  // channels list.
+#if PW_RPC_DYNAMIC_ALLOCATION
+  _PW_RPC_CONSTEXPR Client() = default;
+#endif  // PW_RPC_DYNAMIC_ALLOCATION
+
   // Creates a client that uses a set of RPC channels. Channels can be shared
-  // between a client and a server, but not between multiple clients.
+  // between multiple clients and servers.
   _PW_RPC_CONSTEXPR Client(span<Channel> channels) : Endpoint(channels) {}
 
   // Processes an incoming RPC packet. The packet may be an RPC response or a
@@ -45,6 +51,8 @@ class Client : public internal::Endpoint {
  private:
   // Remove these internal::Endpoint functions from the public interface.
   using Endpoint::active_call_count;
+  using Endpoint::ClaimLocked;
+  using Endpoint::CleanUpCalls;
   using Endpoint::GetInternalChannel;
 };
 

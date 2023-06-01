@@ -26,6 +26,7 @@
 #include "pw_rpc/pwpb/fake_channel_output.h"
 #include "pw_rpc/pwpb/internal/method.h"
 #include "pw_rpc/pwpb/server_reader_writer.h"
+#include "pw_span/span.h"
 
 namespace pw::rpc {
 
@@ -127,7 +128,8 @@ class PwpbInvocationContext
   Response response() const {
     Response response{};
     PW_ASSERT(kMethodInfo.serde()
-                  .DecodeResponse(Base::responses().back(), response)
+                  .response()
+                  .Decode(Base::responses().back(), response)
                   .ok());
     return response;
   }
@@ -137,7 +139,8 @@ class PwpbInvocationContext
   // fields in the Response object before parsing.
   void response(Response& response) const {
     PW_ASSERT(kMethodInfo.serde()
-                  .DecodeResponse(Base::responses().back(), response)
+                  .response()
+                  .Decode(Base::responses().back(), response)
                   .ok());
   }
 
@@ -160,8 +163,10 @@ class PwpbInvocationContext
   template <size_t kEncodingBufferSizeBytes = 128>
   void SendClientStream(const Request& request) PW_LOCKS_EXCLUDED(rpc_lock()) {
     std::array<std::byte, kEncodingBufferSizeBytes> buffer;
-    Base::SendClientStream(span(buffer).first(
-        kMethodInfo.serde().EncodeRequest(request, buffer).size()));
+    // Clang 10.0.1 issue requires separate span variable declaration.
+    span buffer_span(buffer);
+    Base::SendClientStream(buffer_span.first(
+        kMethodInfo.serde().request().Encode(request, buffer).size()));
   }
 
  private:

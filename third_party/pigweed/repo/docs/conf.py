@@ -17,7 +17,7 @@ from datetime import date
 import sphinx
 
 # The suffix of source filenames.
-source_suffix = ['.rst']
+source_suffix = ['.rst', '.md']
 
 # The master toctree document.  # inclusive-language: ignore
 master_doc = 'index'
@@ -41,11 +41,35 @@ pygments_dark_style = 'pw_console.pigweed_code_style.PigweedCodeStyle'
 
 extensions = [
     'pw_docgen.sphinx.google_analytics',  # Enables optional Google Analytics
+    'pw_docgen.sphinx.module_metadata',
     'sphinx.ext.autodoc',  # Automatic documentation for Python code
     'sphinx.ext.napoleon',  # Parses Google-style docstrings
+    'sphinxarg.ext',  # Automatic documentation of Python argparse
     'sphinxcontrib.mermaid',
     'sphinx_design',
+    'myst_parser',
+    'breathe',
+    'sphinx_copybutton',  # Copy-to-clipboard button on code blocks
+    'sphinx_tabs.tabs',
 ]
+
+myst_enable_extensions = [
+    # "amsmath",
+    "colon_fence",
+    # "deflist",
+    "dollarmath",
+    # "html_admonition",
+    # "html_image",
+    # "linkify",
+    # "replacements",
+    # "smartquotes",
+    # "substitution",
+    # "tasklist",
+]
+
+# When a user clicks the copy-to-clipboard button the `$ ` prompt should not be
+# copied: https://sphinx-copybutton.readthedocs.io/en/latest/use.html
+copybutton_prompt_text = "$ "
 
 _DIAG_HTML_IMAGE_FORMAT = 'SVG'
 blockdiag_html_image_format = _DIAG_HTML_IMAGE_FORMAT
@@ -73,6 +97,9 @@ html_use_smartypants = True
 # If false, no module index is generated.
 html_domain_indices = True
 
+html_favicon = 'docs/_static/pw_logo.ico'
+html_logo = 'docs/_static/pw_logo.svg'
+
 # If false, no index is generated.
 html_use_index = True
 
@@ -92,9 +119,10 @@ html_static_path = ['docs/_static']
 # or fully qualified paths (eg. https://...)
 html_css_files = [
     'css/pigweed.css',
-
     # Needed for Inconsolata font.
     'https://fonts.googleapis.com/css2?family=Inconsolata&display=swap',
+    # FontAwesome for mermaid and sphinx-design
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css",
 ]
 
 html_theme_options = {
@@ -121,9 +149,15 @@ html_theme_options = {
         'color-inline-code-border': '#cccccc',
         'color-text-selection-background': '#1d5fad',
         'color-text-selection-foreground': '#ffffff',
+        # Background color for focused headings.
+        'color-highlight-on-target': '#ffffcc',
+        # Background color emphasized code lines.
+        'color-code-hll-background': '#ffffcc',
+        'color-section-button': '#b529aa',
+        'color-section-button-hover': '#fb71fe',
     },
     'dark_css_variables': {
-        'color-sidebar-brand-text': '#e815a5',
+        'color-sidebar-brand-text': '#fb71fe',
         'color-sidebar-search-border': '#e815a5',
         'color-sidebar-link-text--top-level': '#ff79c6',
         'color-sidebar-link-text': '#8be9fd',
@@ -144,8 +178,22 @@ html_theme_options = {
         'color-inline-code-border': '#575757',
         'color-text-selection-background': '#2674bf',
         'color-text-selection-foreground': '#ffffff',
+        # Background color for focused headings.
+        'color-highlight-on-target': '#ffc55140',
+        # Background color emphasized code lines.
+        'color-code-hll-background': '#ffc55140',
+        'color-section-button': '#fb71fe',
+        'color-section-button-hover': '#b529aa',
     },
 }
+
+mermaid_version = '9.4.0'
+# TODO(tonymd): Investigate if ESM only v10 Mermaid can be used.
+# This does not work:
+# mermaid_init_js = '''
+#   import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+#   mermaid.initialize({ startOnLoad: true });
+# '''
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'Pigweeddoc'
@@ -158,9 +206,50 @@ man_pages = [('index', 'pigweed', 'Pigweed', ['Google'], 1)]
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'Pigweed', 'Pigweed', 'Google', 'Pigweed', 'Firmware framework',
-     'Miscellaneous'),
+    (
+        'index',
+        'Pigweed',
+        'Pigweed',
+        'Google',
+        'Pigweed',
+        'Firmware framework',
+        'Miscellaneous',
+    ),
 ]
+
+exclude_patterns = ['docs/templates/**']
+
+breathe_projects = {
+    # Assuming doxygen output is at out/docs/doxygen/
+    # This dir should be relative to out/docs/gen/docs/pw_docgen_tree/
+    "Pigweed": "./../../../doxygen/xml/",
+}
+
+breathe_default_project = "Pigweed"
+
+breathe_debug_trace_directives = True
+
+# Treat these as valid attributes in function signatures.
+cpp_id_attributes = [
+    "PW_EXTERN_C_START",
+    "PW_NO_LOCK_SAFETY_ANALYSIS",
+]
+# This allows directives like this to work:
+# .. cpp:function:: inline bool try_lock_for(
+#     chrono::SystemClock::duration timeout) PW_EXCLUSIVE_TRYLOCK_FUNCTION(true)
+cpp_paren_attributes = [
+    "PW_EXCLUSIVE_TRYLOCK_FUNCTION",
+    "PW_EXCLUSIVE_LOCK_FUNCTION",
+    "PW_UNLOCK_FUNCTION",
+    "PW_NO_SANITIZE",
+]
+# inclusive-language: disable
+# Info on cpp_id_attributes and cpp_paren_attributes
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-cpp_id_attributes
+# inclusive-language: enable
+
+# Disable Python type hints
+# autodoc_typehints = 'none'
 
 
 def do_not_skip_init(app, what, name, obj, would_skip, options):

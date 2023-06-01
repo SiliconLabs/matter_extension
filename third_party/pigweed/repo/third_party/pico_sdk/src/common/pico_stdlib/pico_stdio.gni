@@ -20,5 +20,5 @@ ENUM_LIB_PICO_STDIO = {
 
 # TODO(amontanez): This looks like a facade. Rethink?
 declare_args() {
-  PICO_STDIO = ENUM_LIB_PICO_STDIO.UART
+  PICO_STDIO = ENUM_LIB_PICO_STDIO.USB
 }

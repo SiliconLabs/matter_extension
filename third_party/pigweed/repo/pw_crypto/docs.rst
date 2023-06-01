@@ -91,19 +91,46 @@ crypto libraries.
 Mbed TLS
 ^^^^^^^^
 
+The `Mbed TLS project <https://www.trustedfirmware.org/projects/mbed-tls/>`_
+is a mature and full-featured crypto library that implements cryptographic
+primitives, X.509 certificate manipulation and the SSL/TLS and DTLS protocols.
+
+The project also has good support for interfacing to cryptographic accelerators.
+
+The small code footprint makes the project suitable and popular for embedded
+systems.
+
 To select the Mbed TLS backend, the MbedTLS library needs to be installed and
-configured.
+configured. If using GN, do,
 
 .. code-block:: sh
 
   # Install and configure MbedTLS
   pw package install mbedtls
-  gn gen out \
-      --args='dir_pw_third_party_mbedtls="//.environment/packages/mbedtls" \
-      pw_crypto_SHA256_BACKEND="//pw_crypto:sha256_mbedtls" \
-      pw_crypto_ECDSA_BACKEND="//pw_crypto:ecdsa_mbedtls"'
+  gn gen out --args='
+      import("//build_overrides/pigweed_environment.gni")
+
+      dir_pw_third_party_mbedtls=pw_env_setup_PACKAGE_ROOT+"/mbedtls"
+      pw_crypto_SHA256_BACKEND="//pw_crypto:sha256_mbedtls_v3"
+      pw_crypto_ECDSA_BACKEND="//pw_crypto:ecdsa_mbedtls_v3"
+  '
 
   ninja -C out
+
+If using Bazel, add the Mbed TLS repository to your WORKSPACE and select
+appropriate backends by adding them to your project's `platform
+<https://bazel.build/extending/platforms>`_:
+
+.. code-block:: python
+
+  platform(
+    name = "my_platform",
+     constraint_values = [
+       "@pigweed//pw_crypto:sha256_mbedtls_backend",
+       "@pigweed//pw_crypto:ecdsa_mbedtls_backend",
+       # ... other constraint_values
+     ],
+  )
 
 For optimal code size and/or performance, the Mbed TLS library can be configured
 per product. Mbed TLS configuration is achieved by turning on and off MBEDTLS_*
@@ -133,26 +160,6 @@ a code size of ~12KiB.
    #define MBEDTLS_ECP_NO_INTERNAL_RNG
    #define MBEDTLS_ECP_DP_SECP256R1_ENABLED
 
-BoringSSL
-^^^^^^^^^
-
-To select the BoringSSL backend, the BoringSSL library needs to be installed and
-configured.
-
-.. code-block:: sh
-
-  # Install and configure BoringSSL
-  pw package install boringssl
-  gn gen out \
-      --args='dir_pw_third_party_boringssl="//.environment/packages/boringssl" \
-      pw_crypto_SHA256_BACKEND="//pw_crypto:sha256_boringssl" \
-      pw_crypto_ECDSA_BACKEND="//pw_crypto:ecdsa_boringssl"'
-
-  ninja -C out
-
-BoringSSL does not provide a public configuration interface to reduce the code
-size.
-
 Micro ECC
 ^^^^^^^^^
 
@@ -162,7 +169,18 @@ To select Micro ECC, the library needs to be installed and configured.
 
   # Install and configure Micro ECC
   pw package install micro-ecc
-  gn gen out --args='dir_pw_third_party_micro_ecc="//.environment/packages/micro-ecc" pw_crypto_ECDSA_BACKEND="//pw_crypto:ecdsa_uecc"'
+  gn gen out --args='
+      import("//build_overrides/pigweed_environment.gni")
+
+      dir_pw_third_party_micro_ecc=pw_env_setup_PACKAGE_ROOT+"/micro-ecc"
+      pw_crypto_ECDSA_BACKEND="//pw_crypto:ecdsa_uecc"
+  '
+
+The default micro-ecc backend uses big endian as is standard practice. It also
+has a little-endian configuration which can be used to slightly reduce call
+stack frame use and/or when non pw_crypto clients use the same micro-ecc
+with a little-endian configuration. The little-endian version of micro-ecc
+can be selected with ``pw_crypto_ECDSA_BACKEND="//pw_crypto:ecdsa_uecc_little_endian"``
 
 Note Micro-ECC does not implement any hashing functions, so you will need to use other backends for SHA256 functionality if needed.
 

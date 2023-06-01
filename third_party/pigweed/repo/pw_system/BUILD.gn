@@ -16,6 +16,7 @@ import("//build_overrides/pigweed.gni")
 
 import("$dir_pigweed/third_party/freertos/freertos.gni")
 import("$dir_pigweed/third_party/nanopb/nanopb.gni")
+import("$dir_pigweed/third_party/pico_sdk/pi_pico.gni")
 import("$dir_pigweed/third_party/smartfusion_mss/mss.gni")
 import("$dir_pigweed/third_party/stm32cube/stm32cube.gni")
 import("$dir_pw_build/error.gni")
@@ -80,7 +81,6 @@ pw_source_set("log_backend.impl") {
     "$dir_pw_log:proto_utils",
     "$dir_pw_log:pw_log.facade",
     "$dir_pw_log_string:handler.facade",
-    "$dir_pw_log_tokenized:metadata",
     "$dir_pw_metric:global",
     "$dir_pw_multisink",
     "$dir_pw_result",
@@ -88,7 +88,6 @@ pw_source_set("log_backend.impl") {
     "$dir_pw_sync:interrupt_spin_lock",
     "$dir_pw_sync:lock_annotations",
     "$dir_pw_tokenizer",
-    "$dir_pw_tokenizer:global_handler_with_payload.facade",
   ]
 }
 
@@ -118,6 +117,7 @@ pw_source_set("init") {
     ":log",
     ":rpc_server",
     ":target_hooks.facade",
+    ":thread_snapshot_service",
     ":work_queue",
     "$dir_pw_metric:global",
     "$dir_pw_metric:metric_service_pwpb",
@@ -168,6 +168,14 @@ pw_source_set("socket_target_io") {
   ]
 }
 
+pw_source_set("thread_snapshot_service") {
+  public = [ "public/pw_system/thread_snapshot_service.h" ]
+  public_configs = [ ":public_include_path" ]
+  public_deps = [ "$dir_pw_rpc:server" ]
+  sources = [ "thread_snapshot_service.cc" ]
+  deps = [ "$dir_pw_thread:thread_snapshot_service" ]
+}
+
 pw_facade("target_hooks") {
   backend = pw_system_TARGET_HOOKS_BACKEND
   public = [ "public/pw_system/target_hooks.h" ]
@@ -183,9 +191,6 @@ if (pw_system_TARGET_HOOKS_BACKEND == "") {
            get_label_info(":stl_target_hooks", "label_no_toolchain")) {
   pw_source_set("stl_target_hooks") {
     deps = [
-      ":init",
-      "$dir_pw_log",
-      "$dir_pw_thread:sleep",
       "$dir_pw_thread:thread",
       "$dir_pw_thread_stl:thread",
     ]
@@ -242,6 +247,12 @@ group("system_examples") {
       ":system_example($dir_pigweed/targets/emcraft_sf2_som:emcraft_sf2_som.size_optimized)",
       ":system_example($dir_pigweed/targets/emcraft_sf2_som:emcraft_sf2_som.speed_optimized)",
       ":system_example($dir_pigweed/targets/emcraft_sf2_som:emcraft_sf2_som_debug.debug)",
+    ]
+  }
+  if (PICO_SRC_DIR != "" && dir_pw_third_party_freertos != "") {
+    deps += [
+      ":system_example($dir_pigweed/targets/rp2040_pw_system:rp2040_pw_system.debug)",
+      ":system_example($dir_pigweed/targets/rp2040_pw_system:rp2040_pw_system.size_optimized)",
     ]
   }
 }

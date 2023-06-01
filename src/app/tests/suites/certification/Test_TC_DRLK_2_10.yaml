@@ -21,7 +21,7 @@ PICS:
 
 config:
     nodeId: 0x12344321
-    cluster: "Basic"
+    cluster: "Basic Information"
     endpoint: 0
 
 tests:
@@ -30,7 +30,7 @@ tests:
           NOTE: https://github.com/project-chip/connectedhomeip/tree/master/examples/lock-app/linux#readme
           Events to be executed as following
           1. Compile app using below command in connectedhomeip folder
-          a. ./scripts/run_in_build_env.sh ./scripts/build/build_examples.py --target linux-arm64-all-clusters-no-ble-asan-clang build
+          a. ./scripts/run_in_build_env.sh "./scripts/build/build_examples.py --target linux-arm64-all-clusters-no-ble-asan-clang build"
           2. Build respective app (lock-app)
           3. Commission DUT to TH
           4. Open 2nd terminal of DUT and provide the below command to obtain PID of DUT
@@ -127,7 +127,7 @@ tests:
 
 
 
-          ./chip-tool doorlock lock-door 1 1 --timedInteractionTimeoutMs 1000 --PinCode 123456
+          ./chip-tool doorlock lock-door 1 1 --timedInteractionTimeoutMs 1000 --PINCode 123456
 
           Verify "DUT sends SUCCESS response" on the TH(Chip-tool) Log:
 
@@ -180,7 +180,7 @@ tests:
           PINCode"
       PICS: DRLK.S.C01.Rsp
       verification: |
-          ./chip-tool doorlock unlock-door 1 1 --timedInteractionTimeoutMs 1000 --PinCode 123456
+          ./chip-tool doorlock unlock-door 1 1 --timedInteractionTimeoutMs 1000 --PINCode 123456
 
           Verify "DUT sends SUCCESS response" on the TH(Chip-tool) Log:
 
@@ -247,7 +247,7 @@ tests:
           PINCode"
       PICS: DRLK.S.C00.Rsp
       verification: |
-          ./chip-tool doorlock lock-door 1 1 --timedInteractionTimeoutMs 1000 --PinCode 12345678
+          ./chip-tool doorlock lock-door 1 1 --timedInteractionTimeoutMs 1000 --PINCode 12345678
 
           Verify "DUT sends SUCCESS response" on the TH(Chip-tool) Log:
 
@@ -298,7 +298,7 @@ tests:
     - label: "TH sends Unlock Door Command to the DUT with InvalidPINCode."
       PICS: DRLK.S.C01.Rsp
       verification: |
-          ./chip-tool doorlock unlock-door 1 1 --timedInteractionTimeoutMs 1000 --PinCode 12345678
+          ./chip-tool doorlock unlock-door 1 1 --timedInteractionTimeoutMs 1000 --PINCode 12345678
 
           Verify "DUT sends failure response" on the TH(Chip-tool) Log:
 

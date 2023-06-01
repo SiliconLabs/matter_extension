@@ -1,5 +1,5 @@
 /**
- *    Copyright (c) 2022 Project CHIP Authors
+ *    Copyright (c) 2022-2023 Project CHIP Authors
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -34,6 +34,15 @@
 
     __auto_type * rootCert = [MTRCertificates createRootCertificate:testKeys issuerID:nil fabricID:nil error:nil];
     XCTAssertNotNil(rootCert);
+
+    // Test round-trip through TLV format.
+    __auto_type * tlvCert = [MTRCertificates convertX509Certificate:rootCert];
+    XCTAssertNotNil(tlvCert);
+
+    __auto_type * derCert = [MTRCertificates convertMatterCertificate:tlvCert];
+    XCTAssertNotNil(derCert);
+
+    XCTAssertEqualObjects(rootCert, derCert);
 }
 
 - (void)testGenerateIntermediateCert
@@ -54,6 +63,15 @@
                                                                            fabricID:nil
                                                                               error:nil];
     XCTAssertNotNil(intermediateCert);
+
+    // Test round-trip through TLV format.
+    __auto_type * tlvCert = [MTRCertificates convertX509Certificate:intermediateCert];
+    XCTAssertNotNil(tlvCert);
+
+    __auto_type * derCert = [MTRCertificates convertMatterCertificate:tlvCert];
+    XCTAssertNotNil(derCert);
+
+    XCTAssertEqualObjects(intermediateCert, derCert);
 }
 
 - (void)testGenerateOperationalCertNoIntermediate
@@ -67,7 +85,7 @@
     __auto_type * operationalKeys = [[MTRTestKeys alloc] init];
     XCTAssertNotNil(operationalKeys);
 
-    __auto_type * cats = [[NSMutableArray alloc] initWithCapacity:3];
+    __auto_type * cats = [[NSMutableSet alloc] initWithCapacity:3];
     // High bits are identifier, low bits are version.
     [cats addObject:@0x00010001];
     [cats addObject:@0x00020001];
@@ -81,6 +99,15 @@
                                                             caseAuthenticatedTags:cats
                                                                             error:nil];
     XCTAssertNotNil(operationalCert);
+
+    // Test round-trip through TLV format.
+    __auto_type * tlvCert = [MTRCertificates convertX509Certificate:operationalCert];
+    XCTAssertNotNil(tlvCert);
+
+    __auto_type * derCert = [MTRCertificates convertMatterCertificate:tlvCert];
+    XCTAssertNotNil(derCert);
+
+    XCTAssertEqualObjects(operationalCert, derCert);
 }
 
 - (void)testGenerateOperationalCertWithIntermediate
@@ -113,6 +140,15 @@
                                                             caseAuthenticatedTags:nil
                                                                             error:nil];
     XCTAssertNotNil(operationalCert);
+
+    // Test round-trip through TLV format.
+    __auto_type * tlvCert = [MTRCertificates convertX509Certificate:operationalCert];
+    XCTAssertNotNil(tlvCert);
+
+    __auto_type * derCert = [MTRCertificates convertMatterCertificate:tlvCert];
+    XCTAssertNotNil(derCert);
+
+    XCTAssertEqualObjects(operationalCert, derCert);
 }
 
 - (void)testGenerateOperationalCertErrorCases
@@ -126,25 +162,19 @@
     __auto_type * operationalKeys = [[MTRTestKeys alloc] init];
     XCTAssertNotNil(operationalKeys);
 
-    __auto_type * longCats = [[NSMutableArray alloc] initWithCapacity:4];
+    __auto_type * longCats = [[NSMutableSet alloc] initWithCapacity:4];
     [longCats addObject:@0x00010001];
     [longCats addObject:@0x00020001];
     [longCats addObject:@0x00030001];
     [longCats addObject:@0x00040001];
 
-    __auto_type * catsWithSameIdentifier = [[NSMutableArray alloc] initWithCapacity:3];
+    __auto_type * catsWithSameIdentifier = [[NSMutableSet alloc] initWithCapacity:3];
     // High bits are identifier, low bits are version.
     [catsWithSameIdentifier addObject:@0x00010001];
     [catsWithSameIdentifier addObject:@0x00020001];
     [catsWithSameIdentifier addObject:@0x00010002];
 
-    __auto_type * catsWithDuplicatedCAT = [[NSMutableArray alloc] initWithCapacity:3];
-    // High bits are identifier, low bits are version.
-    [catsWithDuplicatedCAT addObject:@0x00010001];
-    [catsWithDuplicatedCAT addObject:@0x00020001];
-    [catsWithDuplicatedCAT addObject:@0x00010001];
-
-    __auto_type * catsWithInvalidVersion = [[NSMutableArray alloc] initWithCapacity:2];
+    __auto_type * catsWithInvalidVersion = [[NSMutableSet alloc] initWithCapacity:2];
     // High bits are identifier, low bits are version.
     [catsWithInvalidVersion addObject:@0x00010001];
     [catsWithInvalidVersion addObject:@0x00020000];
@@ -176,16 +206,6 @@
                                                            fabricID:@1
                                                              nodeID:@1
                                               caseAuthenticatedTags:catsWithSameIdentifier
-                                                              error:nil];
-    XCTAssertNil(operationalCert);
-
-    // Multiple CATs with the same identifier and same version
-    operationalCert = [MTRCertificates createOperationalCertificate:rootKeys
-                                                 signingCertificate:rootCert
-                                               operationalPublicKey:operationalKeys.publicKey
-                                                           fabricID:@1
-                                                             nodeID:@1
-                                              caseAuthenticatedTags:catsWithDuplicatedCAT
                                                               error:nil];
     XCTAssertNil(operationalCert);
 
@@ -248,7 +268,16 @@
     __auto_type * csr = [MTRCertificates createCertificateSigningRequest:testKeys error:nil];
     XCTAssertNotNil(csr);
 
-    // Wish there was something we could test here about the CSR.
+    __auto_type * publicKey = [MTRCertificates publicKeyFromCSR:csr error:nil];
+    XCTAssertNotNil(publicKey);
+
+    SecKeyRef originalKeyRef = [testKeys publicKey];
+    XCTAssertTrue(originalKeyRef != NULL);
+
+    NSData * originalPublicKey = (__bridge_transfer NSData *) SecKeyCopyExternalRepresentation(originalKeyRef, nil);
+    XCTAssertNotNil(originalPublicKey);
+
+    XCTAssertEqualObjects(publicKey, originalPublicKey);
 }
 
 @end

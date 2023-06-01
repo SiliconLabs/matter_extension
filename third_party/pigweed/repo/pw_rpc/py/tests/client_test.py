@@ -15,7 +15,7 @@
 """Tests creating pw_rpc client."""
 
 import unittest
-from typing import Optional
+from typing import Any, Callable, Optional
 
 from pw_protobuf_compiler import python_protos
 from pw_status import Status
@@ -23,6 +23,8 @@ from pw_status import Status
 from pw_rpc import callback_client, client, packets
 import pw_rpc.ids
 from pw_rpc.internal.packet_pb2 import PacketType, RpcPacket
+
+RpcIds = packets.RpcIds
 
 TEST_PROTO_1 = """\
 syntax = "proto3";
@@ -73,51 +75,83 @@ service Bravo {
 }
 """
 
+SOME_CHANNEL_ID: int = 237
+SOME_SERVICE_ID: int = 193
+SOME_METHOD_ID: int = 769
+SOME_CALL_ID: int = 452
 
-def _test_setup(output=None):
-    protos = python_protos.Library.from_strings([TEST_PROTO_1, TEST_PROTO_2])
-    return protos, client.Client.from_modules(
+CLIENT_FIRST_CHANNEL_ID: int = 557
+CLIENT_SECOND_CHANNEL_ID: int = 474
+
+
+def create_protos() -> Any:
+    return python_protos.Library.from_strings([TEST_PROTO_1, TEST_PROTO_2])
+
+
+def create_client(
+    proto_modules: Any,
+    first_channel_output_fn: Optional[Callable[[bytes], Any]] = None,
+) -> client.Client:
+    return client.Client.from_modules(
         callback_client.Impl(),
-        [client.Channel(1, output),
-         client.Channel(2, lambda _: None)], protos.modules())
+        [
+            client.Channel(CLIENT_FIRST_CHANNEL_ID, first_channel_output_fn),
+            client.Channel(CLIENT_SECOND_CHANNEL_ID, lambda _: None),
+        ],
+        proto_modules,
+    )
 
 
 class ChannelClientTest(unittest.TestCase):
     """Tests the ChannelClient."""
+
     def setUp(self) -> None:
-        self._channel_client = _test_setup()[1].channel(1)
+        client_instance = create_client(create_protos().modules())
+        self._channel_client: client.ChannelClient = client_instance.channel(
+            CLIENT_FIRST_CHANNEL_ID
+        )
 
     def test_access_service_client_as_attribute_or_index(self) -> None:
-        self.assertIs(self._channel_client.rpcs.pw.test1.PublicService,
-                      self._channel_client.rpcs['pw.test1.PublicService'])
         self.assertIs(
             self._channel_client.rpcs.pw.test1.PublicService,
-            self._channel_client.rpcs[pw_rpc.ids.calculate(
-                'pw.test1.PublicService')])
+            self._channel_client.rpcs['pw.test1.PublicService'],
+        )
+        self.assertIs(
+            self._channel_client.rpcs.pw.test1.PublicService,
+            self._channel_client.rpcs[
+                pw_rpc.ids.calculate('pw.test1.PublicService')
+            ],
+        )
 
     def test_access_method_client_as_attribute_or_index(self) -> None:
-        self.assertIs(self._channel_client.rpcs.pw.test2.Alpha.Unary,
-                      self._channel_client.rpcs['pw.test2.Alpha']['Unary'])
         self.assertIs(
             self._channel_client.rpcs.pw.test2.Alpha.Unary,
-            self._channel_client.rpcs['pw.test2.Alpha'][pw_rpc.ids.calculate(
-                'Unary')])
+            self._channel_client.rpcs['pw.test2.Alpha']['Unary'],
+        )
+        self.assertIs(
+            self._channel_client.rpcs.pw.test2.Alpha.Unary,
+            self._channel_client.rpcs['pw.test2.Alpha'][
+                pw_rpc.ids.calculate('Unary')
+            ],
+        )
 
     def test_service_name(self) -> None:
         self.assertEqual(
-            self._channel_client.rpcs.pw.test2.Alpha.Unary.service.name,
-            'Alpha')
+            self._channel_client.rpcs.pw.test2.Alpha.Unary.service.name, 'Alpha'
+        )
         self.assertEqual(
             self._channel_client.rpcs.pw.test2.Alpha.Unary.service.full_name,
-            'pw.test2.Alpha')
+            'pw.test2.Alpha',
+        )
 
     def test_method_name(self) -> None:
         self.assertEqual(
-            self._channel_client.rpcs.pw.test2.Alpha.Unary.method.name,
-            'Unary')
+            self._channel_client.rpcs.pw.test2.Alpha.Unary.method.name, 'Unary'
+        )
         self.assertEqual(
             self._channel_client.rpcs.pw.test2.Alpha.Unary.method.full_name,
-            'pw.test2.Alpha.Unary')
+            'pw.test2.Alpha.Unary',
+        )
 
     def test_iterate_over_all_methods(self) -> None:
         channel_client = self._channel_client
@@ -133,8 +167,10 @@ class ChannelClientTest(unittest.TestCase):
 
     def test_check_for_presence_of_services(self) -> None:
         self.assertIn('pw.test1.PublicService', self._channel_client.rpcs)
-        self.assertIn(pw_rpc.ids.calculate('pw.test1.PublicService'),
-                      self._channel_client.rpcs)
+        self.assertIn(
+            pw_rpc.ids.calculate('pw.test1.PublicService'),
+            self._channel_client.rpcs,
+        )
 
     def test_check_for_presence_of_missing_services(self) -> None:
         self.assertNotIn('PublicService', self._channel_client.rpcs)
@@ -153,17 +189,23 @@ class ChannelClientTest(unittest.TestCase):
         self.assertNotIn(12345, service)
 
     def test_method_fully_qualified_name(self) -> None:
-        self.assertIs(self._channel_client.method('pw.test2.Alpha/Unary'),
-                      self._channel_client.rpcs.pw.test2.Alpha.Unary)
-        self.assertIs(self._channel_client.method('pw.test2.Alpha.Unary'),
-                      self._channel_client.rpcs.pw.test2.Alpha.Unary)
+        self.assertIs(
+            self._channel_client.method('pw.test2.Alpha/Unary'),
+            self._channel_client.rpcs.pw.test2.Alpha.Unary,
+        )
+        self.assertIs(
+            self._channel_client.method('pw.test2.Alpha.Unary'),
+            self._channel_client.rpcs.pw.test2.Alpha.Unary,
+        )
 
 
 class ClientTest(unittest.TestCase):
     """Tests the pw_rpc Client independently of the ClientImpl."""
+
     def setUp(self) -> None:
         self._last_packet_sent_bytes: Optional[bytes] = None
-        self._protos, self._client = _test_setup(self._save_packet)
+        self._protos = create_protos()
+        self._client = create_client(self._protos.modules(), self._save_packet)
 
     def _save_packet(self, packet) -> None:
         self._last_packet_sent_bytes = packet
@@ -175,11 +217,19 @@ class ClientTest(unittest.TestCase):
         return packet
 
     def test_channel(self) -> None:
-        self.assertEqual(self._client.channel(1).channel.id, 1)
-        self.assertEqual(self._client.channel(2).channel.id, 2)
+        self.assertEqual(
+            self._client.channel(CLIENT_FIRST_CHANNEL_ID).channel.id,
+            CLIENT_FIRST_CHANNEL_ID,
+        )
+        self.assertEqual(
+            self._client.channel(CLIENT_SECOND_CHANNEL_ID).channel.id,
+            CLIENT_SECOND_CHANNEL_ID,
+        )
 
     def test_channel_default_is_first_listed(self) -> None:
-        self.assertEqual(self._client.channel().channel.id, 1)
+        self.assertEqual(
+            self._client.channel().channel.id, CLIENT_FIRST_CHANNEL_ID
+        )
 
     def test_channel_invalid(self) -> None:
         with self.assertRaises(KeyError):
@@ -200,11 +250,17 @@ class ClientTest(unittest.TestCase):
 
     def test_method_present(self) -> None:
         self.assertIs(
-            self._client.method('pw.test1.PublicService.SomeUnary'), self.
-            _client.services['pw.test1.PublicService'].methods['SomeUnary'])
+            self._client.method('pw.test1.PublicService.SomeUnary'),
+            self._client.services['pw.test1.PublicService'].methods[
+                'SomeUnary'
+            ],
+        )
         self.assertIs(
-            self._client.method('pw.test1.PublicService/SomeUnary'), self.
-            _client.services['pw.test1.PublicService'].methods['SomeUnary'])
+            self._client.method('pw.test1.PublicService/SomeUnary'),
+            self._client.services['pw.test1.PublicService'].methods[
+                'SomeUnary'
+            ],
+        )
 
     def test_method_invalid_format(self) -> None:
         with self.assertRaises(ValueError):
@@ -218,37 +274,61 @@ class ClientTest(unittest.TestCase):
             self._client.method('nothing.Good')
 
     def test_process_packet_invalid_proto_data(self) -> None:
-        self.assertIs(self._client.process_packet(b'NOT a packet!'),
-                      Status.DATA_LOSS)
+        self.assertIs(
+            self._client.process_packet(b'NOT a packet!'), Status.DATA_LOSS
+        )
 
     def test_process_packet_not_for_client(self) -> None:
         self.assertIs(
             self._client.process_packet(
-                RpcPacket(type=PacketType.REQUEST).SerializeToString()),
-            Status.INVALID_ARGUMENT)
+                RpcPacket(type=PacketType.REQUEST).SerializeToString()
+            ),
+            Status.INVALID_ARGUMENT,
+        )
 
     def test_process_packet_unrecognized_channel(self) -> None:
         self.assertIs(
             self._client.process_packet(
                 packets.encode_response(
-                    (123, 456, 789),
-                    self._protos.packages.pw.test2.Request())),
-            Status.NOT_FOUND)
+                    RpcIds(
+                        SOME_CHANNEL_ID,
+                        SOME_SERVICE_ID,
+                        SOME_METHOD_ID,
+                        SOME_CALL_ID,
+                    ),
+                    self._protos.packages.pw.test2.Request(),
+                )
+            ),
+            Status.NOT_FOUND,
+        )
 
     def test_process_packet_unrecognized_service(self) -> None:
         self.assertIs(
             self._client.process_packet(
                 packets.encode_response(
-                    (1, 456, 789), self._protos.packages.pw.test2.Request())),
-            Status.OK)
+                    RpcIds(
+                        CLIENT_FIRST_CHANNEL_ID,
+                        SOME_SERVICE_ID,
+                        SOME_METHOD_ID,
+                        SOME_CALL_ID,
+                    ),
+                    self._protos.packages.pw.test2.Request(),
+                )
+            ),
+            Status.OK,
+        )
 
         self.assertEqual(
             self._last_packet_sent(),
-            RpcPacket(type=PacketType.CLIENT_ERROR,
-                      channel_id=1,
-                      service_id=456,
-                      method_id=789,
-                      status=Status.NOT_FOUND.value))
+            RpcPacket(
+                type=PacketType.CLIENT_ERROR,
+                channel_id=CLIENT_FIRST_CHANNEL_ID,
+                service_id=SOME_SERVICE_ID,
+                method_id=SOME_METHOD_ID,
+                call_id=SOME_CALL_ID,
+                status=Status.NOT_FOUND.value,
+            ),
+        )
 
     def test_process_packet_unrecognized_method(self) -> None:
         service = next(iter(self._client.services))
@@ -256,16 +336,29 @@ class ClientTest(unittest.TestCase):
         self.assertIs(
             self._client.process_packet(
                 packets.encode_response(
-                    (1, service.id, 789),
-                    self._protos.packages.pw.test2.Request())), Status.OK)
+                    RpcIds(
+                        CLIENT_FIRST_CHANNEL_ID,
+                        service.id,
+                        SOME_METHOD_ID,
+                        SOME_CALL_ID,
+                    ),
+                    self._protos.packages.pw.test2.Request(),
+                )
+            ),
+            Status.OK,
+        )
 
         self.assertEqual(
             self._last_packet_sent(),
-            RpcPacket(type=PacketType.CLIENT_ERROR,
-                      channel_id=1,
-                      service_id=service.id,
-                      method_id=789,
-                      status=Status.NOT_FOUND.value))
+            RpcPacket(
+                type=PacketType.CLIENT_ERROR,
+                channel_id=CLIENT_FIRST_CHANNEL_ID,
+                service_id=service.id,
+                method_id=SOME_METHOD_ID,
+                call_id=SOME_CALL_ID,
+                status=Status.NOT_FOUND.value,
+            ),
+        )
 
     def test_process_packet_non_pending_method(self) -> None:
         service = next(iter(self._client.services))
@@ -274,27 +367,48 @@ class ClientTest(unittest.TestCase):
         self.assertIs(
             self._client.process_packet(
                 packets.encode_response(
-                    (1, service.id, method.id),
-                    self._protos.packages.pw.test2.Request())), Status.OK)
+                    RpcIds(
+                        CLIENT_FIRST_CHANNEL_ID,
+                        service.id,
+                        method.id,
+                        SOME_CALL_ID,
+                    ),
+                    self._protos.packages.pw.test2.Request(),
+                )
+            ),
+            Status.OK,
+        )
 
         self.assertEqual(
             self._last_packet_sent(),
-            RpcPacket(type=PacketType.CLIENT_ERROR,
-                      channel_id=1,
-                      service_id=service.id,
-                      method_id=method.id,
-                      status=Status.FAILED_PRECONDITION.value))
+            RpcPacket(
+                type=PacketType.CLIENT_ERROR,
+                channel_id=CLIENT_FIRST_CHANNEL_ID,
+                service_id=service.id,
+                method_id=method.id,
+                call_id=SOME_CALL_ID,
+                status=Status.FAILED_PRECONDITION.value,
+            ),
+        )
 
     def test_process_packet_non_pending_calls_response_callback(self) -> None:
         method = self._client.method('pw.test1.PublicService.SomeUnary')
         reply = method.response_type(payload='hello')
 
-        def response_callback(rpc: client.PendingRpc, message,
-                              status: Optional[Status]) -> None:
+        def response_callback(
+            rpc: client.PendingRpc,
+            message,
+            status: Optional[Status],
+        ) -> None:
             self.assertEqual(
                 rpc,
                 client.PendingRpc(
-                    self._client.channel(1).channel, method.service, method))
+                    self._client.channel(CLIENT_FIRST_CHANNEL_ID).channel,
+                    method.service,
+                    method,
+                    call_id=SOME_CALL_ID,
+                ),
+            )
             self.assertEqual(message, reply)
             self.assertIs(status, Status.OK)
 
@@ -302,8 +416,18 @@ class ClientTest(unittest.TestCase):
 
         self.assertIs(
             self._client.process_packet(
-                packets.encode_response((1, method.service, method), reply)),
-            Status.OK)
+                packets.encode_response(
+                    RpcIds(
+                        CLIENT_FIRST_CHANNEL_ID,
+                        method.service.id,
+                        method.id,
+                        SOME_CALL_ID,
+                    ),
+                    reply,
+                )
+            ),
+            Status.OK,
+        )
 
 
 if __name__ == '__main__':

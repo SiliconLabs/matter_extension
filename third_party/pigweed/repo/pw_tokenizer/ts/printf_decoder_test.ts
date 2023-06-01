@@ -14,6 +14,7 @@
 
 /* eslint-env browser */
 import {PrintfDecoder} from './printf_decoder';
+import IntDB from './int_testdata';
 
 function argFromString(arg: string): Uint8Array {
   const data = new TextEncoder().encode(arg);
@@ -52,6 +53,41 @@ describe('PrintfDecoder', () => {
     ).toEqual('Hello Mac and PC');
   });
 
+  it('formats string + number correctly', () => {
+    expect(
+      printfDecoder.decode(
+        'Hello %s and %u',
+        argsConcat(argFromString('Computer'), argFromStringBinary('\xff\xff\x03'))
+      )).toEqual(
+        'Hello Computer and 4294934528');
+  });
+
+  it('formats integers correctly', () => {
+    for (let index = 0; index < IntDB.length; index++) {
+      const testcase = IntDB[index];
+      // Test signed
+      expect(
+        printfDecoder
+          .decode(testcase[0], argFromStringBinary(testcase[4])))
+        .toEqual(testcase[1]);
+
+      // Test unsigned
+      expect(
+        printfDecoder
+          .decode(testcase[2], argFromStringBinary(testcase[4])))
+        .toEqual(testcase[3]);
+    }
+  });
+
+  it('formats string correctly', () => {
+    expect(
+      printfDecoder.decode(
+        'Hello %s and %s',
+        argsConcat(argFromString('Mac'), argFromString('PC'))
+      )
+    ).toEqual('Hello Mac and PC');
+  });
+
   it('formats varint correctly', () => {
     const arg = argFromStringBinary('\xff\xff\x03');
     expect(printfDecoder.decode('Number %d', arg)).toEqual('Number -32768');
@@ -76,12 +112,11 @@ describe('PrintfDecoder', () => {
     expect(
       printfDecoder.decode('Value: %f', argFromStringBinary('\xdb\x0f\x49\x40'))
     ).toEqual('Value: 3.1415927410125732');
-    // TODO(asadmemon): Add support to decoder for this format:
-    // expect(
-    //   printfDecoder.decode(
-    //     'Value: %0.5f',
-    //     argFromStringBinary('\xdb\x0f\x49\x40')
-    //   )
-    // ).toEqual('Value: 3.14159');
+    expect(
+      printfDecoder.decode(
+        'Value: %.5f',
+        argFromStringBinary('\xdb\x0f\x49\x40')
+      )
+    ).toEqual('Value: 3.14159');
   });
 });

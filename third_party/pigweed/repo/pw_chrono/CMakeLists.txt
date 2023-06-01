@@ -13,16 +13,20 @@
 # the License.
 
 include($ENV{PW_ROOT}/pw_build/pigweed.cmake)
+include($ENV{PW_ROOT}/pw_chrono/backend.cmake)
+include($ENV{PW_ROOT}/pw_sync/backend.cmake)
 include($ENV{PW_ROOT}/pw_protobuf_compiler/proto.cmake)
 
-pw_add_module_library(pw_chrono.epoch
+pw_add_library(pw_chrono.epoch INTERFACE
   HEADERS
     public/pw_chrono/epoch.h
   PUBLIC_INCLUDES
     public
 )
 
-pw_add_facade(pw_chrono.system_clock
+pw_add_facade(pw_chrono.system_clock STATIC
+  BACKEND
+    pw_chrono.system_clock_BACKEND
   HEADERS
     public/pw_chrono/internal/system_clock_macros.h
     public/pw_chrono/system_clock.h
@@ -35,7 +39,9 @@ pw_add_facade(pw_chrono.system_clock
     system_clock.cc
 )
 
-pw_add_facade(pw_chrono.system_timer
+pw_add_facade(pw_chrono.system_timer INTERFACE
+  BACKEND
+    pw_chrono.system_timer_BACKEND
   HEADERS
     public/pw_chrono/system_timer.h
   PUBLIC_INCLUDES
@@ -46,7 +52,7 @@ pw_add_facade(pw_chrono.system_timer
 )
 
 # Dependency injectable implementation of pw::chrono::SystemClock::Interface.
-pw_add_module_library(pw_chrono.simulated_system_clock
+pw_add_library(pw_chrono.simulated_system_clock INTERFACE
   HEADERS
     public/pw_chrono/simulated_system_clock.h
   PUBLIC_INCLUDES
@@ -60,34 +66,28 @@ pw_proto_library(pw_chrono.protos
   SOURCES
     chrono.proto
   PREFIX
-    pw_chrono
+    pw_chrono_protos
 )
 
-# TODO(ewout): Renable this once we've resolved the backend variable definition
-# ordering issue, likely by mirroring GN's definition of variables in external
-# files which can be imported where needed.
-# if((NOT "${pw_chrono.system_clock_BACKEND}"
-#     STREQUAL "pw_chrono.system_clock.NO_BACKEND_SET") AND
-#    (NOT "${pw_sync.interrupt_spin_lock_BACKEND}"
-#     STREQUAL "pw_sync.interrupt_spin_lock.NO_BACKEND_SET"))
-#   pw_add_test(pw_chrono.simulated_system_clock_test
-#     SOURCES
-#       simulated_system_clock_test.cc
-#     DEPS
-#       pw_chrono.simulated_system_clock
-#     GROUPS
-#       modules
-#       pw_chrono
-#   )
-# endif()
+if((NOT "${pw_chrono.system_clock_BACKEND}" STREQUAL "") AND
+   (NOT "${pw_sync.interrupt_spin_lock_BACKEND}" STREQUAL ""))
+  pw_add_test(pw_chrono.simulated_system_clock_test
+    SOURCES
+      simulated_system_clock_test.cc
+    PRIVATE_DEPS
+      pw_chrono.simulated_system_clock
+    GROUPS
+      modules
+      pw_chrono
+  )
+endif()
 
-if(NOT "${pw_chrono.system_clock_BACKEND}"
-   STREQUAL "pw_chrono.system_clock.NO_BACKEND_SET")
+if(NOT "${pw_chrono.system_clock_BACKEND}" STREQUAL "")
   pw_add_test(pw_chrono.system_clock_facade_test
     SOURCES
       system_clock_facade_test.cc
       system_clock_facade_test_c.c
-    DEPS
+    PRIVATE_DEPS
       pw_chrono.system_clock
       pw_preprocessor
     GROUPS
@@ -96,12 +96,11 @@ if(NOT "${pw_chrono.system_clock_BACKEND}"
   )
 endif()
 
-if(NOT "${pw_chrono.system_timer_BACKEND}"
-   STREQUAL "pw_chrono.system_timer.NO_BACKEND_SET")
+if(NOT "${pw_chrono.system_timer_BACKEND}" STREQUAL "")
   pw_add_test(pw_chrono.system_timer_facade_test
     SOURCES
       system_timer_facade_test.cc
-    DEPS
+    PRIVATE_DEPS
       pw_chrono.system_timer
       pw_sync.thread_notification
     GROUPS

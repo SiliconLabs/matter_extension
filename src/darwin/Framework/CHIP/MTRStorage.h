@@ -1,6 +1,6 @@
 /**
  *
- *    Copyright (c) 2020 Project CHIP Authors
+ *    Copyright (c) 2020-2023 Project CHIP Authors
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,16 +15,20 @@
  *    limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
+#import <Matter/MTRDefines.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
  * This protocol is used by the Matter framework to read and write storage.
  *
- * All storage methods will be called on a single internal work queue (so the
- * implementation does not need to worry about reads and writes racing).
+ * The Matter framework may call storage methods from arbitrary threads, but
+ * will not call storage methods concurrently.
+ *
+ * Implementations of the storage methods must not call into any Matter
+ * framework APIs.
  */
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
 @protocol MTRStorage <NSObject>
 @required
 
@@ -44,8 +48,12 @@ NS_ASSUME_NONNULL_BEGIN
  * Delete the key and corresponding data.  Returns YES if the key was present,
  * NO if the key was not present.
  */
-- (BOOL)removeStorageDataForKey:(NSString *)key;
+- (BOOL)removeStorageDataForKey:(NSString *)key NS_SWIFT_NAME(removeStorageData(forKey:));
 
+@end
+
+MTR_DEPRECATED("Please use MTRStorage", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@protocol MTRPersistentStorageDelegate <MTRStorage>
 @end
 
 NS_ASSUME_NONNULL_END

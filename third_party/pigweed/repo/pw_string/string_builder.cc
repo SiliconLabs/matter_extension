@@ -22,20 +22,20 @@
 namespace pw {
 
 void StringBuilder::clear() {
-  size_ = 0;
+  *size_ = 0;
   NullTerminate();
-  status_ = OkStatus();
-  last_status_ = OkStatus();
+  status_ = StatusCode(OkStatus());
+  last_status_ = StatusCode(OkStatus());
 }
 
 StringBuilder& StringBuilder::append(size_t count, char ch) {
-  char* const append_destination = buffer_.data() + size_;
+  char* const append_destination = buffer_.data() + size();
   std::fill_n(append_destination, ResizeAndTerminate(count), ch);
   return *this;
 }
 
 StringBuilder& StringBuilder::append(const char* str, size_t count) {
-  char* const append_destination = buffer_.data() + size_;
+  char* const append_destination = buffer_.data() + size();
   std::copy_n(str, ResizeAndTerminate(count), append_destination);
   return *this;
 }
@@ -64,22 +64,24 @@ StringBuilder& StringBuilder::append(const std::string_view& str,
 
 size_t StringBuilder::ResizeAndTerminate(size_t chars_to_append) {
   const size_t copied = std::min(chars_to_append, max_size() - size());
-  size_ += copied;
+  // NOTE: `+=` is not used in order to avoid implicit integer conversion which
+  // results in an error on some compilers.
+  *size_ = static_cast<InlineString<>::size_type>(copied + *size_);
   NullTerminate();
 
   if (buffer_.empty() || chars_to_append != copied) {
     SetErrorStatus(Status::ResourceExhausted());
   } else {
-    last_status_ = OkStatus();
+    last_status_ = StatusCode(OkStatus());
   }
   return copied;
 }
 
 void StringBuilder::resize(size_t new_size) {
-  if (new_size <= size_) {
-    size_ = new_size;
+  if (new_size <= size()) {
+    *size_ = static_cast<InlineString<>::size_type>(new_size);
     NullTerminate();
-    last_status_ = OkStatus();
+    last_status_ = StatusCode(OkStatus());
   } else {
     SetErrorStatus(Status::OutOfRange());
   }
@@ -96,7 +98,7 @@ StringBuilder& StringBuilder::Format(const char* format, ...) {
 
 StringBuilder& StringBuilder::FormatVaList(const char* format, va_list args) {
   HandleStatusWithSize(
-      string::FormatVaList(buffer_.subspan(size_), format, args));
+      string::FormatVaList(buffer_.subspan(size()), format, args));
   return *this;
 }
 
@@ -111,24 +113,26 @@ void StringBuilder::WriteBytes(span<const std::byte> data) {
 }
 
 void StringBuilder::CopySizeAndStatus(const StringBuilder& other) {
-  size_ = other.size_;
+  *size_ = static_cast<InlineString<>::size_type>(other.size());
   status_ = other.status_;
   last_status_ = other.last_status_;
 }
 
 void StringBuilder::HandleStatusWithSize(StatusWithSize written) {
   const Status status = written.status();
-  last_status_ = status;
+  last_status_ = StatusCode(status);
   if (!status.ok()) {
-    status_ = status;
+    status_ = StatusCode(status);
   }
 
-  size_ += written.size();
+  // NOTE: `+=` is not used in order to avoid implicit integer conversion which
+  // results in an error on some compilers.
+  *size_ = static_cast<InlineString<>::size_type>(written.size() + *size_);
 }
 
 void StringBuilder::SetErrorStatus(Status status) {
-  last_status_ = status;
-  status_ = status;
+  last_status_ = StatusCode(status);
+  status_ = StatusCode(status);
 }
 
 }  // namespace pw
