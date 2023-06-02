@@ -1,12 +1,21 @@
 id: matter_sed
-label: Sleepy end device component
-description: Adds Thread network layer for matter sleepy end device.
+label: Sleepy End Device
+description: >
+  Sleepy support for Thread applications and compatability with Matter sleepy end devices. This component
+  enables ultra low power consumption while in idle mode. Polling, wake, and active 
+  time frames can be further manipulated within sl_matter_sleepy_config.h. This component 
+  requires that the Thread MTD library be used. Components that must be disabled when
+  using a Matter Sleepy End Device include: Matter shell, OpenThread CLI, UART, QR code display,
+  and LCD.
 package: "Matter"
 category: Stack
 quality: production
 define:
   - name: CHIP_DEVICE_CONFIG_ENABLE_SED
     value: 1
+config_file:
+  - path: slc/config/sl_matter_sleepy_config.h
+    file_id: matter_sleepy_config
 requires:
   - name: matter_thread_mtd
   - name: power_manager
@@ -15,3 +24,8 @@ provides:
 conflicts:
   - name: matter_thread_ftd
   - name: matter_wifi
+  - name: matter_shell
+  - name: matter_thread_cli
+  - name: matter_qr_code
+  - name: matter_lcd
+  - name: matter_uart

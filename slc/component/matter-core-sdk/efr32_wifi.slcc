@@ -2,9 +2,6 @@ category: Matter|Core
 define:
 - name: CHIP_HAVE_CONFIG_H
   value: '1'
-- name: HARD_FAULT_LOG_ENABLE
-- name: SILABS_LOG_ENABLED
-  value: 'true'
 description: efr32_wifi
 id: efr32_wifi
 include:
@@ -34,10 +31,6 @@ include:
   - path: platform/silabs/BLEManagerImpl.h
 - path: src/include
 - path: src/lib
-- path: src/platform/silabs/efr32/rs911x
-  file_list:
-  - path: rsi_ble_config.h
-  - path: wfx_sl_ble_init.h
 - path: src/platform/silabs/efr32
   file_list:
   - path: Efr32PsaOperationalKeystore.h

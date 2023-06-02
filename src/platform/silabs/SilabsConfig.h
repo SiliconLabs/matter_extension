@@ -111,6 +111,10 @@ public:
     static constexpr Key KConfigKey_ProductLabel          = SilabsConfigKey(kMatterFactory_KeyBase, 0x10);
     static constexpr Key kConfigKey_ProductURL            = SilabsConfigKey(kMatterFactory_KeyBase, 0x11);
     static constexpr Key kConfigKey_PartNumber            = SilabsConfigKey(kMatterFactory_KeyBase, 0x12);
+    static constexpr Key kConfigKey_CACerts               = SilabsConfigKey(kMatterFactory_KeyBase, 0x13);
+    static constexpr Key kConfigKey_DeviceCerts           = SilabsConfigKey(kMatterFactory_KeyBase, 0x14);
+    static constexpr Key kConfigKey_hostname              = SilabsConfigKey(kMatterFactory_KeyBase, 0x15);
+    static constexpr Key kConfigKey_clientid              = SilabsConfigKey(kMatterFactory_KeyBase, 0x16);
     static constexpr Key kConfigKey_UniqueId              = SilabsConfigKey(kMatterFactory_KeyBase, 0x1F);
     // Matter Config Keys
     static constexpr Key kConfigKey_ServiceConfig      = SilabsConfigKey(kMatterConfig_KeyBase, 0x01);

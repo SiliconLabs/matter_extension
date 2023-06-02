@@ -1,0 +1,22 @@
+id: matter_subscription_interval
+label: Subscription Interval
+description: >
+  The subscription mechanism is used by ecosystems and controllers to receive
+  attribute change updates and liveness checks on ICD devices. The maximum interval
+  of a subscription request is what defines the frequency at which a device will send
+  a liveness check if there are no attribute changes
+package: "Matter"
+category: Stack
+quality: production
+define:
+  - name: CHIP_CONFIG_USE_ICD_SUBSCRIPTION_CALLBACKS
+    value: 1
+source:
+  - path: examples/platform/silabs/ICDSubscriptionCallback.cpp
+include:
+  - path: examples/platform/silabs
+    file_list: ICDSubscriptionCallback.h
+requires:
+  - name: matter_sed
+provides:
+  - name: matter_subscription_interval

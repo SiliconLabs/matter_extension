@@ -6,7 +6,14 @@ label: "matter_wifi"
 category: Matter-WiFi|lwip
 quality: production
 include:
-  - path: third_party/pigweed/repo/pw_hdlc/public
+  - path: third_party/pigweed/repo/pw_hdlc/public/pw_hdlc
+    file_list:
+    - path: decoder.h
+    - path: encoded_size.h
+    - path: encoder.h
+    - path: rpc_channel.h
+    - path: rpc_packets.h
+    - path: wire_packet_parser.h
 config_file:
   - path: slc/config/sl_matter_wifi_config.h
 provides:

@@ -5,15 +5,16 @@ package: Matter
 category: Stack
 quality: production
 requires:
-- name: matter_thread
 - name: matter_uart
 - name: matter_thread_cli
+  condition: [matter_thread]
 provides:
 - name: matter_shell
 source:
 - path: examples/platform/silabs/matter_shell.cpp
 - path: examples/shell/shell_common/cmd_misc.cpp
 - path: examples/shell/shell_common/cmd_otcli.cpp
+  condition: [matter_thread]
 - path: examples/shell/shell_common/globals.cpp
 - path: src/lib/shell/Engine.cpp
 - path: src/lib/shell/streamer.cpp
@@ -54,5 +55,9 @@ define:
 - name: ENABLE_CHIP_SHELL
 - name: OPENTHREAD_CONFIG_CLI_TRANSPORT
   value: OT_CLI_TRANSPORT_CONSOLE
+  condition: [matter_thread]
 conflicts:
-- name: matter_low_power
+  - name: matter_low_power
+  - name: matter_sed
+  - name: matter_sed_wifi
+  - name: matter_sed_wifi_917ncp

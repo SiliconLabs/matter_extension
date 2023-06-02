@@ -1,0 +1,12 @@
+label: lighting-app-minimal-thread-bootloader
+quality: production
+description: Matter workspace container both a Matter bootloader and Lighting over Thread Example
+project:
+  - path: ../../../sample-app/lighting-app/efr32/lighting-app-minimal-thread.slcp
+    id: application
+    output: lighting-app-minimal-thread-bootloader
+  - path: ../../../sample-app/bootloaders/bootloader-storage-external-single-series-2.slcp
+    id: bootloader
+    output: matter-bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

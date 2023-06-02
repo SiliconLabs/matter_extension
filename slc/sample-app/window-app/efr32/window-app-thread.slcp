@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "0.0.8"
+    version: "2.0.0"
 
 provides:
   - name: window_app
@@ -145,8 +145,6 @@ source:
     directory: src
 
 define:
-  - name: KVS_MAX_ENTRIES
-    value: "75"
   - name: CHIP_CRYPTO_PLATFORM
     value: "1"
   - name: OPENTHREAD_CONFIG_LOG_OUTPUT
@@ -198,3 +196,5 @@ ui_hints:
   highlight:
     - path: README.md
       focus: false
+post_build:
+  profile: application

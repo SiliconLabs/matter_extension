@@ -6,9 +6,6 @@ define:
   value: '1'
 - name: CHIP_HAVE_CONFIG_H
   value: '1'
-- name: HARD_FAULT_LOG_ENABLE
-- name: SILABS_LOG_ENABLED
-  value: 'true'
 description: efr32_icd_subscription_callback
 id: efr32_icd_subscription_callback
 include:

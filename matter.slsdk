@@ -1,7 +1,7 @@
 # Properties file for Simplicity Studio metadata
 id=com.silabs.sdk.matter
 
-version=0.0.8
+version=2.0.0
 
 label=Silicon Labs Matter
 description=Matter extension for Gecko SDK Suite

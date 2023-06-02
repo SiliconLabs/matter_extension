@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "0.0.8"
+    version: "2.0.0"
 
 component:
   - id: device_init
@@ -152,8 +152,6 @@ source:
     directory: src
 
 define:
-  - name: KVS_MAX_ENTRIES
-    value: "75"
   - name: CHIP_CRYPTO_PLATFORM
     value: "1"
   - name: _WANT_REENT_SMALL
@@ -174,7 +172,7 @@ define:
   - name: _REENT_SMALL
     value: 1
   - name: SL_MATTER_LOG_LEVEL
-    value: SL_MATTER_LOG_ERROR
+    value: SL_MATTER_LOG_PROGRESS
   - name: MATTER_WIFI_WF200
     value: "1"
 
@@ -214,3 +212,5 @@ ui_hints:
 
 tag:
   - hardware:component:led:2+
+post_build:
+  profile: application

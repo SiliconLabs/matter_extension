@@ -24,6 +24,9 @@ requires:
   - name: memlcd_usart
     condition:
     - device_series_2
+  - name: power_manager_no_deepsleep
+    condition:
+    - device_series_2
 
 define:
   - name: ENABLE_WSTK_LEDS

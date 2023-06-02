@@ -8,7 +8,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4170A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Light Switch Application for BRD4170A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4170a.demo.thermostat_app_rs911x" label="Matter - SoC Thermostat over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
@@ -18,7 +18,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Thermostat Application for BRD4170A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Thermostat Application for BRD4170A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4170a.demo.sensor_app_rs911x" label="Matter - SoC Sensor over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
@@ -28,7 +28,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Sensor Application for BRD4170A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Sensor Application for BRD4170A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4170a.demo.window_app_rs911x" label="Matter - SoC Window Covering over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
@@ -38,7 +38,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Window Covering Application for BRD4170A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Window Covering Application for BRD4170A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4170a.demo.lighting_app_rs911x" label="Matter - SoC Lighting over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
@@ -48,7 +48,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lighting Application for BRD4170A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Lighting Application for BRD4170A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4170a.demo.lock_app_rs911x" label="Matter - SoC Lock over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lock app"/>
@@ -58,7 +58,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lock Application for BRD4170A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Lock Application for BRD4170A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4170a.demo.onoff_plug_app_rs911x" label="Matter - SoC Onoff Plug over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
@@ -68,7 +68,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Onoff Plug Application for BRD4170A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Onoff Plug Application for BRD4170A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4170a.demo.onoff_plug_app_wf200" label="Matter - SoC Onoff Plug over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
@@ -148,7 +148,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4162A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Light Switch Application for BRD4162A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4162a.demo.thermostat_app_rs911x" label="Matter - SoC Thermostat over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
@@ -158,7 +158,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Thermostat Application for BRD4162A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Thermostat Application for BRD4162A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4162a.demo.sensor_app_rs911x" label="Matter - SoC Sensor over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
@@ -168,7 +168,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Sensor Application for BRD4162A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Sensor Application for BRD4162A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4162a.demo.window_app_rs911x" label="Matter - SoC Window Covering over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
@@ -178,7 +178,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Window Covering Application for BRD4162A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Window Covering Application for BRD4162A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4162a.demo.lighting_app_rs911x" label="Matter - SoC Lighting over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
@@ -188,7 +188,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lighting Application for BRD4162A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Lighting Application for BRD4162A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4162a.demo.lock_app_rs911x" label="Matter - SoC Lock over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lock app"/>
@@ -198,7 +198,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lock Application for BRD4162A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Lock Application for BRD4162A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4162a.demo.onoff_plug_app_rs911x" label="Matter - SoC Onoff Plug over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
@@ -208,7 +208,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Onoff Plug Application for BRD4162A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Onoff Plug Application for BRD4162A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4162a.demo.onoff_plug_app_wf200" label="Matter - SoC Onoff Plug over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
@@ -428,7 +428,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4187C to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Light Switch Application for BRD4187C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4187c.demo.thermostat_app_rs911x" label="Matter - SoC Thermostat over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
@@ -438,7 +438,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Thermostat Application for BRD4187C to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Thermostat Application for BRD4187C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4187c.demo.sensor_app_rs911x" label="Matter - SoC Sensor over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
@@ -448,7 +448,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Sensor Application for BRD4187C to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Sensor Application for BRD4187C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4187c.demo.window_app_rs911x" label="Matter - SoC Window Covering over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
@@ -458,7 +458,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Window Covering Application for BRD4187C to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Window Covering Application for BRD4187C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4187c.demo.lighting_app_rs911x" label="Matter - SoC Lighting over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
@@ -468,7 +468,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lighting Application for BRD4187C to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Lighting Application for BRD4187C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4187c.demo.lock_app_rs911x" label="Matter - SoC Lock over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lock app"/>
@@ -478,7 +478,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lock Application for BRD4187C to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Lock Application for BRD4187C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4187c.demo.onoff_plug_app_rs911x" label="Matter - SoC Onoff Plug over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
@@ -488,7 +488,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Onoff Plug Application for BRD4187C to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Onoff Plug Application for BRD4187C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4187c.demo.onoff_plug_app_wf200" label="Matter - SoC Onoff Plug over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
@@ -638,7 +638,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4161A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Light Switch Application for BRD4161A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4161a.demo.thermostat_app_rs911x" label="Matter - SoC Thermostat over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
@@ -648,7 +648,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Thermostat Application for BRD4161A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Thermostat Application for BRD4161A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4161a.demo.sensor_app_rs911x" label="Matter - SoC Sensor over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
@@ -658,7 +658,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Sensor Application for BRD4161A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Sensor Application for BRD4161A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4161a.demo.window_app_rs911x" label="Matter - SoC Window Covering over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
@@ -668,7 +668,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Window Covering Application for BRD4161A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Window Covering Application for BRD4161A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4161a.demo.lighting_app_rs911x" label="Matter - SoC Lighting over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
@@ -678,7 +678,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lighting Application for BRD4161A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Lighting Application for BRD4161A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4161a.demo.lock_app_rs911x" label="Matter - SoC Lock over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lock app"/>
@@ -688,7 +688,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lock Application for BRD4161A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Lock Application for BRD4161A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4161a.demo.onoff_plug_app_rs911x" label="Matter - SoC Onoff Plug over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
@@ -698,7 +698,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Onoff Plug Application for BRD4161A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Onoff Plug Application for BRD4161A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4161a.demo.onoff_plug_app_wf200" label="Matter - SoC Onoff Plug over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
@@ -1168,7 +1168,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4164A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Light Switch Application for BRD4164A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4164a.demo.thermostat_app_rs911x" label="Matter - SoC Thermostat over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
@@ -1178,7 +1178,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Thermostat Application for BRD4164A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Thermostat Application for BRD4164A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4164a.demo.sensor_app_rs911x" label="Matter - SoC Sensor over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
@@ -1188,7 +1188,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Sensor Application for BRD4164A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Sensor Application for BRD4164A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4164a.demo.window_app_rs911x" label="Matter - SoC Window Covering over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
@@ -1198,7 +1198,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Window Covering Application for BRD4164A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Window Covering Application for BRD4164A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4164a.demo.lighting_app_rs911x" label="Matter - SoC Lighting over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
@@ -1208,7 +1208,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lighting Application for BRD4164A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Lighting Application for BRD4164A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4164a.demo.lock_app_rs911x" label="Matter - SoC Lock over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lock app"/>
@@ -1218,7 +1218,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lock Application for BRD4164A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Lock Application for BRD4164A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4164a.demo.onoff_plug_app_rs911x" label="Matter - SoC Onoff Plug over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
@@ -1228,7 +1228,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Onoff Plug Application for BRD4164A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Onoff Plug Application for BRD4164A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4164a.demo.onoff_plug_app_wf200" label="Matter - SoC Onoff Plug over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
@@ -1388,7 +1388,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4163A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Light Switch Application for BRD4163A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4163a.demo.thermostat_app_rs911x" label="Matter - SoC Thermostat over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
@@ -1398,7 +1398,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Thermostat Application for BRD4163A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Thermostat Application for BRD4163A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4163a.demo.sensor_app_rs911x" label="Matter - SoC Sensor over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
@@ -1408,7 +1408,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Sensor Application for BRD4163A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Sensor Application for BRD4163A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4163a.demo.window_app_rs911x" label="Matter - SoC Window Covering over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
@@ -1418,7 +1418,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Window Covering Application for BRD4163A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Window Covering Application for BRD4163A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4163a.demo.lighting_app_rs911x" label="Matter - SoC Lighting over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
@@ -1428,7 +1428,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lighting Application for BRD4163A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Lighting Application for BRD4163A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4163a.demo.lock_app_rs911x" label="Matter - SoC Lock over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lock app"/>
@@ -1438,7 +1438,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lock Application for BRD4163A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Lock Application for BRD4163A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4163a.demo.onoff_plug_app_rs911x" label="Matter - SoC Onoff Plug over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
@@ -1448,7 +1448,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Onoff Plug Application for BRD4163A to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Onoff Plug Application for BRD4163A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4163a.demo.onoff_plug_app_wf200" label="Matter - SoC Onoff Plug over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
@@ -1598,7 +1598,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4186C to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Light Switch Application for BRD4186C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4186c.demo.thermostat_app_rs911x" label="Matter - SoC Thermostat over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
@@ -1608,7 +1608,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Thermostat Application for BRD4186C to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Thermostat Application for BRD4186C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4186c.demo.sensor_app_rs911x" label="Matter - SoC Sensor over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
@@ -1618,7 +1618,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Sensor Application for BRD4186C to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Sensor Application for BRD4186C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4186c.demo.window_app_rs911x" label="Matter - SoC Window Covering over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
@@ -1628,7 +1628,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Window Covering Application for BRD4186C to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Window Covering Application for BRD4186C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4186c.demo.lighting_app_rs911x" label="Matter - SoC Lighting over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
@@ -1638,7 +1638,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lighting Application for BRD4186C to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Lighting Application for BRD4186C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4186c.demo.lock_app_rs911x" label="Matter - SoC Lock over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lock app"/>
@@ -1648,7 +1648,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lock Application for BRD4186C to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Lock Application for BRD4186C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4186c.demo.onoff_plug_app_rs911x" label="Matter - SoC Onoff Plug over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
@@ -1658,7 +1658,7 @@
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
 		<property key="filters" value="Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Onoff Plug Application for BRD4186C to be used with RS9116 Wi-Fi Evaluation kit</description>
+		<description>This is a Matter Onoff Plug Application for BRD4186C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4186c.demo.onoff_plug_app_wf200" label="Matter - SoC Onoff Plug over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>

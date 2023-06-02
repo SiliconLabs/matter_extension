@@ -184,7 +184,7 @@ void SlWiFiDriver::UpdateNetworkingStatus()
         return;
     }
     mpStatusChangeCallback->OnNetworkingStatusChange(Status::kSuccess, MakeOptional(networkId),
-                                                     MakeOptional((int32_t) SL_STATUS_OK));
+                                                     NullOptional);
 }
 
 void SlWiFiDriver::OnConnectWiFiNetwork()

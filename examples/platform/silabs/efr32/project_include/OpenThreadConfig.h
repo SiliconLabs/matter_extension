@@ -37,9 +37,10 @@
 #define OPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE 1
 
 #if CHIP_DEVICE_CONFIG_ENABLE_SED
-
 #define OPENTHREAD_CONFIG_PARENT_SEARCH_ENABLE 0
 
+// SLC-FIX
+#include <sl_matter_sleepy_config.h>
 // In seconds
 #define SL_MLE_TIMEOUT_s (SL_OT_IDLE_INTERVAL / 1000)
 

@@ -8,12 +8,14 @@ quality: production
 provides:
   - name: example_platform_efr32_common
 
+toolchain_settings:
+  - option: gcc_linker_option
+    value: "-Wl,--allow-multiple-definition"
+
 define:
   - name: __STARTUP_CLEAR_BSS
   - name: CORTEXM3_EFM32_MICRO
   - name: EFR32_SERIES2_CONFIG4_MICRO
-  - name: SILABS_LOG_ENABLED
-    value: 1
   - name: NVM3_DEFAULT_NVM_SIZE
     value: 40960
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE

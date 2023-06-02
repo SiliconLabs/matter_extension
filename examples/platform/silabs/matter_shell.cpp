@@ -77,7 +77,10 @@ void startShellTask()
     // For now also register commands from shell_common (shell app).
     // TODO move at least OTCLI to default commands in lib/shell/commands
     cmd_misc_init();
+// SLC-FIX-WIFI
+#ifndef SL_WIFI
     cmd_otcli_init();
+#endif
 
     shellTaskHandle = xTaskCreateStatic(MatterShellTask, "matter_cli", ArraySize(shellStack), NULL, SHELL_TASK_PRIORITY, shellStack,
                                         &shellTaskStruct);

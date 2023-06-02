@@ -1,6 +1,5 @@
 category: Matter|Core
 define:
--   name: HARD_FAULT_LOG_ENABLE
 -   name: OPENTHREAD_CORE_CONFIG_PLATFORM_CHECK_FILE
     value: \"openthread-core-efr32-config-check.h\"
 -   name: OPENTHREAD_FTD
@@ -17,8 +16,6 @@ define:
     value: \"1.0.0\"
 -   name: RADIO_CONFIG_DMP_SUPPORT
     value: '1'
--   name: SILABS_LOG_ENABLED
-    value: 'true'
 description: libopenthread_cli_ftd
 id: libopenthread_cli_ftd
 include:

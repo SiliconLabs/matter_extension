@@ -2,9 +2,6 @@ category: Matter|Core
 define:
 - name: CHIP_HAVE_CONFIG_H
   value: '1'
-- name: HARD_FAULT_LOG_ENABLE
-- name: SILABS_LOG_ENABLED
-  value: 'true'
 description: libblelayer
 id: libblelayer
 include:
