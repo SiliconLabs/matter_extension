@@ -14,13 +14,17 @@
 
 include($ENV{PW_ROOT}/pw_build/pigweed.cmake)
 
-pw_add_module_library(pw_bluetooth
+pw_add_library(pw_bluetooth INTERFACE
   HEADERS
+    public/pw_bluetooth/address.h
+    public/pw_bluetooth/assigned_uuids.h
     public/pw_bluetooth/gatt/client.h
     public/pw_bluetooth/gatt/constants.h
     public/pw_bluetooth/gatt/error.h
     public/pw_bluetooth/gatt/server.h
     public/pw_bluetooth/gatt/types.h
+    public/pw_bluetooth/internal/hex.h
+    public/pw_bluetooth/internal/raii_ptr.h
     public/pw_bluetooth/low_energy/advertising_data.h
     public/pw_bluetooth/low_energy/bond_data.h
     public/pw_bluetooth/low_energy/central.h
@@ -28,25 +32,37 @@ pw_add_module_library(pw_bluetooth
     public/pw_bluetooth/low_energy/peripheral.h
     public/pw_bluetooth/low_energy/security_mode.h
     public/pw_bluetooth/constants.h
-    public/pw_bluetooth/hci.h
+    public/pw_bluetooth/controller.h
     public/pw_bluetooth/host.h
     public/pw_bluetooth/pairing_delegate.h
     public/pw_bluetooth/peer.h
     public/pw_bluetooth/result.h
     public/pw_bluetooth/types.h
+    public/pw_bluetooth/uuid.h
+    public/pw_bluetooth/vendor.h
   PUBLIC_INCLUDES
     public
   PUBLIC_DEPS
     pw_containers
     pw_function
     pw_status
+    pw_string.string
     pw_chrono.system_clock
+)
+
+pw_add_test(pw_bluetooth.address_test
+  SOURCES
+    address_test.cc
+  PRIVATE_DEPS
+    pw_bluetooth
+  GROUPS
+    pw_bluetooth
 )
 
 pw_add_test(pw_bluetooth.api_test
   SOURCES
     api_test.cc
-  DEPS
+  PRIVATE_DEPS
     pw_bluetooth
   GROUPS
     pw_bluetooth
@@ -55,7 +71,16 @@ pw_add_test(pw_bluetooth.api_test
 pw_add_test(pw_bluetooth.result_test
   SOURCES
     result_test.cc
-  DEPS
+  PRIVATE_DEPS
+    pw_bluetooth
+  GROUPS
+    pw_bluetooth
+)
+
+pw_add_test(pw_bluetooth.uuid_test
+  SOURCES
+    uuid_test.cc
+  PRIVATE_DEPS
     pw_bluetooth
   GROUPS
     pw_bluetooth

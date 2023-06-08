@@ -2,7 +2,6 @@
 #include <lib/support/CHIPMem.h>
 #include <platform/CHIPDeviceLayer.h>
 #include <platform/Linux/bluez/AdapterIterator.h>
-#include <platform/Linux/bluez/MainLoop.h>
 #include <platform/internal/BLEManager.h>
 
 using namespace chip::DeviceLayer::Internal;
@@ -58,7 +57,7 @@ extern "C" void * pychip_ble_adapter_list_get_raw_adapter(void * adapterIterator
 
 namespace {
 
-// To avoid pythoon compatibility issues on inc/dec references,
+// To avoid python compatibility issues on inc/dec references,
 // code assumes an abstract type and leaves it up to python to keep track of
 // reference counts
 struct PyObject;
@@ -69,9 +68,12 @@ public:
     using DeviceScannedCallback = void (*)(PyObject * context, const char * address, uint16_t discriminator, uint16_t vendorId,
                                            uint16_t productId);
     using ScanCompleteCallback  = void (*)(PyObject * context);
+    using ScanErrorCallback     = void (*)(PyObject * context, CHIP_ERROR::StorageType error);
 
-    ScannerDelegateImpl(PyObject * context, DeviceScannedCallback scanCallback, ScanCompleteCallback completeCallback) :
-        mContext(context), mScanCallback(scanCallback), mCompleteCallback(completeCallback)
+    ScannerDelegateImpl(PyObject * context, DeviceScannedCallback scanCallback, ScanCompleteCallback completeCallback,
+                        ScanErrorCallback errorCallback) :
+        mContext(context),
+        mScanCallback(scanCallback), mCompleteCallback(completeCallback), mErrorCallback(errorCallback)
     {}
 
     void SetScanner(std::unique_ptr<ChipDeviceScanner> scanner) { mScanner = std::move(scanner); }
@@ -95,20 +97,31 @@ public:
         delete this;
     }
 
+    virtual void OnScanError(CHIP_ERROR error) override
+    {
+        if (mErrorCallback)
+        {
+            mErrorCallback(mContext, error.AsInteger());
+        }
+    }
+
 private:
     std::unique_ptr<ChipDeviceScanner> mScanner;
     PyObject * const mContext;
     const DeviceScannedCallback mScanCallback;
     const ScanCompleteCallback mCompleteCallback;
+    const ScanErrorCallback mErrorCallback;
 };
 
 } // namespace
 
 extern "C" void * pychip_ble_start_scanning(PyObject * context, void * adapter, uint32_t timeoutMs,
                                             ScannerDelegateImpl::DeviceScannedCallback scanCallback,
-                                            ScannerDelegateImpl::ScanCompleteCallback completeCallback)
+                                            ScannerDelegateImpl::ScanCompleteCallback completeCallback,
+                                            ScannerDelegateImpl::ScanErrorCallback errorCallback)
 {
-    std::unique_ptr<ScannerDelegateImpl> delegate = std::make_unique<ScannerDelegateImpl>(context, scanCallback, completeCallback);
+    std::unique_ptr<ScannerDelegateImpl> delegate =
+        std::make_unique<ScannerDelegateImpl>(context, scanCallback, completeCallback, errorCallback);
 
     std::unique_ptr<ChipDeviceScanner> scanner = ChipDeviceScanner::Create(static_cast<BluezAdapter1 *>(adapter), delegate.get());
 

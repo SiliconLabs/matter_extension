@@ -15,63 +15,75 @@
 include($ENV{PW_ROOT}/pw_build/pigweed.cmake)
 
 # This target provides the backend for pw::thread::Id & pw::this_thread::get_id.
-pw_add_module_library(pw_thread_stl.id
-  IMPLEMENTS_FACADES
-    pw_thread.id
+pw_add_library(pw_thread_stl.id INTERFACE
   HEADERS
     public/pw_thread_stl/id_inline.h
     public/pw_thread_stl/id_native.h
-    public_overrides/pw_thread_backend/id_inline.h
-    public_overrides/pw_thread_backend/id_native.h
+    id_public_overrides/pw_thread_backend/id_inline.h
+    id_public_overrides/pw_thread_backend/id_native.h
   PUBLIC_INCLUDES
     public
-    public_overrides
+    id_public_overrides
+  PUBLIC_DEPS
+    pw_thread.id.facade
 )
 
 # This target provides the backend for pw::thread::Thread with joining
 # joining capability.
-pw_add_module_library(pw_thread_stl.thread
-  IMPLEMENTS_FACADES
-    pw_thread.thread
+pw_add_library(pw_thread_stl.thread INTERFACE
   HEADERS
     public/pw_thread_stl/options.h
     public/pw_thread_stl/thread_inline.h
     public/pw_thread_stl/thread_native.h
-    public_overrides/pw_thread_backend/thread_inline.h
-    public_overrides/pw_thread_backend/thread_native.h
+    thread_public_overrides/pw_thread_backend/thread_inline.h
+    thread_public_overrides/pw_thread_backend/thread_native.h
   PUBLIC_INCLUDES
     public
-    public_overrides
+    thread_public_overrides
+  PUBLIC_DEPS
+    pw_thread.thread.facade
 )
 
 
 # This target provides the backend for pw::this_thread::sleep_{for,until}.
-pw_add_module_library(pw_thread_stl.sleep
-  IMPLEMENTS_FACADES
-    pw_thread.sleep
+pw_add_library(pw_thread_stl.sleep INTERFACE
   HEADERS
     public/pw_thread_stl/sleep_inline.h
-    public_overrides/pw_thread_backend/sleep_inline.h
+    sleep_public_overrides/pw_thread_backend/sleep_inline.h
   PUBLIC_INCLUDES
     public
-    public_overrides
+    sleep_public_overrides
   PUBLIC_DEPS
     pw_chrono.system_clock
+    pw_thread.sleep.facade
 )
 
 # This target provides the backend for pw::this_thread::yield.
-pw_add_module_library(pw_thread_stl.yield
-  IMPLEMENTS_FACADES
-    pw_thread.yield
+pw_add_library(pw_thread_stl.yield INTERFACE
   HEADERS
     public/pw_thread_stl/yield_inline.h
-    public_overrides/pw_thread_backend/yield_inline.h
+    yield_public_overrides/pw_thread_backend/yield_inline.h
   PUBLIC_INCLUDES
     public
-    public_overrides
+    yield_public_overrides
+  PUBLIC_DEPS
+    pw_thread.yield.facade
 )
 
-pw_add_module_library(pw_thread_stl.test_threads
+# This target provides the backend for pw::thread::test::TestThreadContext.
+pw_add_library(pw_thread_stl.test_thread_context INTERFACE
+  HEADERS
+    public/pw_thread_stl/test_thread_context_native.h
+    test_thread_context_public_overrides/pw_thread_backend/test_thread_context_native.h
+  PUBLIC_INCLUDES
+    public
+    test_thread_context_public_overrides
+  PUBLIC_DEPS
+    pw_thread_stl.thread
+    pw_thread.test_thread_context.facade
+)
+
+pw_add_library(pw_thread_stl.test_threads STATIC
   PUBLIC_DEPS
     pw_thread.test_threads
   SOURCES
@@ -81,9 +93,9 @@ pw_add_module_library(pw_thread_stl.test_threads
 )
 
 if(("${pw_thread.thread_BACKEND}" STREQUAL "pw_thread_stl.thread") AND
-   (NOT "${pw_thread.sleep_BACKEND}" STREQUAL "pw_thread.sleep.NO_BACKEND_SET"))
+   (NOT "${pw_thread.sleep_BACKEND}" STREQUAL ""))
   pw_add_test(pw_thread_stl.thread_backend_test
-    DEPS
+    PRIVATE_DEPS
       pw_thread_stl.test_threads
       pw_thread.thread_facade_test
     GROUPS

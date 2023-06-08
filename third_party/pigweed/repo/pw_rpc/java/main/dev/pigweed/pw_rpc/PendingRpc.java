@@ -17,21 +17,27 @@ package dev.pigweed.pw_rpc;
 import com.google.auto.value.AutoValue;
 import java.util.Locale;
 
-/** Represents a unique RPC invocation: channel + service + method. */
+/**
+ * Represents an active RPC invocation: channel + service + method.
+ *
+ * TODO(hepler): Use call ID to support multiple simultaneous calls to the same RPC on one channel.
+ */
 @AutoValue
-public abstract class PendingRpc {
-  public static PendingRpc create(Channel channel, Service service, Method method) {
-    return new AutoValue_PendingRpc(channel, service, method);
+abstract class PendingRpc {
+  static PendingRpc create(Channel channel, Method method) {
+    return new AutoValue_PendingRpc(channel, method);
   }
 
   public abstract Channel channel();
 
-  public abstract Service service();
+  public final Service service() {
+    return method().service();
+  }
 
   public abstract Method method();
 
   @Override
   public final String toString() {
-    return String.format(Locale.ENGLISH, "RpcCall[%s channel=%d]", method(), channel().id());
+    return String.format(Locale.ENGLISH, "PendingRpc[%s|channel=%d]", method(), channel().id());
   }
 }

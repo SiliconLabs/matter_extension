@@ -1,4 +1,4 @@
-// Copyright 2022 The Pigweed Authors
+// Copyright 2023 The Pigweed Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not
 // use this file except in compliance with the License. You may obtain a copy of
@@ -88,17 +88,34 @@ pw::Status PerformTransferActions(const pw::transfer::ClientConfig& config) {
                               rpc::integration_test::kChannelId,
                               transfer_thread);
 
+  client.set_max_retries(config.max_retries());
+  client.set_max_lifetime_retries(config.max_lifetime_retries());
+
   Status status = pw::OkStatus();
   for (const pw::transfer::TransferAction& action : config.transfer_actions()) {
     TransferResult result;
+    // If no protocol version is specified, default to the latest version.
+    pw::transfer::ProtocolVersion protocol_version =
+        action.protocol_version() ==
+                pw::transfer::TransferAction::ProtocolVersion::
+                    TransferAction_ProtocolVersion_UNKNOWN_VERSION
+            ? pw::transfer::ProtocolVersion::kLatest
+            : static_cast<pw::transfer::ProtocolVersion>(
+                  action.protocol_version());
     if (action.transfer_type() ==
         pw::transfer::TransferAction::TransferType::
             TransferAction_TransferType_WRITE_TO_SERVER) {
       pw::stream::StdFileReader input(action.file_path().c_str());
-      client.Write(action.resource_id(), input, [&result](Status status) {
-        result.status = status;
-        result.completed.release();
-      });
+      client.Write(
+          action.resource_id(),
+          input,
+          [&result](Status status) {
+            result.status = status;
+            result.completed.release();
+          },
+          pw::transfer::cfg::kDefaultChunkTimeout,
+          pw::transfer::cfg::kDefaultInitialChunkTimeout,
+          protocol_version);
       // Wait for the transfer to complete. We need to do this here so that the
       // StdFileReader doesn't go out of scope.
       result.completed.acquire();
@@ -107,10 +124,16 @@ pw::Status PerformTransferActions(const pw::transfer::ClientConfig& config) {
                pw::transfer::TransferAction::TransferType::
                    TransferAction_TransferType_READ_FROM_SERVER) {
       pw::stream::StdFileWriter output(action.file_path().c_str());
-      client.Read(action.resource_id(), output, [&result](Status status) {
-        result.status = status;
-        result.completed.release();
-      });
+      client.Read(
+          action.resource_id(),
+          output,
+          [&result](Status status) {
+            result.status = status;
+            result.completed.release();
+          },
+          pw::transfer::cfg::kDefaultChunkTimeout,
+          pw::transfer::cfg::kDefaultInitialChunkTimeout,
+          protocol_version);
       // Wait for the transfer to complete.
       result.completed.acquire();
     } else {
@@ -120,7 +143,7 @@ pw::Status PerformTransferActions(const pw::transfer::ClientConfig& config) {
       break;
     }
 
-    if (!result.status.ok()) {
+    if (result.status.code() != action.expected_status()) {
       PW_LOG_ERROR("Failed to perform action:\n%s",
                    action.DebugString().c_str());
       status = result.status;

@@ -27,9 +27,10 @@ other in your code, depending on point of use requirements:
  2. Per-Field Writers and Readers,
  3. Direct Writers and Readers.
 
-This has a few benefits. The primary one is that it allows the library to be
-incredibly small, with the encoder and decoder each having a code size of
-around 1.5K and negligible RAM usage.
+This has a few benefits. The primary one is that it allows the core proto
+serialization and deserialization libraries to be relatively small.
+
+.. include:: size_report/protobuf_overview
 
 To demonstrate these layers, we use the following protobuf message definition
 in the examples:
@@ -53,6 +54,11 @@ And the following accompanying options file:
 
   Customer.name max_size:32
 
+.. toctree::
+  :maxdepth: 1
+
+  size_report
+
 Message Structures
 ==================
 The highest level API is based around message structures created through C++
@@ -62,7 +68,7 @@ This results in the following generated structure:
 
 .. code:: c++
 
-  enum class Customer::Status {
+  enum class Customer::Status : uint32_t {
     NEW = 1,
     ACTIVE = 2,
     INACTIVE = 3,
@@ -74,7 +80,7 @@ This results in the following generated structure:
 
   struct Customer::Message {
     int32_t age;
-    pw::Vector<char, 32> name;
+    pw::InlineString<32> name;
     Customer::Status status;
   };
 
@@ -111,6 +117,53 @@ equality.
 The encoder and decoder code is generic and implemented in the core C++ module.
 A small overhead for each message type used in your code describes the structure
 to the generic encoder and decoders.
+
+Message comparison
+------------------
+Message structures implement ``operator==`` and ``operator!=`` for equality and
+inequality comparisons. However, these can only work on trivial scalar fields
+and fixed-size strings within the message. Fields using a callback are not
+considered in the comparison.
+
+To check if the equality operator of a generated message covers all fields,
+``pw_protobuf`` provides an ``IsTriviallyComparable`` function.
+
+.. code-block:: c++
+
+  template <typename Message>
+  constexpr bool IsTriviallyComparable<Message>();
+
+For example, given the following protobuf definitions:
+
+.. code-block::
+
+  message Point {
+    int32 x = 1;
+    int32 y = 2;
+  }
+
+  message Label {
+    Point point = 1;
+    string label = 2;
+  }
+
+And the accompanying options file:
+
+.. code-block::
+
+  Label.label use_callback:true
+
+The ``Point`` message can be fully compared for equality, but ``Label`` cannot.
+``Label`` still defines an ``operator==``, but it ignores the ``label`` string.
+
+.. code-block:: c++
+
+   Point::Message one = {.x = 5, .y = 11};
+   Point::Message two = {.x = 5, .y = 11};
+
+   static_assert(pw::protobuf::IsTriviallyComparable<Point::Message>());
+   ASSERT_EQ(one, two);
+   static_assert(!pw::protobuf::IsTriviallyComparable<Label::Message>());
 
 Buffer Sizes
 ------------
@@ -367,15 +420,15 @@ complex than encoding or using the message structure.
 
     while ((status = decoder.Next()).ok()) {
       switch (decoder.Field().value()) {
-        case Customer::Fields::AGE: {
+        case Customer::Fields::kAge: {
           PW_TRY_ASSIGN(age, decoder.ReadAge());
           break;
         }
-        case Customer::Fields::NAME: {
+        case Customer::Fields::kName: {
           PW_TRY(decoder.ReadName(name));
           break;
         }
-        case Customer::Fields::STATUS: {
+        case Customer::Fields::kStatus: {
           PW_TRY_ASSIGN(status, decoder.ReadStatus());
           break;
         }
@@ -384,6 +437,15 @@ complex than encoding or using the message structure.
 
     return status.IsOutOfRange() ? OkStatus() : status;
   }
+
+.. warning:: ``Fields::SNAKE_CASE`` is deprecated. Use ``Fields::kCamelCase``.
+
+  Transitional support for ``Fields::SNAKE_CASE`` will soon only be available by
+  explicitly setting the following GN variable in your project:
+  ``pw_protobuf_compiler_GENERATE_LEGACY_ENUM_SNAKE_CASE_NAMES=true``
+
+  This support will be removed after downstream projects have been migrated.
+
 
 Direct Writers and Readers
 ==========================
@@ -426,12 +488,12 @@ cast the enumerated type.
   #include "example_protos/customer.pwpb.h"
 
   Status EncodeCustomer(pw::protobuf::StreamEncoder& encoder) {
-    PW_TRY(encoder.WriteInt32(static_cast<uint32_t>(Customer::Fields::AGE),
+    PW_TRY(encoder.WriteInt32(static_cast<uint32_t>(Customer::Fields::kAge),
                               33));
-    PW_TRY(encoder.WriteString(static_cast<uint32_t>(Customer::Fields::NAME),
+    PW_TRY(encoder.WriteString(static_cast<uint32_t>(Customer::Fields::kName),
                                "Joe Bloggs"sv));
     PW_TRY(encoder.WriteUint32(
-        static_cast<uint32_t>(Customer::Fields::STATUS),
+        static_cast<uint32_t>(Customer::Fields::kStatus),
         static_cast<uint32_t>(Customer::Status::INACTIVE)));
   }
 
@@ -469,15 +531,15 @@ through the fields and checking the field numbers, along with casting types.
 
     while ((status = decoder.Next()).ok()) {
       switch (decoder.FieldNumber().value()) {
-        case static_cast<uint32_t>(Customer::Fields::AGE): {
+        case static_cast<uint32_t>(Customer::Fields::kAge): {
           PW_TRY_ASSIGN(age, decoder.ReadInt32());
           break;
         }
-        case static_cast<uint32_t>(Customer::Fields::NAME): {
+        case static_cast<uint32_t>(Customer::Fields::kName): {
           PW_TRY(decoder.ReadString(name));
           break;
         }
-        case static_cast<uint32_t>(Customer::Fields::STATUS): {
+        case static_cast<uint32_t>(Customer::Fields::kStatus): {
           uint32_t status_value;
           PW_TRY_ASSIGN(status_value, decoder.ReadUint32());
           status = static_cast<Customer::Status>(status_value);
@@ -488,6 +550,29 @@ through the fields and checking the field numbers, along with casting types.
 
     return status.IsOutOfRange() ? OkStatus() : status;
   }
+
+
+Handling of packages
+====================
+
+Package declarations in ``.proto`` files are converted to namespace
+declarations. Unlike ``protoc``'s native C++ codegen, pw_protobuf appends an
+additional ``::pwpb`` namespace after the user-specified package name: for
+example, ``package my.cool.project`` becomes ``namespace
+my::cool::project::pwpb``. We emit a different package name than stated, in
+order to avoid clashes for projects that link against multiple C++ proto
+libraries in the same library.
+
+..
+  TODO(b/258832150) Remove this section, if possible
+
+In some cases, pw_protobuf codegen may encounter external message references
+during parsing, where it is unable to resolve the package name of the message.
+In these situations, the codegen is instead forced to emit the package name as
+``pw::pwpb_xxx::my::cool::project``, where "pwpb_xxx" is the name of some
+unspecified private namespace. Users are expected to manually identify the
+intended namespace name of that symbol, as described above, and must not rely
+on any such private namespaces, even if they appear in codegen output.
 
 -------
 Codegen
@@ -552,6 +637,33 @@ Configuration
   | 5 bytes           | 4,294,967,295 or < 4GiB (max uint32_t) |
   +-------------------+----------------------------------------+
 
+Field Options
+=============
+``pw_protobuf`` supports the following field options for specifying
+protocol-level limitations, rather than code generation parameters (although
+they do influence code generation):
+
+
+* ``max_count``:
+  Maximum number of entries for repeated fields.
+
+* ``max_size``:
+  Maximum size of `bytes` or `string` fields.
+
+Even though other proto codegen implementations do not respect these field
+options, they can still compile protos which use these options. This is
+especially useful for host builds using upstream protoc code generation, where
+host software can use the reflection API to query for the options and validate
+messages comply with the specified limitations.
+
+.. code::
+
+  import "pw_protobuf_protos/field_options.proto";
+
+  message Demo {
+    string size_limited_string = 1 [(pw.protobuf.pwpb).max_size = 16];
+  };
+
 Options Files
 =============
 Code generation can be configured using a separate ``.options`` file placed
@@ -599,8 +711,9 @@ Valid options are:
   instead of ``pw::Vector``.
 
 * ``max_size``:
-  Maximum size of `bytes` and `strings` fields. When set, these field types
-  will use the ``pw::Vector`` container type instead of a callback.
+  Maximum size of `bytes` or `string` fields. When set, `bytes` fields use
+  ``pw::Vector`` and `string` fields use ``pw::InlineString`` instead of a
+  callback.
 
 * ``fixed_size``:
   Specified with ``max_size`` to use a fixed length ``std::array`` container
@@ -671,7 +784,7 @@ that can hold the set of values encoded by it, following these rules.
 
   .. code:: c++
 
-    enum class Award::Service {
+    enum class Award::Service : uint32_t {
       BRONZE = 1,
       SILVER = 2,
       GOLD = 3,
@@ -699,7 +812,7 @@ that can hold the set of values encoded by it, following these rules.
 
   .. code:: c++
 
-    enum class Activity {
+    enum class Activity : uint32_t {
       ACTIVITY_CYCLING = 1,
       ACTIVITY_RUNNING = 2,
       ACTIVITY_SWIMMING = 3,
@@ -789,10 +902,10 @@ that can hold the set of values encoded by it, following these rules.
       pw::Vector<std::byte, 64> serial_number;
     };
 
-* `string` fields are represented by ``pw::Vector`` when the ``max_size`` option
-  is set for that field. Since the size is provided, the string is not
-  automatically null-terminated. :ref:`module-pw_string` provides utility
-  methods to copy string data into and out of this vector.
+* `string` fields are represented by a :cpp:type:`pw::InlineString` when the
+  ``max_size`` option is set for that field. The string can hold up to
+  ``max_size`` characters, and is always null terminated. The null terminator is
+  not counted in ``max_size``.
 
   .. code::
 
@@ -807,7 +920,7 @@ that can hold the set of values encoded by it, following these rules.
   .. code:: c++
 
     struct Employee::Message {
-      pw::Vector<char, 128> name;
+      pw::InlineString<128> name;
     };
 
 * Nested messages with a dependency cycle, repeated scalar fields without a
@@ -841,6 +954,9 @@ that can hold the set of values encoded by it, following these rules.
       pw::protobuf::Callback<Store::StreamEncoder, Store::StreamDecoder> address;
       pw::protobuf::Callback<Store::StreamEncoder, Store::StreamDecoder> employees;
     };
+
+  A Callback object can be converted to a ``bool`` indicating whether a callback
+  is set.
 
 Message structures can be copied, but doing so will clear any assigned
 callbacks. To preserve functions applied to callbacks, ensure that the message
@@ -903,7 +1019,7 @@ naming conflicts caused by user-defined macros are the user's responsibility
 
 .. code:: c++
 
-  enum class PosixSignal {
+  enum class PosixSignal : uint32_t {
     NONE = 0,
     SIGHUP = 1,
     SIGINT_ = 2,
@@ -965,14 +1081,14 @@ the example below.
 .. code:: c++
 
   struct Function::Message_::Message {
-    pw::Vector<char, 128> content;
+    pw::InlineString<128> content;
   };
 
-  enum class Function::Message_::Fields {
+  enum class Function::Message_::Fields : uint32_t {
     CONTENT = 1,
   };
 
-  enum class Function::Fields_ {
+  enum class Function::Fields_ uint32_t {
     NONE = 0,
     COMPLEX_NUMBERS = 1,
     INTEGERS_MOD_5 = 2,
@@ -993,7 +1109,7 @@ the example below.
     Function::Fields_ codomain;
   };
 
-  enum class Function::Fields {
+  enum class Function::Fields : uint32_t {
     DESCRIPTION = 1,
     DOMAIN = 2,
     CODOMAIN = 3,
@@ -1036,14 +1152,13 @@ generated ``Message`` structure into an in-memory buffer.
   #include "pw_bytes/span.h"
   #include "pw_protobuf/encoder.h"
   #include "pw_status/status_with_size.h"
-  #include "pw_string/vector.h"
 
   // Writes a proto response to the provided buffer, returning the encode
   // status and number of bytes written.
   pw::StatusWithSize WriteProtoResponse(pw::ByteSpan response) {
     MyProto::Message message{}
     message.magic_number = 0x1a1a2b2b;
-    pw::string::Copy("cookies", message.favorite_food);
+    message.favorite_food = "cookies";
     message.calories = 600;
 
     // All proto writes are directly written to the `response` buffer.
@@ -1148,9 +1263,13 @@ is named for the message type.
 .. cpp:function:: Animal::StreamEncoder Owner::StreamEncoder::GetPetEncoder()
 
 A lower-level API method returns an untyped encoder, which only provides the
-lower-level API methods. This can be moved to a typed encoder later.
+lower-level API methods. This can be cast to a typed encoder if needed.
 
-.. cpp:function:: pw::protobuf::StreamEncoder pw::protobuf::StreamEncoder::GetNestedEncoder(uint32_t field_number)
+.. cpp:function:: pw::protobuf::StreamEncoder pw::protobuf::StreamEncoder::GetNestedEncoder(uint32_t field_number, EmptyEncoderBehavior empty_encoder_behavior = EmptyEncoderBehavior::kWriteFieldNumber)
+
+(The optional `empty_encoder_behavior` parameter allows the user to disable
+writing the tag number for the nested encoder, if no data was written to
+that nested decoder.)
 
 .. warning::
   When a nested submessage is created, any use of the parent encoder that
@@ -1258,7 +1377,7 @@ code generated API, and the second implemented by hand.
 .. code:: c++
 
   my_proto_encoder.WriteAge(42);
-  my_proto_encoder.WriteInt32(static_cast<uint32_t>(MyProto::Fields::AGE), 42);
+  my_proto_encoder.WriteInt32(static_cast<uint32_t>(MyProto::Fields::kAge), 42);
 
 Repeated Fields
 ---------------
@@ -1311,7 +1430,7 @@ code generated API, and the second implemented by hand.
 
   my_proto_encoder.WriteNumbers(numbers);
   my_proto_encoder.WritePackedInt32(
-      static_cast<uint32_t>(MyProto::Fields::NUMBERS),
+      static_cast<uint32_t>(MyProto::Fields::kNumbers),
       numbers);
 
 Enumerations
@@ -1332,7 +1451,7 @@ and the second implemented by hand.
 
   my_proto_encoder.WriteAward(MyProto::Award::SILVER);
   my_proto_encoder.WriteUint32(
-      static_cast<uint32_t>(MyProto::Fields::AWARD),
+      static_cast<uint32_t>(MyProto::Fields::kAward),
       static_cast<uint32_t>(MyProto::Award::SILVER));
 
 Repeated Fields
@@ -1470,11 +1589,11 @@ as a typed ``Fields`` enumeration member, while the lower-level API provides a
       // However, Field() is guaranteed to be valid after a call to Next()
       // that returns OK, so the value can be used directly here.
       switch (decoder.Field().value()) {
-        case MyProto::Fields::AGE: {
+        case MyProto::Fields::kAge: {
           PW_TRY_ASSIGN(age, decoder.ReadAge());
           break;
         }
-        case MyProto::Fields::NAME:
+        case MyProto::Fields::kName:
           // The string field is copied into the provided buffer. If the buffer
           // is too small to fit the string, RESOURCE_EXHAUSTED is returned and
           // the decoder is not advanced, allowing the field to be re-read.
@@ -1506,7 +1625,7 @@ calling ``Read()`` on a nested decoder.
 
     Store::Message store{};
     store.employees.SetDecoder([](Store::StreamDecoder& decoder) {
-      PW_ASSERT(decoder.Field().value() == Store::Fields::EMPLOYEES);
+      PW_ASSERT(decoder.Field().value() == Store::Fields::kEmployees);
 
       Employee::Message employee{};
       // Set any callbacks on `employee`.
@@ -1544,7 +1663,7 @@ lower-level API methods. This can be moved to a typed decoder later.
 
 .. code:: c++
 
-  case Owner::Fields::PET: {
+  case Owner::Fields::kPet: {
     // Note that the parent decoder, owner_decoder, cannot be used until the
     // nested decoder, pet_decoder, has been destroyed.
     Animal::StreamDecoder pet_decoder = owner_decoder.GetPetDecoder();
@@ -1592,7 +1711,7 @@ generated API, and the second implemented by hand.
 .. code:: c++
 
   PW_ASSERT(my_proto_decoder.FieldNumber().value() ==
-      static_cast<uint32_t>(MyProto::Fields::AGE));
+      static_cast<uint32_t>(MyProto::Fields::kAge));
   pw::Result<int32_t> my_proto_decoder.ReadInt32();
 
 Repeated Fields
@@ -1658,20 +1777,29 @@ generated API, and the second is implemented by hand.
   pw::Vector<int32_t, 8> numbers;
 
   PW_ASSERT(my_proto_decoder.FieldNumber().value() ==
-      static_cast<uint32_t>(MyProto::Fields::NUMBERS));
+      static_cast<uint32_t>(MyProto::Fields::kNumbers));
   my_proto_decoder.ReadRepeatedInt32(numbers);
 
 Enumerations
 ============
-Enumerations are read using code generated ``ReadEnum`` methods that return the
-code generated enumeration as the appropriate type.
+``pw_protobuf`` generates a few functions for working with enumerations.
+Most importantly, enumerations are read using generated ``ReadEnum`` methods
+that return the enumeration as the appropriate generated type.
 
 .. cpp:function:: Result<MyProto::Enum> MyProto::StreamDecoder::ReadEnum()
 
-To validate the value encoded in the wire format against the known set of
-enumerates, a function is generated that you can use:
+   Decodes an enum from the stream.
 
-.. cpp:function:: bool MyProto::IsValidEnum(MyProto::Enum)
+.. cpp:function:: constexpr bool MyProto::IsValidEnum(MyProto::Enum value)
+
+  Validates the value encoded in the wire format against the known set of
+  enumerates.
+
+.. cpp:function:: constexpr const char* MyProto::EnumToString(MyProto::Enum value)
+
+  Returns the string representation of the enum value. For example,
+  ``FooToString(Foo::kBarBaz)`` returns ``"BAR_BAZ"``. Returns the empty string
+  if the value is not a valid value.
 
 To read enumerations with the lower-level API, you would need to cast the
 retured value from the ``uint32_t``.
@@ -1679,17 +1807,17 @@ retured value from the ``uint32_t``.
 The following two code blocks are equivalent, where the first is using the code
 generated API, and the second implemented by hand.
 
-.. code:: c++
+.. code-block:: c++
 
   pw::Result<MyProto::Award> award = my_proto_decoder.ReadAward();
   if (!MyProto::IsValidAward(award)) {
     PW_LOG_DBG("Unknown award");
   }
 
-.. code:: c++
+.. code-block:: c++
 
   PW_ASSERT(my_proto_decoder.FieldNumber().value() ==
-      static_cast<uint32_t>(MyProto::Fields::AWARD));
+      static_cast<uint32_t>(MyProto::Fields::kAward));
   pw::Result<uint32_t> award_value = my_proto_decoder.ReadUint32();
   if (award_value.ok()) {
     MyProto::Award award = static_cast<MyProto::Award>(award_value);
@@ -2016,7 +2144,7 @@ This report demonstrates the size of using the entire decoder with all of its
 decode methods and a decode callback for a proto message containing each of the
 protobuf field types.
 
-.. include:: size_report/decoder_full
+.. include:: size_report/decoder_partial
 
 
 Incremental size report
@@ -2038,6 +2166,10 @@ type. The ``SizeOfField*()`` functions calculate the encoded size of a field of
 the specified type, given a particular key and, for variable length fields
 (varint or delimited), a value. The ``SizeOf*Field`` functions calculate the
 encoded size of fields with a particular wire format (delimited, varint).
+
+In the rare event that you need to know the serialized size of a field's tag
+(field number and wire type), you can use ``TagSizeBytes()`` to calculate the
+tag size for a given field number.
 
 --------------------------
 Available protobuf modules

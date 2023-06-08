@@ -13,13 +13,14 @@
 # the License.
 
 include($ENV{PW_ROOT}/pw_build/pigweed.cmake)
+include($ENV{PW_ROOT}/pw_log/backend.cmake)
 include($ENV{PW_ROOT}/pw_protobuf_compiler/proto.cmake)
 
 pw_add_module_config(pw_log_CONFIG)
 
 pw_add_module_config(pw_log_GLOG_ADAPTER_CONFIG)
 
-pw_add_module_library(pw_log.config
+pw_add_library(pw_log.config INTERFACE
   HEADERS
     public/pw_log/config.h
   PUBLIC_INCLUDES
@@ -28,7 +29,9 @@ pw_add_module_library(pw_log.config
     ${pw_log_CONFIG}
 )
 
-pw_add_facade(pw_log
+pw_add_facade(pw_log INTERFACE
+  BACKEND
+    pw_log_BACKEND
   HEADERS
     public/pw_log/levels.h
     public/pw_log/log.h
@@ -41,7 +44,7 @@ pw_add_facade(pw_log
     pw_log.config
 )
 
-pw_add_module_library(pw_log.glog_adapter
+pw_add_library(pw_log.glog_adapter INTERFACE
   HEADERS
     public/pw_log/glog_adapter.h
     public/pw_log/glog_adapter_config.h
@@ -57,7 +60,7 @@ pw_add_module_library(pw_log.glog_adapter
     ${pw_log_GLOG_ADAPTER_CONFIG}
 )
 
-pw_add_module_library(pw_log.proto_utils
+pw_add_library(pw_log.proto_utils STATIC
   HEADERS
     public/pw_log/proto_utils.h
   PUBLIC_INCLUDES
@@ -84,12 +87,12 @@ pw_proto_library(pw_log.protos
     pw_tokenizer.proto
 )
 
-if(NOT "${pw_log_BACKEND}" STREQUAL "pw_log.NO_BACKEND_SET")
+if(NOT "${pw_log_BACKEND}" STREQUAL "")
   pw_add_test(pw_log.basic_log_test
     SOURCES
       basic_log_test.cc
       basic_log_test_plain_c.c
-    DEPS
+    PRIVATE_DEPS
       pw_log
       pw_preprocessor
     GROUPS
@@ -100,7 +103,7 @@ if(NOT "${pw_log_BACKEND}" STREQUAL "pw_log.NO_BACKEND_SET")
   pw_add_test(pw_log.glog_adapter_test
     SOURCES
       glog_adapter_test.cc
-    DEPS
+    PRIVATE_DEPS
       pw_log.glog_adapter
     GROUPS
       modules
@@ -110,7 +113,7 @@ if(NOT "${pw_log_BACKEND}" STREQUAL "pw_log.NO_BACKEND_SET")
   pw_add_test(pw_log.proto_utils_test
     SOURCES
       proto_utils_test.cc
-    DEPS
+    PRIVATE_DEPS
       pw_log
       pw_log.proto_utils
       pw_log.protos.pwpb

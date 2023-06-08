@@ -1,0 +1,112 @@
+category: Matter|Core
+define:
+- name: CHIP_HAVE_CONFIG_H
+  value: '1'
+description: libsupportlayer
+id: libsupportlayer
+include:
+- path: examples/platform/silabs
+- path: examples/platform/silabs/efr32
+- path: src
+- path: src/include
+- path: src/lib
+  file_list:
+  - path: support/BytesToHex.h
+  - path: support/CHIPMem.h
+  - path: support/CodeUtils.h
+  - path: support/SafeInt.h
+  - path: support/ScopedBuffer.h
+  - path: support/TimeUtils.h
+  - path: support/BitFlags.h
+  - path: support/DLLUtil.h
+  - path: support/Span.h
+  - path: support/SafePointerCast.h
+  - path: support/TypeTraits.h
+  - path: support/Variant.h
+  - path: support/LambdaBridge.h
+  - path: support/ObjectLifeCycle.h
+  - path: support/Pool.h
+  - path: support/Iterators.h
+  - path: support/BufferWriter.h
+  - path: support/SetupDiscriminator.h
+  - path: support/BitMask.h
+  - path: support/EnforceFormat.h
+  - path: support/logging/Constants.h
+  - path: support/ErrorStr.h
+  - path: support/logging/CHIPLogging.h
+  - path: support/CHIPMemString.h
+  - path: support/DefaultStorageKeyAllocator.h
+  - path: support/CommonPersistentData.h
+  - path: support/PersistentData.h
+  - path: support/CommonIterator.h
+  - path: support/ThreadOperationalDataset.h
+  - path: support/ReferenceCountedHandle.h
+  - path: support/BufferReader.h
+  - path: support/IntrusiveList.h
+  - path: support/SortUtils.h
+  - path: support/Fold.h
+  - path: support/StringBuilder.h
+  - path: support/PoolWrapper.h
+  - path: support/CHIPPlatformMemory.h
+  - path: support/SafeString.h
+  - path: support/Base64.h
+  - path: support/SerializableIntegerSet.h
+  - path: support/CHIPCounter.h
+  - path: support/CHIPArgParser.hpp
+  - path: support/PersistentStorageMacros.h
+  - path: support/TestGroupData.h
+  - path: support/FibonacciUtils.h
+  - path: support/PersistedCounter.h
+  - path: support/PersistentStorageAudit.h
+  - path: support/UnitTestRegistration.h
+  - path: support/UnitTestUtils.h
+  - path: support/Defer.h
+  - path: support/CHIPFaultInjection.h
+  - path: support/BytesCircularBuffer.h
+  - path: support/verhoeff/Verhoeff.h
+  - path: support/FixedBufferAllocator.h
+  - path: support/TestPersistentStorageDelegate.h
+  - path: support/LifetimePersistedCounter.h
+  - path: support/IniEscaping.h
+  - path: support/PrivateHeap.h
+  - path: support/ZclString.h
+- path: src/platform/silabs/efr32
+- path: third_party/nlassert/repo/include
+- path: third_party/nlio/repo/include
+- path: zzz_generated/app-common
+- path: slc/inc
+  file_list:
+  - path: CHIPVersion.h
+label: libsupportlayer
+package: Matter
+provides:
+- name: matter_libsupportlayer
+quality: production
+source:
+- path: src/lib/support/Base64.cpp
+- path: src/lib/support/BufferReader.cpp
+- path: src/lib/support/BufferWriter.cpp
+- path: src/lib/support/BytesCircularBuffer.cpp
+- path: src/lib/support/BytesToHex.cpp
+- path: src/lib/support/CHIPArgParser.cpp
+- path: src/lib/support/CHIPMem.cpp
+- path: src/lib/support/CHIPPlatformMemory.cpp
+- path: src/lib/support/ErrorStr.cpp
+- path: src/lib/support/FibonacciUtils.cpp
+- path: src/lib/support/FixedBufferAllocator.cpp
+- path: src/lib/support/IniEscaping.cpp
+- path: src/lib/support/PersistentStorageAudit.cpp
+- path: src/lib/support/Pool.cpp
+- path: src/lib/support/PrivateHeap.cpp
+- path: src/lib/support/SerializableIntegerSet.cpp
+- path: src/lib/support/ThreadOperationalDataset.cpp
+- path: src/lib/support/TimeUtils.cpp
+- path: src/lib/support/ZclString.cpp
+- path: src/lib/support/logging/CHIPLogging.cpp
+- path: src/lib/support/verhoeff/Verhoeff.cpp
+- path: src/lib/support/verhoeff/Verhoeff10.cpp
+- path: src/lib/support/verhoeff/Verhoeff16.cpp
+- path: src/lib/support/verhoeff/Verhoeff32.cpp
+- path: src/lib/support/verhoeff/Verhoeff36.cpp
+ui_hints:
+  visibility: never

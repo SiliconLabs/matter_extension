@@ -30,18 +30,52 @@ pw_cc_library(
 
 pw_cc_library(
     name = "pw_function",
-    srcs = ["public/pw_function/internal/function.h"],
     hdrs = ["public/pw_function/function.h"],
     includes = ["public"],
     deps = [
         ":config",
         "//pw_assert",
         "//pw_preprocessor",
+        "//third_party/fuchsia:fit",
     ],
 )
 
 pw_cc_test(
     name = "function_test",
     srcs = ["function_test.cc"],
-    deps = [":pw_function"],
+    deps = [
+        ":pw_function",
+        "//pw_compilation_testing:negative_compilation_testing",
+    ],
+)
+
+pw_cc_library(
+    name = "pointer",
+    srcs = ["public/pw_function/internal/static_invoker.h"],
+    hdrs = ["public/pw_function/pointer.h"],
+    includes = ["public"],
+)
+
+pw_cc_test(
+    name = "pointer_test",
+    srcs = ["pointer_test.cc"],
+    deps = [
+        ":pointer",
+        ":pw_function",
+    ],
+)
+
+pw_cc_library(
+    name = "scope_guard",
+    hdrs = ["public/pw_function/scope_guard.h"],
+    includes = ["public"],
+)
+
+pw_cc_test(
+    name = "scope_guard_test",
+    srcs = ["scope_guard_test.cc"],
+    deps = [
+        ":pw_function",
+        ":scope_guard",
+    ],
 )

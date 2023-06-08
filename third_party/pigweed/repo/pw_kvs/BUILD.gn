@@ -607,12 +607,8 @@ pw_doc_group("docs") {
   report_deps = [ ":kvs_size" ]
 }
 
-pw_size_report("kvs_size") {
+pw_size_diff("kvs_size") {
   title = "Pigweed KVS size report"
-
-  # To see all the symbols, uncomment the following:
-  # Note: The size report RST table won't be generated when full_report = true.
-  # full_report = true
 
   binaries = [
     {

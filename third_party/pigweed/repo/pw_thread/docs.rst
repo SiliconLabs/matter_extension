@@ -145,6 +145,9 @@ Example
     const pw::thread::Id my_id = pw::this_thread::get_id();
   }
 
+
+.. _module-pw_thread-thread-creation:
+
 ---------------
 Thread Creation
 ---------------
@@ -225,8 +228,14 @@ but may contain things like the thread name, priority, scheduling policy,
 core/processor affinity, and/or an optional reference to a pre-allocated
 Context (the collection of memory allocations needed for a thread to run).
 
-Options shall NOT permit starting as detached, this must be done explicitly
-through the Thread API.
+Options shall NOT have an attribute to start threads as detached vs joinable.
+All ``pw::thread::Thread`` instances must be explicitly ``join()``'d or
+``detach()``'d through the run-time Thread API.
+
+Note that if backends set ``PW_THREAD_JOINING_ENABLED`` to false, backends
+may use native OS specific APIs to create native detached threads because the
+``join()`` API would be compiled out. However, users must still explicitly
+invoke ``detach()``.
 
 Options must not contain any memory needed for a thread to run (TCB,
 stack, etc.). The Options may be deleted or re-used immediately after
@@ -267,7 +276,7 @@ with the following contents:
   // Contents of my_app/threads.h
   #pragma once
 
-  #include "pw_thread/options.h"
+  #include "pw_thread/thread.h"
 
   namespace my_app {
 
@@ -319,7 +328,6 @@ something like:
   }
 
   }  // namespace my_app
-
 
 Detaching & Joining
 ===================
@@ -442,6 +450,108 @@ function without arguments. For example:
   Because the thread may start after the pw::Thread creation, an object which
   implements the ThreadCore MUST meet or exceed the lifetime of its thread of
   execution!
+
+----------------
+Thread Unit Test
+----------------
+.. doxygenclass:: pw::thread::test::TestThreadContext
+   :members:
+
+The STL backend implementation ``test_thread_context_native.h`` lists below:
+
+.. literalinclude:: ../pw_thread_stl/public/pw_thread_stl/test_thread_context_native.h
+   :language: cpp
+   :lines: 18-36
+
+----------------
+Thread Iteration
+----------------
+C++
+===
+.. cpp:function:: Status ForEachThread(const ThreadCallback& cb)
+
+   Calls the provided callback for each thread that has not been joined/deleted.
+
+   This function provides a generalized subset of information that a TCB might
+   contain to make it easier to introspect system state. Depending on the RTOS
+   and its configuration, some of these fields may not be populated, so it is
+   important to check that they have values before attempting to access them.
+
+   **Warning:**  The function may disable the scheduler to perform
+   a runtime capture of thread information.
+
+-----------------------
+Thread Snapshot Service
+-----------------------
+``pw_thread`` offers an optional RPC service library
+(``:thread_snapshot_service``) that enables thread info capture of
+running threads on a device at runtime via RPC. The service will guide
+optimization of stack usage by providing an overview of thread information,
+including thread name, stack bounds, and peak stack usage.
+
+``ThreadSnapshotService`` currently supports peak stack usage capture for
+all running threads (``ThreadSnapshotService::GetPeakStackUsage()``) as well as
+for a specific thread, filtering by name
+(``ThreadSnapshotService::GetPeakStackUsage(name=b"/* thread name */")``).
+Thread information capture relies on the thread iteration facade which will
+**momentarily halt your RTOS**, collect information about running threads, and
+return this information through the service.
+
+RPC service setup
+=================
+To expose a ``ThreadSnapshotService`` in your application, do the following:
+
+1. Create an instance of ``pw::thread::proto::ThreadSnapshotServiceBuffer``.
+   This template takes the number of expected threads, and uses it to properly
+   size buffers required for a ``ThreadSnapshotService``. If no thread count
+   argument is provided, this defaults to ``PW_THREAD_MAXIMUM_THREADS``.
+2. Register the service with your RPC server.
+
+For example:
+
+.. code::
+
+   #include "pw_rpc/server.h"
+   #include "pw_thread/thread_snapshot_service.h"
+
+   // Note: You must customize the RPC server setup; see pw_rpc.
+   pw::rpc::Channel channels[] = {
+    pw::rpc::Channel::Create<1>(&uart_output),
+   };
+   Server server(channels);
+
+  // Thread snapshot service builder instance.
+  pw::thread::proto::ThreadSnapshotServiceBuffer</*num threads*/>
+      thread_snapshot_service;
+
+   void RegisterServices() {
+     server.RegisterService(thread_snapshot_service);
+     // Register other services here.
+   }
+
+   void main() {
+     // ... system initialization ...
+
+     RegisterServices();
+
+     // ... start your application ...
+   }
+
+.. c:macro:: PW_THREAD_MAXIMUM_THREADS
+
+  The max number of threads to use by default for thread snapshot service.
+
+.. cpp:function:: constexpr size_t RequiredServiceBufferSize(const size_t num_threads)
+
+  Function provided through the service to calculate buffer sizing. If no
+  argument ``num_threads`` is specified, the function will take ``num_threads``
+  to be ``PW_THREAD_MAXIMUM_THREADS``.
+
+.. attention::
+    Some platforms may only support limited subsets of this service
+    depending on RTOS configuration. **Ensure that your RTOS is configured
+    properly before using this service.** Please see the thread iteration
+    documentation for your backend for more detail on RTOS support.
 
 -----------------------
 pw_snapshot integration

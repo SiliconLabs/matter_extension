@@ -31,6 +31,7 @@ pw_python_package("py") {
     "pw_package/packages/boringssl.py",
     "pw_package/packages/chromium_verifier.py",
     "pw_package/packages/crlset.py",
+    "pw_package/packages/emboss.py",
     "pw_package/packages/freertos.py",
     "pw_package/packages/googletest.py",
     "pw_package/packages/mbedtls.py",
@@ -43,6 +44,7 @@ pw_python_package("py") {
     "pw_package/pigweed_packages.py",
   ]
   pylintrc = "$dir_pigweed/.pylintrc"
+  mypy_ini = "$dir_pigweed/.mypy.ini"
   python_deps = [
     "$dir_pw_arduino_build/py",
     "$dir_pw_stm32cube_build/py",

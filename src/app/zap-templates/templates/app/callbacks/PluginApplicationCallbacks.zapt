@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <app-common/zap-generated/callbacks/PluginCallbacks.h>
+{{#all_user_clusters side='server'}}void Matter{{asUpperCamelCase name}}PluginServerInitCallback();
+{{/all_user_clusters}}
 
-#define MATTER_PLUGINS_INIT {{#all_user_clusters}}Matter{{asUpperCamelCase name}}Plugin{{asUpperCamelCase side}}InitCallback(); {{/all_user_clusters}}
-
+#define MATTER_PLUGINS_INIT {{#all_user_clusters side='server'}}Matter{{asUpperCamelCase name}}PluginServerInitCallback(); {{/all_user_clusters}}

@@ -15,7 +15,7 @@ source:
   - path: src/app/clusters/ota-requestor/ExtendedOTARequestorDriver.cpp 
   - path: src/app/clusters/ota-requestor/OTATestEventTriggerDelegate.cpp
 include:
-  - path: src/app/clusters/ota-requestor/
+  - path: src/app/clusters/ota-requestor
     file_list:
       - path: ota-requestor-server.h
       - path: BDXDownloader.h

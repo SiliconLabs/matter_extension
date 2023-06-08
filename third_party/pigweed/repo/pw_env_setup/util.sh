@@ -67,6 +67,14 @@ pw_bold_white() {
   echo -e "\033[1;37m$*\033[0m"
 }
 
+pw_error() {
+  echo -e "\033[1;31m$*\033[0m" >& /dev/stderr
+}
+
+pw_error_info() {
+  echo -e "\033[0;31m$*\033[0m" >& /dev/stderr
+}
+
 pw_eval_sourced() {
   if [ "$1" -eq 0 ]; then
     # TODO(pwbug/354) Remove conditional after all downstream projects have
@@ -76,14 +84,15 @@ pw_eval_sourced() {
     else
       _PW_NAME=$(basename "$_BOOTSTRAP_PATH" .sh)
     fi
-    pw_bold_red "Error: Attempting to $_PW_NAME in a subshell"
-    pw_red "  Since $_PW_NAME.sh modifies your shell's environment variables,"
-    pw_red "  it must be sourced rather than executed. In particular, "
-    pw_red "  'bash $_PW_NAME.sh' will not work since the modified "
-    pw_red "  environment will get destroyed at the end of the script. "
-    pw_red "  Instead, source the script's contents in your shell:"
-    pw_red ""
-    pw_red "    \$ source $_PW_NAME.sh"
+    pw_error "Error: Attempting to $_PW_NAME in a subshell"
+    pw_error_info "  Since $_PW_NAME.sh modifies your shell's environment"
+    pw_error_info "  variables, it must be sourced rather than executed. In"
+    pw_error_info "  particular, 'bash $_PW_NAME.sh' will not work since the "
+    pw_error_info "  modified environment will get destroyed at the end of the"
+    pw_error_info "  script. Instead, source the script's contents in your"
+    pw_error_info "  shell:"
+    pw_error_info ""
+    pw_error_info "    \$ source $_PW_NAME.sh"
     exit 1
   fi
 }
@@ -91,29 +100,59 @@ pw_eval_sourced() {
 pw_check_root() {
   _PW_ROOT="$1"
   if [[ "$_PW_ROOT" = *" "* ]]; then
-    pw_bold_red "Error: The Pigweed path contains spaces\n"
-    pw_red "  The path '$_PW_ROOT' contains spaces. "
-    pw_red "  Pigweed's Python environment currently requires Pigweed to be "
-    pw_red "  at a path without spaces. Please checkout Pigweed in a "
-    pw_red "  directory without spaces and retry running bootstrap."
-    return
+    pw_error "Error: The Pigweed path contains spaces\n"
+    pw_error_info "  The path '$_PW_ROOT' contains spaces. "
+    pw_error_info "  Pigweed's Python environment currently requires Pigweed to"
+    pw_error_info "  be at a path without spaces. Please checkout Pigweed in a"
+    pw_error_info "  directory without spaces and retry running bootstrap."
+    return -1
   fi
 }
 
 pw_get_env_root() {
-  # PW_ENVIRONMENT_ROOT allows developers to specify where the environment
-  # should be installed. bootstrap.sh scripts should not use that variable to
-  # store the result of this function. This separation allows scripts to assume
-  # PW_ENVIRONMENT_ROOT came from the developer and not from a previous
-  # bootstrap possibly from another workspace.
-  if [ -z "$PW_ENVIRONMENT_ROOT" ]; then
-    if [ -n "$PW_PROJECT_ROOT" ]; then
-      echo "$PW_PROJECT_ROOT/.environment"
-    else
-      echo "$PW_ROOT/.environment"
-    fi
-  else
+  # PW_ENVIRONMENT_ROOT allows callers to specify where the environment should
+  # be installed. bootstrap.sh scripts should not use that variable to store the
+  # result of this function. This separation allows scripts to assume
+  # PW_ENVIRONMENT_ROOT came from the caller and not from a previous bootstrap
+  # possibly from another workspace. PW_ENVIRONMENT_ROOT will be cleared after
+  # environment setup completes.
+  if [ -n "$PW_ENVIRONMENT_ROOT" ]; then
     echo "$PW_ENVIRONMENT_ROOT"
+    return
+  fi
+
+  # Determine project-level root directory.
+  if [ -n "$PW_PROJECT_ROOT" ]; then
+    _PW_ENV_PREFIX="$PW_PROJECT_ROOT"
+  else
+    _PW_ENV_PREFIX="$PW_ROOT"
+  fi
+
+  # If <root>/environment exists, use it. Otherwise, if <root>/.environment
+  # exists, use it. Finally, use <root>/environment.
+  _PW_DOTENV="$_PW_ENV_PREFIX/.environment"
+  _PW_ENV="$_PW_ENV_PREFIX/environment"
+
+  if [ -d "$_PW_DOTENV" ]; then
+    if [ -d "$_PW_ENV" ]; then
+      pw_error "Error: both possible environment directories exist."
+      pw_error_info "  $_PW_DOTENV"
+      pw_error_info "  $_PW_ENV"
+      pw_error_info "  If only one of these folders exists it will be used for"
+      pw_error_info "  the Pigweed environment. If neither exists"
+      pw_error_info "  '<...>/environment' will be used. Since both exist,"
+      pw_error_info "  bootstrap doesn't know which to use. Please delete one"
+      pw_error_info "  or both and rerun bootstrap."
+      exit 1
+    fi
+  fi
+
+  if [ -d "$_PW_ENV" ]; then
+    echo "$_PW_ENV"
+  elif [ -d "$_PW_DOTENV" ]; then
+    echo "$_PW_DOTENV"
+  else
+    echo "$_PW_ENV"
   fi
 }
 
@@ -209,14 +248,15 @@ pw_bootstrap() {
   local _pw_alias_check=0
   alias python > /dev/null 2> /dev/null || _pw_alias_check=$?
   if [ "$_pw_alias_check" -eq 0 ]; then
-    pw_bold_red "Error: 'python' is an alias"
-    pw_red "The shell has a 'python' alias set. This causes many obscure"
-    pw_red "Python-related issues both in and out of Pigweed. Please remove"
-    pw_red "the Python alias from your shell init file or at least run the"
-    pw_red "following command before bootstrapping Pigweed."
-    pw_red
-    pw_red "  unalias python"
-    pw_red
+    pw_error "Error: 'python' is an alias"
+    pw_error_info "The shell has a 'python' alias set. This causes many obscure"
+    pw_error_info "Python-related issues both in and out of Pigweed. Please"
+    pw_error_info "remove the Python alias from your shell init file or at"
+    pw_error_info "least run the following command before bootstrapping"
+    pw_error_info "Pigweed."
+    pw_error_info
+    pw_error_info "  unalias python"
+    pw_error_info
     return
   fi
 
@@ -230,10 +270,10 @@ pw_bootstrap() {
   elif command -v python > /dev/null 2> /dev/null; then
     _PW_PYTHON=python
   else
-    pw_bold_red "Error: No system Python present\n"
-    pw_red "  Pigweed's bootstrap process requires a local system Python."
-    pw_red "  Please install Python on your system, add it to your PATH"
-    pw_red "  and re-try running bootstrap."
+    pw_error "Error: No system Python present\n"
+    pw_error_info "  Pigweed's bootstrap process requires a local system"
+    pw_error_info "  Python. Please install Python on your system, add it to "
+    pw_error_info "  your PATH and re-try running bootstrap."
     return
   fi
 
@@ -245,8 +285,13 @@ pw_bootstrap() {
     _PW_ENV_SETUP_STATUS="$?"
   fi
 
+  # Write the directory path at bootstrap time into the directory. This helps
+  # us double-check things are still in the same space when calling activate.
+  _PW_ENV_ROOT_TXT="$_PW_ACTUAL_ENVIRONMENT_ROOT/env_root.txt"
+  echo "$_PW_ACTUAL_ENVIRONMENT_ROOT" > "$_PW_ENV_ROOT_TXT" 2> /dev/null
+
   # Create the environment README file. Use quotes to prevent alias expansion.
-  "cp" "$PW_ROOT/pw_env_setup/destination.md" "$_PW_ACTUAL_ENVIRONMENT_ROOT/README.md"
+  "cp" "$PW_ROOT/pw_env_setup/destination.md" "$_PW_ACTUAL_ENVIRONMENT_ROOT/README.md" &> /dev/null
 }
 
 pw_activate() {
@@ -257,6 +302,28 @@ pw_activate() {
 pw_finalize() {
   _PW_NAME="$1"
   _PW_SETUP_SH="$2"
+
+  # Check that the environment directory agrees that the path it's at matches
+  # where it thinks it should be. If not, bail.
+  _PW_ENV_ROOT_TXT="$_PW_ACTUAL_ENVIRONMENT_ROOT/env_root.txt"
+  if [ -f "$_PW_ENV_ROOT_TXT" ]; then
+    _PW_PREV_ENV_ROOT="$(cat $_PW_ENV_ROOT_TXT)"
+    if [ "$_PW_ACTUAL_ENVIRONMENT_ROOT" != "$_PW_PREV_ENV_ROOT" ]; then
+      pw_error "Error: Environment directory moved"
+      pw_error_info "This Pigweed environment was created at"
+      pw_error_info
+      pw_error_info "    $_PW_PREV_ENV_ROOT"
+      pw_error_info
+      pw_error_info "But it is now being activated from"
+      pw_error_info
+      pw_error_info "    $_PW_ACTUAL_ENVIRONMENT_ROOT"
+      pw_error_info
+      pw_error_info "This is likely because the checkout moved. After moving "
+      pw_error_info "the checkout a full '. ./bootstrap.sh' is required."
+      pw_error_info
+      _PW_ENV_SETUP_STATUS=1
+    fi
+  fi
 
   if [ "$_PW_ENV_SETUP_STATUS" -ne 0 ]; then
      return
@@ -278,11 +345,15 @@ pw_finalize() {
         echo
       fi
     else
-      pw_red "Error during $_PW_NAME--see messages above."
+      pw_error "Error during $_PW_NAME--see messages above."
     fi
   else
-    pw_red "Error during $_PW_NAME--see messages above."
+    pw_error "Error during $_PW_NAME--see messages above."
   fi
+}
+
+pw_install_post_checkout_hook() {
+  cp "$PW_ROOT/pw_env_setup/post-checkout-hook.sh" "$PW_PROJECT_ROOT/.git/hooks/post-checkout"
 }
 
 pw_cleanup() {
@@ -291,11 +362,17 @@ pw_cleanup() {
   unset PW_BANNER_FUNC
   unset _PW_ENV_SETUP
   unset _PW_NAME
+  unset PW_ENVIRONMENT_ROOT
   unset _PW_PYTHON
+  unset _PW_ENV_ROOT_TXT
+  unset _PW_PREV_ENV_ROOT
   unset _PW_SETUP_SH
   unset _PW_DEACTIVATE_SH
   unset _NEW_PW_ROOT
   unset _PW_ENV_SETUP_STATUS
+  unset _PW_ENV_PREFIX
+  unset _PW_ENV
+  unset _PW_DOTENV
 
   unset -f pw_none
   unset -f pw_red
@@ -315,6 +392,9 @@ pw_cleanup() {
   unset -f pw_bootstrap
   unset -f pw_activate
   unset -f pw_finalize
+  unset -f pw_install_post_checkout_hook
   unset -f pw_cleanup
   unset -f _pw_hello
+  unset -f pw_error
+  unset -f pw_error_info
 }

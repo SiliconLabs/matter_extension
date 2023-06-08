@@ -17,8 +17,12 @@ import asyncio
 import functools
 import io
 import logging
+import os
 import sys
+import shlex
+import subprocess
 from typing import Iterable, Optional, TYPE_CHECKING
+from unittest.mock import patch
 
 from prompt_toolkit.buffer import Buffer
 from prompt_toolkit.layout.controls import BufferControl
@@ -29,28 +33,61 @@ from prompt_toolkit.filters import (
     to_filter,
 )
 from ptpython.completer import (  # type: ignore
-    CompletePrivateAttributes, PythonCompleter,
+    CompletePrivateAttributes,
+    PythonCompleter,
 )
 import ptpython.repl  # type: ignore
 from ptpython.layout import (  # type: ignore
-    CompletionVisualisation, Dimension,
+    CompletionVisualisation,
+    Dimension,
 )
+import pygments.plugin
 
-import pw_console.text_formatting
+from pw_console.pigweed_code_style import (
+    PigweedCodeStyle,
+    PigweedCodeLightStyle,
+)
+from pw_console.text_formatting import remove_formatting
 
 if TYPE_CHECKING:
     from pw_console.repl_pane import ReplPane
 
 _LOG = logging.getLogger(__package__)
+_SYSTEM_COMMAND_LOG = logging.getLogger('pw_console_system_command')
+
+_original_find_plugin_styles = pygments.plugin.find_plugin_styles
+
+
+def _wrapped_find_plugin_styles():
+    """Patch pygment find_plugin_styles to also include Pigweed codes styles
+
+    This allows using these themes without requiring Python entrypoints.
+    """
+    for style in [
+        ('pigweed-code', PigweedCodeStyle),
+        ('pigweed-code-light', PigweedCodeLightStyle),
+    ]:
+        yield style
+    yield from _original_find_plugin_styles()
 
 
 class MissingPtpythonBufferControl(Exception):
     """Exception for a missing ptpython BufferControl object."""
 
 
-class PwPtPythonRepl(ptpython.repl.PythonRepl):  # pylint: disable=too-many-instance-attributes
+def _user_input_is_a_shell_command(text: str) -> bool:
+    return text.startswith('!')
+
+
+class PwPtPythonRepl(
+    ptpython.repl.PythonRepl
+):  # pylint: disable=too-many-instance-attributes
     """A ptpython repl class with changes to code execution and output related
     methods."""
+
+    @patch(
+        'pygments.styles.find_plugin_styles', new=_wrapped_find_plugin_styles
+    )
     def __init__(
         self,
         *args,
@@ -58,7 +95,6 @@ class PwPtPythonRepl(ptpython.repl.PythonRepl):  # pylint: disable=too-many-inst
         extra_completers: Optional[Iterable] = None,
         **ptpython_kwargs,
     ):
-
         completer = None
         if extra_completers:
             # Create the default python completer used by
@@ -94,7 +130,8 @@ class PwPtPythonRepl(ptpython.repl.PythonRepl):  # pylint: disable=too-many-inst
         self.show_status_bar = False
         self.show_exit_confirmation = False
         self.complete_private_attributes = (
-            CompletePrivateAttributes.IF_NO_PUBLIC)
+            CompletePrivateAttributes.IF_NO_PUBLIC
+        )
 
         # Function signature that shows args, kwargs, and types under the cursor
         # of the input window.
@@ -106,7 +143,8 @@ class PwPtPythonRepl(ptpython.repl.PythonRepl):  # pylint: disable=too-many-inst
         # Turn off the completion menu in ptpython. The CompletionsMenu in
         # ConsoleApp.root_container will handle this.
         self.completion_visualisation: CompletionVisualisation = (
-            CompletionVisualisation.NONE)
+            CompletionVisualisation.NONE
+        )
 
         # Additional state variables.
         self.repl_pane: 'Optional[ReplPane]' = None
@@ -123,7 +161,8 @@ class PwPtPythonRepl(ptpython.repl.PythonRepl):  # pylint: disable=too-many-inst
             'ptpython/layout.py#L598\n'
             '\n'
             'The installed version of ptpython may not be compatible with'
-            ' pw console; please try re-running environment setup.')
+            ' pw console; please try re-running environment setup.'
+        )
 
         try:
             # Fetch the Window's BufferControl object.
@@ -136,8 +175,12 @@ class PwPtPythonRepl(ptpython.repl.PythonRepl):  # pylint: disable=too-many-inst
             #             [create_python_input_window()] + extra_body
             #           ), ...
             ptpython_buffer_control = (
-                self.ptpython_layout.root_container.children[0].children[0].
-                children[0].content.children[0].content)
+                self.ptpython_layout.root_container.children[0]  # type: ignore
+                .children[0]
+                .children[0]
+                .content.children[0]
+                .content
+            )
             # This should be a BufferControl instance
             if not isinstance(ptpython_buffer_control, BufferControl):
                 raise MissingPtpythonBufferControl(error_message)
@@ -160,14 +203,12 @@ class PwPtPythonRepl(ptpython.repl.PythonRepl):  # pylint: disable=too-many-inst
 
     def _save_result(self, formatted_text):
         """Save the last repl execution result."""
-        unformatted_result = pw_console.text_formatting.remove_formatting(
-            formatted_text)
+        unformatted_result = remove_formatting(formatted_text)
         self._last_result = unformatted_result
 
     def _save_exception(self, formatted_text):
         """Save the last repl exception."""
-        unformatted_result = pw_console.text_formatting.remove_formatting(
-            formatted_text)
+        unformatted_result = remove_formatting(formatted_text)
         self._last_exception = unformatted_result
 
     def clear_last_result(self):
@@ -216,8 +257,7 @@ class PwPtPythonRepl(ptpython.repl.PythonRepl):  # pylint: disable=too-many-inst
             if result_object is not None:
                 # Use ptpython formatted results:
                 formatted_result = self._format_result_output(result_object)
-                result_text = pw_console.text_formatting.remove_formatting(
-                    formatted_result)
+                result_text = remove_formatting(formatted_result)
 
         # Job is finished, append the last result.
         self.repl_pane.append_result_to_executed_code(
@@ -232,10 +272,58 @@ class PwPtPythonRepl(ptpython.repl.PythonRepl):  # pylint: disable=too-many-inst
 
         # Rebuild output buffer.
         self.repl_pane.update_output_buffer(
-            'pw_ptpython_repl.user_code_complete_callback')
+            'pw_ptpython_repl.user_code_complete_callback'
+        )
 
         # Trigger a prompt_toolkit application redraw.
         self.repl_pane.application.application.invalidate()
+
+    async def _run_system_command(  # pylint: disable=no-self-use
+        self, text, stdout_proxy, _stdin_proxy
+    ) -> int:
+        """Run a shell command and print results to the repl."""
+        command = shlex.split(text)
+        returncode = None
+        env = os.environ.copy()
+        # Force colors in Pigweed subcommands and some terminal apps.
+        env['PW_USE_COLOR'] = '1'
+        env['CLICOLOR_FORCE'] = '1'
+
+        def _handle_output(output):
+            # Force tab characters to 8 spaces to prevent \t from showing in
+            # prompt_toolkit.
+            output = output.replace('\t', '        ')
+            # Strip some ANSI sequences that don't render.
+            output = output.replace('\x1b(B\x1b[m', '')
+            output = output.replace('\x1b[1m', '')
+            stdout_proxy.write(output)
+            _SYSTEM_COMMAND_LOG.info(output.rstrip())
+
+        with subprocess.Popen(
+            command,
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            errors='replace',
+        ) as proc:
+            # Print the command
+            _SYSTEM_COMMAND_LOG.info('')
+            _SYSTEM_COMMAND_LOG.info('$ %s', text)
+            while returncode is None:
+                if not proc.stdout:
+                    continue
+
+                # Check for one line and update.
+                output = proc.stdout.readline()
+                _handle_output(output)
+
+                returncode = proc.poll()
+
+            # Print any remaining lines.
+            for output in proc.stdout.readlines():
+                _handle_output(output)
+
+        return returncode
 
     async def _run_user_code(self, text, stdout_proxy, stdin_proxy):
         """Run user code and capture stdout+err.
@@ -256,7 +344,12 @@ class PwPtPythonRepl(ptpython.repl.PythonRepl):  # pylint: disable=too-many-inst
 
         # Run user repl code
         try:
-            result = await self.run_and_show_expression_async(text)
+            if _user_input_is_a_shell_command(text):
+                result = await self._run_system_command(
+                    text[1:], stdout_proxy, stdin_proxy
+                )
+            else:
+                result = await self.run_and_show_expression_async(text)
         finally:
             # Always restore original stdout and stderr
             sys.stdout = original_stdout
@@ -269,7 +362,7 @@ class PwPtPythonRepl(ptpython.repl.PythonRepl):  # pylint: disable=too-many-inst
         return {
             'stdout': stdout_contents,
             'stderr': stderr_contents,
-            'result': result
+            'result': result,
         }
 
     def _accept_handler(self, buff: Buffer) -> bool:
@@ -297,23 +390,30 @@ class PwPtPythonRepl(ptpython.repl.PythonRepl):  # pylint: disable=too-many-inst
             repl_input_text = ''
             # Override stdout
             temp_stdout.write(
-                'Error: Interactive help() is not compatible with this repl.')
+                'Error: Interactive help() is not compatible with this repl.'
+            )
+
+        # Pop open the system command log pane for shell commands.
+        if _user_input_is_a_shell_command(repl_input_text):
+            self.repl_pane.application.setup_command_runner_log_pane()
 
         # Execute the repl code in the the separate user_code thread loop.
         future = asyncio.run_coroutine_threadsafe(
             # This function will be executed in a separate thread.
             self._run_user_code(repl_input_text, temp_stdout, temp_stderr),
             # Using this asyncio event loop.
-            self.repl_pane.application.user_code_loop)  # type: ignore
+            self.repl_pane.application.user_code_loop,
+        )  # type: ignore
 
         # Save the input text and future object.
-        self.repl_pane.append_executed_code(repl_input_text, future,
-                                            temp_stdout,
-                                            temp_stderr)  # type: ignore
+        self.repl_pane.append_executed_code(
+            repl_input_text, future, temp_stdout, temp_stderr
+        )  # type: ignore
 
         # Run user_code_complete_callback() when done.
-        done_callback = functools.partial(self.user_code_complete_callback,
-                                          repl_input_text)
+        done_callback = functools.partial(
+            self.user_code_complete_callback, repl_input_text
+        )
         future.add_done_callback(done_callback)
 
         # Rebuild the parent ReplPane output buffer.

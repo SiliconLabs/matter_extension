@@ -21,18 +21,14 @@
 // In order to minimize changes from the original, this file does NOT fully
 // adhere to Pigweed's style guide.
 
-#ifndef PW_SPAN_TEST_INCLUDE
-#error "The PW_SPAN_TEST_INCLUDE macro must be defined to compile this test."
-#endif  // PW_SPAN_TEST_INCLUDE
+// NOLINTBEGIN(modernize-unary-static-assert)
 
-#ifndef PW_SPAN_TEST_NAMESPACE
-#error "The PW_SPAN_TEST_NAMESPACE macro must be defined to compile this test."
-#endif  // PW_SPAN_TEST_NAMESPACE
+#include "pw_span/span.h"
 
 #include <algorithm>
 #include <cstdint>
+#include <cstring>
 #include <memory>
-#include PW_SPAN_TEST_INCLUDE
 #include <string>
 #include <type_traits>
 #include <vector>
@@ -47,8 +43,7 @@ using ::testing::Eq;
 using ::testing::Pointwise;
 #endif  // 0
 
-namespace PW_SPAN_TEST_NAMESPACE {
-
+namespace pw {
 namespace {
 
 // constexpr implementation of std::equal's 4 argument overload.
@@ -113,7 +108,7 @@ TEST(SpanTest, DeductionGuides_ConstStdArray) {
 
 TEST(SpanTest, DeductionGuides_MutableContainerWithConstElements) {
   std::string_view string("Hello");
-  auto the_span = span(string);
+  auto the_span = span<const char>(string);
   static_assert(the_span.extent == dynamic_extent);
 
   EXPECT_STREQ("Hello", the_span.data());
@@ -151,8 +146,8 @@ class MutableStringView {
   char& operator[](size_type index) const { return data_[index]; }
   pointer data() const { return data_.data(); }
   size_type size() const { return data_.size(); }
-  iterator begin() const { return data_.begin(); }
-  iterator end() const { return data_.end(); }
+  iterator begin() const { return data_.data(); }
+  iterator end() const { return data_.data() + size(); }
 
  private:
   span<char> data_;
@@ -1653,4 +1648,6 @@ TEST(SpanTest, IteratorConversions) {
                 "Error: const iterator should not be convertible to iterator");
 }
 
-}  // namespace PW_SPAN_TEST_NAMESPACE
+// NOLINTEND(modernize-unary-static-assert)
+
+}  // namespace pw

@@ -14,6 +14,7 @@
 
 import("//build_overrides/pigweed.gni")
 
+import("$dir_pw_bloat/bloat.gni")
 import("$dir_pw_build/python.gni")
 import("$dir_pw_build/target_types.gni")
 import("$dir_pw_docgen/docs.gni")
@@ -119,6 +120,23 @@ pw_source_set("packet_parser") {
   ]
 }
 
+# A backend for pw_rpc's `system_server` that sends and receives HDLC-framed RPC
+# packets over pw_sys_io.
+#
+# Warning: This system server is polling and blocking, so it's not
+# production-ready. This exists for simplifying initial bringup/testing, and
+# should not be used in any performance-sensitive application.
+pw_source_set("hdlc_sys_io_system_server") {
+  deps = [
+    "$dir_pw_hdlc:pw_rpc",
+    "$dir_pw_hdlc:rpc_channel_output",
+    "$dir_pw_rpc/system_server:facade",
+    "$dir_pw_stream:sys_io_stream",
+    dir_pw_log,
+  ]
+  sources = [ "hdlc_sys_io_system_server.cc" ]
+}
+
 pw_test_group("tests") {
   tests = [
     ":encoder_test",
@@ -161,11 +179,9 @@ pw_python_action("generate_decoder_test") {
 }
 
 pw_test("decoder_test") {
-  deps = [
-    ":generate_decoder_test",
-    ":pw_hdlc",
-  ]
-  sources = [ "decoder_test.cc" ] + get_target_outputs(":generate_decoder_test")
+  deps = [ ":pw_hdlc" ]
+  source_gen_deps = [ ":generate_decoder_test" ]
+  sources = [ "decoder_test.cc" ]
 }
 
 pw_test("rpc_channel_test") {
@@ -184,6 +200,23 @@ pw_test("wire_packet_parser_test") {
   sources = [ "wire_packet_parser_test.cc" ]
 }
 
+pw_size_diff("size_report") {
+  title = "HDLC sizes"
+
+  binaries = [
+    {
+      target = "size_report:full"
+      base = "size_report:base"
+      label = "HDLC encode and decode"
+    },
+    {
+      target = "size_report:full_crc"
+      base = "size_report:base_crc"
+      label = "HDLC encode and decode, ignoring CRC and varint"
+    },
+  ]
+}
+
 pw_doc_group("docs") {
   sources = [
     "docs.rst",
@@ -193,4 +226,5 @@ pw_doc_group("docs") {
     "py/pw_hdlc/decode.py",
     "py/pw_hdlc/encode.py",
   ]
+  report_deps = [ ":size_report" ]
 }

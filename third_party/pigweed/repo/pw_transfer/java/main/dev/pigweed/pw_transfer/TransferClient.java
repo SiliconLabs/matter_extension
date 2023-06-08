@@ -15,7 +15,6 @@
 package dev.pigweed.pw_transfer;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import dev.pigweed.pw_log.Logger;
 import dev.pigweed.pw_rpc.MethodClient;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -30,24 +29,29 @@ public class TransferClient {
   public static final TransferParameters DEFAULT_READ_TRANSFER_PARAMETERS =
       TransferParameters.create(8192, 1024, 0);
 
-  private final int transferTimeoutMillis;
-  private final int initialTransferTimeoutMillis;
-  private final int maxRetries;
+  private final TransferTimeoutSettings settings;
   private final BooleanSupplier shouldAbortCallback;
 
   private final TransferEventHandler transferEventHandler;
   private final Thread transferEventHandlerThread;
+
+  private ProtocolVersion desiredProtocolVersion = ProtocolVersion.LEGACY;
 
   /**
    * Creates a new transfer client for sending and receiving data with pw_transfer.
    *
    * @param readMethod Method client for the pw.transfer.Transfer.Read method.
    * @param writeMethod Method client for the pw.transfer.Transfer.Write method.
-   * @param transferTimeoutMillis How long to wait for communication from the server. If the server
-   *     delays longer than this, retry up to maxRetries times.
-   * @param initialTransferTimeoutMillis How long to wait for the initial communication from the
-   *     server. If the server delays longer than this, retry up to maxRetries times.
-   * @param maxRetries How many times to retry if a communication times out.
+   * @param settings Settings for timeouts and retries.
+   */
+  public TransferClient(
+      MethodClient readMethod, MethodClient writeMethod, TransferTimeoutSettings settings) {
+    this(readMethod, writeMethod, settings, () -> false, TransferEventHandler::run);
+  }
+
+  /**
+   * Creates a new transfer client with a callback that can be used to terminate transfers.
+   *
    * @param shouldAbortCallback BooleanSupplier that returns true if a transfer should be aborted.
    */
   public TransferClient(MethodClient readMethod,
@@ -56,13 +60,28 @@ public class TransferClient {
       int initialTransferTimeoutMillis,
       int maxRetries,
       BooleanSupplier shouldAbortCallback) {
-    this.transferTimeoutMillis = transferTimeoutMillis;
-    this.initialTransferTimeoutMillis = initialTransferTimeoutMillis;
-    this.maxRetries = maxRetries;
+    this(readMethod,
+        writeMethod,
+        TransferTimeoutSettings.builder()
+            .setTimeoutMillis(transferTimeoutMillis)
+            .setInitialTimeoutMillis(initialTransferTimeoutMillis)
+            .setMaxRetries(maxRetries)
+            .build(),
+        shouldAbortCallback,
+        TransferEventHandler::run);
+  }
+
+  /** Constructor exposed to package for test use only. */
+  TransferClient(MethodClient readMethod,
+      MethodClient writeMethod,
+      TransferTimeoutSettings settings,
+      BooleanSupplier shouldAbortCallback,
+      Consumer<TransferEventHandler> runFunction) {
+    this.settings = settings;
     this.shouldAbortCallback = shouldAbortCallback;
 
     transferEventHandler = new TransferEventHandler(readMethod, writeMethod);
-    transferEventHandlerThread = new Thread(transferEventHandler::run);
+    transferEventHandlerThread = new Thread(() -> runFunction.accept(transferEventHandler));
     transferEventHandlerThread.start();
   }
 
@@ -81,13 +100,8 @@ public class TransferClient {
    */
   public ListenableFuture<Void> write(
       int resourceId, byte[] data, Consumer<TransferProgress> progressCallback) {
-    return transferEventHandler.startWriteTransferAsClient(resourceId,
-        transferTimeoutMillis,
-        initialTransferTimeoutMillis,
-        maxRetries,
-        data,
-        progressCallback,
-        shouldAbortCallback);
+    return transferEventHandler.startWriteTransferAsClient(
+        resourceId, desiredProtocolVersion, settings, data, progressCallback, shouldAbortCallback);
   }
 
   /** Reads the data from the given transfer resource ID. */
@@ -112,12 +126,25 @@ public class TransferClient {
   public ListenableFuture<byte[]> read(
       int resourceId, TransferParameters parameters, Consumer<TransferProgress> progressCallback) {
     return transferEventHandler.startReadTransferAsClient(resourceId,
-        transferTimeoutMillis,
-        initialTransferTimeoutMillis,
-        maxRetries,
+        desiredProtocolVersion,
+        settings,
         parameters,
         progressCallback,
         shouldAbortCallback);
+  }
+
+  /**
+   * Sets the protocol version to request for future transfers
+   *
+   * Does not affect ongoing transfers. Version cannot be set to UNKNOWN!
+   *
+   * @throws IllegalArgumentException if the protocol version is UNKNOWN
+   */
+  public void setProtocolVersion(ProtocolVersion version) {
+    if (version == ProtocolVersion.UNKNOWN) {
+      throw new IllegalArgumentException("Cannot set protocol version to UNKNOWN!");
+    }
+    desiredProtocolVersion = version;
   }
 
   /** Stops the background thread and waits until it terminates. */
@@ -126,7 +153,22 @@ public class TransferClient {
     transferEventHandlerThread.join();
   }
 
-  void waitUntilEventsAreProcessedForTest() {
+  // Functions for test use only.
+  // TODO(b/279808806): These could be annotated with test-only visibility.
+
+  final void waitUntilEventsAreProcessedForTest() {
     transferEventHandler.waitUntilEventsAreProcessedForTest();
+  }
+
+  final int getNextSessionIdForTest() {
+    return transferEventHandler.getNextSessionIdForTest();
+  }
+
+  final WriteTransfer getWriteTransferForTest(ListenableFuture<?> transferFuture) {
+    return (WriteTransfer) transferFuture;
+  }
+
+  final ReadTransfer getReadTransferForTest(ListenableFuture<?> transferFuture) {
+    return (ReadTransfer) transferFuture;
   }
 }

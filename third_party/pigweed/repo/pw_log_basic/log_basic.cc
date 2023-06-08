@@ -85,7 +85,7 @@ const char* GetFileBasename(const char* filename) {
 
 void (*write_log)(std::string_view) = [](std::string_view log) {
   sys_io::WriteLine(log)
-      .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+      .IgnoreError();  // TODO(b/242598609): Handle Status properly
 };
 
 }  // namespace
@@ -100,7 +100,7 @@ extern "C" void pw_Log(int level,
                        const char* message,
                        ...) {
   // Accumulate the log message in this buffer, then output it.
-  pw::StringBuffer<150> buffer;
+  pw::StringBuffer<PW_LOG_BASIC_ENTRY_SIZE> buffer;
 
   // Column: Timestamp
   // Note that this macro method defaults to a no-op.

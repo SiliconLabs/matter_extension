@@ -63,9 +63,13 @@ export PW_PROJECT_ROOT
 
 . "$PW_ROOT/pw_env_setup/util.sh"
 
+# Check environment properties
 pw_deactivate
 pw_eval_sourced "$_pw_sourced" "$_PW_BOOTSTRAP_PATH"
-pw_check_root "$PW_ROOT"
+if ! pw_check_root "$PW_ROOT"; then
+  return
+fi
+
 _PW_ACTUAL_ENVIRONMENT_ROOT="$(pw_get_env_root)"
 export _PW_ACTUAL_ENVIRONMENT_ROOT
 SETUP_SH="$_PW_ACTUAL_ENVIRONMENT_ROOT/activate.sh"
@@ -77,7 +81,7 @@ SETUP_SH="$_PW_ACTUAL_ENVIRONMENT_ROOT/activate.sh"
 if [ "$(basename "$_PW_BOOTSTRAP_PATH")" = "bootstrap.sh" ] || \
   [ ! -f "$SETUP_SH" ] || \
   [ ! -s "$SETUP_SH" ]; then
-  pw_bootstrap --shell-file "$SETUP_SH" --install-dir "$_PW_ACTUAL_ENVIRONMENT_ROOT" --config-file "$PW_ROOT/pw_env_setup/config.json"
+  pw_bootstrap --shell-file "$SETUP_SH" --install-dir "$_PW_ACTUAL_ENVIRONMENT_ROOT"
   pw_finalize bootstrap "$SETUP_SH"
 else
   pw_activate
@@ -90,3 +94,5 @@ unset SETUP_SH
 unset _bootstrap_abspath
 
 pw_cleanup
+
+git -C "$PW_ROOT" config blame.ignoreRevsFile .git-blame-ignore-revs

@@ -1,0 +1,17 @@
+id: matter_wstk_no_leds
+label: WSTK LED Stub 
+description: Stub LED implementation for boards that don't support LED
+package: "Matter"
+category: Platform
+quality: production
+
+provides:
+  - name: matter_wstk_no_leds
+include:
+  - path: examples/platform/silabs
+
+source:
+  - path: examples/platform/silabs/LEDWidget.cpp
+define:
+  - name: MATTER_GSDK_NO_LED
+    value: "1"

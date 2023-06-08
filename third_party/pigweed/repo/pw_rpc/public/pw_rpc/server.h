@@ -18,6 +18,7 @@
 
 #include "pw_containers/intrusive_list.h"
 #include "pw_rpc/channel.h"
+#include "pw_rpc/internal/call.h"
 #include "pw_rpc/internal/channel.h"
 #include "pw_rpc/internal/endpoint.h"
 #include "pw_rpc/internal/lock.h"
@@ -32,6 +33,14 @@ namespace pw::rpc {
 
 class Server : public internal::Endpoint {
  public:
+  // If dynamic allocation is supported, it is not necessary to preallocate a
+  // channels list.
+#if PW_RPC_DYNAMIC_ALLOCATION
+  _PW_RPC_CONSTEXPR Server() = default;
+#endif  // PW_RPC_DYNAMIC_ALLOCATION
+
+  // Creates a client that uses a set of RPC channels. Channels can be shared
+  // between multiple clients and servers.
   _PW_RPC_CONSTEXPR Server(span<Channel> channels) : Endpoint(channels) {}
 
   // Registers one or more services with the server. This should not be called
@@ -44,7 +53,7 @@ class Server : public internal::Endpoint {
   template <typename... OtherServices>
   void RegisterService(Service& service, OtherServices&... services)
       PW_LOCKS_EXCLUDED(internal::rpc_lock()) {
-    internal::LockGuard lock(internal::rpc_lock());
+    internal::RpcLockGuard lock;
     services_.push_front(service);  // Register the first service
 
     // Register any additional services by expanding the parameter pack. This
@@ -52,11 +61,29 @@ class Server : public internal::Endpoint {
     (services_.push_front(services), ...);
   }
 
+  // Returns whether a service is registered.
+  //
+  // Calling RegisterService with a registered service will assert. So depending
+  // on your logic you might want to check if a service is currently registered.
+  bool IsServiceRegistered(const Service& service) const
+      PW_LOCKS_EXCLUDED(internal::rpc_lock()) {
+    internal::RpcLockGuard lock;
+
+    for (const Service& svc : services_) {
+      if (&svc == &service) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   template <typename... OtherServices>
   void UnregisterService(Service& service, OtherServices&... services)
       PW_LOCKS_EXCLUDED(internal::rpc_lock()) {
-    internal::LockGuard lock(internal::rpc_lock());
+    internal::rpc_lock().lock();
     UnregisterServiceLocked(service, static_cast<Service&>(services)...);
+    CleanUpCalls();
   }
 
   // Processes an RPC packet. The packet may contain an RPC request or a control
@@ -67,24 +94,13 @@ class Server : public internal::Endpoint {
   //   DATA_LOSS - Failed to decode the packet.
   //   INVALID_ARGUMENT - The packet is intended for a client, not a server.
   //   UNAVAILABLE - No RPC channel with the requested ID was found.
-  //
-  // ProcessPacket optionally accepts a ChannelOutput as a second argument. If
-  // provided, the server respond on that interface if an unknown channel is
-  // requested.
   Status ProcessPacket(ConstByteSpan packet_data)
-      PW_LOCKS_EXCLUDED(internal::rpc_lock()) {
-    return ProcessPacket(packet_data, nullptr);
-  }
-  Status ProcessPacket(ConstByteSpan packet_data, ChannelOutput& interface)
-      PW_LOCKS_EXCLUDED(internal::rpc_lock()) {
-    return ProcessPacket(packet_data, &interface);
-  }
+      PW_LOCKS_EXCLUDED(internal::rpc_lock());
 
  private:
   friend class internal::Call;
-  friend class ClientServer;
 
-  // Give call classes access to OpenContext.
+  // Give call classes access to OpenCall.
   friend class RawServerReaderWriter;
   friend class RawServerWriter;
   friend class RawServerReader;
@@ -108,16 +124,23 @@ class Server : public internal::Endpoint {
   template <typename>
   friend class PwpbUnaryResponder;
 
-  // Creates a call context for a particular RPC. Unlike the CallContext
-  // constructor, this function checks the type of RPC at compile time.
-  template <auto kMethod,
+  // Opens a call object for an unrequested RPC. Calls created with OpenCall
+  // use a special call ID and will adopt the call ID from the first packet for
+  // their channel, service, and method. Only one call object may be opened in
+  // this fashion at a time.
+  //
+  // This function checks the type of RPC at compile time.
+  template <typename CallType,
+            auto kMethod,
             MethodType kExpected,
             typename ServiceImpl,
             typename MethodImpl>
-  internal::CallContext OpenContext(uint32_t channel_id,
-                                    ServiceImpl& service,
-                                    const MethodImpl& method)
-      PW_EXCLUSIVE_LOCKS_REQUIRED(internal::rpc_lock()) {
+  [[nodiscard]] CallType OpenCall(uint32_t channel_id,
+                                  ServiceImpl& service,
+                                  const MethodImpl& method)
+      PW_LOCKS_EXCLUDED(internal::rpc_lock()) {
+    internal::rpc_lock().lock();
+
     using Info = internal::MethodInfo<kMethod>;
     if constexpr (kExpected == MethodType::kUnary) {
       static_assert(
@@ -137,39 +160,41 @@ class Server : public internal::Endpoint {
                     "streaming RPCs.");
     }
 
-    // Unrequested RPCs always use 0 as the call ID. When an actual request is
-    // sent, the call will be replaced with its real ID.
-    constexpr uint32_t kOpenCallId = 0;
-
-    return internal::CallContext(
-        *this, channel_id, service, method, kOpenCallId);
+    CallType call(internal::CallContext(
+                      *this, channel_id, service, method, internal::kOpenCallId)
+                      .ClaimLocked());
+    CleanUpCalls();
+    return call;
   }
-
-  Status ProcessPacket(ConstByteSpan packet_data, ChannelOutput* interface)
-      PW_LOCKS_EXCLUDED(internal::rpc_lock());
 
   std::tuple<Service*, const internal::Method*> FindMethod(
       const internal::Packet& packet)
       PW_EXCLUSIVE_LOCKS_REQUIRED(internal::rpc_lock());
 
+  void HandleCompletionRequest(const internal::Packet& packet,
+                               internal::Channel& channel,
+                               IntrusiveList<internal::Call>::iterator call)
+      const PW_UNLOCK_FUNCTION(internal::rpc_lock());
+
   void HandleClientStreamPacket(const internal::Packet& packet,
                                 internal::Channel& channel,
-                                internal::ServerCall* call) const
-      PW_UNLOCK_FUNCTION(internal::rpc_lock());
+                                IntrusiveList<internal::Call>::iterator call)
+      const PW_UNLOCK_FUNCTION(internal::rpc_lock());
 
   template <typename... OtherServices>
   void UnregisterServiceLocked(Service& service, OtherServices&... services)
       PW_EXCLUSIVE_LOCKS_REQUIRED(internal::rpc_lock()) {
     services_.remove(service);
-    AbortCallsForService(service);
-
     UnregisterServiceLocked(services...);
+    AbortCallsForService(service);
   }
 
   void UnregisterServiceLocked() {}  // Base case; nothing left to do.
 
   // Remove these internal::Endpoint functions from the public interface.
   using Endpoint::active_call_count;
+  using Endpoint::ClaimLocked;
+  using Endpoint::CleanUpCalls;
   using Endpoint::GetInternalChannel;
 
   IntrusiveList<Service> services_ PW_GUARDED_BY(internal::rpc_lock());

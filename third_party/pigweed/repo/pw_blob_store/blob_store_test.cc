@@ -41,8 +41,7 @@ class BlobStoreTest : public ::testing::Test {
   BlobStoreTest() : flash_(kFlashAlignment), partition_(&flash_) {}
 
   void InitFlashTo(span<const std::byte> contents) {
-    partition_.Erase()
-        .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+    ASSERT_EQ(OkStatus(), partition_.Erase());
     std::memcpy(flash_.buffer().data(), contents.data(), contents.size());
   }
 
@@ -54,8 +53,7 @@ class BlobStoreTest : public ::testing::Test {
     std::memset(source_buffer_.data(),
                 static_cast<int>(flash_.erased_memory_content()),
                 source_buffer_.size());
-    rng.Get(span(source_buffer_).first(init_size_bytes))
-        .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+    rng.Get(span(source_buffer_).first(init_size_bytes));
   }
 
   void InitSourceBufferToFill(char fill,
@@ -161,8 +159,8 @@ class BlobStoreTest : public ::testing::Test {
 };
 
 TEST_F(BlobStoreTest, Init_Ok) {
-  // TODO: Do init test with flash/kvs explicitly in the different possible
-  // entry states.
+  // TODO(davidrogers): Do init test with flash/kvs explicitly in the different
+  // possible entry states.
   constexpr size_t kBufferSize = 256;
   BlobStoreBuffer<kBufferSize> blob(
       "Blob_OK", partition_, nullptr, kvs::TestKvs(), kBufferSize);
@@ -570,7 +568,7 @@ TEST_F(BlobStoreTest, Discard) {
 
   kvs::ChecksumCrc16 checksum;
 
-  // TODO: Do this test with flash/kvs in the different entry state
+  // TODO(davidrogers): Do this test with flash/kvs in the different entry state
   // combinations.
 
   constexpr size_t kBufferSize = 256;

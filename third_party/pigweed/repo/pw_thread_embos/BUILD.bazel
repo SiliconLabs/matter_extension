@@ -24,14 +24,17 @@ licenses(["notice"])
 pw_cc_library(
     name = "id_headers",
     hdrs = [
+        "id_public_overrides/pw_thread_backend/id_inline.h",
+        "id_public_overrides/pw_thread_backend/id_native.h",
         "public/pw_thread_embos/id_inline.h",
         "public/pw_thread_embos/id_native.h",
-        "public_overrides/pw_thread_backend/id_inline.h",
-        "public_overrides/pw_thread_backend/id_native.h",
     ],
     includes = [
+        "id_public_overrides",
         "public",
-        "public_overrides",
+    ],
+    target_compatible_with = [
+        "//pw_build/constraints/rtos:embos",
     ],
 )
 
@@ -49,11 +52,11 @@ pw_cc_library(
     name = "sleep_headers",
     hdrs = [
         "public/pw_thread_embos/sleep_inline.h",
-        "public_overrides/pw_thread_backend/sleep_inline.h",
+        "sleep_public_overrides/pw_thread_backend/sleep_inline.h",
     ],
     includes = [
         "public",
-        "public_overrides",
+        "sleep_public_overrides",
     ],
     deps = [
         "//pw_chrono:system_clock",
@@ -85,18 +88,18 @@ pw_cc_library(
         "public/pw_thread_embos/options.h",
         "public/pw_thread_embos/thread_inline.h",
         "public/pw_thread_embos/thread_native.h",
-        "public_overrides/pw_thread_backend/thread_inline.h",
-        "public_overrides/pw_thread_backend/thread_native.h",
+        "thread_public_overrides/pw_thread_backend/thread_inline.h",
+        "thread_public_overrides/pw_thread_backend/thread_native.h",
     ],
     includes = [
         "public",
-        "public_overrides",
+        "thread_public_overrides",
     ],
     deps = [
         ":id",
         "//pw_assert",
         "//pw_string",
-        "//pw_thread:thread_headers",
+        "//pw_thread:thread_facade",
     ],
     # TODO(b/234876414): This should depend on embOS but our third parties
     # currently do not have Bazel support.
@@ -121,6 +124,9 @@ pw_cc_library(
     srcs = [
         "test_threads.cc",
     ],
+    includes = ["public"],
+    # TODO(b/260637734): This target doesn't build
+    tags = ["manual"],
     deps = [
         "//pw_chrono:system_clock",
         "//pw_thread:sleep",
@@ -133,11 +139,11 @@ pw_cc_library(
     name = "yield_headers",
     hdrs = [
         "public/pw_thread_embos/yield_inline.h",
-        "public_overrides/pw_thread_backend/yield_inline.h",
+        "yield_public_overrides/pw_thread_backend/yield_inline.h",
     ],
     includes = [
         "public",
-        "public_overrides",
+        "yield_public_overrides",
     ],
     # TODO(b/234876414): This should depend on embOS but our third parties
     # currently do not have Bazel support.
@@ -159,6 +165,9 @@ pw_cc_library(
     hdrs = [
         "public/pw_thread_embos/util.h",
     ],
+    includes = ["public"],
+    # TODO(b/260637734): This target doesn't build
+    tags = ["manual"],
     deps = [
         "//pw_function",
         "//pw_status",
@@ -175,6 +184,9 @@ pw_cc_library(
     hdrs = [
         "public/pw_thread_embos/snapshot.h",
     ],
+    includes = ["public"],
+    # TODO(b/260637734): This target doesn't build
+    tags = ["manual"],
     deps = [
         ":util",
         "//pw_bytes",
@@ -182,7 +194,6 @@ pw_cc_library(
         "//pw_log",
         "//pw_protobuf",
         "//pw_status",
-        "//pw_thread:protos",
         "//pw_thread:snapshot",
     ],
     # TODO(b/234876414): This should depend on embOS but our third parties

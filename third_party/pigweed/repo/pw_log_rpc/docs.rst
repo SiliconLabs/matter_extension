@@ -28,9 +28,8 @@ Set up the :ref:`module-pw_log_tokenized` log backend.
 3. Connect the tokenized logging handler to the MultiSink
 ---------------------------------------------------------
 Create a :ref:`MultiSink <module-pw_multisink>` instance to buffer log entries.
-Then, make the log backend handler,
-``pw_tokenizer_HandleEncodedMessageWithPayload``, encode log entries in the
-``log::LogEntry`` format, and add them to the ``MultiSink``.
+Then, make the log backend handler, :c:func:`pw_log_tokenized_HandleLog`, encode
+log entries in the ``log::LogEntry`` format, and add them to the ``MultiSink``.
 
 4. Create log drains and filters
 --------------------------------
@@ -104,11 +103,17 @@ out if logs were dropped during transmission.
 RPC log service
 ---------------
 The ``LogService`` class is an RPC service that provides a way to request a log
-stream sent via RPC and configure log filters. Thus, it helps avoid using a
-different protocol for logs and RPCs over the same interface(s).
+stream sent via RPC and configure log filters. Thus, it helps avoid
+using a different protocol for logs and RPCs over the same interface(s).
 It requires a ``RpcLogDrainMap`` to assign stream writers and delegate the
 log stream flushing to the user's preferred method, as well as a ``FilterMap``
-to retrieve and modify filters.
+to retrieve and modify filters. The client may also stop streaming the logs by
+calling ``Cancel()`` or ``RequestCompletion()`` using the ``RawClientReader``
+interface. Note that ``Cancel()`` may lead to dropped logs. To prevent dropped
+logs use ``RequestCompletion()`` and enable :c:macro:`PW_RPC_REQUEST_COMPLETION_CALLBACK`
+e.g. ``-DPW_RPC_REQUEST_COMPLETION_CALLBACK=1``.
+If ``PW_RPC_REQUEST_COMPLETION_CALLBACK`` is not enabled, RequestCompletion()
+call will not stop the logging stream.
 
 RpcLogDrain
 -----------
@@ -366,7 +371,6 @@ log drains and filters are set up.
   #include "pw_sync/interrupt_spin_lock.h"
   #include "pw_sync/lock_annotations.h"
   #include "pw_sync/mutex.h"
-  #include "pw_tokenizer/tokenize_to_global_handler_with_payload.h"
 
   namespace foo::log {
   namespace {
@@ -418,8 +422,8 @@ log drains and filters are set up.
   };
   pw::log_rpc::FilterMap filter_map(filters);
 
-  extern "C" void pw_tokenizer_HandleEncodedMessageWithPayload(
-      pw_tokenizer_Payload metadata, const uint8_t message[], size_t size_bytes) {
+  extern "C" void pw_log_tokenized_HandleLog(
+      uint32_t metadata, const uint8_t message[], size_t size_bytes) {
     int64_t timestamp =
         pw::chrono::SystemClock::now().time_since_epoch().count();
     std::lock_guard lock(log_encode_lock);

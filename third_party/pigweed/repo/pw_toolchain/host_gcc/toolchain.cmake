@@ -16,12 +16,18 @@
 # Regardless of whether it's set or not the following include will ensure it is.
 include(${CMAKE_CURRENT_LIST_DIR}/../../pw_build/pigweed.cmake)
 
+include($ENV{PW_ROOT}/pw_assert/backend.cmake)
+include($ENV{PW_ROOT}/pw_chrono/backend.cmake)
+include($ENV{PW_ROOT}/pw_log/backend.cmake)
+include($ENV{PW_ROOT}/pw_perf_test/backend.cmake)
+include($ENV{PW_ROOT}/pw_rpc/system_server/backend.cmake)
+include($ENV{PW_ROOT}/pw_sync/backend.cmake)
+include($ENV{PW_ROOT}/pw_sys_io/backend.cmake)
+include($ENV{PW_ROOT}/pw_thread/backend.cmake)
+include($ENV{PW_ROOT}/pw_trace/backend.cmake)
+
 set(CMAKE_C_COMPILER gcc)
 set(CMAKE_CXX_COMPILER g++)
-
-# TODO(b/235273743): set up this facade in CMake
-# Use logging-based test output on host.
-# pw_set_backend(pw_unit_test.main pw_unit_test.logging_main)
 
 # Configure backend for assert facade.
 pw_set_backend(pw_assert.check pw_assert.print_and_abort_check_backend)
@@ -53,13 +59,16 @@ pw_set_backend(pw_rpc.system_server targets.host.system_rpc_server)
 pw_set_backend(pw_chrono.system_clock pw_chrono_stl.system_clock)
 pw_set_backend(pw_chrono.system_timer pw_chrono_stl.system_timer)
 
+# Configure backend for pw_perf_test's facade.
+pw_perf_test(pw_perf_test.timer pw_perf_test.chrono_timer)
+
 # Configure backends for pw_thread's facades.
 pw_set_backend(pw_thread.id pw_thread_stl.id)
 pw_set_backend(pw_thread.yield pw_thread_stl.yield)
 pw_set_backend(pw_thread.sleep pw_thread_stl.sleep)
 pw_set_backend(pw_thread.thread pw_thread_stl.thread)
 
-# TODO: Migrate this to match GN's tokenized trace setup.
+# TODO(ewout): Migrate this to match GN's tokenized trace setup.
 pw_set_backend(pw_trace pw_trace.null)
 
 set(pw_build_WARNINGS pw_build.strict_warnings pw_build.extra_strict_warnings

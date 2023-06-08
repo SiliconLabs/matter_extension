@@ -18,13 +18,17 @@
 #include <assert.h>
 #include <stddef.h>
 
+#include "pw_tokenizer/tokenize.h"
 #include "pw_tokenizer_private/argument_types_test.h"
 
 #ifdef __cplusplus
 #error "This is a test of C code and must be compiled as C, not C++."
 #endif  // __cplusplus
 
-struct FakeType {};  // stand-in type for pointer argument type test
+// Stand-in type for pointer argument type test
+struct FakeType {
+  char unused;
+};
 
 // Check each relevant type mapping using static_asserts.
 #define CHECK_TYPE(c_type, enum_type)                     \

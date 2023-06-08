@@ -122,12 +122,3 @@ pw_cc_library(
         "//pw_sync:mutex",
     ],
 )
-
-pw_cc_test(
-    name = "linux_spi_test",
-    srcs = ["linux_spi_test.cc"],
-    deps = [
-        ":device",
-        ":linux_spi",
-    ],
-)

@@ -24,6 +24,17 @@
 
 #include <platform/internal/CHIPDeviceLayerInternal.h>
 
+#include <arpa/inet.h>
+#include <dirent.h>
+#include <errno.h>
+#include <linux/netlink.h>
+#include <linux/rtnetlink.h>
+#include <net/if.h>
+#include <netinet/in.h>
+#include <unistd.h>
+
+#include <mutex>
+
 #include <app-common/zap-generated/enums.h>
 #include <app-common/zap-generated/ids/Events.h>
 #include <lib/support/CHIPMem.h>
@@ -35,22 +46,6 @@
 #include <platform/PlatformManager.h>
 #include <platform/internal/GenericPlatformManagerImpl_POSIX.ipp>
 
-#include <thread>
-
-#include <arpa/inet.h>
-#include <dirent.h>
-#include <errno.h>
-#include <linux/netlink.h>
-#include <linux/rtnetlink.h>
-#include <net/if.h>
-#include <netinet/in.h>
-#include <unistd.h>
-
-#if __GLIBC__ == 2 && __GLIBC_MINOR__ < 30
-#include <sys/syscall.h>
-#define gettid() syscall(SYS_gettid)
-#endif
-
 using namespace ::chip::app::Clusters;
 
 namespace chip {
@@ -60,41 +55,32 @@ PlatformManagerImpl PlatformManagerImpl::sInstance;
 
 namespace {
 
-#if CHIP_WITH_GIO
-void GDBus_Thread()
+#if CHIP_DEVICE_CONFIG_WITH_GLIB_MAIN_LOOP
+void * GLibMainLoopThread(void * loop)
 {
-    GMainLoop * loop = g_main_loop_new(nullptr, false);
-
-    g_main_loop_run(loop);
-    g_main_loop_unref(loop);
+    g_main_loop_run(static_cast<GMainLoop *>(loop));
+    return nullptr;
 }
 #endif
-} // namespace
 
 #if CHIP_DEVICE_CONFIG_ENABLE_WIFI
-void PlatformManagerImpl::WiFIIPChangeListener()
+
+gboolean WiFiIPChangeListener(GIOChannel * ch, GIOCondition /* condition */, void * /* userData */)
 {
-    int sock;
-    if ((sock = socket(PF_NETLINK, SOCK_RAW, NETLINK_ROUTE)) == -1)
-    {
-        ChipLogError(DeviceLayer, "Failed to init netlink socket for ip addresses.");
-        return;
-    }
 
-    struct sockaddr_nl addr;
-    memset(&addr, 0, sizeof(addr));
-    addr.nl_family = AF_NETLINK;
-    addr.nl_groups = RTMGRP_IPV4_IFADDR;
-
-    if (bind(sock, (struct sockaddr *) &addr, sizeof(addr)) == -1)
-    {
-        ChipLogError(DeviceLayer, "Failed to bind netlink socket for ip addresses.");
-        return;
-    }
-
-    ssize_t len;
     char buffer[4096];
-    for (struct nlmsghdr * header = reinterpret_cast<struct nlmsghdr *>(buffer); (len = recv(sock, header, sizeof(buffer), 0)) > 0;)
+    auto * header = reinterpret_cast<struct nlmsghdr *>(buffer);
+    ssize_t len;
+
+    if ((len = recv(g_io_channel_unix_get_fd(ch), buffer, sizeof(buffer), 0)) == -1)
+    {
+        if (errno == EINTR || errno == EAGAIN)
+            return G_SOURCE_CONTINUE;
+        ChipLogError(DeviceLayer, "Error reading from netlink socket: %d", errno);
+        return G_SOURCE_CONTINUE;
+    }
+
+    if (len > 0)
     {
         for (struct nlmsghdr * messageHeader = header;
              (NLMSG_OK(messageHeader, static_cast<uint32_t>(len))) && (messageHeader->nlmsg_type != NLMSG_DONE);
@@ -154,23 +140,88 @@ void PlatformManagerImpl::WiFIIPChangeListener()
             }
         }
     }
+    else
+    {
+        ChipLogError(DeviceLayer, "EOF on netlink socket");
+        return G_SOURCE_REMOVE;
+    }
+
+    return G_SOURCE_CONTINUE;
 }
+
+// The temporary hack for getting IP address change on linux for network provisioning in the rendezvous session.
+// This should be removed or find a better place once we deprecate the rendezvous session.
+CHIP_ERROR RunWiFiIPChangeListener()
+{
+    int sock;
+    if ((sock = socket(PF_NETLINK, SOCK_RAW, NETLINK_ROUTE)) == -1)
+    {
+        ChipLogError(DeviceLayer, "Failed to init netlink socket for IP addresses: %d", errno);
+        return CHIP_ERROR_INTERNAL;
+    }
+
+    struct sockaddr_nl addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.nl_family = AF_NETLINK;
+    addr.nl_groups = RTMGRP_IPV4_IFADDR;
+
+    if (bind(sock, (struct sockaddr *) &addr, sizeof(addr)) == -1)
+    {
+        ChipLogError(DeviceLayer, "Failed to bind netlink socket for IP addresses: %d", errno);
+        close(sock);
+        return CHIP_ERROR_INTERNAL;
+    }
+
+    GIOChannel * ch = g_io_channel_unix_new(sock);
+    g_io_add_watch_full(ch, G_PRIORITY_DEFAULT, G_IO_IN, WiFiIPChangeListener, nullptr, nullptr);
+
+    g_io_channel_set_close_on_unref(ch, TRUE);
+    g_io_channel_set_encoding(ch, nullptr, nullptr);
+    g_io_channel_unref(ch);
+
+    return CHIP_NO_ERROR;
+}
+
 #endif // #if CHIP_DEVICE_CONFIG_ENABLE_WIFI
+
+} // namespace
 
 CHIP_ERROR PlatformManagerImpl::_InitChipStack()
 {
-#if CHIP_WITH_GIO
-    GError * error = nullptr;
+#if CHIP_DEVICE_CONFIG_WITH_GLIB_MAIN_LOOP
 
-    this->mpGDBusConnection = UniqueGDBusConnection(g_bus_get_sync(G_BUS_TYPE_SYSTEM, nullptr, &error));
+    mGLibMainLoop       = g_main_loop_new(nullptr, FALSE);
+    mGLibMainLoopThread = g_thread_new("gmain-matter", GLibMainLoopThread, mGLibMainLoop);
 
-    std::thread gdbusThread(GDBus_Thread);
-    gdbusThread.detach();
+    {
+        // Wait for the GLib main loop to start. It is required that the context used
+        // by the main loop is acquired before any other GLib functions are called. Otherwise,
+        // the GLibMatterContextInvokeSync() might run functions on the wrong thread.
+
+        std::unique_lock<std::mutex> lock(mGLibMainLoopCallbackIndirectionMutex);
+        GLibMatterContextInvokeData invokeData{};
+
+        auto * idleSource = g_idle_source_new();
+        g_source_set_callback(
+            idleSource,
+            [](void * userData_) {
+                auto * data = reinterpret_cast<GLibMatterContextInvokeData *>(userData_);
+                std::unique_lock<std::mutex> lock_(PlatformMgrImpl().mGLibMainLoopCallbackIndirectionMutex);
+                data->mDone = true;
+                data->mDoneCond.notify_one();
+                return G_SOURCE_REMOVE;
+            },
+            &invokeData, nullptr);
+        g_source_attach(idleSource, g_main_loop_get_context(mGLibMainLoop));
+        g_source_unref(idleSource);
+
+        invokeData.mDoneCond.wait(lock, [&invokeData]() { return invokeData.mDone; });
+    }
+
 #endif
 
 #if CHIP_DEVICE_CONFIG_ENABLE_WIFI
-    std::thread wifiIPThread(WiFIIPChangeListener);
-    wifiIPThread.detach();
+    ReturnErrorOnFailure(RunWiFiIPChangeListener());
 #endif
 
     // Initialize the configuration system.
@@ -212,14 +263,56 @@ void PlatformManagerImpl::_Shutdown()
     }
 
     Internal::GenericPlatformManagerImpl_POSIX<PlatformManagerImpl>::_Shutdown();
+
+#if CHIP_DEVICE_CONFIG_WITH_GLIB_MAIN_LOOP
+    g_main_loop_quit(mGLibMainLoop);
+    g_thread_join(mGLibMainLoopThread);
+    g_main_loop_unref(mGLibMainLoop);
+#endif
 }
 
-#if CHIP_WITH_GIO
-GDBusConnection * PlatformManagerImpl::GetGDBusConnection()
+#if CHIP_DEVICE_CONFIG_WITH_GLIB_MAIN_LOOP
+CHIP_ERROR PlatformManagerImpl::_GLibMatterContextInvokeSync(CHIP_ERROR (*func)(void *), void * userData)
 {
-    return this->mpGDBusConnection.get();
+    // Because of TSAN false positives, we need to use a mutex to synchronize access to all members of
+    // the GLibMatterContextInvokeData object (including constructor and destructor). This is a temporary
+    // workaround until TSAN-enabled GLib will be used in our CI.
+    std::unique_lock<std::mutex> lock(mGLibMainLoopCallbackIndirectionMutex);
+
+    GLibMatterContextInvokeData invokeData{ func, userData };
+
+    lock.unlock();
+
+    g_main_context_invoke_full(
+        g_main_loop_get_context(mGLibMainLoop), G_PRIORITY_HIGH_IDLE,
+        [](void * userData_) {
+            auto * data = reinterpret_cast<GLibMatterContextInvokeData *>(userData_);
+
+            // XXX: Temporary workaround for TSAN false positives.
+            std::unique_lock<std::mutex> lock_(PlatformMgrImpl().mGLibMainLoopCallbackIndirectionMutex);
+
+            auto mFunc     = data->mFunc;
+            auto mUserData = data->mFuncUserData;
+
+            lock_.unlock();
+            auto result = mFunc(mUserData);
+            lock_.lock();
+
+            data->mDone       = true;
+            data->mFuncResult = result;
+            data->mDoneCond.notify_one();
+
+            return G_SOURCE_REMOVE;
+        },
+        &invokeData, nullptr);
+
+    lock.lock();
+
+    invokeData.mDoneCond.wait(lock, [&invokeData]() { return invokeData.mDone; });
+
+    return invokeData.mFuncResult;
 }
-#endif
+#endif // CHIP_DEVICE_CONFIG_WITH_GLIB_MAIN_LOOP
 
 } // namespace DeviceLayer
 } // namespace chip

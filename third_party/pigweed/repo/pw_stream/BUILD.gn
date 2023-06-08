@@ -46,7 +46,11 @@ pw_source_set("pw_stream") {
 pw_source_set("socket_stream") {
   public_configs = [ ":public_include_path" ]
   public_deps = [ ":pw_stream" ]
-  deps = [ dir_pw_log ]
+  deps = [
+    dir_pw_assert,
+    dir_pw_log,
+    dir_pw_string,
+  ]
   sources = [ "socket_stream.cc" ]
   public = [ "public/pw_stream/socket_stream.h" ]
 }
@@ -87,6 +91,7 @@ pw_test_group("tests") {
   tests = [
     ":interval_reader_test",
     ":memory_stream_test",
+    ":null_stream_test",
     ":seek_test",
     ":stream_test",
   ]
@@ -94,11 +99,21 @@ pw_test_group("tests") {
   if (defined(pw_toolchain_SCOPE.is_host_toolchain) &&
       pw_toolchain_SCOPE.is_host_toolchain) {
     tests += [ ":std_file_stream_test" ]
+
+    # socket_stream_test doesn't compile on Windows.
+    if (host_os != "win") {
+      tests += [ ":socket_stream_test" ]
+    }
   }
 }
 
 pw_test("memory_stream_test") {
   sources = [ "memory_stream_test.cc" ]
+  deps = [ ":pw_stream" ]
+}
+
+pw_test("null_stream_test") {
+  sources = [ "null_stream_test.cc" ]
   deps = [ ":pw_stream" ]
 }
 
@@ -129,4 +144,9 @@ pw_test("stream_test") {
 pw_test("interval_reader_test") {
   sources = [ "interval_reader_test.cc" ]
   deps = [ ":interval_reader" ]
+}
+
+pw_test("socket_stream_test") {
+  sources = [ "socket_stream_test.cc" ]
+  deps = [ ":socket_stream" ]
 }

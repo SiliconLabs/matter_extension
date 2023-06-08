@@ -103,6 +103,17 @@ pw_source_set("googletest_style_event_handler") {
   sources = [ "googletest_style_event_handler.cc" ]
 }
 
+pw_source_set("googletest_handler_adapter") {
+  public_configs = [ ":public_include_path" ]
+  public_deps = [
+    ":logging_event_handler",
+    "$dir_pw_third_party/googletest",
+    dir_pw_preprocessor,
+  ]
+  public = [ "public/pw_unit_test/googletest_handler_adapter.h" ]
+  sources = [ "googletest_handler_adapter.cc" ]
+}
+
 # Library providing an event handler which outputs human-readable text.
 pw_source_set("simple_printing_event_handler") {
   public_deps = [
@@ -152,11 +163,19 @@ pw_source_set("logging_event_handler") {
   sources = [ "logging_event_handler.cc" ]
 }
 
+# Provides logging to either the light framework or an external GoogleTest.
+group("logging") {
+  public_deps = [ ":logging_event_handler" ]
+  deps = []
+  if (pw_unit_test_GOOGLETEST_BACKEND != "$dir_pw_unit_test:light") {
+    deps += [ ":googletest_handler_adapter" ]
+  }
+}
+
 pw_source_set("logging_main") {
   deps = [
-    ":logging_event_handler",
+    ":logging",
     ":pw_unit_test",
-    "$dir_pw_sys_io",
   ]
   sources = [ "logging_main.cc" ]
 }
@@ -172,6 +191,7 @@ config("rpc_service_backend_gtest") {
 pw_source_set("rpc_service") {
   public_configs = [ ":public_include_path" ]
   public_deps = [
+    ":event_handler",
     ":pw_unit_test",
     ":unit_test_proto.pwpb",
     ":unit_test_proto.raw_rpc",
@@ -229,7 +249,31 @@ pw_doc_group("docs") {
   sources = [ "docs.rst" ]
 }
 
+pw_test("metadata_only_test") {
+  extra_metadata = {
+    extra_key = "extra_value"
+  }
+}
+
+# pw_test_group produces the metadata file for its tests.
+pw_test_group("metadata_only_group") {
+  tests = [ ":metadata_only_test" ]
+}
+
+pw_python_script("test_group_metadata_test") {
+  sources = [ "py/test_group_metadata_test.py" ]
+  action = {
+    args = [
+      "--stamp-path",
+      "<TARGET_FILE(:metadata_only_group)>",
+    ]
+    deps = [ ":metadata_only_group" ]
+    stamp = true
+  }
+}
+
 pw_test("framework_test") {
+  enable_if = pw_unit_test_GOOGLETEST_BACKEND == "$dir_pw_unit_test:light"
   sources = [ "framework_test.cc" ]
   deps = [ dir_pw_assert ]
 }
@@ -244,6 +288,7 @@ pw_static_library("tests_in_archive") {
 }
 
 pw_test("static_library_support_test") {
+  enable_if = pw_unit_test_GOOGLETEST_BACKEND == "$dir_pw_unit_test:light"
   sources = [ "static_library_support_test.cc" ]
   deps = [
     ":static_library_support",

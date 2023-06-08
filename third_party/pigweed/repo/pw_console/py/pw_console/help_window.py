@@ -17,7 +17,7 @@ import functools
 import importlib.resources
 import inspect
 import logging
-from typing import Dict, TYPE_CHECKING
+from typing import Dict, Optional, TYPE_CHECKING
 
 from prompt_toolkit.document import Document
 from prompt_toolkit.filters import Condition
@@ -37,12 +37,21 @@ from prompt_toolkit.widgets import Box, TextArea
 
 from pygments.lexers.markup import RstLexer  # type: ignore
 from pygments.lexers.data import YamlLexer  # type: ignore
-import pw_console.widgets.mouse_handlers
+
+from pw_console.style import (
+    get_pane_indicator,
+)
+from pw_console.widgets import (
+    mouse_handlers,
+    to_keybind_indicator,
+)
 
 if TYPE_CHECKING:
     from pw_console.console_app import ConsoleApp
 
 _LOG = logging.getLogger(__package__)
+
+_PW_CONSOLE_MODULE = 'pw_console'
 
 
 def _longest_line_length(text):
@@ -78,24 +87,30 @@ class HelpWindow(ConditionalContainer):
             """Close the current dialog window."""
             self.toggle_display()
 
-        @register('help-window.copy-all', key_bindings)
-        def _copy_all(_event: KeyPressEvent) -> None:
-            """Close the current dialog window."""
-            self.copy_all_text()
+        if not self.disable_ctrl_c:
+
+            @register('help-window.copy-all', key_bindings)
+            def _copy_all(_event: KeyPressEvent) -> None:
+                """Close the current dialog window."""
+                self.copy_all_text()
 
         help_text_area.control.key_bindings = key_bindings
         return help_text_area
 
-    def __init__(self,
-                 application: 'ConsoleApp',
-                 preamble: str = '',
-                 additional_help_text: str = '',
-                 title: str = '') -> None:
+    def __init__(
+        self,
+        application: 'ConsoleApp',
+        preamble: str = '',
+        additional_help_text: str = '',
+        title: str = '',
+        disable_ctrl_c: bool = False,
+    ) -> None:
         # Dict containing key = section title and value = list of key bindings.
         self.application: 'ConsoleApp' = application
         self.show_window: bool = False
         self.help_text_sections: Dict[str, Dict] = {}
         self._pane_title: str = title
+        self.disable_ctrl_c = disable_ctrl_c
 
         # Tracks the last focused container, to enable restoring focus after
         # closing the dialog.
@@ -106,8 +121,11 @@ class HelpWindow(ConditionalContainer):
         self.additional_help_text: str = additional_help_text
         self.help_text: str = ''
 
-        self.max_additional_help_text_width: int = (_longest_line_length(
-            self.additional_help_text) if additional_help_text else 0)
+        self.max_additional_help_text_width: int = (
+            _longest_line_length(self.additional_help_text)
+            if additional_help_text
+            else 0
+        )
         self.max_description_width: int = 0
         self.max_key_list_width: int = 0
         self.max_line_length: int = 0
@@ -115,35 +133,47 @@ class HelpWindow(ConditionalContainer):
         self.help_text_area: TextArea = self._create_help_text_area()
 
         close_mouse_handler = functools.partial(
-            pw_console.widgets.mouse_handlers.on_click, self.toggle_display)
+            mouse_handlers.on_click, self.toggle_display
+        )
         copy_mouse_handler = functools.partial(
-            pw_console.widgets.mouse_handlers.on_click, self.copy_all_text)
+            mouse_handlers.on_click, self.copy_all_text
+        )
 
         toolbar_padding = 1
         toolbar_title = ' ' * toolbar_padding
         toolbar_title += self.pane_title()
 
         buttons = []
+        if not self.disable_ctrl_c:
+            buttons.extend(
+                to_keybind_indicator(
+                    'Ctrl-c',
+                    'Copy All',
+                    copy_mouse_handler,
+                    base_style='class:toolbar-button-active',
+                )
+            )
+            buttons.append(('', '  '))
+
         buttons.extend(
-            pw_console.widgets.checkbox.to_keybind_indicator(
-                'Ctrl-c',
-                'Copy All',
-                copy_mouse_handler,
-                base_style='class:toolbar-button-active'))
-        buttons.append(('', '  '))
-        buttons.extend(
-            pw_console.widgets.checkbox.to_keybind_indicator(
+            to_keybind_indicator(
                 'q',
                 'Close',
                 close_mouse_handler,
-                base_style='class:toolbar-button-active'))
+                base_style='class:toolbar-button-active',
+            )
+        )
         top_toolbar = VSplit(
             [
                 Window(
                     content=FormattedTextControl(
                         # [('', toolbar_title)]
-                        functools.partial(pw_console.style.get_pane_indicator,
-                                          self, toolbar_title)),
+                        functools.partial(
+                            get_pane_indicator,
+                            self,
+                            toolbar_title,
+                        )
+                    ),
                     align=WindowAlign.LEFT,
                     dont_extend_width=True,
                 ),
@@ -162,17 +192,19 @@ class HelpWindow(ConditionalContainer):
             style='class:toolbar_active',
         )
 
-        self.container = HSplit([
-            top_toolbar,
-            Box(
-                body=DynamicContainer(lambda: self.help_text_area),
-                padding=Dimension(preferred=1, max=1),
-                padding_bottom=0,
-                padding_top=0,
-                char=' ',
-                style='class:frame.border',  # Same style used for Frame.
-            ),
-        ])
+        self.container = HSplit(
+            [
+                top_toolbar,
+                Box(
+                    body=DynamicContainer(lambda: self.help_text_area),
+                    padding=Dimension(preferred=1, max=1),
+                    padding_bottom=0,
+                    padding_top=0,
+                    char=' ',
+                    style='class:frame.border',  # Same style used for Frame.
+                ),
+            ]
+        )
 
         super().__init__(
             self.container,
@@ -196,7 +228,8 @@ class HelpWindow(ConditionalContainer):
     def copy_all_text(self):
         """Copy all text in the Python input to the system clipboard."""
         self.application.application.clipboard.set_text(
-            self.help_text_area.buffer.text)
+            self.help_text_area.buffer.text
+        )
 
     def toggle_display(self):
         """Toggle visibility of this help window."""
@@ -227,20 +260,24 @@ class HelpWindow(ConditionalContainer):
         scrollbar_width = 1
 
         desired_width = self.max_line_length + (
-            left_side_frame_and_padding_width +
-            right_side_frame_and_padding_width + scrollbar_padding +
-            scrollbar_width)
+            left_side_frame_and_padding_width
+            + right_side_frame_and_padding_width
+            + scrollbar_padding
+            + scrollbar_width
+        )
         desired_width = max(60, desired_width)
 
         window_manager_width = (
-            self.application.window_manager.current_window_manager_width)
+            self.application.window_manager.current_window_manager_width
+        )
         if not window_manager_width:
             window_manager_width = 80
         return min(desired_width, window_manager_width)
 
     def load_user_guide(self):
-        rstdoc_text = importlib.resources.read_text('pw_console.docs',
-                                                    'user_guide.rst')
+        rstdoc_text = importlib.resources.read_text(
+            f'{_PW_CONSOLE_MODULE}.docs', 'user_guide.rst'
+        )
         max_line_length = 0
         rst_text = ''
         for line in rstdoc_text.splitlines():
@@ -266,12 +303,21 @@ class HelpWindow(ConditionalContainer):
             text=content,
         )
 
-    def generate_help_text(self):
+    def set_help_text(
+        self, text: str, lexer: Optional[PygmentsLexer] = None
+    ) -> None:
+        self.help_text_area = self._create_help_text_area(
+            lexer=lexer,
+            text=text,
+        )
+        self._update_help_text_area(text)
+
+    def generate_keybind_help_text(self) -> str:
         """Generate help text based on added key bindings."""
 
         template = self.application.get_template('keybind_list.jinja')
 
-        self.help_text = template.render(
+        text = template.render(
             sections=self.help_text_sections,
             max_additional_help_text_width=self.max_additional_help_text_width,
             max_description_width=self.max_description_width,
@@ -280,14 +326,19 @@ class HelpWindow(ConditionalContainer):
             additional_help_text=self.additional_help_text,
         )
 
+        self._update_help_text_area(text)
+        return text
+
+    def _update_help_text_area(self, text: str) -> None:
+        self.help_text = text
+
         # Find the longest line in the rendered template.
         self.max_line_length = _longest_line_length(self.help_text)
 
         # Replace the TextArea content.
-        self.help_text_area.buffer.document = Document(text=self.help_text,
-                                                       cursor_position=0)
-
-        return self.help_text
+        self.help_text_area.buffer.document = Document(
+            text=self.help_text, cursor_position=0
+        )
 
     def add_custom_keybinds_help_text(self, section_name, key_bindings: Dict):
         """Add hand written key_bindings."""
@@ -319,11 +370,13 @@ class HelpWindow(ConditionalContainer):
 
             # Get the existing list of keys for this function or make a new one.
             key_list = self.help_text_sections[section_name].get(
-                description, list())
+                description, list()
+            )
 
             # Save the name of the key e.g. F1, q, ControlQ, ControlUp
             key_name = ' '.join(
-                [getattr(key, 'name', str(key)) for key in binding.keys])
+                [getattr(key, 'name', str(key)) for key in binding.keys]
+            )
             key_name = key_name.replace('Control', 'Ctrl-')
             key_name = key_name.replace('Shift', 'Shift-')
             key_name = key_name.replace('Escape ', 'Alt-')

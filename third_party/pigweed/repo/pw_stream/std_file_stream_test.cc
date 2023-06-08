@@ -90,7 +90,7 @@ class TempDir {
   std::string GetRandomSuffix() {
     pw::StringBuffer<9> random_suffix_str;
     uint32_t random_suffix_int = 0;
-    PW_ASSERT(rng_.GetInt(random_suffix_int).ok());
+    rng_.GetInt(random_suffix_int);
     PW_ASSERT(random_suffix_str.Format("%08" PRIx32, random_suffix_int).ok());
     return std::string(random_suffix_str.view());
   }
@@ -143,6 +143,8 @@ TEST_F(StdFileStreamTest, SeekAtEnd) {
   writer.Close();
 
   StdFileReader reader(TempFilename());
+  ASSERT_EQ(reader.ConservativeReadLimit(), kTestData.size());
+
   std::array<char, 3> read_buffer;
   size_t read_offset = 0;
   while (read_offset < kTestData.size()) {
@@ -156,17 +158,20 @@ TEST_F(StdFileStreamTest, SeekAtEnd) {
         as_bytes(span(kTestData)).subspan(read_offset, result.value().size());
     EXPECT_TRUE(pw::containers::Equal(result.value(), expect_window));
     read_offset += result.value().size();
+    ASSERT_EQ(reader.ConservativeReadLimit(), kTestData.size() - read_offset);
   }
   // After data has been read, do a final read to trigger EOF.
   Result<ConstByteSpan> result =
       reader.Read(as_writable_bytes(span(read_buffer)));
   EXPECT_EQ(result.status(), Status::OutOfRange());
+  ASSERT_EQ(reader.ConservativeReadLimit(), 0u);
 
   EXPECT_EQ(read_offset, kTestData.size());
 
   // Seek backwards and read again to ensure seek at EOF works.
   ASSERT_EQ(reader.Seek(-1 * read_buffer.size(), Stream::Whence::kEnd),
             OkStatus());
+  ASSERT_EQ(reader.ConservativeReadLimit(), read_buffer.size());
   result = reader.Read(as_writable_bytes(span(read_buffer)));
   EXPECT_EQ(result.status(), OkStatus());
 

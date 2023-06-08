@@ -51,6 +51,7 @@ pw_cc_library(
     deps = [
         ":pw_stream",
         "//pw_log",
+        "//pw_string",
         "//pw_sys_io",
     ],
 )
@@ -88,6 +89,15 @@ pw_cc_test(
         ":pw_stream",
         "//pw_assert",
         "//pw_status",
+        "//pw_unit_test",
+    ],
+)
+
+pw_cc_test(
+    name = "null_stream_test",
+    srcs = ["null_stream_test.cc"],
+    deps = [
+        ":pw_stream",
         "//pw_unit_test",
     ],
 )
@@ -131,6 +141,15 @@ pw_cc_test(
     srcs = ["interval_reader_test.cc"],
     deps = [
         ":interval_reader",
+        "//pw_unit_test",
+    ],
+)
+
+pw_cc_test(
+    name = "socket_stream_test",
+    srcs = ["socket_stream_test.cc"],
+    deps = [
+        ":socket_stream",
         "//pw_unit_test",
     ],
 )

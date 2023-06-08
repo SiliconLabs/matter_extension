@@ -37,16 +37,12 @@ class DeferredWriteTest : public ::testing::Test {
 
   void InitFlashToRandom(uint64_t seed) {
     random::XorShiftStarRng64 rng(seed);
-    StatusWithSize sws = rng.Get(flash_.buffer());
-    ASSERT_EQ(OkStatus(), sws.status());
-    ASSERT_EQ(sws.size(), flash_.buffer().size());
+    rng.Get(flash_.buffer());
   }
 
   void InitBufferToRandom(uint64_t seed) {
     random::XorShiftStarRng64 rng(seed);
-    StatusWithSize sws = rng.Get(buffer_);
-    ASSERT_EQ(OkStatus(), sws.status());
-    ASSERT_EQ(sws.size(), buffer_.size());
+    rng.Get(buffer_);
   }
 
   void InitBufferToFill(char fill) {
@@ -92,7 +88,7 @@ class DeferredWriteTest : public ::testing::Test {
                    static_cast<unsigned>(source.size_bytes()));
 
       ASSERT_EQ(OkStatus(), writer.Write(source.first(write_size)));
-      // TODO: Add check that the write did not go to flash yet.
+      // TODO(davidrogers): Add check that the write did not go to flash yet.
 
       source = source.subspan(write_size);
       bytes_since_flush += write_size;

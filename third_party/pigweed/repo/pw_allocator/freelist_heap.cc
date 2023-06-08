@@ -29,7 +29,7 @@ FreeListHeap::FreeListHeap(span<std::byte> region, FreeList& freelist)
       "Failed to initialize FreeListHeap region; misaligned or too small");
 
   freelist_.AddChunk(BlockToSpan(block))
-      .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+      .IgnoreError();  // TODO(b/242598609): Handle Status properly
 
   region_ = region;
   heap_stats_.total_bytes = region.size();
@@ -44,7 +44,7 @@ void* FreeListHeap::Allocate(size_t size) {
     return nullptr;
   }
   freelist_.RemoveChunk(chunk)
-      .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+      .IgnoreError();  // TODO(b/242598609): Handle Status properly
 
   Block* chunk_block = Block::FromUsableSpace(chunk.data());
 
@@ -55,7 +55,7 @@ void* FreeListHeap::Allocate(size_t size) {
   auto status = chunk_block->Split(size, &leftover);
   if (status == PW_STATUS_OK) {
     freelist_.AddChunk(BlockToSpan(leftover))
-        .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+        .IgnoreError();  // TODO(b/242598609): Handle Status properly
   }
 
   chunk_block->MarkUsed();
@@ -96,9 +96,9 @@ void FreeListHeap::Free(void* ptr) {
   if (prev != nullptr && !prev->Used()) {
     // Remove from freelist and merge
     freelist_.RemoveChunk(BlockToSpan(prev))
-        .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+        .IgnoreError();  // TODO(b/242598609): Handle Status properly
     chunk_block->MergePrev()
-        .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+        .IgnoreError();  // TODO(b/242598609): Handle Status properly
 
     // chunk_block is now invalid; prev now encompasses it.
     chunk_block = prev;
@@ -106,13 +106,13 @@ void FreeListHeap::Free(void* ptr) {
 
   if (next != nullptr && !next->Used()) {
     freelist_.RemoveChunk(BlockToSpan(next))
-        .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+        .IgnoreError();  // TODO(b/242598609): Handle Status properly
     chunk_block->MergeNext()
-        .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+        .IgnoreError();  // TODO(b/242598609): Handle Status properly
   }
   // Add back to the freelist
   freelist_.AddChunk(BlockToSpan(chunk_block))
-      .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+      .IgnoreError();  // TODO(b/242598609): Handle Status properly
 
   heap_stats_.bytes_allocated -= size_freed;
   heap_stats_.cumulative_freed += size_freed;
@@ -147,7 +147,7 @@ void* FreeListHeap::Realloc(void* ptr, size_t size) {
 
   // Do nothing and return ptr if the required memory size is smaller than
   // the current size.
-  // TODO: Currently do not support shrink of memory chunk.
+  // TODO(keir): Currently do not support shrink of memory chunk.
   if (old_size >= size) {
     return ptr;
   }
@@ -192,8 +192,8 @@ void FreeListHeap::LogHeapStats() {
   PW_LOG_INFO(" ");
 }
 
-// TODO: Add stack tracing to locate which call to the heap operation caused
-// the corruption.
+// TODO(keir): Add stack tracing to locate which call to the heap operation
+// caused the corruption.
 void FreeListHeap::InvalidFreeCrash() {
   PW_DCHECK(false, "You tried to free an invalid pointer!");
 }

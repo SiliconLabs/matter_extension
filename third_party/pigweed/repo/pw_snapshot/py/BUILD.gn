@@ -34,6 +34,7 @@ pw_python_package("pw_snapshot_metadata") {
     "..:metadata_proto.python",
   ]
   pylintrc = "$dir_pigweed/.pylintrc"
+  mypy_ini = "$dir_pigweed/.mypy.ini"
 }
 
 pw_python_package("pw_snapshot") {
@@ -52,6 +53,8 @@ pw_python_package("pw_snapshot") {
   python_deps = [
     ":pw_snapshot_metadata",
     "$dir_pw_build_info/py",
+    "$dir_pw_chrono:protos.python",
+    "$dir_pw_chrono/py",
     "$dir_pw_cpu_exception_cortex_m/py",
     "$dir_pw_symbolizer/py",
     "$dir_pw_thread:protos.python",
@@ -60,6 +63,7 @@ pw_python_package("pw_snapshot") {
     "..:snapshot_proto.python",
   ]
   pylintrc = "$dir_pigweed/.pylintrc"
+  mypy_ini = "$dir_pigweed/.mypy.ini"
 }
 
 pw_python_group("py") {

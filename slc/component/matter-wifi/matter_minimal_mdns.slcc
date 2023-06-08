@@ -1,0 +1,32 @@
+id: matter_minimal_mdns
+package: Matter
+description: >
+  matter_minimal_mdns for wifi
+label: "matter_minimal_mdns"
+category: Matter-WiFi|lwip
+quality: production
+provides:
+  - name: matter_minimal_mdns
+define:
+-   name: CHIP_MINMDNS_USE_EPHEMERAL_UNICAST_PORT
+    value: 0
+-   name: CHIP_MINMDNS_HIGH_VERBOSITY
+    value: 0
+-   name: CHIP_MINMDNS_DEFAULT_POLICY
+    value: 1
+include:
+  - path: src/lib/dnssd/minimal_mdns
+source:
+-   path: src/lib/dnssd/minimal_mdns/AddressPolicy.cpp
+-   path: src/lib/dnssd/minimal_mdns/AddressPolicy_DefaultImpl.cpp
+-   path: src/lib/dnssd/minimal_mdns/Parser.cpp
+-   path: src/lib/dnssd/minimal_mdns/RecordData.cpp
+-   path: src/lib/dnssd/minimal_mdns/ResponseSender.cpp
+-   path: src/lib/dnssd/minimal_mdns/Server.cpp
+-   path: src/lib/dnssd/minimal_mdns/core/QName.cpp
+-   path: src/lib/dnssd/minimal_mdns/core/QNameString.cpp
+-   path: src/lib/dnssd/minimal_mdns/core/RecordWriter.cpp
+-   path: src/lib/dnssd/minimal_mdns/records/IP.cpp
+-   path: src/lib/dnssd/minimal_mdns/records/ResourceRecord.cpp
+-   path: src/lib/dnssd/minimal_mdns/responders/IP.cpp
+-   path: src/lib/dnssd/minimal_mdns/responders/QueryResponder.cpp

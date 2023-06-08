@@ -30,24 +30,24 @@
 #define CHIP_CONFIG_PERSISTED_STORAGE_KEY_TYPE const char *
 #define CHIP_CONFIG_PERSISTED_STORAGE_MAX_KEY_LENGTH 2
 
-/**
- *  @def CHIP_CONFIG_MAX_FABRICS
- *
- *  @brief
- *    Maximum number of fabrics the device can participate in.  Each fabric can
- *    provision the device with its unique operational credentials and manage
- *    its own access control lists.
- */
-#ifndef CHIP_CONFIG_MAX_FABRICS
-#define CHIP_CONFIG_MAX_FABRICS 5 // 4 fabrics + 1 for rotation slack
-#endif
+#define CHIP_CONFIG_LIFETIIME_PERSISTED_COUNTER_KEY "rc"
 
 // ==================== Security Adaptations ====================
+
+#ifdef CONFIG_CHIP_CRYPTO_PSA
+#define CHIP_CONFIG_SHA256_CONTEXT_SIZE sizeof(psa_hash_operation_t)
+#elif defined(CONFIG_CC3XX_BACKEND)
+// Size of the statically allocated context for SHA256 operations in CryptoPAL
+// determined empirically.
+#define CHIP_CONFIG_SHA256_CONTEXT_SIZE 244
+#else
+#define CHIP_CONFIG_SHA256_CONTEXT_SIZE 208
+#endif
 
 // ==================== General Configuration Overrides ====================
 
 #ifndef CHIP_CONFIG_MAX_UNSOLICITED_MESSAGE_HANDLERS
-#define CHIP_CONFIG_MAX_UNSOLICITED_MESSAGE_HANDLERS 16
+#define CHIP_CONFIG_MAX_UNSOLICITED_MESSAGE_HANDLERS 8
 #endif // CHIP_CONFIG_MAX_UNSOLICITED_MESSAGE_HANDLERS
 
 #ifndef CHIP_CONFIG_MAX_EXCHANGE_CONTEXTS
@@ -61,3 +61,33 @@
 #ifndef CHIP_CONFIG_BDX_MAX_NUM_TRANSFERS
 #define CHIP_CONFIG_BDX_MAX_NUM_TRANSFERS 1
 #endif // CHIP_CONFIG_BDX_MAX_NUM_TRANSFERS
+
+#ifndef CHIP_CONFIG_MAX_FABRICS
+#define CHIP_CONFIG_MAX_FABRICS 5
+#endif
+
+#if CONFIG_CHIP_LOG_SIZE_OPTIMIZATION
+// Disable some of the too detailed log modules to save flash
+#define CHIP_CONFIG_LOG_MODULE_ExchangeManager_DETAIL 0
+#define CHIP_CONFIG_LOG_MODULE_Crypto_DETAIL 0
+#define CHIP_CONFIG_LOG_MODULE_Crypto_PROGRESS 0
+#define CHIP_CONFIG_LOG_MODULE_BDX_DETAIL 0
+#define CHIP_CONFIG_LOG_MODULE_BDX_PROGRESS 0
+#define CHIP_CONFIG_LOG_MODULE_EventLogging_DETAIL 0
+#define CHIP_CONFIG_LOG_MODULE_EventLogging_PROGRESS 0
+#define CHIP_CONFIG_LOG_MODULE_SetupPayload_DETAIL 0
+#define CHIP_CONFIG_LOG_MODULE_SetupPayload_PROGRESS 0
+#define CHIP_CONFIG_LOG_MODULE_CASESessionManager_DETAIL 0
+#define CHIP_CONFIG_LOG_MODULE_CASESessionManager_PROGRESS 0
+#define CHIP_CONFIG_LOG_MODULE_DataManagement_DETAIL 0
+#define CHIP_CONFIG_LOG_MODULE_FabricProvisioning_DETAIL 0
+#define CHIP_CONFIG_LOG_MODULE_chipSystemLayer_DETAIL 0
+#define CHIP_CONFIG_LOG_MODULE_chipSystemLayer_PROGRESS 0
+#define CHIP_CONFIG_LOG_MODULE_Zcl_DETAIL 0
+#define CHIP_CONFIG_LOG_MODULE_SecureChannel_DETAIL 0
+#define CHIP_CONFIG_LOG_MODULE_Ble_DETAIL 0
+#define CHIP_CONFIG_LOG_MODULE_AppServer_DETAIL 0
+#define CHIP_CONFIG_LOG_MODULE_Support_DETAIL 0
+#define CHIP_CONFIG_LOG_MODULE_Support_PROGRESS 0
+#define CHIP_CONFIG_LOG_MODULE_DeviceLayer_DETAIL 0
+#endif

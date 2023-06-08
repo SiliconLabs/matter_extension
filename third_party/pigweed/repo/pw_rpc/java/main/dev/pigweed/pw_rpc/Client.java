@@ -18,12 +18,12 @@ import com.google.protobuf.ExtensionRegistryLite;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.MessageLite;
 import dev.pigweed.pw_log.Logger;
-import dev.pigweed.pw_rpc.internal.Packet.PacketType;
 import dev.pigweed.pw_rpc.internal.Packet.RpcPacket;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
@@ -35,13 +35,12 @@ import javax.annotation.Nullable;
 public class Client {
   private static final Logger logger = Logger.forClass(Client.class);
 
-  private final Map<Integer, Channel> channels;
   private final Map<Integer, Service> services;
+  private final Endpoint endpoint;
 
-  private final Map<PendingRpc, MethodClient> methodClients;
-  private final RpcManager rpcs;
+  private final Map<RpcKey, MethodClient> methodClients = new HashMap<>();
 
-  private final Function<PendingRpc, StreamObserver<MessageLite>> defaultObserverFactory;
+  private final Function<RpcKey, StreamObserver<MessageLite>> defaultObserverFactory;
 
   /**
    * Creates a new RPC client.
@@ -51,12 +50,9 @@ public class Client {
    */
   private Client(List<Channel> channels,
       List<Service> services,
-      Function<PendingRpc, StreamObserver<MessageLite>> defaultObserverFactory) {
-    this.channels = channels.stream().collect(Collectors.toMap(Channel::id, c -> c));
+      Function<RpcKey, StreamObserver<MessageLite>> defaultObserverFactory) {
     this.services = services.stream().collect(Collectors.toMap(Service::id, s -> s));
-
-    this.methodClients = new HashMap<>();
-    this.rpcs = new RpcManager();
+    this.endpoint = new Endpoint(channels);
 
     this.defaultObserverFactory = defaultObserverFactory;
   }
@@ -71,11 +67,13 @@ public class Client {
    */
   public static Client create(List<Channel> channels,
       List<Service> services,
-      Function<PendingRpc, StreamObserver<MessageLite>> defaultObserverFactory) {
+      Function<RpcKey, StreamObserver<MessageLite>> defaultObserverFactory) {
     return new Client(channels, services, defaultObserverFactory);
   }
 
-  /** Creates a new pw_rpc client that logs responses when no observer is provided to calls. */
+  /**
+   * Creates a new pw_rpc client that logs responses when no observer is provided to calls.
+   */
   public static Client create(List<Channel> channels, List<Service> services) {
     return create(channels, services, (rpc) -> new StreamObserver<MessageLite>() {
       @Override
@@ -93,6 +91,25 @@ public class Client {
         logger.atWarning().log("%s terminated with error %s", rpc, status);
       }
     });
+  }
+
+  /**
+   * Adds a new channel to this RPC client.
+   *
+   * @throws InvalidRpcChannelException if the channel's ID is already in use
+   */
+  public void openChannel(Channel channel) {
+    endpoint.openChannel(channel);
+  }
+
+  /**
+   * Closes a channel and aborts and RPCs using it.
+   *
+   * @param id the channel ID to close
+   * @return true if the channel was closed; false if the channel was not found
+   */
+  public boolean closeChannel(int id) {
+    return endpoint.closeChannel(id);
   }
 
   /**
@@ -118,48 +135,65 @@ public class Client {
    * and "Method".
    */
   public MethodClient method(int channelId, String fullServiceName, String methodName) {
-    try {
-      return method(channelId, Ids.calculate(fullServiceName), Ids.calculate(methodName));
-    } catch (IllegalArgumentException e) {
-      // Rethrow the exception with the service and method name instead of the ID.
-      throw new IllegalArgumentException("Unknown RPC " + fullServiceName + '/' + methodName, e);
-    }
+    return method(channelId, Ids.calculate(fullServiceName), Ids.calculate(methodName));
   }
 
   /**
    * Returns a MethodClient instance from a Method instance.
    */
   public MethodClient method(int channelId, Method serviceMethod) {
-    try {
-      return method(channelId, serviceMethod.service().id(), serviceMethod.id());
-    } catch (IllegalArgumentException e) {
-      // Rethrow the exception with the service and method name instead of the ID.
-      throw new IllegalArgumentException("Unknown RPC " + serviceMethod.fullName(), e);
-    }
+    return method(channelId, serviceMethod.service().id(), serviceMethod.id());
   }
 
-  /** Returns a MethodClient with the provided service and method IDs. */
+  /**
+   * Returns a MethodClient with the provided service and method IDs.
+   */
   synchronized MethodClient method(int channelId, int serviceId, int methodId) {
-    Channel channel = channels.get(channelId);
-    if (channel == null) {
-      throw new IllegalArgumentException("Unknown channel ID " + channelId);
-    }
+    Method method = getMethod(serviceId, methodId);
 
+    RpcKey rpc = RpcKey.create(channelId, method);
+    if (!methodClients.containsKey(rpc)) {
+      methodClients.put(
+          rpc, new MethodClient(this, channelId, method, defaultObserverFactory.apply(rpc)));
+    }
+    return methodClients.get(rpc);
+  }
+
+  synchronized<CallT extends AbstractCall<?, ?>> CallT invokeRpc(int channelId,
+      Method method,
+      BiFunction<Endpoint, PendingRpc, CallT> createCall,
+      @Nullable MessageLite request) throws ChannelOutputException {
+    return endpoint.invokeRpc(channelId, checkMethod(method), createCall, request);
+  }
+
+  synchronized<CallT extends AbstractCall<?, ?>> CallT openRpc(
+      int channelId, Method method, BiFunction<Endpoint, PendingRpc, CallT> createCall) {
+    return endpoint.openRpc(channelId, checkMethod(method), createCall);
+  }
+
+  private Method checkMethod(Method method) {
+    // Check that the method on this service object matches the method this client is for.
+    // If the service was swapped out, the method could be different.
+    Method foundMethod = getMethod(method.service().id(), method.id());
+    if (!method.equals(foundMethod)) {
+      throw new InvalidRpcServiceMethodException(foundMethod);
+    }
+    return foundMethod;
+  }
+
+  private synchronized Method getMethod(int serviceId, int methodId) {
+    // Make sure the service is still present on the class.
     Service service = services.get(serviceId);
     if (service == null) {
-      throw new IllegalArgumentException("Unknown service ID " + serviceId);
+      throw new InvalidRpcServiceException(serviceId);
     }
 
     Method method = service.methods().get(methodId);
     if (method == null) {
-      throw new IllegalArgumentException("Unknown method ID " + methodId);
+      throw new InvalidRpcServiceMethodException(service, methodId);
     }
 
-    PendingRpc rpc = PendingRpc.create(channel, service, method);
-    if (!methodClients.containsKey(rpc)) {
-      methodClients.put(rpc, new MethodClient(rpcs, rpc, defaultObserverFactory.apply(rpc)));
-    }
-    return methodClients.get(rpc);
+    return method;
   }
 
   /**
@@ -193,92 +227,12 @@ public class Client {
       return false;
     }
 
-    Channel channel = channels.get(packet.getChannelId());
-    if (channel == null) {
-      logger.atWarning().log("Received packet for unrecognized channel %d", packet.getChannelId());
-      return false;
-    }
-
-    PendingRpc rpc = lookupRpc(channel, packet);
-    if (rpc == null) {
-      logger.atInfo().log("Ignoring packet for unknown service method");
-      sendError(channel, packet, Status.NOT_FOUND);
-      return true; // true since the packet was handled, even though it was invalid.
-    }
-
-    // Any packet type other than SERVER_STREAM indicates that this is the last packet for this RPC.
-    StreamObserverCall<?, ?> call =
-        packet.getType().equals(PacketType.SERVER_STREAM) ? rpcs.getPending(rpc) : rpcs.clear(rpc);
-    if (call == null) {
-      logger.atFine().log(
-          "Ignoring packet for %s, which isn't pending. Pending RPCs are %s", rpc, rpcs);
-      sendError(channel, packet, Status.FAILED_PRECONDITION);
-      return true;
-    }
-
-    switch (packet.getType()) {
-      case SERVER_ERROR: {
-        Status status = decodeStatus(packet);
-        logger.atWarning().log("%s failed with error %s", rpc, status);
-        call.onError(status);
-        break;
-      }
-      case RESPONSE: {
-        Status status = decodeStatus(packet);
-        // Server streaming an unary RPCs include a payload with their response packet.
-        if (!rpc.method().isServerStreaming()) {
-          logger.atFiner().log("%s completed with status %s and %d B payload",
-              rpc,
-              status,
-              packet.getPayload().size());
-          call.onNext(packet.getPayload());
-        } else {
-          logger.atFiner().log("%s completed with status %s", rpc, status);
-        }
-        call.onCompleted(status);
-        break;
-      }
-      case SERVER_STREAM:
-        logger.atFiner().log(
-            "%s received server stream with %d B payload", rpc, packet.getPayload().size());
-        call.onNext(packet.getPayload());
-        break;
-      default:
-        logger.atWarning().log(
-            "%s received unexpected PacketType %d", rpc, packet.getType().getNumber());
-    }
-
-    return true;
-  }
-
-  private static void sendError(Channel channel, RpcPacket packet, Status status) {
+    Method method;
     try {
-      channel.send(Packets.error(packet, status));
-    } catch (ChannelOutputException e) {
-      logger.atWarning().withCause(e).log("Failed to send error packet");
+      method = getMethod(packet.getServiceId(), packet.getMethodId());
+    } catch (InvalidRpcStateException e) {
+      method = null;
     }
-  }
-
-  @Nullable
-  private PendingRpc lookupRpc(Channel channel, RpcPacket packet) {
-    Service service = services.get(packet.getServiceId());
-    if (service != null) {
-      Method method = service.methods().get(packet.getMethodId());
-      if (method != null) {
-        return PendingRpc.create(channel, service, method);
-      }
-    }
-
-    return null;
-  }
-
-  private static Status decodeStatus(RpcPacket packet) {
-    Status status = Status.fromCode(packet.getStatus());
-    if (status == null) {
-      logger.atWarning().log(
-          "Illegal status code %d in packet; using Status.UNKNOWN ", packet.getStatus());
-      return Status.UNKNOWN;
-    }
-    return status;
+    return endpoint.processClientPacket(method, packet);
   }
 }

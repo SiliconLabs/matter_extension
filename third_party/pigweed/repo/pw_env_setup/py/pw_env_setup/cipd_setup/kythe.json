@@ -1,12 +1,12 @@
 {
-  'packages': [
+  "packages": [
     {
       "path": "fuchsia/third_party/kythe",
       "platforms": [
         "linux-amd64"
       ],
       "tags": [
-        "version:0.0.46"
+        "version:1.0.3"
       ]
     },
     {

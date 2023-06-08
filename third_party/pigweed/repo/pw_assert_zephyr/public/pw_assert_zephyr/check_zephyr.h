@@ -13,7 +13,9 @@
 // the License.
 #pragma once
 
-#include <sys/__assert.h>
+#include <zephyr/sys/__assert.h>
+
+#include "pw_preprocessor/compiler.h"
 
 #define PW_HANDLE_CRASH(...)        \
   {                                 \

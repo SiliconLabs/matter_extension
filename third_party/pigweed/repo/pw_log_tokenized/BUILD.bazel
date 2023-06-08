@@ -35,16 +35,40 @@ pw_cc_library(
         "public_overrides",
     ],
     deps = [
+        "//pw_log:facade",
         "//pw_tokenizer",
     ],
 )
 
 pw_cc_library(
     name = "pw_log_tokenized",
+    srcs = ["log_tokenized.cc"],
     deps = [
+        ":handler",
         ":headers",
         "//pw_log:facade",
     ],
+)
+
+pw_cc_library(
+    name = "handler_facade",
+    hdrs = ["public/pw_log_tokenized/handler.h"],
+    includes = ["public"],
+    deps = ["//pw_preprocessor"],
+)
+
+pw_cc_library(
+    name = "handler",
+    deps = [
+        ":handler_facade",
+        "@pigweed_config//:pw_log_tokenized_handler_backend",
+    ],
+)
+
+# There is no default backend for now.
+pw_cc_library(
+    name = "backend_multiplexer",
+    visibility = ["@pigweed_config//:__pkg__"],
 )
 
 pw_cc_library(
@@ -53,9 +77,10 @@ pw_cc_library(
     hdrs = ["public/pw_log_tokenized/base64_over_hdlc.h"],
     includes = ["public"],
     deps = [
-        "//pw_hdlc:encoder",
+        ":handler_facade",
+        "//pw_hdlc",
+        "//pw_stream:sys_io_stream",
         "//pw_tokenizer:base64",
-        "//pw_tokenizer:global_handler_with_payload.facade",
     ],
 )
 

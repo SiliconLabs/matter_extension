@@ -179,11 +179,32 @@ pw_cc_test(
     ],
 )
 
+# Negative compilation testing is not supported by Bazel. Build this as a
+# regular unit for now test.
+pw_cc_test(
+    name = "service_nc_test",
+    srcs = ["service_nc_test.cc"],
+    deps = ["//pw_rpc:pw_rpc_test_cc.raw_rpc"],
+)
+
 pw_cc_test(
     name = "stub_generation_test",
     srcs = ["stub_generation_test.cc"],
     deps = [
         "//pw_rpc:pw_rpc_test_cc.pwpb",
         "//pw_rpc:pw_rpc_test_cc.raw_rpc",
+    ],
+)
+
+pw_cc_test(
+    name = "synchronous_call_test",
+    srcs = ["synchronous_call_test.cc"],
+    deps = [
+        ":test_method_context",
+        "//pw_rpc:pw_rpc_test_cc.raw_rpc",
+        "//pw_rpc:synchronous_client_api",
+        "//pw_work_queue",
+        "//pw_work_queue:stl_test_thread",
+        "//pw_work_queue:test_thread_header",
     ],
 )

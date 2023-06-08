@@ -204,10 +204,13 @@ void rsi_tx_event_handler(void)
     // Read packet from BT/BLE Common Queue
     pkt = (rsi_pkt_t *)(rsi_driver_cb->bt_single_tx_q.head);
 
-    buf_ptr = (uint8_t *)pkt->desc;
+    /* GAR-8247: Check for the Null Pointer and proceed with Buffer full checks */
+    if (pkt != NULL) {
+      buf_ptr = (uint8_t *)pkt->desc;
 
-    // Get Frame type
-    frame_type = buf_ptr[2];
+      // Get Frame type
+      frame_type = buf_ptr[2];
+    }
 #endif
     // Read interrupt status register to check buffer full condition
     ret_status = rsi_device_interrupt_status(&int_status);
@@ -525,36 +528,7 @@ void rsi_tx_event_handler(void)
       bt_pkt_pending = rsi_check_queue_status(&rsi_driver_cb->bt_single_tx_q);
 
       if (bt_pkt_pending) {
-#if ((defined RSI_SPI_INTERFACE) || (defined RSI_M4_INTERFACE) \
-     || ((defined RSI_SDIO_INTERFACE) && (!defined LINUX_PLATFORM)))
-        // Read interrupt status register to check buffer full condition
-        ret_status = rsi_device_interrupt_status(&int_status);
-
-        // if buffer full then return without clearing Tx event
-        if ((ret_status != 0x0)
-#ifdef RSI_BT_ENABLE
-            || ((int_status & (BIT(1)))
-                && (rsi_bt_get_ACL_type(frame_type)
-                    == RSI_BT_HCI_ACL_PKT)) /* Check for ACL Packet Buffer full Condition */
-#endif
-#if ((defined RSI_BT_ENABLE) || (defined RSI_BLE_ENABLE))
-            || ((int_status & (BIT(4))) /* Check for Command Pool Buffer full Condition */
-#ifdef RSI_BT_ENABLE
-                // ACL Packets should not blocked by Command Buffer Full Condition
-                && (!(frame_type == RSI_BT_REQ_A2DP_SBC_AAC_DATA) || (frame_type == RSI_BT_REQ_SPP_TRANSFER))
-#endif
-                  )
-#endif
-#ifdef RSI_BLE_ENABLE
-            || (int_status & (BIT(2)))
-#endif
-        ) {
-          //do nothing
-        } else
-#endif
-        {
-          return;
-        }
+        return;
       }
     }
 #ifdef RSI_PROP_PROTOCOL_ENABLE
@@ -592,10 +566,6 @@ void rsi_tx_event_handler(void)
 #endif
     }
 
-#ifndef RSI_M4_INTERFACE
-    // signal semaphore incase of packet having async response
-    rsi_common_packet_transfer_done(pkt);
-#endif
     rsi_clear_event(RSI_TX_EVENT);
   }
 }
@@ -916,6 +886,7 @@ void rsi_rx_event_handler(void)
              || (frame_type == RSI_COMMON_RSP_DEBUG_LOG) || (frame_type == RSI_COMMON_RSP_SWITCH_PROTO)
              || (frame_type == RSI_COMMON_RSP_GET_RAM_DUMP) || (frame_type == RSI_COMMON_RSP_SET_RTC_TIMER)
              || (frame_type == RSI_COMMON_RSP_GET_RTC_TIMER) || (frame_type == RSI_COMMON_REQ_SET_CONFIG)
+             || (frame_type == RSI_COMMON_RSP_MODULE_TYPE)
 #ifdef FW_LOGGING_ENABLE
              || (frame_type == RSI_COMMON_RSP_DEVICE_LOGGING_INIT)
 #endif
@@ -983,6 +954,14 @@ void rsi_rx_event_handler(void)
 #if (RSI_TCP_IP_BYPASS || TCP_IP_ETHERNET_BRIDGE)
     // Process Raw DATA packet
     rsi_wlan_process_raw_data(rx_pkt);
+#elif RSI_ENABLE_DUAL_HOST
+    if (frame_type == DUAL_HOST_RAW_DATA_PACKET) {
+      // Process Raw DATA packet - dual host enabled
+      rsi_wlan_process_raw_data(rx_pkt);
+    } else {
+      // Process DATA packet
+      rsi_driver_process_recv_data(rx_pkt);
+    }
 #else
     // Process DATA packet
     rsi_driver_process_recv_data(rx_pkt);

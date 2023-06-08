@@ -14,6 +14,8 @@
 
 #include "pw_rpc/raw/client_reader_writer.h"
 
+#include <optional>
+
 #include "gtest/gtest.h"
 #include "pw_rpc/raw/client_testing.h"
 #include "pw_rpc/writer.h"
@@ -48,7 +50,7 @@ TEST(RawClientWriter, DefaultConstructed) {
 
   EXPECT_EQ(Status::FailedPrecondition(), call.Write({}));
   EXPECT_EQ(Status::FailedPrecondition(), call.Cancel());
-  EXPECT_EQ(Status::FailedPrecondition(), call.CloseClientStream());
+  EXPECT_EQ(Status::FailedPrecondition(), call.RequestCompletion());
 
   call.set_on_completed([](ConstByteSpan, Status) {});
   call.set_on_error([](Status) {});
@@ -61,6 +63,7 @@ TEST(RawClientReader, DefaultConstructed) {
   EXPECT_EQ(call.channel_id(), Channel::kUnassignedChannelId);
 
   EXPECT_EQ(Status::FailedPrecondition(), call.Cancel());
+  EXPECT_EQ(Status::FailedPrecondition(), call.RequestCompletion());
 
   call.set_on_completed([](Status) {});
   call.set_on_next([](ConstByteSpan) {});
@@ -75,14 +78,74 @@ TEST(RawClientReaderWriter, DefaultConstructed) {
 
   EXPECT_EQ(Status::FailedPrecondition(), call.Write({}));
   EXPECT_EQ(Status::FailedPrecondition(), call.Cancel());
-  EXPECT_EQ(Status::FailedPrecondition(), call.CloseClientStream());
+  EXPECT_EQ(Status::FailedPrecondition(), call.RequestCompletion());
 
   call.set_on_completed([](Status) {});
   call.set_on_next([](ConstByteSpan) {});
   call.set_on_error([](Status) {});
 }
 
-TEST(RawUnaryReceiver, Closed) {
+TEST(RawClientWriter, RequestCompletion) {
+  RawClientTestContext ctx;
+  RawClientWriter call = TestService::TestClientStreamRpc(
+      ctx.client(), ctx.channel().id(), FailIfOnCompletedCalled, FailIfCalled);
+  ASSERT_EQ(OkStatus(), call.RequestCompletion());
+
+  ASSERT_TRUE(call.active());
+  EXPECT_EQ(call.channel_id(), ctx.channel().id());
+
+  EXPECT_EQ(OkStatus(), call.Write({}));
+  EXPECT_EQ(OkStatus(), call.RequestCompletion());
+  EXPECT_EQ(OkStatus(), call.Cancel());
+
+  call.set_on_completed([](ConstByteSpan, Status) {});
+  call.set_on_error([](Status) {});
+}
+
+TEST(RawClientReader, RequestCompletion) {
+  RawClientTestContext ctx;
+  RawClientReader call = TestService::TestServerStreamRpc(ctx.client(),
+                                                          ctx.channel().id(),
+                                                          {},
+                                                          FailIfOnNextCalled,
+                                                          FailIfCalled,
+                                                          FailIfCalled);
+  ASSERT_EQ(OkStatus(), call.RequestCompletion());
+
+  ASSERT_TRUE(call.active());
+  EXPECT_EQ(call.channel_id(), ctx.channel().id());
+
+  EXPECT_EQ(OkStatus(), call.RequestCompletion());
+  EXPECT_EQ(OkStatus(), call.Cancel());
+
+  call.set_on_completed([](Status) {});
+  call.set_on_next([](ConstByteSpan) {});
+  call.set_on_error([](Status) {});
+}
+
+TEST(RawClientReaderWriter, RequestCompletion) {
+  RawClientTestContext ctx;
+  RawClientReaderWriter call =
+      TestService::TestBidirectionalStreamRpc(ctx.client(),
+                                              ctx.channel().id(),
+                                              FailIfOnNextCalled,
+                                              FailIfCalled,
+                                              FailIfCalled);
+  ASSERT_EQ(OkStatus(), call.RequestCompletion());
+
+  ASSERT_TRUE(call.active());
+  EXPECT_EQ(call.channel_id(), ctx.channel().id());
+
+  EXPECT_EQ(OkStatus(), call.Write({}));
+  EXPECT_EQ(OkStatus(), call.RequestCompletion());
+  EXPECT_EQ(OkStatus(), call.Cancel());
+
+  call.set_on_completed([](Status) {});
+  call.set_on_next([](ConstByteSpan) {});
+  call.set_on_error([](Status) {});
+}
+
+TEST(RawUnaryReceiver, Cancel) {
   RawClientTestContext ctx;
   RawUnaryReceiver call = TestService::TestUnaryRpc(ctx.client(),
                                                     ctx.channel().id(),
@@ -91,6 +154,10 @@ TEST(RawUnaryReceiver, Closed) {
                                                     FailIfCalled);
   ASSERT_EQ(OkStatus(), call.Cancel());
 
+  // Additional calls should do nothing and return FAILED_PRECONDITION.
+  ASSERT_EQ(Status::FailedPrecondition(), call.Cancel());
+  ASSERT_EQ(Status::FailedPrecondition(), call.Cancel());
+
   ASSERT_FALSE(call.active());
   EXPECT_EQ(call.channel_id(), Channel::kUnassignedChannelId);
 
@@ -98,9 +165,11 @@ TEST(RawUnaryReceiver, Closed) {
 
   call.set_on_completed([](ConstByteSpan, Status) {});
   call.set_on_error([](Status) {});
+
+  EXPECT_EQ(ctx.output().total_packets(), 2u);  // request & cancellation only
 }
 
-TEST(RawClientWriter, Closed) {
+TEST(RawClientWriter, Cancel) {
   RawClientTestContext ctx;
   RawClientWriter call = TestService::TestClientStreamRpc(
       ctx.client(), ctx.channel().id(), FailIfOnCompletedCalled, FailIfCalled);
@@ -111,13 +180,15 @@ TEST(RawClientWriter, Closed) {
 
   EXPECT_EQ(Status::FailedPrecondition(), call.Write({}));
   EXPECT_EQ(Status::FailedPrecondition(), call.Cancel());
-  EXPECT_EQ(Status::FailedPrecondition(), call.CloseClientStream());
+  EXPECT_EQ(Status::FailedPrecondition(), call.RequestCompletion());
 
   call.set_on_completed([](ConstByteSpan, Status) {});
   call.set_on_error([](Status) {});
+
+  EXPECT_EQ(ctx.output().total_packets(), 2u);  // request & cancellation only
 }
 
-TEST(RawClientReader, Closed) {
+TEST(RawClientReader, Cancel) {
   RawClientTestContext ctx;
   RawClientReader call = TestService::TestServerStreamRpc(ctx.client(),
                                                           ctx.channel().id(),
@@ -131,13 +202,16 @@ TEST(RawClientReader, Closed) {
   EXPECT_EQ(call.channel_id(), Channel::kUnassignedChannelId);
 
   EXPECT_EQ(Status::FailedPrecondition(), call.Cancel());
+  EXPECT_EQ(Status::FailedPrecondition(), call.RequestCompletion());
 
   call.set_on_completed([](Status) {});
   call.set_on_next([](ConstByteSpan) {});
   call.set_on_error([](Status) {});
+
+  EXPECT_EQ(ctx.output().total_packets(), 2u);  // request & cancellation only
 }
 
-TEST(RawClientReaderWriter, Closed) {
+TEST(RawClientReaderWriter, Cancel) {
   RawClientTestContext ctx;
   RawClientReaderWriter call =
       TestService::TestBidirectionalStreamRpc(ctx.client(),
@@ -152,11 +226,85 @@ TEST(RawClientReaderWriter, Closed) {
 
   EXPECT_EQ(Status::FailedPrecondition(), call.Write({}));
   EXPECT_EQ(Status::FailedPrecondition(), call.Cancel());
-  EXPECT_EQ(Status::FailedPrecondition(), call.CloseClientStream());
+  EXPECT_EQ(Status::FailedPrecondition(), call.RequestCompletion());
 
   call.set_on_completed([](Status) {});
   call.set_on_next([](ConstByteSpan) {});
   call.set_on_error([](Status) {});
+
+  EXPECT_EQ(ctx.output().total_packets(), 2u);  // request & cancellation only
+}
+
+TEST(RawUnaryReceiver, Abandon) {
+  RawClientTestContext ctx;
+  RawUnaryReceiver call = TestService::TestUnaryRpc(ctx.client(),
+                                                    ctx.channel().id(),
+                                                    {},
+                                                    FailIfOnCompletedCalled,
+                                                    FailIfCalled);
+  call.Abandon();
+
+  ASSERT_FALSE(call.active());
+  EXPECT_EQ(call.channel_id(), Channel::kUnassignedChannelId);
+
+  EXPECT_EQ(Status::FailedPrecondition(), call.Cancel());
+
+  EXPECT_EQ(ctx.output().total_packets(), 1u);  // request only
+}
+
+TEST(RawClientWriter, Abandon) {
+  RawClientTestContext ctx;
+  RawClientWriter call = TestService::TestClientStreamRpc(
+      ctx.client(), ctx.channel().id(), FailIfOnCompletedCalled, FailIfCalled);
+  call.Abandon();
+
+  ASSERT_FALSE(call.active());
+  EXPECT_EQ(call.channel_id(), Channel::kUnassignedChannelId);
+
+  EXPECT_EQ(Status::FailedPrecondition(), call.Write({}));
+  EXPECT_EQ(Status::FailedPrecondition(), call.Cancel());
+  EXPECT_EQ(Status::FailedPrecondition(), call.RequestCompletion());
+
+  EXPECT_EQ(ctx.output().total_packets(), 2u);  // request & client stream end
+}
+
+TEST(RawClientReader, Abandon) {
+  RawClientTestContext ctx;
+  RawClientReader call = TestService::TestServerStreamRpc(ctx.client(),
+                                                          ctx.channel().id(),
+                                                          {},
+                                                          FailIfOnNextCalled,
+                                                          FailIfCalled,
+                                                          FailIfCalled);
+  call.Abandon();
+
+  ASSERT_FALSE(call.active());
+  EXPECT_EQ(call.channel_id(), Channel::kUnassignedChannelId);
+
+  EXPECT_EQ(Status::FailedPrecondition(), call.Cancel());
+  EXPECT_EQ(Status::FailedPrecondition(), call.RequestCompletion());
+
+  EXPECT_EQ(ctx.output().total_packets(), 1u);  // request only
+}
+
+TEST(RawClientReaderWriter, Abandon) {
+  RawClientTestContext ctx;
+  RawClientReaderWriter call =
+      TestService::TestBidirectionalStreamRpc(ctx.client(),
+                                              ctx.channel().id(),
+                                              FailIfOnNextCalled,
+                                              FailIfCalled,
+                                              FailIfCalled);
+  call.Abandon();
+
+  ASSERT_FALSE(call.active());
+  EXPECT_EQ(call.channel_id(), Channel::kUnassignedChannelId);
+
+  EXPECT_EQ(Status::FailedPrecondition(), call.Write({}));
+  EXPECT_EQ(Status::FailedPrecondition(), call.Cancel());
+  EXPECT_EQ(Status::FailedPrecondition(), call.RequestCompletion());
+
+  EXPECT_EQ(ctx.output().total_packets(), 2u);  // request & client stream end
 }
 
 TEST(RawClientReaderWriter, Move_InactiveToActive_EndsClientStream) {
@@ -175,7 +323,8 @@ TEST(RawClientReaderWriter, Move_InactiveToActive_EndsClientStream) {
 
   active_call = std::move(inactive_call);
 
-  EXPECT_EQ(ctx.output().total_packets(), 2u);  // Sent CLIENT_STREAM_END
+  EXPECT_EQ(ctx.output().total_packets(),
+            2u);  // Sent CLIENT_REQUEST_COMPLETION
   EXPECT_EQ(
       ctx.output()
           .client_stream_end_packets<TestService::TestBidirectionalStreamRpc>(),
@@ -231,25 +380,16 @@ TEST(RawUnaryReceiver, Move_ActiveToActive) {
   EXPECT_TRUE(active_call_2.active());
 }
 
-TEST(RawClientReaderWriter, NewCallCancelsPreviousAndCallsErrorCallback) {
+TEST(RawUnaryReceiver, InvalidChannelId) {
   RawClientTestContext ctx;
+  std::optional<Status> error;
 
-  Status error;
-  RawClientReaderWriter active_call_1 = TestService::TestBidirectionalStreamRpc(
-      ctx.client(),
-      ctx.channel().id(),
-      FailIfOnNextCalled,
-      FailIfCalled,
-      [&error](Status status) { error = status; });
-
-  ASSERT_TRUE(active_call_1.active());
-
-  RawClientReaderWriter active_call_2 =
-      TestService::TestBidirectionalStreamRpc(ctx.client(), ctx.channel().id());
-
-  EXPECT_FALSE(active_call_1.active());
-  EXPECT_TRUE(active_call_2.active());
-  EXPECT_EQ(error, Status::Cancelled());
+  RawUnaryReceiver call = TestService::TestUnaryRpc(
+      ctx.client(), 1290341, {}, {}, [&error](Status status) {
+        error = status;
+      });
+  EXPECT_FALSE(call.active());
+  EXPECT_EQ(error, Status::Unavailable());
 }
 
 TEST(RawClientReader, NoClientStream_OutOfScope_SilentlyCloses) {
@@ -280,7 +420,8 @@ TEST(RawClientWriter, WithClientStream_OutOfScope_SendsClientStreamEnd) {
     ASSERT_EQ(ctx.output().total_packets(), 1u);  // Sent the request
   }
 
-  EXPECT_EQ(ctx.output().total_packets(), 2u);  // Sent CLIENT_STREAM_END
+  EXPECT_EQ(ctx.output().total_packets(),
+            2u);  // Sent CLIENT_REQUEST_COMPLETION
   EXPECT_EQ(ctx.output()
                 .client_stream_end_packets<TestService::TestClientStreamRpc>(),
             1u);
@@ -327,6 +468,50 @@ TEST(RawClientReaderWriter, UsableAsWriter) {
                        .back()
                        .data()),
                kWriterData);
+}
+
+const char* span_as_cstr(ConstByteSpan span) {
+  return reinterpret_cast<const char*>(span.data());
+}
+
+TEST(RawClientReaderWriter,
+     MultipleCallsToSameMethodOkAndReceiveSeparateResponses) {
+  RawClientTestContext ctx;
+
+  ConstByteSpan data_1 = as_bytes(span("data_1_unset"));
+  ConstByteSpan data_2 = as_bytes(span("data_2_unset"));
+
+  Status error;
+  auto set_error = [&error](Status status) { error.Update(status); };
+  RawClientReaderWriter active_call_1 = TestService::TestBidirectionalStreamRpc(
+      ctx.client(),
+      ctx.channel().id(),
+      [&data_1](ConstByteSpan payload) { data_1 = payload; },
+      FailIfCalled,
+      set_error);
+
+  EXPECT_TRUE(active_call_1.active());
+
+  RawClientReaderWriter active_call_2 = TestService::TestBidirectionalStreamRpc(
+      ctx.client(),
+      ctx.channel().id(),
+      [&data_2](ConstByteSpan payload) { data_2 = payload; },
+      FailIfCalled,
+      set_error);
+
+  EXPECT_TRUE(active_call_1.active());
+  EXPECT_TRUE(active_call_2.active());
+  EXPECT_EQ(error, OkStatus());
+
+  ConstByteSpan message_1 = as_bytes(span("hello_1"));
+  ConstByteSpan message_2 = as_bytes(span("hello_2"));
+
+  ctx.server().SendServerStream<TestService::TestBidirectionalStreamRpc>(
+      message_2, active_call_2.id());
+  EXPECT_STREQ(span_as_cstr(data_2), span_as_cstr(message_2));
+  ctx.server().SendServerStream<TestService::TestBidirectionalStreamRpc>(
+      message_1, active_call_1.id());
+  EXPECT_STREQ(span_as_cstr(data_1), span_as_cstr(message_1));
 }
 
 }  // namespace

@@ -44,37 +44,37 @@ extern "C" uint16_t prvTaskCheckFreeStackSpace(const uint8_t* pucStackByte);
         // (INCLUDE_uxTaskGetStackHighWaterMark == 1))
 
 void CaptureThreadState(eTaskState thread_state,
-                        Thread::StreamEncoder& encoder) {
+                        proto::Thread::StreamEncoder& encoder) {
   switch (thread_state) {
     case eRunning:
       PW_LOG_DEBUG("Thread state: RUNNING");
-      encoder.WriteState(ThreadState::Enum::RUNNING);
+      encoder.WriteState(proto::ThreadState::Enum::RUNNING).IgnoreError();
       return;
 
     case eReady:
       PW_LOG_DEBUG("Thread state: READY");
-      encoder.WriteState(ThreadState::Enum::READY);
+      encoder.WriteState(proto::ThreadState::Enum::READY).IgnoreError();
       return;
 
     case eBlocked:
       PW_LOG_DEBUG("Thread state: BLOCKED");
-      encoder.WriteState(ThreadState::Enum::BLOCKED);
+      encoder.WriteState(proto::ThreadState::Enum::BLOCKED).IgnoreError();
       return;
 
     case eSuspended:
       PW_LOG_DEBUG("Thread state: SUSPENDED");
-      encoder.WriteState(ThreadState::Enum::SUSPENDED);
+      encoder.WriteState(proto::ThreadState::Enum::SUSPENDED).IgnoreError();
       return;
 
     case eDeleted:
       PW_LOG_DEBUG("Thread state: INACTIVE");
-      encoder.WriteState(ThreadState::Enum::INACTIVE);
+      encoder.WriteState(proto::ThreadState::Enum::INACTIVE).IgnoreError();
       return;
 
     case eInvalid:
     default:
       PW_LOG_DEBUG("Thread state: UNKNOWN");
-      encoder.WriteState(ThreadState::Enum::UNKNOWN);
+      encoder.WriteState(proto::ThreadState::Enum::UNKNOWN).IgnoreError();
       return;
   }
 }
@@ -82,11 +82,11 @@ void CaptureThreadState(eTaskState thread_state,
 }  // namespace
 
 Status SnapshotThreads(void* running_thread_stack_pointer,
-                       SnapshotThreadInfo::StreamEncoder& encoder,
+                       proto::SnapshotThreadInfo::StreamEncoder& encoder,
                        ProcessThreadStackCallback& stack_dumper) {
   struct {
     void* running_thread_stack_pointer;
-    SnapshotThreadInfo::StreamEncoder* encoder;
+    proto::SnapshotThreadInfo::StreamEncoder* encoder;
     ProcessThreadStackCallback* stack_dumper;
     Status thread_capture_status;
   } ctx;
@@ -97,7 +97,8 @@ Status SnapshotThreads(void* running_thread_stack_pointer,
 
   ThreadCallback thread_capture_cb(
       [&ctx](TaskHandle_t thread, eTaskState thread_state) -> bool {
-        Thread::StreamEncoder thread_encoder = ctx.encoder->GetThreadsEncoder();
+        proto::Thread::StreamEncoder thread_encoder =
+            ctx.encoder->GetThreadsEncoder();
         ctx.thread_capture_status.Update(
             SnapshotThread(thread,
                            thread_state,
@@ -118,12 +119,12 @@ Status SnapshotThread(
     TaskHandle_t thread,
     eTaskState thread_state,
     void* running_thread_stack_pointer,
-    Thread::StreamEncoder& encoder,
+    proto::Thread::StreamEncoder& encoder,
     [[maybe_unused]] ProcessThreadStackCallback& thread_stack_callback) {
   const tskTCB& tcb = *reinterpret_cast<tskTCB*>(thread);
 
   PW_LOG_DEBUG("Capturing thread info for %s", tcb.pcTaskName);
-  encoder.WriteName(as_bytes(span(std::string_view(tcb.pcTaskName))));
+  PW_TRY(encoder.WriteName(as_bytes(span(std::string_view(tcb.pcTaskName)))));
 
   CaptureThreadState(thread_state, encoder);
 

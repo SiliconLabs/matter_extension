@@ -22,8 +22,18 @@ import threading
 import time
 import socket
 import subprocess
-from typing import (Any, BinaryIO, Callable, Dict, Iterable, List, NoReturn,
-                    Optional, Sequence, Union)
+from typing import (
+    Any,
+    BinaryIO,
+    Callable,
+    Dict,
+    Iterable,
+    List,
+    NoReturn,
+    Optional,
+    Sequence,
+    Union,
+)
 
 from pw_protobuf_compiler import python_protos
 import pw_rpc
@@ -36,12 +46,15 @@ _LOG = logging.getLogger(__name__)
 
 STDOUT_ADDRESS = 1
 DEFAULT_ADDRESS = ord('R')
+DEFAULT_CHANNEL_ID = 1
 _VERBOSE = logging.DEBUG - 1
 
 
-def channel_output(writer: Callable[[bytes], Any],
-                   address: int = DEFAULT_ADDRESS,
-                   delay_s: float = 0) -> Callable[[bytes], None]:
+def channel_output(
+    writer: Callable[[bytes], Any],
+    address: int = DEFAULT_ADDRESS,
+    delay_s: float = 0,
+) -> Callable[[bytes], None]:
     """Returns a function that can be used as a channel output for pw_rpc."""
 
     if delay_s:
@@ -70,17 +83,19 @@ def _handle_error(frame: Frame) -> None:
 FrameHandlers = Dict[int, Callable[[Frame], Any]]
 
 
-def read_and_process_data(read: Callable[[], bytes],
-                          on_read_error: Callable[[Exception], Any],
-                          frame_handlers: FrameHandlers,
-                          error_handler: Callable[[Frame],
-                                                  Any] = _handle_error,
-                          handler_threads: Optional[int] = 1) -> NoReturn:
+def read_and_process_data(
+    read: Callable[[], bytes],
+    on_read_error: Callable[[Exception], Any],
+    frame_handlers: FrameHandlers,
+    error_handler: Callable[[Frame], Any] = _handle_error,
+    handler_threads: Optional[int] = 1,
+) -> NoReturn:
     """Continuously reads and handles HDLC frames.
 
     Passes frames to an executor that calls frame handler functions in other
     threads.
     """
+
     def handle_frame(frame: Frame):
         try:
             if not frame.ok():
@@ -90,8 +105,9 @@ def read_and_process_data(read: Callable[[], bytes],
             try:
                 frame_handlers[frame.address](frame)
             except KeyError:
-                _LOG.warning('Unhandled frame for address %d: %s',
-                             frame.address, frame)
+                _LOG.warning(
+                    'Unhandled frame for address %d: %s', frame.address, frame
+                )
         except:  # pylint: disable=bare-except
             _LOG.exception('Exception in HDLC frame handler thread')
 
@@ -121,24 +137,29 @@ def write_to_file(data: bytes, output: BinaryIO = sys.stdout.buffer):
 
 
 def default_channels(write: Callable[[bytes], Any]) -> List[pw_rpc.Channel]:
-    return [pw_rpc.Channel(1, channel_output(write))]
+    return [pw_rpc.Channel(DEFAULT_CHANNEL_ID, channel_output(write))]
 
 
-PathsModulesOrProtoLibrary = Union[Iterable[python_protos.PathOrModule],
-                                   python_protos.Library]
+PathsModulesOrProtoLibrary = Union[
+    Iterable[python_protos.PathOrModule], python_protos.Library
+]
 
 
 class HdlcRpcClient:
     """An RPC client configured to run over HDLC."""
-    def __init__(self,
-                 read: Callable[[], bytes],
-                 paths_or_modules: PathsModulesOrProtoLibrary,
-                 channels: Iterable[pw_rpc.Channel],
-                 output: Callable[[bytes], Any] = write_to_file,
-                 client_impl: pw_rpc.client.ClientImpl = None,
-                 *,
-                 _incoming_packet_filter_for_testing: pw_rpc.
-                 ChannelManipulator = None):
+
+    def __init__(
+        self,
+        read: Callable[[], bytes],
+        paths_or_modules: PathsModulesOrProtoLibrary,
+        channels: Iterable[pw_rpc.Channel],
+        output: Callable[[bytes], Any] = write_to_file,
+        client_impl: Optional[pw_rpc.client.ClientImpl] = None,
+        *,
+        _incoming_packet_filter_for_testing: Optional[
+            pw_rpc.ChannelManipulator
+        ] = None,
+    ):
         """Creates an RPC client configured to communicate using HDLC.
 
         Args:
@@ -155,8 +176,9 @@ class HdlcRpcClient:
         if client_impl is None:
             client_impl = callback_client.Impl()
 
-        self.client = pw_rpc.Client.from_modules(client_impl, channels,
-                                                 self.protos.modules())
+        self.client = pw_rpc.Client.from_modules(
+            client_impl, channels, self.protos.modules()
+        )
 
         rpc_output: Callable[[bytes], Any] = self._handle_rpc_packet
         if _incoming_packet_filter_for_testing is not None:
@@ -169,12 +191,13 @@ class HdlcRpcClient:
         }
 
         # Start background thread that reads and processes RPC packets.
-        threading.Thread(target=read_and_process_data,
-                         daemon=True,
-                         args=(read, lambda exc: None,
-                               frame_handlers)).start()
+        threading.Thread(
+            target=read_and_process_data,
+            daemon=True,
+            args=(read, lambda exc: None, frame_handlers),
+        ).start()
 
-    def rpcs(self, channel_id: int = None) -> Any:
+    def rpcs(self, channel_id: Optional[int] = None) -> Any:
         """Returns object for accessing services on the specified channel.
 
         This skips some intermediate layers to make it simpler to invoke RPCs
@@ -218,6 +241,7 @@ def _try_connect(port: int, attempts: int = 10) -> socket.socket:
 
 class SocketSubprocess:
     """Executes a subprocess and connects to it with a socket."""
+
     def __init__(self, command: Sequence, port: int) -> None:
         self._server_process = subprocess.Popen(command, stdin=subprocess.PIPE)
         self.stdin = self._server_process.stdin
@@ -248,6 +272,7 @@ class HdlcRpcLocalServerAndClient:
 
     This can be used to run a local RPC server in an integration test.
     """
+
     def __init__(
         self,
         server_command: Sequence,
@@ -255,7 +280,7 @@ class HdlcRpcLocalServerAndClient:
         protos: PathsModulesOrProtoLibrary,
         *,
         incoming_processor: Optional[pw_rpc.ChannelManipulator] = None,
-        outgoing_processor: Optional[pw_rpc.ChannelManipulator] = None
+        outgoing_processor: Optional[pw_rpc.ChannelManipulator] = None,
     ) -> None:
         """Creates a new HdlcRpcLocalServerAndClient."""
 
@@ -279,7 +304,8 @@ class HdlcRpcLocalServerAndClient:
             protos,
             default_channels(self.channel_output),
             self.output.write,
-            _incoming_packet_filter_for_testing=incoming_processor).client
+            _incoming_packet_filter_for_testing=incoming_processor,
+        ).client
 
     def _read_from_socket(self):
         while True:

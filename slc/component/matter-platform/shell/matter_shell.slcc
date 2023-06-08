@@ -1,0 +1,63 @@
+id: matter_shell
+label: Matter Shell
+description: Enables the Matter Shell (CHIP Shell) functionality
+package: Matter
+category: Stack
+quality: production
+requires:
+- name: matter_uart
+- name: matter_thread_cli
+  condition: [matter_thread]
+provides:
+- name: matter_shell
+source:
+- path: examples/platform/silabs/matter_shell.cpp
+- path: examples/shell/shell_common/cmd_misc.cpp
+- path: examples/shell/shell_common/cmd_otcli.cpp
+  condition: [matter_thread]
+- path: examples/shell/shell_common/globals.cpp
+- path: src/lib/shell/Engine.cpp
+- path: src/lib/shell/streamer.cpp
+- path: src/lib/shell/streamer_silabs.cpp
+- path: src/lib/shell/MainLoopSilabs.cpp
+- path: src/lib/shell/commands/Base64.cpp
+- path: src/lib/shell/commands/Help.cpp
+- path: src/lib/shell/commands/Meta.cpp
+- path: src/lib/shell/commands/Config.cpp
+- path: src/lib/shell/commands/Device.cpp
+- path: src/lib/shell/commands/OnboardingCodes.cpp
+- path: src/lib/shell/commands/Dns.cpp
+- path: src/lib/shell/commands/BLE.cpp
+  condition: [matter_ble]
+- path: src/lib/shell/commands/WiFi.cpp
+  condition: [matter_wifi]
+- path: src/lib/shell/commands/NFC.cpp
+  condition: [matter_nfc]
+- path: src/lib/shell/commands/Ota.cpp
+  condition: [matter_ota_support]
+include:
+- path: src/lib/shell
+  file_list:
+  - path: Engine.h
+  - path: Commands.h
+  - path: streamer.h
+- path: src/lib/shell/commands
+  file_list:
+  - path: Help.h
+- path: examples/platform/silabs
+  file_list:
+  - path: matter_shell.h
+- path: examples/shell/shell_common/include
+  file_list:
+  - path: ChipShellCollection.h
+  - path: Globals.h
+define:
+- name: ENABLE_CHIP_SHELL
+- name: OPENTHREAD_CONFIG_CLI_TRANSPORT
+  value: OT_CLI_TRANSPORT_CONSOLE
+  condition: [matter_thread]
+conflicts:
+  - name: matter_low_power
+  - name: matter_sed
+  - name: matter_sed_wifi
+  - name: matter_sed_wifi_917ncp

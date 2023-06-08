@@ -13,8 +13,11 @@
 # the License.
 
 include($ENV{PW_ROOT}/pw_build/pigweed.cmake)
+include($ENV{PW_ROOT}/pw_trace/backend.cmake)
 
-pw_add_facade(pw_trace
+pw_add_facade(pw_trace INTERFACE
+  BACKEND
+    pw_trace_BACKEND
   HEADERS
     public/pw_trace/internal/trace_internal.h
     public/pw_trace/trace.h
@@ -24,9 +27,7 @@ pw_add_facade(pw_trace
     pw_preprocessor
 )
 
-pw_add_module_library(pw_trace.null
-  IMPLEMENTS_FACADES
-    pw_trace
+pw_add_library(pw_trace.null INTERFACE
   HEADERS
     public/pw_trace/internal/null.h
     public_overrides/pw_trace_backend/trace_backend.h
@@ -41,19 +42,19 @@ pw_add_test(pw_trace.pw_trace_null_test
   SOURCES
     trace_null_test.cc
     trace_null_test_c.c
-  DEPS
+  PRIVATE_DEPS
     pw_trace.null
   GROUPS
     modules
     pw_trace
 )
 
-if(NOT "${pw_trace_BACKEND}" STREQUAL "pw_trace.NO_BACKEND_SET")
+if(NOT "${pw_trace_BACKEND}" STREQUAL "")
   pw_add_test(pw_trace.trace_backend_compile_test
    SOURCES
     trace_backend_compile_test.cc
     trace_backend_compile_test_c.c
-   DEPS
+   PRIVATE_DEPS
     pw_trace
   GROUPS
     modules

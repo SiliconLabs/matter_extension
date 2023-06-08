@@ -31,69 +31,132 @@ except ImportError:
 
 _LOG = logging.getLogger(__name__)
 
-_COMMON_FLAGS = ('--experimental_allow_proto3_optional', )
-
 
 def _argument_parser() -> argparse.ArgumentParser:
     """Registers the script's arguments on an argument parser."""
 
     parser = argparse.ArgumentParser(description=__doc__)
 
-    parser.add_argument('--language',
-                        required=True,
-                        choices=DEFAULT_PROTOC_ARGS,
-                        help='Output language')
-    parser.add_argument('--plugin-path',
-                        type=Path,
-                        help='Path to the protoc plugin')
-    parser.add_argument('--include-file',
-                        type=argparse.FileType('r'),
-                        help='File containing additional protoc include paths')
-    parser.add_argument('--out-dir',
-                        type=Path,
-                        required=True,
-                        help='Output directory for generated code')
-    parser.add_argument('--compile-dir',
-                        type=Path,
-                        required=True,
-                        help='Root path for compilation')
-    parser.add_argument('--sources',
-                        type=Path,
-                        nargs='+',
-                        help='Input protobuf files')
+    parser.add_argument(
+        '--language',
+        required=True,
+        choices=DEFAULT_PROTOC_ARGS,
+        help='Output language',
+    )
+    parser.add_argument(
+        '--plugin-path', type=Path, help='Path to the protoc plugin'
+    )
+    parser.add_argument(
+        '--proto-path',
+        type=Path,
+        help='Additional protoc include paths',
+        action='append',
+    )
+    parser.add_argument(
+        '--include-file',
+        type=argparse.FileType('r'),
+        help='File containing additional protoc include paths',
+    )
+    parser.add_argument(
+        '--out-dir',
+        type=Path,
+        required=True,
+        help='Output directory for generated code',
+    )
+    parser.add_argument(
+        '--compile-dir',
+        type=Path,
+        required=True,
+        help='Root path for compilation',
+    )
+    parser.add_argument(
+        '--sources', type=Path, nargs='+', help='Input protobuf files'
+    )
+    parser.add_argument(
+        '--protoc', type=Path, default='protoc', help='Path to protoc'
+    )
+    parser.add_argument(
+        '--no-experimental-proto3-optional',
+        dest='experimental_proto3_optional',
+        action='store_false',
+        help='Do not invoke protoc with --experimental_allow_proto3_optional',
+    )
+    parser.add_argument(
+        '--no-generate-type-hints',
+        dest='generate_type_hints',
+        action='store_false',
+        help='Do not generate pyi files for python',
+    )
+    parser.add_argument(
+        '--exclude-pwpb-legacy-snake-case-field-name-enums',
+        dest='exclude_pwpb_legacy_snake_case_field_name_enums',
+        action='store_true',
+        help=(
+            'If set, generates legacy SNAKE_CASE names for field name enums '
+            'in PWPB.'
+        ),
+    )
 
     return parser
 
 
-def protoc_pwpb_args(args: argparse.Namespace) -> Tuple[str, ...]:
-    return _COMMON_FLAGS + (
+def protoc_common_args(args: argparse.Namespace) -> Tuple[str, ...]:
+    flags: Tuple[str, ...] = ()
+    if args.experimental_proto3_optional:
+        flags += ('--experimental_allow_proto3_optional',)
+    return flags
+
+
+def protoc_pwpb_args(
+    args: argparse.Namespace, include_paths: List[str]
+) -> Tuple[str, ...]:
+    out_args = [
         '--plugin',
         f'protoc-gen-custom={args.plugin_path}',
-        f'--custom_opt=-I{args.compile_dir.as_posix()}',
+        f'--custom_opt=-I{args.compile_dir}',
+        *[f'--custom_opt=-I{include_path}' for include_path in include_paths],
+    ]
+
+    if args.exclude_pwpb_legacy_snake_case_field_name_enums:
+        out_args.append(
+            '--custom_opt=--exclude-legacy-snake-case-field-name-enums'
+        )
+
+    out_args.extend(
+        [
+            '--custom_out',
+            args.out_dir,
+        ]
+    )
+
+    return tuple(out_args)
+
+
+def protoc_pwpb_rpc_args(
+    args: argparse.Namespace, _include_paths: List[str]
+) -> Tuple[str, ...]:
+    return (
+        '--plugin',
+        f'protoc-gen-custom={args.plugin_path}',
         '--custom_out',
         args.out_dir,
     )
 
 
-def protoc_pwpb_rpc_args(args: argparse.Namespace) -> Tuple[str, ...]:
-    return _COMMON_FLAGS + (
-        '--plugin',
-        f'protoc-gen-custom={args.plugin_path}',
-        '--custom_out',
-        args.out_dir,
-    )
-
-
-def protoc_go_args(args: argparse.Namespace) -> Tuple[str, ...]:
-    return _COMMON_FLAGS + (
+def protoc_go_args(
+    args: argparse.Namespace, _include_paths: List[str]
+) -> Tuple[str, ...]:
+    return (
         '--go_out',
         f'plugins=grpc:{args.out_dir}',
     )
 
 
-def protoc_nanopb_args(args: argparse.Namespace) -> Tuple[str, ...]:
+def protoc_nanopb_args(
+    args: argparse.Namespace, _include_paths: List[str]
+) -> Tuple[str, ...]:
     # nanopb needs to know of the include path to parse *.options files
-    return _COMMON_FLAGS + (
+    return (
         '--plugin',
         f'protoc-gen-nanopb={args.plugin_path}',
         # nanopb_opt provides the flags to use for nanopb_out. Windows doesn't
@@ -105,8 +168,10 @@ def protoc_nanopb_args(args: argparse.Namespace) -> Tuple[str, ...]:
     )
 
 
-def protoc_nanopb_rpc_args(args: argparse.Namespace) -> Tuple[str, ...]:
-    return _COMMON_FLAGS + (
+def protoc_nanopb_rpc_args(
+    args: argparse.Namespace, _include_paths: List[str]
+) -> Tuple[str, ...]:
+    return (
         '--plugin',
         f'protoc-gen-custom={args.plugin_path}',
         '--custom_out',
@@ -114,8 +179,10 @@ def protoc_nanopb_rpc_args(args: argparse.Namespace) -> Tuple[str, ...]:
     )
 
 
-def protoc_raw_rpc_args(args: argparse.Namespace) -> Tuple[str, ...]:
-    return _COMMON_FLAGS + (
+def protoc_raw_rpc_args(
+    args: argparse.Namespace, _include_paths: List[str]
+) -> Tuple[str, ...]:
+    return (
         '--plugin',
         f'protoc-gen-custom={args.plugin_path}',
         '--custom_out',
@@ -123,16 +190,26 @@ def protoc_raw_rpc_args(args: argparse.Namespace) -> Tuple[str, ...]:
     )
 
 
-def protoc_python_args(args: argparse.Namespace) -> Tuple[str, ...]:
-    return _COMMON_FLAGS + (
+def protoc_python_args(
+    args: argparse.Namespace, _include_paths: List[str]
+) -> Tuple[str, ...]:
+    flags: Tuple[str, ...] = (
         '--python_out',
         args.out_dir,
-        '--mypy_out',
-        args.out_dir,
     )
 
+    if args.generate_type_hints:
+        flags += (
+            '--mypy_out',
+            args.out_dir,
+        )
 
-_DefaultArgsFunction = Callable[[argparse.Namespace], Tuple[str, ...]]
+    return flags
+
+
+_DefaultArgsFunction = Callable[
+    [argparse.Namespace, List[str]], Tuple[str, ...]
+]
 
 # Default additional protoc arguments for each supported language.
 # TODO(frolv): Make these overridable with a command-line argument.
@@ -158,13 +235,16 @@ def main() -> int:
 
     if args.plugin_path is None and args.language not in BUILTIN_PROTOC_LANGS:
         parser.error(
-            f'--plugin-path is required for --language {args.language}')
+            f'--plugin-path is required for --language {args.language}'
+        )
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
 
     include_paths: List[str] = []
     if args.include_file:
-        include_paths = [f'-I{line.strip()}' for line in args.include_file]
+        include_paths.extend(line.strip() for line in args.include_file)
+    if args.proto_path:
+        include_paths.extend(str(path) for path in args.proto_path)
 
     wrapper_script: Optional[Path] = None
 
@@ -175,32 +255,36 @@ def main() -> int:
             args.plugin_path = args.plugin_path.with_suffix('.bat')
             _LOG.debug('Using Batch plugin %s', args.plugin_path)
         else:
-            with tempfile.NamedTemporaryFile('w', suffix='.bat',
-                                             delete=False) as file:
+            with tempfile.NamedTemporaryFile(
+                'w', suffix='.bat', delete=False
+            ) as file:
                 file.write(f'@echo off\npython {args.plugin_path.resolve()}\n')
 
             args.plugin_path = wrapper_script = Path(file.name)
             _LOG.debug('Using generated plugin wrapper %s', args.plugin_path)
 
     cmd: Tuple[Union[str, Path], ...] = (
-        'protoc',
+        args.protoc,
         f'-I{args.compile_dir}',
-        *include_paths,
-        *DEFAULT_PROTOC_ARGS[args.language](args),
+        *[f'-I{include_path}' for include_path in include_paths],
+        *protoc_common_args(args),
+        *DEFAULT_PROTOC_ARGS[args.language](args, include_paths),
         *args.sources,
     )
 
     try:
-        process = subprocess.run(cmd,
-                                 stdout=subprocess.PIPE,
-                                 stderr=subprocess.STDOUT)
+        process = subprocess.run(
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+        )
     finally:
         if wrapper_script:
             wrapper_script.unlink()
 
     if process.returncode != 0:
-        _LOG.error('Protocol buffer compilation failed!\n%s',
-                   ' '.join(str(c) for c in cmd))
+        _LOG.error(
+            'Protocol buffer compilation failed!\n%s',
+            ' '.join(str(c) for c in cmd),
+        )
         sys.stderr.buffer.write(process.stdout)
         sys.stderr.flush()
 

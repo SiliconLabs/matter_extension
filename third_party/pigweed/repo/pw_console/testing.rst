@@ -35,7 +35,7 @@ Log Pane: Basic Actions
      - ✅
 
    * - 1
-     - Click the :guilabel:`Fake Device Logs` window title
+     - Click the :guilabel:`Fake Device` window title
      - Log pane is focused
      - |checkbox|
 
@@ -140,7 +140,7 @@ Log Pane: Search and Filtering
      - ✅
 
    * - 1
-     - Click the :guilabel:`Fake Device Logs` window title
+     - Click the :guilabel:`Fake Device` window title
      - Log pane is focused
      - |checkbox|
 
@@ -356,6 +356,39 @@ Help Windows
      - Window is hidden
      - |checkbox|
 
+Floating Windows
+^^^^^^^^^^^^^^^^
+
+.. list-table::
+   :widths: 5 45 45 5
+   :header-rows: 1
+
+   * - #
+     - Test Action
+     - Expected Result
+     - ✅
+
+   * - 1
+     - Start ``pw-console --test-mode`` press ``Ctrl-p``
+     - The :guilabel:`Menu Items` command runner dialog appears.
+     - |checkbox|
+
+   * - 2
+     - Type :kbd:`exit` and press :kbd:`enter`.
+     - The console exits.
+     - |checkbox|
+
+   * - 3
+     - Restart ``pw-console`` but without the ``--test-mode`` option.
+     - Console starts up with ONLY the Python Results and Repl windows.
+     - |checkbox|
+
+   * - 4
+     - Press ``Ctrl-p``
+     - The :guilabel:`Menu Items` command runner dialog appears.
+     - |checkbox|
+
+
 Window Management
 ^^^^^^^^^^^^^^^^^
 
@@ -369,12 +402,12 @@ Window Management
      - ✅
 
    * - 1
-     - | Click the :guilabel:`Fake Device Logs` window title
+     - | Click the :guilabel:`Fake Device` window title
      - Log pane is focused
      - |checkbox|
 
    * - 2
-     - | Click the menu :guilabel:`Windows > #: Fake Device Logs...`
+     - | Click the menu :guilabel:`Windows > #: Fake Device...`
        | Click :guilabel:`Duplicate pane`
      - | 3 panes are visible:
        | Log pane on top
@@ -383,8 +416,8 @@ Window Management
      - |checkbox|
 
    * - 3
-     - | Click the :guilabel:`Python Input` window title
-     - Python Input pane is focused
+     - | Click the :guilabel:`Python Repl` window title
+     - Python Repl pane is focused
      - |checkbox|
 
    * - 4
@@ -410,7 +443,7 @@ Window Management
      - |checkbox|
 
    * - 7
-     - | Click the menu :guilabel:`Windows > #: Fake Device Logs...`
+     - | Click the menu :guilabel:`Windows > #: Fake Device...`
        | Click :guilabel:`Remove pane`
      - | 2 panes are visible:
        | Repl pane on the top
@@ -418,7 +451,7 @@ Window Management
      - |checkbox|
 
    * - 8
-     - | Click the :guilabel:`Python Input`
+     - | Click the :guilabel:`Python Repl`
        | window title
      - Repl pane is focused
      - |checkbox|
@@ -487,7 +520,7 @@ Mouse Window Resizing
      - ✅
 
    * - 1
-     - | Click the :guilabel:`Fake Device Logs` window
+     - | Click the :guilabel:`Fake Device` window
      - Log pane is focused
      - |checkbox|
 
@@ -507,7 +540,7 @@ Mouse Window Resizing
 
    * - 4
      - Click the :guilabel:`View > Move Window Right`
-     - :guilabel:`Fake Device Logs` should appear in a right side split
+     - :guilabel:`Fake Device` should appear in a right side split
      - |checkbox|
 
    * - 5
@@ -549,7 +582,7 @@ Copy Paste
      - ✅
 
    * - 1
-     - | Click the :guilabel:`Fake Device Logs` window title
+     - | Click the :guilabel:`Fake Device` window title
      - Log pane is focused
      - |checkbox|
 
@@ -573,7 +606,7 @@ Copy Paste
      - | Copy this text in your browser or
        | text editor to the system clipboard:
        | ``print('copy paste test!')``
-     - | Click the :guilabel:`Python Input` window title
+     - | Click the :guilabel:`Python Repl` window title
        | Press :kbd:`Ctrl-v`
        | ``print('copy paste test!')`` appears
        | after the prompt.
@@ -615,8 +648,8 @@ Copy Paste
      - |checkbox|
 
    * - 10
-     - Click the :guilabel:`Python Input` window title
-     - Python Input is focused
+     - Click the :guilabel:`Python Repl` window title
+     - Python Repl is focused
      - |checkbox|
 
    * - 11
@@ -641,8 +674,8 @@ Incremental Stdout
      - ✅
 
    * - 1
-     - | Click the :guilabel:`Python Input` window title
-     - Python Input pane is focused
+     - | Click the :guilabel:`Python Repl` window title
+     - Python Repl pane is focused
      - |checkbox|
 
    * - 2
@@ -655,7 +688,7 @@ Incremental Stdout
        | (not all at once after a delay).
      - |checkbox|
 
-Python Input & Output
+Python Repl & Output
 ^^^^^^^^^^^^^^^^^^^^^
 
 .. list-table::
@@ -678,8 +711,8 @@ Python Input & Output
      - |checkbox|
 
    * - 3
-     - Click empty whitespace in the ``Python Input`` window
-     - Python Input pane is focused
+     - Click empty whitespace in the ``Python Repl`` window
+     - Python Repl pane is focused
      - |checkbox|
 
    * - 4
@@ -698,16 +731,84 @@ Python Input & Output
 
    * - 5
      - | Enter the following text and press :kbd:`Enter` to run
-       | ``globals()``
+       | ``locals()``
      - | The results should appear pretty printed
      - |checkbox|
 
    * - 6
-     - | With the cursor over the Python Output,
+     - | Enter the following text and press :kbd:`Enter` to run
+       | ``zzzz = 'test'``
+     - | No new results are shown
+       | The previous ``locals()`` output does not show ``'zzzz': 'test'``
+     - |checkbox|
+
+   * - 7
+     - | Enter the following text and press :kbd:`Enter` to run
+       | ``locals()``
+     - | The output ends with ``'zzzz': 'test'}``
+     - |checkbox|
+
+   * - 8
+     - | With the cursor over the Python Results,
        | use the mouse wheel to scroll up and down.
      - | The output window should be able to scroll all
        | the way to the beginning and end of the buffer.
      - |checkbox|
+
+   * - 9
+     - Click empty whitespace in the ``Python Repl`` window
+     - Python Repl pane is focused
+     - |checkbox|
+
+   * - 10
+     - | Enter the following text and press :kbd:`Enter` to run
+       | ``!ls``
+     - | 1. Shell output of running the ``ls`` command should appear in the
+       | results window.
+       | 2. A new log window pane should appear titled ``Shell Output``.
+       | 3. The Shell Output window should show the command that was run and the
+       | output:
+       | ``$ ls``
+       | ``activate.bat``
+       | ``activate.sh``
+     - |checkbox|
+
+Web Log Viewer
+^^^^^^^^^^^^^^
+
+.. list-table::
+   :widths: 5 45 45 5
+   :header-rows: 1
+
+   * - #
+     - Test Action
+     - Expected Result
+     - ✅
+
+   * - 1
+     - | Start the pw console test mode by
+       | running ``pw console --test-mode``
+     - | Console starts up showing an ``Fake Device`` window.
+     - |checkbox|
+
+   * - 2
+     - | Focus on ``Fake Device`` panel and press :kbd:`Shift-o` to enable web log viewer
+     - | This should hide log stream in the console and automatically copy the
+       | URL to log viewer to the clipboard
+     - |checkbox|
+   * - 3
+     - | Focus on the ``Fake Keys`` panel with a filter applied. Then press
+       | :kbd:`Shift-o` to enable another web log viewer for that new pane. Open the
+       | new URL in Chrome
+     - | This log viewer should have filters pre-applied
+     - |checkbox|
+   * - 4
+     - | Press :kbd:`Shift-o` again on both log panes to disable web log view
+     - | This should re-enable log stream in console and stop streaming logs to
+       | web view
+     - |checkbox|
+
+
 
 Early Startup
 ^^^^^^^^^^^^^
@@ -793,11 +894,11 @@ Quit Confirmation Dialog
 
    * - 9
      - | Press :kbd:`q`
-     - | The help window disappears and the Python Input is in focus.
+     - | The help window disappears and the Python Repl is in focus.
      - |checkbox|
 
    * - 10
-     - | Type some text into the Python Input.
+     - | Type some text into the Python Repl.
        | Press :kbd:`Home` or move the cursor to the
        | beginning of the text you just entered.
        | Press :kbd:`Ctrl-d`
@@ -805,7 +906,7 @@ Quit Confirmation Dialog
      - |checkbox|
 
    * - 11
-     - | Press :kbd:`Ctrl-c` to clear the Python Input text
+     - | Press :kbd:`Ctrl-c` to clear the Python Repl text
        | Press :kbd:`Ctrl-d`
      - | The quit dialog appears.
      - |checkbox|

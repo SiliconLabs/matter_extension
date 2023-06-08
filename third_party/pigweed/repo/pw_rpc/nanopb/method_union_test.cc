@@ -25,8 +25,6 @@
 namespace pw::rpc::internal {
 namespace {
 
-using std::byte;
-
 template <typename Implementation>
 class FakeGeneratedService : public Service {
  public:
@@ -119,7 +117,7 @@ TEST(NanopbMethodUnion, Raw_CallsServerStreamingMethod) {
 
   EXPECT_TRUE(context.service().last_raw_writer.active());
   EXPECT_EQ(OkStatus(), context.service().last_raw_writer.Finish());
-  EXPECT_EQ(context.output().last_packet().type(), PacketType::RESPONSE);
+  EXPECT_EQ(context.output().last_packet().type(), pwpb::PacketType::RESPONSE);
 }
 
 TEST(NanopbMethodUnion, Nanopb_CallsUnaryMethod) {
@@ -162,7 +160,7 @@ TEST(NanopbMethodUnion, Nanopb_CallsServerStreamingMethod) {
   EXPECT_TRUE(context.service().last_writer.active());
 
   EXPECT_EQ(OkStatus(), context.service().last_writer.Finish());
-  EXPECT_EQ(context.output().last_packet().type(), PacketType::RESPONSE);
+  EXPECT_EQ(context.output().last_packet().type(), pwpb::PacketType::RESPONSE);
 }
 
 }  // namespace

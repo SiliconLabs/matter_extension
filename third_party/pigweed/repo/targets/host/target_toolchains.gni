@@ -15,6 +15,7 @@
 import("//build_overrides/pigweed.gni")
 
 import("$dir_pw_chrono/backend.gni")
+import("$dir_pw_perf_test/perf_test.gni")
 import("$dir_pw_protobuf_compiler/proto.gni")
 import("$dir_pw_rpc/system_server/backend.gni")
 import("$dir_pw_sync/backend.gni")
@@ -31,6 +32,9 @@ import("$dir_pw_trace_tokenized/config.gni")
 _host_common = {
   # Use logging-based test output on host.
   pw_unit_test_MAIN = "$dir_pw_unit_test:logging_main"
+
+  # Used to configure logging-based perftest on host
+  pw_perf_test_MAIN_FUNCTION = "$dir_pw_perf_test:log_perf_handler_main"
 
   # Configure backend for assert facade.
   pw_assert_BACKEND = "$dir_pw_assert_basic"
@@ -73,11 +77,16 @@ _host_common = {
   pw_chrono_SYSTEM_CLOCK_BACKEND = "$dir_pw_chrono_stl:system_clock"
   pw_chrono_SYSTEM_TIMER_BACKEND = "$dir_pw_chrono_stl:system_timer"
 
+  # Configure backend for pw_perf_test timing facade.
+  pw_perf_test_TIMER_INTERFACE_BACKEND = "$dir_pw_perf_test:chrono_timer"
+
   # Configure backends for pw_thread's facades.
   pw_thread_ID_BACKEND = "$dir_pw_thread_stl:id"
   pw_thread_YIELD_BACKEND = "$dir_pw_thread_stl:yield"
   pw_thread_SLEEP_BACKEND = "$dir_pw_thread_stl:sleep"
   pw_thread_THREAD_BACKEND = "$dir_pw_thread_stl:thread"
+  pw_thread_TEST_THREAD_CONTEXT_BACKEND =
+      "$dir_pw_thread_stl:test_thread_context"
 
   pw_build_LINK_DEPS = []  # Explicit list overwrite required by GN
   pw_build_LINK_DEPS = [
@@ -248,6 +257,18 @@ pw_target_toolchain_host = {
     }
   }
 
+  clang_coverage = {
+    name = "host_clang_coverage"
+    _toolchain_base = pw_toolchain_host_clang.coverage
+    forward_variables_from(_toolchain_base, "*", _excluded_members)
+    defaults = {
+      forward_variables_from(_toolchain_base.defaults, "*")
+      forward_variables_from(_host_common, "*")
+      forward_variables_from(_os_specific_config, "*")
+      default_configs += _clang_default_configs
+    }
+  }
+
   gcc_debug = {
     name = "host_gcc_debug"
     _toolchain_base = pw_toolchain_host_gcc.debug
@@ -298,6 +319,7 @@ pw_target_toolchain_host_list = [
   pw_target_toolchain_host.clang_ubsan_heuristic,
   pw_target_toolchain_host.clang_msan,
   pw_target_toolchain_host.clang_tsan,
+  pw_target_toolchain_host.clang_coverage,
   pw_target_toolchain_host.gcc_debug,
   pw_target_toolchain_host.gcc_speed_optimized,
   pw_target_toolchain_host.gcc_size_optimized,
@@ -306,6 +328,9 @@ pw_target_toolchain_host_list = [
 # Additional configuration intended only for upstream Pigweed use.
 _pigweed_internal = {
   pw_status_CONFIG = "$dir_pw_status:check_if_used"
+
+  # TODO(b/241565082): Enable NC testing in GN Windows when it is fixed.
+  pw_compilation_testing_NEGATIVE_COMPILATION_ENABLED = host_os != "win"
 }
 
 # Host toolchains exclusively for upstream Pigweed use. To give upstream Pigweed
@@ -398,6 +423,10 @@ pw_internal_host_toolchains = [
       # Set the C++ standard to C++14 instead of the default (C++17).
       pw_toolchain_CXX_STANDARD = pw_toolchain_STANDARD.CXX14
 
+      # Do not do negative compilation testing with C++14 since the code may
+      # fail to compile for different reasons than in C++17 or newer.
+      pw_compilation_testing_NEGATIVE_COMPILATION_ENABLED = false
+
       # Select C++14-compatible backends.
       pw_assert_BACKEND = "$dir_pw_assert:print_and_abort_check_backend"
       pw_log_BACKEND = "$dir_pw_log_null"
@@ -415,8 +444,26 @@ pw_internal_host_toolchains = [
       forward_variables_from(_os_specific_config, "*")
       default_configs += _internal_clang_default_configs
 
+      # Don't enable span asserts since C++20 provides the implementation for
+      # pw::span, and there's no way to ensure asserts are enabled for the C++
+      # standard library's std::span implementation.
+      pw_span_ENABLE_ASSERTS = false
+
       # Set the C++ standard to C++20 instead of the default.
       pw_toolchain_CXX_STANDARD = pw_toolchain_STANDARD.CXX20
+    }
+  },
+  {
+    name = "pw_strict_host_clang_size_optimized_minimal_cpp_stdlib"
+    _toolchain_base = pw_toolchain_host_clang.size_optimized
+    forward_variables_from(_toolchain_base, "*", _excluded_members)
+    defaults = {
+      forward_variables_from(_toolchain_base.defaults, "*")
+      forward_variables_from(_host_common, "*")
+      forward_variables_from(_pigweed_internal, "*")
+      forward_variables_from(_os_specific_config, "*")
+      default_configs += _internal_clang_default_configs
+      default_configs += [ "$dir_pw_minimal_cpp_stdlib:use_minimal_cpp_stdlib" ]
     }
   },
 ]

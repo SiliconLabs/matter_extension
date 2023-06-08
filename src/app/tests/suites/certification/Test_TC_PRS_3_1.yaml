@@ -13,7 +13,7 @@
 # limitations under the License.
 # Auto-generated scripts for harness use only, please review before automation. The endpoints and cluster names are currently set to default
 
-name: 34.3.1. [TC-PRS-3.1] Attributes with Client as DUT
+name: 34.3.1. [TC-PRS-3.1] Attributes with client as DUT
 
 PICS:
     - PRS.C
@@ -24,7 +24,7 @@ PICS:
 
 config:
     nodeId: 0x12344321
-    cluster: "Basic"
+    cluster: "Basic Information"
     endpoint: 0
 
 tests:
@@ -35,8 +35,12 @@ tests:
 
     - label:
           "DUT reads all supported mandatory attributes from TH one at a time in
-          a manufacturer specific order"
+          a manufacturer specific order."
+      PICS: PRS.C.AM-READ
       verification: |
+          Product maker needs to provide instructions for how to trigger the command on the DUT. For comparison, the DUT behavior for this test step can be simulated using chip-tool (when DUT is a commissioner/Client)
+
+
           ./chip-tool pressuremeasurement read measured-value 1 1
 
           verify the " measured-value response" on the TH (all-cluster-app) log:
@@ -108,9 +112,15 @@ tests:
 
     - label:
           "DUT reads all supported optional attributes from TH one at a time in
-          a manufacturer specific order"
+          a manufacturer specific order."
+      PICS: PRS.C.AO-READ
       verification: |
-          OPTIONAL ATTRIBUTES ARE NOT IMPLEMENTED IN SDK
+          OPTIONAL ATTRIBUTES ARE NOT IMPLEMENTED IN SDK, If Implemented we will get the expected outcome that is value of below attributes as per Spec
+
+
+          Product maker needs to provide instructions for how to trigger the command on the DUT. For comparison, the DUT behavior for this test step can be simulated using chip-tool (when DUT is a commissioner/Client)
+
+          TH receives the read command and knows this attribute for this cluster and provides a plausable value, DUT processes the values and operates normally
 
           ./chip-tool pressuremeasurement read  tolerance 1 1
           ./chip-tool pressuremeasurement read scaled-value 1 1
@@ -122,14 +132,16 @@ tests:
 
     - label:
           "DUT writes a suitable value to all supported mandatory attributes on
-          the TH one at a time in a manufacturer specific order"
+          the TH one at a time in a manufacturer specific order."
+      PICS: PRS.C.AM-WRITE
       verification: |
           This cluster doesn"t have any writable attributes
       disabled: true
 
     - label:
           "DUT writes a suitable value to all supported optional attributes on
-          the TH one at a time in a manufacturer specific order"
+          the TH one at a time in a manufacturer specific order."
+      PICS: PRS.C.AO-WRITE
       verification: |
           This cluster doesn"t have any writable attributes
       disabled: true
@@ -138,10 +150,41 @@ tests:
           "Configure TH such that it implements mandatory and none of the
           optional attributes of the server-side of the cluster, and that it
           also reflects this in global attributes such as FeatureMap and
-          AttributeList. Commission DUT to TH again"
+          AttributeList. Commission DUT to TH again."
+      PICS: ""
       verification: |
-          ./chip-tool pressuremeasurement read attribute-list  1 1
+          Product maker needs to provide instructions for how to trigger the command on the DUT. For comparison, the DUT behavior for this test step can be simulated using chip-tool (when DUT is a commissioner/Client)
 
+
+          TH receives the read command and knows this attribute for this cluster and provides a plausable value, DUT processes the values and operates normally
+
+
+          ./chip-tool pressuremeasurement read feature-map 1 1
+          verify the "  feature-map  response" on the TH (all-cluster-minimal-app) log:
+
+          [1678873303.474810][348369:348369] CHIP:EM: Handling via exchange: 59017r, Delegate: 0x55713c07aca8
+          [1678873303.474829][348369:348369] CHIP:IM: Received Read request
+          [1678873303.474872][348369:348369] CHIP:DMG: ReadRequestMessage =
+          [1678873303.474880][348369:348369] CHIP:DMG: {
+          [1678873303.474885][348369:348369] CHIP:DMG:         AttributePathIBs =
+          [1678873303.474894][348369:348369] CHIP:DMG:         [
+          [1678873303.474900][348369:348369] CHIP:DMG:                 AttributePathIB =
+          [1678873303.474908][348369:348369] CHIP:DMG:                 {
+          [1678873303.474915][348369:348369] CHIP:DMG:                         Endpoint = 0x1,
+          [1678873303.474922][348369:348369] CHIP:DMG:                         Cluster = 0x403,
+          [1678873303.474930][348369:348369] CHIP:DMG:                         Attribute = 0x0000_FFFC,
+          [1678873303.474936][348369:348369] CHIP:DMG:                 }
+          [1678873303.474944][348369:348369] CHIP:DMG:
+          [1678873303.474950][348369:348369] CHIP:DMG:         ],
+          [1678873303.474959][348369:348369] CHIP:DMG:
+          [1678873303.474966][348369:348369] CHIP:DMG:         isFabricFiltered = true,
+          [1678873303.474972][348369:348369] CHIP:DMG:         InteractionModelRevision = 1
+          [1678873303.474978][348369:348369] CHIP:DMG: },
+          [1678873303.475012][348369:348369] CHIP:DMG: IM RH moving to [GeneratingReports]
+          [1678873303.475045][348369:348369] CHIP:DMG: Building Reports for ReadHandler with LastReportGeneration = 0 DirtyGeneration = 0
+          [1678873303.475054][348369:348369] CHIP:DMG: <RE:Run> Cluster 403, Attribute fffc is dirty
+
+           ./chip-tool pressuremeasurement read attribute-list  1 1
           verify the " attribute-list response" on the TH (all-cluster-minimal-app) log:
 
           [1659606175.282588][7312:7312] CHIP:EM: Handling via exchange: 12368r, Delegate: 0xaaaaad2c4f68
@@ -241,9 +284,16 @@ tests:
 
     - label:
           "DUT reads all supported optional attributes from TH one at a time in
-          a manufacturer specific order"
+          a manufacturer specific order."
+      PICS: PRS.C.AO-READ
       verification: |
-          TH all-clusters-minimal-app does not support optional attributes
+          TH all-clusters-minimal-app does not support optional attributes, if implemted we will get "General error: 0x86 (UNSUPPORTED_ATTRIBUTE)" as output when we read following attributes.
+
+
+          Product maker needs to provide instructions for how to trigger the command on the DUT. For comparison, the DUT behavior for this test step can be simulated using chip-tool (when DUT is a commissioner/Client)
+
+
+          TH receives the read command and knows this attribute for this cluster and provides a plausable value, DUT processes the values and operates normally
 
           ./chip-tool pressuremeasurement read  tolerance 1 1
           ./chip-tool pressuremeasurement read scaled-value 1 1
@@ -255,7 +305,8 @@ tests:
 
     - label:
           "DUT writes a suitable value to all supported optional attributes on
-          the TH one at a time in a manufacturer specific order"
+          the TH one at a time in a manufacturer specific order."
+      PICS: PRS.C.AO-WRITE
       verification: |
           This cluster doesn"t have any writable attributes
       disabled: true

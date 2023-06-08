@@ -13,10 +13,11 @@
 # the License.
 
 include($ENV{PW_ROOT}/pw_build/pigweed.cmake)
+include($ENV{PW_ROOT}/pw_log_tokenized/backend.cmake)
 
 pw_add_module_config(pw_log_tokenized_CONFIG)
 
-pw_add_module_library(pw_log_tokenized.config
+pw_add_library(pw_log_tokenized.config INTERFACE
   HEADERS
     public/pw_log_tokenized/config.h
   PUBLIC_INCLUDES
@@ -26,37 +27,53 @@ pw_add_module_library(pw_log_tokenized.config
     ${pw_log_tokenized_CONFIG}
 )
 
-pw_add_module_library(pw_log_tokenized
-  IMPLEMENTS_FACADES
-    pw_log
+pw_add_library(pw_log_tokenized STATIC
+  HEADERS
+    public_overrides/pw_log_backend/log_backend.h
+  PUBLIC_INCLUDES
+    public_overrides
+  PUBLIC_DEPS
+    pw_log_tokenized.handler
+    pw_log_tokenized._headers
+  SOURCES
+    log_tokenized.cc
+)
+
+pw_add_library(pw_log_tokenized._headers INTERFACE
   HEADERS
     public/pw_log_tokenized/log_tokenized.h
-    public_overrides/pw_log_backend/log_backend.h
   PUBLIC_INCLUDES
     public
   PUBLIC_DEPS
     pw_log_tokenized.config
     pw_log_tokenized.metadata
+    pw_preprocessor
     pw_tokenizer
-  PRIVATE_DEPS
-    pw_tokenizer.global_handler_with_payload
 )
 
-pw_add_module_library(pw_log_tokenized.metadata
+pw_add_library(pw_log_tokenized.metadata INTERFACE
   HEADERS
     public/pw_log_tokenized/metadata.h
   PUBLIC_INCLUDES
     public
   PUBLIC_DEPS
-    pw_log.facade
     pw_log_tokenized.config
+)
+
+pw_add_facade(pw_log_tokenized.handler INTERFACE
+  BACKEND
+    pw_log_tokenized.handler_BACKEND
+  HEADERS
+    public/pw_log_tokenized/handler.h
+  PUBLIC_INCLUDES
+    public
+  PUBLIC_DEPS
+    pw_preprocessor
 )
 
 # This target provides a backend for pw_tokenizer that encodes tokenized logs as
 # Base64, encodes them into HDLC frames, and writes them over sys_io.
-pw_add_module_library(pw_log_tokenized.base64_over_hdlc
-  IMPLEMENTS_FACADES
-    pw_tokenizer.global_handler_with_payload
+pw_add_library(pw_log_tokenized.base64_over_hdlc STATIC
   HEADERS
     public/pw_log_tokenized/base64_over_hdlc.h
   PUBLIC_INCLUDES
@@ -65,6 +82,8 @@ pw_add_module_library(pw_log_tokenized.base64_over_hdlc
     base64_over_hdlc.cc
   PRIVATE_DEPS
     pw_hdlc.encoder
+    pw_log_tokenized.handler
+    pw_span
     pw_stream.sys_io_stream
     pw_tokenizer.base64
 )
@@ -74,8 +93,8 @@ pw_add_test(pw_log_tokenized.log_tokenized_test
     log_tokenized_test.cc
     log_tokenized_test_c.c
     pw_log_tokenized_private/test_utils.h
-  DEPS
-    pw_log_tokenized
+  PRIVATE_DEPS
+    pw_log_tokenized._headers
     pw_preprocessor
   GROUPS
     modules
@@ -85,7 +104,7 @@ pw_add_test(pw_log_tokenized.log_tokenized_test
 pw_add_test(pw_log_tokenized.metadata_test
   SOURCES
     metadata_test.cc
-  DEPS
+  PRIVATE_DEPS
     pw_log_tokenized.metadata
   GROUPS
     modules

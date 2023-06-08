@@ -15,1032 +15,1120 @@
  *    limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
+#import <Matter/MTRDefines.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRScenesClusterAttributeValuePair : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nullable attributeId;
-@property (nonatomic, copy) NSArray * _Nonnull attributeValue;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nullable attributeID API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nullable attributeId MTR_DEPRECATED(
+    "Please use attributeID", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4));
+@property (nonatomic, copy) NSArray * _Nonnull attributeValue API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRScenesClusterExtensionFieldSet : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull clusterId;
-@property (nonatomic, copy) NSArray * _Nonnull attributeValueList;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull clusterID API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull clusterId MTR_DEPRECATED(
+    "Please use clusterID", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4));
+@property (nonatomic, copy) NSArray * _Nonnull attributeValueList API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.2), macos(13.1), watchos(9.2), tvos(16.2))
 @interface MTRDescriptorClusterDeviceTypeStruct : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull type;
-@property (nonatomic, copy) NSNumber * _Nonnull revision;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull deviceType API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull type MTR_DEPRECATED(
+    "Please use deviceType", ios(16.2, 16.4), macos(13.1, 13.3), watchos(9.2, 9.4), tvos(16.2, 16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull revision API_AVAILABLE(ios(16.2), macos(13.1), watchos(9.2), tvos(16.2));
 @end
 
+MTR_DEPRECATED(
+    "Please use MTRDescriptorClusterDeviceTypeStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRDescriptorClusterDeviceType : MTRDescriptorClusterDeviceTypeStruct
+@end
+
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRBindingClusterTargetStruct : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nullable node;
-@property (nonatomic, copy) NSNumber * _Nullable group;
-@property (nonatomic, copy) NSNumber * _Nullable endpoint;
-@property (nonatomic, copy) NSNumber * _Nullable cluster;
-@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nullable node API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable group API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable endpoint API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable cluster API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRAccessControlClusterTarget : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nullable cluster;
-@property (nonatomic, copy) NSNumber * _Nullable endpoint;
-@property (nonatomic, copy) NSNumber * _Nullable deviceType;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nullable cluster API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable endpoint API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable deviceType API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
-@interface MTRAccessControlClusterAccessControlEntry : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull privilege;
-@property (nonatomic, copy) NSNumber * _Nonnull authMode;
-@property (nonatomic, copy) NSArray * _Nullable subjects;
-@property (nonatomic, copy) NSArray * _Nullable targets;
-@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRAccessControlClusterAccessControlEntryStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull privilege API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull authMode API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSArray * _Nullable subjects API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSArray * _Nullable targets API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
-@interface MTRAccessControlClusterExtensionEntry : NSObject <NSCopying>
-@property (nonatomic, copy) NSData * _Nonnull data;
-@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED("Please use MTRAccessControlClusterAccessControlEntryStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4),
+    tvos(16.1, 16.4))
+@interface MTRAccessControlClusterAccessControlEntry : MTRAccessControlClusterAccessControlEntryStruct
+@end
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRAccessControlClusterAccessControlExtensionStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSData * _Nonnull data API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
+MTR_DEPRECATED("Please use MTRAccessControlClusterAccessControlExtensionStruct", ios(16.1, 16.4), macos(13.0, 13.3),
+    watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRAccessControlClusterExtensionEntry : MTRAccessControlClusterAccessControlExtensionStruct
+@end
+
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRAccessControlClusterAccessControlEntryChangedEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nullable adminNodeID;
-@property (nonatomic, copy) NSNumber * _Nullable adminPasscodeID;
-@property (nonatomic, copy) NSNumber * _Nonnull changeType;
-@property (nonatomic, copy) MTRAccessControlClusterAccessControlEntry * _Nullable latestValue;
-@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nullable adminNodeID API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable adminPasscodeID API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull changeType API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) MTRAccessControlClusterAccessControlEntryStruct * _Nullable latestValue API_AVAILABLE(
+    ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRAccessControlClusterAccessControlExtensionChangedEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nullable adminNodeID;
-@property (nonatomic, copy) NSNumber * _Nullable adminPasscodeID;
-@property (nonatomic, copy) NSNumber * _Nonnull changeType;
-@property (nonatomic, copy) MTRAccessControlClusterExtensionEntry * _Nullable latestValue;
-@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nullable adminNodeID API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable adminPasscodeID API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull changeType API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) MTRAccessControlClusterAccessControlExtensionStruct * _Nullable latestValue API_AVAILABLE(
+    ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRActionsClusterActionStruct : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull actionID;
-@property (nonatomic, copy) NSString * _Nonnull name;
-@property (nonatomic, copy) NSNumber * _Nonnull type;
-@property (nonatomic, copy) NSNumber * _Nonnull endpointListID;
-@property (nonatomic, copy) NSNumber * _Nonnull supportedCommands;
-@property (nonatomic, copy) NSNumber * _Nonnull state;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull actionID API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSString * _Nonnull name API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull type API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull endpointListID API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull supportedCommands API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull state API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRActionsClusterEndpointListStruct : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull endpointListID;
-@property (nonatomic, copy) NSString * _Nonnull name;
-@property (nonatomic, copy) NSNumber * _Nonnull type;
-@property (nonatomic, copy) NSArray * _Nonnull endpoints;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull endpointListID API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSString * _Nonnull name API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull type API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSArray * _Nonnull endpoints API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRActionsClusterStateChangedEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull actionID;
-@property (nonatomic, copy) NSNumber * _Nonnull invokeID;
-@property (nonatomic, copy, getter=getNewState) NSNumber * _Nonnull newState;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull actionID API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull invokeID API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy, getter=getNewState)
+    NSNumber * _Nonnull newState API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRActionsClusterActionFailedEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull actionID;
-@property (nonatomic, copy) NSNumber * _Nonnull invokeID;
-@property (nonatomic, copy, getter=getNewState) NSNumber * _Nonnull newState;
-@property (nonatomic, copy) NSNumber * _Nonnull error;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull actionID API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull invokeID API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy, getter=getNewState)
+    NSNumber * _Nonnull newState API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull error API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
-@interface MTRBasicClusterCapabilityMinimaStruct : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull caseSessionsPerFabric;
-@property (nonatomic, copy) NSNumber * _Nonnull subscriptionsPerFabric;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRBasicInformationClusterCapabilityMinimaStruct : NSObject <NSCopying>
+@property (nonatomic, copy)
+    NSNumber * _Nonnull caseSessionsPerFabric API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy)
+    NSNumber * _Nonnull subscriptionsPerFabric API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
-@interface MTRBasicClusterStartUpEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull softwareVersion;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED("Please use MTRBasicInformationClusterCapabilityMinimaStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4),
+    tvos(16.1, 16.4))
+@interface MTRBasicClusterCapabilityMinimaStruct : MTRBasicInformationClusterCapabilityMinimaStruct
+@end
+MTR_NEWLY_AVAILABLE
+@interface MTRBasicInformationClusterProductAppearanceStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull finish MTR_NEWLY_AVAILABLE;
+@property (nonatomic, copy) NSNumber * _Nullable primaryColor MTR_NEWLY_AVAILABLE;
 @end
 
-@interface MTRBasicClusterShutDownEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRBasicInformationClusterStartUpEvent : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull softwareVersion API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
-@interface MTRBasicClusterLeaveEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED(
+    "Please use MTRBasicInformationClusterStartUpEvent", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRBasicClusterStartUpEvent : MTRBasicInformationClusterStartUpEvent
 @end
 
-@interface MTRBasicClusterReachableChangedEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull reachableNewValue;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRBasicInformationClusterShutDownEvent : NSObject <NSCopying>
 @end
 
+MTR_DEPRECATED(
+    "Please use MTRBasicInformationClusterShutDownEvent", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRBasicClusterShutDownEvent : MTRBasicInformationClusterShutDownEvent
+@end
+
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRBasicInformationClusterLeaveEvent : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@end
+
+MTR_DEPRECATED(
+    "Please use MTRBasicInformationClusterLeaveEvent", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRBasicClusterLeaveEvent : MTRBasicInformationClusterLeaveEvent
+@end
+
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRBasicInformationClusterReachableChangedEvent : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull reachableNewValue API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@end
+
+MTR_DEPRECATED("Please use MTRBasicInformationClusterReachableChangedEvent", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4),
+    tvos(16.1, 16.4))
+@interface MTRBasicClusterReachableChangedEvent : MTRBasicInformationClusterReachableChangedEvent
+@end
+
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
 @interface MTROTASoftwareUpdateRequestorClusterProviderLocation : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull providerNodeID;
-@property (nonatomic, copy) NSNumber * _Nonnull endpoint;
-@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull providerNodeID API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull endpoint API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
+MTR_DEPRECATED("Please use MTROTASoftwareUpdateRequestorClusterProviderLocation", ios(16.1, 16.4), macos(13.0, 13.3),
+    watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTROtaSoftwareUpdateRequestorClusterProviderLocation : MTROTASoftwareUpdateRequestorClusterProviderLocation
+@end
+
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
 @interface MTROTASoftwareUpdateRequestorClusterStateTransitionEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull previousState;
-@property (nonatomic, copy, getter=getNewState) NSNumber * _Nonnull newState;
-@property (nonatomic, copy) NSNumber * _Nonnull reason;
-@property (nonatomic, copy) NSNumber * _Nullable targetSoftwareVersion;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull previousState API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy, getter=getNewState)
+    NSNumber * _Nonnull newState API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull reason API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy)
+    NSNumber * _Nullable targetSoftwareVersion API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
+MTR_DEPRECATED("Please use MTROTASoftwareUpdateRequestorClusterStateTransitionEvent", ios(16.1, 16.4), macos(13.0, 13.3),
+    watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTROtaSoftwareUpdateRequestorClusterStateTransitionEvent : MTROTASoftwareUpdateRequestorClusterStateTransitionEvent
+@end
+
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
 @interface MTROTASoftwareUpdateRequestorClusterVersionAppliedEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull softwareVersion;
-@property (nonatomic, copy) NSNumber * _Nonnull productID;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull softwareVersion API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull productID API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
+MTR_DEPRECATED("Please use MTROTASoftwareUpdateRequestorClusterVersionAppliedEvent", ios(16.1, 16.4), macos(13.0, 13.3),
+    watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTROtaSoftwareUpdateRequestorClusterVersionAppliedEvent : MTROTASoftwareUpdateRequestorClusterVersionAppliedEvent
+@end
+
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
 @interface MTROTASoftwareUpdateRequestorClusterDownloadErrorEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull softwareVersion;
-@property (nonatomic, copy) NSNumber * _Nonnull bytesDownloaded;
-@property (nonatomic, copy) NSNumber * _Nullable progressPercent;
-@property (nonatomic, copy) NSNumber * _Nullable platformCode;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull softwareVersion API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull bytesDownloaded API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nullable progressPercent API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nullable platformCode API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
+MTR_DEPRECATED("Please use MTROTASoftwareUpdateRequestorClusterDownloadErrorEvent", ios(16.1, 16.4), macos(13.0, 13.3),
+    watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTROtaSoftwareUpdateRequestorClusterDownloadErrorEvent : MTROTASoftwareUpdateRequestorClusterDownloadErrorEvent
+@end
+
+MTR_DEPRECATED("This struct is unused and will be removed", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
 @interface MTRPowerSourceClusterBatChargeFaultChangeType : NSObject <NSCopying>
-@property (nonatomic, copy) NSArray * _Nonnull current;
-@property (nonatomic, copy) NSArray * _Nonnull previous;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSArray * _Nonnull current MTR_DEPRECATED("Please use MTRPowerSourceClusterBatChargeFaultChangeType",
+    ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4));
+@property (nonatomic, copy) NSArray * _Nonnull previous MTR_DEPRECATED("Please use MTRPowerSourceClusterBatChargeFaultChangeType",
+    ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4));
 @end
 
+MTR_DEPRECATED("This struct is unused and will be removed", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
 @interface MTRPowerSourceClusterBatFaultChangeType : NSObject <NSCopying>
-@property (nonatomic, copy) NSArray * _Nonnull current;
-@property (nonatomic, copy) NSArray * _Nonnull previous;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSArray * _Nonnull current MTR_DEPRECATED(
+    "Please use MTRPowerSourceClusterBatFaultChangeType", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4));
+@property (nonatomic, copy) NSArray * _Nonnull previous MTR_DEPRECATED(
+    "Please use MTRPowerSourceClusterBatFaultChangeType", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4));
 @end
 
+MTR_DEPRECATED("This struct is unused and will be removed", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
 @interface MTRPowerSourceClusterWiredFaultChangeType : NSObject <NSCopying>
-@property (nonatomic, copy) NSArray * _Nonnull current;
-@property (nonatomic, copy) NSArray * _Nonnull previous;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSArray * _Nonnull current MTR_DEPRECATED("Please use MTRPowerSourceClusterWiredFaultChangeType",
+    ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4));
+@property (nonatomic, copy) NSArray * _Nonnull previous MTR_DEPRECATED("Please use MTRPowerSourceClusterWiredFaultChangeType",
+    ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4));
 @end
 
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRPowerSourceClusterWiredFaultChangeEvent : NSObject <NSCopying>
+@property (nonatomic, copy) NSArray * _Nonnull current API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSArray * _Nonnull previous API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@end
+
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRPowerSourceClusterBatFaultChangeEvent : NSObject <NSCopying>
+@property (nonatomic, copy) NSArray * _Nonnull current API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSArray * _Nonnull previous API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@end
+
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRPowerSourceClusterBatChargeFaultChangeEvent : NSObject <NSCopying>
+@property (nonatomic, copy) NSArray * _Nonnull current API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSArray * _Nonnull previous API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@end
+
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRGeneralCommissioningClusterBasicCommissioningInfo : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull failSafeExpiryLengthSeconds;
-@property (nonatomic, copy) NSNumber * _Nonnull maxCumulativeFailsafeSeconds;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy)
+    NSNumber * _Nonnull failSafeExpiryLengthSeconds API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy)
+    NSNumber * _Nonnull maxCumulativeFailsafeSeconds API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRNetworkCommissioningClusterNetworkInfo : NSObject <NSCopying>
-@property (nonatomic, copy) NSData * _Nonnull networkID;
-@property (nonatomic, copy) NSNumber * _Nonnull connected;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSData * _Nonnull networkID API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull connected API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRNetworkCommissioningClusterThreadInterfaceScanResult : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull panId;
-@property (nonatomic, copy) NSNumber * _Nonnull extendedPanId;
-@property (nonatomic, copy) NSString * _Nonnull networkName;
-@property (nonatomic, copy) NSNumber * _Nonnull channel;
-@property (nonatomic, copy) NSNumber * _Nonnull version;
-@property (nonatomic, copy) NSData * _Nonnull extendedAddress;
-@property (nonatomic, copy) NSNumber * _Nonnull rssi;
-@property (nonatomic, copy) NSNumber * _Nonnull lqi;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull panId API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull extendedPanId API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSString * _Nonnull networkName API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull channel API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull version API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSData * _Nonnull extendedAddress API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull rssi API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull lqi API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRNetworkCommissioningClusterWiFiInterfaceScanResult : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull security;
-@property (nonatomic, copy) NSData * _Nonnull ssid;
-@property (nonatomic, copy) NSData * _Nonnull bssid;
-@property (nonatomic, copy) NSNumber * _Nonnull channel;
-@property (nonatomic, copy) NSNumber * _Nonnull wiFiBand;
-@property (nonatomic, copy) NSNumber * _Nonnull rssi;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull security API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSData * _Nonnull ssid API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSData * _Nonnull bssid API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull channel API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull wiFiBand API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull rssi API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
-@interface MTRGeneralDiagnosticsClusterNetworkInterfaceType : NSObject <NSCopying>
-@property (nonatomic, copy) NSString * _Nonnull name;
-@property (nonatomic, copy) NSNumber * _Nonnull isOperational;
-@property (nonatomic, copy) NSNumber * _Nullable offPremiseServicesReachableIPv4;
-@property (nonatomic, copy) NSNumber * _Nullable offPremiseServicesReachableIPv6;
-@property (nonatomic, copy) NSData * _Nonnull hardwareAddress;
-@property (nonatomic, copy) NSArray * _Nonnull iPv4Addresses;
-@property (nonatomic, copy) NSArray * _Nonnull iPv6Addresses;
-@property (nonatomic, copy) NSNumber * _Nonnull type;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRGeneralDiagnosticsClusterNetworkInterface : NSObject <NSCopying>
+@property (nonatomic, copy) NSString * _Nonnull name API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull isOperational API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy)
+    NSNumber * _Nullable offPremiseServicesReachableIPv4 API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy)
+    NSNumber * _Nullable offPremiseServicesReachableIPv6 API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSData * _Nonnull hardwareAddress API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSArray * _Nonnull iPv4Addresses API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSArray * _Nonnull iPv6Addresses API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull type API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
+MTR_DEPRECATED("Please use MTRGeneralDiagnosticsClusterNetworkInterface", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4),
+    tvos(16.1, 16.4))
+@interface MTRGeneralDiagnosticsClusterNetworkInterfaceType : MTRGeneralDiagnosticsClusterNetworkInterface
+@end
+
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRGeneralDiagnosticsClusterHardwareFaultChangeEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSArray * _Nonnull current;
-@property (nonatomic, copy) NSArray * _Nonnull previous;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSArray * _Nonnull current API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSArray * _Nonnull previous API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRGeneralDiagnosticsClusterRadioFaultChangeEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSArray * _Nonnull current;
-@property (nonatomic, copy) NSArray * _Nonnull previous;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSArray * _Nonnull current API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSArray * _Nonnull previous API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRGeneralDiagnosticsClusterNetworkFaultChangeEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSArray * _Nonnull current;
-@property (nonatomic, copy) NSArray * _Nonnull previous;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSArray * _Nonnull current API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSArray * _Nonnull previous API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRGeneralDiagnosticsClusterBootReasonEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull bootReason;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull bootReason API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
-@interface MTRSoftwareDiagnosticsClusterThreadMetrics : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull id;
-@property (nonatomic, copy) NSString * _Nullable name;
-@property (nonatomic, copy) NSNumber * _Nullable stackFreeCurrent;
-@property (nonatomic, copy) NSNumber * _Nullable stackFreeMinimum;
-@property (nonatomic, copy) NSNumber * _Nullable stackSize;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRSoftwareDiagnosticsClusterThreadMetricsStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull id API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSString * _Nullable name API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nullable stackFreeCurrent API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nullable stackFreeMinimum API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nullable stackSize API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
+MTR_DEPRECATED("Please use MTRSoftwareDiagnosticsClusterThreadMetricsStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4),
+    tvos(16.1, 16.4))
+@interface MTRSoftwareDiagnosticsClusterThreadMetrics : MTRSoftwareDiagnosticsClusterThreadMetricsStruct
+@end
+
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRSoftwareDiagnosticsClusterSoftwareFaultEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull id;
-@property (nonatomic, copy) NSString * _Nullable name;
-@property (nonatomic, copy) NSData * _Nullable faultRecording;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull id API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSString * _Nullable name API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSData * _Nullable faultRecording API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRThreadNetworkDiagnosticsClusterNeighborTable : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull extAddress;
-@property (nonatomic, copy) NSNumber * _Nonnull age;
-@property (nonatomic, copy) NSNumber * _Nonnull rloc16;
-@property (nonatomic, copy) NSNumber * _Nonnull linkFrameCounter;
-@property (nonatomic, copy) NSNumber * _Nonnull mleFrameCounter;
-@property (nonatomic, copy) NSNumber * _Nonnull lqi;
-@property (nonatomic, copy) NSNumber * _Nullable averageRssi;
-@property (nonatomic, copy) NSNumber * _Nullable lastRssi;
-@property (nonatomic, copy) NSNumber * _Nonnull frameErrorRate;
-@property (nonatomic, copy) NSNumber * _Nonnull messageErrorRate;
-@property (nonatomic, copy) NSNumber * _Nonnull rxOnWhenIdle;
-@property (nonatomic, copy) NSNumber * _Nonnull fullThreadDevice;
-@property (nonatomic, copy) NSNumber * _Nonnull fullNetworkData;
-@property (nonatomic, copy) NSNumber * _Nonnull isChild;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull extAddress API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull age API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull rloc16 API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull linkFrameCounter API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull mleFrameCounter API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull lqi API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable averageRssi API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable lastRssi API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull frameErrorRate API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull messageErrorRate API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull rxOnWhenIdle API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull fullThreadDevice API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull fullNetworkData API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull isChild API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRThreadNetworkDiagnosticsClusterOperationalDatasetComponents : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull activeTimestampPresent;
-@property (nonatomic, copy) NSNumber * _Nonnull pendingTimestampPresent;
-@property (nonatomic, copy) NSNumber * _Nonnull masterKeyPresent;
-@property (nonatomic, copy) NSNumber * _Nonnull networkNamePresent;
-@property (nonatomic, copy) NSNumber * _Nonnull extendedPanIdPresent;
-@property (nonatomic, copy) NSNumber * _Nonnull meshLocalPrefixPresent;
-@property (nonatomic, copy) NSNumber * _Nonnull delayPresent;
-@property (nonatomic, copy) NSNumber * _Nonnull panIdPresent;
-@property (nonatomic, copy) NSNumber * _Nonnull channelPresent;
-@property (nonatomic, copy) NSNumber * _Nonnull pskcPresent;
-@property (nonatomic, copy) NSNumber * _Nonnull securityPolicyPresent;
-@property (nonatomic, copy) NSNumber * _Nonnull channelMaskPresent;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy)
+    NSNumber * _Nonnull activeTimestampPresent API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy)
+    NSNumber * _Nonnull pendingTimestampPresent API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull masterKeyPresent API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull networkNamePresent API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull extendedPanIdPresent API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
+    ;
+@property (nonatomic, copy)
+    NSNumber * _Nonnull meshLocalPrefixPresent API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull delayPresent API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull panIdPresent API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull channelPresent API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull pskcPresent API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy)
+    NSNumber * _Nonnull securityPolicyPresent API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull channelMaskPresent API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRThreadNetworkDiagnosticsClusterRouteTable : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull extAddress;
-@property (nonatomic, copy) NSNumber * _Nonnull rloc16;
-@property (nonatomic, copy) NSNumber * _Nonnull routerId;
-@property (nonatomic, copy) NSNumber * _Nonnull nextHop;
-@property (nonatomic, copy) NSNumber * _Nonnull pathCost;
-@property (nonatomic, copy) NSNumber * _Nonnull lqiIn;
-@property (nonatomic, copy) NSNumber * _Nonnull lqiOut;
-@property (nonatomic, copy) NSNumber * _Nonnull age;
-@property (nonatomic, copy) NSNumber * _Nonnull allocated;
-@property (nonatomic, copy) NSNumber * _Nonnull linkEstablished;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull extAddress API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull rloc16 API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull routerId API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull nextHop API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull pathCost API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull lqiIn API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull lqiOut API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull age API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull allocated API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull linkEstablished API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRThreadNetworkDiagnosticsClusterSecurityPolicy : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull rotationTime;
-@property (nonatomic, copy) NSNumber * _Nonnull flags;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull rotationTime API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull flags API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRThreadNetworkDiagnosticsClusterConnectionStatusEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull connectionStatus;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull connectionStatus API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRThreadNetworkDiagnosticsClusterNetworkFaultChangeEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSArray * _Nonnull current;
-@property (nonatomic, copy) NSArray * _Nonnull previous;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSArray * _Nonnull current API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSArray * _Nonnull previous API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRWiFiNetworkDiagnosticsClusterDisconnectionEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull reasonCode;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull reasonCode API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRWiFiNetworkDiagnosticsClusterAssociationFailureEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull associationFailure;
-@property (nonatomic, copy) NSNumber * _Nonnull status;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull associationFailure API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull status API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRWiFiNetworkDiagnosticsClusterConnectionStatusEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull connectionStatus;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull connectionStatus API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
-@interface MTRTimeSynchronizationClusterDstOffsetType : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull offset;
-@property (nonatomic, copy) NSNumber * _Nonnull validStarting;
-@property (nonatomic, copy) NSNumber * _Nonnull validUntil;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.5), macos(13.4), watchos(9.5), tvos(16.5))
+@interface MTRTimeSynchronizationClusterDSTOffsetStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull offset API_AVAILABLE(ios(16.5), macos(13.4), watchos(9.5), tvos(16.5));
+@property (nonatomic, copy) NSNumber * _Nonnull validStarting API_AVAILABLE(ios(16.5), macos(13.4), watchos(9.5), tvos(16.5));
+@property (nonatomic, copy) NSNumber * _Nonnull validUntil API_AVAILABLE(ios(16.5), macos(13.4), watchos(9.5), tvos(16.5));
 @end
 
-@interface MTRTimeSynchronizationClusterTimeZoneType : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull offset;
-@property (nonatomic, copy) NSNumber * _Nonnull validAt;
-@property (nonatomic, copy) NSString * _Nullable name;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED("Please use MTRTimeSynchronizationClusterDSTOffsetStruct", ios(16.1, 16.5), macos(13.0, 13.4), watchos(9.1, 9.5),
+    tvos(16.1, 16.5))
+@interface MTRTimeSynchronizationClusterDstOffsetType : MTRTimeSynchronizationClusterDSTOffsetStruct
+@end
+API_AVAILABLE(ios(16.5), macos(13.4), watchos(9.5), tvos(16.5))
+@interface MTRTimeSynchronizationClusterTimeZoneStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull offset API_AVAILABLE(ios(16.5), macos(13.4), watchos(9.5), tvos(16.5));
+@property (nonatomic, copy) NSNumber * _Nonnull validAt API_AVAILABLE(ios(16.5), macos(13.4), watchos(9.5), tvos(16.5));
+@property (nonatomic, copy) NSString * _Nullable name API_AVAILABLE(ios(16.5), macos(13.4), watchos(9.5), tvos(16.5));
 @end
 
-@interface MTRBridgedDeviceBasicClusterStartUpEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull softwareVersion;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED("Please use MTRTimeSynchronizationClusterTimeZoneStruct", ios(16.1, 16.5), macos(13.0, 13.4), watchos(9.1, 9.5),
+    tvos(16.1, 16.5))
+@interface MTRTimeSynchronizationClusterTimeZoneType : MTRTimeSynchronizationClusterTimeZoneStruct
 @end
 
-@interface MTRBridgedDeviceBasicClusterShutDownEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_NEWLY_AVAILABLE
+@interface MTRBridgedDeviceBasicInformationClusterProductAppearanceStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull finish MTR_NEWLY_AVAILABLE;
+@property (nonatomic, copy) NSNumber * _Nullable primaryColor MTR_NEWLY_AVAILABLE;
 @end
 
-@interface MTRBridgedDeviceBasicClusterLeaveEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRBridgedDeviceBasicInformationClusterStartUpEvent : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull softwareVersion API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
-@interface MTRBridgedDeviceBasicClusterReachableChangedEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull reachableNewValue;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
+@interface MTRBridgedDeviceBasicClusterStartUpEvent : MTRBridgedDeviceBasicInformationClusterStartUpEvent
 @end
 
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRBridgedDeviceBasicInformationClusterShutDownEvent : NSObject <NSCopying>
+@end
+
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
+@interface MTRBridgedDeviceBasicClusterShutDownEvent : MTRBridgedDeviceBasicInformationClusterShutDownEvent
+@end
+
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRBridgedDeviceBasicInformationClusterLeaveEvent : NSObject <NSCopying>
+@end
+
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
+@interface MTRBridgedDeviceBasicClusterLeaveEvent : MTRBridgedDeviceBasicInformationClusterLeaveEvent
+@end
+
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRBridgedDeviceBasicInformationClusterReachableChangedEvent : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull reachableNewValue API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@end
+
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
+@interface MTRBridgedDeviceBasicClusterReachableChangedEvent : MTRBridgedDeviceBasicInformationClusterReachableChangedEvent
+@end
+
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRSwitchClusterSwitchLatchedEvent : NSObject <NSCopying>
-@property (nonatomic, copy, getter=getNewPosition) NSNumber * _Nonnull newPosition;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy, getter=getNewPosition)
+    NSNumber * _Nonnull newPosition API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRSwitchClusterInitialPressEvent : NSObject <NSCopying>
-@property (nonatomic, copy, getter=getNewPosition) NSNumber * _Nonnull newPosition;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy, getter=getNewPosition)
+    NSNumber * _Nonnull newPosition API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRSwitchClusterLongPressEvent : NSObject <NSCopying>
-@property (nonatomic, copy, getter=getNewPosition) NSNumber * _Nonnull newPosition;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy, getter=getNewPosition)
+    NSNumber * _Nonnull newPosition API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRSwitchClusterShortReleaseEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull previousPosition;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull previousPosition API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRSwitchClusterLongReleaseEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull previousPosition;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull previousPosition API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRSwitchClusterMultiPressOngoingEvent : NSObject <NSCopying>
-@property (nonatomic, copy, getter=getNewPosition) NSNumber * _Nonnull newPosition;
-@property (nonatomic, copy) NSNumber * _Nonnull currentNumberOfPressesCounted;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy, getter=getNewPosition)
+    NSNumber * _Nonnull newPosition API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy)
+    NSNumber * _Nonnull currentNumberOfPressesCounted API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRSwitchClusterMultiPressCompleteEvent : NSObject <NSCopying>
-@property (nonatomic, copy, getter=getNewPosition) NSNumber * _Nonnull newPosition;
-@property (nonatomic, copy) NSNumber * _Nonnull totalNumberOfPressesCounted;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull previousPosition API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy, getter=getNewPosition) NSNumber * _Nonnull newPosition MTR_DEPRECATED(
+    "Please use previousPosition", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4));
+@property (nonatomic, copy)
+    NSNumber * _Nonnull totalNumberOfPressesCounted API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
-@interface MTROperationalCredentialsClusterFabricDescriptor : NSObject <NSCopying>
-@property (nonatomic, copy) NSData * _Nonnull rootPublicKey;
-@property (nonatomic, copy) NSNumber * _Nonnull vendorId;
-@property (nonatomic, copy) NSNumber * _Nonnull fabricId;
-@property (nonatomic, copy) NSNumber * _Nonnull nodeId;
-@property (nonatomic, copy) NSString * _Nonnull label;
-@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTROperationalCredentialsClusterFabricDescriptorStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSData * _Nonnull rootPublicKey API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull vendorID API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull vendorId MTR_DEPRECATED(
+    "Please use vendorID", ios(16.4, 16.4), macos(13.3, 13.3), watchos(9.4, 9.4), tvos(16.4, 16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull fabricID API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull fabricId MTR_DEPRECATED(
+    "Please use fabricID", ios(16.4, 16.4), macos(13.3, 13.3), watchos(9.4, 9.4), tvos(16.4, 16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull nodeID API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull nodeId MTR_DEPRECATED(
+    "Please use nodeID", ios(16.4, 16.4), macos(13.3, 13.3), watchos(9.4, 9.4), tvos(16.4, 16.4));
+@property (nonatomic, copy) NSString * _Nonnull label API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
+MTR_DEPRECATED("Please use MTROperationalCredentialsClusterFabricDescriptorStruct", ios(16.1, 16.4), macos(13.0, 13.3),
+    watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTROperationalCredentialsClusterFabricDescriptor : MTROperationalCredentialsClusterFabricDescriptorStruct
+@end
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTROperationalCredentialsClusterNOCStruct : NSObject <NSCopying>
-@property (nonatomic, copy) NSData * _Nonnull noc;
-@property (nonatomic, copy) NSData * _Nullable icac;
-@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSData * _Nonnull noc API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSData * _Nullable icac API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRGroupKeyManagementClusterGroupInfoMapStruct : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull groupId;
-@property (nonatomic, copy) NSArray * _Nonnull endpoints;
-@property (nonatomic, copy) NSString * _Nullable groupName;
-@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull groupId API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSArray * _Nonnull endpoints API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSString * _Nullable groupName API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRGroupKeyManagementClusterGroupKeyMapStruct : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull groupId;
-@property (nonatomic, copy) NSNumber * _Nonnull groupKeySetID;
-@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull groupId API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull groupKeySetID API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRGroupKeyManagementClusterGroupKeySetStruct : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull groupKeySetID;
-@property (nonatomic, copy) NSNumber * _Nonnull groupKeySecurityPolicy;
-@property (nonatomic, copy) NSData * _Nullable epochKey0;
-@property (nonatomic, copy) NSNumber * _Nullable epochStartTime0;
-@property (nonatomic, copy) NSData * _Nullable epochKey1;
-@property (nonatomic, copy) NSNumber * _Nullable epochStartTime1;
-@property (nonatomic, copy) NSData * _Nullable epochKey2;
-@property (nonatomic, copy) NSNumber * _Nullable epochStartTime2;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull groupKeySetID API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy)
+    NSNumber * _Nonnull groupKeySecurityPolicy API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSData * _Nullable epochKey0 API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable epochStartTime0 API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSData * _Nullable epochKey1 API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable epochStartTime1 API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSData * _Nullable epochKey2 API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable epochStartTime2 API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRFixedLabelClusterLabelStruct : NSObject <NSCopying>
-@property (nonatomic, copy) NSString * _Nonnull label;
-@property (nonatomic, copy) NSString * _Nonnull value;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSString * _Nonnull label API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSString * _Nonnull value API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRUserLabelClusterLabelStruct : NSObject <NSCopying>
-@property (nonatomic, copy) NSString * _Nonnull label;
-@property (nonatomic, copy) NSString * _Nonnull value;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSString * _Nonnull label API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSString * _Nonnull value API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRBooleanStateClusterStateChangeEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull stateValue;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull stateValue API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
-@interface MTRModeSelectClusterSemanticTag : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull mfgCode;
-@property (nonatomic, copy) NSNumber * _Nonnull value;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRModeSelectClusterSemanticTagStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull mfgCode API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull value API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
+MTR_DEPRECATED(
+    "Please use MTRModeSelectClusterSemanticTagStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRModeSelectClusterSemanticTag : MTRModeSelectClusterSemanticTagStruct
+@end
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRModeSelectClusterModeOptionStruct : NSObject <NSCopying>
-@property (nonatomic, copy) NSString * _Nonnull label;
-@property (nonatomic, copy) NSNumber * _Nonnull mode;
-@property (nonatomic, copy) NSArray * _Nonnull semanticTags;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSString * _Nonnull label API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull mode API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSArray * _Nonnull semanticTags API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
-@interface MTRDoorLockClusterDlCredential : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull credentialType;
-@property (nonatomic, copy) NSNumber * _Nonnull credentialIndex;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRDoorLockClusterCredentialStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull credentialType API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull credentialIndex API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
+MTR_DEPRECATED(
+    "Please use MTRDoorLockClusterCredentialStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRDoorLockClusterDlCredential : MTRDoorLockClusterCredentialStruct
+@end
+
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRDoorLockClusterDoorLockAlarmEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull alarmCode;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull alarmCode API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRDoorLockClusterDoorStateChangeEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull doorState;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull doorState API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRDoorLockClusterLockOperationEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull lockOperationType;
-@property (nonatomic, copy) NSNumber * _Nonnull operationSource;
-@property (nonatomic, copy) NSNumber * _Nullable userIndex;
-@property (nonatomic, copy) NSNumber * _Nullable fabricIndex;
-@property (nonatomic, copy) NSNumber * _Nullable sourceNode;
-@property (nonatomic, copy) NSArray * _Nullable credentials;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull lockOperationType API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull operationSource API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable userIndex API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable fabricIndex API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable sourceNode API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSArray * _Nullable credentials API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRDoorLockClusterLockOperationErrorEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull lockOperationType;
-@property (nonatomic, copy) NSNumber * _Nonnull operationSource;
-@property (nonatomic, copy) NSNumber * _Nonnull operationError;
-@property (nonatomic, copy) NSNumber * _Nullable userIndex;
-@property (nonatomic, copy) NSNumber * _Nullable fabricIndex;
-@property (nonatomic, copy) NSNumber * _Nullable sourceNode;
-@property (nonatomic, copy) NSArray * _Nullable credentials;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull lockOperationType API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull operationSource API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull operationError API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable userIndex API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable fabricIndex API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable sourceNode API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSArray * _Nullable credentials API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRDoorLockClusterLockUserChangeEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull lockDataType;
-@property (nonatomic, copy) NSNumber * _Nonnull dataOperationType;
-@property (nonatomic, copy) NSNumber * _Nonnull operationSource;
-@property (nonatomic, copy) NSNumber * _Nullable userIndex;
-@property (nonatomic, copy) NSNumber * _Nullable fabricIndex;
-@property (nonatomic, copy) NSNumber * _Nullable sourceNode;
-@property (nonatomic, copy) NSNumber * _Nullable dataIndex;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull lockDataType API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull dataOperationType API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nonnull operationSource API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable userIndex API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable fabricIndex API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable sourceNode API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable dataIndex API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRPumpConfigurationAndControlClusterSupplyVoltageLowEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRPumpConfigurationAndControlClusterSupplyVoltageHighEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRPumpConfigurationAndControlClusterPowerMissingPhaseEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRPumpConfigurationAndControlClusterSystemPressureLowEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRPumpConfigurationAndControlClusterSystemPressureHighEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRPumpConfigurationAndControlClusterDryRunningEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRPumpConfigurationAndControlClusterMotorTemperatureHighEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRPumpConfigurationAndControlClusterPumpMotorFatalFailureEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRPumpConfigurationAndControlClusterElectronicTemperatureHighEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRPumpConfigurationAndControlClusterPumpBlockedEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRPumpConfigurationAndControlClusterSensorFailureEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRPumpConfigurationAndControlClusterElectronicNonFatalFailureEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRPumpConfigurationAndControlClusterElectronicFatalFailureEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRPumpConfigurationAndControlClusterGeneralFaultEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRPumpConfigurationAndControlClusterLeakageEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRPumpConfigurationAndControlClusterAirDetectionEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRPumpConfigurationAndControlClusterTurbineOperationEvent : NSObject <NSCopying>
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
 @end
 
+API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1))
 @interface MTRThermostatClusterThermostatScheduleTransition : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull transitionTime;
-@property (nonatomic, copy) NSNumber * _Nullable heatSetpoint;
-@property (nonatomic, copy) NSNumber * _Nullable coolSetpoint;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+@property (nonatomic, copy) NSNumber * _Nonnull transitionTime API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable heatSetpoint API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
+@property (nonatomic, copy) NSNumber * _Nullable coolSetpoint API_AVAILABLE(ios(16.1), macos(13.0), watchos(9.1), tvos(16.1));
 @end
 
-@interface MTRChannelClusterChannelInfo : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull majorNumber;
-@property (nonatomic, copy) NSNumber * _Nonnull minorNumber;
-@property (nonatomic, copy) NSString * _Nullable name;
-@property (nonatomic, copy) NSString * _Nullable callSign;
-@property (nonatomic, copy) NSString * _Nullable affiliateCallSign;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRChannelClusterChannelInfoStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull majorNumber API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull minorNumber API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSString * _Nullable name API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSString * _Nullable callSign API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSString * _Nullable affiliateCallSign API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
-@interface MTRChannelClusterLineupInfo : NSObject <NSCopying>
-@property (nonatomic, copy) NSString * _Nonnull operatorName;
-@property (nonatomic, copy) NSString * _Nullable lineupName;
-@property (nonatomic, copy) NSString * _Nullable postalCode;
-@property (nonatomic, copy) NSNumber * _Nonnull lineupInfoType;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED(
+    "Please use MTRChannelClusterChannelInfoStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRChannelClusterChannelInfo : MTRChannelClusterChannelInfoStruct
+@end
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRChannelClusterLineupInfoStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSString * _Nonnull operatorName API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSString * _Nullable lineupName API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSString * _Nullable postalCode API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull lineupInfoType API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
-@interface MTRTargetNavigatorClusterTargetInfo : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull identifier;
-@property (nonatomic, copy) NSString * _Nonnull name;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED(
+    "Please use MTRChannelClusterLineupInfoStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRChannelClusterLineupInfo : MTRChannelClusterLineupInfoStruct
 @end
 
-@interface MTRMediaPlaybackClusterPlaybackPosition : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull updatedAt;
-@property (nonatomic, copy) NSNumber * _Nullable position;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRTargetNavigatorClusterTargetInfoStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull identifier API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSString * _Nonnull name API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
-@interface MTRMediaInputClusterInputInfo : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull index;
-@property (nonatomic, copy) NSNumber * _Nonnull inputType;
-@property (nonatomic, copy) NSString * _Nonnull name;
-@property (nonatomic, copy) NSString * _Nonnull descriptionString;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED(
+    "Please use MTRTargetNavigatorClusterTargetInfoStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRTargetNavigatorClusterTargetInfo : MTRTargetNavigatorClusterTargetInfoStruct
 @end
 
-@interface MTRContentLauncherClusterDimension : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull width;
-@property (nonatomic, copy) NSNumber * _Nonnull height;
-@property (nonatomic, copy) NSNumber * _Nonnull metric;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRMediaPlaybackClusterPlaybackPositionStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull updatedAt API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nullable position API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
-@interface MTRContentLauncherClusterAdditionalInfo : NSObject <NSCopying>
-@property (nonatomic, copy) NSString * _Nonnull name;
-@property (nonatomic, copy) NSString * _Nonnull value;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED("Please use MTRMediaPlaybackClusterPlaybackPositionStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4),
+    tvos(16.1, 16.4))
+@interface MTRMediaPlaybackClusterPlaybackPosition : MTRMediaPlaybackClusterPlaybackPositionStruct
 @end
 
-@interface MTRContentLauncherClusterParameter : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull type;
-@property (nonatomic, copy) NSString * _Nonnull value;
-@property (nonatomic, copy) NSArray * _Nullable externalIDList;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRMediaInputClusterInputInfoStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull index API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull inputType API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSString * _Nonnull name API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSString * _Nonnull descriptionString API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
-@interface MTRContentLauncherClusterContentSearch : NSObject <NSCopying>
-@property (nonatomic, copy) NSArray * _Nonnull parameterList;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED(
+    "Please use MTRMediaInputClusterInputInfoStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRMediaInputClusterInputInfo : MTRMediaInputClusterInputInfoStruct
 @end
 
-@interface MTRContentLauncherClusterStyleInformation : NSObject <NSCopying>
-@property (nonatomic, copy) NSString * _Nullable imageUrl;
-@property (nonatomic, copy) NSString * _Nullable color;
-@property (nonatomic, copy) MTRContentLauncherClusterDimension * _Nullable size;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRContentLauncherClusterDimensionStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull width API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull height API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull metric API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
-@interface MTRContentLauncherClusterBrandingInformation : NSObject <NSCopying>
-@property (nonatomic, copy) NSString * _Nonnull providerName;
-@property (nonatomic, copy) MTRContentLauncherClusterStyleInformation * _Nullable background;
-@property (nonatomic, copy) MTRContentLauncherClusterStyleInformation * _Nullable logo;
-@property (nonatomic, copy) MTRContentLauncherClusterStyleInformation * _Nullable progressBar;
-@property (nonatomic, copy) MTRContentLauncherClusterStyleInformation * _Nullable splash;
-@property (nonatomic, copy) MTRContentLauncherClusterStyleInformation * _Nullable waterMark;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED(
+    "Please use MTRContentLauncherClusterDimensionStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRContentLauncherClusterDimension : MTRContentLauncherClusterDimensionStruct
+@end
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRContentLauncherClusterAdditionalInfoStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSString * _Nonnull name API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSString * _Nonnull value API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
-@interface MTRAudioOutputClusterOutputInfo : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull index;
-@property (nonatomic, copy) NSNumber * _Nonnull outputType;
-@property (nonatomic, copy) NSString * _Nonnull name;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED("Please use MTRContentLauncherClusterAdditionalInfoStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4),
+    tvos(16.1, 16.4))
+@interface MTRContentLauncherClusterAdditionalInfo : MTRContentLauncherClusterAdditionalInfoStruct
+@end
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRContentLauncherClusterParameterStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull type API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSString * _Nonnull value API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSArray * _Nullable externalIDList API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
-@interface MTRApplicationLauncherClusterApplication : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull catalogVendorId;
-@property (nonatomic, copy) NSString * _Nonnull applicationId;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED(
+    "Please use MTRContentLauncherClusterParameterStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRContentLauncherClusterParameter : MTRContentLauncherClusterParameterStruct
+@end
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRContentLauncherClusterContentSearchStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSArray * _Nonnull parameterList API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
-@interface MTRApplicationLauncherClusterApplicationEP : NSObject <NSCopying>
-@property (nonatomic, copy) MTRApplicationLauncherClusterApplication * _Nonnull application;
-@property (nonatomic, copy) NSNumber * _Nullable endpoint;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED("Please use MTRContentLauncherClusterContentSearchStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4),
+    tvos(16.1, 16.4))
+@interface MTRContentLauncherClusterContentSearch : MTRContentLauncherClusterContentSearchStruct
+@end
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRContentLauncherClusterStyleInformationStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSString * _Nullable imageURL API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSString * _Nullable imageUrl MTR_DEPRECATED(
+    "Please use imageURL", ios(16.4, 16.4), macos(13.3, 13.3), watchos(9.4, 9.4), tvos(16.4, 16.4));
+@property (nonatomic, copy) NSString * _Nullable color API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy)
+    MTRContentLauncherClusterDimensionStruct * _Nullable size API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
-@interface MTRApplicationBasicClusterApplicationBasicApplication : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull catalogVendorId;
-@property (nonatomic, copy) NSString * _Nonnull applicationId;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED("Please use MTRContentLauncherClusterStyleInformationStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4),
+    tvos(16.1, 16.4))
+@interface MTRContentLauncherClusterStyleInformation : MTRContentLauncherClusterStyleInformationStruct
+@end
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRContentLauncherClusterBrandingInformationStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSString * _Nonnull providerName API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) MTRContentLauncherClusterStyleInformationStruct * _Nullable background API_AVAILABLE(
+    ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) MTRContentLauncherClusterStyleInformationStruct * _Nullable logo API_AVAILABLE(
+    ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) MTRContentLauncherClusterStyleInformationStruct * _Nullable progressBar API_AVAILABLE(
+    ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) MTRContentLauncherClusterStyleInformationStruct * _Nullable splash API_AVAILABLE(
+    ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) MTRContentLauncherClusterStyleInformationStruct * _Nullable waterMark API_AVAILABLE(
+    ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
-@interface MTRTestClusterClusterSimpleStruct : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull a;
-@property (nonatomic, copy) NSNumber * _Nonnull b;
-@property (nonatomic, copy) NSNumber * _Nonnull c;
-@property (nonatomic, copy) NSData * _Nonnull d;
-@property (nonatomic, copy) NSString * _Nonnull e;
-@property (nonatomic, copy) NSNumber * _Nonnull f;
-@property (nonatomic, copy) NSNumber * _Nonnull g;
-@property (nonatomic, copy) NSNumber * _Nonnull h;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED("Please use MTRContentLauncherClusterBrandingInformationStruct", ios(16.1, 16.4), macos(13.0, 13.3),
+    watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRContentLauncherClusterBrandingInformation : MTRContentLauncherClusterBrandingInformationStruct
 @end
 
-@interface MTRTestClusterClusterTestFabricScoped : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull fabricSensitiveInt8u;
-@property (nonatomic, copy) NSNumber * _Nullable optionalFabricSensitiveInt8u;
-@property (nonatomic, copy) NSNumber * _Nullable nullableFabricSensitiveInt8u;
-@property (nonatomic, copy) NSNumber * _Nullable nullableOptionalFabricSensitiveInt8u;
-@property (nonatomic, copy) NSString * _Nonnull fabricSensitiveCharString;
-@property (nonatomic, copy) MTRTestClusterClusterSimpleStruct * _Nonnull fabricSensitiveStruct;
-@property (nonatomic, copy) NSArray * _Nonnull fabricSensitiveInt8uList;
-@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRAudioOutputClusterOutputInfoStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull index API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull outputType API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSString * _Nonnull name API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
-@interface MTRTestClusterClusterNullablesAndOptionalsStruct : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nullable nullableInt;
-@property (nonatomic, copy) NSNumber * _Nullable optionalInt;
-@property (nonatomic, copy) NSNumber * _Nullable nullableOptionalInt;
-@property (nonatomic, copy) NSString * _Nullable nullableString;
-@property (nonatomic, copy) NSString * _Nullable optionalString;
-@property (nonatomic, copy) NSString * _Nullable nullableOptionalString;
-@property (nonatomic, copy) MTRTestClusterClusterSimpleStruct * _Nullable nullableStruct;
-@property (nonatomic, copy) MTRTestClusterClusterSimpleStruct * _Nullable optionalStruct;
-@property (nonatomic, copy) MTRTestClusterClusterSimpleStruct * _Nullable nullableOptionalStruct;
-@property (nonatomic, copy) NSArray * _Nullable nullableList;
-@property (nonatomic, copy) NSArray * _Nullable optionalList;
-@property (nonatomic, copy) NSArray * _Nullable nullableOptionalList;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED(
+    "Please use MTRAudioOutputClusterOutputInfoStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRAudioOutputClusterOutputInfo : MTRAudioOutputClusterOutputInfoStruct
 @end
 
-@interface MTRTestClusterClusterNestedStruct : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull a;
-@property (nonatomic, copy) NSNumber * _Nonnull b;
-@property (nonatomic, copy) MTRTestClusterClusterSimpleStruct * _Nonnull c;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRApplicationLauncherClusterApplicationStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull catalogVendorID API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull catalogVendorId MTR_DEPRECATED(
+    "Please use catalogVendorID", ios(16.4, 16.4), macos(13.3, 13.3), watchos(9.4, 9.4), tvos(16.4, 16.4));
+@property (nonatomic, copy) NSString * _Nonnull applicationID API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSString * _Nonnull applicationId MTR_DEPRECATED(
+    "Please use applicationID", ios(16.4, 16.4), macos(13.3, 13.3), watchos(9.4, 9.4), tvos(16.4, 16.4));
 @end
 
-@interface MTRTestClusterClusterNestedStructList : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull a;
-@property (nonatomic, copy) NSNumber * _Nonnull b;
-@property (nonatomic, copy) MTRTestClusterClusterSimpleStruct * _Nonnull c;
-@property (nonatomic, copy) NSArray * _Nonnull d;
-@property (nonatomic, copy) NSArray * _Nonnull e;
-@property (nonatomic, copy) NSArray * _Nonnull f;
-@property (nonatomic, copy) NSArray * _Nonnull g;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED("Please use MTRApplicationLauncherClusterApplicationStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4),
+    tvos(16.1, 16.4))
+@interface MTRApplicationLauncherClusterApplication : MTRApplicationLauncherClusterApplicationStruct
+@end
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRApplicationLauncherClusterApplicationEPStruct : NSObject <NSCopying>
+@property (nonatomic, copy) MTRApplicationLauncherClusterApplicationStruct * _Nonnull application API_AVAILABLE(
+    ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nullable endpoint API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
 @end
 
-@interface MTRTestClusterClusterDoubleNestedStructList : NSObject <NSCopying>
-@property (nonatomic, copy) NSArray * _Nonnull a;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED("Please use MTRApplicationLauncherClusterApplicationEPStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4),
+    tvos(16.1, 16.4))
+@interface MTRApplicationLauncherClusterApplicationEP : MTRApplicationLauncherClusterApplicationEPStruct
 @end
 
-@interface MTRTestClusterClusterTestListStructOctet : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull member1;
-@property (nonatomic, copy) NSData * _Nonnull member2;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRApplicationBasicClusterApplicationStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull catalogVendorID API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull catalogVendorId MTR_DEPRECATED(
+    "Please use catalogVendorID", ios(16.4, 16.4), macos(13.3, 13.3), watchos(9.4, 9.4), tvos(16.4, 16.4));
+@property (nonatomic, copy) NSString * _Nonnull applicationID API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSString * _Nonnull applicationId MTR_DEPRECATED(
+    "Please use applicationID", ios(16.4, 16.4), macos(13.3, 13.3), watchos(9.4, 9.4), tvos(16.4, 16.4));
 @end
 
-@interface MTRTestClusterClusterTestEventEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull arg1;
-@property (nonatomic, copy) NSNumber * _Nonnull arg2;
-@property (nonatomic, copy) NSNumber * _Nonnull arg3;
-@property (nonatomic, copy) MTRTestClusterClusterSimpleStruct * _Nonnull arg4;
-@property (nonatomic, copy) NSArray * _Nonnull arg5;
-@property (nonatomic, copy) NSArray * _Nonnull arg6;
-
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED("Please use MTRApplicationBasicClusterApplicationStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4),
+    tvos(16.1, 16.4))
+@interface MTRApplicationBasicClusterApplicationBasicApplication : MTRApplicationBasicClusterApplicationStruct
 @end
 
-@interface MTRTestClusterClusterTestFabricScopedEventEvent : NSObject <NSCopying>
-@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex;
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRUnitTestingClusterSimpleStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull a API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull b API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull c API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSData * _Nonnull d API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSString * _Nonnull e API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull f API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull g API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull h API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@end
 
-- (instancetype)init;
-- (id)copyWithZone:(NSZone * _Nullable)zone;
+MTR_DEPRECATED(
+    "Please use MTRUnitTestingClusterSimpleStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRTestClusterClusterSimpleStruct : MTRUnitTestingClusterSimpleStruct
+@end
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRUnitTestingClusterTestFabricScoped : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull fabricSensitiveInt8u API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+    ;
+@property (nonatomic, copy)
+    NSNumber * _Nullable optionalFabricSensitiveInt8u API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy)
+    NSNumber * _Nullable nullableFabricSensitiveInt8u API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy)
+    NSNumber * _Nullable nullableOptionalFabricSensitiveInt8u API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy)
+    NSString * _Nonnull fabricSensitiveCharString API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) MTRUnitTestingClusterSimpleStruct * _Nonnull fabricSensitiveStruct API_AVAILABLE(
+    ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy)
+    NSArray * _Nonnull fabricSensitiveInt8uList API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@end
+
+MTR_DEPRECATED(
+    "Please use MTRUnitTestingClusterTestFabricScoped", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRTestClusterClusterTestFabricScoped : MTRUnitTestingClusterTestFabricScoped
+@end
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRUnitTestingClusterNullablesAndOptionalsStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nullable nullableInt API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nullable optionalInt API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nullable nullableOptionalInt API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+    ;
+@property (nonatomic, copy) NSString * _Nullable nullableString API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSString * _Nullable optionalString API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy)
+    NSString * _Nullable nullableOptionalString API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy)
+    MTRUnitTestingClusterSimpleStruct * _Nullable nullableStruct API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy)
+    MTRUnitTestingClusterSimpleStruct * _Nullable optionalStruct API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) MTRUnitTestingClusterSimpleStruct * _Nullable nullableOptionalStruct API_AVAILABLE(
+    ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSArray * _Nullable nullableList API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSArray * _Nullable optionalList API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSArray * _Nullable nullableOptionalList API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+    ;
+@end
+
+MTR_DEPRECATED("Please use MTRUnitTestingClusterNullablesAndOptionalsStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4),
+    tvos(16.1, 16.4))
+@interface MTRTestClusterClusterNullablesAndOptionalsStruct : MTRUnitTestingClusterNullablesAndOptionalsStruct
+@end
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRUnitTestingClusterNestedStruct : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull a API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull b API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy)
+    MTRUnitTestingClusterSimpleStruct * _Nonnull c API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@end
+
+MTR_DEPRECATED(
+    "Please use MTRUnitTestingClusterNestedStruct", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRTestClusterClusterNestedStruct : MTRUnitTestingClusterNestedStruct
+@end
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRUnitTestingClusterNestedStructList : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull a API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull b API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy)
+    MTRUnitTestingClusterSimpleStruct * _Nonnull c API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSArray * _Nonnull d API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSArray * _Nonnull e API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSArray * _Nonnull f API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSArray * _Nonnull g API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@end
+
+MTR_DEPRECATED(
+    "Please use MTRUnitTestingClusterNestedStructList", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRTestClusterClusterNestedStructList : MTRUnitTestingClusterNestedStructList
+@end
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRUnitTestingClusterDoubleNestedStructList : NSObject <NSCopying>
+@property (nonatomic, copy) NSArray * _Nonnull a API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@end
+
+MTR_DEPRECATED("Please use MTRUnitTestingClusterDoubleNestedStructList", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4),
+    tvos(16.1, 16.4))
+@interface MTRTestClusterClusterDoubleNestedStructList : MTRUnitTestingClusterDoubleNestedStructList
+@end
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRUnitTestingClusterTestListStructOctet : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull member1 API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSData * _Nonnull member2 API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@end
+
+MTR_DEPRECATED(
+    "Please use MTRUnitTestingClusterTestListStructOctet", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRTestClusterClusterTestListStructOctet : MTRUnitTestingClusterTestListStructOctet
+@end
+
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRUnitTestingClusterTestEventEvent : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull arg1 API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull arg2 API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSNumber * _Nonnull arg3 API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy)
+    MTRUnitTestingClusterSimpleStruct * _Nonnull arg4 API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSArray * _Nonnull arg5 API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@property (nonatomic, copy) NSArray * _Nonnull arg6 API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@end
+
+MTR_DEPRECATED(
+    "Please use MTRUnitTestingClusterTestEventEvent", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4), tvos(16.1, 16.4))
+@interface MTRTestClusterClusterTestEventEvent : MTRUnitTestingClusterTestEventEvent
+@end
+
+API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4))
+@interface MTRUnitTestingClusterTestFabricScopedEventEvent : NSObject <NSCopying>
+@property (nonatomic, copy) NSNumber * _Nonnull fabricIndex API_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4));
+@end
+
+MTR_DEPRECATED("Please use MTRUnitTestingClusterTestFabricScopedEventEvent", ios(16.1, 16.4), macos(13.0, 13.3), watchos(9.1, 9.4),
+    tvos(16.1, 16.4))
+@interface MTRTestClusterClusterTestFabricScopedEventEvent : MTRUnitTestingClusterTestFabricScopedEventEvent
 @end
 
 NS_ASSUME_NONNULL_END

@@ -1,101 +1,95 @@
 [  {
-  "clusterCode": "diagnostic-logs-server",
+  "clusterCode": "diagnostic logs-server",
   "value": [
     "%extension-matter%matter_diagnostic_logs"
   ]
 },
 {
-  "clusterCode": "color-control-server",
+  "clusterCode": "color control-server",
   "value": [
     "%extension-matter%matter_color_control"
   ]
 },
 {
-  "clusterCode": "thermostat-user-interface-configuration-server",
+  "clusterCode": "thermostat user interface configuration-server",
   "value": [
     "%extension-matter%matter_thermostat_user_interface_configuration"
   ]
 },
 {
-  "clusterCode": "general-commissioning-server",
+  "clusterCode": "general commissioning-server",
   "value": [
     "%extension-matter%matter_general_commissioning"
   ]
 },
 {
-  "clusterCode": "group-key-mgmt-server",
+  "clusterCode": "group key management-server",
   "value": [
     "%extension-matter%matter_group_key_mgmt"
   ]
 },
 {
-  "clusterCode": "test-cluster-server",
+  "clusterCode": "test cluster-server",
   "value": [
     "%extension-matter%matter_test_cluster"
   ]
 },
 {
-  "clusterCode": "content-launch-server",
+  "clusterCode": "content launcher-server",
   "value": [
     "%extension-matter%matter_content_launch"
   ]
 },
 {
-  "clusterCode": "scenes",
+  "clusterCode": "scenes-server",
   "value": [
     "%extension-matter%matter_scenes"
   ]
 },
 {
-  "clusterCode": "fan-control-server",
+  "clusterCode": "fan control-server",
   "value": [
     "%extension-matter%matter_fan_control"
   ]
 },
 {
-  "clusterCode": "audio-output-server",
+  "clusterCode": "audio output-server",
   "value": [
     "%extension-matter%matter_audio_output"
   ]
 },
 {
-  "clusterCode": "power-source-configuration-server",
+  "clusterCode": "power source configuration-server",
   "value": [
     "%extension-matter%matter_power_source_configuration"
   ]
 },
 {
-  "clusterCode": "ias-zone-client",
-  "value": [
-    "%extension-matter%matter_ias_zone_client"
-  ]
-},
-{
-  "clusterCode": "software-diagnostics-server",
+  "clusterCode": "software diagnostics-server",
   "value": [
     "%extension-matter%matter_software_diagnostics"
   ]
 },
 {
-  "clusterCode": "pump-configuration-and-control-server",
+  "clusterCode": "pump configuration and control-server",
   "value": [
     "%extension-matter%matter_pump_configuration_and_control"
   ]
 },
 {
-  "clusterCode": "mode-select-server",
+  "clusterCode": "mode select-server",
   "value": [
     "%extension-matter%matter_mode_select"
   ]
 },
 {
-  "clusterCode": "user-label-server",
+  "clusterCode": "user label-server",
   "value": [
     "%extension-matter%matter_user_label"
   ]
 },
 {
-  "clusterCode": "door-lock-server",
+  "clusterCode": "door lock-server",
   "value": [
     "%extension-matter%matter_door_lock"
   ]
@@ -119,25 +113,25 @@
   ]
 },
 {
-  "clusterCode": "media-playback-server",
+  "clusterCode": "media playback-server",
   "value": [
     "%extension-matter%matter_media_playback"
   ]
 },
 {
-  "clusterCode": "basic",
+  "clusterCode": "basic-server",
   "value": [
     "%extension-matter%matter_basic"
   ]
 },
 {
-  "clusterCode": "fault-injection-server",
+  "clusterCode": "fault injection-server",
   "value": [
     "%extension-matter%matter_fault_injection"
   ]
 },
 {
-  "clusterCode": "operational-credentials-server",
+  "clusterCode": "operational credentials-server",
   "value": [
     "%extension-matter%matter_operational_credentials"
   ]
@@ -155,31 +149,31 @@
   ]
 },
 {
-  "clusterCode": "thread-network-diagnostics-server",
+  "clusterCode": "thread network diagnostics-server",
   "value": [
     "%extension-matter%matter_thread_network_diagnostics"
   ]
 },
 {
-  "clusterCode": "ota-provider",
+  "clusterCode": "ota software update provider-server",
   "value": [
     "%extension-matter%matter_ota_provider"
   ]
 },
 {
-  "clusterCode": "network-commissioning",
+  "clusterCode": "network commissioning-server",
   "value": [
     "%extension-matter%matter_network_commissioning"
   ]
 },
 {
-  "clusterCode": "ota-requestor-server",
+  "clusterCode": "ota software update requestor-server",
   "value": [
     "%extension-matter%matter_ota_requestor"
   ]
 },
 {
-  "clusterCode": "application-basic-server",
+  "clusterCode": "application basic-server",
   "value": [
     "%extension-matter%matter_application_basic"
   ]
@@ -191,31 +185,31 @@
   ]
 },
 {
-  "clusterCode": "ethernet-network-diagnostics-server",
+  "clusterCode": "ethernet network diagnostics-server",
   "value": [
     "%extension-matter%matter_ethernet_network_diagnostics"
   ]
 },
 {
-  "clusterCode": "general-diagnostics-server",
+  "clusterCode": "general diagnostics-server",
   "value": [
     "%extension-matter%matter_general_diagnostics"
   ]
 },
 {
-  "clusterCode": "administrator-commissioning-server",
+  "clusterCode": "administratorcommissioning-server",
   "value": [
     "%extension-matter%matter_administrator_commissioning"
   ]
 },
 {
-  "clusterCode": "time-format-localization-server",
+  "clusterCode": "time format localization-server",
   "value": [
     "%extension-matter%matter_time_format_localization"
   ]
 },
 {
-  "clusterCode": "media-input-server",
+  "clusterCode": "media input-server",
   "value": [
     "%extension-matter%matter_media_input"
   ]
@@ -227,37 +221,31 @@
   ]
 },
 {
-  "clusterCode": "fixed-label-server",
+  "clusterCode": "fixed label-server",
   "value": [
     "%extension-matter%matter_fixed_label"
   ]
 },
 {
-  "clusterCode": "application-launcher-server",
+  "clusterCode": "application launcher-server",
   "value": [
     "%extension-matter%matter_application_launcher"
   ]
 },
 {
-  "clusterCode": "ias-zone-server",
-  "value": [
-    "%extension-matter%matter_ias_zone"
-  ]
-},
-{
-  "clusterCode": "wifi-network-diagnostics-server",
+  "clusterCode": "wifi network diagnostics-server",
   "value": [
     "%extension-matter%matter_wifi_network_diagnostics"
   ]
 },
 {
-  "clusterCode": "descriptor",
+  "clusterCode": "descriptor-server",
   "value": [
     "%extension-matter%matter_descriptor"
   ]
 },
 {
-  "clusterCode": "barrier-control-server",
+  "clusterCode": "barrier control-server",
   "value": [
     "%extension-matter%matter_barrier_control"
   ]
@@ -269,31 +257,31 @@
   ]
 },
 {
-  "clusterCode": "pump-configuration-and-control-client",
+  "clusterCode": "pump configuration and control-client",
   "value": [
     "%extension-matter%matter_pump_configuration_and_control_client"
   ]
 },
 {
-  "clusterCode": "window-covering-server",
+  "clusterCode": "window covering-server",
   "value": [
     "%extension-matter%matter_window_covering"
   ]
 },
 {
-  "clusterCode": "power-source-server",
+  "clusterCode": "power source-server",
   "value": [
     "%extension-matter%matter_power_source"
   ]
 },
 {
-  "clusterCode": "bindings",
+  "clusterCode": "binding-server",
   "value": [
     "%extension-matter%matter_bindings"
   ]
 },
 {
-  "clusterCode": "occupancy-sensor-server",
+  "clusterCode": "occupancy sensing-server",
   "value": [
     "%extension-matter%matter_occupancy_sensor"
   ]
@@ -311,31 +299,31 @@
   ]
 },
 {
-  "clusterCode": "low-power-server",
+  "clusterCode": "low power-client",
   "value": [
     "%extension-matter%matter_low_power"
   ]
 },
 {
-  "clusterCode": "keypad-input-server",
+  "clusterCode": "keypad input-server",
   "value": [
     "%extension-matter%matter_keypad_input"
   ]
 },
 {
-  "clusterCode": "access-control-server",
+  "clusterCode": "access control-server",
   "value": [
     "%extension-matter%matter_access_control"
   ]
 },
 {
-  "clusterCode": "bridged-device-basic-information-server",
+  "clusterCode": "bridged device basic-server",
   "value": [
     "%extension-matter%matter_bridged_device_basic_information"
   ]
 },
 {
-  "clusterCode": "account-login-server",
+  "clusterCode": "account login-server",
   "value": [
     "%extension-matter%matter_account_login"
   ]
@@ -347,19 +335,19 @@
   ]
 },
 {
-  "clusterCode": "wake-on-lan-server",
+  "clusterCode": "wake on lan-server",
   "value": [
     "%extension-matter%matter_wake_on_lan"
   ]
 },
 {
-  "clusterCode": "target-navigator-server",
+  "clusterCode": "target navigator-server",
   "value": [
     "%extension-matter%matter_target_navigator"
   ]
 },
 {
-  "clusterCode": "localization-configuration-server",
+  "clusterCode": "localization configuration-server",
   "value": [
     "%extension-matter%matter_localization_configuration"
   ]

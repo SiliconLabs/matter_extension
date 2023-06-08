@@ -16,7 +16,7 @@ include($ENV{PW_ROOT}/pw_build/pigweed.cmake)
 
 pw_add_module_config(pw_string_CONFIG)
 
-pw_add_module_library(pw_string.config
+pw_add_library(pw_string.config INTERFACE
   HEADERS
     public/pw_string/internal/config.h
   PUBLIC_INCLUDES
@@ -25,7 +25,7 @@ pw_add_module_library(pw_string.config
     ${pw_string_CONFIG}
 )
 
-pw_add_module_library(pw_string
+pw_add_library(pw_string INTERFACE
   PUBLIC_DEPS
     pw_string.builder
     pw_string.format
@@ -33,13 +33,14 @@ pw_add_module_library(pw_string
     pw_string.util
 )
 
-pw_add_module_library(pw_string.builder
+pw_add_library(pw_string.builder STATIC
   HEADERS
     public/pw_string/string_builder.h
   PUBLIC_INCLUDES
     public
   PUBLIC_DEPS
     pw_string.format
+    pw_string.string
     pw_string.to_string
     pw_string.util
     pw_preprocessor
@@ -48,7 +49,7 @@ pw_add_module_library(pw_string.builder
     string_builder.cc
 )
 
-pw_add_module_library(pw_string.format
+pw_add_library(pw_string.format STATIC
   HEADERS
     public/pw_string/format.h
   PUBLIC_INCLUDES
@@ -57,11 +58,23 @@ pw_add_module_library(pw_string.format
     pw_preprocessor
     pw_span
     pw_status
+    pw_string.string
   SOURCES
     format.cc
 )
 
-pw_add_module_library(pw_string.to_string
+pw_add_library(pw_string.string INTERFACE
+  HEADERS
+    public/pw_string/string.h
+    public/pw_string/internal/string_impl.h
+  PUBLIC_INCLUDES
+    public
+  PUBLIC_DEPS
+    pw_assert
+    pw_polyfill
+)
+
+pw_add_library(pw_string.to_string STATIC
   HEADERS
     public/pw_string/to_string.h
     public/pw_string/type_to_string.h
@@ -72,11 +85,13 @@ pw_add_module_library(pw_string.to_string
     pw_string.format
     pw_string.util
     pw_status
+  PRIVATE_DEPS
+    pw_third_party.fuchsia.stdcompat
   SOURCES
     type_to_string.cc
 )
 
-pw_add_module_library(pw_string.util
+pw_add_library(pw_string.util STATIC
   HEADERS
     public/pw_string/util.h
   PUBLIC_INCLUDES
@@ -86,25 +101,15 @@ pw_add_module_library(pw_string.util
     pw_result
     pw_span
     pw_status
+    pw_string.string
   SOURCES
     public/pw_string/internal/length.h
-)
-
-pw_add_module_library(pw_string.vector
-  HEADERS
-    public/pw_string/vector.h
-  PUBLIC_INCLUDES
-    public
-  PUBLIC_DEPS
-    pw_containers.vector
-    pw_status
-    pw_string
 )
 
 pw_add_test(pw_string.format_test
   SOURCES
     format_test.cc
-  DEPS
+  PRIVATE_DEPS
     pw_string
   GROUPS
     modules
@@ -114,8 +119,19 @@ pw_add_test(pw_string.format_test
 pw_add_test(pw_string.string_builder_test
   SOURCES
     string_builder_test.cc
-  DEPS
+  PRIVATE_DEPS
     pw_string
+  GROUPS
+    modules
+    pw_string
+)
+
+pw_add_test(pw_string.string_test
+  SOURCES
+    string_test.cc
+  PRIVATE_DEPS
+    pw_compilation_testing._pigweed_only_negative_compilation
+    pw_string.string
   GROUPS
     modules
     pw_string
@@ -124,7 +140,7 @@ pw_add_test(pw_string.string_builder_test
 pw_add_test(pw_string.to_string_test
   SOURCES
     to_string_test.cc
-  DEPS
+  PRIVATE_DEPS
     pw_string
     pw_string.config
   GROUPS
@@ -135,7 +151,7 @@ pw_add_test(pw_string.to_string_test
 pw_add_test(pw_string.type_to_string_test
   SOURCES
     type_to_string_test.cc
-  DEPS
+  PRIVATE_DEPS
     pw_string
   GROUPS
     modules
@@ -145,24 +161,9 @@ pw_add_test(pw_string.type_to_string_test
 pw_add_test(pw_string.util_test
   SOURCES
     util_test.cc
-  DEPS
+  PRIVATE_DEPS
     pw_string
   GROUPS
     modules
     pw_string
 )
-
-pw_add_test(pw_string.vector_test
-  SOURCES
-    vector_test.cc
-  DEPS
-    pw_containers.vector
-    pw_string.vector
-  GROUPS
-    modules
-    pw_string
-)
-
-if(Zephyr_FOUND AND CONFIG_PIGWEED_STRING)
-  zephyr_link_libraries(pw_string)
-endif()

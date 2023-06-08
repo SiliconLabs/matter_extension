@@ -10,7 +10,7 @@
         "windows-amd64"
       ],
       "tags": [
-        "git_revision:9ef321772ecc161937db69acb346397e0ccc484d"
+        "git_revision:5a004f9427a050c6c393c07ddb85cba8ff3849fa"
       ],
       "version_file": ".versions/gn.cipd_version"
     },
@@ -24,45 +24,19 @@
         "windows-amd64"
       ],
       "tags": [
-        "version:2@1.11.0.chromium.4"
+        "version:2@1.11.1.chromium.7"
       ]
     },
     {
-      "path": "infra/3pp/tools/nodejs/${platform}",
-      "platforms": [
-        "linux-amd64",
-        "linux-arm64",
-        "mac-amd64",
-        "mac-arm64",
-        "windows-amd64"
-      ],
-      "tags": [
-        "version:2@18.4.0"
-      ]
-    },
-    {
-      "path": "fuchsia/third_party/cmake/${platform}",
-      "platforms": [
-        "mac-amd64",
-        "linux-amd64",
-        "linux-arm64",
-        "windows-amd64"
-      ],
-      "tags": [
-        "version:3.24.20220730-gcb964ca"
-      ],
-      "version_file": ".versions/cmake.cipd_version"
-    },
-    {
-      "path": "pigweed/third_party/bloaty-embedded/${platform}",
+      "path": "fuchsia/third_party/bloaty/${platform}",
       "platforms": [
         "linux-amd64",
         "mac-amd64"
       ],
       "tags": [
-        "git_revision:2d87d204057b419f5290f8d38b61b9c2c5b4fb52-2"
+        "git_revision:c057ba4f43db0506d4ba8c096925b054b02a8bd3"
       ],
-      "version_file": ".versions/bloaty-embedded.cipd_version"
+      "version_file": ".versions/bloaty.cipd_version"
     },
     {
       "path": "infra/3pp/tools/protoc/${platform}",
@@ -95,33 +69,22 @@
         "windows-amd64"
       ],
       "tags": [
-        "git_revision:1aa59ff2f789776ebfa2d4b315fd3ea589652b4a"
+        "git_revision:3a20597776a5d2920e511d81653b4d2b6ca0c855"
       ],
       "version_file": ".versions/clang.cipd_version"
     },
     {
-      "path": "infra/3pp/tools/go/${platform}",
+      "path": "fuchsia/third_party/rust/${platform}",
       "platforms": [
         "linux-amd64",
         "linux-arm64",
-        "mac-amd64",
-        "mac-arm64",
-        "windows-amd64"
+        "mac-amd64"
       ],
+      "subdir": "rust",
       "tags": [
-        "version:2@1.18.4"
-      ]
-    },
-    {
-      "path": "pigweed/third_party/protoc-gen-go/${platform}",
-      "platforms": [
-        "linux-amd64",
-        "mac-amd64",
-        "windows-amd64"
+        "git_revision:b7b7f2716ee1655a696d3d64c3e12638d0dd19c0"
       ],
-      "tags": [
-        "version:1.3.2"
-      ]
+      "version_file": ".versions/rust.cipd_version"
     },
     {
       "path": "infra/3pp/tools/openocd/${platform}",
@@ -129,8 +92,7 @@
         "linux-amd64",
         "linux-arm64",
         "mac-amd64",
-        "mac-arm64",
-        "windows-amd64"
+        "mac-arm64"
       ],
       "tags": [
         "version:2@0.11.0-3"
@@ -146,30 +108,6 @@
       ]
     },
     {
-      "path": "pigweed/host_tools/${platform}",
-      "platforms": [
-        "linux-amd64",
-        "mac-amd64",
-        "windows-amd64"
-      ],
-      "tags": [
-        "git_revision:07a61ccf0226a5a370bf93a3f275e561f07beb44"
-      ],
-      "version_file": ".versions/host_tools.cipd_version"
-    },
-    {
-      "path": "infra/rbe/client/${platform}",
-      "platforms": [
-        "linux-amd64",
-        "mac-amd64",
-        "mac-arm64",
-        "windows-amd64"
-      ],
-      "tags": [
-        "re_client_version:0.72.0.b874055-gomaip"
-      ]
-    },
-    {
       "path": "fuchsia/third_party/qemu/${platform}",
       "platforms": [
         "linux-amd64",
@@ -177,51 +115,19 @@
         "mac-amd64"
       ],
       "tags": [
-        "git_revision:44f28df24767cf9dca1ddc9b23157737c4cbb645,1"
+        "git_revision:823a3f11fb8f04c3c3cc0f95f968fef1bfc6534f,1"
       ],
       "version_file": ".versions/qemu.cipd_version"
     },
     {
-      "path": "fuchsia/third_party/kythe",
-      "platforms": [
-        "linux-amd64"
-      ],
-      "subdir": "kythe",
-      "tags": [
-        "version:1.0.3"
-      ]
-    },
-    {
-      "path": "fuchsia/third_party/kythe-libs/${platform}",
-      "platforms": [
-        "linux-amd64"
-      ],
-      "subdir": "kythe",
-      "tags": [
-        "version:2020-08-05"
-      ]
-    },
-    {
-      "path": "infra/3pp/tools/renode/${platform}",
+      "path": "fuchsia/third_party/sysroot/linux",
       "platforms": [
         "linux-amd64",
         "linux-arm64"
       ],
+      "subdir": "clang_sysroot",
       "tags": [
-        "version:2@renode-1.11.0+20210306gite7897c1"
-      ]
-    },
-    {
-      "path": "infra/3pp/tools/buildifier/${platform}",
-      "platforms": [
-        "linux-amd64",
-        "linux-arm64",
-        "mac-amd64",
-        "mac-arm64",
-        "windows-amd64"
-      ],
-      "tags": [
-        "version:2@5.1.0"
+        "git_revision:b07475f83bae0e0744ce5ab5c07b602ececc7fd2"
       ]
     }
   ]

@@ -90,8 +90,10 @@ constexpr uint32_t kTxRegisterEmpty = 0x1u << 7;
 // to reasonable values and we don't need to change them.
 constexpr uint32_t kReceiveEnable = 0x1 << 2;
 constexpr uint32_t kTransmitEnable = 0x1 << 3;
-constexpr uint32_t kReadDataReady = 0x1u << 5;
 constexpr uint32_t kEnableUsart = 0x1 << 13;
+
+// USART configuration flags for status register.
+constexpr uint32_t kReadDataReady = 0x1u << 5;
 
 // Layout of memory mapped registers for USART blocks.
 PW_PACKED(struct) UsartBlock {
@@ -132,24 +134,30 @@ volatile UsartBlock& usart1 =
 
 extern "C" void pw_sys_io_stm32f429_Init() {
   // Enable 'A' GIPO clocks.
-  platform_rcc.ahb1_config |= kGpioAEnable;
+  platform_rcc.ahb1_config = platform_rcc.ahb1_config | kGpioAEnable;
 
   // Enable Uart TX pin.
   // Output type defaults to push-pull (rather than open/drain).
-  gpio_a.modes |= kGpioPortModeAlternate << kGpio9PortModePos;
-  gpio_a.out_speed |= kGpioSpeedVeryHigh << kGpio9PortSpeedPos;
-  gpio_a.pull_up_down |= kPullTypePullUp << kGpio9PullTypePos;
-  gpio_a.alt_high |= kGpioAlternateFunctionUsart1 << kGpio9AltModeHighPos;
+  gpio_a.modes = gpio_a.modes | (kGpioPortModeAlternate << kGpio9PortModePos);
+  gpio_a.out_speed =
+      gpio_a.out_speed | (kGpioSpeedVeryHigh << kGpio9PortSpeedPos);
+  gpio_a.pull_up_down =
+      gpio_a.pull_up_down | (kPullTypePullUp << kGpio9PullTypePos);
+  gpio_a.alt_high =
+      gpio_a.alt_high | (kGpioAlternateFunctionUsart1 << kGpio9AltModeHighPos);
 
   // Enable Uart RX pin.
   // Output type defaults to push-pull (rather than open/drain).
-  gpio_a.modes |= kGpioPortModeAlternate << kGpio10PortModePos;
-  gpio_a.out_speed |= kGpioSpeedVeryHigh << kGpio10PortSpeedPos;
-  gpio_a.pull_up_down |= kPullTypePullUp << kGpio10PullTypePos;
-  gpio_a.alt_high |= kGpioAlternateFunctionUsart1 << kGpio10AltModeHighPos;
+  gpio_a.modes = gpio_a.modes | (kGpioPortModeAlternate << kGpio10PortModePos);
+  gpio_a.out_speed =
+      gpio_a.out_speed | (kGpioSpeedVeryHigh << kGpio10PortSpeedPos);
+  gpio_a.pull_up_down =
+      gpio_a.pull_up_down | (kPullTypePullUp << kGpio10PullTypePos);
+  gpio_a.alt_high =
+      gpio_a.alt_high | (kGpioAlternateFunctionUsart1 << kGpio10AltModeHighPos);
 
   // Initialize USART1. Initialized to 8N1 at the specified baud rate.
-  platform_rcc.apb2_config |= kUsart1Enable;
+  platform_rcc.apb2_config = platform_rcc.apb2_config | (kUsart1Enable);
 
   // Warning: Normally the baud rate register calculation is based off
   // peripheral 2 clock. For this code, the peripheral clock defaults to

@@ -17,6 +17,7 @@
 
 #include <app/clusters/bindings/PendingNotificationMap.h>
 #include <app/util/binding-table.h>
+#include <app/util/config.h>
 #include <lib/support/TestPersistentStorageDelegate.h>
 #include <lib/support/UnitTestRegistration.h>
 #include <nlunit-test.h>
@@ -80,10 +81,10 @@ void TestAddRemove(nlTestSuite * aSuite, void * aContext)
     pendingMap.RemoveAllEntriesForNode(chip::ScopedNodeId());
     uint8_t expectedEntryIndecies[] = { 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
     iter                            = pendingMap.begin();
-    for (size_t i = 0; i < sizeof(expectedEntryIndecies); i++)
+    for (uint8_t ch : expectedEntryIndecies)
     {
         PendingNotificationEntry entry = *iter;
-        NL_TEST_ASSERT(aSuite, entry.mBindingEntryId == expectedEntryIndecies[i]);
+        NL_TEST_ASSERT(aSuite, entry.mBindingEntryId == ch);
         ++iter;
     }
     NL_TEST_ASSERT(aSuite, iter == pendingMap.end());

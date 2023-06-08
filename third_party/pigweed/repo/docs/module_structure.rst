@@ -64,6 +64,14 @@ Example module structure
     py/pw_foo/bar.py
     py/pw_foo/py.typed  # Indicates that this package has type annotations
 
+    # Rust crates go into 'rust/...'
+    rust/BUILD.bazel
+    rust/crate_one.rs          # Single file crates are in rust/
+    rust/crate_two.rs          # Multi-file crate's top level source in rust/
+    rust/crate_two/mod_one.rs  # Multi-file crate's modules in:
+    rust/crate_two/mod_two.rs  #   rust/<crate>/<module.rs>
+                               # Prefer not using lib.rs and mod.rs files.
+
     # Go files go into 'go/...'
     go/...
 
@@ -103,9 +111,8 @@ C++ module structure
 
 C++ public headers
 ~~~~~~~~~~~~~~~~~~
-Located ``{pw_module_dir}/public/<module>``. These are headers that must be
-exposed due to C++ limitations (i.e. are included from the public interface,
-but are not intended for public use).
+Located ``{pw_module_dir}/public/<module>``. These headers are the public
+interface for the module.
 
 **Public headers** should take the form:
 
@@ -387,6 +394,28 @@ The GN build system provides the
 :ref:`pw_facade template<module-pw_build-facade>` as a convenient way to declare
 facades.
 
+Multiple Facades
+~~~~~~~~~~~~~~~~
+A module may contain multiple facades. Each facade's public override headers
+must be contained in separate folders in the backend implementation, so that
+it's possible to use multiple backends for a module.
+
+.. code-block::
+
+  # pw_foo contains 2 facades, foo and bar
+  pw_foo/...
+    # Public headers
+    # public/pw_foo/foo.h #includes pw_foo_backend/foo.h
+    # public/pw_foo/bar.h #includes pw_foo_backend/bar.h
+    public/pw_foo/foo.h
+    public/pw_foo/bar.h
+
+  pw_foo_backend/...
+
+    # Public override headers for facade1 and facade2 go in separate folders
+    foo_public_overrides/pw_foo_backend/foo.h
+    bar_public_overrides/pw_foo_backend/bar.h
+
 Documentation
 -------------
 Documentation should go in the root module folder, typically in the
@@ -465,6 +494,6 @@ To create a new Pigweed module, follow the below steps.
 
 11. Run :ref:`module-pw_module-module-check`
 
-    - ``$ pw module-check {pw_module_dir}``
+    - ``$ pw module check {pw_module_dir}``
 
 12. Contribute your module to upstream Pigweed (optional but encouraged!)

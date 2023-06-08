@@ -25,10 +25,10 @@ extern "C" {
 // Expose a subset of the varint API for use in C code.
 
 typedef enum {
-  PW_VARINT_ZERO_TERMINATED_LEAST_SIGNIFICANT = 0b00,
-  PW_VARINT_ZERO_TERMINATED_MOST_SIGNIFICANT = 0b01,
-  PW_VARINT_ONE_TERMINATED_LEAST_SIGNIFICANT = 0b10,
-  PW_VARINT_ONE_TERMINATED_MOST_SIGNIFICANT = 0b11,
+  PW_VARINT_ZERO_TERMINATED_LEAST_SIGNIFICANT = 0,
+  PW_VARINT_ZERO_TERMINATED_MOST_SIGNIFICANT = 1,
+  PW_VARINT_ONE_TERMINATED_LEAST_SIGNIFICANT = 2,
+  PW_VARINT_ONE_TERMINATED_MOST_SIGNIFICANT = 3,
 } pw_varint_Format;
 
 size_t pw_varint_EncodeCustom(uint64_t integer,
@@ -187,12 +187,23 @@ inline size_t Decode(span<const std::byte> input,
       input.data(), input.size(), value, static_cast<pw_varint_Format>(format));
 }
 
-// Returns a size of an integer when encoded as a varint.
+/// @brief Computes the size of an integer when encoded as a varint.
+///
+/// @param integer The integer whose encoded size is to be computed. `integer`
+/// can be signed or unsigned.
+///
+/// @returns The size of `integer` when encoded as a varint.
 constexpr size_t EncodedSize(uint64_t integer) {
   return integer == 0 ? 1 : (64 - __builtin_clzll(integer) + 6) / 7;
 }
 
-// Returns a size of an signed integer when ZigZag encoded as a varint.
+/// @brief Returns the size of a signed integer when
+/// [ZigZag](https://protobuf.dev/programming-guides/encoding/#signed-ints)-encoded
+/// as a variable-length integer (varint).
+///
+/// @param integer The signed integer that will be ZigZag-encoded as a varint.
+///
+/// @returns The size of `integer` when ZigZag-encoded as a varint.
 constexpr size_t ZigZagEncodedSize(int64_t integer) {
   return EncodedSize(ZigZagEncode(integer));
 }

@@ -14,6 +14,8 @@
 
 #include "pw_rpc/pwpb/server_reader_writer.h"
 
+#include <optional>
+
 #include "gtest/gtest.h"
 #include "pw_rpc/pwpb/fake_channel_output.h"
 #include "pw_rpc/pwpb/test_method_context.h"
@@ -21,29 +23,31 @@
 #include "pw_rpc_test_protos/test.rpc.pwpb.h"
 
 namespace pw::rpc {
+namespace {
+
+namespace TestRequest = ::pw::rpc::test::pwpb::TestRequest;
+namespace TestResponse = ::pw::rpc::test::pwpb::TestResponse;
+namespace TestStreamResponse = ::pw::rpc::test::pwpb::TestStreamResponse;
 
 class TestServiceImpl final
     : public test::pw_rpc::pwpb::TestService::Service<TestServiceImpl> {
  public:
-  Status TestUnaryRpc(const test::TestRequest::Message&,
-                      test::TestResponse::Message&) {
+  Status TestUnaryRpc(const TestRequest::Message&, TestResponse::Message&) {
     return OkStatus();
   }
 
-  void TestAnotherUnaryRpc(const test::TestRequest::Message&,
-                           PwpbUnaryResponder<test::TestResponse::Message>&) {}
+  void TestAnotherUnaryRpc(const TestRequest::Message&,
+                           PwpbUnaryResponder<TestResponse::Message>&) {}
 
-  void TestServerStreamRpc(
-      const test::TestRequest::Message&,
-      PwpbServerWriter<test::TestStreamResponse::Message>&) {}
+  void TestServerStreamRpc(const TestRequest::Message&,
+                           PwpbServerWriter<TestStreamResponse::Message>&) {}
 
   void TestClientStreamRpc(
-      PwpbServerReader<test::TestRequest::Message,
-                       test::TestStreamResponse::Message>&) {}
+      PwpbServerReader<TestRequest::Message, TestStreamResponse::Message>&) {}
 
   void TestBidirectionalStreamRpc(
-      PwpbServerReaderWriter<test::TestRequest::Message,
-                             test::TestStreamResponse::Message>&) {}
+      PwpbServerReaderWriter<TestRequest::Message,
+                             TestStreamResponse::Message>&) {}
 };
 
 template <auto kMethod>
@@ -65,7 +69,7 @@ struct ReaderWriterTestContext {
 using test::pw_rpc::pwpb::TestService;
 
 TEST(PwpbUnaryResponder, DefaultConstructed) {
-  PwpbUnaryResponder<test::TestResponse::Message> call;
+  PwpbUnaryResponder<TestResponse::Message> call;
 
   ASSERT_FALSE(call.active());
   EXPECT_EQ(call.channel_id(), Channel::kUnassignedChannelId);
@@ -76,7 +80,7 @@ TEST(PwpbUnaryResponder, DefaultConstructed) {
 }
 
 TEST(PwpbServerWriter, DefaultConstructed) {
-  PwpbServerWriter<test::TestStreamResponse::Message> call;
+  PwpbServerWriter<TestStreamResponse::Message> call;
 
   ASSERT_FALSE(call.active());
   EXPECT_EQ(call.channel_id(), Channel::kUnassignedChannelId);
@@ -88,22 +92,19 @@ TEST(PwpbServerWriter, DefaultConstructed) {
 }
 
 TEST(PwpbServerReader, DefaultConstructed) {
-  PwpbServerReader<test::TestRequest::Message,
-                   test::TestStreamResponse::Message>
-      call;
+  PwpbServerReader<TestRequest::Message, TestStreamResponse::Message> call;
 
   ASSERT_FALSE(call.active());
   EXPECT_EQ(call.channel_id(), Channel::kUnassignedChannelId);
 
   EXPECT_EQ(Status::FailedPrecondition(), call.Finish({}, OkStatus()));
 
-  call.set_on_next([](const test::TestRequest::Message&) {});
+  call.set_on_next([](const TestRequest::Message&) {});
   call.set_on_error([](Status) {});
 }
 
 TEST(PwpbServerReaderWriter, DefaultConstructed) {
-  PwpbServerReaderWriter<test::TestRequest::Message,
-                         test::TestStreamResponse::Message>
+  PwpbServerReaderWriter<TestRequest::Message, TestStreamResponse::Message>
       call;
 
   ASSERT_FALSE(call.active());
@@ -112,15 +113,14 @@ TEST(PwpbServerReaderWriter, DefaultConstructed) {
   EXPECT_EQ(Status::FailedPrecondition(), call.Write({}));
   EXPECT_EQ(Status::FailedPrecondition(), call.Finish(OkStatus()));
 
-  call.set_on_next([](const test::TestRequest::Message&) {});
+  call.set_on_next([](const TestRequest::Message&) {});
   call.set_on_error([](Status) {});
 }
 
 TEST(PwpbUnaryResponder, Closed) {
   ReaderWriterTestContext<TestService::TestUnaryRpc> ctx;
-  PwpbUnaryResponder call =
-      PwpbUnaryResponder<test::TestResponse::Message>::Open<
-          TestService::TestUnaryRpc>(ctx.server, ctx.channel.id(), ctx.service);
+  PwpbUnaryResponder call = PwpbUnaryResponder<TestResponse::Message>::Open<
+      TestService::TestUnaryRpc>(ctx.server, ctx.channel.id(), ctx.service);
   ASSERT_EQ(OkStatus(), call.Finish({}, OkStatus()));
 
   ASSERT_FALSE(call.active());
@@ -133,10 +133,9 @@ TEST(PwpbUnaryResponder, Closed) {
 
 TEST(PwpbServerWriter, Closed) {
   ReaderWriterTestContext<TestService::TestServerStreamRpc> ctx;
-  PwpbServerWriter call =
-      PwpbServerWriter<test::TestStreamResponse::Message>::Open<
-          TestService::TestServerStreamRpc>(
-          ctx.server, ctx.channel.id(), ctx.service);
+  PwpbServerWriter call = PwpbServerWriter<TestStreamResponse::Message>::Open<
+      TestService::TestServerStreamRpc>(
+      ctx.server, ctx.channel.id(), ctx.service);
   ASSERT_EQ(OkStatus(), call.Finish(OkStatus()));
 
   ASSERT_FALSE(call.active());
@@ -150,9 +149,9 @@ TEST(PwpbServerWriter, Closed) {
 
 TEST(PwpbServerReader, Closed) {
   ReaderWriterTestContext<TestService::TestClientStreamRpc> ctx;
-  PwpbServerReader call = PwpbServerReader<test::TestRequest::Message,
-                                           test::TestStreamResponse::Message>::
-      Open<TestService::TestClientStreamRpc>(
+  PwpbServerReader call =
+      PwpbServerReader<TestRequest::Message, TestStreamResponse::Message>::Open<
+          TestService::TestClientStreamRpc>(
           ctx.server, ctx.channel.id(), ctx.service);
   ASSERT_EQ(OkStatus(), call.Finish({}, OkStatus()));
 
@@ -161,15 +160,15 @@ TEST(PwpbServerReader, Closed) {
 
   EXPECT_EQ(Status::FailedPrecondition(), call.Finish({}, OkStatus()));
 
-  call.set_on_next([](const test::TestRequest::Message&) {});
+  call.set_on_next([](const TestRequest::Message&) {});
   call.set_on_error([](Status) {});
 }
 
 TEST(PwpbServerReaderWriter, Closed) {
   ReaderWriterTestContext<TestService::TestBidirectionalStreamRpc> ctx;
   PwpbServerReaderWriter call =
-      PwpbServerReaderWriter<test::TestRequest::Message,
-                             test::TestStreamResponse::Message>::
+      PwpbServerReaderWriter<TestRequest::Message,
+                             TestStreamResponse::Message>::
           Open<TestService::TestBidirectionalStreamRpc>(
               ctx.server, ctx.channel.id(), ctx.service);
   ASSERT_EQ(OkStatus(), call.Finish(OkStatus()));
@@ -180,14 +179,14 @@ TEST(PwpbServerReaderWriter, Closed) {
   EXPECT_EQ(Status::FailedPrecondition(), call.Write({}));
   EXPECT_EQ(Status::FailedPrecondition(), call.Finish(OkStatus()));
 
-  call.set_on_next([](const test::TestRequest::Message&) {});
+  call.set_on_next([](const TestRequest::Message&) {});
   call.set_on_error([](Status) {});
 }
 
 TEST(PwpbUnaryResponder, Open_ReturnsUsableResponder) {
   ReaderWriterTestContext<TestService::TestUnaryRpc> ctx;
   PwpbUnaryResponder responder =
-      PwpbUnaryResponder<test::TestResponse::Message>::Open<
+      PwpbUnaryResponder<TestResponse::Message>::Open<
           TestService::TestUnaryRpc>(ctx.server, ctx.channel.id(), ctx.service);
 
   ASSERT_EQ(OkStatus(),
@@ -200,7 +199,7 @@ TEST(PwpbUnaryResponder, Open_ReturnsUsableResponder) {
 TEST(PwpbServerWriter, Open_ReturnsUsableWriter) {
   ReaderWriterTestContext<TestService::TestServerStreamRpc> ctx;
   PwpbServerWriter responder =
-      PwpbServerWriter<test::TestStreamResponse::Message>::Open<
+      PwpbServerWriter<TestStreamResponse::Message>::Open<
           TestService::TestServerStreamRpc>(
           ctx.server, ctx.channel.id(), ctx.service);
 
@@ -215,10 +214,9 @@ TEST(PwpbServerWriter, Open_ReturnsUsableWriter) {
 TEST(PwpbServerReader, Open_ReturnsUsableReader) {
   ReaderWriterTestContext<TestService::TestClientStreamRpc> ctx;
   PwpbServerReader responder =
-      PwpbServerReader<test::TestRequest::Message,
-                       test::TestStreamResponse::Message>::
-          Open<TestService::TestClientStreamRpc>(
-              ctx.server, ctx.channel.id(), ctx.service);
+      PwpbServerReader<TestRequest::Message, TestStreamResponse::Message>::Open<
+          TestService::TestClientStreamRpc>(
+          ctx.server, ctx.channel.id(), ctx.service);
 
   ASSERT_EQ(OkStatus(), responder.Finish({.chunk = {}, .number = 321}));
 
@@ -229,8 +227,8 @@ TEST(PwpbServerReader, Open_ReturnsUsableReader) {
 TEST(PwpbServerReaderWriter, Open_ReturnsUsableReaderWriter) {
   ReaderWriterTestContext<TestService::TestBidirectionalStreamRpc> ctx;
   PwpbServerReaderWriter responder =
-      PwpbServerReaderWriter<test::TestRequest::Message,
-                             test::TestStreamResponse::Message>::
+      PwpbServerReaderWriter<TestRequest::Message,
+                             TestStreamResponse::Message>::
           Open<TestService::TestBidirectionalStreamRpc>(
               ctx.server, ctx.channel.id(), ctx.service);
 
@@ -248,8 +246,8 @@ TEST(RawServerReaderWriter, Open_UnknownChannel) {
   ASSERT_EQ(OkStatus(), ctx.server.CloseChannel(ctx.kChannelId));
 
   PwpbServerReaderWriter call =
-      PwpbServerReaderWriter<test::TestRequest::Message,
-                             test::TestStreamResponse::Message>::
+      PwpbServerReaderWriter<TestRequest::Message,
+                             TestStreamResponse::Message>::
           Open<TestService::TestBidirectionalStreamRpc>(
               ctx.server, ctx.kChannelId, ctx.service);
 
@@ -267,6 +265,32 @@ TEST(RawServerReaderWriter, Open_UnknownChannel) {
   EXPECT_EQ(call.channel_id(), Channel::kUnassignedChannelId);
 }
 
+TEST(RawServerReaderWriter, Open_MultipleTimes_CancelsPrevious) {
+  ReaderWriterTestContext<TestService::TestBidirectionalStreamRpc> ctx;
+
+  PwpbServerReaderWriter one =
+      PwpbServerReaderWriter<TestRequest::Message,
+                             TestStreamResponse::Message>::
+          Open<TestService::TestBidirectionalStreamRpc>(
+              ctx.server, ctx.kChannelId, ctx.service);
+
+  std::optional<Status> error;
+  one.set_on_error([&error](Status status) { error = status; });
+
+  ASSERT_TRUE(one.active());
+
+  PwpbServerReaderWriter two =
+      PwpbServerReaderWriter<TestRequest::Message,
+                             TestStreamResponse::Message>::
+          Open<TestService::TestBidirectionalStreamRpc>(
+              ctx.server, ctx.kChannelId, ctx.service);
+
+  EXPECT_FALSE(one.active());
+  EXPECT_TRUE(two.active());
+
+  EXPECT_EQ(Status::Cancelled(), error);
+}
+
 TEST(PwpbServerReader, CallbacksMoveCorrectly) {
   PW_PWPB_TEST_METHOD_CONTEXT(TestServiceImpl, TestClientStreamRpc) ctx;
 
@@ -274,24 +298,21 @@ TEST(PwpbServerReader, CallbacksMoveCorrectly) {
 
   ASSERT_TRUE(call_1.active());
 
-  test::TestRequest::Message received_request = {.integer = 12345678,
-                                                 .status_code = 1};
+  TestRequest::Message received_request = {.integer = 12345678,
+                                           .status_code = 1};
 
-  call_1.set_on_next(
-      [&received_request](const test::TestRequest::Message& value) {
-        received_request = value;
-      });
+  call_1.set_on_next([&received_request](const TestRequest::Message& value) {
+    received_request = value;
+  });
 
-  PwpbServerReader<test::TestRequest::Message,
-                   test::TestStreamResponse::Message>
-      call_2;
+  PwpbServerReader<TestRequest::Message, TestStreamResponse::Message> call_2;
   call_2 = std::move(call_1);
 
-  constexpr test::TestRequest::Message request{.integer = 600613,
-                                               .status_code = 2};
+  constexpr TestRequest::Message request{.integer = 600613, .status_code = 2};
   ctx.SendClientStream(request);
   EXPECT_EQ(request.integer, received_request.integer);
   EXPECT_EQ(request.status_code, received_request.status_code);
 }
 
+}  // namespace
 }  // namespace pw::rpc

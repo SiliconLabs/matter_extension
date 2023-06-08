@@ -16,16 +16,38 @@
 import abc
 import collections
 import enum
+import itertools
 
-from typing import Callable, Dict, Iterator, List, Optional, Tuple, TypeVar
-from typing import cast
+from typing import (
+    Callable,
+    Dict,
+    Iterator,
+    List,
+    Optional,
+    Tuple,
+    TypeVar,
+    cast,
+)
 
 from google.protobuf import descriptor_pb2
 
 from pw_protobuf import options, symbol_name_mapping
-from pw_protobuf_codegen_protos.options_pb2 import Options
+from pw_protobuf_codegen_protos.codegen_options_pb2 import CodegenOptions
+from pw_protobuf_protos.field_options_pb2 import pwpb as pwpb_field_options
 
 T = TypeVar('T')  # pylint: disable=invalid-name
+
+# Currently, protoc does not do a traversal to look up the package name of all
+# messages that are referenced in the file. For such "external" message names,
+# we are unable to find where the "::pwpb" subnamespace would be inserted by our
+# codegen. This namespace provides us with an alternative, more verbose
+# namespace that the codegen can use as a fallback in these cases. For example,
+# for the symbol name `my.external.package.ProtoMsg.SubMsg`, we would use
+# `::pw::pwpb_codegen_private::my::external::package:ProtoMsg::SubMsg` to refer
+# to the pw_protobuf generated code, when package name info is not available.
+#
+# TODO(b/258832150) Explore removing this if possible
+EXTERNAL_SYMBOL_WORKAROUND_NAMESPACE = 'pw::pwpb_codegen_private'
 
 
 class ProtoNode(abc.ABC):
@@ -34,6 +56,7 @@ class ProtoNode(abc.ABC):
     Nodes form a tree beginning at a top-level (global) scope, descending into a
     hierarchy of .proto packages and the messages and enums defined within them.
     """
+
     class Type(enum.Enum):
         """The type of a ProtoNode.
 
@@ -43,6 +66,7 @@ class ProtoNode(abc.ABC):
         EXTERNAL represents a node defined within a different compilation unit.
         SERVICE represents an RPC service definition.
         """
+
         PACKAGE = 1
         MESSAGE = 2
         ENUM = 3
@@ -61,18 +85,130 @@ class ProtoNode(abc.ABC):
     def children(self) -> List['ProtoNode']:
         return list(self._children.values())
 
+    def parent(self) -> Optional['ProtoNode']:
+        return self._parent
+
     def name(self) -> str:
         return self._name
 
     def cpp_name(self) -> str:
         """The name of this node in generated C++ code."""
         return symbol_name_mapping.fix_cc_identifier(self._name).replace(
-            '.', '::')
+            '.', '::'
+        )
 
-    def cpp_namespace(self, root: Optional['ProtoNode'] = None) -> str:
-        """C++ namespace of the node, up to the specified root."""
-        return '::'.join(name for name in self._attr_hierarchy(
-            lambda node: node.cpp_name(), root) if name)
+    def _package_or_external(self) -> 'ProtoNode':
+        """Returns this node's deepest package or external ancestor node.
+
+        This method may need to return an external node, as a fallback for
+        external names that are referenced, but not processed into a more
+        regular proto tree. This is because there is no way to find the package
+        name of a node referring to an external symbol.
+        """
+        node: Optional['ProtoNode'] = self
+        while (
+            node
+            and node.type() != ProtoNode.Type.PACKAGE
+            and node.type() != ProtoNode.Type.EXTERNAL
+        ):
+            node = node.parent()
+
+        assert node, 'proto tree was built without a root'
+        return node
+
+    def cpp_namespace(
+        self,
+        root: Optional['ProtoNode'] = None,
+        codegen_subnamespace: Optional[str] = 'pwpb',
+    ) -> str:
+        """C++ namespace of the node, up to the specified root.
+
+        Args:
+          root: Namespace from which this ProtoNode is referred. If this
+            ProtoNode has `root` as an ancestor namespace, then the ancestor
+            namespace scopes above `root` are omitted.
+
+          codegen_subnamespace: A subnamespace that is appended to the package
+            declared in the .proto file. It is appended to the declared package,
+            but before any namespaces that are needed for messages etc. This
+            feature can be used to allow different codegen tools to output
+            different, non-conflicting symbols for the same protos.
+
+            By default, this is "pwpb", which reflects the default behaviour
+            of the pwpb codegen.
+        """
+        self_pkg_or_ext = self._package_or_external()
+        root_pkg_or_ext = (
+            root._package_or_external()  # pylint: disable=protected-access
+            if root is not None
+            else None
+        )
+        if root_pkg_or_ext:
+            assert root_pkg_or_ext.type() != ProtoNode.Type.EXTERNAL
+
+        def compute_hierarchy() -> Iterator[str]:
+            same_package = True
+
+            if self_pkg_or_ext.type() == ProtoNode.Type.EXTERNAL:
+                # Can't figure out where the namespace cutoff is. Punt to using
+                # the external symbol workaround.
+                #
+                # TODO(b/250945489) Investigate removing this limitation / hack
+                return itertools.chain(
+                    [EXTERNAL_SYMBOL_WORKAROUND_NAMESPACE],
+                    self._attr_hierarchy(ProtoNode.cpp_name, root=None),
+                )
+
+            if root is None or root_pkg_or_ext is None:  # extra check for mypy
+                # TODO(b/250945489): maybe elide "::{codegen_subnamespace}"
+                # here, if this node doesn't have any package?
+                same_package = False
+            else:
+                paired_hierarchy = itertools.zip_longest(
+                    self_pkg_or_ext._attr_hierarchy(  # pylint: disable=protected-access
+                        ProtoNode.cpp_name, root=None
+                    ),
+                    root_pkg_or_ext._attr_hierarchy(  # pylint: disable=protected-access
+                        ProtoNode.cpp_name, root=None
+                    ),
+                )
+                for str_a, str_b in paired_hierarchy:
+                    if str_a != str_b:
+                        same_package = False
+                        break
+
+            if same_package:
+                # This ProtoNode and the requested root are in the same package,
+                # so the `codegen_subnamespace` should be omitted.
+                hierarchy = self._attr_hierarchy(ProtoNode.cpp_name, root)
+                return hierarchy
+
+            # The given root is either effectively nonexistent (common ancestor
+            # is ""), or is only a partial match for the package of this node.
+            # Either way, we will have to insert `codegen_subnamespace` after
+            # the relevant package string.
+            package_hierarchy = self_pkg_or_ext._attr_hierarchy(  # pylint: disable=protected-access
+                ProtoNode.cpp_name, root
+            )
+            maybe_subnamespace = (
+                [codegen_subnamespace] if codegen_subnamespace else []
+            )
+            inside_hierarchy = self._attr_hierarchy(
+                ProtoNode.cpp_name, self_pkg_or_ext
+            )
+
+            hierarchy = itertools.chain(
+                package_hierarchy, maybe_subnamespace, inside_hierarchy
+            )
+            return hierarchy
+
+        joined_namespace = '::'.join(
+            name for name in compute_hierarchy() if name
+        )
+
+        return (
+            '' if joined_namespace == codegen_subnamespace else joined_namespace
+        )
 
     def proto_path(self) -> str:
         """Fully-qualified package path of the node."""
@@ -149,8 +285,10 @@ class ProtoNode(abc.ABC):
           ValueError: This node does not allow nesting the given type of child.
         """
         if not self._supports_child(child):
-            raise ValueError('Invalid child %s for node of type %s' %
-                             (child.type(), self.type()))
+            raise ValueError(
+                'Invalid child %s for node of type %s'
+                % (child.type(), self.type())
+            )
 
         # pylint: disable=protected-access
         if child._parent is not None:
@@ -178,9 +316,6 @@ class ProtoNode(abc.ABC):
 
         return node
 
-    def parent(self) -> Optional['ProtoNode']:
-        return self._parent
-
     def __iter__(self) -> Iterator['ProtoNode']:
         """Iterates depth-first through all nodes in this node's subtree."""
         yield self
@@ -188,8 +323,11 @@ class ProtoNode(abc.ABC):
             for child in child_iterator:
                 yield child
 
-    def _attr_hierarchy(self, attr_accessor: Callable[['ProtoNode'], T],
-                        root: Optional['ProtoNode']) -> Iterator[T]:
+    def _attr_hierarchy(
+        self,
+        attr_accessor: Callable[['ProtoNode'], T],
+        root: Optional['ProtoNode'],
+    ) -> Iterator[T]:
         """Fetches node attributes at each level of the tree from the root.
 
         Args:
@@ -214,6 +352,7 @@ class ProtoNode(abc.ABC):
 
 class ProtoPackage(ProtoNode):
     """A protobuf package."""
+
     def type(self) -> ProtoNode.Type:
         return ProtoNode.Type.PACKAGE
 
@@ -223,6 +362,7 @@ class ProtoPackage(ProtoNode):
 
 class ProtoEnum(ProtoNode):
     """Representation of an enum in a .proto file."""
+
     def __init__(self, name: str):
         super().__init__(name)
         self._values: List[Tuple[str, int]] = []
@@ -234,11 +374,14 @@ class ProtoEnum(ProtoNode):
         return list(self._values)
 
     def add_value(self, name: str, value: int) -> None:
-        self._values.append((
-            ProtoMessageField.upper_snake_case(
-                symbol_name_mapping.fix_cc_enum_value_name(name)),
-            value,
-        ))
+        self._values.append(
+            (
+                ProtoMessageField.upper_snake_case(
+                    symbol_name_mapping.fix_cc_enum_value_name(name)
+                ),
+                value,
+            )
+        )
 
     def _supports_child(self, child: ProtoNode) -> bool:
         # Enums cannot have nested children.
@@ -247,6 +390,7 @@ class ProtoEnum(ProtoNode):
 
 class ProtoMessage(ProtoNode):
     """Representation of a message in a .proto file."""
+
     def __init__(self, name: str):
         super().__init__(name)
         self._fields: List['ProtoMessageField'] = []
@@ -263,15 +407,18 @@ class ProtoMessage(ProtoNode):
         self._fields.append(field)
 
     def _supports_child(self, child: ProtoNode) -> bool:
-        return (child.type() == self.Type.ENUM
-                or child.type() == self.Type.MESSAGE)
+        return (
+            child.type() == self.Type.ENUM or child.type() == self.Type.MESSAGE
+        )
 
     def dependencies(self) -> List['ProtoMessage']:
         if self._dependencies is None:
             self._dependencies = []
             for field in self._fields:
-                if (field.type() !=
-                        descriptor_pb2.FieldDescriptorProto.TYPE_MESSAGE):
+                if (
+                    field.type()
+                    != descriptor_pb2.FieldDescriptorProto.TYPE_MESSAGE
+                ):
                     continue
 
                 type_node = field.type_node()
@@ -293,6 +440,7 @@ class ProtoMessage(ProtoNode):
 
 class ProtoService(ProtoNode):
     """Representation of a service in a .proto file."""
+
     def __init__(self, name: str):
         super().__init__(name)
         self._methods: List['ProtoServiceMethod'] = []
@@ -319,6 +467,7 @@ class ProtoExternal(ProtoNode):
     within the node graph is to provide namespace resolution between compile
     units.
     """
+
     def type(self) -> ProtoNode.Type:
         return ProtoNode.Type.EXTERNAL
 
@@ -330,21 +479,24 @@ class ProtoExternal(ProtoNode):
 # Fields belong to proto messages and are processed separately.
 class ProtoMessageField:
     """Representation of a field within a protobuf message."""
-    def __init__(self,
-                 field_name: str,
-                 field_number: int,
-                 field_type: int,
-                 type_node: Optional[ProtoNode] = None,
-                 optional: bool = False,
-                 repeated: bool = False,
-                 field_options: Optional[Options] = None):
+
+    def __init__(
+        self,
+        field_name: str,
+        field_number: int,
+        field_type: int,
+        type_node: Optional[ProtoNode] = None,
+        optional: bool = False,
+        repeated: bool = False,
+        codegen_options: Optional[CodegenOptions] = None,
+    ):
         self._field_name = symbol_name_mapping.fix_cc_identifier(field_name)
         self._number: int = field_number
         self._type: int = field_type
         self._type_node: Optional[ProtoNode] = type_node
         self._optional: bool = optional
         self._repeated: bool = repeated
-        self._options: Optional[Options] = field_options
+        self._options: Optional[CodegenOptions] = codegen_options
 
     def name(self) -> str:
         return self.upper_camel_case(self._field_name)
@@ -353,8 +505,12 @@ class ProtoMessageField:
         return self._field_name
 
     def enum_name(self) -> str:
+        return 'k' + self.name()
+
+    def legacy_enum_name(self) -> str:
         return self.upper_snake_case(
-            symbol_name_mapping.fix_cc_enum_value_name(self._field_name))
+            symbol_name_mapping.fix_cc_enum_value_name(self._field_name)
+        )
 
     def number(self) -> int:
         return self._number
@@ -371,7 +527,7 @@ class ProtoMessageField:
     def is_repeated(self) -> bool:
         return self._repeated
 
-    def options(self) -> Optional[Options]:
+    def options(self) -> Optional[CodegenOptions]:
         return self._options
 
     @staticmethod
@@ -388,6 +544,7 @@ class ProtoMessageField:
 
 class ProtoServiceMethod:
     """A method defined in a protobuf service."""
+
     class Type(enum.Enum):
         UNARY = 'kUnary'
         SERVER_STREAMING = 'kServerStreaming'
@@ -398,8 +555,14 @@ class ProtoServiceMethod:
             """Returns the pw_rpc MethodType C++ enum for this method type."""
             return '::pw::rpc::MethodType::' + self.value
 
-    def __init__(self, service: ProtoService, name: str, method_type: Type,
-                 request_type: ProtoNode, response_type: ProtoNode):
+    def __init__(
+        self,
+        service: ProtoService,
+        name: str,
+        method_type: Type,
+        request_type: ProtoNode,
+        response_type: ProtoNode,
+    ):
         self._service = service
         self._name = name
         self._type = method_type
@@ -416,12 +579,16 @@ class ProtoServiceMethod:
         return self._type
 
     def server_streaming(self) -> bool:
-        return self._type in (self.Type.SERVER_STREAMING,
-                              self.Type.BIDIRECTIONAL_STREAMING)
+        return self._type in (
+            self.Type.SERVER_STREAMING,
+            self.Type.BIDIRECTIONAL_STREAMING,
+        )
 
     def client_streaming(self) -> bool:
-        return self._type in (self.Type.CLIENT_STREAMING,
-                              self.Type.BIDIRECTIONAL_STREAMING)
+        return self._type in (
+            self.Type.CLIENT_STREAMING,
+            self.Type.BIDIRECTIONAL_STREAMING,
+        )
 
     def request_type(self) -> ProtoNode:
         return self._request_type
@@ -453,8 +620,9 @@ def _create_external_nodes(root: ProtoNode, path: str) -> ProtoNode:
     return node
 
 
-def _find_or_create_node(global_root: ProtoNode, package_root: ProtoNode,
-                         path: str) -> ProtoNode:
+def _find_or_create_node(
+    global_root: ProtoNode, package_root: ProtoNode, path: str
+) -> ProtoNode:
     """Searches the proto tree for a node by path, creating it if not found."""
 
     if path[0] == '.':
@@ -475,9 +643,13 @@ def _find_or_create_node(global_root: ProtoNode, package_root: ProtoNode,
     return node
 
 
-def _add_message_fields(global_root: ProtoNode, package_root: ProtoNode,
-                        message: ProtoNode, proto_message,
-                        proto_options) -> None:
+def _add_message_fields(
+    global_root: ProtoNode,
+    package_root: ProtoNode,
+    message: ProtoNode,
+    proto_message,
+    proto_options,
+) -> None:
     """Adds fields from a protobuf message descriptor to a message node."""
     assert message.type() == ProtoNode.Type.MESSAGE
     message = cast(ProtoMessage, message)
@@ -489,24 +661,63 @@ def _add_message_fields(global_root: ProtoNode, package_root: ProtoNode,
             # The "type_name" member contains the global .proto path of the
             # field's type object, for example ".pw.protobuf.test.KeyValuePair".
             # Try to find the node for this object within the current context.
-            type_node = _find_or_create_node(global_root, package_root,
-                                             field.type_name)
+            type_node = _find_or_create_node(
+                global_root, package_root, field.type_name
+            )
         else:
             type_node = None
 
         optional = field.proto3_optional
-        repeated = \
+        repeated = (
             field.label == descriptor_pb2.FieldDescriptorProto.LABEL_REPEATED
-        field_options = options.match_options(
-            '.'.join((message.proto_path(), field.name)),
-            proto_options) if proto_options is not None else None
+        )
+
+        codegen_options = (
+            options.match_options(
+                '.'.join((message.proto_path(), field.name)), proto_options
+            )
+            if proto_options is not None
+            else None
+        )
+
+        field_options = (
+            options.create_from_field_options(
+                field.options.Extensions[pwpb_field_options]
+            )
+            if field.options.HasExtension(pwpb_field_options)
+            else None
+        )
+
+        merged_options = None
+
+        if field_options and codegen_options:
+            merged_options = options.merge_field_and_codegen_options(
+                field_options, codegen_options
+            )
+        elif field_options:
+            merged_options = field_options
+        elif codegen_options:
+            merged_options = codegen_options
+
         message.add_field(
-            ProtoMessageField(field.name, field.number, field.type, type_node,
-                              optional, repeated, field_options))
+            ProtoMessageField(
+                field.name,
+                field.number,
+                field.type,
+                type_node,
+                optional,
+                repeated,
+                merged_options,
+            )
+        )
 
 
-def _add_service_methods(global_root: ProtoNode, package_root: ProtoNode,
-                         service: ProtoNode, proto_service) -> None:
+def _add_service_methods(
+    global_root: ProtoNode,
+    package_root: ProtoNode,
+    service: ProtoNode,
+    proto_service,
+) -> None:
     assert service.type() == ProtoNode.Type.SERVICE
     service = cast(ProtoService, service)
 
@@ -520,23 +731,33 @@ def _add_service_methods(global_root: ProtoNode, package_root: ProtoNode,
         else:
             method_type = ProtoServiceMethod.Type.UNARY
 
-        request_node = _find_or_create_node(global_root, package_root,
-                                            method.input_type)
-        response_node = _find_or_create_node(global_root, package_root,
-                                             method.output_type)
+        request_node = _find_or_create_node(
+            global_root, package_root, method.input_type
+        )
+        response_node = _find_or_create_node(
+            global_root, package_root, method.output_type
+        )
 
         service.add_method(
-            ProtoServiceMethod(service, method.name, method_type, request_node,
-                               response_node))
+            ProtoServiceMethod(
+                service, method.name, method_type, request_node, response_node
+            )
+        )
 
 
-def _populate_fields(proto_file, global_root: ProtoNode,
-                     package_root: ProtoNode, proto_options) -> None:
+def _populate_fields(
+    proto_file: descriptor_pb2.FileDescriptorProto,
+    global_root: ProtoNode,
+    package_root: ProtoNode,
+    proto_options: Optional[options.ParsedOptions],
+) -> None:
     """Traverses a proto file, adding all message and enum fields to a tree."""
+
     def populate_message(node, message):
         """Recursively populates nested messages and enums."""
-        _add_message_fields(global_root, package_root, node, message,
-                            proto_options)
+        _add_message_fields(
+            global_root, package_root, node, message, proto_options
+        )
 
         for proto_enum in message.enum_type:
             _add_enum_fields(node.find(proto_enum.name), proto_enum)
@@ -558,7 +779,9 @@ def _populate_fields(proto_file, global_root: ProtoNode,
         _add_service_methods(global_root, package_root, service_node, service)
 
 
-def _build_hierarchy(proto_file):
+def _build_hierarchy(
+    proto_file: descriptor_pb2.FileDescriptorProto,
+) -> Tuple[ProtoPackage, ProtoPackage]:
     """Creates a ProtoNode hierarchy from a proto file descriptor."""
 
     root = ProtoPackage('')
@@ -590,14 +813,17 @@ def _build_hierarchy(proto_file):
     return root, package_root
 
 
-def build_node_tree(file_descriptor_proto,
-                    proto_options=None) -> Tuple[ProtoNode, ProtoNode]:
+def build_node_tree(
+    file_descriptor_proto: descriptor_pb2.FileDescriptorProto,
+    proto_options: Optional[options.ParsedOptions] = None,
+) -> Tuple[ProtoNode, ProtoNode]:
     """Constructs a tree of proto nodes from a file descriptor.
 
     Returns the root node of the entire proto package tree and the node
     representing the file's package.
     """
     global_root, package_root = _build_hierarchy(file_descriptor_proto)
-    _populate_fields(file_descriptor_proto, global_root, package_root,
-                     proto_options)
+    _populate_fields(
+        file_descriptor_proto, global_root, package_root, proto_options
+    )
     return global_root, package_root

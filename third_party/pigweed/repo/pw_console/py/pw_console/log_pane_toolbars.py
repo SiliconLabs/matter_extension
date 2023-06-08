@@ -27,9 +27,7 @@ from prompt_toolkit.layout import (
     HorizontalAlign,
 )
 
-import pw_console.widgets.checkbox
-import pw_console.widgets.mouse_handlers
-import pw_console.style
+from pw_console.style import get_toolbar_style
 
 if TYPE_CHECKING:
     from pw_console.log_pane import LogPane
@@ -37,6 +35,7 @@ if TYPE_CHECKING:
 
 class LineInfoBar(ConditionalContainer):
     """One line bar for showing current and total log lines."""
+
     def get_tokens(self):
         """Return formatted text tokens for display."""
         tokens = ' {} / {} '.format(
@@ -48,30 +47,37 @@ class LineInfoBar(ConditionalContainer):
     def __init__(self, log_pane: 'LogPane'):
         self.log_pane = log_pane
         info_bar_control = FormattedTextControl(self.get_tokens)
-        info_bar_window = Window(content=info_bar_control,
-                                 align=WindowAlign.RIGHT,
-                                 dont_extend_width=True)
+        info_bar_window = Window(
+            content=info_bar_control,
+            align=WindowAlign.RIGHT,
+            dont_extend_width=True,
+        )
 
         super().__init__(
-            VSplit([info_bar_window],
-                   height=1,
-                   style=functools.partial(pw_console.style.get_toolbar_style,
-                                           self.log_pane,
-                                           dim=True),
-                   align=HorizontalAlign.RIGHT),
+            VSplit(
+                [info_bar_window],
+                height=1,
+                style=functools.partial(
+                    get_toolbar_style, self.log_pane, dim=True
+                ),
+                align=HorizontalAlign.RIGHT,
+            ),
             # Only show current/total line info if not auto-following
             # logs. Similar to tmux behavior.
-            filter=Condition(lambda: not self.log_pane.log_view.follow))
+            filter=Condition(lambda: not self.log_pane.log_view.follow),
+        )
 
 
 class TableToolbar(ConditionalContainer):
     """One line toolbar for showing table headers."""
+
     TOOLBAR_HEIGHT = 1
 
     def __init__(self, log_pane: 'LogPane'):
         # FormattedText of the table column headers.
         table_header_bar_control = FormattedTextControl(
-            log_pane.log_view.render_table_header)
+            log_pane.log_view.render_table_header
+        )
         # Left justify the header content.
         table_header_bar_window = Window(
             content=table_header_bar_control,
@@ -79,11 +85,14 @@ class TableToolbar(ConditionalContainer):
             dont_extend_width=False,
         )
         super().__init__(
-            VSplit([table_header_bar_window],
-                   height=1,
-                   style=functools.partial(pw_console.style.get_toolbar_style,
-                                           log_pane,
-                                           dim=True),
-                   align=HorizontalAlign.LEFT),
-            filter=Condition(lambda: log_pane.table_view and log_pane.log_view.
-                             get_total_count() > 0))
+            VSplit(
+                [table_header_bar_window],
+                height=1,
+                style=functools.partial(get_toolbar_style, log_pane, dim=True),
+                align=HorizontalAlign.LEFT,
+            ),
+            filter=Condition(
+                lambda: log_pane.table_view
+                and log_pane.log_view.get_total_count() > 0
+            ),
+        )

@@ -24,13 +24,10 @@
  *          key-value config calls to the correct partition.
  */
 
-#include <platform/internal/CHIPDeviceLayerInternal.h>
-#include <platform/internal/testing/ConfigUnitTest.h>
+#include "PosixConfig.h"
 
-#include <lib/core/CHIPEncoding.h>
 #include <lib/support/CodeUtils.h>
 #include <platform/KeyValueStoreManager.h>
-#include <platform/Tizen/PosixConfig.h>
 
 namespace chip {
 namespace DeviceLayer {
@@ -69,6 +66,11 @@ const PosixConfig::Key PosixConfig::kConfigKey_WiFiStationSecType = { kConfigNam
 const PosixConfig::Key PosixConfig::kConfigKey_RegulatoryLocation = { kConfigNamespace_ChipConfig, "regulatory-location" };
 const PosixConfig::Key PosixConfig::kConfigKey_CountryCode        = { kConfigNamespace_ChipConfig, "country-code" };
 const PosixConfig::Key PosixConfig::kConfigKey_UniqueId           = { kConfigNamespace_ChipConfig, "unique-id" };
+
+// Keys stored in the Chip-counters namespace
+const PosixConfig::Key PosixConfig::kCounterKey_TotalOperationalHours = { kConfigNamespace_ChipCounters,
+                                                                          "total-operational-hours" };
+const PosixConfig::Key PosixConfig::kCounterKey_BootReason            = { kConfigNamespace_ChipCounters, "boot-reason" };
 
 CHIP_ERROR PosixConfig::Init()
 {

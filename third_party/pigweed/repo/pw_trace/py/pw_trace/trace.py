@@ -28,6 +28,7 @@ import struct
 from typing import Iterable, NamedTuple
 
 _LOG = logging.getLogger('pw_trace')
+_ORDERING_CHARS = ("@", "=", "<", ">", "!")
 
 
 class TraceType(Enum):
@@ -52,7 +53,7 @@ class TraceEvent(NamedTuple):
     event_type: TraceType
     module: str
     label: str
-    timestamp_us: int
+    timestamp_us: float
     group: str = ""
     trace_id: int = 0
     flags: int = 0
@@ -69,19 +70,93 @@ def event_has_trace_id(event_type):
     }
 
 
+def decode_struct_fmt_args(event):
+    """Decodes the trace's event data for struct-formatted data"""
+    args = {}
+    # We assume all data is packed, little-endian ordering if not specified.
+    struct_fmt = event.data_fmt[len("@pw_py_struct_fmt:") :]
+    if not struct_fmt.startswith(_ORDERING_CHARS):
+        struct_fmt = "<" + struct_fmt
+    try:
+        # Assert is needed in case the buffer is larger than expected.
+        assert struct.calcsize(struct_fmt) == len(event.data)
+        items = struct.unpack_from(struct_fmt, event.data)
+        for i, item in enumerate(items):
+            # Try to decode the item in case it is a byte array (string) since
+            # the JSON lib cannot serialize byte arrays.
+            try:
+                args["data_" + str(i)] = item.decode()
+            except (UnicodeDecodeError, AttributeError):
+                args["data_" + str(i)] = item
+    except (AssertionError, struct.error):
+        args["error"] = (
+            f"Mismatched struct/data format {event.data_fmt} "
+            f"expected data len {struct.calcsize(struct_fmt)} "
+            f"data {event.data.hex()} "
+            f"data len {len(event.data)}"
+        )
+    return args
+
+
+def decode_map_fmt_args(event):
+    """Decodes the trace's event data for map-formatted data"""
+    args = {}
+    fmt = event.data_fmt[len("@pw_py_map_fmt:") :]
+
+    # We assume all data is packed, little-endian ordering if not specified.
+    if not fmt.startswith(_ORDERING_CHARS):
+        fmt = '<' + fmt
+
+    try:
+        (fmt_bytes, fmt_list) = fmt.split("{")
+        fmt_list = fmt_list.strip("}").split(",")
+
+        names = []
+        for pair in fmt_list:
+            (name, fmt_char) = (s.strip() for s in pair.split(":"))
+            names.append(name)
+            fmt_bytes += fmt_char
+    except ValueError:
+        args["error"] = f"Invalid map format {event.data_fmt}"
+    else:
+        try:
+            # Assert is needed in case the buffer is larger than expected.
+            assert struct.calcsize(fmt_bytes) == len(event.data)
+            items = struct.unpack_from(fmt_bytes, event.data)
+            for i, item in enumerate(items):
+                # Try to decode the item in case it is a byte array (string)
+                # since the JSON lib cannot serialize byte arrays.
+                try:
+                    args[names[i]] = item.decode()
+                except (UnicodeDecodeError, AttributeError):
+                    args[names[i]] = item
+        except (AssertionError, struct.error):
+            args["error"] = (
+                f"Mismatched map/data format {event.data_fmt} "
+                f"expected data len {struct.calcsize(fmt_bytes)} "
+                f"data {event.data.hex()} "
+                f"data len {len(event.data)}"
+            )
+    return args
+
+
 def generate_trace_json(events: Iterable[TraceEvent]):
     """Generates a list of JSON lines from provided trace events."""
     json_lines = []
     for event in events:
-        if event.module is None or event.timestamp_us is None or \
-           event.event_type is None or event.label is None:
+        if (
+            event.module is None
+            or event.timestamp_us is None
+            or event.event_type is None
+            or event.label is None
+        ):
             _LOG.error("Invalid sample")
             continue
 
         line = {
             "pid": event.module,
             "name": (event.label),
-            "ts": event.timestamp_us
+            "ts": event.timestamp_us,
         }
         if event.event_type == TraceType.DURATION_START:
             line["ph"] = "B"
@@ -139,12 +214,9 @@ def generate_trace_json(events: Iterable[TraceEvent]):
                     line["name"]: int.from_bytes(event.data, "little")
                 }
             elif event.data_fmt.startswith("@pw_py_struct_fmt:"):
-                items = struct.unpack_from(
-                    event.data_fmt[len("@pw_py_struct_fmt:"):], event.data)
-                args = {}
-                for i, item in enumerate(items):
-                    args["data_" + str(i)] = item
-                line["args"] = args
+                line["args"] = decode_struct_fmt_args(event)
+            elif event.data_fmt.startswith("@pw_py_map_fmt:"):
+                line["args"] = decode_map_fmt_args(event)
             else:
                 line["args"] = {"data": event.data.hex()}
 

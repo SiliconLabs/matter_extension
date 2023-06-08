@@ -19,6 +19,8 @@
 #include <cstring>
 #include <limits>
 
+#include "lib/stdcompat/bit.h"
+
 namespace pw::string {
 namespace {
 
@@ -59,12 +61,12 @@ StatusWithSize HandleExhaustedBuffer(span<char> buffer) {
 uint_fast8_t DecimalDigitCount(uint64_t integer) {
   // This fancy piece of code takes the log base 2, then approximates the
   // change-of-base formula by multiplying by 1233 / 4096.
-  // TODO(hepler): Replace __builtin_clzll with std::countl_zeros in C++20.
   const uint_fast8_t log_10 = static_cast<uint_fast8_t>(
-      (64 - __builtin_clzll(integer | 1)) * 1233 >> 12);
+      (64 - cpp20::countl_zero(integer | 1)) * 1233 >> 12);
 
   // Adjust the estimated log base 10 by comparing against the power of 10.
-  return log_10 + (integer < kPowersOf10[log_10] ? 0u : 1u);
+  return static_cast<uint_fast8_t>(log_10 +
+                                   (integer < kPowersOf10[log_10] ? 0u : 1u));
 }
 
 // std::to_chars is available for integers in recent versions of GCC. I looked
@@ -97,14 +99,14 @@ StatusWithSize IntToString(uint64_t value, span<char> buffer) {
       lower_digits = static_cast<uint32_t>(value);
       digit_count = remaining;
     } else {
-      lower_digits = value % max_uint32_base_power;
+      lower_digits = static_cast<uint32_t>(value % max_uint32_base_power);
       digit_count = max_uint32_base_power_exponent;
       value /= max_uint32_base_power;
     }
 
     // Write the specified number of digits, with leading 0s.
     for (uint_fast8_t i = 0; i < digit_count; ++i) {
-      buffer[--remaining] = lower_digits % base + '0';
+      buffer[--remaining] = static_cast<char>(lower_digits % base + '0');
       lower_digits /= base;
     }
   }
@@ -120,8 +122,8 @@ StatusWithSize IntToHexString(uint64_t value,
     return HandleExhaustedBuffer(buffer);
   }
 
-  for (int i = digits - 1; i >= 0; --i) {
-    buffer[i] = "0123456789abcdef"[value & 0xF];
+  for (int i = static_cast<int>(digits) - 1; i >= 0; --i) {
+    buffer[static_cast<size_t>(i)] = "0123456789abcdef"[value & 0xF];
     value >>= 4;
   }
 
@@ -132,12 +134,13 @@ StatusWithSize IntToHexString(uint64_t value,
 template <>
 StatusWithSize IntToString(int64_t value, span<char> buffer) {
   if (value >= 0) {
-    return IntToString<uint64_t>(value, buffer);
+    return IntToString<uint64_t>(static_cast<uint64_t>(value), buffer);
   }
 
   // Write as an unsigned number, but leave room for the leading minus sign.
-  auto result = IntToString<uint64_t>(
-      std::abs(value), buffer.empty() ? buffer : buffer.subspan(1));
+  auto result =
+      IntToString<uint64_t>(static_cast<uint64_t>(std::abs(value)),
+                            buffer.empty() ? buffer : buffer.subspan(1));
 
   if (result.ok()) {
     buffer[0] = '-';

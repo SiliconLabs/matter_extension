@@ -19,14 +19,9 @@ Compatibility
 API
 ===
 
-.. cpp:function:: size_t EncodedSize(uint64_t integer)
+.. doxygenfunction:: pw::varint::EncodedSize(uint64_t integer)
 
-Returns the size of an integer when encoded as a varint. Works on both signed
-and unsigned integers.
-
-.. cpp:function:: size_t ZigZagEncodedSize(int64_t integer)
-
-Returns the size of a signed integer when ZigZag encoded as a varint.
+.. doxygenfunction:: pw::varint::ZigZagEncodedSize(int64_t integer)
 
 .. cpp:function:: uint64_t MaxValueInBytes(size_t bytes)
 
@@ -57,3 +52,11 @@ Zephyr
 ======
 To enable ``pw_varint`` for Zephyr add ``CONFIG_PIGWEED_VARINT=y`` to the
 project's configuration.
+
+Rust
+====
+The Rust implementation is documented in
+`//pw_varint/rust/pw_varint.rs <https://pigweed.googlesource.com/pigweed/pigweed/+/refs/heads/main/pw_varint/rust/pw_varint.rs>`_
+
+..
+  TODO(b/280102965): Update above to point to rustdoc API docs

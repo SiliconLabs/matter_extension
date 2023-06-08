@@ -22,29 +22,25 @@ set(dir_pw_third_party_googletest "" CACHE PATH
 # used instead. If the build rule is used in the build it fails with this
 # error.
 if(NOT dir_pw_third_party_googletest)
-  add_custom_target(pw_third_party.googletest._not_configured
-    COMMAND
-      "${CMAKE_COMMAND}" -E echo
-        "ERROR: Attempted to build the pw_third_party.googletest without"
-        "configuring it via dir_pw_third_party_googletest."
-        "See https://pigweed.dev/third_party/googletest."
-    COMMAND
-      "${CMAKE_COMMAND}" -E false
+  pw_add_error_target(pw_third_party.googletest
+    MESSAGE
+      "Attempted to build the pw_third_party.googletest without "
+      "configuring it via dir_pw_third_party_googletest. "
+      "See https://pigweed.dev/third_party/googletest."
   )
-  add_library(pw_third_party.googletest INTERFACE)
-  add_dependencies(pw_third_party.googletest
-    pw_third_party.googletest._not_configured)
 
-  add_library(pw_third_party.googletest.gtest_main INTERFACE)
-  add_dependencies(
-    pw_third_party.googletest.gtest_main pw_thid_party.googletest)
+  pw_add_library(pw_third_party.googletest.gtest_main INTERFACE
+    PUBLIC_DEPS
+      pw_third_party.googletest
+  )
 
-  add_library(pw_third_party.googletest.gmock_main INTERFACE)
-  add_dependencies(
-    pw_third_party.googletest.gmock_main pw_thid_party.googletest)
+  pw_add_library(pw_third_party.googletest.gmock_main INTERFACE
+    PUBLIC_DEPS
+      pw_third_party.googletest
+  )
 
 else()  # dir_pw_thid_parrty_googletest is set
-  pw_add_module_library(pw_third_party.googletest
+  pw_add_library(pw_third_party.googletest STATIC
     SOURCES
       # Only add the "*-all.cc" files (and no headers) to improve maintainability
       # from upstream refactoring. The "*-all.cc" files include the respective
@@ -64,14 +60,14 @@ else()  # dir_pw_thid_parrty_googletest is set
       -Wno-undef
   )
 
-  pw_add_module_library(pw_third_party.googletest.gtest_main
+  pw_add_library(pw_third_party.googletest.gtest_main STATIC
     SOURCES
       ${dir_pw_third_party_googletest}/googletest/src/gtest_main.cc
     PUBLIC_DEPS
       pw_third_party.googletest
   )
 
-  pw_add_module_library(pw_third_party.googletest.gmock_main
+  pw_add_library(pw_third_party.googletest.gmock_main STATIC
     SOURCES
       ${dir_pw_third_party_googletest}/googlemock/src/gmock_main.cc
     PUBLIC_DEPS

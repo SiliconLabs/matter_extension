@@ -1,0 +1,57 @@
+category: Matter|Core
+define:
+- name: PW_SPAN_ENABLE_ASSERTS
+  value: 'false'
+description: pw_work_queue
+id: pw_work_queue
+include:
+- path: third_party/pigweed/repo/pw_assert/assert_compatibility_public_overrides
+- path: third_party/pigweed/repo/pw_assert/public
+  file_list:
+  - path: pw_assert/check.h
+  - path: pw_assert/internal/check_impl.h
+  - path: pw_assert/config.h
+- path: third_party/pigweed/repo/pw_base64/public
+- path: third_party/pigweed/repo/pw_containers/public
+- path: third_party/pigweed/repo/pw_function/public
+- path: third_party/pigweed/repo/pw_log/public
+- path: third_party/pigweed/repo/pw_metric/public
+- path: third_party/pigweed/repo/pw_polyfill/public
+- path: third_party/pigweed/repo/pw_polyfill/standard_library_public
+- path: third_party/pigweed/repo/pw_preprocessor/public
+- path: third_party/pigweed/repo/pw_span/public
+- path: third_party/pigweed/repo/pw_status/public
+- path: third_party/pigweed/repo/pw_string/public
+  file_list:
+  - path: pw_string/string_builder.h
+  - path: pw_string/to_string.h
+  - path: pw_string/format.h
+  - path: pw_string/internal/config.h
+  - path: pw_string/type_to_string.h
+  - path: pw_string/util.h
+  - path: pw_string/internal/length.h
+- path: third_party/pigweed/repo/pw_sync/public
+  file_list:
+  - path: pw_sync/interrupt_spin_lock.h
+  - path: pw_sync/lock_annotations.h
+  - path: pw_sync/thread_notification.h
+  - path: pw_sync/virtual_basic_lockable.h
+  - path: pw_sync/mutex.h
+- path: third_party/pigweed/repo/pw_thread/public
+  file_list:
+  - path: pw_thread/thread_core.h
+- path: third_party/pigweed/repo/pw_tokenizer/public
+- path: third_party/pigweed/repo/pw_work_queue/public
+  file_list:
+  - path: pw_work_queue/work_queue.h
+- path: third_party/pigweed/repo/third_party/fuchsia/repo/sdk/lib/fit/include
+- path: third_party/pigweed/repo/third_party/fuchsia/repo/sdk/lib/stdcompat/include
+label: pw_work_queue
+package: Matter
+provides:
+- name: matter_pw_work_queue
+quality: production
+source:
+- path: third_party/pigweed/repo/pw_work_queue/work_queue.cc
+ui_hints:
+  visibility: never

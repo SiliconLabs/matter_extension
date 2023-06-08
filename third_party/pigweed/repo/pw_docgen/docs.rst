@@ -69,7 +69,7 @@ groups, causing them to be built with it.
 * ``inputs``: Additional resources required for the docs (images, data files,
   etc.)
 * ``group_deps``: Other ``pw_doc_group`` targets required by this one.
-* ``report_deps``: Report card generating targets (e.g. ``pw_size_report``) on
+* ``report_deps``: Report card generating targets (e.g. ``pw_size_diff``) on
   which the docs depend.
 
 **Example**
@@ -167,6 +167,52 @@ Sphinx Extensions
 =================
 This module houses Pigweed-specific extensions for the Sphinx documentation
 generator. Extensions are included and configured in ``docs/conf.py``.
+
+module_metadata
+---------------
+Per :ref:`SEED-0102 <seed-0102>`, Pigweed module documentation has a standard
+format. The ``pigweed-module`` Sphinx directive provides that format and
+registers module metadata that can be used elsewhere in the Sphinx build.
+
+We need to add the directive after the document title, and add a class *to*
+the document title to achieve the title & subtitle formatting. Here's an
+example:
+
+.. code-block:: rst
+
+   .. rst-class:: with-subtitle
+
+   =========
+   pw_string
+   =========
+
+   .. pigweed-module::
+      :name: pw_string
+      :tagline: Efficient, easy, and safe string manipulation
+      :status: stable
+      :languages: C++14, C++17
+      :code-size-impact: 500 to 1500 bytes
+      :get-started: module-pw_string-get-started
+      :design: module-pw_string-design
+      :guides: module-pw_string-guide
+      :api: module-pw_string-api
+
+      Module sales pitch goes here!
+
+Directive options
+_________________
+- ``name``: The module name (required)
+- ``tagline``: A very short tagline that summarizes the module (required)
+- ``status``: One of ``experimental``, ``unstable``, and ``stable`` (required)
+- ``is-deprecated``: A flag indicating that the module is deprecated
+- ``languages``: A comma-separated list of languages the module supports
+- ``code-size-impact``: A summarize of the average code size impact
+- ``get-started``: A reference to the getting started section (required)
+- ``tutorials``: A reference to the tutorials section
+- ``guides``: A reference to the guides section
+- ``design``: A reference to the design considerations section (required)
+- ``concepts``: A reference to the concepts documentation
+- ``api``: A reference to the API documentation
 
 google_analytics
 ----------------

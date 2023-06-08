@@ -1,0 +1,18 @@
+id: matter_memory_monitoring
+package: "Matter"
+category: Platform
+description: Component to enable memory monitoring
+label: Memory monitoring
+quality: production
+provides:
+  - name: matter_memory_monitoring
+source:
+  - path: examples/platform/silabs/MemMonitoring.cpp
+
+include:
+  - path: examples/platform/silabs/
+    file_list:
+      - path: MemMonitoring.h
+define:
+  - name: HEAP_MONITORING
+    value: 1

@@ -25,8 +25,7 @@
 // compile time but does NOT require it to be evaluated at compile time and we
 // have to be incredibly careful that this does not end up in the .data section.
 void pw_boot_PreStaticMemoryInit() {
-  // TODO(pwbug/17): Optionally enable Replace when Pigweed config system is
-  // added.
+// TODO(b/264897542): Whether the FPU is enabled should be an Arm target trait.
 #if PW_ARMV7M_ENABLE_FPU
   // Enable FPU if built using hardware FPU instructions.
   // CPCAR mask that enables FPU. (ARMv7-M Section B3.2.20)
@@ -35,7 +34,7 @@ void pw_boot_PreStaticMemoryInit() {
   // Memory mapped register to enable FPU. (ARMv7-M Section B3.2.2, Table B3-4)
   volatile uint32_t& arm_v7m_cpacr =
       *reinterpret_cast<volatile uint32_t*>(0xE000ED88u);
-  arm_v7m_cpacr |= kFpuEnableMask;
+  arm_v7m_cpacr = arm_v7m_cpacr | kFpuEnableMask;
 
   // Ensure the FPU configuration is committed and enabled before continuing and
   // potentially executing any FPU instructions, however rare that may be during

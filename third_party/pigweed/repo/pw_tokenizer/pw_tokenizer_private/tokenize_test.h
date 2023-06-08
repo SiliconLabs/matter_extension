@@ -13,7 +13,7 @@
 // the License.
 
 // Functions to test that the tokenization macro works correctly in C code.
-// These are defined in tokenize_test.c and global_handlers_test.c.
+// These are defined in tokenize_test.c.
 #pragma once
 
 #include <stddef.h>
@@ -39,9 +39,5 @@ void pw_tokenizer_ToCallbackTest_SequentialZigZag(
 #define TEST_FORMAT_REQUIRES_8 "Won't fit : %s%d"
 
 void pw_tokenizer_ToBufferTest_Requires8(void* buffer, size_t* buffer_size);
-
-void pw_tokenizer_ToGlobalHandlerTest_SequentialZigZag(void);
-
-void pw_tokenizer_ToGlobalHandlerWithPayloadTest_SequentialZigZag(void);
 
 PW_EXTERN_C_END

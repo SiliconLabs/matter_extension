@@ -24,7 +24,7 @@ PICS:
 
 config:
     nodeId: 0x12344321
-    cluster: "Basic"
+    cluster: "Basic Information"
     endpoint: 0
 
 tests:
@@ -36,7 +36,10 @@ tests:
     - label:
           "DUT reads all supported mandatory attributes from TH one at a time in
           a manufacturer specific order"
+      PICS: PS.C.AM-READ
       verification: |
+          Product maker needs to provide instructions for how to trigger the command on the DUT. For comparison, the DUT behavior for this test step can be simulated using chip-tool (when DUT is a commissioner/Client)
+
           ./chip-tool powersource read status 1 1
 
           verify the " status response" on the TH (all-cluster-app) log:
@@ -191,13 +194,146 @@ tests:
     - label:
           "DUT reads all supported optional attributes from TH one at a time in
           a manufacturer specific order"
+      PICS: PS.C.AO-READ
       verification: |
-          This cluster doesn"t have any  optional attribute
+          Optional Attribute - If it is supported, then in TH log it will results in displaying the value, else it will display UNSUPPORTED_ATTRIBUTE
+
+
+          ./chip-tool powersource read wired-assessed-input-voltage 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)"
+
+
+          ./chip-tool powersource read wired-assessed-input-frequency 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)"
+
+          ./chip-tool powersource read wired-current-type 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)"
+
+          ./chip-tool powersource read wired-assessed-current 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)"
+
+          ./chip-tool powersource read wired-nominal-voltage 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)"
+
+          ./chip-tool powersource read wired-maximum-current 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)"
+
+          ./chip-tool powersource read wired-present 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)"
+
+          ./chip-tool powersource read active-wired-faults 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)"
+
+          ./chip-tool powersource read bat-voltage  1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)"
+
+          ./chip-tool powersource read bat-percent-remaining 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)"
+
+          ./chip-tool powersource read bat-time-remaining 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)"
+
+          ./chip-tool powersource read bat-present 1 1
+
+          Verify on the TH Log:
+
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)  "
+
+          ./chip-tool powersource read active-bat-faults 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)"
+
+          ./chip-tool powersource read bat-replacement-description 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)  "
+
+          ./chip-tool powersource read bat-common-designation 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE) "
+
+          ./chip-tool powersource read bat-ansidesignation 1 1
+
+          Verify on the TH Log:
+
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)  "
+
+          ./chip-tool powersource read bat-iecdesignation 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)
+
+          ./chip-tool powersource read bat-approved-chemistry 1 1
+
+          Verify on the TH Log:
+
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)  "
+
+          ./chip-tool powersource read bat-capacity 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)  "
+
+
+          ./chip-tool powersource read bat-quantity 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)  "
+
+          ./chip-tool powersource read bat-charge-state 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE) "
+
+          ./chip-tool powersource read bat-time-to-full-charge 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)  "
+
+          ./chip-tool powersource read bat-functional-while-charging 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE) "
+
+          ./chip-tool powersource read bat-charging-current 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)  "
+
+          ./chip-tool powersource read active-bat-charge-faults 1 1
+
+          Verify on the TH Log:
+          General error: 0x86 (UNSUPPORTED_ATTRIBUTE)"
       disabled: true
 
     - label:
           "DUT writes a suitable value to all supported mandatory attributes on
           the TH one at a time in a manufacturer specific order"
+      PICS: PS.C.AM-WRITE
       verification: |
           This cluster doesn"t have any writable attributes
       disabled: true
@@ -205,6 +341,7 @@ tests:
     - label:
           "DUT writes a suitable value to all supported optional attributes on
           the TH one at a time in a manufacturer specific order"
+      PICS: PS.C.AO-WRITE
       verification: |
           This cluster doesn"t have any writable attributes
       disabled: true
@@ -214,7 +351,33 @@ tests:
           optional attributes of the server-side of the cluster, and that it
           also reflects this in global attributes such as FeatureMap and
           AttributeList. Commission DUT to TH again"
+      PICS: ""
       verification: |
+          Product maker needs to provide instructions for how to trigger the command on the DUT. For comparison, the DUT behavior for this test step can be simulated using chip-tool (when DUT is a commissioner/Client)
+
+          ./chip-tool powersource read feature-map 1 1
+          verify the " feature-map  response" on the TH (all-cluster-minimal-app) log:
+          [1678873672.092602][348369:348369] CHIP:IM: Received Read request
+          [1678873672.092651][348369:348369] CHIP:DMG: ReadRequestMessage =
+          [1678873672.092660][348369:348369] CHIP:DMG: {
+          [1678873672.092669][348369:348369] CHIP:DMG:         AttributePathIBs =
+          [1678873672.092680][348369:348369] CHIP:DMG:         [
+          [1678873672.092706][348369:348369] CHIP:DMG:                 AttributePathIB =
+          [1678873672.092715][348369:348369] CHIP:DMG:                 {
+          [1678873672.092724][348369:348369] CHIP:DMG:                         Endpoint = 0x1,
+          [1678873672.092735][348369:348369] CHIP:DMG:                         Cluster = 0x2f,
+          [1678873672.092747][348369:348369] CHIP:DMG:                         Attribute = 0x0000_FFFC,
+          [1678873672.092757][348369:348369] CHIP:DMG:                 }
+          [1678873672.092770][348369:348369] CHIP:DMG:
+          [1678873672.092777][348369:348369] CHIP:DMG:         ],
+          [1678873672.092791][348369:348369] CHIP:DMG:
+          [1678873672.092800][348369:348369] CHIP:DMG:         isFabricFiltered = true,
+          [1678873672.092810][348369:348369] CHIP:DMG:         InteractionModelRevision = 1
+          [1678873672.092818][348369:348369] CHIP:DMG: },
+          [1678873672.092858][348369:348369] CHIP:DMG: IM RH moving to [GeneratingReports]
+          [1678873672.092892][348369:348369] CHIP:DMG: Building Reports for ReadHandler
+
+
           ./chip-tool powersource read attribute-list 1 0
 
           verify the " attribute-list response" on the TH (all-cluster-minimal-app) log:
@@ -391,13 +554,37 @@ tests:
     - label:
           "DUT reads all supported optional attributes from TH one at a time in
           a manufacturer specific order"
+      PICS: PS.C.AO-READ
       verification: |
-          This cluster doesn"t have any  optional attribute
+          Product maker needs to provide instructions for how to trigger the command on the DUT. For comparison, the DUT behavior for this test step can be simulated using chip-tool (when DUT is a commissioner/Client)
+
+
+
+          Verify TH(all-clusters-minimal-app) receives the read command, and responds that this attribute is not available and also DUT is aware that the optional attributes are not available, and does not issue read requests for the attributes which it did read in step 2
+
+
+          ./chip-tool powersource read bat-charge-level 1 1
+
+          on TH all-clusters-minimal-app verify status response a  UNSUPPORTED_ATTRIBUTE
+           General error: 0x86 (UNSUPPORTED_ATTRIBUTE)
+
+
+          ./chip-tool powersource read bat-replacement-needed 1 1
+
+          on TH all-clusters-minimal-app verify status response a  UNSUPPORTED_ATTRIBUTE
+           General error: 0x86 (UNSUPPORTED_ATTRIBUTE)
+
+
+          ./chip-tool powersource read bat-replaceability 1 1
+
+          on TH all-clusters-minimal-app verify status response a  UNSUPPORTED_ATTRIBUTE
+           General error: 0x86 (UNSUPPORTED_ATTRIBUTE)
       disabled: true
 
     - label:
           "DUT writes a suitable value to all supported optional attributes on
           the TH one at a time in a manufacturer specific order"
+      PICS: PS.C.AO-WRITE
       verification: |
           This cluster doesn"t have any writable attributes
       disabled: true

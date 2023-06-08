@@ -36,13 +36,13 @@ def _little_endian_base128_encode(integer: int) -> bytearray:
 
     while True:
         # Grab 7 bits; the eighth bit is set to 1 to indicate more data coming.
-        data.append((integer & 0x7f) | 0x80)
+        data.append((integer & 0x7F) | 0x80)
         integer >>= 7
 
         if not integer:
             break
 
-    data[-1] &= 0x7f  # clear the top bit of the last byte
+    data[-1] &= 0x7F  # clear the top bit of the last byte
     return data
 
 
@@ -55,25 +55,14 @@ def _encode_int32(arg: int) -> bytearray:
 
 
 def _encode_string(arg: bytes) -> bytes:
-    size_byte = len(arg) if len(arg) < 128 else 0xff
+    size_byte = len(arg) if len(arg) < 128 else 0xFF
     return struct.pack('B', size_byte) + arg[:127]
 
 
-def encode_token_and_args(token: int, *args: Union[int, float, bytes,
-                                                   str]) -> bytes:
-    """Encodes a tokenized message given its token and arguments.
+def encode_args(*args: Union[int, float, bytes, str]) -> bytes:
+    """Encodes a list of arguments to their on-wire representation."""
 
-    This function assumes that the token represents a format string with
-    conversion specifiers that correspond with the provided argument types.
-    Currently, only 32-bit integers are supported.
-    """
-
-    if token < 0 or token > _UINT32_MAX:
-        raise ValueError(
-            f'The token ({token}) must be an unsigned 32-bit integer')
-
-    data = bytearray(struct.pack('<I', token))
-
+    data = bytearray(b'')
     for arg in args:
         if isinstance(arg, int):
             if arg.bit_length() > 32:
@@ -89,9 +78,27 @@ def encode_token_and_args(token: int, *args: Union[int, float, bytes,
             data += _encode_string(arg)
         else:
             raise ValueError(
-                f'{arg} has type {type(arg)}, which is not supported')
-
+                f'{arg} has type {type(arg)}, which is not supported'
+            )
     return bytes(data)
+
+
+def encode_token_and_args(
+    token: int, *args: Union[int, float, bytes, str]
+) -> bytes:
+    """Encodes a tokenized message given its token and arguments.
+
+    This function assumes that the token represents a format string with
+    conversion specifiers that correspond with the provided argument types.
+    Currently, only 32-bit integers are supported.
+    """
+
+    if token < 0 or token > _UINT32_MAX:
+        raise ValueError(
+            f'The token ({token}) must be an unsigned 32-bit integer'
+        )
+
+    return struct.pack('<I', token) + encode_args(*args)
 
 
 def prefixed_base64(data: bytes, prefix: str = '$') -> str:
@@ -110,7 +117,7 @@ def _parse_user_input(string: str):
 
 
 def _main(format_string_list: Sequence[str], raw_args: Sequence[str]) -> int:
-    format_string, = format_string_list
+    (format_string,) = format_string_list
     token = tokens.pw_tokenizer_65599_hash(format_string)
     args = tuple(_parse_user_input(a) for a in raw_args)
 
@@ -130,19 +137,25 @@ def _main(format_string_list: Sequence[str], raw_args: Sequence[str]) -> int:
 def _parse_args() -> dict:
     parser = argparse.ArgumentParser(
         description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('format_string_list',
-                        metavar='FORMAT_STRING',
-                        nargs=1,
-                        help='Format string with optional %%-style arguments.')
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        'format_string_list',
+        metavar='FORMAT_STRING',
+        nargs=1,
+        help='Format string with optional %%-style arguments.',
+    )
     parser.add_argument(
         'raw_args',
         metavar='ARG',
         nargs='*',
-        help=('Arguments for the format string, if any. Arguments are parsed '
-              'as Python expressions, with no builtins (e.g. 9 is the number '
-              '9 and \'"9"\' is the string "9"). Arguments that are not valid '
-              'Python are treated as string literals.'))
+        help=(
+            'Arguments for the format string, if any. Arguments are parsed '
+            'as Python expressions, with no builtins (e.g. 9 is the number '
+            '9 and \'"9"\' is the string "9"). Arguments that are not valid '
+            'Python are treated as string literals.'
+        ),
+    )
     return vars(parser.parse_args())
 
 

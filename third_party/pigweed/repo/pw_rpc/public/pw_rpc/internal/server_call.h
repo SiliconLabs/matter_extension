@@ -23,16 +23,23 @@ namespace pw::rpc::internal {
 // A Call object, as used by an RPC server.
 class ServerCall : public Call {
  public:
-  void HandleClientStreamEnd() PW_UNLOCK_FUNCTION(rpc_lock()) {
-    MarkClientStreamCompleted();
-    // TODO(b/234876851): Ensure on_client_stream_end_ is properly guarded.
+  void HandleClientRequestedCompletion() PW_UNLOCK_FUNCTION(rpc_lock()) {
+    MarkStreamCompleted();
+
+#if PW_RPC_COMPLETION_REQUEST_CALLBACK
+    auto on_client_requested_completion_local =
+        std::move(on_client_requested_completion_);
+    CallbackStarted();
     rpc_lock().unlock();
 
-#if PW_RPC_CLIENT_STREAM_END_CALLBACK
-    if (on_client_stream_end_) {
-      on_client_stream_end_();
+    if (on_client_requested_completion_local) {
+      on_client_requested_completion_local();
     }
-#endif  // PW_RPC_CLIENT_STREAM_END_CALLBACK
+
+    rpc_lock().lock();
+    CallbackFinished();
+#endif  // PW_RPC_COMPLETION_REQUEST_CALLBACK
+    rpc_lock().unlock();
   }
 
  protected:
@@ -40,14 +47,11 @@ class ServerCall : public Call {
 
   ServerCall(ServerCall&& other) { *this = std::move(other); }
 
-  ~ServerCall() {
-    // Any errors are logged in Channel::Send.
-    CloseAndSendResponse(OkStatus()).IgnoreError();
-  }
+  ~ServerCall() = default;
 
   // Version of operator= used by the raw call classes.
   ServerCall& operator=(ServerCall&& other) PW_LOCKS_EXCLUDED(rpc_lock()) {
-    LockGuard lock(rpc_lock());
+    RpcLockGuard lock;
     MoveServerCallFrom(other);
     return *this;
   }
@@ -55,30 +59,47 @@ class ServerCall : public Call {
   void MoveServerCallFrom(ServerCall& other)
       PW_EXCLUSIVE_LOCKS_REQUIRED(rpc_lock());
 
-  ServerCall(const CallContext& context, MethodType type)
-      : Call(context, type) {}
+  ServerCall(const LockedCallContext& context, CallProperties properties)
+      PW_EXCLUSIVE_LOCKS_REQUIRED(rpc_lock())
+      : Call(context, properties) {}
 
-  // set_on_client_stream_end is templated so that it can be conditionally
-  // disabled with a helpful static_assert message.
+  // set_on_completion_requested is templated so that it can be
+  // conditionally disabled with a helpful static_assert message.
   template <typename UnusedType = void>
-  void set_on_client_stream_end(
-      [[maybe_unused]] Function<void()>&& on_client_stream_end) {
-    // TODO(b/234876851): Ensure on_client_stream_end_ is properly guarded.
-    static_assert(
-        cfg::kClientStreamEndCallbackEnabled<UnusedType>,
-        "The client stream end callback is disabled, so "
-        "set_on_client_stream_end cannot be called. To enable the client end "
-        "callback, set PW_RPC_CLIENT_STREAM_END_CALLBACK to 1.");
-#if PW_RPC_CLIENT_STREAM_END_CALLBACK
-    on_client_stream_end_ = std::move(on_client_stream_end);
-#endif  // PW_RPC_CLIENT_STREAM_END_CALLBACK
+  void set_on_completion_requested(
+      [[maybe_unused]] Function<void()>&& on_client_requested_completion)
+      PW_LOCKS_EXCLUDED(rpc_lock()) {
+    static_assert(cfg::kClientStreamEndCallbackEnabled<UnusedType>,
+                  "The client stream end callback is disabled, so "
+                  "set_on_completion_requested cannot be called. To "
+                  "enable the client end "
+                  "callback, set PW_RPC_REQUEST_COMPLETION_CALLBACK to 1.");
+#if PW_RPC_COMPLETION_REQUEST_CALLBACK
+    RpcLockGuard lock;
+    on_client_requested_completion_ = std::move(on_client_requested_completion);
+#endif  // PW_RPC_COMPLETION_REQUEST_CALLBACK
+  }
+
+  // Sets the provided on_client_requested_completion callback if
+  // PW_RPC_COMPLETION_REQUEST_CALLBACK is defined. Unlike
+  // set_on_completion_requested this API will not raise a static_assert
+  // message at compile time even when the macro is not defined.
+  void set_on_completion_requested_if_enabled(
+      Function<void()>&& on_client_requested_completion)
+      PW_LOCKS_EXCLUDED(rpc_lock()) {
+#if PW_RPC_COMPLETION_REQUEST_CALLBACK
+    RpcLockGuard lock;
+    on_client_requested_completion_ = std::move(on_client_requested_completion);
+#else
+    on_client_requested_completion = nullptr;
+#endif  // PW_RPC_COMPLETION_REQUEST_CALLBACK
   }
 
  private:
-#if PW_RPC_CLIENT_STREAM_END_CALLBACK
+#if PW_RPC_COMPLETION_REQUEST_CALLBACK
   // Called when a client stream completes.
-  Function<void()> on_client_stream_end_;
-#endif  // PW_RPC_CLIENT_STREAM_END_CALLBACK
+  Function<void()> on_client_requested_completion_ PW_GUARDED_BY(rpc_lock());
+#endif  // PW_RPC_COMPLETION_REQUEST_CALLBACK
 };
 
 }  // namespace pw::rpc::internal

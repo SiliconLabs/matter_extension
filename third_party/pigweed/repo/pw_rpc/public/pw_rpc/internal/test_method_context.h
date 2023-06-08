@@ -17,6 +17,7 @@
 
 #include "pw_assert/assert.h"
 #include "pw_rpc/channel.h"
+#include "pw_rpc/internal/call.h"
 #include "pw_rpc/internal/fake_channel_output.h"
 #include "pw_rpc/internal/method.h"
 #include "pw_rpc/internal/packet.h"
@@ -75,6 +76,8 @@ class InvocationContext {
   }
 
   void SendClientError(Status error) {
+    using PacketType = ::pw::rpc::internal::pwpb::PacketType;
+
     std::byte packet[kNoPayloadPacketSizeBytes];
     PW_ASSERT(server_
                   .ProcessPacket(Packet(PacketType::CLIENT_ERROR,
@@ -85,8 +88,7 @@ class InvocationContext {
                                         {},
                                         error)
                                      .Encode(packet)
-                                     .value(),
-                                 output_)
+                                     .value())
                   .ok());
   }
 
@@ -113,6 +115,8 @@ class InvocationContext {
 
   template <size_t kMaxPayloadSize = 32>
   void SendClientStream(ConstByteSpan payload) {
+    using PacketType = ::pw::rpc::internal::pwpb::PacketType;
+
     std::byte packet[kNoPayloadPacketSizeBytes + 3 + kMaxPayloadSize];
     PW_ASSERT(server_
                   .ProcessPacket(Packet(PacketType::CLIENT_STREAM,
@@ -122,27 +126,27 @@ class InvocationContext {
                                         0,
                                         payload)
                                      .Encode(packet)
-                                     .value(),
-                                 output_)
+                                     .value())
                   .ok());
   }
 
   void SendClientStreamEnd() {
+    using PacketType = ::pw::rpc::internal::pwpb::PacketType;
+
     std::byte packet[kNoPayloadPacketSizeBytes];
     PW_ASSERT(server_
-                  .ProcessPacket(Packet(PacketType::CLIENT_STREAM_END,
+                  .ProcessPacket(Packet(PacketType::CLIENT_REQUEST_COMPLETION,
                                         channel_.id(),
                                         UnwrapServiceId(service_.service_id()),
                                         kMethodId)
                                      .Encode(packet)
-                                     .value(),
-                                 output_)
+                                     .value())
                   .ok());
   }
 
   // Invokes the RPC, optionally with a request argument.
   template <auto kMethod, typename T, typename... RequestArg>
-  void call(RequestArg&&... request) {
+  void call(RequestArg&&... request) PW_LOCKS_EXCLUDED(rpc_lock()) {
     static_assert(sizeof...(request) <= 1);
     output_.clear();
     T responder = GetResponder<T>();
@@ -151,8 +155,9 @@ class InvocationContext {
   }
 
   template <typename T>
-  T GetResponder() {
-    return T(call_context());
+  T GetResponder() PW_LOCKS_EXCLUDED(rpc_lock()) {
+    RpcLockGuard lock;
+    return T(call_context().ClaimLocked());
   }
 
   const internal::CallContext& call_context() const { return context_; }

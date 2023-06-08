@@ -1,0 +1,19 @@
+id: matter_sed_wifi
+label: Sleepy end device component for rs9116 and wf200
+description: Enables the sed for rs9116 and wf200 matter wifi applications
+package: "Matter"
+category: Stack
+quality: production
+define:
+  - name: CHIP_DEVICE_CONFIG_ENABLE_SED
+    value: 1
+  - name: WIFI_DEBUG_ENABLED
+    value: 1
+    condition:
+     - rs911x_ncp_extension
+provides:
+  - name: matter_sed_wifi
+conflicts:
+  - name: matter_shell
+  - name: matter_qr_code
+  - name: matter_lcd

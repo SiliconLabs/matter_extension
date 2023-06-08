@@ -1,0 +1,21 @@
+id: matter_subscription_persistence
+label: Subscription Persistence
+description: >
+  Ensures that an ICD can re-establish its subscription and by extension its secure
+  session to a subscriber in the event of a power cycle. Must be used in conjunction
+  with Matter Sleepy Device.
+package: "Matter"
+category: Stack
+quality: production
+define:
+  - name: CHIP_CONFIG_PERSIST_SUBSCRIPTIONS
+    value: 1
+source:
+  - path: src/app/SimpleSubscriptionResumptionStorage.cpp
+include:
+  - path: src/app
+    file_list: SimpleSubscriptionResumptionStorage.h
+requires:
+  - name: matter_sed
+provides:
+  - name: matter_subscription_persistence

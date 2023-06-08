@@ -14,6 +14,7 @@
 
 load("//pw_build:pigweed.bzl", "pw_cc_library", "pw_cc_test")
 load("//pw_protobuf_compiler:proto.bzl", "pw_proto_library")
+load("//pw_protobuf_compiler:pw_proto_library.bzl", "pw_proto_filegroup")
 load("@com_google_protobuf//:protobuf.bzl", "py_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
 load("@rules_proto_grpc//:defs.bzl", "proto_plugin")
@@ -45,7 +46,7 @@ pw_cc_library(
     ],
 )
 
-# TODO(pwbug/507): Build this as a cc_binary and use it in integration tests.
+# TODO(b/242059613): Build this as a cc_binary and use it in integration tests.
 filegroup(
     name = "test_rpc_server",
     srcs = ["test_rpc_server.cc"],
@@ -80,6 +81,7 @@ pw_cc_library(
         "public/pw_rpc/internal/channel_list.h",
         "public/pw_rpc/internal/client_call.h",
         "public/pw_rpc/internal/config.h",
+        "public/pw_rpc/internal/encoding_buffer.h",
         "public/pw_rpc/internal/endpoint.h",
         "public/pw_rpc/internal/hash.h",
         "public/pw_rpc/internal/lock.h",
@@ -101,6 +103,7 @@ pw_cc_library(
         "public/pw_rpc/channel.h",
         "public/pw_rpc/client.h",
         "public/pw_rpc/internal/service_client.h",
+        "public/pw_rpc/method_id.h",
         "public/pw_rpc/method_info.h",
         "public/pw_rpc/packet_meta.h",
         "public/pw_rpc/server.h",
@@ -112,20 +115,23 @@ pw_cc_library(
         ":internal_packet_cc.pwpb",
         "//pw_assert",
         "//pw_bytes",
-        "//pw_containers",
         "//pw_containers:intrusive_list",
         "//pw_function",
         "//pw_log",
+        "//pw_preprocessor",
         "//pw_result",
         "//pw_span",
         "//pw_status",
         "//pw_sync:lock_annotations",
         "//pw_sync:mutex",
+        "//pw_thread:sleep",
+        "//pw_toolchain:no_destructor",
     ],
 )
 
 pw_cc_library(
     name = "synchronous_client_api",
+    srcs = ["public/pw_rpc/internal/synchronous_call_impl.h"],
     hdrs = [
         "public/pw_rpc/synchronous_call.h",
         "public/pw_rpc/synchronous_call_result.h",
@@ -196,11 +202,11 @@ pw_cc_library(
         "public/pw_rpc/internal/fake_channel_output.h",
         "public/pw_rpc/internal/method_impl_tester.h",
         "public/pw_rpc/internal/method_info_tester.h",
-        "public/pw_rpc/internal/test_method.h",
         "public/pw_rpc/internal/test_method_context.h",
         "public/pw_rpc/internal/test_utils.h",
         "public/pw_rpc/payloads_view.h",
         "pw_rpc_private/fake_server_reader_writer.h",
+        "pw_rpc_private/test_method.h",
     ],
     includes = [
         ".",
@@ -241,7 +247,7 @@ pw_cc_library(
     ],
 )
 
-# TODO(pwbug/507): Add the client integration test to the build.
+# TODO(b/242059613): Add the client integration test to the build.
 filegroup(
     name = "client_integration_test",
     srcs = ["client_integration_test.cc"],
@@ -255,6 +261,21 @@ pw_cc_test(
     deps = [
         ":internal_test_utils",
         ":pw_rpc",
+    ],
+)
+
+pw_cc_test(
+    name = "callback_test",
+    srcs = ["callback_test.cc"],
+    deps = [
+        ":pw_rpc",
+        ":pw_rpc_test_cc.raw_rpc",
+        "//pw_rpc/raw:client_testing",
+        "//pw_sync:binary_semaphore",
+        "//pw_thread:sleep",
+        "//pw_thread:test_threads_header",
+        "//pw_thread:yield",
+        "//pw_thread_stl:test_threads",
     ],
 )
 
@@ -370,7 +391,7 @@ proto_library(
         "pw_rpc_test_protos/no_package.proto",
         "pw_rpc_test_protos/test.proto",
     ],
-    strip_import_prefix = "//pw_rpc",
+    strip_import_prefix = "/pw_rpc",
 )
 
 pw_proto_library(
@@ -401,21 +422,6 @@ proto_plugin(
 )
 
 proto_plugin(
-    name = "nanopb_plugin",
-    options = [
-        "--library-include-format='#include\"%s\"'",
-    ],
-    outputs = [
-        "{protopath}.pb.h",
-        "{protopath}.pb.c",
-    ],
-    separate_options_flag = True,
-    tool = "@com_github_nanopb_nanopb//:bazel_generator",
-    use_built_in_shell_environment = True,
-    visibility = ["//visibility:public"],
-)
-
-proto_plugin(
     name = "pw_cc_plugin_pwpb_rpc",
     outputs = [
         "{protopath}.rpc.pwpb.h",
@@ -426,11 +432,20 @@ proto_plugin(
     visibility = ["//visibility:public"],
 )
 
+pw_proto_filegroup(
+    name = "echo_proto_and_options",
+    srcs = ["echo.proto"],
+    options_files = ["echo.options"],
+)
+
 proto_library(
     name = "echo_proto",
-    srcs = [
-        "echo.proto",
-    ],
+    srcs = [":echo_proto_and_options"],
+)
+
+py_proto_library(
+    name = "echo_py_pb2",
+    srcs = ["echo.proto"],
 )
 
 pw_proto_library(

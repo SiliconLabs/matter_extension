@@ -46,6 +46,11 @@ extern rom_apis_t *rom_apis;
 extern void rom_init(void);
 int32_t rsi_driver_memory_estimate(void);
 
+/* For Remove sapi Wranings*/
+#if defined(RSI_SDIO_INTERFACE)
+void rsi_sdio_deinit(void);
+#endif
+
 /** @addtogroup COMMON 
 * @{
 */
@@ -92,7 +97,6 @@ void rsi_common_set_status(int32_t status)
  *             			**RSI_ERROR_INVALID_PARAM**   -    If maximum sockets is greater than 10
  */
 
-/** @} */
 uint8_t *buffer_addr = NULL;
 int32_t rsi_driver_init(uint8_t *buffer, uint32_t length)
 {
@@ -151,13 +155,6 @@ int32_t rsi_driver_init(uint8_t *buffer, uint32_t length)
   buffer += sizeof(struct wpa_scan_results_arr);
 #endif
 
-#ifdef SAPI_LOGGING_ENABLE
-  buffer += sl_log_init(buffer);
-#endif
-#ifdef FW_LOGGING_ENABLE
-  buffer += sl_fw_log_init(buffer);
-#endif
-
   // Check for max no of sockets
   if (RSI_NUMBER_OF_SOCKETS > (10 + RSI_NUMBER_OF_LTCP_SOCKETS)) {
     status = RSI_ERROR_INVALID_PARAM;
@@ -182,6 +179,13 @@ int32_t rsi_driver_init(uint8_t *buffer, uint32_t length)
   // Designate memory for common_cb
   rsi_driver_cb_non_rom = (rsi_driver_cb_non_rom_t *)buffer;
   buffer += sizeof(rsi_driver_cb_non_rom_t);
+
+#ifdef SAPI_LOGGING_ENABLE
+  buffer += sl_log_init(buffer);
+#endif
+#ifdef FW_LOGGING_ENABLE
+  buffer += sl_fw_log_init(buffer);
+#endif
 
   // Designate memory for common_cb
   rsi_driver_cb->common_cb = (rsi_common_cb_t *)buffer;
@@ -393,6 +397,8 @@ int32_t rsi_driver_init(uint8_t *buffer, uint32_t length)
   SL_PRINTF(SL_DRIVER_INIT_EXIT, COMMON, LOG_INFO, "actual_length=%4x", actual_length);
   return actual_length;
 }
+/** @} */
+
 /** @addtogroup COMMON 
 * @{
 */
@@ -415,7 +421,6 @@ int32_t rsi_driver_init(uint8_t *buffer, uint32_t length)
  *			                        6 - Access point mode \n
  *			                        8 - Transmit test mode \n
  *			                        9 - Concurrent mode
- * @note 			 Opermode WiFi-Direct(1) mode is not supported.
  * @param[in]  coex_mode       -    Coexistence mode
  *                                  0 - WLAN only mode \n
  *                                  1 - WLAN \n
@@ -426,10 +431,11 @@ int32_t rsi_driver_init(uint8_t *buffer, uint32_t length)
  *                                  12- BLE mode \n
  *                                  13- WLAN + BLE \n
  *                                   
- * @note 			1. Coex modes are supported only in 384K memory configuration.
- * @note			2. Coex mode 4(Bluetooth classic), 8 (Dual mode), and 12(BLE mode) are not supported.
- * @note			3. To achieve the same functionality, use coexmode 5, 9, and 13 respectively instead of coexmode 4, 8, and 12.
- * @note			4. To achieve power save functionality, trigger 'rsi_wlan_radio_init()' API after rsi_wireless_init() API and also issue
+ * @note 			1. Opermode WiFi-Direct(1) mode is not supported.
+ * @note 			2. Coex modes are supported only in 384K memory configuration.
+ * @note			3. Coex mode 4(Bluetooth classic), 8 (Dual mode), and 12(BLE mode) are not supported.
+ * @note			4. To achieve the same functionality, use coexmode 5, 9, and 13 respectively instead of coexmode 4, 8, and 12.
+ * @note			5. To achieve power save functionality, trigger 'rsi_wlan_radio_init()' API after rsi_wireless_init() API and also issue
  * both WLAN and BT power save commands. \n
  *
  * @return      **Success** - RSI_SUCCESS  \n
@@ -1293,7 +1299,10 @@ int32_t rsi_send_feature_frame(void)
 
     // Feature enables
     rsi_feature_frame->feature_enables =
-      (RSI_WLAN_TRANSMIT_TEST_MODE == rsi_driver_cb->wlan_cb->opermode) ? 0 : FEATURE_ENABLES;
+      (RSI_WLAN_TRANSMIT_TEST_MODE == rsi_driver_cb->wlan_cb->opermode)
+        ? (FEATURE_ENABLES
+           & ~(RSI_FEAT_FRAME_PREAMBLE_DUTY_CYCLE | RSI_FEAT_FRAME_LP_CHAIN | RSI_FEAT_FRAME_IN_PACKET_DUTY_CYCLE))
+        : FEATURE_ENABLES;
 
 #ifndef RSI_COMMON_SEM_BITMAP
     rsi_driver_cb_non_rom->common_wait_bitmap |= BIT(0);
@@ -1322,6 +1331,7 @@ int32_t rsi_send_feature_frame(void)
   SL_PRINTF(SL_SEND_FEATURE_FRAME_EXIT, COMMON, LOG_INFO, "status: %4x", status);
   return status;
 }
+
 /*==============================================*/
 /**
  * @brief       Get firmware version present in the device. This is a blocking API.
@@ -1411,6 +1421,104 @@ int32_t rsi_get_fw_version(uint8_t *response, uint16_t length)
 
   // Return status
   SL_PRINTF(SL_GET_FW_VERSION_EXIT, COMMON, LOG_INFO, "status: %4x", status);
+  return status;
+}
+/*==============================================*/
+/**
+ * @fn          int32_t rsi_get_module_type(uint8_t *response, uint16_t length)
+ * @brief       Get the module type
+ * @pre         Need to call after the device initialization
+ * @param[in]   length         - This is the length of the response buffer in bytes to hold result.
+ * @param[out]  response       - This is the response of the requested command. This is an output parameter.
+ * @return      0              - Success \n
+ *				Non-Zero Value - Failure \n
+ *                               If return value is lesser than 0 \n
+ *                               -3: Command given in wrong state \n
+ *                               -4: Buffer not available to serve the command \n
+ *                               -6: Insufficient input buffer given \n
+ *                               If return value is greater than 0 \n
+ *                               0x0021, 0x0025, 0x002c
+ * @note       Refer Error Codes section for above error codes \ref SP16 .
+ */
+
+int32_t rsi_get_module_type(uint8_t *response)
+{
+  int32_t status = RSI_SUCCESS;
+  rsi_pkt_t *pkt;
+
+  if (rsi_driver_cb_non_rom->module_type_valid) {
+    *response = rsi_driver_cb_non_rom->module_type_id;
+    return RSI_SUCCESS;
+  }
+  // Get common cb structure pointer
+  rsi_common_cb_t *common_cb = rsi_driver_cb->common_cb;
+
+  // if state is not in card ready received state
+  if (common_cb->state == RSI_COMMON_STATE_NONE) {
+    while (common_cb->state != RSI_COMMON_CARDREADY) {
+#ifndef RSI_WITH_OS
+      rsi_scheduler(&rsi_driver_cb->scheduler_cb);
+#endif
+    }
+  }
+
+  status = rsi_check_and_update_cmd_state(COMMON_CMD, IN_USE);
+  if (status == RSI_SUCCESS) {
+
+    // allocate command buffer  from common pool
+    pkt = rsi_pkt_alloc(&common_cb->common_tx_pool);
+
+    // If allocation of packet fails
+    if (pkt == NULL) {
+      //Changing the common state to allow state
+      rsi_check_and_update_cmd_state(COMMON_CMD, ALLOW);
+
+      // return packet allocation failure error
+      return RSI_ERROR_PKT_ALLOCATION_FAILURE;
+    }
+
+    if (response != NULL) {
+      // attach the buffer given by user
+      common_cb->app_buffer = response;
+
+      // length of the buffer provided by user
+      common_cb->app_buffer_length = 1;
+    } else {
+      // Assign NULL to the app_buffer to avoid junk
+      common_cb->app_buffer = NULL;
+
+      // length of the buffer to 0
+      common_cb->app_buffer_length = 0;
+    }
+
+#ifndef RSI_COMMON_SEM_BITMAP
+    rsi_driver_cb_non_rom->common_wait_bitmap |= BIT(0);
+#endif
+    // Send module type query request
+    status = rsi_driver_common_send_cmd(RSI_COMMON_REQ_MODULE_TYPE, pkt);
+
+    // wait on common semaphore
+    rsi_wait_on_common_semaphore(&rsi_driver_cb_non_rom->common_cmd_sem, RSI_MTYPE_RESPONSE_WAIT_TIME);
+
+    //Changing the common state to allow state
+    rsi_check_and_update_cmd_state(COMMON_CMD, ALLOW);
+
+  }
+
+  else {
+    //return common command error
+    return status;
+  }
+
+  // get common command response status
+  status = rsi_common_get_status();
+
+  if (status == RSI_SUCCESS) {
+    rsi_driver_cb_non_rom->module_type_id    = *response;
+    rsi_driver_cb_non_rom->module_type_valid = 1;
+  }
+
+  // Return the status
   return status;
 }
 
@@ -1907,8 +2015,6 @@ int32_t rsi_destroy_driver_task_and_driver_deinit(rsi_task_handle_t *task_handle
  * @return      0              - Success \n
  * 				Non-Zero Value - Failure
  */
-
-#define RSI_DRIVER_VERSION "2.6.0.38"
 int32_t rsi_driver_version(uint8_t *request)
 {
   SL_PRINTF(SL_DRIVER_VERSION_ENTRY, COMMON, LOG_INFO);

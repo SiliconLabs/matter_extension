@@ -21,16 +21,21 @@ from pathlib import Path
 import re
 import shlex
 import subprocess
-from typing import Sequence, Union
+from typing import Optional, Sequence, Union
 
 _LOG: logging.Logger = logging.getLogger(__name__)
 
 
 def git_repo_root(path: Union[Path, str]) -> Path:
     return Path(
-        subprocess.run(['git', '-C', path, 'rev-parse', '--show-toplevel'],
-                       check=True,
-                       stdout=subprocess.PIPE).stdout.strip().decode())
+        subprocess.run(
+            ['git', '-C', path, 'rev-parse', '--show-toplevel'],
+            check=True,
+            stdout=subprocess.PIPE,
+        )
+        .stdout.strip()
+        .decode()
+    )
 
 
 def _stdin_args_for_hook(hook) -> Sequence[str]:
@@ -39,8 +44,12 @@ def _stdin_args_for_hook(hook) -> Sequence[str]:
     See https://git-scm.com/docs/githooks for more information.
     """
     if hook == 'pre-push':
-        return ('local_ref', 'local_object_name', 'remote_ref',
-                'remote_object_name')
+        return (
+            'local_ref',
+            'local_object_name',
+            'remote_ref',
+            'remote_object_name',
+        )
     if hook in ('pre-receive', 'post-receive', 'reference-transaction'):
         return ('old_value', 'new_value', 'ref_name')
     if hook == 'post-rewrite':
@@ -54,25 +63,11 @@ def _replace_arg_in_hook(arg: str, unquoted_args: Sequence[str]) -> str:
     return shlex.quote(arg)
 
 
-def install_hook(script,
-                 hook: str,
-                 args: Sequence[str] = (),
-                 repository: Union[Path, str] = '.') -> None:
-    """This function is deprecated; use install_git_hook instead.
-
-    This version of the function takes the script separately from the arguments
-    and calculates the relative path to the script from the root of the repo.
-    This does not work well when the path is to a file installed in the virtual
-    environment, since the execute permission may be lost. Instead of using a
-    path to a script, invoke the script from `python -m` or the `pw` command.
-    """
-    root = git_repo_root(repository).resolve()
-    install_git_hook(hook, [os.path.relpath(script, root), *args], repository)
-
-
-def install_git_hook(hook: str,
-                     command: Sequence[Union[Path, str]],
-                     repository: Union[Path, str] = '.') -> None:
+def install_git_hook(
+    hook: str,
+    command: Sequence[Union[Path, str]],
+    repository: Union[Path, str] = '.',
+) -> None:
     """Installs a simple Git hook that executes the provided command.
 
     Args:
@@ -125,11 +120,14 @@ def install_git_hook(hook: str,
         line(command_str)
 
     hook_path.chmod(0o755)
-    logging.info('Installed %s hook for `%s` at %s', hook, command_str,
-                 hook_path)
+    logging.info(
+        'Installed %s hook for `%s` at %s', hook, command_str, hook_path
+    )
 
 
-def argument_parser(parser=None) -> argparse.ArgumentParser:
+def argument_parser(
+    parser: Optional[argparse.ArgumentParser] = None,
+) -> argparse.ArgumentParser:
     if parser is None:
         parser = argparse.ArgumentParser(description=__doc__)
 
@@ -144,22 +142,18 @@ def argument_parser(parser=None) -> argparse.ArgumentParser:
         '--repository',
         default='.',
         type=path,
-        help='Path to the repository in which to install the hook')
-    parser.add_argument('--hook',
-                        required=True,
-                        help='Which type of Git hook to create')
-    parser.add_argument('-s',
-                        '--script',
-                        required=True,
-                        type=path,
-                        help='Path to the script to execute in the hook')
-    parser.add_argument('args',
-                        nargs='*',
-                        help='Arguments to provide to the commit hook')
+        help='Path to the repository in which to install the hook',
+    )
+    parser.add_argument(
+        '--hook', required=True, help='Which type of Git hook to create'
+    )
+    parser.add_argument(
+        'command', nargs='*', help='Command to run in the commit hook'
+    )
 
     return parser
 
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(message)s', level=logging.INFO)
-    install_hook(**vars(argument_parser().parse_args()))
+    install_git_hook(**vars(argument_parser().parse_args()))

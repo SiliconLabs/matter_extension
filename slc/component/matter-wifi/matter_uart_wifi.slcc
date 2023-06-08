@@ -23,7 +23,7 @@ requires:
 provides:
   - name: matter_uart_wifi
 source:
-  - path: examples/platform/efr32/uart.cpp
+  - path: examples/platform/silabs/efr32/uart.cpp
 define:
   - name: CONFIG_ENABLE_UART
     condition:
@@ -34,7 +34,7 @@ define:
   - name: EFR32MG12
     condition:
      - device_series_1
-# For examples/platform/efr32/uart.cpp EFR32MG24 and MGM24 follow the same logic
+# For examples/platform/silabs/efr32/uart.cpp EFR32MG24 and MGM24 follow the same logic
   - name: EFR32MG24
     condition:
      - device_series_2

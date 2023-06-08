@@ -1,0 +1,63 @@
+category: Matter|Core
+define:
+- name: CHIP_HAVE_CONFIG_H
+  value: '1'
+description: libinetlayer_wifi
+id: libinetlayer_wifi
+include:
+- path: examples/platform/silabs
+- path: examples/platform/silabs/efr32
+- path: src
+  file_list:
+  - path: inet/TCPEndPoint.h
+  - path: inet/UDPEndPoint.h
+  - path: inet/EndPointBasis.h
+  - path: inet/IPAddress.h
+  - path: inet/InetInterface.h
+  - path: inet/InetLayer.h
+  - path: inet/InetConfig.h
+  - path: inet/InetError.h
+  - path: inet/IANAConstants.h
+  - path: inet/IPPacketInfo.h
+  - path: inet/Inet.h
+  - path: inet/IPPrefix.h
+  - path: inet/InetArgParser.h
+  - path: inet/UDPEndPointImplOpenThread.h
+  - path: inet/EndPointStateOpenThread.h
+  - path: inet/InetFaultInjection.h
+  - path: inet/arpa-inet-compatibility.h
+  - path: inet/TCPEndPointImplLwIP.h
+  - path: inet/EndPointStateLwIP.h
+  - path: inet/UDPEndPointImplLwIP.h
+  - path: inet/EndpointQueueFilter.h
+  - path: inet/TCPEndPointImplOpenThread.h
+  - path: inet/UDPEndPointImpl.h
+  - path: inet/TCPEndPointImpl.h
+- path: src/include
+- path: src/lib
+- path: src/platform/silabs/efr32
+- path: third_party/nlassert/repo/include
+- path: third_party/nlio/repo/include
+- path: zzz_generated/app-common
+- path: slc/inc
+  file_list:
+  - path: inet/InetBuildConfig.h
+label: libinetlayer_wifi
+package: Matter
+provides:
+- name: matter_libinetlayer_wifi
+quality: production
+source:
+- path: src/inet/IPAddress-StringFuncts.cpp
+- path: src/inet/IPAddress.cpp
+- path: src/inet/IPPacketInfo.cpp
+- path: src/inet/IPPrefix.cpp
+- path: src/inet/InetArgParser.cpp
+- path: src/inet/InetError.cpp
+- path: src/inet/InetInterface.cpp
+- path: src/inet/TCPEndPoint.cpp
+- path: src/inet/TCPEndPointImplLwIP.cpp
+- path: src/inet/UDPEndPoint.cpp
+- path: src/inet/UDPEndPointImplLwIP.cpp
+ui_hints:
+  visibility: never

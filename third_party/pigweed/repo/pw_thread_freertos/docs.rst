@@ -16,6 +16,10 @@ Optional dynamic allocation for threads is supported using ``xTaskCreate()``.
 Optional joining support is enabled via an ``StaticEventGroup_t`` in each
 thread's context.
 
+.. Note::
+  Scheduler State API support is required in your FreeRTOS Configuration, i.e.
+  ``INCLUDE_xTaskGetSchedulerState == 1``.
+
 This backend always permits users to start threads where static contexts are
 passed in as an option. As a quick example, a detached thread can be created as
 follows:
@@ -161,10 +165,18 @@ FreeRTOS Thread Options
 -----------------------------
 Thread Identification Backend
 -----------------------------
-A backend for ``pw::thread::Id`` and ``pw::thread::get_id()`` is offerred using
+A backend for ``pw::thread::Id`` and ``pw::thread::get_id()`` is offered using
 ``xTaskGetCurrentTaskHandle()``. It uses ``DASSERT`` to ensure that it is not
 invoked from interrupt context and if possible that the scheduler has started
 via ``xTaskGetSchedulerState()``.
+
+------------------------
+Thread Iteration Backend
+------------------------
+``pw_thread_freertos_TSKTCB_BACKEND`` to be configured
+properly and ``pw_third_party_freertos_DISABLE_TASKS_STATICS`` to be enabled.
+To allow for peak stack usage measurement, the FreeRTOS config
+``INCLUDE_uxTaskGetStackHighWaterMark`` should also be enabled.
 
 --------------------
 Thread Sleep Backend
@@ -222,12 +234,15 @@ Unfortunately FreeRTOS entirely hides the contents of the TCB inside of
 ``Source/tasks.c``, but it's necessary for snapshot processing in order to
 access the stack limits from interrupt contexts. For this reason, FreeRTOS
 snapshot integration relies on the ``pw_thread_freertos:freertos_tsktcb`` facade
-to provide the ``tskTCB`` definition.
+to provide the ``tskTCB`` definition. By default, a header will automatically be
+generated from FreeRTOS's ``tasks.c`` file to work around this limitation.
 
-The selected backend is expected to provide the ``struct tskTCB`` definition
-through ``pw_thread_freertos_backend/freertos_tsktcb.h``. The facade asserts
-that this definition matches the size of FreeRTOS's ``StaticTask_T`` which is
-the public opaque TCB type.
+In the event that the automatic header generation is incompatible with your
+version of FreeRTOS, ``pw_thread_freertos_FREERTOS_TSKTCB_BACKEND`` must be
+configured to point to a source set that provides the ``struct tskTCB``
+definition through ``pw_thread_freertos_backend/freertos_tsktcb.h``. The facade
+asserts that this definition matches the size of FreeRTOS's ``StaticTask_T``
+which is the public opaque TCB type.
 
 ``SnapshotThreads()``
 =====================
@@ -243,7 +258,7 @@ captured. For ARM Cortex-M CPUs, you can do something like this:
   void* stack_ptr = 0;
   asm volatile("mrs %0, psp\n" : "=r"(stack_ptr));
   pw::thread::ProcessThreadStackCallback cb =
-      [](pw::thread::Thread::StreamEncoder& encoder,
+      [](pw::thread::proto::Thread::StreamEncoder& encoder,
          pw::ConstByteSpan stack) -> pw::Status {
     return encoder.WriteRawStack(stack);
   };
@@ -251,11 +266,12 @@ captured. For ARM Cortex-M CPUs, you can do something like this:
                                       snapshot_encoder, cb);
 
 ``SnapshotThreads()`` wraps the singular thread capture to instead captures
-all created threads to a ``pw::thread::SnapshotThreadInfo`` message which also
-captures the thread state for you. This proto
+all created threads to a ``pw::thread::proto::SnapshotThreadInfo`` message
+which also captures the thread state for you. This proto
 message overlays a snapshot, so it is safe to static cast a
 ``pw::snapshot::Snapshot::StreamEncoder`` to a
-``pw::thread::SnapshotThreadInfo::StreamEncoder`` when calling this function.
+``pw::thread::proto::SnapshotThreadInfo::StreamEncoder`` when calling this
+function.
 
 .. Note:: ``SnapshotThreads()`` is only safe to use this while the scheduler and
    interrupts are disabled as it relies on ``ForEachThread()``.
@@ -263,7 +279,7 @@ message overlays a snapshot, so it is safe to static cast a
 Thread Stack Capture
 --------------------
 Snapshot attempts to capture as much of the thread stack state as possible,
-however it can be limited by on the FreeRTOS configuration.
+however it can be limited by the FreeRTOS configuration.
 
 The ``stack_start_ptr`` can only be provided if the ``portSTACK_GROWTH`` is < 0,
 i.e. the stack grows down, when ``configRECORD_STACK_HIGH_ADDRESS`` is enabled.

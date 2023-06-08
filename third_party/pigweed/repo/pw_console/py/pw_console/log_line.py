@@ -26,6 +26,7 @@ from pw_log_tokenized import FormatStringWithMetadata
 @dataclass
 class LogLine:
     """Class to hold a single log event."""
+
     record: logging.LogRecord
     formatted_log: str
     ansi_stripped_log: str
@@ -42,9 +43,12 @@ class LogLine:
         """Parse log metadata fields from various sources."""
 
         # 1. Parse any metadata from the message itself.
-        self.metadata = FormatStringWithMetadata(str(self.record.message))
+        self.metadata = FormatStringWithMetadata(
+            str(self.record.message)  # pylint: disable=no-member
+        )  # pylint: disable=no-member
         self.formatted_log = self.formatted_log.replace(
-            self.metadata.raw_string, self.metadata.message)
+            self.metadata.raw_string, self.metadata.message
+        )
         # Remove any trailing line breaks.
         self.formatted_log = self.formatted_log.rstrip()
 
@@ -63,8 +67,9 @@ class LogLine:
         # See:
         # https://docs.python.org/3/library/logging.html#logging.debug
         if hasattr(self.record, 'extra_metadata_fields') and (
-                self.record.extra_metadata_fields):  # type: ignore
-            fields = self.record.extra_metadata_fields  # type: ignore
+            self.record.extra_metadata_fields  # type: ignore  # pylint: disable=no-member
+        ):
+            fields = self.record.extra_metadata_fields  # type: ignore  # pylint: disable=no-member
             for key, value in fields.items():
                 self.metadata.fields[key] = value
 
@@ -89,8 +94,8 @@ class LogLine:
         # Create prompt_toolkit FormattedText tuples based on the log ANSI
         # escape sequences.
         if self.fragment_cache is None:
-            self.fragment_cache = ANSI(self.formatted_log +
-                                       '\n'  # Add a trailing linebreak
-                                       ).__pt_formatted_text__()
+            self.fragment_cache = ANSI(
+                self.formatted_log + '\n'  # Add a trailing linebreak
+            ).__pt_formatted_text__()
 
         return self.fragment_cache

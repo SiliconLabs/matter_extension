@@ -28,32 +28,45 @@
 #if CONFIG_CHIP_CERTIFICATION_DECLARATION_STORAGE
 #include <credentials/CertificationDeclaration.h>
 #include <platform/Zephyr/ZephyrConfig.h>
-#include <settings/settings.h>
+#include <zephyr/settings/settings.h>
 #endif
 
 #include <dfu/dfu_multi_image.h>
 #include <dfu/dfu_target.h>
 #include <dfu/dfu_target_mcuboot.h>
-#include <dfu/mcuboot.h>
-#include <logging/log.h>
-#include <pm/device.h>
-
-#if CONFIG_CHIP_CERTIFICATION_DECLARATION_STORAGE
-// Cd globals are needed to be accessed from dfu image writer lambdas
-namespace {
-uint8_t sCdBuf[chip::Credentials::kMaxCMSSignedCDMessage] = { 0 };
-size_t sCdSavedBytes                                      = 0;
-} // namespace
-#endif
+#include <zephyr/dfu/mcuboot.h>
+#include <zephyr/logging/log.h>
+#include <zephyr/pm/device.h>
 
 namespace chip {
+namespace {
+#if CONFIG_CHIP_CERTIFICATION_DECLARATION_STORAGE
+// Cd globals are needed to be accessed from dfu image writer lambdas
+uint8_t sCdBuf[chip::Credentials::kMaxCMSSignedCDMessage] = { 0 };
+size_t sCdSavedBytes                                      = 0;
+#endif
+
+void PostOTAStateChangeEvent(DeviceLayer::OtaState newState)
+{
+    DeviceLayer::ChipDeviceEvent otaChange;
+    otaChange.Type                     = DeviceLayer::DeviceEventType::kOtaStateChanged;
+    otaChange.OtaStateChanged.newState = newState;
+    CHIP_ERROR error                   = DeviceLayer::PlatformMgr().PostEvent(&otaChange);
+
+    if (error != CHIP_NO_ERROR)
+    {
+        ChipLogError(SoftwareUpdate, "Error while posting OtaChange event %" CHIP_ERROR_FORMAT, error.Format());
+    }
+}
+} // namespace
+
 namespace DeviceLayer {
 
 CHIP_ERROR OTAImageProcessorImpl::PrepareDownload()
 {
     VerifyOrReturnError(mDownloader != nullptr, CHIP_ERROR_INCORRECT_STATE);
 
-    TriggerFlashAction(FlashHandler::Action::WAKE_UP);
+    TriggerFlashAction(ExternalFlashManager::Action::WAKE_UP);
 
     return DeviceLayer::SystemLayer().ScheduleLambda([this] { mDownloader->OnPreparedForDownload(PrepareDownloadImpl()); });
 }
@@ -92,11 +105,13 @@ CHIP_ERROR OTAImageProcessorImpl::PrepareDownloadImpl()
     ReturnErrorOnFailure(System::MapErrorZephyr(dfu_multi_image_register_writer(&cdWriter)));
 #endif
 
+    PostOTAStateChangeEvent(DeviceLayer::kOtaDownloadInProgress);
     return CHIP_NO_ERROR;
 }
 
 CHIP_ERROR OTAImageProcessorImpl::Finalize()
 {
+    PostOTAStateChangeEvent(DeviceLayer::kOtaDownloadComplete);
     return System::MapErrorZephyr(dfu_multi_image_done(true));
 }
 
@@ -104,17 +119,19 @@ CHIP_ERROR OTAImageProcessorImpl::Abort()
 {
     CHIP_ERROR error = System::MapErrorZephyr(dfu_multi_image_done(false));
 
-    TriggerFlashAction(FlashHandler::Action::SLEEP);
+    TriggerFlashAction(ExternalFlashManager::Action::SLEEP);
+    PostOTAStateChangeEvent(DeviceLayer::kOtaDownloadAborted);
 
     return error;
 }
 
 CHIP_ERROR OTAImageProcessorImpl::Apply()
 {
+    PostOTAStateChangeEvent(DeviceLayer::kOtaApplyInProgress);
     // Schedule update of all images
     int err = dfu_target_schedule_update(-1);
 
-    TriggerFlashAction(FlashHandler::Action::SLEEP);
+    TriggerFlashAction(ExternalFlashManager::Action::SLEEP);
 
 #ifdef CONFIG_CHIP_OTA_REQUESTOR_REBOOT_ON_APPLY
     if (!err)
@@ -130,6 +147,7 @@ CHIP_ERROR OTAImageProcessorImpl::Apply()
     }
     else
     {
+        PostOTAStateChangeEvent(DeviceLayer::kOtaApplyFailed);
         return System::MapErrorZephyr(err);
     }
 #else
@@ -146,8 +164,16 @@ CHIP_ERROR OTAImageProcessorImpl::ProcessBlock(ByteSpan & aBlock)
     if (error == CHIP_NO_ERROR)
     {
         // DFU target library buffers data internally, so do not clone the block data.
-        error = System::MapErrorZephyr(dfu_multi_image_write(mParams.downloadedBytes, aBlock.data(), aBlock.size()));
-        mParams.downloadedBytes += aBlock.size();
+        if (mParams.downloadedBytes > std::numeric_limits<size_t>::max())
+        {
+            error = CHIP_ERROR_BUFFER_TOO_SMALL;
+        }
+        else
+        {
+            error = System::MapErrorZephyr(
+                dfu_multi_image_write(static_cast<size_t>(mParams.downloadedBytes), aBlock.data(), aBlock.size()));
+            mParams.downloadedBytes += aBlock.size();
+        }
     }
 
     // Report the result back to the downloader asynchronously.
@@ -161,6 +187,7 @@ CHIP_ERROR OTAImageProcessorImpl::ProcessBlock(ByteSpan & aBlock)
         else
         {
             mDownloader->EndDownload(error);
+            PostOTAStateChangeEvent(DeviceLayer::kOtaDownloadFailed);
         }
     });
 }
@@ -179,6 +206,7 @@ bool OTAImageProcessorImpl::IsFirstImageRun()
 
 CHIP_ERROR OTAImageProcessorImpl::ConfirmCurrentImage()
 {
+    PostOTAStateChangeEvent(DeviceLayer::kOtaApplyComplete);
     return System::MapErrorZephyr(boot_write_img_confirmed());
 }
 
@@ -200,26 +228,12 @@ CHIP_ERROR OTAImageProcessorImpl::ProcessHeader(ByteSpan & aBlock)
     return CHIP_NO_ERROR;
 }
 
-void OTAImageProcessorImpl::TriggerFlashAction(FlashHandler::Action action)
+void OTAImageProcessorImpl::TriggerFlashAction(ExternalFlashManager::Action action)
 {
     if (mFlashHandler)
     {
         mFlashHandler->DoAction(action);
     }
-}
-
-// external flash power consumption optimization
-void FlashHandler::DoAction(Action aAction)
-{
-#if CONFIG_PM_DEVICE && CONFIG_NORDIC_QSPI_NOR && !CONFIG_SOC_NRF52840 // nRF52 is optimized per default
-    // utilize the QSPI driver sleep power mode
-    const auto * qspi_dev = device_get_binding(DT_LABEL(DT_INST(0, nordic_qspi_nor)));
-    if (qspi_dev)
-    {
-        const auto requestedAction = Action::WAKE_UP == aAction ? PM_DEVICE_ACTION_RESUME : PM_DEVICE_ACTION_SUSPEND;
-        (void) pm_device_action_run(qspi_dev, requestedAction); // not much can be done in case of a failure
-    }
-#endif
 }
 
 } // namespace DeviceLayer

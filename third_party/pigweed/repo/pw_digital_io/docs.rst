@@ -58,7 +58,8 @@ There are 3 basic capabilities of a Digital IO line:
 Additionally, all lines can be *enabled* and *disabled*:
 
 * Enable - tell the hardware to apply power to an output line, connect any
-  pull-up/down resistors, etc.
+  pull-up/down resistors, etc. For output lines, the line is set to an initial
+  output state that is backend-specific.
 * Disable - tell the hardware to stop applying power and return the line to its
   default state. This may save power or allow some other component to drive a
   shared line.
@@ -206,9 +207,9 @@ Class Hierarchy
   * Use a specific class in APIs to represent the requirements.
   * Extend the specific class that has the actual capabilities of the line.
 
-In the future, we may support additional for classes that describe lines with
-**optional** functionality. For example, ``DigitalInOptionalInterrupt`` could
-describe a line that supports input and optionally supports interrupts.
+In the future, we may add new classes that describe lines with **optional**
+functionality. For example, ``DigitalInOptionalInterrupt`` could describe a line
+that supports input and optionally supports interrupts.
 
 When using any classes with optional functionality, including
 ``DigitalIoOptional``, you must check that a functionality is available using
@@ -266,7 +267,10 @@ Backend Implemention Notes
     state. i.e. the same state it would be in after calling ``Enable()``
     followed by ``Disable()``.
   * Calling ``Disable()`` on an uninitialized line must put it into the disabled
-    state.
+    state. In general, ``Disable()`` can be called in any state.
+
+* Calling ``Enable()`` on a line that is already enabled should be a no-op. In
+  particular, the state of an already-enabled output line should not change.
 
 ------------
 Dependencies

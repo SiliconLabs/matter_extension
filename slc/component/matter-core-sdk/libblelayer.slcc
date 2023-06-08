@@ -1,0 +1,46 @@
+category: Matter|Core
+define:
+- name: CHIP_HAVE_CONFIG_H
+  value: '1'
+description: libblelayer
+id: libblelayer
+include:
+- path: examples/platform/silabs
+- path: examples/platform/silabs/efr32
+- path: src
+  file_list:
+  - path: ble/BleConfig.h
+  - path: ble/BleLayer.h
+  - path: ble/BleApplicationDelegate.h
+  - path: ble/BleConnectionDelegate.h
+  - path: ble/BleError.h
+  - path: ble/BleLayerDelegate.h
+  - path: ble/BlePlatformDelegate.h
+  - path: ble/BleRole.h
+  - path: ble/BleUUID.h
+  - path: ble/BLEEndPoint.h
+  - path: ble/BtpEngine.h
+  - path: ble/Ble.h
+  - path: ble/CHIPBleServiceData.h
+- path: src/include
+- path: src/lib
+- path: src/platform/silabs/efr32
+- path: third_party/nlassert/repo/include
+- path: third_party/nlio/repo/include
+- path: zzz_generated/app-common
+- path: slc/inc
+  file_list:
+  - path: ble/BleBuildConfig.h
+label: libblelayer
+package: Matter
+provides:
+- name: matter_libblelayer
+quality: production
+source:
+- path: src/ble/BLEEndPoint.cpp
+- path: src/ble/BleError.cpp
+- path: src/ble/BleLayer.cpp
+- path: src/ble/BleUUID.cpp
+- path: src/ble/BtpEngine.cpp
+ui_hints:
+  visibility: never

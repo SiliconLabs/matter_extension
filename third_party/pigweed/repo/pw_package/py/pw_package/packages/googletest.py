@@ -22,18 +22,26 @@ import pw_package.package_manager
 
 class Googletest(pw_package.git_repo.GitRepo):
     """Install and check status of googletest."""
+
     def __init__(self, *args, **kwargs):
-        super().__init__(*args,
-                         name='googletest',
-                         url='https://github.com/google/googletest',
-                         commit='073293463e1733c5e931313da1c3f1de044e1db3',
-                         **kwargs)
+        super().__init__(
+            *args,
+            name='googletest',
+            url=(
+                'https://pigweed.googlesource.com/'
+                'third_party/github/google/googletest'
+            ),
+            commit="dea0484e4d3b6a2c50055c24c5617cd662a50c5f",
+            **kwargs,
+        )
 
     def info(self, path: pathlib.Path) -> Sequence[str]:
         return (
             f'{self.name} installed in: {path}',
-            "Enable by running 'gn args out' and adding this line:",
+            "Enable by running 'gn args out' and adding these lines:",
             f'  dir_pw_third_party_googletest = "{path}"',
+            '  pw_unit_test_MAIN = "//third_party/googletest:gmock_main"',
+            '  pw_unit_test_GOOGLETEST_BACKEND = "//third_party/googletest"',
         )
 
 

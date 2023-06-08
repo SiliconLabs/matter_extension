@@ -88,9 +88,10 @@ goto finish
 :: came from the developer and not from a previous bootstrap possibly from
 :: another workspace.
 
-:: Not prefixing environment with "." since that doesn't hide it anyway.
+if "%PW_PROJECT_ROOT%"=="" set "PW_PROJECT_ROOT=%PW_ROOT%"
+
 if "%PW_ENVIRONMENT_ROOT%"=="" (
-  set "_PW_ACTUAL_ENVIRONMENT_ROOT=%PW_ROOT%\environment"
+  set "_PW_ACTUAL_ENVIRONMENT_ROOT=%PW_PROJECT_ROOT%\environment"
 ) else (
   set "_PW_ACTUAL_ENVIRONMENT_ROOT=%PW_ENVIRONMENT_ROOT%"
 )
@@ -98,8 +99,6 @@ if "%PW_ENVIRONMENT_ROOT%"=="" (
 set "shell_file=%_PW_ACTUAL_ENVIRONMENT_ROOT%\activate.bat"
 
 set "_pw_start_script=%PW_ROOT%\pw_env_setup\py\pw_env_setup\windows_env_start.py"
-
-if "%PW_PROJECT_ROOT%"=="" set "PW_PROJECT_ROOT=%PW_ROOT%"
 
 :: If PW_SKIP_BOOTSTRAP is set, only run the activation stage instead of the
 :: complete env_setup.
@@ -111,7 +110,6 @@ call "%python%" "%PW_ROOT%\pw_env_setup\py\pw_env_setup\env_setup.py" ^
     --pw-root "%PW_ROOT%" ^
     --shell-file "%shell_file%" ^
     --install-dir "%_PW_ACTUAL_ENVIRONMENT_ROOT%" ^
-    --config-file "%PW_ROOT%/pw_env_setup/config.json" ^
     --project-root "%PW_PROJECT_ROOT%"
 goto activate_shell
 

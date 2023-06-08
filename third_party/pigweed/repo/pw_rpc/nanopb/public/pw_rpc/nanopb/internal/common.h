@@ -50,7 +50,12 @@ class NanopbSerde {
   StatusWithSize EncodedSizeBytes(const void* proto_struct) const;
 
   // Decodes a serialized protobuf to a Nanopb struct.
-  bool Decode(ConstByteSpan buffer, void* proto_struct) const;
+  template <typename T>
+  Status Decode(ConstByteSpan buffer, T& proto_struct) const {
+    return Decode(buffer, static_cast<void*>(&proto_struct));
+  }
+
+  Status Decode(ConstByteSpan buffer, void* proto_struct) const;
 
  private:
   NanopbMessageDescriptor fields_;
@@ -66,22 +71,6 @@ class NanopbMethodSerde {
 
   NanopbMethodSerde(const NanopbMethodSerde&) = delete;
   NanopbMethodSerde& operator=(const NanopbMethodSerde&) = delete;
-
-  StatusWithSize EncodeRequest(const void* proto_struct,
-                               ByteSpan buffer) const {
-    return request_fields_.Encode(proto_struct, buffer);
-  }
-  StatusWithSize EncodeResponse(const void* proto_struct,
-                                ByteSpan buffer) const {
-    return response_fields_.Encode(proto_struct, buffer);
-  }
-
-  bool DecodeRequest(ConstByteSpan buffer, void* proto_struct) const {
-    return request_fields_.Decode(buffer, proto_struct);
-  }
-  bool DecodeResponse(ConstByteSpan buffer, void* proto_struct) const {
-    return response_fields_.Decode(buffer, proto_struct);
-  }
 
   const NanopbSerde& request() const { return request_fields_; }
   const NanopbSerde& response() const { return response_fields_; }
@@ -103,12 +92,14 @@ class NanopbServerCall;
 void NanopbSendInitialRequest(ClientCall& call,
                               NanopbSerde serde,
                               const void* payload)
-    PW_UNLOCK_FUNCTION(rpc_lock());
+    PW_EXCLUSIVE_LOCKS_REQUIRED(rpc_lock());
 
 // [Client/Server] Encodes and sends a client or server stream message.
 // active() must be true.
-Status NanopbSendStream(Call& call, const void* payload, NanopbSerde serde)
-    PW_LOCKS_EXCLUDED(rpc_lock());
+Status NanopbSendStream(Call& call,
+                        const void* payload,
+                        const NanopbMethodSerde* serde)
+    PW_EXCLUSIVE_LOCKS_REQUIRED(rpc_lock());
 
 // [Server] Encodes and sends the final response message.
 // Returns Status::FailedPrecondition if active() is false.

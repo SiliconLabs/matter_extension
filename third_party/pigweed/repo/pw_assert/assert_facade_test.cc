@@ -26,6 +26,7 @@
 // clang-format on
 
 #include "gtest/gtest.h"
+#include "pw_compilation_testing/negative_compilation.h"
 #include "pw_status/status.h"
 
 namespace {
@@ -280,6 +281,14 @@ TEST_F(AssertPassTest, FunctionPtrNotNull) {
 TEST_F(AssertFailTest, FunctionPtrNotNull) {
   void (*const function)() = nullptr;
   PW_CHECK_NOTNULL(function);
+}
+
+[[maybe_unused]] void CompareIntWithString() {
+#if PW_NC_TEST(CompareIntWithString)
+  PW_NC_EXPECT("cannot initialize|invalid conversion");
+
+  PW_CHECK_INT_EQ(123l, "This check message is accidentally compared to 123!");
+#endif  // PW_NC_TEST
 }
 
 // Note: Due to platform inconsistencies, the below test for the NOTNULL
@@ -556,6 +565,6 @@ TEST_F(AssertPassTest, DCheckFunction_Err) {
 TEST_F(AssertPassTest, DCheckEnum_Err) { PW_DCHECK_OK(PW_STATUS_UNKNOWN); }
 #endif  // PW_ASSERT_ENABLE_DEBUG
 
-// TODO: Figure out how to run some of these tests is C.
+// TODO(keir): Figure out how to run some of these tests is C.
 
 }  // namespace

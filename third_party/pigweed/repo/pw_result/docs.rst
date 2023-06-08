@@ -89,6 +89,157 @@ and attempting to access the value is an error.
   This module is experimental. Its impact on code size and stack usage has not
   yet been profiled. Use at your own risk.
 
+Monadic Operations
+==================
+``pw::Result<T>`` also supports monadic operations, similar to the additions
+made to ``std::optional<T>`` in C++23. These operations allow functions to be
+applied to a ``pw::Result<T>`` that would perform additional computation.
+
+These operations do not incur any additional FLASH or RAM cost compared to a
+traditional if/else ladder, as can be seen in the `Size report`_.
+
+.. code-block:: cpp
+
+  // Without monads
+  pw::Result<Image> GetCuteCat(const Image& img) {
+     pw::Result<Image> cropped = CropToCat(img);
+     if (!cropped.ok()) {
+       return cropped.status();
+     }
+     pw::Result<Image> with_tie = AddBowTie(*cropped);
+     if (!with_tie.ok()) {
+       return with_tie.status();
+     }
+     pw::Result<Image> with_sparkles = MakeEyesSparkle(*with_tie);
+     if (!with_sparkles.ok()) {
+       return with_parkes.status();
+     }
+     return AddRainbow(MakeSmaller(*with_sparkles));
+  }
+
+  // With monads
+  pw::Result<Image> GetCuteCat(const Image& img) {
+    return CropToCat(img)
+           .and_then(AddBoeTie)
+           .and_then(MakeEyesSparkle)
+           .transform(MakeSmaller)
+           .transform(AddRainbow);
+  }
+
+``pw::Result<T>::and_then``
+---------------------------
+The ``pw::Result<T>::and_then`` member function will return the result of the
+invocation of the provided function on the contained value if it exists.
+Otherwise, returns the contained status in a ``pw::Result<U>``, which is the
+return type of provided function.
+
+.. code-block:: cpp
+
+  // Expositional prototype of and_then:
+  template <typename T>
+  class Result {
+    template <typename U>
+    Result<U> and_then(Function<Result<U>(T)> func);
+  };
+
+  Result<Foo> CreateFoo();
+  Result<Bar> CreateBarFromFoo(const Foo& foo);
+
+  Result<Bar> bar = CreateFoo().and_then(CreateBarFromFoo);
+
+``pw::Result<T>::or_else``
+--------------------------
+The ``pw::Result<T>::or_else`` member function will return ``*this`` if it
+contains a value. Otherwise, it will return the result of the provided function.
+The function must return a type convertible to a ``pw::Result<T>`` or ``void``.
+This is particularly useful for handling errors.
+
+.. code-block:: cpp
+
+  // Expositional prototype of or_else:
+  template <typename T>
+  class Result {
+    template <typename U>
+      requires std::is_convertible_v<U, Result<T>>
+    Result<T> or_else(Function<U(Status)> func);
+
+    Result<T> or_else(Function<void(Status)> func);
+  };
+
+  // Without or_else:
+  Result<Image> GetCuteCat(const Image& image) {
+    Result<Image> cropped = CropToCat(image);
+    if (!cropped.ok()) {
+      PW_LOG_ERROR("Failed to crop cat: %d", cropped.status().code());
+      return cropped.status();
+    }
+    return cropped;
+  }
+
+  // With or_else:
+  Result<Image> GetCuteCat(const Image& image) {
+    return CropToCat(image).or_else(
+        [](Status s) { PW_LOG_ERROR("Failed to crop cat: %d", s.code()); });
+  }
+
+Another useful scenario for ``pw::Result<T>::or_else`` is providing a default
+value that is expensive to compute. Typically, default values are provided by
+using ``pw::Result<T>::value_or``, but that requires the default value to be
+constructed regardless of whether we actually need it.
+
+.. code-block:: cpp
+
+  // With value_or:
+  Image GetCuteCat(const Image& image) {
+    // GenerateCuteCat() must execute regardless of the success of CropToCat
+    return CropToCat(image).value_or(GenerateCuteCat());
+  }
+
+  // With or_else:
+  Image GetCuteCat(const Image& image) {
+    // GenerateCuteCat() only executes if CropToCat fails.
+    return *CropToCat(image).or_else([](Status) { return GenerateCuteCat(); });
+  }
+
+``pw::Result<T>::transform``
+----------------------------
+The ``pw::Result<T>::transform`` member method will return a ``pw::Result<U>``
+which contains the result of the invocation of the given function if ``*this``
+contains a value. Otherwise, it returns a ``pw::Result<U>`` with the same
+``pw::Status`` value as ``*this``.
+
+The monadic methods for ``and_then`` and ``transform`` are fairly similar. The
+primary difference is that ``and_then`` requires the provided function to return
+a ``pw::Result``, whereas ``transform`` functions can return any type. Users
+should be aware that if they provide a function that returns a ``pw::Result`` to
+``transform``, this will return a ``pw::Result<pw::Result<U>>``.
+
+.. code-block:: cpp
+
+  // Expositional prototype of transform:
+  template <typename T>
+  class Result {
+    template <typename U>
+    Result<U> transform(Function<U(T)> func);
+  };
+
+  Result<int> ConvertStringToInteger(std::string_view);
+  int MultiplyByTwo(int x);
+
+  Result<int> x = ConvertStringToInteger("42")
+                    .transform(MultiplyByTwo);
+
+-------------
+pw::expected
+-------------
+This module also includes the ``pw::expected`` type, which is either an alias
+for ``std::expected`` or a polyfill for that type if it is not available. This
+type has a similar use case to ``pw::Result``, in that it either returns a type
+``T`` or an error, but the error may be any type ``E``, not just ``pw::Status``.
+The ``PW_TRY`` and ``PW_TRY_ASSIGN`` macros do not work with ``pw::expected``
+but it should be usable in any place that ``std::expected`` from the ``C++23``
+standard could be used.
+
 -----------
 Size report
 -----------

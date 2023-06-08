@@ -63,6 +63,7 @@ tests:
                 value: 0
 
     - label: "Wait 100ms"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -89,6 +90,7 @@ tests:
                 value: 0
 
     - label: "Wait 10s"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -106,6 +108,7 @@ tests:
               maxValue: 9200
 
     - label: "Wait 10s"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -123,6 +126,7 @@ tests:
               maxValue: 11500
 
     - label: "Wait 10s"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -140,6 +144,7 @@ tests:
               maxValue: 13800
 
     - label: "Wait 5s"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -152,7 +157,9 @@ tests:
       command: "readAttribute"
       attribute: "EnhancedCurrentHue"
       response:
-          value: 12000
+          constraints:
+              minValue: 10200
+              maxValue: 13800
 
     - label:
           "TH sends EnhancedMoveToHue command to DUT with EnhancedHue=6000,
@@ -173,6 +180,7 @@ tests:
                 value: 0
 
     - label: "Wait 100ms"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -199,6 +207,7 @@ tests:
                 value: 0
 
     - label: "Wait 10s"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -216,6 +225,7 @@ tests:
               maxValue: 25300
 
     - label: "Wait 10s"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -233,6 +243,7 @@ tests:
               maxValue: 41300
 
     - label: "Wait 10s"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -250,6 +261,7 @@ tests:
               maxValue: 62100
 
     - label: "Wait 5s"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -262,7 +274,9 @@ tests:
       command: "readAttribute"
       attribute: "EnhancedCurrentHue"
       response:
-          value: 54000
+          constraints:
+              minValue: 50700
+              maxValue: 62100
 
     - label:
           "TH sends EnhancedMoveToHue command to DUT with EnhancedHue=6000,
@@ -283,6 +297,7 @@ tests:
                 value: 0
 
     - label: "Wait 100ms"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -309,6 +324,7 @@ tests:
                 value: 0
 
     - label: "Wait 10s"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -326,6 +342,7 @@ tests:
               maxValue: 9200
 
     - label: "Wait 10s"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -343,6 +360,7 @@ tests:
               maxValue: 11500
 
     - label: "Wait 10s"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -360,6 +378,7 @@ tests:
               maxValue: 13800
 
     - label: "Wait 5s"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -372,7 +391,9 @@ tests:
       command: "readAttribute"
       attribute: "EnhancedCurrentHue"
       response:
-          value: 12000
+          constraints:
+              minValue: 10200
+              maxValue: 13800
 
     - label:
           "TH sends EnhancedMoveToHue command to DUT with EnhancedHue=12000,
@@ -393,6 +414,7 @@ tests:
                 value: 0
 
     - label: "Wait 100ms"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -419,6 +441,7 @@ tests:
                 value: 0
 
     - label: "Wait 10s"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -436,6 +459,7 @@ tests:
               maxValue: 11500
 
     - label: "Wait 10s"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -453,6 +477,7 @@ tests:
               maxValue: 9200
 
     - label: "Wait 10s"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -470,6 +495,7 @@ tests:
               maxValue: 6900
 
     - label: "Wait 5s"
+      PICS: CC.S.F01
       cluster: "DelayCommands"
       command: "WaitForMs"
       arguments:
@@ -482,10 +508,12 @@ tests:
       command: "readAttribute"
       attribute: "EnhancedCurrentHue"
       response:
-          value: 6000
+          constraints:
+              minValue: 5100
+              maxValue: 6900
 
     - label: "TH reads ColorMode attribute from DUT"
-      PICS: CC.S.F00 && CC.S.A0008
+      PICS: CC.S.F01 && CC.S.A0008
       command: "readAttribute"
       attribute: "ColorMode"
       response:
@@ -495,7 +523,7 @@ tests:
               maxValue: 2
 
     - label: "TH reads EnhancedColorMode attribute from DUT"
-      PICS: CC.S.F00 && CC.S.A4001
+      PICS: CC.S.F01 && CC.S.A4001
       command: "readAttribute"
       attribute: "EnhancedColorMode"
       response:

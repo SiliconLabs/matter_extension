@@ -36,8 +36,6 @@ static_library("BL602") {
     "ConfigurationManagerImpl.h",
     "ConnectivityManagerImpl.cpp",
     "ConnectivityManagerImpl.h",
-    "DeviceNetworkProvisioningDelegateImpl.cpp",
-    "DeviceNetworkProvisioningDelegateImpl.h",
     "DiagnosticDataProviderImpl.cpp",
     "DiagnosticDataProviderImpl.h",
     "InetPlatformConfig.h",
@@ -61,5 +59,12 @@ static_library("BL602") {
   sources += [
     "KeyValueStoreManagerImpl.cpp",
     "KeyValueStoreManagerImpl.h",
+  ]
+
+  sources += [
+    "${chip_root}/src/credentials/CHIPCert.h",
+    "${chip_root}/src/credentials/DeviceAttestationCredsProvider.h",
+    "../common/FactoryDataProvider.cpp",
+    "../common/FactoryDataProvider.h",
   ]
 }

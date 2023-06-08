@@ -1,0 +1,18 @@
+id: matter_sed_wifi_917ncp
+label: Sleepy end device component for 917ncp
+description: Enables the sed for 917ncp matter wifi applications
+package: "Matter"
+category: Stack
+quality: production
+define:
+  - name: CHIP_DEVICE_CONFIG_ENABLE_SED
+    value: 1
+  - name: WIFI_DEBUG_ENABLED
+    value: 1
+  - name: EXP_BOARD
+provides:
+  - name: matter_sed_wifi_917ncp
+conflicts:
+  - name: matter_shell
+  - name: matter_qr_code
+  - name: matter_lcd

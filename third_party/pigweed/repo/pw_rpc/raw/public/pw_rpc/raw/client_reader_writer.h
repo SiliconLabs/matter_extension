@@ -1,4 +1,4 @@
-// Copyright 2021 The Pigweed Authors
+// Copyright 2022 The Pigweed Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not
 // use this file except in compliance with the License. You may obtain a copy of
@@ -35,8 +35,14 @@ class RawClientReaderWriter : private internal::StreamResponseClientCall {
   RawClientReaderWriter(RawClientReaderWriter&&) = default;
   RawClientReaderWriter& operator=(RawClientReaderWriter&&) = default;
 
+  ~RawClientReaderWriter() PW_LOCKS_EXCLUDED(internal::rpc_lock()) {
+    DestroyClientCall();
+  }
+
   using internal::Call::active;
   using internal::Call::channel_id;
+
+  using internal::ClientCall::id;
 
   // Functions for setting the callbacks.
   using internal::StreamResponseClientCall::set_on_completed;
@@ -46,26 +52,38 @@ class RawClientReaderWriter : private internal::StreamResponseClientCall {
   // Sends a stream request packet with the given raw payload.
   using internal::Call::Write;
 
-  // Notifies the server that no further client stream messages will be sent.
-  using internal::Call::CloseClientStream;
+  // Notifies the server that the client has requested to stop communication by
+  // sending CLIENT_REQUEST_COMPLETION.
+  using internal::ClientCall::RequestCompletion;
 
-  // Cancels this RPC.
+  // Cancels this RPC. Closes the call locally and sends a CANCELLED error to
+  // the server.
   using internal::Call::Cancel;
+
+  // Closes this RPC locally. Sends a CLIENT_REQUEST_COMPLETION, but no
+  // cancellation packet. Future packets for this RPC are dropped, and the
+  // client sends a FAILED_PRECONDITION error in response because the call is
+  // not active.
+  using internal::ClientCall::Abandon;
 
   // Allow use as a generic RPC Writer.
   using internal::Call::operator Writer&;
   using internal::Call::operator const Writer&;
 
- protected:
+ private:
   friend class internal::StreamResponseClientCall;
 
-  RawClientReaderWriter(internal::Endpoint& client,
+  RawClientReaderWriter(internal::LockedEndpoint& client,
                         uint32_t channel_id,
                         uint32_t service_id,
-                        uint32_t method_id,
-                        MethodType type = MethodType::kBidirectionalStreaming)
+                        uint32_t method_id)
+      PW_EXCLUSIVE_LOCKS_REQUIRED(internal::rpc_lock())
       : StreamResponseClientCall(
-            client, channel_id, service_id, method_id, type) {}
+            client,
+            channel_id,
+            service_id,
+            method_id,
+            RawCallProps(MethodType::kBidirectionalStreaming)) {}
 };
 
 // Handles responses for a server streaming RPC.
@@ -76,6 +94,10 @@ class RawClientReader : private internal::StreamResponseClientCall {
   RawClientReader(RawClientReader&&) = default;
   RawClientReader& operator=(RawClientReader&&) = default;
 
+  ~RawClientReader() PW_LOCKS_EXCLUDED(internal::rpc_lock()) {
+    DestroyClientCall();
+  }
+
   using internal::StreamResponseClientCall::active;
   using internal::StreamResponseClientCall::channel_id;
 
@@ -84,19 +106,22 @@ class RawClientReader : private internal::StreamResponseClientCall {
   using internal::StreamResponseClientCall::set_on_next;
 
   using internal::Call::Cancel;
+  using internal::Call::RequestCompletion;
+  using internal::ClientCall::Abandon;
 
  private:
   friend class internal::StreamResponseClientCall;
 
-  RawClientReader(internal::Endpoint& client,
+  RawClientReader(internal::LockedEndpoint& client,
                   uint32_t channel_id,
                   uint32_t service_id,
                   uint32_t method_id)
+      PW_EXCLUSIVE_LOCKS_REQUIRED(internal::rpc_lock())
       : StreamResponseClientCall(client,
                                  channel_id,
                                  service_id,
                                  method_id,
-                                 MethodType::kServerStreaming) {}
+                                 RawCallProps(MethodType::kServerStreaming)) {}
 };
 
 // Sends requests and handles the response for a client streaming RPC.
@@ -107,6 +132,10 @@ class RawClientWriter : private internal::UnaryResponseClientCall {
   RawClientWriter(RawClientWriter&&) = default;
   RawClientWriter& operator=(RawClientWriter&&) = default;
 
+  ~RawClientWriter() PW_LOCKS_EXCLUDED(internal::rpc_lock()) {
+    DestroyClientCall();
+  }
+
   using internal::UnaryResponseClientCall::active;
   using internal::UnaryResponseClientCall::channel_id;
 
@@ -114,8 +143,9 @@ class RawClientWriter : private internal::UnaryResponseClientCall {
   using internal::UnaryResponseClientCall::set_on_error;
 
   using internal::Call::Cancel;
-  using internal::Call::CloseClientStream;
+  using internal::Call::RequestCompletion;
   using internal::Call::Write;
+  using internal::ClientCall::Abandon;
 
   // Allow use as a generic RPC Writer.
   using internal::Call::operator Writer&;
@@ -124,15 +154,16 @@ class RawClientWriter : private internal::UnaryResponseClientCall {
  private:
   friend class internal::UnaryResponseClientCall;
 
-  RawClientWriter(internal::Endpoint& client,
+  RawClientWriter(internal::LockedEndpoint& client,
                   uint32_t channel_id,
                   uint32_t service_id,
                   uint32_t method_id)
+      PW_EXCLUSIVE_LOCKS_REQUIRED(internal::rpc_lock())
       : UnaryResponseClientCall(client,
                                 channel_id,
                                 service_id,
                                 method_id,
-                                MethodType::kClientStreaming) {}
+                                RawCallProps(MethodType::kClientStreaming)) {}
 };
 
 // Handles the response for to unary RPC.
@@ -143,23 +174,32 @@ class RawUnaryReceiver : private internal::UnaryResponseClientCall {
   RawUnaryReceiver(RawUnaryReceiver&&) = default;
   RawUnaryReceiver& operator=(RawUnaryReceiver&&) = default;
 
+  ~RawUnaryReceiver() PW_LOCKS_EXCLUDED(internal::rpc_lock()) {
+    DestroyClientCall();
+  }
+
   using internal::UnaryResponseClientCall::active;
   using internal::UnaryResponseClientCall::channel_id;
 
   using internal::UnaryResponseClientCall::set_on_completed;
   using internal::UnaryResponseClientCall::set_on_error;
 
+  using internal::ClientCall::Abandon;
   using internal::UnaryResponseClientCall::Cancel;
 
  private:
   friend class internal::UnaryResponseClientCall;
 
-  RawUnaryReceiver(internal::Endpoint& client,
+  RawUnaryReceiver(internal::LockedEndpoint& client,
                    uint32_t channel_id,
                    uint32_t service_id,
                    uint32_t method_id)
-      : UnaryResponseClientCall(
-            client, channel_id, service_id, method_id, MethodType::kUnary) {}
+      PW_EXCLUSIVE_LOCKS_REQUIRED(internal::rpc_lock())
+      : UnaryResponseClientCall(client,
+                                channel_id,
+                                service_id,
+                                method_id,
+                                RawCallProps(MethodType::kUnary)) {}
 };
 
 }  // namespace pw::rpc

@@ -60,12 +60,12 @@ FlashPartition.
 FlashMemory is the lower level that manages the raw read/write/erase of the
 flash memory device.
 
-FlashPartition is a portion of a FlashMemory. A FlashMemory may have multiple
-FlashPartitions that represent different parts of the FlashMemory - such as
-partitions for KVS, OTA, snapshots/crashlogs, etc. Each FlashPartition has its
-own separate logical address space starting from zero to size of the partition.
-FlashPartition logical address does not always map directly to FlashMemory
-addresses due to partition encryption, sector headers, etc.
+FlashPartition is a subset of a FlashMemory. A FlashMemory may have one or
+multiple FlashPartitions that represent different parts of the FlashMemory -
+such as partitions for KVS, OTA, snapshots/crashlogs, etc. Each FlashPartition
+has its own separate logical address space starting from zero to size bytes of
+the partition. FlashPartition logical address does not always map directly to
+FlashMemory addresses due to partition encryption, sector headers, etc.
 
 Writes to flash must have a start address that is a multiple of the flash
 write alignment. Write size must also be a multiple of flash write alignment.
@@ -83,7 +83,10 @@ they are part of. Partition logical sectors may be smaller due to partition
 overhead (encryption, wear tracking, etc) or larger due to combining raw
 sectors into larger logical sectors.
 
-FlashPartition supports access via NonSeekableWriter and SeekableReader.
+FlashPartition supports access via NonSeekableWriter and SeekableReader. The
+reader defaults to the full size of the partition but can optionally be limited
+to a smaller range.
+
 
 Size report
 ===========

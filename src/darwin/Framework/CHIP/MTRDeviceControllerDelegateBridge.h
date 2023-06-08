@@ -18,6 +18,7 @@
 #import "MTRDeviceControllerDelegate.h"
 
 #include <controller/CHIPDeviceController.h>
+#include <controller/CommissioningDelegate.h>
 #include <platform/CHIPDeviceBuildConfig.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -37,10 +38,12 @@ public:
 
     void OnPairingDeleted(CHIP_ERROR error) override;
 
+    void OnReadCommissioningInfo(const chip::Controller::ReadCommissioningInfo & info) override;
+
     void OnCommissioningComplete(chip::NodeId deviceId, CHIP_ERROR error) override;
 
 private:
-    MTRDeviceController * _Nullable mController;
+    MTRDeviceController * __weak mController;
     _Nullable id<MTRDeviceControllerDelegate> mDelegate;
     _Nullable dispatch_queue_t mQueue;
 

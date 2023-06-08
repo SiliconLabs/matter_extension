@@ -15,8 +15,23 @@ syntax = "proto3";
 
 package pw.protobuf_compiler;
 
+import "pw_protobuf_protos/field_options.proto";
+
 message Point {
   uint32 x = 1;
   uint32 y = 2;
   string name = 3;
 };
+
+// Check that `.options` files work properly. Compare three strings, two of them
+// with different `max_size` values defined in the `.options` file and the third
+// with no specified `max_size`.
+message OptionsFileExample {
+  string thirty_two_chars = 1;
+  string forty_two_chars = 2;
+  string unspecified_length = 3;
+};
+
+message InlineOptionsExample {
+  string ten_chars_inline = 1 [(pw.protobuf.pwpb).max_size = 10];
+}

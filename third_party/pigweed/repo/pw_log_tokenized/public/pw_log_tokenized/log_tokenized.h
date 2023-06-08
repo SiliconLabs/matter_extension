@@ -16,30 +16,30 @@
 #include <stdint.h>
 
 #include "pw_log_tokenized/config.h"
-#include "pw_tokenizer/tokenize_to_global_handler_with_payload.h"
+#include "pw_preprocessor/util.h"
+#include "pw_tokenizer/tokenize.h"
 
-// TODO(hepler): Remove this include.
+// TODO(hepler): Remove these includes.
 #ifdef __cplusplus
 #include "pw_log_tokenized/metadata.h"
 #endif  // __cplusplus
 
-// This macro implements PW_LOG using
-// PW_TOKENIZE_TO_GLOBAL_HANDLER_WITH_PAYLOAD or an equivalent alternate macro
-// provided by PW_LOG_TOKENIZED_ENCODE_MESSAGE. The log level, module token, and
-// flags are packed into the payload argument.
+// This macro implements PW_LOG using pw_tokenizer. Users must implement
+// pw_log_tokenized_HandleLog(uint32_t metadata, uint8_t* buffer, size_t size).
+// The log level, module token, and flags are packed into the metadata argument.
 //
 // Two strings are tokenized in this macro:
 //
 //   - The log format string, tokenized in the default tokenizer domain.
-//   - PW_LOG_MODULE_NAME, masked to 16 bits and tokenized in the
+//   - Log module name, masked to 16 bits and tokenized in the
 //     "pw_log_module_names" tokenizer domain.
 //
-// To use this macro, implement pw_tokenizer_HandleEncodedMessageWithPayload,
-// which is defined in pw_tokenizer/tokenize.h. The log metadata can be accessed
-// using pw::log_tokenized::Metadata. For example:
+// To use this macro, implement pw_log_tokenized_HandleLog(), which is defined
+// in pw_log_tokenized/handler.h. The log metadata can be accessed using
+// pw::log_tokenized::Metadata. For example:
 //
-//   extern "C" void pw_tokenizer_HandleEncodedMessageWithPayload(
-//       pw_tokenizer_Payload payload, const uint8_t data[], size_t size) {
+//   extern "C" void pw_log_tokenized_HandleLog(
+//       uint32_t payload, const uint8_t data[], size_t size) {
 //     pw::log_tokenized::Metadata metadata(payload);
 //
 //     if (metadata.level() >= kLogLevel && ModuleEnabled(metadata.module())) {
@@ -48,12 +48,12 @@
 //   }
 //
 #define PW_LOG_TOKENIZED_TO_GLOBAL_HANDLER_WITH_PAYLOAD(                     \
-    level, flags, message, ...)                                              \
+    level, module, flags, message, ...)                                      \
   do {                                                                       \
     _PW_TOKENIZER_CONST uintptr_t _pw_log_tokenized_module_token =           \
         PW_TOKENIZE_STRING_MASK("pw_log_module_names",                       \
                                 ((1u << PW_LOG_TOKENIZED_MODULE_BITS) - 1u), \
-                                PW_LOG_MODULE_NAME);                         \
+                                module);                                     \
     const uintptr_t _pw_log_tokenized_level = level;                         \
     PW_LOG_TOKENIZED_ENCODE_MESSAGE(                                         \
         (_PW_LOG_TOKENIZED_LEVEL(_pw_log_tokenized_level) |                  \
@@ -101,3 +101,22 @@
                            PW_LOG_TOKENIZED_LINE_BITS +  \
                            PW_LOG_TOKENIZED_FLAG_BITS)))
 #endif  // PW_LOG_TOKENIZED_MODULE_BITS
+
+#define PW_LOG_TOKENIZED_ENCODE_MESSAGE(metadata, format, ...)               \
+  do {                                                                       \
+    PW_TOKENIZE_FORMAT_STRING(                                               \
+        PW_TOKENIZER_DEFAULT_DOMAIN, UINT32_MAX, format, __VA_ARGS__);       \
+    _pw_log_tokenized_EncodeTokenizedLog(metadata,                           \
+                                         _pw_tokenizer_token,                \
+                                         PW_TOKENIZER_ARG_TYPES(__VA_ARGS__) \
+                                             PW_COMMA_ARGS(__VA_ARGS__));    \
+  } while (0)
+
+PW_EXTERN_C_START
+
+void _pw_log_tokenized_EncodeTokenizedLog(uint32_t metadata,
+                                          pw_tokenizer_Token token,
+                                          pw_tokenizer_ArgTypes types,
+                                          ...);
+
+PW_EXTERN_C_END

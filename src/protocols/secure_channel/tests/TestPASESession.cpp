@@ -119,7 +119,7 @@ public:
         NL_TEST_ASSERT(suite,
                        CHIP_NO_ERROR ==
                            mSessionManager.Init(&ctx.GetSystemLayer(), &ctx.GetTransportMgr(), &ctx.GetMessageCounterManager(),
-                                                &mStorage, &ctx.GetFabricTable()));
+                                                &mStorage, &ctx.GetFabricTable(), ctx.GetSessionKeystore()));
         // The setup here is really weird: we are using one session manager for
         // the actual messages we send (the PASE handshake, so the
         // unauthenticated sessions) and a different one for allocating the PASE
@@ -323,6 +323,12 @@ void SecurePairingHandshakeTestCommon(nlTestSuite * inSuite, void * inContext, S
     session = pairingAccessory.CopySecureSession();
     NL_TEST_ASSERT(inSuite, session.HasValue());
     session.Value()->AsSecureSession()->MarkForEviction();
+
+    // Evicting a session async notifies the PASESession's delegate.  Normally
+    // that notification is what would delete the PASESession, but in our case
+    // that will happen as soon as things come off the stack.  So make sure to
+    // process the async bits before that happens.
+    ctx.DrainAndServiceIO();
 
     // And check that this did not result in any new notifications.
     NL_TEST_ASSERT(inSuite, delegateAccessory.mNumPairingErrors == 0);

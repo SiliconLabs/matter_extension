@@ -120,8 +120,8 @@ pw::Result<std::unique_ptr<int>> ReturnUniquePtr() {
 }
 
 TEST(Result, ElementType) {
-  static_assert(std::is_same<pw::Result<int>::value_type, int>(), "");
-  static_assert(std::is_same<pw::Result<char>::value_type, char>(), "");
+  static_assert(std::is_same<pw::Result<int>::value_type, int>());
+  static_assert(std::is_same<pw::Result<char>::value_type, char>());
 }
 
 TEST(Result, TestMoveOnlyInitialization) {
@@ -198,7 +198,7 @@ TEST(Result, StatusCtorForwards) {
 }
 
 #define EXPECT_DEATH_OR_THROW(statement, status) \
-  EXPECT_DEATH_IF_SUPPORTED(statement, status.str());
+  EXPECT_DEATH_IF_SUPPORTED(statement, ".*");
 
 TEST(ResultDeathTest, TestDefaultCtorValue) {
   pw::Result<int> thing;
@@ -243,7 +243,7 @@ TEST(ResultDeathTest, TestStatusCtorStatusOk) {
         EXPECT_FALSE(thing.ok());
         EXPECT_EQ(thing.status().code(), pw::Status::Internal().code());
       },
-      "An OK status is not a valid constructor argument");
+      ".*");
 }
 
 TEST(ResultDeathTest, TestPointerStatusCtorStatusOk) {
@@ -255,7 +255,7 @@ TEST(ResultDeathTest, TestPointerStatusCtorStatusOk) {
         EXPECT_FALSE(thing.ok());
         EXPECT_EQ(thing.status().code(), pw::Status::Internal().code());
       },
-      "An OK status is not a valid constructor argument");
+      ".*");
 }
 #endif
 
@@ -1345,7 +1345,7 @@ TEST(Result, TestPointerValueConst) {
 
 TEST(Result, ResultVectorOfUniquePointerCanReserveAndResize) {
   using EvilType = std::vector<std::unique_ptr<int>>;
-  static_assert(std::is_copy_constructible<EvilType>::value, "");
+  static_assert(std::is_copy_constructible<EvilType>::value);
   std::vector<::pw::Result<EvilType>> v(5);
   v.reserve(v.capacity() + 10);
   v.resize(v.capacity() + 10);

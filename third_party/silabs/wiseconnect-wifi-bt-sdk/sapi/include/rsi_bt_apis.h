@@ -3696,6 +3696,7 @@ int32_t rsi_bt_vendor_dynamic_pwr(uint16_t enable,
                                   uint8_t power_index_br,
                                   uint8_t power_index_2m,
                                   uint8_t power_index_3m);
+int32_t rsi_bt_vendor_set_afh_classification_intervals(uint16_t afh_min, uint16_t afh_max);
 
 int32_t rsi_bt_iap_send_control_session_data(rsi_bt_iap_payload_t *payload);
 int32_t rsi_bt_iap2_update_send_cmds_info(rsi_bt_iap_cmds_info_t *cmd_list);
@@ -3709,7 +3710,7 @@ int32_t rsi_bt_spp_transfer(uint8_t *remote_dev_addr, uint8_t *data, uint16_t le
 int32_t rsi_bt_hfp_init(void);
 int32_t rsi_bt_hfp_connect(uint8_t *remote_dev_addr);
 int32_t rsi_bt_hfp_disconnect(uint8_t *remote_dev_addr);
-int32_t rsi_bt_hfp_phoneoperator(uint8_t *operator);
+int32_t rsi_bt_hfp_phoneoperator(uint8_t *phone_operator);
 int32_t rsi_bt_hfp_callaccept(void);
 int32_t rsi_bt_hfp_callreject(void);
 int32_t rsi_bt_hfp_dialnum(uint8_t *phone_no);

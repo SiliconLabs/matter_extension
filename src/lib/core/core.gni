@@ -47,6 +47,11 @@ declare_args() {
   # Configure chip logging to output through pigweed logging.
   chip_use_pw_logging = false
 
+  # Configure chip logging to output through external logging implementation.
+  # External code will need to provide implementation for CHIP log output
+  # function (LogV), which is defined in "src/platform/logging/LogV.h".
+  chip_use_external_logging = false
+
   # Enable short error strings.
   chip_config_short_error_str = false
 
@@ -74,7 +79,8 @@ declare_args() {
   # When not set, CHIP_CONFIG_MAX_FABRICS is used for static allocation
   # of tracking information for operational advertisement.
   chip_config_minmdns_dynamic_operational_responder_list =
-      current_os == "linux" || current_os == "android" || current_os == "darwin"
+      current_os == "linux" || current_os == "android" || current_os == "mac" ||
+      current_os == "ios"
 
   # When using minmdns, set the number of parallel resolves
   chip_config_minmdns_max_parallel_resolves = 2
@@ -82,7 +88,7 @@ declare_args() {
 
 if (chip_target_style == "") {
   if (current_os != "freertos" && current_os != "zephyr" &&
-      current_os != "mbed") {
+      current_os != "mbed" && current_os != "cmsis-rtos") {
     chip_target_style = "unix"
   } else {
     chip_target_style = "embedded"

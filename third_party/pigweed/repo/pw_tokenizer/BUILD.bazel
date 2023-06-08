@@ -1,4 +1,4 @@
-# Copyright 2020 The Pigweed Authors
+# Copyright 2023 The Pigweed Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License. You may obtain a copy of
@@ -19,6 +19,7 @@ load(
     "pw_cc_test",
 )
 load("//pw_fuzzer:fuzzer.bzl", "pw_cc_fuzz_test")
+load("//pw_build/bazel_internal:py_proto_library.bzl", "py_proto_library")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -62,26 +63,6 @@ pw_cc_library(
 )
 
 pw_cc_library(
-    name = "global_handler",
-    srcs = ["tokenize_to_global_handler.cc"],
-    hdrs = ["public/pw_tokenizer/tokenize_to_global_handler.h"],
-    deps = [
-        ":pw_tokenizer",
-        "@pigweed_config//:pw_tokenizer_global_handler_backend",
-    ],
-)
-
-pw_cc_library(
-    name = "global_handler_with_payload",
-    srcs = ["tokenize_to_global_handler_with_payload.cc"],
-    hdrs = ["public/pw_tokenizer/tokenize_to_global_handler_with_payload.h"],
-    deps = [
-        ":pw_tokenizer",
-        "@pigweed_config//:pw_tokenizer_global_handler_with_payload_backend",
-    ],
-)
-
-pw_cc_library(
     name = "base64",
     srcs = [
         "base64.cc",
@@ -95,6 +76,7 @@ pw_cc_library(
         "//pw_base64",
         "//pw_preprocessor",
         "//pw_span",
+        "//pw_string:string",
     ],
 )
 
@@ -124,10 +106,17 @@ proto_library(
         "options.proto",
     ],
     import_prefix = "pw_tokenizer/proto",
-    strip_import_prefix = "//pw_tokenizer",
+    strip_import_prefix = "/pw_tokenizer",
     deps = [
         "@com_google_protobuf//:descriptor_proto",
     ],
+)
+
+# TODO(b/241456982): Not expected to build yet.
+py_proto_library(
+    name = "tokenizer_proto_py_pb2",
+    tags = ["manual"],
+    deps = [":tokenizer_proto"],
 )
 
 # Executable for generating test data for the C++ and Python detokenizers. This
@@ -151,29 +140,6 @@ pw_cc_binary(
         "//pw_preprocessor",
         "//pw_span",
         "//pw_varint",
-    ],
-)
-
-# Executable for generating a test ELF file for elf_reader_test.py. A host
-# version of this binary is checked in for use in elf_reader_test.py.
-# Commented out because it fails to compile with bazel, with the error
-# ld.lld: error: symbol 'main' has no type. Instead use a filegroup to
-# keep pw_presubmit happy.
-# cc_binary(
-#     name = "elf_reader_test_binary",
-#     srcs = [
-#         "py/elf_reader_test_binary.c",
-#     ],
-#     linkopts = ["-Wl,--unresolved-symbols=ignore-all"],  # main is not defined
-#     deps = [
-#         ":pw_tokenizer",
-#         "//pw_varint",
-#     ],
-# )
-filegroup(
-    name = "elf_reader_test_binary",
-    srcs = [
-        "py/elf_reader_test_binary.c",
     ],
 )
 
@@ -239,15 +205,11 @@ pw_cc_fuzz_test(
 )
 
 pw_cc_test(
-    name = "global_handlers_test",
-    srcs = [
-        "global_handlers_test.cc",
-        "global_handlers_test_c.c",
-        "pw_tokenizer_private/tokenize_test.h",
-    ],
+    name = "encode_args_test",
+    srcs = ["encode_args_test.cc"],
     deps = [
-        ":global_handler",
-        ":global_handler_with_payload",
+        ":pw_tokenizer",
+        "//pw_unit_test",
     ],
 )
 
@@ -270,8 +232,6 @@ pw_cc_test(
         "simple_tokenize_test.cc",
     ],
     deps = [
-        ":global_handler",
-        ":global_handler_with_payload",
         ":pw_tokenizer",
         "//pw_unit_test",
     ],

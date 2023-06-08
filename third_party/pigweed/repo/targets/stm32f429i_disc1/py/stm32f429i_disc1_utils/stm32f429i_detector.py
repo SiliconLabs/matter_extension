@@ -16,21 +16,23 @@
 
 import logging
 import typing
+from typing import Optional
 
 import coloredlogs  # type: ignore
-import serial.tools.list_ports  # type: ignore
+import serial.tools.list_ports
 
 # Vendor/device ID to search for in USB devices.
 _ST_VENDOR_ID = 0x0483
-_DISCOVERY_MODEL_ID = 0x374b
+_DISCOVERY_MODEL_ID = 0x374B
 
 _LOG = logging.getLogger('stm32f429i_detector')
 
 
 class BoardInfo(typing.NamedTuple):
     """Information about a connected dev board."""
+
     dev_name: str
-    serial_number: str
+    serial_number: Optional[str]
 
 
 def detect_boards() -> list:
@@ -40,8 +42,8 @@ def detect_boards() -> list:
     for dev in all_devs:
         if dev.vid == _ST_VENDOR_ID and dev.pid == _DISCOVERY_MODEL_ID:
             boards.append(
-                BoardInfo(dev_name=dev.device,
-                          serial_number=dev.serial_number))
+                BoardInfo(dev_name=dev.device, serial_number=dev.serial_number)
+            )
     return boards
 
 
@@ -51,18 +53,14 @@ def main():
     # Try to use pw_cli logs, else default to something reasonable.
     try:
         import pw_cli.log  # pylint: disable=import-outside-toplevel
+
         pw_cli.log.install()
     except ImportError:
-        coloredlogs.install(level='INFO',
-                            level_styles={
-                                'debug': {
-                                    'color': 244
-                                },
-                                'error': {
-                                    'color': 'red'
-                                }
-                            },
-                            fmt='%(asctime)s %(levelname)s | %(message)s')
+        coloredlogs.install(
+            level='INFO',
+            level_styles={'debug': {'color': 244}, 'error': {'color': 'red'}},
+            fmt='%(asctime)s %(levelname)s | %(message)s',
+        )
 
     boards = detect_boards()
     if not boards:
@@ -70,7 +68,7 @@ def main():
     for idx, board in enumerate(boards):
         _LOG.info('Board %d:', idx)
         _LOG.info('  - Port: %s', board.dev_name)
-        _LOG.info('  - Serial #: %s', board.serial_number)
+        _LOG.info('  - Serial #: %s', board.serial_number or '<not set>')
 
 
 if __name__ == '__main__':

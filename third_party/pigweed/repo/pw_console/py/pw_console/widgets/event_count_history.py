@@ -15,7 +15,7 @@
 
 import collections
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import time
 from typing import Optional
 
@@ -57,11 +57,11 @@ class EventCountHistory:
     interval: float = 1.0  # Number of seconds per sum of events.
     history_limit: int = 20
     scale_characters = ' ▁▂▃▄▅▆▇█'
-    history: collections.deque = collections.deque()
+    history: collections.deque = field(default_factory=collections.deque)
     show_sparkline: bool = False
     _this_count: int = 0
     _last_count: int = 0
-    _last_update_time: float = time.time()
+    _last_update_time: float = field(default_factory=time.time)
 
     def log(self, count: int) -> None:
         self._this_count += count
@@ -84,8 +84,8 @@ class EventCountHistory:
 
     def last_count_with_units(self) -> str:
         return '{:.3f} [{}]'.format(
-            self._last_count * self.display_unit_factor,
-            self.display_unit_title)
+            self._last_count * self.display_unit_factor, self.display_unit_title
+        )
 
     def __repr__(self) -> str:
         sparkline = ''
@@ -96,9 +96,9 @@ class EventCountHistory:
     def __pt_formatted_text__(self):
         return [('', self.__repr__())]
 
-    def sparkline(self,
-                  min_value: int = 0,
-                  max_value: Optional[int] = None) -> str:
+    def sparkline(
+        self, min_value: int = 0, max_value: Optional[int] = None
+    ) -> str:
         msg = ''.rjust(self.history_limit)
         if len(self.history) == 0:
             return msg
@@ -112,8 +112,10 @@ class EventCountHistory:
         msg = ''
         for i in self.history:
             # (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
-            index = int((((1.0 * i) - minimum) / max_minus_min) *
-                        len(self.scale_characters))
+            index = int(
+                (((1.0 * i) - minimum) / max_minus_min)
+                * len(self.scale_characters)
+            )
             if index >= len(self.scale_characters):
                 index = len(self.scale_characters) - 1
             msg += self.scale_characters[index]

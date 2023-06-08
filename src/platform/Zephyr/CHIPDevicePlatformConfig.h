@@ -50,8 +50,6 @@
 
 #define CHIP_DEVICE_CONFIG_ENABLE_CHIPOBLE CONFIG_BT
 
-#define CHIP_DEVICE_CONFIG_ENABLE_CHIP_TIME_SERVICE_TIME_SYNC 0
-
 // ========== Platform-specific Configuration =========
 
 // These are configuration options that are unique to Zephyr platforms.
@@ -80,6 +78,12 @@
 #endif // !defined(CONFIG_CHIP_MALLOC_SYS_HEAP) && defined(CONFIG_NEWLIB_LIBC)
 #endif // CHIP_DEVICE_CONFIG_HEAP_STATISTICS_MALLINFO
 
+#ifndef CHIP_DEVICE_BLE_ADVERTISING_PRIORITY
+/// Priority of the Matter BLE advertising when there are multiple application
+/// components that compete for the BLE advertising.
+#define CHIP_DEVICE_BLE_ADVERTISING_PRIORITY 0
+#endif // CHIP_DEVICE_BLE_ADVERTISING_PRIORITY
+
 // ========== Platform-specific Configuration Overrides =========
 
 #ifndef CHIP_DEVICE_CONFIG_CHIP_TASK_PRIORITY
@@ -93,7 +97,6 @@
 #define CHIP_DEVICE_CONFIG_ENABLE_WIFI_TELEMETRY 0
 #define CHIP_DEVICE_CONFIG_ENABLE_THREAD_TELEMETRY 0
 #define CHIP_DEVICE_CONFIG_ENABLE_THREAD_TELEMETRY_FULL 0
-#define CHIP_DEVICE_CONFIG_LOG_PROVISIONING_HASH 0
 
 #define CHIP_DEVICE_CONFIG_CHIPOBLE_ENABLE_ADVERTISING_AUTOSTART 0
 

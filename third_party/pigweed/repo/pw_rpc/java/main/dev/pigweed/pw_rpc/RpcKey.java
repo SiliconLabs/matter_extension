@@ -1,0 +1,41 @@
+// Copyright 2022 The Pigweed Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not
+// use this file except in compliance with the License. You may obtain a copy of
+// the License at
+//
+//     https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+// License for the specific language governing permissions and limitations under
+// the License.
+
+package dev.pigweed.pw_rpc;
+
+import com.google.auto.value.AutoValue;
+import java.util.Locale;
+
+/**
+ * Represents a potential RPC invocation: channel ID, service, and method.
+ */
+@AutoValue
+public abstract class RpcKey {
+  static RpcKey create(int channelId, Method method) {
+    return new AutoValue_RpcKey(channelId, method);
+  }
+
+  public abstract int channelId();
+
+  public final Service service() {
+    return method().service();
+  }
+
+  public abstract Method method();
+
+  @Override
+  public final String toString() {
+    return String.format(Locale.ENGLISH, "RpcKey[%s|channel=%d]", method(), channelId());
+  }
+}

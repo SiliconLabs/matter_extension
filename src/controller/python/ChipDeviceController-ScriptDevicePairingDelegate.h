@@ -26,13 +26,17 @@
 #pragma once
 
 #include <controller/CHIPDeviceController.h>
+#include <controller/CommissioningWindowOpener.h>
+#include <controller/python/chip/native/PyChipError.h>
 
 namespace chip {
 namespace Controller {
 
 extern "C" {
-typedef void (*DevicePairingDelegate_OnPairingCompleteFunct)(ChipError::StorageType err);
-typedef void (*DevicePairingDelegate_OnCommissioningCompleteFunct)(NodeId nodeId, ChipError::StorageType err);
+typedef void (*DevicePairingDelegate_OnPairingCompleteFunct)(PyChipError err);
+typedef void (*DevicePairingDelegate_OnCommissioningCompleteFunct)(NodeId nodeId, PyChipError err);
+typedef void (*DevicePairingDelegate_OnWindowOpenCompleteFunct)(NodeId nodeId, uint32_t setupPinCode, const char * setupCode,
+                                                                PyChipError err);
 
 // Used for testing by OpCredsBinding
 typedef void (*DevicePairingDelegate_OnCommissioningSuccessFunct)(PeerId peerId);
@@ -47,25 +51,36 @@ typedef void (*DevicePairingDelegate_OnCommissioningStatusUpdateFunct)(PeerId pe
 class ScriptDevicePairingDelegate final : public Controller::DevicePairingDelegate
 {
 public:
+    ScriptDevicePairingDelegate();
     ~ScriptDevicePairingDelegate() = default;
     void SetKeyExchangeCallback(DevicePairingDelegate_OnPairingCompleteFunct callback);
     void SetCommissioningCompleteCallback(DevicePairingDelegate_OnCommissioningCompleteFunct callback);
     void SetCommissioningStatusUpdateCallback(DevicePairingDelegate_OnCommissioningStatusUpdateFunct callback);
     void SetCommissioningSuccessCallback(DevicePairingDelegate_OnCommissioningSuccessFunct callback);
     void SetCommissioningFailureCallback(DevicePairingDelegate_OnCommissioningFailureFunct callback);
+    void SetCommissioningWindowOpenCallback(DevicePairingDelegate_OnWindowOpenCompleteFunct callback);
+    void OnStatusUpdate(Controller::DevicePairingDelegate::Status status) override;
     void OnPairingComplete(CHIP_ERROR error) override;
     void OnCommissioningComplete(NodeId nodeId, CHIP_ERROR err) override;
     void OnCommissioningSuccess(PeerId peerId) override;
     void OnCommissioningFailure(PeerId peerId, CHIP_ERROR error, CommissioningStage stageFailed,
                                 Optional<Credentials::AttestationVerificationResult> additionalErrorInfo) override;
     void OnCommissioningStatusUpdate(PeerId peerId, CommissioningStage stageCompleted, CHIP_ERROR error) override;
+    Callback::Callback<Controller::OnOpenCommissioningWindow> *
+    GetOpenWindowCallback(Controller::CommissioningWindowOpener * context);
+    void OnOpenCommissioningWindow(NodeId deviceId, CHIP_ERROR status, SetupPayload payload);
+    void SetExpectingPairingComplete(bool value) { expectingPairingComplete = value; }
 
 private:
     DevicePairingDelegate_OnPairingCompleteFunct mOnPairingCompleteCallback                     = nullptr;
     DevicePairingDelegate_OnCommissioningCompleteFunct mOnCommissioningCompleteCallback         = nullptr;
+    DevicePairingDelegate_OnWindowOpenCompleteFunct mOnWindowOpenCompleteCallback               = nullptr;
     DevicePairingDelegate_OnCommissioningSuccessFunct mOnCommissioningSuccessCallback           = nullptr;
     DevicePairingDelegate_OnCommissioningFailureFunct mOnCommissioningFailureCallback           = nullptr;
     DevicePairingDelegate_OnCommissioningStatusUpdateFunct mOnCommissioningStatusUpdateCallback = nullptr;
+    Callback::Callback<Controller::OnOpenCommissioningWindow> mOpenWindowCallback;
+    Controller::CommissioningWindowOpener * mWindowOpener = nullptr;
+    bool expectingPairingComplete                         = false;
 };
 
 } // namespace Controller

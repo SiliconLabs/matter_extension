@@ -1,0 +1,53 @@
+category: Matter|WiFi
+define:
+-   name: DIC_ENABLE
+    value: "1"
+-   name: USE_AWS
+    value: "1"
+-   name: SL_DIC_NVM_EMBED_CERT
+    value: "0"
+-   name: CHIP_DEVICE_CONFIG_ENABLE_IPV4
+    value: '1'
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: MBEDTLS_SSL_MAX_CONTENT_LEN
+    value: "768"
+-   name: PSA_WANT_ALG_RSA_PKCS1V15_SIGN
+    value: "1"
+description:
+    This component enables Direct Internet connectivity feature for matter-wifi
+id: efr32_wifi_dic
+include:
+-   path: examples/platform/silabs/DIC/matter_abs_interface/include
+-   path: third_party/silabs/mqtt/stack
+-   path: third_party/silabs/mqtt/mqtt_transport_interface/include
+-   path: src/platform/silabs/efr32
+label: efr32_wifi_dic
+package: Matter
+provides:
+-   name: efr32_wifi_dic
+requires:
+  - name: mbedtls_tls
+  - name: mbedtls_rsa
+  - name: mbedtls_pki
+  - name: mbedtls_jpake
+  - name: mbedtls_ecdhe_key_exchange
+  - name: psa_crypto_tls12_prf
+template_contribution:
+  - name: mbedtls_ssl_content_len_in_requirement
+    value: 5120
+  - name: mbedtls_ssl_content_len_out_requirement
+    value: 1560
+
+quality: production
+source:
+-   path: examples/platform/silabs/DIC/matter_abs_interface/src/dic.cpp
+-   path: examples/platform/silabs/DIC/matter_abs_interface/src/dic_control.cpp
+-   path: examples/platform/silabs/DIC/matter_abs_interface/src/dic_nvm_cert.cpp
+-   path: third_party/silabs/mqtt/mqtt_transport_interface/src/MQTT_transport.c
+-   path: third_party/silabs/mqtt/mqtt_transport_interface/src/altcp.c
+-   path: third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_alloc.c
+-   path: third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_tcp.c
+-   path: third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls.c
+-   path: third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls_mem.c
+-   path: third_party/silabs/mqtt/stack/mqtt.c

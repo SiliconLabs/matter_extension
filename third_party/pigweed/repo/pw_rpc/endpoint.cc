@@ -21,19 +21,68 @@
 #include "pw_log/log.h"
 #include "pw_rpc/internal/lock.h"
 
+#if PW_RPC_YIELD_MODE == PW_RPC_YIELD_MODE_BUSY_LOOP
+
+static_assert(
+    PW_RPC_USE_GLOBAL_MUTEX == 0,
+    "The RPC global mutex is enabled, but no pw_rpc yield mode is selected! "
+    "Because the global mutex is in use, pw_rpc may be used from multiple "
+    "threads. This could result in thread starvation. To fix this, set "
+    "PW_RPC_YIELD to PW_RPC_YIELD_MODE_SLEEP and add a dependency on "
+    "pw_thread:sleep.");
+
+#elif PW_RPC_YIELD_MODE == PW_RPC_YIELD_MODE_SLEEP
+
+#include <chrono>
+
+#if !__has_include("pw_thread/sleep.h")
+
+static_assert(false,
+              "PW_RPC_YIELD_MODE is PW_RPC_YIELD_MODE_SLEEP "
+              "(pw::this_thread::sleep_for()), but no backend is set for "
+              "pw_thread:sleep. Set a pw_thread:sleep backend or use a "
+              "different PW_RPC_YIELD_MODE setting.");
+
+#endif  // !__has_include("pw_thread/sleep.h")
+
+#include "pw_thread/sleep.h"
+
+#elif PW_RPC_YIELD_MODE == PW_RPC_YIELD_MODE_YIELD
+
+#if !__has_include("pw_thread/yield.h")
+
+static_assert(false,
+              "PW_RPC_YIELD_MODE is PW_RPC_YIELD_MODE_YIELD "
+              "(pw::this_thread::yield()), but no backend is set for "
+              "pw_thread:yield. Set a pw_thread:yield backend or use a "
+              "different PW_RPC_YIELD_MODE setting.");
+
+#endif  // !__has_include("pw_thread/yield.h")
+
+#include "pw_thread/yield.h"
+
+#else
+
+static_assert(
+    false,
+    "PW_RPC_YIELD_MODE macro must be set to PW_RPC_YIELD_MODE_BUSY_LOOP, "
+    "PW_RPC_YIELD_MODE_SLEEP (pw::this_thread::sleep_for()), or "
+    "PW_RPC_YIELD_MODE_YIELD (pw::this_thread::yield())");
+
+#endif  // PW_RPC_YIELD_MODE
+
 namespace pw::rpc::internal {
 
-RpcLock& rpc_lock() {
-  static RpcLock lock;
-  return lock;
-}
-
-Endpoint::~Endpoint() {
-  // Since the calls remove themselves from the Endpoint in
-  // CloseAndSendResponse(), close responders until no responders remain.
-  while (!calls_.empty()) {
-    calls_.front().CloseAndSendResponse(OkStatus()).IgnoreError();
-  }
+void YieldRpcLock() {
+  rpc_lock().unlock();
+#if PW_RPC_YIELD_MODE == PW_RPC_YIELD_MODE_SLEEP
+  static constexpr chrono::SystemClock::duration kSleepDuration =
+      PW_RPC_YIELD_SLEEP_DURATION;
+  this_thread::sleep_for(kSleepDuration);
+#elif PW_RPC_YIELD_MODE == PW_RPC_YIELD_MODE_YIELD
+  this_thread::yield();
+#endif  // PW_RPC_YIELD_MODE
+  rpc_lock().lock();
 }
 
 Result<Packet> Endpoint::ProcessPacket(span<const std::byte> data,
@@ -60,44 +109,60 @@ Result<Packet> Endpoint::ProcessPacket(span<const std::byte> data,
   return result;
 }
 
-void Endpoint::RegisterCall(Call& call) {
-  Call* const existing_call = FindCallById(
-      call.channel_id_locked(), call.service_id(), call.method_id());
-
-  RegisterUniqueCall(call);
-
-  if (existing_call != nullptr) {
-    // TODO(b/234876851): Ensure call object is locked when calling callback.
-    //     For on_error, could potentially move the callback and call it after
-    //     the lock is released.
-    existing_call->HandleError(Status::Cancelled());
-    rpc_lock().lock();
+void Endpoint::RegisterCall(Call& new_call) {
+  // Mark any exisitng duplicate calls as cancelled.
+  auto [before_call, call] = FindIteratorsForCall(new_call);
+  if (call != calls_.end()) {
+    CloseCallAndMarkForCleanup(before_call, call, Status::Cancelled());
   }
+
+  // Register the new call.
+  calls_.push_front(new_call);
 }
 
-Call* Endpoint::FindCallById(uint32_t channel_id,
-                             uint32_t service_id,
-                             uint32_t method_id) {
-  for (Call& call : calls_) {
-    if (channel_id == call.channel_id_locked() &&
-        service_id == call.service_id() && method_id == call.method_id()) {
-      return &call;
+std::tuple<IntrusiveList<Call>::iterator, IntrusiveList<Call>::iterator>
+Endpoint::FindIteratorsForCall(uint32_t channel_id,
+                               uint32_t service_id,
+                               uint32_t method_id,
+                               uint32_t call_id) {
+  auto previous = calls_.before_begin();
+  auto call = calls_.begin();
+
+  while (call != calls_.end()) {
+    if (channel_id == call->channel_id_locked() &&
+        service_id == call->service_id() && method_id == call->method_id()) {
+      if (call_id == call->id() || call_id == kOpenCallId) {
+        break;
+      }
+      if (call->id() == kOpenCallId) {
+        // Calls with ID of `kOpenCallId` were unrequested, and
+        // are updated to have the call ID of the first matching request.
+        call->set_id(call_id);
+        break;
+      }
     }
+    previous = call;
+    ++call;
   }
-  return nullptr;
+
+  return {previous, call};
 }
 
 Status Endpoint::CloseChannel(uint32_t channel_id) {
-  LockGuard lock(rpc_lock());
+  rpc_lock().lock();
 
   Channel* channel = channels_.Get(channel_id);
   if (channel == nullptr) {
+    rpc_lock().unlock();
     return Status::NotFound();
   }
   channel->Close();
 
   // Close pending calls on the channel that's going away.
   AbortCalls(AbortIdType::kChannel, channel_id);
+
+  CleanUpCalls();
+
   return OkStatus();
 }
 
@@ -108,12 +173,51 @@ void Endpoint::AbortCalls(AbortIdType type, uint32_t id) {
   while (current != calls_.end()) {
     if (id == (type == AbortIdType::kChannel ? current->channel_id_locked()
                                              : current->service_id())) {
-      current->Abort();
-      current = calls_.erase_after(previous);  // previous stays the same
+      current =
+          CloseCallAndMarkForCleanup(previous, current, Status::Aborted());
     } else {
       previous = current;
       ++current;
     }
+  }
+}
+
+void Endpoint::CleanUpCalls() {
+  if (to_cleanup_.empty()) {
+    rpc_lock().unlock();
+    return;
+  }
+
+  // Drain the to_cleanup_ list. This while loop is structured to avoid
+  // unnecessarily acquiring the lock after popping the last call.
+  while (true) {
+    Call& call = to_cleanup_.front();
+    to_cleanup_.pop_front();
+
+    const bool done = to_cleanup_.empty();
+
+    call.CleanUpFromEndpoint();
+
+    if (done) {
+      return;
+    }
+
+    rpc_lock().lock();
+  }
+}
+
+void Endpoint::RemoveAllCalls() {
+  RpcLockGuard lock;
+
+  // Close all calls without invoking on_error callbacks, since the calls should
+  // have been closed before the Endpoint was deleted.
+  while (!calls_.empty()) {
+    calls_.front().CloseFromDeletedEndpoint();
+    calls_.pop_front();
+  }
+  while (!to_cleanup_.empty()) {
+    to_cleanup_.front().CloseFromDeletedEndpoint();
+    to_cleanup_.pop_front();
   }
 }
 

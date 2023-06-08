@@ -46,8 +46,7 @@ constexpr EntryFormat default_format{.magic = 0x749c361e,
 
 TEST(KvsFuzz, FuzzTest) {
   FlashPartition& test_partition = FlashTestPartition();
-  test_partition.Erase()
-      .IgnoreError();  // TODO(pwbug/387): Handle Status properly
+  ASSERT_EQ(OkStatus(), test_partition.Erase());
 
   KeyValueStoreBuffer<kMaxEntries, kMaxUsableSectors> kvs_(&test_partition,
                                                            default_format);
@@ -57,7 +56,7 @@ TEST(KvsFuzz, FuzzTest) {
   if (test_partition.sector_size_bytes() < 4 * 1024 ||
       test_partition.sector_count() < 4) {
     PW_LOG_INFO("Sectors too small, skipping test.");
-    return;  // TODO: Test could be generalized
+    return;  // TODO(davidrogers): Test could be generalized
   }
   const char* key1 = "Buf1";
   const char* key2 = "Buf2";
@@ -120,7 +119,7 @@ TEST(KvsFuzz, FuzzTestWithGC) {
   if (test_partition.sector_size_bytes() < 4 * 1024 ||
       test_partition.sector_count() < 4) {
     PW_LOG_INFO("Sectors too small, skipping test.");
-    return;  // TODO: Test could be generalized
+    return;  // TODO(drempel): Test could be generalized
   }
   const char* key1 = "Buf1";
   const char* key2 = "Buf2";

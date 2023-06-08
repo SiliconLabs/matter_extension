@@ -15,10 +15,40 @@
 import("//build_overrides/pigweed.gni")
 import("//build_overrides/pigweed_environment.gni")
 
+import("toolchains.gni")
+
+config("coverage") {
+  cflags = [
+    "-fprofile-instr-generate",
+    "-fcoverage-mapping",
+  ]
+
+  if (pw_toolchain_PROFILE_SOURCE_FILES != []) {
+    _profile_source_files = []
+    foreach(file, pw_toolchain_PROFILE_SOURCE_FILES) {
+      file = rebase_path(file, root_build_dir)
+      file = string_replace(file, "/", "\/")
+      file = string_replace(file, ".", "\.")
+      _profile_source_files += [ "src:$file" ]
+    }
+
+    _profile_file = "$root_build_dir/profile-source-files.list"
+    write_file(_profile_file, _profile_source_files)
+    cflags += [ "-fprofile-list=" + rebase_path(_profile_file, root_build_dir) ]
+  }
+
+  ldflags = cflags
+}
+
 # See https://github.com/google/sanitizers
 config("sanitize_address") {
   cflags = [ "-fsanitize=address" ]
   ldflags = cflags
+}
+
+# This is a deprecated config, use "coverage" config instead.
+config("sanitize_coverage") {
+  configs = [ ":coverage" ]
 }
 
 config("sanitize_memory") {
@@ -83,14 +113,6 @@ config("sanitize_thread") {
   ldflags = cflags
 }
 
-config("sanitize_coverage") {
-  cflags = [
-    "-fprofile-instr-generate",
-    "-fcoverage-mapping",
-  ]
-  ldflags = cflags
-}
-
 # Locate XCode's sysroot for Clang.
 config("xcode_sysroot") {
   if (current_os == "mac") {
@@ -106,6 +128,15 @@ config("xcode_sysroot") {
   }
 }
 
+config("linux_sysroot") {
+  if (current_os == "linux" && defined(pw_env_setup_CIPD_PIGWEED)) {
+    cflags = [ "--sysroot=" +
+               rebase_path(pw_env_setup_CIPD_PIGWEED, root_build_dir) +
+               "/clang_sysroot/" ]
+    ldflags = cflags
+  }
+}
+
 # The CIPD provided Clang/LLVM toolchain must link against the matched
 # libc++ which is also from CIPD. However, by default, Clang on Mac (but
 # not on Linux) will fall back to the system libc++, which is
@@ -113,8 +144,8 @@ config("xcode_sysroot") {
 #
 # Pull the appropriate paths from our Pigweed env setup.
 config("no_system_libcpp") {
-  if (current_os == "mac") {
-    install_dir = dir_cipd_pigweed
+  if (current_os == "mac" && defined(pw_env_setup_CIPD_PIGWEED)) {
+    install_dir = pw_env_setup_CIPD_PIGWEED
     assert(install_dir != "",
            "You forgot to activate the Pigweed environment; " +
                "did you source pw_env_setup/setup.sh?")
@@ -123,7 +154,7 @@ config("no_system_libcpp") {
       "-nostdlib++",
 
       # Use the libc++ from CIPD.
-      rebase_path(dir_cipd_pigweed + "/lib/libc++.a", root_build_dir),
+      rebase_path(pw_env_setup_CIPD_PIGWEED + "/lib/libc++.a", root_build_dir),
     ]
   }
 }

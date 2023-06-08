@@ -15,31 +15,35 @@
 #include "pw_function/function.h"
 
 #include "gtest/gtest.h"
+#include "pw_compilation_testing/negative_compilation.h"
 #include "pw_polyfill/language_feature_macros.h"
 
 namespace pw {
 namespace {
 
-// TODO(b/234882063): Convert this to a compilation failure test.
-#if defined(PW_COMPILE_FAIL_TEST_CannotInstantiateWithNonFunction)
+#if PW_NC_TEST(CannotInstantiateWithNonFunction)
+PW_NC_EXPECT("must be instantiated with a function type");
 
 [[maybe_unused]] Function<int> function_pointer;
 
-#elif defined(PW_COMPILE_FAIL_TEST_CannotInstantiateWithFunctionPointer1)
+#elif PW_NC_TEST(CannotInstantiateWithFunctionPointer1)
+PW_NC_EXPECT("must be instantiated with a function type");
 
 [[maybe_unused]] Function<void (*)()> function_pointer;
 
-#elif defined(PW_COMPILE_FAIL_TEST_CannotInstantiateWithFunctionPointer2)
+#elif PW_NC_TEST(CannotInstantiateWithFunctionPointer2)
+PW_NC_EXPECT("must be instantiated with a function type");
 
 [[maybe_unused]] void SomeFunction(int);
 
 [[maybe_unused]] Function<decltype(&SomeFunction)> function_pointer;
 
-#elif defined(PW_COMPILE_FAIL_TEST_CannotInstantiateWithFunctionReference)
+#elif PW_NC_TEST(CannotInstantiateWithFunctionReference)
+PW_NC_EXPECT("must be instantiated with a function type");
 
 [[maybe_unused]] Function<void (&)()> function_pointer;
 
-#endif  // compile fail tests
+#endif  // PW_NC_TEST
 
 // Ensure that Function can be constant initialized.
 [[maybe_unused]] PW_CONSTINIT Function<void()> can_be_constant_initialized;
@@ -52,6 +56,12 @@ TEST(Function, OperatorCall) {
 }
 
 void CallbackAdd(int a, int b, pw::Function<void(int sum)> callback) {
+  callback(a + b);
+}
+
+void InlineCallbackAdd(int a,
+                       int b,
+                       pw::InlineFunction<void(int sum)> callback) {
   callback(a + b);
 }
 
@@ -77,6 +87,24 @@ TEST(Function, ConstructInPlace_CapturingLambda) {
   EXPECT_EQ(result, 44);
 }
 
+TEST(InlineFunction, ConstructInPlace_FreeFunction) {
+  add_result = -1;
+  InlineCallbackAdd(25, 17, free_add_callback);
+  EXPECT_EQ(add_result, 42);
+}
+
+TEST(InlineFunction, ConstructInPlace_NonCapturingLambda) {
+  add_result = -1;
+  InlineCallbackAdd(25, 18, [](int sum) { add_result = sum; });
+  EXPECT_EQ(add_result, 43);
+}
+
+TEST(InlineFunction, ConstructInPlace_CapturingLambda) {
+  int result = -1;
+  InlineCallbackAdd(25, 19, [&](int sum) { result = sum; });
+  EXPECT_EQ(result, 44);
+}
+
 class CallableObject {
  public:
   CallableObject(int* result) : result_(result) {}
@@ -93,6 +121,12 @@ class CallableObject {
 TEST(Function, ConstructInPlace_CallableObject) {
   int result = -1;
   CallbackAdd(25, 20, CallableObject(&result));
+  EXPECT_EQ(result, 45);
+}
+
+TEST(InlineFunction, ConstructInPlace_CallableObject) {
+  int result = -1;
+  InlineCallbackAdd(25, 20, CallableObject(&result));
   EXPECT_EQ(result, 45);
 }
 
@@ -198,6 +232,18 @@ TEST(Function, Move_Inline) {
 #endif  // __clang_analyzer__
 }
 
+TEST(InlineFunction, Move_InlineFunctionToFunction) {
+  InlineFunction<int(int, int)> moved(Multiply);
+  EXPECT_NE(moved, nullptr);
+  Function<int(int, int)> multiply(std::move(moved));
+  EXPECT_EQ(multiply(3, 3), 9);
+
+// Ignore use-after-move.
+#ifndef __clang_analyzer__
+  EXPECT_EQ(moved, nullptr);
+#endif  // __clang_analyzer__
+}
+
 TEST(Function, MoveAssign_Inline) {
   Function<int(int, int)> moved(Multiply);
   EXPECT_NE(moved, nullptr);
@@ -210,8 +256,27 @@ TEST(Function, MoveAssign_Inline) {
 #endif  // __clang_analyzer__
 }
 
+TEST(InlineFunction, MoveAssign_InlineFunctionToFunction) {
+  InlineFunction<int(int, int)> moved(Multiply);
+  EXPECT_NE(moved, nullptr);
+  Function<int(int, int)> multiply = std::move(moved);
+  EXPECT_EQ(multiply(3, 3), 9);
+
+// Ignore use-after-move.
+#ifndef __clang_analyzer__
+  EXPECT_EQ(moved, nullptr);
+#endif  // __clang_analyzer__
+}
+
 TEST(Function, MoveAssign_Callable) {
   Function<int(int, int)> operation = Multiply;
+  EXPECT_EQ(operation(3, 3), 9);
+  operation = [](int a, int b) -> int { return a + b; };
+  EXPECT_EQ(operation(3, 3), 6);
+}
+
+TEST(InlineFunction, MoveAssign_Callable) {
+  InlineFunction<int(int, int)> operation = Multiply;
   EXPECT_EQ(operation(3, 3), 9);
   operation = [](int a, int b) -> int { return a + b; };
   EXPECT_EQ(operation(3, 3), 6);
@@ -232,9 +297,9 @@ class MoveTracker {
 
 TEST(Function, Move_CustomObject) {
   Function<int()> moved((MoveTracker()));
-  EXPECT_EQ(moved(), 2);  // internally moves twice on construction
+  EXPECT_EQ(moved(), 1);
   Function<int()> tracker(std::move(moved));
-  EXPECT_EQ(tracker(), 3);
+  EXPECT_EQ(tracker(), 2);
 
 // Ignore use-after-move.
 #ifndef __clang_analyzer__
@@ -244,9 +309,9 @@ TEST(Function, Move_CustomObject) {
 
 TEST(Function, MoveAssign_CustomObject) {
   Function<int()> moved((MoveTracker()));
-  EXPECT_EQ(moved(), 2);  // internally moves twice on construction
+  EXPECT_EQ(moved(), 1);
   Function<int()> tracker = std::move(moved);
-  EXPECT_EQ(tracker(), 3);
+  EXPECT_EQ(tracker(), 2);
 
 // Ignore use-after-move.
 #ifndef __clang_analyzer__
@@ -274,6 +339,52 @@ TEST(Function, MoveOnlyType) {
 
   MoveOnlyType move_only;
   EXPECT_TRUE(function(std::move(move_only)));
+}
+
+TEST(Function, CallbackCanOnlyBeCalledOnce) {
+  Callback<void()> cb([]() {});
+  cb();
+  EXPECT_FALSE(cb);
+  EXPECT_EQ(cb, nullptr);
+}
+
+TEST(Function, CallbackDestroysTargetAfterBeingCalled) {
+  class MoveOnlyDestructionCounter {
+   public:
+    MoveOnlyDestructionCounter(int* destroyed_count)
+        : destroyed_(destroyed_count) {}
+
+    MoveOnlyDestructionCounter(const MoveOnlyDestructionCounter& other) =
+        delete;
+    MoveOnlyDestructionCounter& operator=(
+        const MoveOnlyDestructionCounter& other) = delete;
+
+    MoveOnlyDestructionCounter(MoveOnlyDestructionCounter&& t) {
+      *this = std::move(t);
+    }
+    MoveOnlyDestructionCounter& operator=(MoveOnlyDestructionCounter&& t) {
+      destroyed_ = t.destroyed_;
+      t.destroyed_ = nullptr;
+      return *this;
+    }
+
+    ~MoveOnlyDestructionCounter() {
+      if (destroyed_) {
+        (*destroyed_)++;
+      }
+    }
+
+   private:
+    int* destroyed_;
+  };
+
+  int destroyed_count = 0;
+  MoveOnlyDestructionCounter destruction_counter(&destroyed_count);
+  Callback<void()> cb = [destruction_counter =
+                             std::move(destruction_counter)]() {};
+  EXPECT_EQ(destroyed_count, 0);
+  cb();
+  EXPECT_EQ(destroyed_count, 1);
 }
 
 }  // namespace

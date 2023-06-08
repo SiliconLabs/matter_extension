@@ -59,7 +59,7 @@ Status Block::Split(size_t head_block_inner_size, Block** new_block) {
   }
 
   // Don't split used blocks.
-  // TODO: Relax this restriction? Flag to enable/disable this check?
+  // TODO(jgarside): Relax this restriction? Flag to enable/disable this check?
   if (Used()) {
     return Status::FailedPrecondition();
   }
@@ -82,7 +82,7 @@ Status Block::Split(size_t head_block_inner_size, Block** new_block) {
   }
 
   // (2) Does the resulting block have enough space to store the header?
-  // TODO: What to do if the returned section is empty (i.e. remaining
+  // TODO(jgarside): What to do if the returned section is empty (i.e. remaining
   // size == sizeof(Block))?
   if (InnerSize() - aligned_head_block_inner_size <
       sizeof(Block) + 2 * PW_ALLOCATOR_POISON_OFFSET) {
@@ -162,34 +162,37 @@ Status Block::MergePrev() {
   return prev_->MergeNext();
 }
 
-// TODO(pwbug/234): Add stack tracing to locate which call to the heap operation
-// caused the corruption.
-// TODO: Add detailed information to log report and leave succinct messages
-// in the crash message.
+// TODO(b/234875269): Add stack tracing to locate which call to the heap
+// operation caused the corruption.
+// TODO(jgarside): Add detailed information to log report and leave succinct
+// messages in the crash message.
 void Block::CrashIfInvalid() {
   switch (CheckStatus()) {
     case VALID:
       break;
     case MISALIGNED:
-      PW_DCHECK(false, "The block at address %p is not aligned.", this);
+      PW_DCHECK(false,
+                "The block at address %p is not aligned.",
+                static_cast<void*>(this));
       break;
     case NEXT_MISMATCHED:
       PW_DCHECK(false,
                 "The 'prev' field in the next block (%p) does not match the "
                 "address of the current block (%p).",
-                Next()->Prev(),
-                this);
+                static_cast<void*>(Next()->Prev()),
+                static_cast<void*>(this));
       break;
     case PREV_MISMATCHED:
       PW_DCHECK(false,
                 "The 'next' field in the previous block (%p) does not match "
                 "the address of the current block (%p).",
-                Prev()->Next(),
-                this);
+                static_cast<void*>(Prev()->Next()),
+                static_cast<void*>(this));
       break;
     case POISON_CORRUPTED:
-      PW_DCHECK(
-          false, "The poisoned pattern in the block at %p is corrupted.", this);
+      PW_DCHECK(false,
+                "The poisoned pattern in the block at %p is corrupted.",
+                static_cast<void*>(this));
       break;
   }
 }

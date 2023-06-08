@@ -1,228 +1,180 @@
 .. _module-pw_string:
 
+.. rst-class:: with-subtitle
+
 =========
 pw_string
 =========
-String manipulation is a very common operation, but the standard C and C++
-string libraries have drawbacks. The C++ functions are easy-to-use and powerful,
-but require too much flash and memory for many embedded projects. The C string
-functions are lighter weight, but can be difficult to use correctly. Mishandling
-of null terminators or buffer sizes can result in serious bugs.
 
-The ``pw_string`` module provides the flexibility, ease-of-use, and safety of
-C++-style string manipulation, but with no dynamic memory allocation and a much
-smaller binary size impact. Using ``pw_string`` in place of the standard C
-functions eliminates issues related to buffer overflow or missing null
-terminators.
+.. pigweed-module::
+   :name: pw_string
+   :tagline: Efficient, easy, and safe string manipulation
+   :status: stable
+   :languages: C++14, C++17
+   :code-size-impact: 500 to 1500 bytes
+   :get-started: module-pw_string-get-started
+   :design: module-pw_string-design
+   :guides: module-pw_string-guide
+   :api: module-pw_string-api
 
--------------
-Compatibility
--------------
-C++17
+   - **Efficient**: No memory allocation, no pointer indirection.
+   - **Easy**: Use the string API you already know.
+   - **Safe**: Never worry about buffer overruns or undefined behavior.
 
------
-Usage
------
-pw::string::Format
-==================
-The ``pw::string::Format`` and ``pw::string::FormatVaList`` functions provide
-safer alternatives to ``std::snprintf`` and ``std::vsnprintf``. The snprintf
-return value is awkward to interpret, and misinterpreting it can lead to serious
-bugs.
+   *Pick three!* If you know how to use ``std::string``, just use
+   :cpp:type:`pw::InlineString` in the same way:
 
-Size report: replacing snprintf with pw::string::Format
--------------------------------------------------------
-The ``Format`` functions have a small, fixed code size cost. However, relative
-to equivalent ``std::snprintf`` calls, there is no incremental code size cost to
-using ``Format``.
+   .. code:: cpp
 
-.. include:: format_size_report
+      // Create a string from a C-style char array; storage is pre-allocated!
+      pw::InlineString<16> my_string = "Literally";
 
-Safe Length Checking
-====================
-This module provides two safer alternatives to ``std::strlen`` in case the
-string is extremely long and/or potentially not null-terminated.
+      // We have some space left, so let's add to the string.
+      my_string.append('?', 3);  // "Literally???"
 
-First, a constexpr alternative to C11's ``strnlen_s`` is offerred through
-:cpp:func:`pw::string::ClampedCString`. This does not return a length by
-design and instead returns a string_view which does not require
-null-termination.
+      // Let's try something evil and extend this past its capacity 😈
+      my_string.append('!', 8);
+      // Foiled by a crash! No mysterious bugs or undefined behavior.
 
-Second, a constexpr specialized form is offered where null termination is
-required through :cpp:func:`pw::string::NullTerminatedLength`. This will only
-return a length if the string is null-terminated.
+   Need to build up a string? :cpp:type:`pw::StringBuilder` works like
+   ``std::ostringstream``, but with most of the efficiency and memory benefits
+   of :cpp:type:`pw::InlineString`:
 
-.. cpp:function:: constexpr std::string_view pw::string::ClampedCString(span<const char> str)
-.. cpp:function:: constexpr std::string_view pw::string::ClampedCString(const char* str, size_t max_len)
+   .. code:: cpp
 
-   Safe alternative to the string_view constructor to avoid the risk of an
-   unbounded implicit or explicit use of strlen.
+      // Create a pw::StringBuilder with a built-in buffer
+      pw::StringBuffer<32> my_string_builder = "Is it really this easy?";
 
-   This is strongly recommended over using something like C11's strnlen_s as
-   a string_view does not require null-termination.
+      // Add to it with idiomatic C++
+      my_string << " YES!";
 
-.. cpp:function:: constexpr pw::Result<size_t> pw::string::NullTerminatedLength(span<const char> str)
-.. cpp:function:: pw::Result<size_t> pw::string::NullTerminatedLength(const char* str, size_t max_len)
+      // Use it like any other string
+      PW_LOG_DEBUG("%s", my_string_builder.c_str());
 
-   Safe alternative to strlen to calculate the null-terminated length of the
-   string within the specified span, excluding the null terminator. Like C11's
-   strnlen_s, the scan for the null-terminator is bounded.
+   Check out :ref:`module-pw_string-guide` for more code samples.
 
-   Returns:
-     null-terminated length of the string excluding the null terminator.
-     OutOfRange - if the string is not null-terminated.
+----------
+Background
+----------
+String manipulation on embedded systems can be surprisingly challenging.
+C strings are light weight but come with many pitfalls for those who don't know
+the standard library deeply. C++ provides string classes that are safe and easy
+to use, but they consume way too much code space and are designed to be used
+with dynamic memory allocation.
 
-   Precondition: The string shall be at a valid pointer.
+Embedded systems need string functionality that is both safe and suitable for
+resource-constrained platforms.
 
-pw::string::Copy
-================
-The ``pw::string::Copy`` functions provide a safer alternative to
-``std::strncpy`` as it always null-terminates whenever the destination
-buffer has a non-zero size.
+------------
+Our solution
+------------
+``pw_string`` provides safe string handling functionality with an API that
+closely matches that of ``std::string``, but without dynamic memory allocation
+and with a *much* smaller :ref:`binary size impact <module-pw_string-size-reports>`.
 
-.. cpp:function:: StatusWithSize Copy(const std::string_view& source, span<char> dest)
-.. cpp:function:: StatusWithSize Copy(const char* source, span<char> dest)
-.. cpp:function:: StatusWithSize Copy(const char* source, char* dest, size_t num)
-.. cpp:function:: StatusWithSize Copy(const pw::Vector<char>& source, span<char> dest)
+---------------
+Who this is for
+---------------
+``pw_string`` is useful any time you need to handle strings in embedded C++.
 
-   Copies the source string to the dest, truncating if the full string does not
-   fit. Always null terminates if dest.size() or num > 0.
+--------------------
+Is it right for you?
+--------------------
+If your project written in C, ``pw_string`` is not a good fit since we don't
+currently expose a C API.
 
-   Returns the number of characters written, excluding the null terminator. If
-   the string is truncated, the status is ResourceExhausted.
+For larger platforms where code space isn't in short supply and dynamic memory
+allocation isn't a problem, you may find that ``std::string`` meets your needs.
 
-   Precondition: The destination and source shall not overlap.
-   Precondition: The source shall be a valid pointer.
+.. tip::
+   ``pw_string`` works just as well on larger embedded platforms and host
+   systems. Using ``pw_string`` even when you might get away with ``std:string``
+   gives you the flexibility to move to smaller platforms later with much less
+   rework.
 
-It also has variants that provide a destination of ``pw::Vector<char>``
-(see :ref:`module-pw_containers` for details) that do not store the null
-terminator in the vector.
+Here are some size reports that may affect whether ``pw_string`` is right for
+you.
 
-.. cpp:function:: StatusWithSize Copy(const std::string_view& source, pw::Vector<char>& dest)
-.. cpp:function:: StatusWithSize Copy(const char* source, pw::Vector<char>& dest)
+.. _module-pw_string-size-reports:
 
+Size comparison: snprintf versus pw::StringBuilder
+--------------------------------------------------
+:cpp:type:`pw::StringBuilder` is safe, flexible, and results in much smaller
+code size than using ``std::ostringstream``. However, applications sensitive to
+code size should use :cpp:type:`pw::StringBuilder` with care.
 
-pw::string::PrintableCopy
-=========================
-The ``pw::string::PrintableCopy`` function provides a safe printable copy of a
-string. It functions with the same safety of ``pw::string::Copy`` while also
-converting any non-printable characters to a ``.`` char.
+The fixed code size cost of :cpp:type:`pw::StringBuilder` is significant, though
+smaller than ``std::snprintf``. Using :cpp:type:`pw::StringBuilder`'s ``<<`` and
+``append`` methods exclusively in place of ``snprintf`` reduces code size, but
+``snprintf`` may be difficult to avoid.
 
-.. cpp:function:: StatusWithSize PrintableCopy(const std::string_view& source, span<char> dest)
-
-pw::StringBuilder
-=================
-``pw::StringBuilder`` facilitates building formatted strings in a fixed-size
-buffer. It is designed to give the flexibility of ``std::string`` and
-``std::ostringstream``, but with a small footprint.
-
-.. code-block:: cpp
-
-  #include "pw_log/log.h"
-  #include "pw_string/string_builder.h"
-
-  pw::Status LogProducedData(std::string_view func_name,
-                             span<const std::byte> data) {
-    pw::StringBuffer<42> sb;
-
-    // Append a std::string_view to the buffer.
-    sb << func_name;
-
-    // Append a format string to the buffer.
-    sb.Format(" produced %d bytes of data: ", static_cast<int>(data.data()));
-
-    // Append bytes as hex to the buffer.
-    sb << data;
-
-    // Log the final string.
-    PW_LOG_DEBUG("%s", sb.c_str());
-
-    // Errors encountered while mutating the string builder are tracked.
-    return sb.status();
-  }
-
-Supporting custom types with StringBuilder
-------------------------------------------
-As with ``std::ostream``, StringBuilder supports printing custom types by
-overriding the ``<<`` operator. This is is done by defining ``operator<<`` in
-the same namespace as the custom type. For example:
-
-.. code-block:: cpp
-
-  namespace my_project {
-
-  struct MyType {
-    int foo;
-    const char* bar;
-  };
-
-  pw::StringBuilder& operator<<(pw::StringBuilder& sb, const MyType& value) {
-    return sb << "MyType(" << value.foo << ", " << value.bar << ')';
-  }
-
-  }  // namespace my_project
-
-Internally, ``StringBuilder`` uses the ``ToString`` function to print. The
-``ToString`` template function can be specialized to support custom types with
-``StringBuilder``, though it is recommended to overload ``operator<<`` instead.
-This example shows how to specialize ``pw::ToString``:
-
-.. code-block:: cpp
-
-  #include "pw_string/to_string.h"
-
-  namespace pw {
-
-  template <>
-  StatusWithSize ToString<MyStatus>(MyStatus value, span<char> buffer) {
-    return Copy(MyStatusString(value), buffer);
-  }
-
-  }  // namespace pw
-
-Size report: replacing snprintf with pw::StringBuilder
-------------------------------------------------------
-StringBuilder is safe, flexible, and results in much smaller code size than
-using ``std::ostringstream``. However, applications sensitive to code size
-should use StringBuilder with care.
-
-The fixed code size cost of StringBuilder is significant, though smaller than
-``std::snprintf``. Using StringBuilder's << and append methods exclusively in
-place of ``snprintf`` reduces code size, but ``snprintf`` may be difficult to
-avoid.
-
-The incremental code size cost of StringBuilder is comparable to ``snprintf`` if
-errors are handled. Each argument to StringBuilder's ``<<`` expands to a
-function call, but one or two StringBuilder appends may have a smaller code size
+The incremental code size cost of :cpp:type:`pw::StringBuilder` is comparable to
+``snprintf`` if errors are handled. Each argument to
+:cpp:type:`pw::StringBuilder`'s ``<<`` method expands to a function call, but
+one or two :cpp:type:`pw::StringBuilder` appends may have a smaller code size
 impact than a single ``snprintf`` call.
 
 .. include:: string_builder_size_report
 
-Module Configuration Options
-============================
-The following configuration options can be adjusted via compile-time
-configuration of this module.
+Size comparison: snprintf versus pw::string::Format
+---------------------------------------------------
+The ``pw::string::Format`` functions have a small, fixed code size
+cost. However, relative to equivalent ``std::snprintf`` calls, there is no
+incremental code size cost to using ``pw::string::Format``.
 
-.. c:macro:: PW_STRING_ENABLE_DECIMAL_FLOAT_EXPANSION
+.. include:: format_size_report
 
-   Setting this to a non-zero value will result in the ``ToString`` function
-   outputting string representations of floating-point values with a decimal
-   expansion after the point, by using the ``Format`` function. The default
-   value of this configuration option is zero, which will result in floating
-   point values being rounded to the nearest integer in their string
-   representation.
-
-   Using a non-zero value for this configuration option may incur a code size
-   cost due to the dependency on ``Format``.
-
------------
-Future work
------------
+Roadmap
+-------
 * StringBuilder's fixed size cost can be dramatically reduced by limiting
   support for 64-bit integers.
 * Consider integrating with the tokenizer module.
 
+Compatibility
+-------------
+C++17, C++14 (:cpp:type:`pw::InlineString`)
+
+.. _module-pw_string-get-started:
+
+---------------
+Getting started
+---------------
+
+GN
+--
+
+Add ``$dir_pw_string`` to the ``deps`` list in your ``pw_executable()`` build
+target:
+
+.. code::
+
+  pw_executable("...") {
+    # ...
+    deps = [
+      # ...
+      "$dir_pw_string",
+      # ...
+    ]
+  }
+
+See `//source/BUILD.gn <https://pigweed.googlesource.com/pigweed/sample_project/+/refs/heads/main/source/BUILD.gn>`_
+in the Pigweed Sample Project for an example.
+
 Zephyr
-======
-To enable ``pw_string`` for Zephyr add ``CONFIG_PIGWEED_STRING=y`` to the
-project's configuration.
+------
+Add ``CONFIG_PIGWEED_STRING=y`` to the Zephyr project's configuration.
+
+-------
+Roadmap
+-------
+* The fixed size cost of :cpp:type:`pw::StringBuilder` can be dramatically
+  reduced by limiting support for 64-bit integers.
+* ``pw_string`` may be integrated with :ref:`module-pw_tokenizer`.
+
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+
+   design
+   guide
+   api

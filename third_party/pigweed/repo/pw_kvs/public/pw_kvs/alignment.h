@@ -61,7 +61,7 @@ class AlignedWriter {
   AlignedWriter& operator=(const AlignedWriter&) = delete;
 
   ~AlignedWriter() {
-    Flush().IgnoreError();  // TODO(pwbug/387): Handle Status properly
+    Flush().IgnoreError();  // TODO(b/242598609): Handle Status properly
   }
 
   // Writes bytes to the AlignedWriter. The output may be called if the internal
@@ -118,8 +118,8 @@ template <size_t kBufferSize>
 StatusWithSize AlignedWrite(Output& output,
                             size_t alignment_bytes,
                             span<const span<const std::byte>> data) {
-  // TODO: This should convert to PW_CHECK once that is available for use in
-  // host tests.
+  // TODO(davidrogers): This should convert to PW_CHECK once that is available
+  // for use in host tests.
   if (alignment_bytes > kBufferSize) {
     return StatusWithSize::Internal();
   }

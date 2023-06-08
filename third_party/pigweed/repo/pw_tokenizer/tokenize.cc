@@ -20,6 +20,7 @@
 
 #include <cstring>
 
+#include "pw_span/span.h"
 #include "pw_tokenizer/encode_args.h"
 
 namespace pw {
@@ -77,27 +78,22 @@ extern "C" void _pw_tokenizer_ToBuffer(void* buffer,
 
   va_list args;
   va_start(args, types);
+#if PW_CXX_STANDARD_IS_SUPPORTED(17)
   const size_t encoded_bytes = EncodeArgs(
       types,
       args,
       span<std::byte>(static_cast<std::byte*>(buffer) + sizeof(token),
                       *buffer_size_bytes - sizeof(token)));
+#else
+  const size_t encoded_bytes =
+      pw_tokenizer_EncodeArgs(types,
+                              args,
+                              static_cast<std::byte*>(buffer) + sizeof(token),
+                              *buffer_size_bytes - sizeof(token));
+#endif  // PW_CXX_STANDARD_IS_SUPPORTED(17)
   va_end(args);
 
   *buffer_size_bytes = sizeof(token) + encoded_bytes;
-}
-
-extern "C" void _pw_tokenizer_ToCallback(
-    void (*callback)(const uint8_t* encoded_message, size_t size_bytes),
-    Token token,
-    pw_tokenizer_ArgTypes types,
-    ...) {
-  va_list args;
-  va_start(args, types);
-  EncodedMessage encoded(token, types, args);
-  va_end(args);
-
-  callback(encoded.data_as_uint8(), encoded.size());
 }
 
 }  // namespace tokenizer

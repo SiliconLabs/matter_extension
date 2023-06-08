@@ -15,11 +15,3 @@
 package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])
-
-# This is only used for the python tests.
-filegroup(
-    name = "symbolizer_test",
-    srcs = [
-        "py/symbolizer_test.cc",
-    ],
-)

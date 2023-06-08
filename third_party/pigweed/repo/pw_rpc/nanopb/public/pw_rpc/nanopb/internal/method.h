@@ -173,7 +173,7 @@ class NanopbMethod : public Method {
     // generically in the Function union, defined below.
     //
     // In optimized builds, the compiler inlines the user-defined function into
-    // this wrapper, elminating any overhead.
+    // this wrapper, eliminating any overhead.
     constexpr SynchronousUnaryFunction wrapper =
         [](Service& service, const void* req, void* resp) {
           return CallMethodImplFunction<kMethod>(
@@ -198,7 +198,7 @@ class NanopbMethod : public Method {
     // generically in the Function union, defined below.
     //
     // In optimized builds, the compiler inlines the user-defined function into
-    // this wrapper, elminating any overhead.
+    // this wrapper, eliminating any overhead.
     constexpr UnaryRequestFunction wrapper =
         [](Service& service, const void* req, NanopbServerCall& resp) {
           return CallMethodImplFunction<kMethod>(
@@ -384,7 +384,7 @@ class NanopbMethod : public Method {
   template <typename Request>
   static void ClientStreamingInvoker(const CallContext& context, const Packet&)
       PW_UNLOCK_FUNCTION(rpc_lock()) {
-    BaseNanopbServerReader<Request> reader(context,
+    BaseNanopbServerReader<Request> reader(context.ClaimLocked(),
                                            MethodType::kClientStreaming);
     rpc_lock().unlock();
     static_cast<const NanopbMethod&>(context.method())
@@ -397,7 +397,7 @@ class NanopbMethod : public Method {
                                             const Packet&)
       PW_UNLOCK_FUNCTION(rpc_lock()) {
     BaseNanopbServerReader<Request> reader_writer(
-        context, MethodType::kBidirectionalStreaming);
+        context.ClaimLocked(), MethodType::kBidirectionalStreaming);
     rpc_lock().unlock();
     static_cast<const NanopbMethod&>(context.method())
         .function_.stream_request(context.service(), reader_writer);

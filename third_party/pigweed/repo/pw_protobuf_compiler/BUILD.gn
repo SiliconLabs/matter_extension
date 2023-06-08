@@ -28,6 +28,7 @@ pw_test_group("tests") {
   tests = [
     ":nanopb_test",
     ":pwpb_test",
+    ":nested_packages_test",
   ]
 }
 
@@ -53,6 +54,7 @@ pw_test("pwpb_test") {
 pw_proto_library("pwpb_test_protos") {
   sources = [ "pw_protobuf_compiler_pwpb_protos/pwpb_test.proto" ]
   inputs = [ "pw_protobuf_compiler_pwpb_protos/pwpb_test.options" ]
+  deps = [ "$dir_pw_protobuf:common_protos" ]
 }
 
 pw_proto_library("test_protos") {
@@ -62,13 +64,7 @@ pw_proto_library("test_protos") {
   ]
 }
 
-# TODO(b/232800695): Remove when all projects are on the new Python build.
-# PyPI Requirements needed to install Python protobuf packages.
-pw_python_requirements("protobuf_requirements") {
-  requirements = [
-    # NOTE: mypy needs to stay in sync with mypy-protobuf
-    # Currently using mypy 0.910 and mypy-protobuf 2.9
-    # This must also be specified in //pw_protobuf_compiler/py/setup.cfg
-    "mypy-protobuf==2.9",
-  ]
+pw_test("nested_packages_test") {
+  deps = [ "pw_nested_packages:aggregate_wrapper.pwpb" ]
+  sources = [ "nested_packages_test.cc" ]
 }

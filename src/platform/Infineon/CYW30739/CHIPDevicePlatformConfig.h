@@ -26,7 +26,6 @@
 
 // -------------------- General Configuration --------------------
 #define CHIP_DEVICE_CONFIG_CHIP_TASK_STACK_SIZE 0x00001300
-#define CHIP_DEVICE_CONFIG_LOG_PROVISIONING_HASH 0
 
 // -------------------- WiFi Station Configuration --------------------
 
@@ -64,7 +63,5 @@
 // -------------------- Network Telemetry Configuration --------------------
 
 // -------------------- Event Logging Configuration --------------------
-#define CHIP_DEVICE_CONFIG_EVENT_LOGGING_CRIT_BUFFER_SIZE 256
-#define CHIP_DEVICE_CONFIG_EVENT_LOGGING_PROD_BUFFER_SIZE 256
 
 // -------------------- Software Update Manager Configuration --------------------

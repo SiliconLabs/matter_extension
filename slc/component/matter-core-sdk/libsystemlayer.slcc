@@ -1,0 +1,58 @@
+category: Matter|Core
+define:
+- name: CHIP_HAVE_CONFIG_H
+  value: '1'
+description: libsystemlayer
+id: libsystemlayer
+include:
+- path: examples/platform/silabs
+- path: examples/platform/silabs/efr32
+- path: src
+  file_list:
+  - path: system/SystemConfig.h
+  - path: system/SystemLayer.h
+  - path: system/SystemClock.h
+  - path: system/SystemError.h
+  - path: system/SystemEvent.h
+  - path: system/SocketEvents.h
+  - path: system/SystemPacketBuffer.h
+  - path: system/SystemStats.h
+  - path: system/SystemPacketBufferInternal.h
+  - path: system/SystemAlignSize.h
+  - path: system/SystemMutex.h
+  - path: system/SystemLayerImpl.h
+  - path: system/PlatformEventSupport.h
+  - path: system/SystemLayerImplSelect.h
+  - path: system/SystemTimer.h
+  - path: system/WakeEvent.h
+  - path: system/TimeSource.h
+  - path: system/TLVPacketBufferBackingStore.h
+  - path: system/SystemFaultInjection.h
+  - path: system/SystemLayerImplFreeRTOS.h
+- path: src/include
+- path: src/lib
+- path: src/platform/silabs/efr32
+- path: third_party/nlassert/repo/include
+- path: third_party/nlio/repo/include
+- path: zzz_generated/app-common
+- path: slc/inc
+  file_list:
+  - path: system/SystemBuildConfig.h
+label: libsystemlayer
+package: Matter
+provides:
+- name: matter_libsystemlayer
+quality: production
+source:
+- path: src/system/SystemClock.cpp
+- path: src/system/SystemError.cpp
+- path: src/system/SystemLayer.cpp
+- path: src/system/SystemLayerImplFreeRTOS.cpp
+- path: src/system/SystemMutex.cpp
+- path: src/system/SystemPacketBuffer.cpp
+- path: src/system/SystemStats.cpp
+- path: src/system/SystemTimer.cpp
+- path: src/system/TLVPacketBufferBackingStore.cpp
+- path: src/system/WakeEvent.cpp
+ui_hints:
+  visibility: never

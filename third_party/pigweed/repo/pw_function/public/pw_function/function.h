@@ -13,149 +13,84 @@
 // the License.
 #pragma once
 
-#include "pw_function/internal/function.h"
+#include "lib/fit/function.h"
+#include "pw_function/config.h"
 
 namespace pw {
 
-// pw::Function is a wrapper for an aribtrary callable object. It can be used by
-// callback-based APIs to allow callers to provide any type of callable.
-//
-// Example:
-//
-//   template <typename T>
-//   bool All(const pw::Vector<T>& items,
-//            pw::Function<bool(const T& item)> predicate) {
-//     for (const T& item : items) {
-//       if (!predicate(item)) {
-//         return false;
-//       }
-//     }
-//     return true;
-//   }
-//
-//   bool ElementsArePostive(const pw::Vector<int>& items) {
-//     return All(items, [](const int& i) { return i > 0; });
-//   }
-//
-//   bool IsEven(const int& i) { return i % 2 == 0; }
-//
-//   bool ElementsAreEven(const pw::Vector<int>& items) {
-//     return All(items, IsEven);
-//   }
-//
-template <typename Callable>
-class Function {
-  static_assert(std::is_function_v<Callable>,
-                "pw::Function may only be instantianted for a function type, "
-                "such as pw::Function<void(int)>.");
-};
+/// `pw::Function` is a wrapper for an arbitrary callable object. It can be used
+/// by callback-based APIs to allow callers to provide any type of callable.
+///
+/// Example:
+/// @code{.cpp}
+///
+///   template <typename T>
+///   bool All(const pw::Vector<T>& items,
+///            pw::Function<bool(const T& item)> predicate) {
+///     for (const T& item : items) {
+///       if (!predicate(item)) {
+///         return false;
+///       }
+///     }
+///     return true;
+///   }
+///
+///   bool ElementsArePositive(const pw::Vector<int>& items) {
+///     return All(items, [](const int& i) { return i > 0; });
+///   }
+///
+///   bool IsEven(const int& i) { return i % 2 == 0; }
+///
+///   bool ElementsAreEven(const pw::Vector<int>& items) {
+///     return All(items, IsEven);
+///   }
+///
+/// @endcode
+template <typename Callable,
+          size_t inline_target_size =
+              function_internal::config::kInlineCallableSize>
+using Function = fit::function_impl<
+    inline_target_size,
+    /*require_inline=*/!function_internal::config::kEnableDynamicAllocation,
+    Callable>;
+
+/// Version of `pw::Function` that exclusively uses inline storage.
+///
+/// IMPORTANT: If `pw::Function` is configured to allow dynamic allocations then
+/// any attempt to convert `pw::InlineFunction` to `pw::Function` will ALWAYS
+/// allocate.
+///
+// TODO(b/252852651): Remove warning above when conversion from
+// `fit::inline_function` to `fit::function` doesn't allocate anymore.
+template <typename Callable,
+          size_t inline_target_size =
+              function_internal::config::kInlineCallableSize>
+using InlineFunction = fit::inline_function<Callable, inline_target_size>;
 
 using Closure = Function<void()>;
 
-template <typename Return, typename... Args>
-class Function<Return(Args...)> {
- public:
-  constexpr Function() = default;
-  constexpr Function(std::nullptr_t) : Function() {}
+/// `pw::Callback` is identical to @cpp_type{pw::Function} except:
+///
+/// 1. On the first call to invoke a `pw::Callback`, the target function held
+///    by the `pw::Callback` cannot be called again.
+/// 2. When a `pw::Callback` is invoked for the first time, the target function
+///    is released and destructed, along with any resources owned by that
+///    function (typically the objects captured by a lambda).
+///
+/// A `pw::Callback` in the "already called" state has the same state as a
+/// `pw::Callback` that has been assigned to `nullptr`.
+template <typename Callable,
+          size_t inline_target_size =
+              function_internal::config::kInlineCallableSize>
+using Callback = fit::callback_impl<
+    inline_target_size,
+    /*require_inline=*/!function_internal::config::kEnableDynamicAllocation,
+    Callable>;
 
-  Function(const Function&) = delete;
-  Function& operator=(const Function&) = delete;
-
-  template <typename Callable>
-  Function(Callable&& callable) {
-    if (function_internal::IsNull(callable)) {
-      holder_.InitializeNullTarget();
-    } else {
-      holder_.InitializeInlineTarget(std::forward<Callable>(callable));
-    }
-  }
-
-  Function(Function&& other) {
-    holder_.MoveInitializeTargetFrom(other.holder_);
-    other.holder_.InitializeNullTarget();
-  }
-
-  Function& operator=(Function&& other) {
-    holder_.DestructTarget();
-    holder_.MoveInitializeTargetFrom(other.holder_);
-    other.holder_.InitializeNullTarget();
-    return *this;
-  }
-
-  Function& operator=(std::nullptr_t) {
-    holder_.DestructTarget();
-    holder_.InitializeNullTarget();
-    return *this;
-  }
-
-  template <typename Callable>
-  Function& operator=(Callable&& callable) {
-    holder_.DestructTarget();
-    if (function_internal::IsNull(callable)) {
-      holder_.InitializeNullTarget();
-    } else {
-      holder_.InitializeInlineTarget(std::forward<Callable>(callable));
-    }
-    return *this;
-  }
-
-  ~Function() { holder_.DestructTarget(); }
-
-  template <typename... PassedArgs>
-  Return operator()(PassedArgs&&... args) const {
-    return holder_.target()(std::forward<PassedArgs>(args)...);
-  }
-
-  explicit operator bool() const { return !holder_.target().IsNull(); }
-
- private:
-  // TODO(frolv): This is temporarily private while the API is worked out.
-  template <typename Callable, size_t kSizeBytes>
-  Function(Callable&& callable,
-           function_internal::FunctionStorage<kSizeBytes>& storage)
-      : Function(callable, &storage) {
-    static_assert(sizeof(Callable) <= kSizeBytes,
-                  "pw::Function callable does not fit into provided storage");
-  }
-
-  // Constructs a function that stores its callable at the provided location.
-  // Public constructors wrapping this must ensure that the memory region is
-  // capable of storing the callable in terms of both size and alignment.
-  template <typename Callable>
-  Function(Callable&& callable, void* storage) {
-    if (function_internal::IsNull(callable)) {
-      holder_.InitializeNullTarget();
-    } else {
-      holder_.InitializeMemoryTarget(std::forward(callable), storage);
-    }
-  }
-
-  function_internal::FunctionTargetHolder<
-      function_internal::config::kInlineCallableSize,
-      Return,
-      Args...>
-      holder_;
-};
-
-// nullptr comparisions for functions.
-template <typename T>
-bool operator==(const Function<T>& f, std::nullptr_t) {
-  return !static_cast<bool>(f);
-}
-
-template <typename T>
-bool operator!=(const Function<T>& f, std::nullptr_t) {
-  return static_cast<bool>(f);
-}
-
-template <typename T>
-bool operator==(std::nullptr_t, const Function<T>& f) {
-  return !static_cast<bool>(f);
-}
-
-template <typename T>
-bool operator!=(std::nullptr_t, const Function<T>& f) {
-  return static_cast<bool>(f);
-}
+/// Version of `pw::Callback` that exclusively uses inline storage.
+template <typename Callable,
+          size_t inline_target_size =
+              function_internal::config::kInlineCallableSize>
+using InlineCallback = fit::inline_callback<Callable, inline_target_size>;
 
 }  // namespace pw

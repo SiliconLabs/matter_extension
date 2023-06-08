@@ -14,6 +14,10 @@
 
 import("//build_overrides/pigweed.gni")
 
+import("$dir_pw_boot/backend.gni")
+import("$dir_pw_boot_cortex_m/toolchain.gni")
+import("$dir_pw_compilation_testing/negative_compilation_test.gni")
+import("$dir_pw_perf_test/perf_test.gni")
 import("$dir_pw_rpc/system_server/backend.gni")
 import("$dir_pw_sys_io/backend.gni")
 import("$dir_pw_toolchain/arm_gcc/toolchains.gni")
@@ -24,8 +28,14 @@ declare_args() {
 }
 
 _target_config = {
+  # TODO(b/241565082): Enable NC testing in GN Windows when it is fixed.
+  pw_compilation_testing_NEGATIVE_COMPILATION_ENABLED = host_os != "win"
+
   # Use the logging main.
   pw_unit_test_MAIN = "$dir_pw_unit_test:logging_main"
+
+  # Use ARM Cycle Counts
+  pw_perf_test_TIMER_INTERFACE_BACKEND = "$dir_pw_perf_test:arm_cortex_timer"
 
   # Configuration options for Pigweed executable targets.
   pw_build_EXECUTABLE_TARGET_TYPE = "stm32f429i_executable"
@@ -52,12 +62,13 @@ _target_config = {
   pw_sync_INTERRUPT_SPIN_LOCK_BACKEND =
       "$dir_pw_sync_baremetal:interrupt_spin_lock"
   pw_sync_MUTEX_BACKEND = "$dir_pw_sync_baremetal:mutex"
+  pw_rpc_CONFIG = "$dir_pw_rpc:disable_global_mutex"
   pw_log_BACKEND = dir_pw_log_basic
   pw_sys_io_BACKEND = dir_pw_sys_io_baremetal_stm32f429
-  pw_rpc_system_server_BACKEND =
-      "$dir_pigweed/targets/stm32f429i_disc1:system_rpc_server"
+  pw_rpc_system_server_BACKEND = "$dir_pw_hdlc:hdlc_sys_io_system_server"
   pw_malloc_BACKEND = dir_pw_malloc_freelist
 
+  pw_boot_cortex_m_LINK_CONFIG_DEFINES = []
   pw_boot_cortex_m_LINK_CONFIG_DEFINES = [
     "PW_BOOT_FLASH_BEGIN=0x08000200",
     "PW_BOOT_FLASH_SIZE=1024K",
@@ -78,10 +89,12 @@ _target_config = {
     "PW_BOOT_VECTOR_TABLE_SIZE=512",
   ]
 
+  pw_build_LINK_DEPS = []
   pw_build_LINK_DEPS = [
     "$dir_pw_assert:impl",
     "$dir_pw_cpu_exception:entry_impl",
     "$dir_pw_log:impl",
+    "$dir_pw_toolchain/arm_gcc:arm_none_eabi_gcc_support",
   ]
 
   current_cpu = "arm"

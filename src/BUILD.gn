@@ -26,6 +26,10 @@ declare_args() {
   chip_monolithic_tests = false
 }
 
+# chip_root relative to root_build_dir for macro-prefix-map.
+# "/." avoids trailing "/" in result when chip_root is "//"
+build_relative_chip_root = rebase_path("${chip_root}/.", root_build_dir)
+
 config("includes") {
   include_dirs = [
     "include",
@@ -37,6 +41,9 @@ config("includes") {
   include_dirs += [ "${chip_root}/zzz_generated/app-common" ]
 
   defines = [ "CHIP_HAVE_CONFIG_H=1" ]
+
+  # Make __FILE__ and related macros relative to chip_root
+  cflags = [ "-fmacro-prefix-map=${build_relative_chip_root}/=" ]
 }
 
 if (chip_build_tests) {
@@ -47,6 +54,7 @@ if (chip_build_tests) {
       "${chip_root}/src/access/tests",
       "${chip_root}/src/crypto/tests",
       "${chip_root}/src/inet/tests",
+      "${chip_root}/src/lib/address_resolve/tests",
       "${chip_root}/src/lib/asn1/tests",
       "${chip_root}/src/lib/core/tests",
       "${chip_root}/src/messaging/tests",
@@ -107,10 +115,13 @@ if (chip_build_tests) {
     if (chip_device_platform != "nrfconnect" &&
         chip_device_platform != "efr32") {
       # TODO(#10447): Controller test has HF on EFR32.
-      deps += [
-        "${chip_root}/src/controller/tests",
-        "${chip_root}/src/controller/tests/data_model",
-      ]
+      deps += [ "${chip_root}/src/controller/tests/data_model" ]
+
+      # Skip controller test for Open IoT SDK
+      # https://github.com/project-chip/connectedhomeip/issues/23747
+      if (chip_device_platform != "openiotsdk") {
+        deps += [ "${chip_root}/src/controller/tests" ]
+      }
     }
 
     if (current_os != "zephyr" && current_os != "mbed" &&

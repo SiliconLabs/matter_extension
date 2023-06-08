@@ -68,7 +68,7 @@ class BlobStore {
     BlobWriter& operator=(const BlobWriter&) = delete;
     ~BlobWriter() override {
       if (open_) {
-        Close().IgnoreError();  // TODO(pwbug/387): Handle Status properly
+        Close().IgnoreError();  // TODO(b/242598609): Handle Status properly
       }
     }
 
@@ -349,7 +349,7 @@ class BlobStore {
   BlobStore(std::string_view name,
             kvs::FlashPartition& partition,
             kvs::ChecksumAlgorithm* checksum_algo,
-            sync::Borrowable<kvs::KeyValueStore>& kvs,
+            sync::Borrowable<kvs::KeyValueStore> kvs,
             ByteSpan write_buffer,
             size_t flash_write_size_bytes)
       : name_(name),
@@ -548,7 +548,7 @@ class BlobStore {
   kvs::FlashPartition& partition_;
   // checksum_algo_ of nullptr indicates no checksum algorithm.
   kvs::ChecksumAlgorithm* const checksum_algo_;
-  sync::Borrowable<kvs::KeyValueStore>& kvs_;
+  sync::Borrowable<kvs::KeyValueStore> kvs_;
   ByteSpan write_buffer_;
 
   // Size in bytes of flash write operations. This should be chosen to balance
@@ -559,7 +559,7 @@ class BlobStore {
   //
   // Internal state for Blob store
   //
-  // TODO: Consolidate blob state to a single struct
+  // TODO(davidrogers): Consolidate blob state to a single struct
 
   // Initialization has been done.
   bool initialized_;
@@ -611,7 +611,7 @@ class BlobStoreBuffer : public BlobStore {
   explicit BlobStoreBuffer(std::string_view name,
                            kvs::FlashPartition& partition,
                            kvs::ChecksumAlgorithm* checksum_algo,
-                           sync::Borrowable<kvs::KeyValueStore>& kvs,
+                           sync::Borrowable<kvs::KeyValueStore> kvs,
                            size_t flash_write_size_bytes)
       : BlobStore(name,
                   partition,

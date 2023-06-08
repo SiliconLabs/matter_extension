@@ -41,11 +41,12 @@ class PwpbMethod;
 
 // internal::PwpbServerCall extends internal::ServerCall by adding a method
 // serializer/deserializer that is initialized based on the method context.
-class PwpbServerCall : public internal::ServerCall {
+class PwpbServerCall : public ServerCall {
  public:
   // Allow construction using a call context and method type which creates
   // a working server call.
-  PwpbServerCall(const CallContext& context, MethodType type);
+  PwpbServerCall(const LockedCallContext& context, MethodType type)
+      PW_EXCLUSIVE_LOCKS_REQUIRED(rpc_lock());
 
   // Sends a unary response.
   // Returns the following Status codes:
@@ -59,22 +60,30 @@ class PwpbServerCall : public internal::ServerCall {
   template <typename Response>
   Status SendUnaryResponse(const Response& response, Status status = OkStatus())
       PW_LOCKS_EXCLUDED(rpc_lock()) {
-    LockGuard lock(rpc_lock());
+    RpcLockGuard lock;
     if (!active_locked()) {
       return Status::FailedPrecondition();
     }
 
-    return PwpbSendFinalResponse(*this, response, status, serde().response());
-  }
+    Result<ByteSpan> buffer =
+        EncodeToPayloadBuffer(response, serde_->response());
+    if (!buffer.ok()) {
+      return CloseAndSendServerErrorLocked(Status::Internal());
+    }
 
-  // Give access to the serializer/deserializer object for converting requests
-  // and responses between the wire format and pw_protobuf structs.
-  const PwpbMethodSerde& serde() const { return *serde_; }
+    return CloseAndSendResponseLocked(*buffer, status);
+  }
 
  protected:
   // Derived classes allow default construction so that users can declare a
   // variable into which to move server reader/writers from RPC calls.
   constexpr PwpbServerCall() : serde_(nullptr) {}
+
+  // Give access to the serializer/deserializer object for converting requests
+  // and responses between the wire format and pw_protobuf structs.
+  const PwpbMethodSerde& serde() const PW_EXCLUSIVE_LOCKS_REQUIRED(rpc_lock()) {
+    return *serde_;
+  }
 
   // Allow derived classes to be constructed moving another instance.
   PwpbServerCall(PwpbServerCall&& other) PW_LOCKS_EXCLUDED(rpc_lock()) {
@@ -84,7 +93,7 @@ class PwpbServerCall : public internal::ServerCall {
   // Allow derived classes to use move assignment from another instance.
   PwpbServerCall& operator=(PwpbServerCall&& other)
       PW_LOCKS_EXCLUDED(rpc_lock()) {
-    LockGuard lock(rpc_lock());
+    RpcLockGuard lock;
     MovePwpbServerCallFrom(other);
     return *this;
   }
@@ -108,16 +117,12 @@ class PwpbServerCall : public internal::ServerCall {
   template <typename Response>
   Status SendStreamResponse(const Response& response)
       PW_LOCKS_EXCLUDED(rpc_lock()) {
-    LockGuard lock(rpc_lock());
-    if (!active_locked()) {
-      return Status::FailedPrecondition();
-    }
-
-    return PwpbSendStream(*this, response, serde().response());
+    RpcLockGuard lock;
+    return PwpbSendStream(*this, response, serde_);
   }
 
  private:
-  const PwpbMethodSerde* serde_;
+  const PwpbMethodSerde* serde_ PW_GUARDED_BY(rpc_lock());
 };
 
 // internal::BasePwpbServerReader extends internal::PwpbServerCall further by
@@ -125,7 +130,8 @@ class PwpbServerCall : public internal::ServerCall {
 template <typename Request>
 class BasePwpbServerReader : public PwpbServerCall {
  public:
-  BasePwpbServerReader(const CallContext& context, MethodType type)
+  BasePwpbServerReader(const LockedCallContext& context, MethodType type)
+      PW_EXCLUSIVE_LOCKS_REQUIRED(rpc_lock())
       : PwpbServerCall(context, type) {}
 
  protected:
@@ -142,7 +148,7 @@ class BasePwpbServerReader : public PwpbServerCall {
   // Allow derived classes to use move assignment from another instance.
   BasePwpbServerReader& operator=(BasePwpbServerReader&& other)
       PW_LOCKS_EXCLUDED(rpc_lock()) {
-    LockGuard lock(rpc_lock());
+    RpcLockGuard lock;
     MoveBasePwpbServerReaderFrom(other);
     return *this;
   }
@@ -151,32 +157,28 @@ class BasePwpbServerReader : public PwpbServerCall {
   void MoveBasePwpbServerReaderFrom(BasePwpbServerReader& other)
       PW_EXCLUSIVE_LOCKS_REQUIRED(rpc_lock()) {
     MovePwpbServerCallFrom(other);
-    set_on_next_locked(std::move(other.pwpb_on_next_));
+    set_pwpb_on_next_locked(std::move(other.pwpb_on_next_));
   }
 
   void set_on_next(Function<void(const Request& request)>&& on_next)
       PW_LOCKS_EXCLUDED(rpc_lock()) {
-    LockGuard lock(rpc_lock());
-    set_on_next_locked(std::move(on_next));
+    RpcLockGuard lock;
+    set_pwpb_on_next_locked(std::move(on_next));
   }
 
  private:
-  void set_on_next_locked(Function<void(const Request& request)>&& on_next)
+  void set_pwpb_on_next_locked(Function<void(const Request& request)>&& on_next)
       PW_EXCLUSIVE_LOCKS_REQUIRED(rpc_lock()) {
     pwpb_on_next_ = std::move(on_next);
 
-    Call::set_on_next_locked([this](ConstByteSpan payload) {
-      if (pwpb_on_next_) {
-        Request request{};
-        const Status status = serde().DecodeRequest(payload, request);
-        if (status.ok()) {
-          pwpb_on_next_(request);
-        }
-      }
-    });
+    Call::set_on_next_locked(
+        [this](ConstByteSpan payload) PW_NO_LOCK_SAFETY_ANALYSIS {
+          DecodeToStructAndInvokeOnNext(
+              payload, serde().request(), pwpb_on_next_);
+        });
   }
 
-  Function<void(const Request&)> pwpb_on_next_;
+  Function<void(const Request&)> pwpb_on_next_ PW_GUARDED_BY(rpc_lock());
 };
 
 }  // namespace internal
@@ -195,7 +197,8 @@ class PwpbServerReaderWriter : private internal::BasePwpbServerReader<Request> {
   template <auto kMethod, typename ServiceImpl>
   [[nodiscard]] static PwpbServerReaderWriter Open(Server& server,
                                                    uint32_t channel_id,
-                                                   ServiceImpl& service) {
+                                                   ServiceImpl& service)
+      PW_LOCKS_EXCLUDED(internal::rpc_lock()) {
     using MethodInfo = internal::MethodInfo<kMethod>;
     static_assert(std::is_same_v<Request, typename MethodInfo::Request>,
                   "The request type of a PwpbServerReaderWriter must match "
@@ -203,12 +206,13 @@ class PwpbServerReaderWriter : private internal::BasePwpbServerReader<Request> {
     static_assert(std::is_same_v<Response, typename MethodInfo::Response>,
                   "The response type of a PwpbServerReaderWriter must match "
                   "the method.");
-    internal::LockGuard lock(internal::rpc_lock());
-    return {server.OpenContext<kMethod, MethodType::kBidirectionalStreaming>(
+    return server.OpenCall<PwpbServerReaderWriter,
+                           kMethod,
+                           MethodType::kBidirectionalStreaming>(
         channel_id,
         service,
         internal::MethodLookup::GetPwpbMethod<ServiceImpl,
-                                              MethodInfo::kMethodId>())};
+                                              MethodInfo::kMethodId>());
   }
 
   // Allow default construction so that users can declare a variable into
@@ -218,13 +222,16 @@ class PwpbServerReaderWriter : private internal::BasePwpbServerReader<Request> {
   PwpbServerReaderWriter(PwpbServerReaderWriter&&) = default;
   PwpbServerReaderWriter& operator=(PwpbServerReaderWriter&&) = default;
 
+  ~PwpbServerReaderWriter() { internal::Call::DestroyServerCall(); }
+
   using internal::Call::active;
   using internal::Call::channel_id;
 
   // Functions for setting RPC event callbacks.
   using internal::Call::set_on_error;
   using internal::BasePwpbServerReader<Request>::set_on_next;
-  using internal::ServerCall::set_on_client_stream_end;
+  using internal::ServerCall::set_on_completion_requested;
+  using internal::ServerCall::set_on_completion_requested_if_enabled;
 
   // Writes a response. Returns the following Status codes:
   //
@@ -243,13 +250,15 @@ class PwpbServerReaderWriter : private internal::BasePwpbServerReader<Request> {
   }
 
  private:
+  friend class internal::PwpbMethod;
+  friend class Server;
+
   template <typename, typename, uint32_t>
   friend class internal::test::InvocationContext;
 
-  friend class internal::PwpbMethod;
-
-  PwpbServerReaderWriter(const internal::CallContext& context,
+  PwpbServerReaderWriter(const internal::LockedCallContext& context,
                          MethodType type = MethodType::kBidirectionalStreaming)
+      PW_EXCLUSIVE_LOCKS_REQUIRED(internal::rpc_lock())
       : internal::BasePwpbServerReader<Request>(context, type) {}
 };
 
@@ -267,7 +276,8 @@ class PwpbServerReader : private internal::BasePwpbServerReader<Request> {
   template <auto kMethod, typename ServiceImpl>
   [[nodiscard]] static PwpbServerReader Open(Server& server,
                                              uint32_t channel_id,
-                                             ServiceImpl& service) {
+                                             ServiceImpl& service)
+      PW_LOCKS_EXCLUDED(internal::rpc_lock()) {
     using MethodInfo = internal::MethodInfo<kMethod>;
     static_assert(std::is_same_v<Request, typename MethodInfo::Request>,
                   "The request type of a PwpbServerReader must match "
@@ -275,12 +285,12 @@ class PwpbServerReader : private internal::BasePwpbServerReader<Request> {
     static_assert(std::is_same_v<Response, typename MethodInfo::Response>,
                   "The response type of a PwpbServerReader must match "
                   "the method.");
-    internal::LockGuard lock(internal::rpc_lock());
-    return {server.OpenContext<kMethod, MethodType::kClientStreaming>(
-        channel_id,
-        service,
-        internal::MethodLookup::GetPwpbMethod<ServiceImpl,
-                                              MethodInfo::kMethodId>())};
+    return server
+        .OpenCall<PwpbServerReader, kMethod, MethodType::kClientStreaming>(
+            channel_id,
+            service,
+            internal::MethodLookup::GetPwpbMethod<ServiceImpl,
+                                                  MethodInfo::kMethodId>());
   }
 
   // Allow default construction so that users can declare a variable into
@@ -290,13 +300,16 @@ class PwpbServerReader : private internal::BasePwpbServerReader<Request> {
   PwpbServerReader(PwpbServerReader&&) = default;
   PwpbServerReader& operator=(PwpbServerReader&&) = default;
 
+  ~PwpbServerReader() { internal::Call::DestroyServerCall(); }
+
   using internal::Call::active;
   using internal::Call::channel_id;
 
   // Functions for setting RPC event callbacks.
   using internal::Call::set_on_error;
   using internal::BasePwpbServerReader<Request>::set_on_next;
-  using internal::ServerCall::set_on_client_stream_end;
+  using internal::ServerCall::set_on_completion_requested;
+  using internal::ServerCall::set_on_completion_requested_if_enabled;
 
   // Sends the response. Returns the following Status codes:
   //
@@ -311,12 +324,14 @@ class PwpbServerReader : private internal::BasePwpbServerReader<Request> {
   }
 
  private:
+  friend class internal::PwpbMethod;
+  friend class Server;
+
   template <typename, typename, uint32_t>
   friend class internal::test::InvocationContext;
 
-  friend class internal::PwpbMethod;
-
-  PwpbServerReader(const internal::CallContext& context)
+  PwpbServerReader(const internal::LockedCallContext& context)
+      PW_EXCLUSIVE_LOCKS_REQUIRED(internal::rpc_lock())
       : internal::BasePwpbServerReader<Request>(context,
                                                 MethodType::kClientStreaming) {}
 };
@@ -335,17 +350,18 @@ class PwpbServerWriter : private internal::PwpbServerCall {
   template <auto kMethod, typename ServiceImpl>
   [[nodiscard]] static PwpbServerWriter Open(Server& server,
                                              uint32_t channel_id,
-                                             ServiceImpl& service) {
+                                             ServiceImpl& service)
+      PW_LOCKS_EXCLUDED(internal::rpc_lock()) {
     using MethodInfo = internal::MethodInfo<kMethod>;
     static_assert(std::is_same_v<Response, typename MethodInfo::Response>,
                   "The response type of a PwpbServerWriter must match "
                   "the method.");
-    internal::LockGuard lock(internal::rpc_lock());
-    return {server.OpenContext<kMethod, MethodType::kServerStreaming>(
-        channel_id,
-        service,
-        internal::MethodLookup::GetPwpbMethod<ServiceImpl,
-                                              MethodInfo::kMethodId>())};
+    return server
+        .OpenCall<PwpbServerWriter, kMethod, MethodType::kServerStreaming>(
+            channel_id,
+            service,
+            internal::MethodLookup::GetPwpbMethod<ServiceImpl,
+                                                  MethodInfo::kMethodId>());
   }
 
   // Allow default construction so that users can declare a variable into
@@ -355,12 +371,15 @@ class PwpbServerWriter : private internal::PwpbServerCall {
   PwpbServerWriter(PwpbServerWriter&&) = default;
   PwpbServerWriter& operator=(PwpbServerWriter&&) = default;
 
+  ~PwpbServerWriter() { DestroyServerCall(); }
+
   using internal::Call::active;
   using internal::Call::channel_id;
 
   // Functions for setting RPC event callbacks.
   using internal::Call::set_on_error;
-  using internal::ServerCall::set_on_client_stream_end;
+  using internal::ServerCall::set_on_completion_requested;
+  using internal::ServerCall::set_on_completion_requested_if_enabled;
 
   // Writes a response. Returns the following Status codes:
   //
@@ -379,12 +398,14 @@ class PwpbServerWriter : private internal::PwpbServerCall {
   }
 
  private:
+  friend class internal::PwpbMethod;
+  friend class Server;
+
   template <typename, typename, uint32_t>
   friend class internal::test::InvocationContext;
 
-  friend class internal::PwpbMethod;
-
-  PwpbServerWriter(const internal::CallContext& context)
+  PwpbServerWriter(const internal::LockedCallContext& context)
+      PW_EXCLUSIVE_LOCKS_REQUIRED(internal::rpc_lock())
       : internal::PwpbServerCall(context, MethodType::kServerStreaming) {}
 };
 
@@ -402,17 +423,18 @@ class PwpbUnaryResponder : private internal::PwpbServerCall {
   template <auto kMethod, typename ServiceImpl>
   [[nodiscard]] static PwpbUnaryResponder Open(Server& server,
                                                uint32_t channel_id,
-                                               ServiceImpl& service) {
+                                               ServiceImpl& service)
+      PW_LOCKS_EXCLUDED(internal::rpc_lock()) {
     using MethodInfo = internal::MethodInfo<kMethod>;
     static_assert(std::is_same_v<Response, typename MethodInfo::Response>,
                   "The response type of a PwpbUnaryResponder must match "
                   "the method.");
-    internal::LockGuard lock(internal::rpc_lock());
-    return {server.OpenContext<kMethod, MethodType::kUnary>(
-        channel_id,
-        service,
-        internal::MethodLookup::GetPwpbMethod<ServiceImpl,
-                                              MethodInfo::kMethodId>())};
+    return server
+        .OpenCall<PwpbUnaryResponder<Response>, kMethod, MethodType::kUnary>(
+            channel_id,
+            service,
+            internal::MethodLookup::GetPwpbMethod<ServiceImpl,
+                                                  MethodInfo::kMethodId>());
   }
 
   // Allow default construction so that users can declare a variable into
@@ -422,12 +444,13 @@ class PwpbUnaryResponder : private internal::PwpbServerCall {
   PwpbUnaryResponder(PwpbUnaryResponder&&) = default;
   PwpbUnaryResponder& operator=(PwpbUnaryResponder&&) = default;
 
+  ~PwpbUnaryResponder() { DestroyServerCall(); }
+
   using internal::ServerCall::active;
   using internal::ServerCall::channel_id;
 
   // Functions for setting RPC event callbacks.
   using internal::Call::set_on_error;
-  using internal::ServerCall::set_on_client_stream_end;
 
   // Sends the response. Returns the following Status codes:
   //
@@ -442,12 +465,14 @@ class PwpbUnaryResponder : private internal::PwpbServerCall {
   }
 
  private:
+  friend class internal::PwpbMethod;
+  friend class Server;
+
   template <typename, typename, uint32_t>
   friend class internal::test::InvocationContext;
 
-  friend class internal::PwpbMethod;
-
-  PwpbUnaryResponder(const internal::CallContext& context)
+  PwpbUnaryResponder(const internal::LockedCallContext& context)
+      PW_EXCLUSIVE_LOCKS_REQUIRED(internal::rpc_lock())
       : internal::PwpbServerCall(context, MethodType::kUnary) {}
 };
 

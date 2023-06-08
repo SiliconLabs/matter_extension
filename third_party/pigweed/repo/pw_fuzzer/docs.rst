@@ -68,8 +68,9 @@ Building fuzzers with GN
 
 To build a fuzzer, do the following:
 
-1. Add the GN target using ``pw_fuzzer`` GN template, and add it to your the
-   test group of the module:
+1. Add the GN target to the module using ``pw_fuzzer`` GN template. If you wish
+   to limit when the generated unit test is run, you can set `enable_test_if` in
+   the same manner as `enable_if` for `pw_test`:
 
 .. code::
 
@@ -79,25 +80,65 @@ To build a fuzzer, do the following:
   pw_fuzzer("my_fuzzer") {
     sources = [ "my_fuzzer.cc" ]
     deps = [ ":my_lib" ]
+    enable_test_if = device_has_1m_flash
   }
 
+2. Add the generated unit test to the module's test group. This test verifies
+   the fuzzer can build and run, even when not being built in a fuzzing
+   toolchain.
+
+.. code::
+
+  # In $dir_my_module/BUILD.gn
   pw_test_group("tests") {
     tests = [
-      ":existing_tests", ...
-      ":my_fuzzer",     # <- Added!
+      ...
+      ":my_fuzzer_test",
     ]
   }
 
-2. Select your choice of sanitizers ("address" is also the current default).
+3. If your module does not already have a group of fuzzers, add it and include
+   it in the top level fuzzers target. Depending on your project, the specific
+   toolchain may differ. Fuzzer toolchains are those with
+   ``pw_toolchain_FUZZING_ENABLED`` set to true. Examples include
+   ``host_clang_fuzz`` and any toolchains that extend it.
+
+.. code::
+
+  # In //BUILD.gn
+  group("fuzzers") {
+    deps = [
+      ...
+      "$dir_my_module:fuzzers($dir_pigweed/targets/host:host_clang_fuzz)",
+    ]
+  }
+
+4. Add your fuzzer to the module's group of fuzzers.
+
+.. code::
+
+  group("fuzzers") {
+    deps = [
+      ...
+      ":my_fuzzer",
+    ]
+  }
+
+5. If desired, select a sanitizer runtime. By default,
+   `//targets/host:host_clang_fuzz` uses "address" if no sanitizer is specified.
    See LLVM for `valid options`_.
 
 .. code:: sh
 
   $ gn gen out --args='pw_toolchain_SANITIZERS=["address"]'
 
-3. Build normally, e.g. using ``pw watch``.
+6. Build the fuzzers!
 
-.. _run:
+.. code:: sh
+
+  $ ninja -C out fuzzers
+
+.. _bazel:
 
 Building and running fuzzers with Bazel
 =======================================
@@ -141,6 +182,8 @@ To build a fuzzer, do the following:
 .. code::
 
   bazel test //my_module:my_fuzz_test --config asan-libfuzzer
+
+.. _run:
 
 Running fuzzers locally
 =======================

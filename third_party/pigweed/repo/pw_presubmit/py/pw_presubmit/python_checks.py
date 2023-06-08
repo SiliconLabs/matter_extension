@@ -18,30 +18,21 @@ These checks assume that they are running in a preconfigured Python environment.
 
 import json
 import logging
-import os
 from pathlib import Path
 import subprocess
 import sys
 from typing import Optional
 
-try:
-    import pw_presubmit
-except ImportError:
-    # Append the pw_presubmit package path to the module search path to allow
-    # running this module without installing the pw_presubmit package.
-    sys.path.append(os.path.dirname(os.path.dirname(
-        os.path.abspath(__file__))))
-    import pw_presubmit
-
 from pw_env_setup import python_packages
-from pw_presubmit import (
-    build,
+
+from pw_presubmit.presubmit import (
     call,
     Check,
     filter_paths,
     PresubmitContext,
     PresubmitFailure,
 )
+from pw_presubmit import build
 
 _LOG = logging.getLogger(__name__)
 
@@ -55,8 +46,8 @@ _PYTHON_IS_3_9_OR_HIGHER = sys.version_info >= (
 
 @filter_paths(endswith=_PYTHON_EXTENSIONS)
 def gn_python_check(ctx: PresubmitContext):
-    build.gn_gen(ctx.root, ctx.output_dir)
-    build.ninja(ctx.output_dir, 'python.tests', 'python.lint')
+    build.gn_gen(ctx)
+    build.ninja(ctx, 'python.tests', 'python.lint')
 
 
 def _transform_lcov_file_paths(lcov_file: Path, repo_root: Path) -> str:
@@ -79,19 +70,30 @@ def _transform_lcov_file_paths(lcov_file: Path, repo_root: Path) -> str:
         file_string = line[3:].rstrip()
         source_file_path = Path(file_string)
 
+        # TODO(b/248257406) Remove once we drop support for Python 3.8.
+        def is_relative_to(path: Path, other: Path) -> bool:
+            try:
+                path.relative_to(other)
+                return True
+            except ValueError:
+                return False
+
         # Attempt to map a generated Python package source file to the root
         # source tree.
         # pylint: disable=no-member
-        if not source_file_path.is_relative_to(  # type: ignore[attr-defined]
-                repo_root):
+        if not is_relative_to(
+            source_file_path, repo_root  # type: ignore[attr-defined]
+        ):
             # pylint: enable=no-member
             source_file_path = repo_root / str(source_file_path).replace(
-                'python/gen/', '').replace('py.generated_python_package/', '')
+                'python/gen/', ''
+            ).replace('py.generated_python_package/', '')
 
         # If mapping fails don't modify this line.
         # pylint: disable=no-member
-        if not source_file_path.is_relative_to(  # type: ignore[attr-defined]
-                repo_root):
+        if not is_relative_to(
+            source_file_path, repo_root  # type: ignore[attr-defined]
+        ):
             # pylint: enable=no-member
             lcov_output += line + '\n'
             continue
@@ -105,8 +107,8 @@ def _transform_lcov_file_paths(lcov_file: Path, repo_root: Path) -> str:
 @filter_paths(endswith=_PYTHON_EXTENSIONS)
 def gn_python_test_coverage(ctx: PresubmitContext):
     """Run Python tests with coverage and create reports."""
-    build.gn_gen(ctx.root, ctx.output_dir, pw_build_PYTHON_TEST_COVERAGE=True)
-    build.ninja(ctx.output_dir, 'python.tests')
+    build.gn_gen(ctx, pw_build_PYTHON_TEST_COVERAGE=True)
+    build.ninja(ctx, 'python.tests')
 
     # Find coverage data files
     coverage_data_files = list(ctx.output_dir.glob('**/*.coverage'))
@@ -120,7 +122,8 @@ def gn_python_test_coverage(ctx: PresubmitContext):
         # Leave existing coverage files in place; by default they are deleted.
         '--keep',
         *coverage_data_files,
-        cwd=ctx.output_dir)
+        cwd=ctx.output_dir,
+    )
     combined_data_file = ctx.output_dir / '.coverage'
     _LOG.info('Coverage data saved to: %s', combined_data_file.resolve())
 
@@ -129,7 +132,8 @@ def gn_python_test_coverage(ctx: PresubmitContext):
 
     # Output coverage percentage summary to the terminal of changed files.
     changed_python_files = list(
-        str(p) for p in ctx.paths if str(p).endswith('.py'))
+        str(p) for p in ctx.paths if str(p).endswith('.py')
+    )
     report_args = [
         'coverage',
         'report',
@@ -143,7 +147,8 @@ def gn_python_test_coverage(ctx: PresubmitContext):
     call('coverage', 'lcov', coverage_omit_patterns, cwd=ctx.output_dir)
     lcov_data_file = ctx.output_dir / 'coverage.lcov'
     lcov_data_file.write_text(
-        _transform_lcov_file_paths(lcov_data_file, repo_root=ctx.root))
+        _transform_lcov_file_paths(lcov_data_file, repo_root=ctx.root)
+    )
     _LOG.info('Coverage lcov saved to: %s', lcov_data_file.resolve())
 
     # Generate an html report
@@ -152,23 +157,29 @@ def gn_python_test_coverage(ctx: PresubmitContext):
     _LOG.info('Coverage html report saved to: %s', html_report.resolve())
 
 
-@filter_paths(endswith=_PYTHON_EXTENSIONS + ('.pylintrc', ))
-def gn_python_lint(ctx: pw_presubmit.PresubmitContext) -> None:
-    build.gn_gen(ctx.root, ctx.output_dir)
-    build.ninja(ctx.output_dir, 'python.lint')
+@filter_paths(endswith=_PYTHON_EXTENSIONS + ('.pylintrc',))
+def gn_python_lint(ctx: PresubmitContext) -> None:
+    build.gn_gen(ctx)
+    build.ninja(ctx, 'python.lint')
 
 
 @Check
 def check_python_versions(ctx: PresubmitContext):
     """Checks that the list of installed packages is as expected."""
 
-    build.gn_gen(ctx.root, ctx.output_dir)
+    build.gn_gen(ctx)
     constraint_file: Optional[str] = None
+    requirement_file: Optional[str] = None
     try:
         for arg in build.get_gn_args(ctx.output_dir):
             if arg['name'] == 'pw_build_PIP_CONSTRAINTS':
-                constraint_file = json.loads(
-                    arg['current']['value'])[0].strip('/')
+                constraint_file = json.loads(arg['current']['value'])[0].strip(
+                    '/'
+                )
+            if arg['name'] == 'pw_build_PIP_REQUIREMENTS':
+                requirement_file = json.loads(arg['current']['value'])[0].strip(
+                    '/'
+                )
     except json.JSONDecodeError:
         _LOG.warning('failed to parse GN args json')
         return
@@ -176,7 +187,15 @@ def check_python_versions(ctx: PresubmitContext):
     if not constraint_file:
         _LOG.warning('could not find pw_build_PIP_CONSTRAINTS GN arg')
         return
+    ignored_requirements_arg = None
+    if requirement_file:
+        ignored_requirements_arg = [(ctx.root / requirement_file)]
 
-    with (ctx.root / constraint_file).open('r') as ins:
-        if python_packages.diff(ins) != 0:
-            raise PresubmitFailure
+    if (
+        python_packages.diff(
+            expected=(ctx.root / constraint_file),
+            ignore_requirements_file=ignored_requirements_arg,
+        )
+        != 0
+    ):
+        raise PresubmitFailure

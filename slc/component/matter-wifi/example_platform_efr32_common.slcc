@@ -5,63 +5,17 @@ description: >
 package: "Matter"
 category: "Matter-WiFi|Platform"
 quality: production
-config_file:
-  - path: slc/config/sl_matter_wifi_config.h
 provides:
   - name: example_platform_efr32_common
-requires:
-  - name: matter
-  - name: matter_efr32
-  - name: device_init_dpll
-    condition: [brd4186c]
-  - name: device_init_dpll
-    condition: [brd4187c]
-include:
-  - path: examples/platform/efr32
-  - path: third_party/pigweed/repo/pw_hdlc/public
-source:
-  - path: examples/platform/efr32/BaseApplication.cpp
-    unless: ["window_app"]
-  - path: examples/platform/efr32/efr32_utils.cpp
-  - path: examples/platform/efr32/heap_4_silabs.c
-  - path: examples/platform/efr32/init_efrPlatform.cpp
-  - path: examples/platform/efr32/LEDWidget.cpp
-  - path: examples/platform/efr32/matter_config.cpp
-toolchain_settings:
-  - option: gcc_linker_option
-    value: "-Wl,--wrap=malloc"
-  - option: gcc_linker_option
-    value: "-Wl,--wrap=free"
-  - option: gcc_linker_option
-    value: "-Wl,--wrap=realloc"
-  - option: gcc_linker_option
-    value: "-Wl,--wrap=calloc"
-  - option: gcc_linker_option
-    value: "-Wl,--wrap=MemoryAlloc"
-    # Wrap these in case internal newlib call them (e.g. strdup will)
-    # directly call _malloc_r)
-  - option: gcc_linker_option
-    value: "-Wl,--wrap=_malloc_r"
-  - option: gcc_linker_option
-    value: "-Wl,--wrap=_realloc_r"
-  - option: gcc_linker_option
-    value: "-Wl,--wrap=_free_r"
-  - option: gcc_linker_option
-    value: "-Wl,--wrap=_calloc_r"
-  - option: gcc_linker_option
-    value: "-Wl,--allow-multiple-definition"
 
 define:
   - name: __STARTUP_CLEAR_BSS
   - name: CORTEXM3_EFM32_MICRO
   - name: EFR32_SERIES2_CONFIG4_MICRO
-  - name: SILABS_LOG_ENABLED
-    value: 1
   - name: NVM3_DEFAULT_NVM_SIZE
     value: 40960
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
     value: 4092
-  - name: EFR32_OPENTHREAD_API
   - name: PHY
     value: EMBER_PHY_RAIL
   - name: CORTEXM3
@@ -142,8 +96,6 @@ define:
     value: 32768
   - name: PLAT
     value: EMBER_PLATFORM_CORTEXM3
-  - name: CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
-    value: 1
   - name: PLATFORM_HEADER
     value: "platform-header.h"
   - name: SL_POWER_MANAGER_LOWEST_EM_ALLOWED

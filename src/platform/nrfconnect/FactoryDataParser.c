@@ -17,15 +17,12 @@
 
 #include "FactoryDataParser.h"
 
-#include <logging/log.h>
 #include <zcbor_decode.h>
 
 #include <ctype.h>
 #include <string.h>
 
 #define MAX_FACTORY_DATA_NESTING_LEVEL 3
-
-LOG_MODULE_DECLARE(app, CONFIG_MATTER_LOG_LEVEL);
 
 static inline bool uint16_decode(zcbor_state_t * states, uint16_t * value)
 {
@@ -38,6 +35,77 @@ static inline bool uint16_decode(zcbor_state_t * states, uint16_t * value)
     }
 
     return false;
+}
+
+static bool DecodeEntry(zcbor_state_t * states, void * buffer, size_t bufferSize, size_t * outlen)
+{
+    struct zcbor_string tempString;
+    int32_t tempInt = 0;
+
+    // Try to decode entry as string
+    bool res = zcbor_tstr_decode(states, &tempString);
+    if (res)
+    {
+        if (bufferSize < tempString.len)
+        {
+            return false;
+        }
+        memcpy(buffer, tempString.value, tempString.len);
+        *outlen = tempString.len;
+        return res;
+    }
+
+    // Try to decode entry as int32
+    res = zcbor_int32_decode(states, &tempInt);
+    if (res)
+    {
+        if (bufferSize < sizeof(tempInt))
+        {
+            return false;
+        }
+        memcpy(buffer, &tempInt, sizeof(tempInt));
+        *outlen = sizeof(tempInt);
+        return res;
+    }
+
+    return res;
+}
+
+bool FindUserDataEntry(struct FactoryData * factoryData, const char * entry, void * buffer, size_t bufferSize, size_t * outlen)
+{
+    if ((!factoryData) || (!factoryData->user.data) || (!buffer) || (!outlen))
+    {
+        return false;
+    }
+
+    ZCBOR_STATE_D(states, MAX_FACTORY_DATA_NESTING_LEVEL - 1, factoryData->user.data, factoryData->user.len, 1);
+
+    bool res      = zcbor_map_start_decode(states);
+    bool keyFound = false;
+    struct zcbor_string currentString;
+
+    while (res)
+    {
+        res = zcbor_tstr_decode(states, &currentString);
+
+        if (!res)
+        {
+            break;
+        }
+
+        if (strncmp(entry, (const char *) currentString.value, currentString.len) == 0)
+        {
+            res      = DecodeEntry(states, buffer, bufferSize, outlen);
+            keyFound = true;
+            break;
+        }
+        else
+        {
+            res = res && zcbor_any_skip(states, NULL);
+        }
+    }
+
+    return res && keyFound && zcbor_list_map_end_force_decode(states);
 }
 
 bool ParseFactoryData(uint8_t * buffer, uint16_t bufferSize, struct FactoryData * factoryData)
@@ -103,14 +171,14 @@ bool ParseFactoryData(uint8_t * buffer, uint16_t bufferSize, struct FactoryData 
                 isdigit(date.value[3]) && date.value[4] == '-' && isdigit(date.value[5]) && isdigit(date.value[6]) &&
                 date.value[7] == '-' && isdigit(date.value[8]) && isdigit(date.value[9]))
             {
-                factoryData->date_year =
-                    1000 * (date.value[0] - '0') + 100 * (date.value[1] - '0') + 10 * (date.value[2] - '0') + date.value[3] - '0';
-                factoryData->date_month = 10 * (date.value[5] - '0') + date.value[6] - '0';
-                factoryData->date_day   = 10 * (date.value[8] - '0') + date.value[9] - '0';
+                factoryData->date_year = (uint16_t)(1000 * (uint16_t)(date.value[0] - '0') + 100 * (uint16_t)(date.value[1] - '0') +
+                                                    10 * (uint16_t)(date.value[2] - '0') + (uint16_t)(date.value[3] - '0'));
+                factoryData->date_month = (uint8_t)(10 * (uint16_t)(date.value[5] - '0') + (uint16_t)(date.value[6] - '0'));
+                factoryData->date_day   = (uint8_t)(10 * (uint16_t)(date.value[8] - '0') + (uint16_t)(date.value[9] - '0'));
             }
             else
             {
-                LOG_ERR("Parsing error - wrong date format");
+                res = false;
             }
         }
         else if (strncmp("hw_ver_str", (const char *) currentString.value, currentString.len) == 0)
@@ -149,13 +217,27 @@ bool ParseFactoryData(uint8_t * buffer, uint16_t bufferSize, struct FactoryData 
         {
             res = res && zcbor_bstr_decode(states, (struct zcbor_string *) &factoryData->product_name);
         }
+        else if (strncmp("part_number", (const char *) currentString.value, currentString.len) == 0)
+        {
+            res = res && zcbor_bstr_decode(states, (struct zcbor_string *) &factoryData->part_number);
+        }
+        else if (strncmp("product_url", (const char *) currentString.value, currentString.len) == 0)
+        {
+            res = res && zcbor_bstr_decode(states, (struct zcbor_string *) &factoryData->product_url);
+        }
+        else if (strncmp("product_label", (const char *) currentString.value, currentString.len) == 0)
+        {
+            res = res && zcbor_bstr_decode(states, (struct zcbor_string *) &factoryData->product_label);
+        }
         else if (strncmp("enable_key", (const char *) currentString.value, currentString.len) == 0)
         {
             res = res && zcbor_bstr_decode(states, (struct zcbor_string *) &factoryData->enable_key);
         }
         else if (strncmp("user", (const char *) currentString.value, currentString.len) == 0)
         {
-            res = res && zcbor_bstr_decode(states, (struct zcbor_string *) &factoryData->user);
+            factoryData->user.data = (void *) states->payload;
+            res                    = res && zcbor_any_skip(states, NULL);
+            factoryData->user.len  = (size_t)((void *) states->payload - factoryData->user.data);
         }
         else
         {

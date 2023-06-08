@@ -1,0 +1,35 @@
+category: Matter|Core
+define:
+-   name: OPENTHREAD_CORE_CONFIG_PLATFORM_CHECK_FILE
+    value: \"openthread-core-efr32-config-check.h\"
+-   name: OPENTHREAD_FTD
+    value: '0'
+-   name: OPENTHREAD_MTD
+    value: '1'
+-   name: OPENTHREAD_PROJECT_CORE_CONFIG_FILE
+    value: \"OpenThreadConfig.h\"
+-   name: OPENTHREAD_RADIO
+    value: '0'
+-   name: PACKAGE_NAME
+    value: \"OPENTHREAD\"
+-   name: PACKAGE_VERSION
+    value: \"1.0.0\"
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
+description: libopenthread_mtd
+id: libopenthread_mtd
+include:
+-   path: examples/platform/efr32
+-   path: examples/platform/silabs
+-   path: examples/platform/silabs/efr32
+-   path: examples/platform/silabs/efr32/project_include
+-   path: src/lib
+-   path: src/platform/silabs/efr32
+label: libopenthread_mtd
+package: Matter
+provides:
+-   name: matter_libopenthread_mtd
+quality: production
+source: []
+ui_hints:
+    visibility: never
