@@ -7,7 +7,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.lock-app.efr32.lock-app-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/lock-app/efr32/lock-app-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -23,7 +23,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.lock-app.efr32.lock-app-no-lcd-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/lock-app/efr32/lock-app-no-lcd-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -39,7 +39,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.lock-app.efr32.lock-app-no-led-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/lock-app/efr32/lock-app-no-led-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4316a brd4317a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -55,7 +55,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.lock-app.efr32.lock-app-minimal-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/lock-app/efr32/lock-app-minimal-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4319a brd4337a brd4318a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4319a:0.0.0.A00 brd4337a brd4318a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -71,7 +71,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.sensor-app.efr32.sensor-app-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/sensor-app/efr32/sensor-app-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -87,7 +87,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.sensor-app.efr32.sensor-app-no-lcd-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/sensor-app/efr32/sensor-app-no-lcd-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -103,7 +103,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.sensor-app.efr32.sensor-app-no-led-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/sensor-app/efr32/sensor-app-no-led-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4316a brd4317a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -119,7 +119,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.sensor-app.efr32.sensor-app-minimal-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/sensor-app/efr32/sensor-app-minimal-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4319a brd4337a brd4318a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4319a:0.0.0.A00 brd4337a brd4318a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -135,7 +135,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.lighting-app.efr32.lighting-app-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/lighting-app/efr32/lighting-app-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -151,7 +151,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.lighting-app.efr32.lighting-app-no-lcd-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/lighting-app/efr32/lighting-app-no-lcd-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -167,7 +167,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.lighting-app.efr32.lighting-app-no-led-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/lighting-app/efr32/lighting-app-no-led-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4316a brd4317a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -183,7 +183,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.lighting-app.efr32.lighting-app-minimal-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/lighting-app/efr32/lighting-app-minimal-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4319a brd4337a brd4318a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4319a:0.0.0.A00 brd4337a brd4318a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -215,7 +215,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.thermostat.efr32.thermostat-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/thermostat/efr32/thermostat-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -231,7 +231,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.thermostat.efr32.thermostat-no-lcd-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/thermostat/efr32/thermostat-no-lcd-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4166a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4166a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -247,7 +247,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.thermostat.efr32.thermostat-no-led-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/thermostat/efr32/thermostat-no-led-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4316a brd4317a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -279,7 +279,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.light-switch-app.efr32.light-switch-app-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/light-switch-app/efr32/light-switch-app-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -295,7 +295,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.light-switch-app.efr32.light-switch-app-no-lcd-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/light-switch-app/efr32/light-switch-app-no-lcd-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -311,7 +311,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.light-switch-app.efr32.light-switch-app-no-led-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/light-switch-app/efr32/light-switch-app-no-led-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4316a brd4317a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -327,7 +327,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.light-switch-app.efr32.light-switch-app-minimal-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/light-switch-app/efr32/light-switch-app-minimal-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4319a brd4337a brd4318a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4319a:0.0.0.A00 brd4337a brd4318a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -343,7 +343,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.window-app.efr32.window-app-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/window-app/efr32/window-app-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -359,7 +359,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.window-app.efr32.window-app-no-lcd-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/window-app/efr32/window-app-no-lcd-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -375,7 +375,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.window-app.efr32.window-app-no-led-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/window-app/efr32/window-app-no-led-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4316a brd4317a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -391,7 +391,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.window-app.efr32.window-app-minimal-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/window-app/efr32/window-app-minimal-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4319a brd4337a brd4318a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4319a:0.0.0.A00 brd4337a brd4318a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -568,7 +568,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.openthread-border-router-doc.openthread-border-router-doc.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/openthread-border-router-doc/openthread-border-router-doc.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/openthread-border-router-doc/README.md"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4166a brd4170a brd4186c brd4187c brd2601b brd2703a brd4316a brd4317a brd4319a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4166a brd4170a brd4186c brd4187c brd2601b brd2703a brd4316a brd4317a brd4319a:0.0.0.A00 "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -584,7 +584,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.onoff-plug-app.efr32.onoff-plug-app-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/onoff-plug-app/efr32/onoff-plug-app-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -600,7 +600,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.onoff-plug-app.efr32.onoff-plug-app-no-lcd-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/onoff-plug-app/efr32/onoff-plug-app-no-lcd-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -616,7 +616,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.onoff-plug-app.efr32.onoff-plug-app-no-led-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/onoff-plug-app/efr32/onoff-plug-app-no-led-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4316a brd4317a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -632,7 +632,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.onoff-plug-app.efr32.onoff-plug-app-minimal-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/onoff-plug-app/efr32/onoff-plug-app-minimal-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4319a brd4337a brd4318a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4319a:0.0.0.A00 brd4337a brd4318a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -711,7 +711,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.sample-app.bootloaders.bootloader-storage-external-single-series-1.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/bootloaders/bootloader-storage-external-single-series-1.slcp"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -726,7 +726,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.sample-app.bootloaders.bootloader-storage-external-single-series-2.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/bootloaders/bootloader-storage-external-single-series-2.slcp"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -741,7 +741,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lighting-app.series-1.lighting-app-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lighting-app/series-1/lighting-app-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -757,7 +757,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lighting-app.series-1.lighting-app-no-lcd-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lighting-app/series-1/lighting-app-no-lcd-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4166a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4166a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -773,7 +773,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lighting-app.series-1.lighting-app-rs911x-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lighting-app/series-1/lighting-app-rs911x-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -789,7 +789,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lighting-app.series-1.lighting-app-wf200-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lighting-app/series-1/lighting-app-wf200-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -805,7 +805,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lighting-app.series-2.lighting-app-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lighting-app/series-2/lighting-app-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -821,7 +821,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lighting-app.series-2.lighting-app-no-lcd-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lighting-app/series-2/lighting-app-no-lcd-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd2601b brd2703a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2601b brd2703a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -837,7 +837,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lighting-app.series-2.lighting-app-no-led-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lighting-app/series-2/lighting-app-no-led-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4316a brd4317a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -853,7 +853,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lighting-app.series-2.lighting-app-minimal-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lighting-app/series-2/lighting-app-minimal-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4319a brd4337a brd4318a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4319a:0.0.0.A00 brd4337a brd4318a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -869,7 +869,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lighting-app.series-2.lighting-app-rs911x-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lighting-app/series-2/lighting-app-rs911x-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -885,7 +885,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lighting-app.series-2.lighting-app-wf200-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lighting-app/series-2/lighting-app-wf200-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -901,7 +901,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.light-switch-app.series-1.light-switch-app-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/light-switch-app/series-1/light-switch-app-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -917,7 +917,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.light-switch-app.series-1.light-switch-app-no-lcd-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/light-switch-app/series-1/light-switch-app-no-lcd-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4166a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4166a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -933,7 +933,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.light-switch-app.series-1.light-switch-app-rs911x-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/light-switch-app/series-1/light-switch-app-rs911x-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -949,7 +949,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.light-switch-app.series-1.light-switch-app-wf200-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/light-switch-app/series-1/light-switch-app-wf200-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -965,7 +965,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.light-switch-app.series-2.light-switch-app-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/light-switch-app/series-2/light-switch-app-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -981,7 +981,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.light-switch-app.series-2.light-switch-app-no-lcd-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/light-switch-app/series-2/light-switch-app-no-lcd-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd2601b brd2703a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2601b brd2703a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -997,7 +997,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.light-switch-app.series-2.light-switch-app-no-led-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/light-switch-app/series-2/light-switch-app-no-led-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4316a brd4317a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1013,7 +1013,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.light-switch-app.series-2.light-switch-app-minimal-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/light-switch-app/series-2/light-switch-app-minimal-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4319a brd4337a brd4318a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4319a:0.0.0.A00 brd4337a brd4318a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1029,7 +1029,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.light-switch-app.series-2.light-switch-app-rs911x-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/light-switch-app/series-2/light-switch-app-rs911x-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1045,7 +1045,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.light-switch-app.series-2.light-switch-app-wf200-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/light-switch-app/series-2/light-switch-app-wf200-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1061,7 +1061,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lock-app.series-1.lock-app-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lock-app/series-1/lock-app-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1077,7 +1077,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lock-app.series-1.lock-app-no-lcd-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lock-app/series-1/lock-app-no-lcd-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4166a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4166a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1093,7 +1093,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lock-app.series-1.lock-app-rs911x-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lock-app/series-1/lock-app-rs911x-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1109,7 +1109,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lock-app.series-1.lock-app-wf200-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lock-app/series-1/lock-app-wf200-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1125,7 +1125,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lock-app.series-2.lock-app-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lock-app/series-2/lock-app-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1141,7 +1141,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lock-app.series-2.lock-app-no-lcd-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lock-app/series-2/lock-app-no-lcd-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd2601b brd2703a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2601b brd2703a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1157,7 +1157,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lock-app.series-2.lock-app-no-led-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lock-app/series-2/lock-app-no-led-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4316a brd4317a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1173,7 +1173,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lock-app.series-2.lock-app-minimal-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lock-app/series-2/lock-app-minimal-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4319a brd4337a brd4318a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4319a:0.0.0.A00 brd4337a brd4318a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1189,7 +1189,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lock-app.series-2.lock-app-rs911x-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lock-app/series-2/lock-app-rs911x-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1205,7 +1205,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.lock-app.series-2.lock-app-wf200-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/lock-app/series-2/lock-app-wf200-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1221,7 +1221,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.onoff-plug-app.series-1.onoff-plug-app-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/onoff-plug-app/series-1/onoff-plug-app-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1237,7 +1237,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.onoff-plug-app.series-1.onoff-plug-app-no-lcd-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/onoff-plug-app/series-1/onoff-plug-app-no-lcd-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4166a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4166a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1253,7 +1253,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.onoff-plug-app.series-1.onoff-plug-app-rs911x-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/onoff-plug-app/series-1/onoff-plug-app-rs911x-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1269,7 +1269,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.onoff-plug-app.series-1.onoff-plug-app-wf200-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/onoff-plug-app/series-1/onoff-plug-app-wf200-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1285,7 +1285,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.onoff-plug-app.series-2.onoff-plug-app-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/onoff-plug-app/series-2/onoff-plug-app-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1301,7 +1301,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.onoff-plug-app.series-2.onoff-plug-app-no-lcd-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/onoff-plug-app/series-2/onoff-plug-app-no-lcd-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd2601b brd2703a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2601b brd2703a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1317,7 +1317,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.onoff-plug-app.series-2.onoff-plug-app-no-led-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/onoff-plug-app/series-2/onoff-plug-app-no-led-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4316a brd4317a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1333,7 +1333,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.onoff-plug-app.series-2.onoff-plug-app-minimal-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/onoff-plug-app/series-2/onoff-plug-app-minimal-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4319a brd4337a brd4318a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4319a:0.0.0.A00 brd4337a brd4318a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1349,7 +1349,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.onoff-plug-app.series-2.onoff-plug-app-rs911x-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/onoff-plug-app/series-2/onoff-plug-app-rs911x-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1365,7 +1365,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.onoff-plug-app.series-2.onoff-plug-app-wf200-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/onoff-plug-app/series-2/onoff-plug-app-wf200-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1381,7 +1381,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.sensor-app.series-1.sensor-app-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/sensor-app/series-1/sensor-app-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1397,7 +1397,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.sensor-app.series-1.sensor-app-no-lcd-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/sensor-app/series-1/sensor-app-no-lcd-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4166a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4166a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1413,7 +1413,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.sensor-app.series-1.sensor-app-rs911x-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/sensor-app/series-1/sensor-app-rs911x-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1429,7 +1429,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.sensor-app.series-1.sensor-app-wf200-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/sensor-app/series-1/sensor-app-wf200-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1445,7 +1445,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.sensor-app.series-2.sensor-app-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/sensor-app/series-2/sensor-app-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1461,7 +1461,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.sensor-app.series-2.sensor-app-no-lcd-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/sensor-app/series-2/sensor-app-no-lcd-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd2601b brd2703a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2601b brd2703a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1477,7 +1477,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.sensor-app.series-2.sensor-app-no-led-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/sensor-app/series-2/sensor-app-no-led-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4316a brd4317a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1493,7 +1493,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.sensor-app.series-2.sensor-app-minimal-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/sensor-app/series-2/sensor-app-minimal-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4319a brd4337a brd4318a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4319a:0.0.0.A00 brd4337a brd4318a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1509,7 +1509,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.sensor-app.series-2.sensor-app-rs911x-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/sensor-app/series-2/sensor-app-rs911x-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1525,7 +1525,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.sensor-app.series-2.sensor-app-wf200-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/sensor-app/series-2/sensor-app-wf200-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1541,7 +1541,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.thermostat.series-1.thermostat-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/thermostat/series-1/thermostat-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1557,7 +1557,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.thermostat.series-1.thermostat-no-lcd-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/thermostat/series-1/thermostat-no-lcd-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4166a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4166a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1573,7 +1573,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.thermostat.series-1.thermostat-rs911x-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/thermostat/series-1/thermostat-rs911x-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1589,7 +1589,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.thermostat.series-1.thermostat-wf200-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/thermostat/series-1/thermostat-wf200-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1605,7 +1605,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.thermostat.series-2.thermostat-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/thermostat/series-2/thermostat-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1621,7 +1621,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.thermostat.series-2.thermostat-no-lcd-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/thermostat/series-2/thermostat-no-lcd-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd2601b brd2703a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2601b brd2703a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1637,7 +1637,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.thermostat.series-2.thermostat-no-led-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/thermostat/series-2/thermostat-no-led-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4316a brd4317a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1653,7 +1653,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.thermostat.series-2.thermostat-minimal-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/thermostat/series-2/thermostat-minimal-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4319a brd4337a brd4318a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4319a:0.0.0.A00 brd4337a brd4318a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1669,7 +1669,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.thermostat.series-2.thermostat-rs911x-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/thermostat/series-2/thermostat-rs911x-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1685,7 +1685,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.thermostat.series-2.thermostat-wf200-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/thermostat/series-2/thermostat-wf200-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1701,7 +1701,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.window-app.series-1.window-app-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/window-app/series-1/window-app-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1717,7 +1717,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.window-app.series-1.window-app-no-lcd-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/window-app/series-1/window-app-no-lcd-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4166a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4166a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1733,7 +1733,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.window-app.series-1.window-app-rs911x-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/window-app/series-1/window-app-rs911x-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1749,7 +1749,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.window-app.series-1.window-app-wf200-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/window-app/series-1/window-app-wf200-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1765,7 +1765,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.window-app.series-2.window-app-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/window-app/series-2/window-app-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1781,7 +1781,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.window-app.series-2.window-app-no-lcd-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/window-app/series-2/window-app-no-lcd-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd2601b brd2703a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2601b brd2703a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1797,7 +1797,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.window-app.series-2.window-app-no-led-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/window-app/series-2/window-app-no-led-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4316a brd4317a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1813,7 +1813,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.window-app.series-2.window-app-minimal-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/window-app/series-2/window-app-minimal-thread-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4319a brd4337a brd4318a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4319a:0.0.0.A00 brd4337a brd4318a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1829,7 +1829,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.window-app.series-2.window-app-rs911x-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/window-app/series-2/window-app-rs911x-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1845,7 +1845,7 @@
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.workspaces.window-app.series-2.window-app-wf200-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/workspaces/window-app/series-2/window-app-wf200-bootloader.slcw"/>
-    <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
     <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
     <properties key="toolchainCompatibility" value="gcc"/>

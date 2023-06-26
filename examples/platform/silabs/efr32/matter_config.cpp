@@ -150,8 +150,6 @@ CHIP_ERROR SilabsMatterConfig::InitMatter(const char * appName)
 #ifdef HEAP_MONITORING
     MemMonitoring::startHeapMonitoring();
 #endif
-    SetDeviceInstanceInfoProvider(&Silabs::SilabsDeviceDataProvider::GetDeviceDataProvider());
-    SetCommissionableDataProvider(&Silabs::SilabsDeviceDataProvider::GetDeviceDataProvider());
 
     //==============================================
     // Init Matter Stack

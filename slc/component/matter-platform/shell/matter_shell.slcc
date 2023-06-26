@@ -35,6 +35,10 @@ source:
   condition: [matter_nfc]
 - path: src/lib/shell/commands/Ota.cpp
   condition: [matter_ota_support]
+- path: examples/lock-app/silabs/efr32/src/EventHandlerLibShell.cpp
+  condition:
+    - matter_lock
+
 include:
 - path: src/lib/shell
   file_list:
@@ -51,6 +55,10 @@ include:
   file_list:
   - path: ChipShellCollection.h
   - path: Globals.h
+- path: examples/lock-app/silabs/efr32/include
+  file_list:
+    - path: EventHandlerLibShell.h
+      condition: matter_lock
 define:
 - name: ENABLE_CHIP_SHELL
 - name: OPENTHREAD_CONFIG_CLI_TRANSPORT

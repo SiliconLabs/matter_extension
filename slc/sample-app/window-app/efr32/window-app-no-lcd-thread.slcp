@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.0.0"
+    version: "2.1.0"
 
 provides:
   - name: window_app
@@ -38,6 +38,8 @@ component:
   - id: matter_gatt
     from: matter
 
+  - id: matter_window
+    from: matter   
   - id: app_common
     from: matter
 
@@ -117,8 +119,6 @@ include:
     file_list:
     - path: AppConfig.h
     - path: CHIPProjectConfig.h
-    - path: LcdPainter.h
-      condition: [matter_lcd]
     - path: WindowAppImpl.h
     directory: include
 
@@ -128,9 +128,6 @@ include:
     directory: include
 
 source:
-  - path: ../../../../examples/window-app/silabs/efr32/src/LcdPainter.cpp
-    condition: [matter_lcd]
-    directory: src
   - path: ../../../../examples/window-app/silabs/efr32/src/WindowAppImpl.cpp
     directory: src
   - path: ../../../../examples/window-app/silabs/efr32/src/main.cpp

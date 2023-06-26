@@ -67,7 +67,7 @@ void init_efrPlatform(void)
 #if SILABS_LOG_OUT_UART || ENABLE_CHIP_SHELL || CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
     uartConsoleInit();
 #endif
-#if EFR32_LOG_ENABLED
+#if SILABS_LOG_ENABLED
     silabsInitLog();
 #endif
 }

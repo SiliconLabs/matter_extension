@@ -1,0 +1,11 @@
+category: Matter|Examples
+package: Matter
+description: >
+  Provides example component for a Light Switch application. This component should be 
+  included in all Light Switch applications to help resolve SLC dependencies. Only applicable to Light Switch applications.
+id: matter_light_switch
+quality: production
+provides:
+  - name: matter_light_switch
+ui_hints:
+  visibility: never

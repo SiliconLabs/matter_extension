@@ -21,7 +21,7 @@
 #define SL_MATTER_LOG_LEVEL SL_MATTER_LOG_DETAIL
 #endif
 
-// <q EFR32_LOG_ENABLED> Enable EFR32 specific log used in matter
+// <q SILABS_LOG_ENABLED> Enable EFR32 specific log used in matter
 #define SILABS_LOG_ENABLED 1
 
 // <q HARD_FAULT_LOG_ENABLE> Enable HARD fault logging

@@ -1,7 +1,6 @@
 /*
  *
- *    Copyright (c) 2020 Project CHIP Authors
- *    Copyright (c) 2019 Google LLC.
+ *    Copyright (c) 2021 Project CHIP Authors
  *    All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,12 +18,13 @@
 
 #pragma once
 
-#include "efr32_utils.h"
+namespace chip {
+namespace rpc {
 
-// ---- Lighting Example App Config ----
+class LightingService;
 
-#define APP_TASK_NAME "Lit"
+void Init();
+void RunRpcService(void *);
 
-// Time it takes in ms for the simulated actuator to move from one
-// state to another.
-#define ACTUATOR_MOVEMENT_PERIOS_MS 10
+} // namespace rpc
+} // namespace chip

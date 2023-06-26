@@ -8,10 +8,6 @@ quality: production
 provides:
   - name: example_platform_efr32_common
 
-toolchain_settings:
-  - option: gcc_linker_option
-    value: "-Wl,--allow-multiple-definition"
-
 define:
   - name: __STARTUP_CLEAR_BSS
   - name: CORTEXM3_EFM32_MICRO

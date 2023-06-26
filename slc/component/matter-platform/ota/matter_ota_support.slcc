@@ -16,4 +16,4 @@ config_file:
   - path: slc/config/sl_matter_ota_config.h
     file_id: matter_ota_config
 define:
-  - name: EFR32_OTA_ENABLED
+  - name: SILABS_OTA_ENABLED

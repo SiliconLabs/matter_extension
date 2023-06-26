@@ -1,0 +1,14 @@
+category: Matter|Examples
+package: Matter
+description: >
+  Provides example component for a Lighting application. This component should be 
+  included in all Lighting applications to help resolve SLC dependencies. Only applicable to Lighting applications.
+id: matter_lighting
+quality: production
+provides:
+  - name: matter_lighting
+define:
+  - name: IS_DEMO_LIGHT
+    value: "1"
+ui_hints:
+  visibility: never

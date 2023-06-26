@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.0.0"
+    version: "2.1.0"
 
 component:
   - id: device_init
@@ -33,6 +33,8 @@ component:
   - id: silabs_factory_data_provider
     from: matter
 
+  - id: matter_lock
+    from: matter   
   - id: app_common
     from: matter
 
@@ -121,8 +123,6 @@ include:
       - path: AppTask.h
       - path: LockManager.h
       - path: CHIPProjectConfig.h
-      - path: EventHandlerLibShell.h
-        condition: [matter_shell]
     directory: include
 
 source:
@@ -133,9 +133,6 @@ source:
   - path: ../../../../examples/lock-app/silabs/efr32/src/main.cpp
     directory: src
   - path: ../../../../examples/lock-app/silabs/efr32/src/ZclCallbacks.cpp
-    directory: src
-  - path: ../../../../examples/lock-app/silabs/efr32/src/EventHandlerLibShell.cpp
-    condition: [matter_shell]
     directory: src
 
 define:
