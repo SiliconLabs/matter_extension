@@ -96,23 +96,14 @@ component:
   # Override RTT
   - id: matter_segger_rtt
     from: matter
-
+  - id: matter_lcd
+    from: matter
+  - id: matter_qr_code
+    from: matter
 
 # Require LCD and QR Code components only on the boards that support LCD
 requires:
   - name: wf200_ncp_extension
-  - name: matter_lcd
-    condition:
-    - device_series_1
-  - name: matter_lcd
-    condition:
-    - device_series_2
-  - name: matter_qr_code
-    condition:
-    - device_series_1
-  - name: matter_qr_code
-    condition:
-    - device_series_2
   - name: spidrv_instance
   - name: uartdrv_instance
     condition:

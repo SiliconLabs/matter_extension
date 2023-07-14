@@ -6,11 +6,9 @@ description: liblogging_stdio
 id: liblogging_stdio
 include:
 -   path: examples/platform/silabs
--   path: examples/platform/silabs/efr32
 -   path: src
 -   path: src/include
 -   path: src/lib
--   path: src/platform/silabs/efr32
 -   path: zzz_generated/app-common
 label: liblogging_stdio
 package: Matter

@@ -1,0 +1,17 @@
+id: siwx917_soc_custom_startup
+label: Matter startup component for SiWx917 SoC
+description: This component adds a customized startup file for SiWx917 SoC
+package: "Matter"
+category: Stack
+quality: production
+
+include:
+- path: examples/platform/silabs/SiWx917/device/inc
+  file_list:
+  - path: system_si917.h
+
+source:
+- path: examples/platform/silabs/SiWx917/device/src/startup_RS1xxxx.c
+
+provides:
+  - name: siwx917_soc_custom_startup

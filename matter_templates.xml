@@ -464,6 +464,70 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
   </descriptors>
+  <descriptors name="MatterLightOverWiFi" label="Matter - 917 SoC Lighting over Wi-Fi"
+               description="This project builds a Matter Lighting app for Wi-Fi SiWx917 that can be developed inside Simplicity Studio">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.lighting-app.efr32.lighting-app-917-soc.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/lighting-app/efr32/lighting-app-917-soc.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
+    <properties key="boardCompatibility" value="brd4325a brd4325b com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*si917.* .*si917.* "/>
+    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="EXPERIMENTAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+  </descriptors>
+  <descriptors name="MatterLockOverWiFi" label="Matter - 917 SoC Lock over Wi-Fi"
+               description="This project builds a Matter Lock app for Wi-Fi SiWx917 that can be developed inside Simplicity Studio">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.lighting-app.efr32.lock-app-917-soc.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/lock-app/efr32/lock-app-917-soc.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
+    <properties key="boardCompatibility" value="brd4325a brd4325b com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*si917.* .*si917.* "/>
+    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="EXPERIMENTAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+  </descriptors>
+  <descriptors name="MatterLightSwitchOverWiFi" label="Matter - 917 SoC Light Switch over Wi-Fi"
+               description="This project builds a Matter  Light Switch app for Wi-Fi SiWx917 that can be developed inside Simplicity Studio">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.light-switch-app.efr32.light-switch-app-917-soc.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/light-switch-app/efr32/light-switch-app-917-soc.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
+    <properties key="boardCompatibility" value="brd4325a brd4325b com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*si917.* .*si917.* "/>
+    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="EXPERIMENTAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+  </descriptors>
+  <descriptors name="MatterWindowCoverOverWiFi" label="Matter - 917 SoC window-app over Wi-Fi"
+               description="This project builds a Matter window-app for Wi-Fi SiWx917 that can be developed inside Simplicity Studio">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.window-app.efr32.window-app-917-soc.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/window-app/efr32/window-app-917-soc.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
+    <properties key="boardCompatibility" value="brd4325a brd4325b com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*si917.* .*si917.* "/>
+    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="EXPERIMENTAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+  </descriptors>
   <descriptors name="MatterLightSwitchOverWiFi" label="Matter - SoC Light Switch over Wi-Fi"
                description="This project builds a Matter Light Switch for Wi-Fi RS9116 and 917NCP that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>

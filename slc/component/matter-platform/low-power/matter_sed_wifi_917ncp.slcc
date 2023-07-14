@@ -1,7 +1,7 @@
 id: matter_sed_wifi_917ncp
 label: Sleepy end device component for 917ncp
 description: Enables the sed for 917ncp matter wifi applications
-package: "Matter"
+package: "WiFi|Platform|SED"
 category: Stack
 quality: production
 define:

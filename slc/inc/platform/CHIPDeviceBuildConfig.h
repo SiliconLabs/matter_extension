@@ -6,8 +6,11 @@
 #define SL_MATTER_STACK_LOCK_TRACKING_LOG       1
 #define SL_MATTER_STACK_LOCK_TRACKING_FATAL     2
 
-// configurable options
 #include "sl_matter_config.h"
+// configurable options
+#ifndef CCP_SI917_BRINGUP
+#include "sl_component_catalog.h"
+#endif
 
 // inferred options
 #include "sl_component_catalog.h"
@@ -30,7 +33,7 @@
 #define CHIP_DEVICE_CONFIG_ENABLE_WPA           SL_MATTER_ENABLE_WIFI
 #define CHIP_WITH_GIO                           SL_MATTER_ENABLE_WIFI
 #define OPENTHREAD_CONFIG_ENABLE_TOBLE          0
-#define CHIP_STACK_LOCK_TRACKING_ENABLED        (SL_MATTER_STACK_LOCK_TRACKING_MODE != SL_MATTER_STACK_LOCK_TRACKING_NONE)
+//#define CHIP_STACK_LOCK_TRACKING_ENABLED        (SL_MATTER_STACK_LOCK_TRACKING_MODE != SL_MATTER_STACK_LOCK_TRACKING_NONE)
 #define CHIP_STACK_LOCK_TRACKING_ERROR_FATAL    (SL_MATTER_STACK_LOCK_TRACKING_MODE == SL_MATTER_STACK_LOCK_TRACKING_FATAL)
 #define CHIP_DEVICE_CONFIG_RUN_AS_ROOT          1
 #define CHIP_DISABLE_PLATFORM_KVS               0

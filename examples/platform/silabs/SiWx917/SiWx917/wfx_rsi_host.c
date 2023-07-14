@@ -67,11 +67,6 @@ sl_status_t wfx_wifi_start(void)
     return SL_STATUS_OK;
 }
 
-int32_t wfx_rsi_platform()
-{
-    return wfx_rsi_init_platform();
-}
-
 /*********************************************************************
  * @fn  void wfx_enable_sta_mode(void)
  * @brief

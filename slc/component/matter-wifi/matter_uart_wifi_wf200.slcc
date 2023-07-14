@@ -21,6 +21,10 @@ provides:
   - name: matter_uart_wifi_wf200
 source:
   - path: examples/platform/silabs/efr32/uart.cpp
+include:
+- path: examples/platform/silabs/efr32
+  file_list:
+  - path: uart.h
 define:
   - name: CONFIG_ENABLE_UART
     condition:

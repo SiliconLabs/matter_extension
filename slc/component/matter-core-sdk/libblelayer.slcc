@@ -6,7 +6,6 @@ description: libblelayer
 id: libblelayer
 include:
 - path: examples/platform/silabs
-- path: examples/platform/silabs/efr32
 - path: src
   file_list:
   - path: ble/BleConfig.h

@@ -20,6 +20,6 @@ provides:
 -   name: matter_lock_common_codegen
 quality: production
 source:
--   path: out/lock-app_wifi_wf200/release/BRD4161A/gen/third_party/connectedhomeip/examples/lock-app/lock-common/app/callback-stub.cpp
+-   path: out/lock-app-wifi/BRD4187C/gen/third_party/connectedhomeip/examples/lock-app/lock-common/app/callback-stub.cpp
 ui_hints:
     visibility: never

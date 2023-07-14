@@ -6,7 +6,6 @@ description: dnssd_wifi
 id: dnssd_wifi
 include:
 - path: examples/platform/silabs
-- path: examples/platform/silabs/efr32
 - path: src
 - path: src/include
 - path: src/lib
@@ -59,7 +58,6 @@ include:
   - path: dnssd/minimal_mdns/responders/ReplyFilter.h
   - path: dnssd/minimal_mdns/ResponseBuilder.h
   - path: dnssd/minimal_mdns/QueryReplyFilter.h
-- path: src/platform/silabs/efr32
 - path: third_party/nlassert/repo/include
 - path: third_party/nlio/repo/include
 - path: zzz_generated/app-common

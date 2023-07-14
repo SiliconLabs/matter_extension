@@ -1930,4 +1930,44 @@
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application over Thread for BRD2601B</description>
 	</demo>
+	<demo name="brd4325b.demo.lighting_app_siwx917" label="Matter - SoC Lighting over Wi-Fi">
+		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4325b"/>
+		<property key="demos.imageFile" value="demos/BRD4325B/WiFi/SiWx917-lighting-example.rps"/>
+		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lighting Application for BRD4325B to be used with the 917 SoC</description>
+	</demo>
+	<demo name="brd4325b.demo.light_switch_app_siwx917" label="Matter - SoC Light Switch over Wi-Fi">
+		<property key="demos.blurb" value="Matter - SoC Light Switch app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4325b"/>
+		<property key="demos.imageFile" value="demos/BRD4325B/WiFi/SiWx917-light-switch-example.rps"/>
+		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Light Switch Application for BRD4325B to be used with the 917 SoC</description>
+	</demo>
+	<demo name="brd4325b.demo.lock_app_siwx917" label="Matter - SoC Lock over Wi-Fi">
+		<property key="demos.blurb" value="Matter - SoC Lock app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4325b"/>
+		<property key="demos.imageFile" value="demos/BRD4325B/WiFi/SiWx917-light-switch-example.rps"/>
+		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Lock Application for BRD4325B to be used with the 917 SoC</description>
+	</demo>
+	<demo name="brd4325b.demo.window_app_siwx917" label="Matter - SoC Window over Wi-Fi">
+		<property key="demos.blurb" value="Matter - SoC Window app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4325b"/>
+		<property key="demos.imageFile" value="demos/BRD4325B/WiFi/SiWx917-window-example.rps"/>
+		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Window Application for BRD4325B to be used with the 917 SoC</description>
+	</demo>
 </demos>

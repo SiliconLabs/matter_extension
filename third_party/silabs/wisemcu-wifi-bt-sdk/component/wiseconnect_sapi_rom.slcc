@@ -1,0 +1,15 @@
+id: wiseconnect_sapi_rom
+package: wiseconnect
+description: >
+  WiSeConnect rom component
+label: sapi rom
+category: sapi|rom
+quality: alpha
+requires:
+  - name: wiseconnect_sapi_core
+provides:
+  - name: wiseconnect_sapi_rom
+source:
+  - path: sapi/rom/rsi_network_rom.c
+include:
+  - path: sapi/rom

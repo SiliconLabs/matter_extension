@@ -1,0 +1,27 @@
+id: wiseconnect_sapi_core
+package: wiseconnect
+description: >
+  WiSeConnect SAPI core features
+label: sapi core
+category: sapi|core
+quality: alpha
+provides:
+  - name: wiseconnect_sapi_core
+
+
+include:
+  - path: sapi/include
+  - path: sapi/network/protocols
+
+requires:
+  - name: wiseconnect_sapi_common
+  - name: wiseconnect_sapi_crypto
+  - name: wiseconnect_sapi_driver
+  - name: wiseconnect_sapi_logging
+
+  - name: wiseconnect_sapi_ncp_mode
+    condition:
+      - wiseconnect_platform_ncp_mode
+  - name: wiseconnect_sapi_soc_mode
+    condition:
+      - wiseconnect_platform_soc_mode

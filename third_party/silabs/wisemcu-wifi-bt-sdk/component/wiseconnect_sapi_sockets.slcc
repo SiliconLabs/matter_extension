@@ -1,0 +1,19 @@
+id: wiseconnect_sapi_sockets
+package: wiseconnect
+description: >
+  WiSeConnect sockets component
+label: sapi sockets
+category: sapi|sockets
+quality: alpha
+requires:
+  - name: wiseconnect_sapi_core
+provides:
+  - name: wiseconnect_sapi_sockets
+source:
+  - path: sapi/network/protocols/rsi_dns.c
+  - path: sapi/network/protocols/rsi_emb_mqtt_client.c
+  - path: sapi/network/protocols/rsi_raw_data.c
+  - path: sapi/network/protocols/rsi_http_ota_fw_up.c
+  - path: sapi/network/protocols/rsi_dhcp_user_class.c
+include:
+  - path: sapi/network/protocols

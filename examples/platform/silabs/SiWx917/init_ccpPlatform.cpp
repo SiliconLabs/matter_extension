@@ -24,25 +24,34 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include <assert.h>
-#include <string.h>
-
-#include <mbedtls/platform.h>
-
 #include "init_ccpPlatform.h"
+#include "rsi_pll.h"
+#include "rsi_rom_clks.h"
+#include "sl_system_init.h"
+#include "sli_siwx917_soc.h"
+#include <assert.h>
+#include <mbedtls/platform.h>
+#include <string.h>
 
 void initAntenna(void);
 
 /* GPIO button config */
+// TODO: to be checked and add a header
+void soc_pll_config(void);
 void RSI_Wakeupsw_config(void);
 void RSI_Wakeupsw_config_gpio0(void);
 
 void init_ccpPlatform(void)
 {
+    sl_system_init();
 
+    // Configuration the clock rate
+    soc_pll_config();
+
+    // BTN0 and BTN1 init
     RSI_Wakeupsw_config();
-
     RSI_Wakeupsw_config_gpio0();
+
 #if SILABS_LOG_ENABLED
     silabsInitLog();
 #endif

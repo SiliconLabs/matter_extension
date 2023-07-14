@@ -35,3 +35,4 @@ include:
   - path: rsi_board_configuration.h
 define:
 - name: RSI_BLE_ENABLE
+- name: BLE_ENABLE

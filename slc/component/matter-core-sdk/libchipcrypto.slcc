@@ -6,7 +6,6 @@ description: libchipcrypto
 id: libchipcrypto
 include:
 - path: examples/platform/silabs
-- path: examples/platform/silabs/efr32
 - path: src
   file_list:
   - path: crypto/hsm/CHIPCryptoPALHsm.h
@@ -20,7 +19,6 @@ include:
   - path: crypto/RawKeySessionKeystore.h
 - path: src/include
 - path: src/lib
-- path: src/platform/silabs/efr32
 - path: third_party/nlassert/repo/include
 - path: third_party/nlio/repo/include
 - path: zzz_generated/app-common

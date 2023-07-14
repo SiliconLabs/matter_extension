@@ -1,0 +1,13 @@
+id: wiseconnect_sapi_http_client
+package: wiseconnect
+description: >
+  WiSeConnect http_client component
+label: sapi http_client
+category: sapi|http_client
+quality: alpha
+requires:
+  - name: wiseconnect_sapi_core
+provides:
+  - name: wiseconnect_sapi_http_client
+source:
+  - path: sapi/network/protocols/rsi_http_client.c

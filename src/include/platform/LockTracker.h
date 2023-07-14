@@ -35,7 +35,6 @@ namespace Platform {
 #if CHIP_STACK_LOCK_TRACKING_ENABLED
 
 namespace Internal {
-
 void AssertChipStackLockedByCurrentThread(const char * file, int line);
 
 } // namespace Internal

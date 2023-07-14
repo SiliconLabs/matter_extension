@@ -1,0 +1,32 @@
+category: Matter|Core
+define:
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+description: siwx917
+id: siwx917
+label: siwx917
+package: Matter
+requires:
+  - name: matter_siwx917_common
+provides:
+-   name: matter_siwx917
+quality: production
+source:
+-   path: src/platform/FreeRTOS/SystemTimeSupport.cpp
+-   path: src/platform/SingletonConfigurationManager.cpp
+-   path: src/platform/silabs/CHIPMem-Platform.cpp
+-   path: src/platform/silabs/ConnectivityManagerImpl_WIFI.cpp
+-   path: src/platform/silabs/DiagnosticDataProviderImpl.cpp
+-   path: src/platform/silabs/KeyValueStoreManagerImpl.cpp
+-   path: src/platform/silabs/Logging.cpp
+-   path: src/platform/silabs/MigrationManager.cpp
+-   path: src/platform/silabs/NetworkCommissioningWiFiDriver.cpp
+-   path: src/platform/silabs/SiWx917/BLEManagerImpl.cpp
+-   path: src/platform/silabs/SiWx917/CHIPCryptoPALTinyCrypt.cpp
+-   path: src/platform/silabs/SiWx917/ConfigurationManagerImpl.cpp
+-   path: src/platform/silabs/SiWx917/PlatformManagerImpl.cpp
+-   path: src/platform/silabs/SiWx917/bluetooth/wfx_sl_ble_init.c
+-   path: src/platform/silabs/SilabsConfig.cpp
+-   path: src/platform/silabs/platformAbstraction/WiseMcuSpam.cpp
+ui_hints:
+    visibility: never

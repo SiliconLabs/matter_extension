@@ -1,0 +1,15 @@
+id: wiseconnect_sapi_logging
+package: wiseconnect
+description: >
+  WiSeConnect logging component
+label: sapi logging
+category: sapi|logging
+quality: alpha
+requires:
+  - name: wiseconnect_sapi_core
+provides:
+  - name: wiseconnect_sapi_logging
+source:
+  - path: sapi/logging/sl_app_logging.c
+  - path: sapi/logging/sl_fw_logging.c
+  - path: utilities/advanced_logging/firmware_logging/firmware_logging_utils.c
