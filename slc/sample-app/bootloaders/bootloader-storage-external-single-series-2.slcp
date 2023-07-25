@@ -21,6 +21,7 @@ component:
   - id: bootloader_spi_controller_driver
   - id: bootloader_debug
   - id: bootloader_compression_lzma
+  - id: psa_crypto_config
 
 configuration:
   - name: BTL_STORAGE_BASE_ADDRESS

@@ -17,32 +17,16 @@
  *    limitations under the License.
  */
 
-#include <AppTask.h>
-
-#include "AppConfig.h"
 #include "init_ccpPlatform.h"
-#include <DeviceInfoProviderImpl.h>
-#include <app/server/Server.h>
-#include <credentials/DeviceAttestationCredsProvider.h>
-#include <matter_config.h>
-#ifdef SILABS_ATTESTATION_CREDENTIALS
-#include <examples/platform/silabs/SilabsDeviceAttestationCreds.h>
-#else
-#include <credentials/examples/DeviceAttestationCredsExample.h>
-#endif
+#include <AppTask.h>
+#include "AppConfig.h"
 
-#define BLE_DEV_NAME "SiLabs-Door-Lock"
 extern "C" void sl_button_on_change(uint8_t btn, uint8_t btnAction);
 
 using namespace ::chip;
-using namespace ::chip::Inet;
 using namespace ::chip::DeviceLayer;
-using namespace ::chip::Credentials;
 
 #define UNUSED_PARAMETER(a) (a = a)
-
-volatile int apperror_cnt;
-static chip::DeviceLayer::DeviceInfoProviderImpl gExampleDeviceInfoProvider;
 
 // ================================================================================
 // Main Code
@@ -50,28 +34,10 @@ static chip::DeviceLayer::DeviceInfoProviderImpl gExampleDeviceInfoProvider;
 int main(void)
 {
     init_ccpPlatform();
+    SILABS_LOG("init_ccpPlatform completed  ");
 
-    if (SilabsMatterConfig::InitMatter(BLE_DEV_NAME) != CHIP_NO_ERROR)
-        appError(CHIP_ERROR_INTERNAL);
-
-    gExampleDeviceInfoProvider.SetStorageDelegate(&Server::GetInstance().GetPersistentStorage());
-    chip::DeviceLayer::SetDeviceInfoProvider(&gExampleDeviceInfoProvider);
-
-    chip::DeviceLayer::PlatformMgr().LockChipStack();
-    // Initialize device attestation config
-#ifdef SILABS_ATTESTATION_CREDENTIALS
-    SetDeviceAttestationCredentialsProvider(SI917::GetSI917DacProvider());
-#else
-    SetDeviceAttestationCredentialsProvider(Examples::GetExampleDACProvider());
-#endif
-    chip::DeviceLayer::PlatformMgr().UnlockChipStack();
-
-    SILABS_LOG("Starting App Task");
-    if (AppTask::GetAppTask().StartAppTask() != CHIP_NO_ERROR)
-        appError(CHIP_ERROR_INTERNAL);
-
-    SILABS_LOG("Starting FreeRTOS scheduler");
-    vTaskStartScheduler();
+    // Create Main task and starting a scheduler
+    Create_application_task();
 
     // Should never get here.
     chip::Platform::MemoryShutdown();

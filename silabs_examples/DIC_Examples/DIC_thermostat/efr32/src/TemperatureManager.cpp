@@ -101,7 +101,7 @@ void TemperatureManager::AttributeChangeHandler(EndpointId endpointId, Attribute
 #ifdef DIC_ENABLE
         char buffer[BYTE];
         itoa(Temp, buffer, DECIMAL);
-        DIC_SendMsg("LocalTemperature/Temp",(const char *)(buffer));
+        dic_sendmsg("LocalTemperature/Temp",(const char *)(buffer));
 #endif
     }
     break;
@@ -113,7 +113,7 @@ void TemperatureManager::AttributeChangeHandler(EndpointId endpointId, Attribute
 #ifdef DIC_ENABLE
         char buffer[BYTE];
         itoa(coolingTemp, buffer, DECIMAL);
-        DIC_SendMsg("OccupiedCoolingSetpoint/coolingTemp",(const char *)(buffer));
+        dic_sendmsg("OccupiedCoolingSetpoint/coolingTemp",(const char *)(buffer));
 #endif
     }
     break;
@@ -125,7 +125,7 @@ void TemperatureManager::AttributeChangeHandler(EndpointId endpointId, Attribute
 #ifdef DIC_ENABLE
         char buffer[BYTE];
         itoa(heatingTemp, buffer, DECIMAL);
-        DIC_SendMsg("OccupiedHeatingSetpoint/heatingTemp", (const char *)(buffer));
+        dic_sendmsg("OccupiedHeatingSetpoint/heatingTemp", (const char *)(buffer));
 #endif
     }
     break;
@@ -155,8 +155,8 @@ void TemperatureManager::AttributeChangeHandler(EndpointId endpointId, Attribute
         }
         uint16_t current_temp = TempMgr().GetCurrentTemp();
         itoa(current_temp, buffer, DECIMAL);
-        DIC_SendMsg("thermostat/systemMode", Mode);
-        DIC_SendMsg("thermostat/currentTemp", (const char *)(buffer));
+        dic_sendmsg("thermostat/systemMode", Mode);
+        dic_sendmsg("thermostat/currentTemp", (const char *)(buffer));
 #endif
         if (mThermMode != mode)
         {

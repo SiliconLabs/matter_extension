@@ -41,6 +41,10 @@ public:
     int Update(void);
     void WriteDemoUI(bool state);
     void SetCustomUI(customUICB cb);
+#ifdef LCD_WITH_SLEEP
+    void TurnOn(void);
+    void TurnOff(void);
+#endif
 
 #ifdef QR_CODE_ENABLED
     void SetQRCode(uint8_t * str, uint32_t size);

@@ -21,6 +21,8 @@
 #include <lib/support/CHIPPlatformMemory.h>
 #include <platform/CHIPDeviceLayer.h>
 
+#include "main_task.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -29,9 +31,18 @@ extern "C" {
 #include "rsi_rom_clks.h"
 #include "sl_system_init.h"
 #include "sli_siwx917_soc.h"
+#include "em_core.h"
 #include <assert.h>
 #include <mbedtls/platform.h>
 #include <string.h>
+
+using namespace ::chip;
+using namespace ::chip::Inet;
+using namespace ::chip::DeviceLayer;
+using namespace ::chip::Credentials;
+
+volatile int apperror_cnt;
+static chip::DeviceLayer::DeviceInfoProviderImpl gExampleDeviceInfoProvider;
 
 void initAntenna(void);
 
@@ -44,6 +55,8 @@ void RSI_Wakeupsw_config_gpio0(void);
 void init_ccpPlatform(void)
 {
     sl_system_init();
+    // TODO: Setting the highest priority for SVCall_IRQn to avoid the HardFault issue
+    NVIC_SetPriority(SVCall_IRQn, CORE_INTERRUPT_HIGHEST_PRIORITY);
 
     // Configuration the clock rate
     soc_pll_config();
@@ -60,3 +73,59 @@ void init_ccpPlatform(void)
 #ifdef __cplusplus
 }
 #endif
+
+void application_start(const void *unused)
+{
+  sl_status_t status;
+  CHIP_ERROR err = CHIP_NO_ERROR;
+
+  SILABS_LOG("Wireless init starting");
+
+  if ((status = wfx_wifi_rsi_init()) != SL_STATUS_OK)
+  {
+      SILABS_LOG("wfx_wifi_start() failed: %s", status);
+      return;
+  }
+  SILABS_LOG("WIFI init completed");
+
+  if (SilabsMatterConfig::InitMatter(BLE_DEV_NAME) != CHIP_NO_ERROR)
+  {
+      appError(CHIP_ERROR_INTERNAL);
+  }
+
+  gExampleDeviceInfoProvider.SetStorageDelegate(&chip::Server::GetInstance().GetPersistentStorage());
+  chip::DeviceLayer::SetDeviceInfoProvider(&gExampleDeviceInfoProvider);
+
+  chip::DeviceLayer::PlatformMgr().LockChipStack();
+  // Initialize device attestation config
+#ifdef SILABS_ATTESTATION_CREDENTIALS
+  SetDeviceAttestationCredentialsProvider(Silabs::GetSilabsDacProvider());
+#else
+  SetDeviceAttestationCredentialsProvider(Examples::GetExampleDACProvider());
+#endif
+  chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+
+  SILABS_LOG("Starting App Task");
+#ifndef WINDOWS_APP
+  err = AppTask::GetAppTask().StartAppTask();
+#else
+  WindowApp & app = WindowApp::Instance();
+  err = app.Init();
+#endif
+
+  if (err != CHIP_NO_ERROR)
+  {
+      appError(CHIP_ERROR_INTERNAL);
+  }
+
+  // Terminating current teask
+  osThreadTerminate(main_Task);
+}
+
+void Create_application_task(void)
+{
+  main_Task = osThreadNew((osThreadFunc_t)application_start, NULL, &thread_attributes);
+
+  SILABS_LOG("Starting FreeRTOS scheduler");
+  vTaskStartScheduler();
+}

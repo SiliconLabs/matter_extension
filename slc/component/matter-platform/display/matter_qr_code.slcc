@@ -13,7 +13,5 @@ provides:
 conflicts:
   - name: matter_low_power
   - name: matter_sed
-  - name: matter_sed_wifi
-  - name: matter_sed_wifi_917ncp
 define:
   - name: QR_CODE_ENABLED

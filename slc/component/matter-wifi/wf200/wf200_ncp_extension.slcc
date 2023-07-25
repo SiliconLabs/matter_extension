@@ -3,7 +3,7 @@ label: wf200_ncp_extension
 package: Matter
 description: >
   WiSeConnect Wi-Fi and BLE extension for the Gecko SDK
-category: Wifi
+category: Matter-WiFi
 provides:
 - name: wf200_ncp_extension
 requires:

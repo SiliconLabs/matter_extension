@@ -2,7 +2,7 @@ id: matter_platform_siwx917
 label: Platform for SiWx917
 description: SiWx917 platform support for Matter
 package: "Matter"
-category: "WiFi|Platform"
+category: "Matter-WiFi|Platform"
 quality: production
 requires:
   - name: matter_siwx917
@@ -21,6 +21,7 @@ include:
     - path: BaseApplication.h
     - path: init_ccpPlatform.h
     - path: board_config.h
+    - path: main_task.h
 source:
   - path: examples/platform/silabs/SiWx917/BaseApplication.cpp
     unless: ["window_app"]

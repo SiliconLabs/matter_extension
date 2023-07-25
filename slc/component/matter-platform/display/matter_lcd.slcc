@@ -15,8 +15,6 @@ provides:
 conflicts:
   - name: matter_low_power
   - name: matter_sed
-  - name: matter_sed_wifi
-  - name: matter_sed_wifi_917ncp
 include:
   - path: examples/platform/silabs/display/
   - path: examples/window-app/silabs/efr32/include

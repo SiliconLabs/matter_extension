@@ -96,6 +96,12 @@ component:
 # Override RTT
   - id: matter_segger_rtt
     from: matter
+# Override psa crypto config
+  - id: matter_psa_crypto_config
+    from: matter
+  - id: matter_psa_crypto_builtin_override
+    from: matter
+
   - id: matter_temperature_sensor
     from: matter
   - id: sensor_rht

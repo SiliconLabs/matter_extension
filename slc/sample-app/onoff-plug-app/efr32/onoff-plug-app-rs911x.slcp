@@ -108,6 +108,11 @@ component:
   # Override RTT
   - id: matter_segger_rtt
     from: matter
+  # Override psa crypto config
+  - id: matter_psa_crypto_config
+    from: matter
+  - id: matter_psa_crypto_builtin_override
+    from: matter
 
 # Require LCD and QR Code components only on the boards that support LCD
 requires:

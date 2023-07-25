@@ -12,6 +12,9 @@ include:
 
 source:
 - path: examples/platform/silabs/SiWx917/device/src/startup_RS1xxxx.c
+  condition: [matter_si91x_dual_flash_nvm3]
+- path: examples/platform/silabs/SiWx917/device/src/startup_common_RS1xxxx.c
+  condition: [matter_si91x_common_flash_nvm3]
 
 provides:
   - name: siwx917_soc_custom_startup

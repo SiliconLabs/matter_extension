@@ -123,7 +123,7 @@
 #include "altcp_tcp.h"
 #include "lwip/tcp.h"
 #include "altcp_tls_mbedtls_structs.h"
-
+#include "efr32_utils.h"
 #include <string.h>
 
 extern const struct altcp_functions altcp_tcp_functions;
@@ -290,6 +290,7 @@ altcp_err(struct altcp_pcb *conn, altcp_err_fn err)
 void
 altcp_recved(struct altcp_pcb *conn, u16_t len)
 {
+  SILABS_LOG("altcp_recved");
   if (conn && conn->fns && conn->fns->recved) {
     conn->fns->recved(conn, len);
   }

@@ -101,6 +101,11 @@ component:
   # Override RTT
   - id: matter_segger_rtt
     from: matter
+  # Override psa crypto config
+  - id: matter_psa_crypto_config
+    from: matter
+  - id: matter_psa_crypto_builtin_override
+    from: matter
 
 requires:
 # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART

@@ -19,3 +19,11 @@ requires:
   - name: matter_sed
 provides:
   - name: matter_subscription_persistence
+conflicts:
+  - name: matter_thread_ftd
+  - name: matter_wifi
+  - name: matter_shell
+  - name: matter_thread_cli
+  - name: matter_qr_code
+  - name: matter_lcd
+  - name: matter_uart

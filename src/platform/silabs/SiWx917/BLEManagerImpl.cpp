@@ -726,24 +726,6 @@ void BLEManagerImpl::HandleConnectionCloseEvent(uint16_t reason)
 
     ChipLogProgress(DeviceLayer, "Disconnect Event for handle : %d", connHandle);
 
-#if CHIP_DEVICE_CONFIG_ENABLE_SED
-    int32_t status;
-    status = rsi_bt_power_save_profile(RSI_SLEEP_MODE_2, RSI_MAX_PSP);
-    if (status != RSI_SUCCESS)
-    {
-        // printf("BT Powersave Config Failed, Error Code : 0x%lX", status);
-        return;
-    }
-
-    status = rsi_wlan_power_save_profile(RSI_SLEEP_MODE_2, RSI_MAX_PSP);
-    if (status != RSI_SUCCESS)
-    {
-        // printf("WLAN Powersave Config Failed, Error Code : 0x%lX", status);
-        return;
-    }
-    // printf("Powersave Config Success");
-#endif
-
     if (RemoveConnection(connHandle))
     {
         ChipDeviceEvent event;

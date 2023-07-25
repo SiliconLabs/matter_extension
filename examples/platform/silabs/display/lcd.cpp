@@ -140,7 +140,17 @@ int SilabsLCD::Update(void)
      */
     return status;
 }
-
+#ifdef LCD_WITH_SLEEP
+void SilabsLCD::TurnOn()
+{
+    sl_board_enable_display();
+}
+void SilabsLCD::TurnOff()
+{
+    Clear();
+    sl_board_disable_display();
+}
+#endif // LCD_WITH_SLEEP
 void SilabsLCD::WriteDemoUI(bool state)
 {
 #ifdef QR_CODE_ENABLED

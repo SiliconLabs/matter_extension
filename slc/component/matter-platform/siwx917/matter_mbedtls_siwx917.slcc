@@ -3,7 +3,7 @@ label: Matter MbedTLS Integration
 description: >
   Mbedlts and Tinycrypt for SiWx917 SoC
 package: "Matter"
-category: "WiFi|Platform|Tinycrypt"
+category: "Matter-WiFi|Platform|Tinycrypt"
 quality: production
 provides:
   - name: matter_mbedtls_siwx917
@@ -42,6 +42,32 @@ source:
   - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/platform_util.c
   - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/x509_crt.c
   - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/x509write_csr.c
+  - path: third_party/mbedtls/repo/library/base64.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/debug.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/ecjpake.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/pem.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/rsa.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/rsa_internal.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/sha1.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/ssl_ciphersuites.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/ssl_cli.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/ssl_msg.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/ssl_srv.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/ssl_tls.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/x509.c
+    condition: [matter_dic]
 include:
   - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/inc
   - path: third_party/mbedtls/repo/library

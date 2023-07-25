@@ -29,6 +29,8 @@ source:
 - path: src/lib/shell/commands/Dns.cpp
 - path: src/lib/shell/commands/BLE.cpp
   condition: [matter_ble]
+- path: src/lib/shell/commands/BLE.cpp
+  condition: [matter_wifi_ble]
 - path: src/lib/shell/commands/WiFi.cpp
   condition: [matter_wifi]
 - path: src/lib/shell/commands/NFC.cpp

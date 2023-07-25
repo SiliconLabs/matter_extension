@@ -21,65 +21,28 @@
 #include <WindowApp.h>
 
 #include "init_ccpPlatform.h"
-#include <DeviceInfoProviderImpl.h>
-#include <app/server/Server.h>
-#include <credentials/DeviceAttestationCredsProvider.h>
-#include <matter_config.h>
-#ifdef SILABS_ATTESTATION_CREDENTIALS
-#include <examples/platform/silabs/SilabsDeviceAttestationCreds.h>
-#else
-#include <credentials/examples/DeviceAttestationCredsExample.h>
-#endif
-
-#define BLE_DEV_NAME "Silabs-Window"
 using namespace ::chip::DeviceLayer;
-using namespace ::chip::Credentials;
 
 #define UNUSED_PARAMETER(a) (a = a)
 
-volatile int apperror_cnt;
-static chip::DeviceLayer::DeviceInfoProviderImpl gExampleDeviceInfoProvider;
+WindowApp & app = WindowApp::Instance();
 
 // ================================================================================
 // Main Code
 // ================================================================================
 int main(void)
 {
-    CHIP_ERROR err = CHIP_NO_ERROR;
-
     init_ccpPlatform();
-    if (SilabsMatterConfig::InitMatter(BLE_DEV_NAME) != CHIP_NO_ERROR)
-        appError(CHIP_ERROR_INTERNAL);
+    SILABS_LOG("init_ccpPlatform completed ");
 
-    gExampleDeviceInfoProvider.SetStorageDelegate(&chip::Server::GetInstance().GetPersistentStorage());
-    chip::DeviceLayer::SetDeviceInfoProvider(&gExampleDeviceInfoProvider);
+    // Create Main task and starting a scheduler
+    Create_application_task();
 
-    WindowApp & app = WindowApp::Instance();
-
-    SILABS_LOG("Starting App");
-    chip::DeviceLayer::PlatformMgr().LockChipStack();
-    err = app.Init();
-    // Initialize device attestation config
-#ifdef SILABS_ATTESTATION_CREDENTIALS
-    SetDeviceAttestationCredentialsProvider(SILABS::GetSILABSDacProvider());
-#else
-    SetDeviceAttestationCredentialsProvider(Examples::GetExampleDACProvider());
-#endif
-    chip::DeviceLayer::PlatformMgr().UnlockChipStack();
-
-    if (err != CHIP_NO_ERROR)
-    {
-        SILABS_LOG("App Init failed");
-        appError(err);
-    }
-
-    err = app.Start();
-    if (err != CHIP_NO_ERROR)
-    {
-        SILABS_LOG("App Start failed");
-        appError(err);
-    }
+    // Should never get here.
+    chip::Platform::MemoryShutdown();
+    SILABS_LOG("vTaskStartScheduler() failed");
+    appError(CHIP_ERROR_INTERNAL);
 
     app.Finish();
-    return err.AsInteger();
+    return 0;
 }

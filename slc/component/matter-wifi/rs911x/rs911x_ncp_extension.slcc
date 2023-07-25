@@ -3,7 +3,7 @@ label: rs911x_ncp_extension
 description: >
   example platform
 package: Matter
-category: Wifi
+category: Matter-WiFi
 provides:
 - name: rs911x_ncp_extension
 requires:

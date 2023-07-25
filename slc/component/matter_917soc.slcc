@@ -57,13 +57,17 @@ provides:
   # Set provide used by SDK to suppress content that Matter provides
   - name: matter_integration
   - name: matter_917soc
-  - name: device_cortexm
   - name: device
-  - name: wiseconnect_toolchain_gcc_override 
+  - name: wiseconnect_toolchain_gcc_override
+  - name: matter_si91x_dual_flash_nvm3_enabled  
+    condition: [brd4325b]   
+  - name: matter_si91x_common_flash_nvm3_enabled  
+    condition: [brd4325c] 
+  - name: matter_si91x_common_flash_nvm3_enabled  
+    condition: [brd4325g] 
 
 requires:
   - name: cpp_support
-  - name: toolchain_gcc
   - name: matter_dnssd_wifi
   - name: matter_libinetlayer_wifi
   - name: matter_libdevicelayer_wifi
@@ -89,7 +93,8 @@ requires:
   - name: matter_libsystemlayer
   - name: matter_libtransportlayer
   - name: configuration_over_swo
-  - name: siwx917_soc_custom_startup    
+  - name: siwx917_soc_custom_startup
+  - name: device_init_nvic
 
 recommends:
   - id: matter_configuration_over_swo
