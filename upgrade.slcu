@@ -1,0 +1,12 @@
+upgrade:
+  - sdk:
+      id: matter
+      version: "2.1.0"
+    component:
+      - trigger: matter
+        description: >
+          Upgrading project to Matter 2.1.0, overriding PSA Crypto config
+        add:
+           - matter_psa_crypto_config
+           - matter_psa_crypto_builtin_override
+

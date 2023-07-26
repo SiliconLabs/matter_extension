@@ -1,16 +1,17 @@
+
 category: Clusters
 description: Implementation of the Basic Cluster
 id: matter_basic
 label: Basic Cluster
 quality: production
 provides:
-- name: matter_basic
+  - name: matter_basic
 source:
-- path: src/app/clusters/basic-information/basic-information.cpp
+  - path: src/app/clusters/basic-information/basic-information.cpp
 include:
-- path: src/app/clusters/basic-information/
-  file_list:
-  - path: basic-information.h
+  - path: src/app/clusters/basic-information/
+    file_list:
+      - path: basic.h
 template_contribution:
-- name: component_catalog
-  value: matter_basic
+  - name: component_catalog
+    value: matter_basic

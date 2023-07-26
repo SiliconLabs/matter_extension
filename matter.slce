@@ -5,6 +5,8 @@ label: "Silicon Labs Matter"
 sdk:
   id: gecko_sdk
   version: 4.3.1
+upgrade_manifest:
+  - path: upgrade.slcu
 component_path:
   - path: slc/component
   - path: slc/component/matter-core-sdk
