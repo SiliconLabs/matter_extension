@@ -13,5 +13,6 @@ provides:
 conflicts:
   - name: matter_low_power
   - name: matter_sed
+  - name: matter_sed_wifi
 define:
   - name: QR_CODE_ENABLED

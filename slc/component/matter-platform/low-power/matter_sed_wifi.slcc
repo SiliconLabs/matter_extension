@@ -11,12 +11,11 @@ define:
     value: 1
     condition:
      - rs911x_ncp_extension
-  - name: LCD_WITH_SLEEP
-    condition:
-     - wf200_ncp_extension
 provides:
   - name: matter_sed_wifi
 requires:
   - name: power_manager
 conflicts:
   - name: matter_shell
+  - name: matter_qr_code
+  - name: matter_lcd
