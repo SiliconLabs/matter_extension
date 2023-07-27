@@ -1,0 +1,14 @@
+id: wiseconnect_sapi_bleconfig
+package: wiseconnect
+description: >
+  WiSeConnect bleconfig component
+label: sapi bleconfig
+category: sapi|bleconfig
+quality: alpha
+requires:
+  - name: wiseconnect_sapi_core
+provides:
+  - name: wiseconnect_sapi_bleconfig
+
+define:
+  - name: BLE_CONFIGURATOR

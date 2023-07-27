@@ -1,0 +1,50 @@
+category: Matter|Core
+define:
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: HARD_FAULT_LOG_ENABLE
+description: pw_kvs
+id: pw_kvs
+include:
+-   path: examples/platform/efr32
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: src/lib/support/pw_log_chip/public
+-   path: src/lib/support/pw_log_chip/public_overrides
+-   path: src/platform/EFR32
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+-   path: third_party/pigweed/repo/pw_assert/assert_compatibility_public_overrides
+-   path: third_party/pigweed/repo/pw_assert/public
+-   path: third_party/pigweed/repo/pw_assert_log/check_backend_public_overrides
+-   path: third_party/pigweed/repo/pw_assert_log/public
+-   path: third_party/pigweed/repo/pw_bytes/public
+-   path: third_party/pigweed/repo/pw_checksum/public
+-   path: third_party/pigweed/repo/pw_containers/public
+-   path: third_party/pigweed/repo/pw_kvs/public
+-   path: third_party/pigweed/repo/pw_log/public
+-   path: third_party/pigweed/repo/pw_polyfill/public
+-   path: third_party/pigweed/repo/pw_polyfill/standard_library_public
+-   path: third_party/pigweed/repo/pw_preprocessor/public
+-   path: third_party/pigweed/repo/pw_result/public
+-   path: third_party/pigweed/repo/pw_span/public
+-   path: third_party/pigweed/repo/pw_status/public
+-   path: third_party/pigweed/repo/pw_stream/public
+-   path: zzz_generated/app-common
+label: pw_kvs
+package: Matter
+provides:
+-   name: matter_pw_kvs
+quality: production
+source:
+-   path: third_party/pigweed/repo/pw_kvs/alignment.cc
+-   path: third_party/pigweed/repo/pw_kvs/checksum.cc
+-   path: third_party/pigweed/repo/pw_kvs/entry.cc
+-   path: third_party/pigweed/repo/pw_kvs/entry_cache.cc
+-   path: third_party/pigweed/repo/pw_kvs/flash_memory.cc
+-   path: third_party/pigweed/repo/pw_kvs/format.cc
+-   path: third_party/pigweed/repo/pw_kvs/key_value_store.cc
+-   path: third_party/pigweed/repo/pw_kvs/sectors.cc
+ui_hints:
+    visibility: never

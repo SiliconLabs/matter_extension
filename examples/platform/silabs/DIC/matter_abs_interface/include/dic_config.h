@@ -28,7 +28,7 @@
 /* Task Configuration*/
 #define DIC_TASK_NAME "DIC"
 #define DIC_TASK_STACK_SIZE (2*1024)  //2k
-#define DIC_TASK_PRIORITY 2
+#define DIC_TASK_PRIORITY 5
 
 /* Network Configuration*/
 #define DIC_SERVER_PORT	8883
@@ -36,7 +36,7 @@
 #define DIC_KEEP_ALIVE 0
 
 #if USE_AWS
-
+#define DIC_CLIENT_ID "SQA_DIC_C3"
 #define DIC_CLIENT_USER NULL
 #define DIC_CLIENT_PASS NULL
 

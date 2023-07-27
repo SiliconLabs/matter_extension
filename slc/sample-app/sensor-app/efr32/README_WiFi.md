@@ -26,7 +26,7 @@ Silicon Labs platform.
 
 For more general information on running Matter applications and prerequisites see the online 
 documentation for Matter available on docs.silabs.com. Follow Wi-Fi instructions depending on the example you are running.
-[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.0.0/matter-wifi)
+[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.1.0/matter-wifi)
 
 ## Sensor Example User Interface
 
@@ -80,9 +80,9 @@ After 15 minutes, the advertisement stops.
 
 ## Provision and Control
 
-You can provision and control the Matter device using the Python controller, chip-tool standalone, Android or iOS app, or the Matter Hub provided by Silicon Labs. More information on using the Matter Hub can be found in the online [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.0.0/matter-thread/raspi-img)
+You can provision and control the Matter device using the Python controller, chip-tool standalone, Android or iOS app, or the Matter Hub provided by Silicon Labs. More information on using the Matter Hub can be found in the online [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.1.0/matter-thread/raspi-img)
 
-The pre-built chip-tool instance ships with the Matter Hub image which is available from Silicon Labs here: [Silicon Labs Matter Hub](https://www.silabs.com/documents/public/software/SilabsMatterPi_2.0.0-1.1.zip)
+The pre-built chip-tool instance ships with the Matter Hub image which is available from Silicon Labs here: [Silicon Labs Matter Hub](https://www.silabs.com/documents/public/software/SilabsMatterPi_2.1.0-1.1.zip)
     
 More information on using the chip-tool directly can be found here: [chip-tool](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
 

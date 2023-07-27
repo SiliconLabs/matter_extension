@@ -35,6 +35,10 @@
 #endif // QR_CODE_ENABLED
 #endif // DISPLAY_ENABLED
 
+#ifdef LCD_WITH_SLEEP
+#include "sl_sleeptimer.h"
+#endif // LCD_WITH_SLEEP
+
 #include <app-common/zap-generated/attributes/Accessors.h>
 #include <app-common/zap-generated/callback.h>
 #include <app-common/zap-generated/cluster-objects.h>
@@ -58,6 +62,13 @@
 #endif // SL_CATALOG_SIMPLE_BUTTON_PRESENT
 
 #define MODE_TIMER 1000 // 1s timer period
+
+#ifdef LCD_WITH_SLEEP 
+#define defaultTimeoutMs 10000
+#define timeoutMs 3000
+#define QRtimeoutMs 5000
+sl_sleeptimer_timer_handle_t timerHandle;
+#endif // LCD_WITH_SLEEP
 
 using namespace chip;
 using namespace chip::TLV;
@@ -175,6 +186,16 @@ CHIP_ERROR AppTask::StartAppTask()
     return BaseApplication::StartAppTask(AppTaskMain);
 }
 
+#ifdef LCD_WITH_SLEEP
+void lcdTimerCallback(sl_sleeptimer_timer_handle_t *handle, void *data)
+{
+    // Perform the desired task when the timer expires
+    (void)handle;
+    (void)data;
+    AppTask::GetLCD().TurnOff();
+}
+#endif // LCD_WITH_SLEEP
+
 void AppTask::AppTaskMain(void * pvParameter)
 {
     AppEvent event;
@@ -192,6 +213,11 @@ void AppTask::AppTaskMain(void * pvParameter)
 #endif
 
     SILABS_LOG("App Task started");
+
+#ifdef LCD_WITH_SLEEP
+    sl_sleeptimer_start_timer_ms(&timerHandle, defaultTimeoutMs, lcdTimerCallback, NULL, 0, SL_SLEEPTIMER_NO_HIGH_PRECISION_HF_CLOCKS_REQUIRED_FLAG);
+#endif // LCD_WIth_SLEEP 
+
     while (true)
     {
         BaseType_t eventReceived = xQueueReceive(sAppEventQueue, &event, portMAX_DELAY);
@@ -235,6 +261,11 @@ void AppTask::UpdateThermoStatUI()
     if (ConnectivityMgr().IsThreadProvisioned())
 #endif /* !SL_WIFI */
     {
+#ifdef LCD_WITH_SLEEP 
+        AppTask::GetLCD().TurnOn();
+        // Start the timer with the specified duration and callback function
+        sl_sleeptimer_restart_timer_ms(&timerHandle, timeoutMs, lcdTimerCallback, NULL, 0, SL_SLEEPTIMER_NO_HIGH_PRECISION_HF_CLOCKS_REQUIRED_FLAG);
+#endif // LCD_WIth_SLEEP
         AppTask::GetAppTask().GetLCD().WriteDemoUI(false); // State doesn't Matter
     }
 #else
@@ -257,6 +288,10 @@ void AppTask::ButtonEventHandler(const sl_button_t * buttonHandle, uint8_t btnAc
 
     if (buttonHandle == APP_FUNCTION_BUTTON)
     {
+#ifdef LCD_WITH_SLEEP
+        AppTask::GetLCD().TurnOn();
+        sl_sleeptimer_restart_timer_ms(&timerHandle, QRtimeoutMs, lcdTimerCallback, NULL, 0, SL_SLEEPTIMER_NO_HIGH_PRECISION_HF_CLOCKS_REQUIRED_FLAG);
+#endif //LCD_WITH_SLEEP
         aEvent.Handler = BaseApplication::ButtonHandler;
         sAppTask.PostEvent(&aEvent);
     }

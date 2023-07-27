@@ -1,0 +1,44 @@
+id: matter_si91x_common_flash_nvm3
+label: matter_si91x_common_flash_nvm3
+package: "Matter"
+description: >
+  NVM3 component for 917SoC common Flash
+category: Matter-WiFi|Platform|si91x|Middleware
+quality: production
+component_root_path: "third_party/silabs/wifi_sdk/components/siwx917_soc/drivers/middleware/nvm3"
+define:
+  - name: EXT_IRQ_COUNT
+    value: "75"
+  - name: SRAM_BASE
+    value: "0x0C000000UL"
+  - name: SRAM_SIZE
+    value: "0x00040000UL"
+  - name: RSI_M4_INTERFACE
+  - name: FLASH_PAGE_SIZE
+  - name: __STATIC_INLINE
+    value: "static inline"
+  - name: RSI_SAMPLE_HAL
+    value: 1
+  - name: SL_NVM3_PRESENT
+    value: 1
+  - name: SI917_COMMON_FLASH
+    value: 1
+
+source:
+  - path: "src/sl_si91x_common_flash_intf.c"
+  - path: "src/sl_si91x_nvm3_hal_flash.c"
+include:
+  - path: "inc"
+    file_list:
+    - path: "nvm3_default_config.h"
+    - path: "sl_si91x_flash_intf.h"
+    - path: "sl_si91x_common_flash_intf.h"
+requires:
+  - name: sl_system_init
+  - name: matter_nvm3_lib
+  - name: emlib_core
+template_contribution:
+  - name: nvm3_enable
+    value: true
+provides:
+  - name: matter_si91x_common_flash_nvm3

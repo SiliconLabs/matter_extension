@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.0.0"
+    version: "2.1.0"
 
 component:
   - id: device_init
@@ -37,6 +37,8 @@ component:
   - id: wf200_ncp_extension
     from: matter
 
+  - id: matter_sensor
+    from: matter   
   - id: app_common
     from: matter
 
@@ -91,6 +93,11 @@ component:
     from: matter
   # Override RTT
   - id: matter_segger_rtt
+    from: matter
+  # Override psa crypto config
+  - id: matter_psa_crypto_config
+    from: matter
+  - id: matter_psa_crypto_builtin_override
     from: matter
   - id: matter_occupancy_sensor_type
     from: matter

@@ -18,27 +18,18 @@
 
 #pragma once
 
-#include <stdint.h>
+#ifdef HEAP_MONITORING
+#include "FreeRTOS.h"
 
-struct RgbColor_t
+#define MONITORING_STACK_SIZE_byte 1024
+
+class MemMonitoring
 {
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
+public:
+    static void startHeapMonitoring();
+
+private:
+    static void HeapMonitoring(void * pvParameter);
 };
 
-struct HsvColor_t
-{
-    uint8_t h;
-    uint8_t s;
-    uint8_t v;
-};
-
-struct XyColor_t
-{
-    uint16_t x;
-    uint16_t y;
-};
-
-RgbColor_t XYToRgb(uint8_t Level, uint16_t currentX, uint16_t currentY);
-RgbColor_t HsvToRgb(HsvColor_t hsv);
+#endif

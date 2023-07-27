@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.0.0"
+    version: "2.1.0"
 
 component:
   - id: device_init
@@ -39,6 +39,8 @@ component:
   - id: rs911x_ncp_extension
     from: matter
 
+  - id: matter_lock
+    from: matter   
   - id: app_common
     from: matter
 
@@ -98,21 +100,19 @@ component:
   # Override RTT
   - id: matter_segger_rtt
     from: matter
+  # Override psa crypto config
+  - id: matter_psa_crypto_config
+    from: matter
+  - id: matter_psa_crypto_builtin_override
+    from: matter
+
+#  - id: matter_lcd // TODO: Enable this feature once MG24 has LCD and QR code support
+#    from: matter
+#  - id: matter_qr_code
+#    from: matter
 
 # Require LCD and QR Code components only on the boards that support LCD
 requires:
-  - name: matter_lcd
-    condition:
-    - device_series_1
-#  - name: matter_lcd // TODO: We need enable this feature after CSA changes merged
-#    condition:
-#    - device_series_2
-  - name: matter_qr_code
-    condition:
-    - device_series_1
-#  - name: matter_qr_code // TODO: We need enable this feature after CSA changes merged
-#    condition:
-#    - device_series_2
   - name: spidrv_instance
   - name: uartdrv_eusart
     condition:
@@ -137,8 +137,6 @@ include:
       - path: AppTask.h
       - path: LockManager.h
       - path: CHIPProjectConfig.h
-      - path: EventHandlerLibShell.h
-        condition: [matter_shell]
     directory: include
 
 source:
@@ -149,9 +147,6 @@ source:
   - path: ../../../../examples/lock-app/silabs/efr32/src/main.cpp
     directory: src
   - path: ../../../../examples/lock-app/silabs/efr32/src/ZclCallbacks.cpp
-    directory: src
-  - path: ../../../../examples/lock-app/silabs/efr32/src/EventHandlerLibShell.cpp
-    condition: [matter_shell]
     directory: src
     
 define:

@@ -1,0 +1,66 @@
+id: matter_platform_siwx917
+label: Platform for SiWx917
+description: SiWx917 platform support for Matter
+package: "Matter"
+category: "Matter-WiFi|Platform"
+quality: production
+requires:
+  - name: matter_siwx917
+  - name: matter_siwx917_common
+provides:
+  - name: matter_platform_siwx917
+  - name: freertos_heap
+include:
+  - path: examples/platform/silabs
+    file_list:
+    - path: heap_4_silabs.h
+    - path: matter_config.h
+  - path: examples/platform/silabs/SiWx917
+    file_list:
+    - path: siwx917_utils.h
+    - path: BaseApplication.h
+    - path: init_ccpPlatform.h
+    - path: board_config.h
+    - path: main_task.h
+source:
+  - path: examples/platform/silabs/SiWx917/BaseApplication.cpp
+    unless: ["window_app"]
+  - path: examples/platform/silabs/SiWx917/siwx917_utils.cpp
+  - path: examples/platform/silabs/heap_4_silabs.c
+  - path: examples/platform/silabs/SiWx917/init_ccpPlatform.cpp
+  - path: examples/platform/silabs/SiWx917/matter_config.cpp
+  - path: examples/platform/silabs/SiWx917/SiWx917/hal/rsi_hal_mcu_m4.c
+  - path: examples/platform/silabs/SiWx917/SiWx917/hal/rsi_hal_mcu_platform_init.c
+define:
+  - name: SL_WFX_CONFIG_SCAN
+    value: 1
+  - name: SL_HEAP_SIZE
+    value: 32768
+  - name: SL_WIFI
+    value: 1
+  - name: CHIP_9117
+    value: 1
+  - name: RS911X_WIFI
+  - name: SL_CATALOG_MATTER_BLE_PRESENT
+  - name: ROMDRIVER_PRESENT
+toolchain_settings:
+  - option: gcc_linker_option
+    value: "-Wl,--wrap=malloc"
+  - option: gcc_linker_option
+    value: "-Wl,--wrap=free"
+  - option: gcc_linker_option
+    value: "-Wl,--wrap=realloc"
+  - option: gcc_linker_option
+    value: "-Wl,--wrap=calloc"
+  - option: gcc_linker_option
+    value: "-Wl,--wrap=MemoryAlloc"
+    # Wrap these in case internal newlib call them (e.g. strdup will)
+    # directly call _malloc_r)
+  - option: gcc_linker_option
+    value: "-Wl,--wrap=_malloc_r"
+  - option: gcc_linker_option
+    value: "-Wl,--wrap=_realloc_r"
+  - option: gcc_linker_option
+    value: "-Wl,--wrap=_free_r"
+  - option: gcc_linker_option
+    value: "-Wl,--wrap=_calloc_r"

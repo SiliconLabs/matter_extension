@@ -112,3 +112,4 @@ requires:
 recommends:
   - id: matter_configuration_over_swo
   - id: matter_segger_rtt
+  - id: matter_psa_crypto_config

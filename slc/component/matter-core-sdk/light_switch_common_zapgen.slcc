@@ -1,0 +1,28 @@
+category: Matter|Core
+define:
+-   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+description: light_switch_common_zapgen
+id: light_switch_common_zapgen
+include:
+-   path: examples/light-switch-app/silabs/common
+-   path: examples/platform/silabs
+-   path: examples/platform/silabs/efr32
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: src/platform/silabs/efr32
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+-   path: zzz_generated/app-common
+label: light_switch_common_zapgen
+package: Matter
+provides:
+-   name: matter_light_switch_common_zapgen
+quality: production
+source:
+-   path: out/light-switch-app-wifi/BRD4187C/gen/third_party/connectedhomeip/examples/light-switch-app/light-switch-common/zapgen/zap-generated/IMClusterCommandHandler.cpp
+ui_hints:
+    visibility: never

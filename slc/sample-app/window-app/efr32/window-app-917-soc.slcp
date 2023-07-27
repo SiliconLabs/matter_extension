@@ -1,0 +1,192 @@
+project_name: window-app-917-soc
+label: Matter Window App
+description: >
+  Matter window-app For WiFi
+quality: production
+package: Matter
+
+sdk_extension:
+  - id: matter
+    version: "2.1.0"
+  - id: wiseconnect3_sdk
+    version: "3.0.10"
+
+provides:
+  - name: window_app
+
+component:
+
+  - id: matter_wstk_leds
+    from: matter
+
+  - id: matter_917soc
+    from: matter
+  - id: matter_wifi_ble
+    from: matter
+  - id: matter_mbedtls_siwx917
+    from: matter
+  - id: matter_si91x_dual_flash_nvm3
+    from: matter
+  - id: silabs_factory_data_provider
+    from: matter
+
+  - id: matter_wifi
+    from: matter
+    
+  - id: app_common
+    from: matter
+
+  - id: matter_access_control
+    from: matter
+  - id: matter_administrator_commissioning
+    from: matter
+  - id: matter_basic
+    from: matter
+  - id: matter_descriptor
+    from: matter
+  - id: matter_ethernet_network_diagnostics
+    from: matter
+  - id: matter_fixed_label
+    from: matter
+  - id: matter_general_commissioning
+    from: matter
+  - id: matter_general_diagnostics
+    from: matter
+  - id: matter_group_key_mgmt
+    from: matter
+  - id: matter_groups
+    from: matter
+  - id: matter_identify
+    from: matter
+  - id: matter_localization_configuration
+    from: matter
+  - id: matter_network_commissioning
+    from: matter
+  - id: matter_operational_credentials
+    from: matter
+  - id: matter_ota_requestor
+    from: matter
+  - id: matter_power_source
+    from: matter
+  - id: matter_scenes
+    from: matter
+  - id: matter_software_diagnostics
+    from: matter
+  - id: matter_thread_network_diagnostics
+    from: matter
+  - id: matter_time_format_localization
+    from: matter
+  - id: matter_user_label
+    from: matter
+  - id: matter_wifi_network_diagnostics
+    from: matter
+  - id: matter_window_covering
+    from: matter
+  # Override configuration for JTAG use
+  - id: matter_configuration_over_swo
+    from: matter
+  # Override RTT
+  - id: matter_segger_rtt
+    from: matter
+
+  - id: matter_ota_requestor
+    from: matter
+  - id: si91x
+    from: wiseconnect3_sdk
+  - id: wifi
+    from: wiseconnect3_sdk
+  - id: basic_network_manager
+    from: wiseconnect3_sdk
+  - id: si91x_basic_buffers
+    from: wiseconnect3_sdk
+  - id: siwx917_soc
+    from: wiseconnect3_sdk
+  - id: freertos
+  - id: slist
+  - id: sl_assert
+  - id: cmsis_rtos2_init
+  - id: matter_platform_siwx917
+    from: matter
+  - id: si91x_support
+    from: wiseconnect3_sdk
+  - id: wifi_resources
+    from: wiseconnect3_sdk
+  - id: ble
+    from: wiseconnect3_sdk
+  - id: network_manager
+    from: wiseconnect3_sdk
+     
+config_file:
+  - path: ../../../../examples/window-app/common/window-app.zap
+    directory: common
+
+include:
+  - path: ../../../../examples/window-app/silabs/SiWx917/include
+    file_list:
+    - path: AppConfig.h
+    - path: CHIPProjectConfig.h
+    - path: LcdPainter.h
+      condition: [matter_lcd]
+    - path: WindowAppImpl.h
+    directory: include
+
+  - path: ../../../../examples/window-app/common/include
+    file_list:
+    - path: WindowApp.h
+    directory: include
+
+source:
+  - path: ../../../../examples/window-app/silabs/SiWx917/src/LcdPainter.cpp
+    condition: [matter_lcd]
+    directory: src
+  - path: ../../../../examples/window-app/silabs/SiWx917/src/WindowAppImpl.cpp
+    directory: src
+  - path: ../../../../examples/window-app/silabs/SiWx917/src/main.cpp
+    directory: src
+  - path: ../../../../examples/window-app/common/src/WindowApp.cpp
+    directory: src
+  - path: ../../../../examples/window-app/common/src/ZclCallbacks.cpp
+    directory: src
+
+define:
+  - name: CCP_SI917_BRINGUP
+  - name: KVS_MAX_ENTRIES
+    value: "255"
+  - name: CHIP_CRYPTO_PLATFORM
+    value: "1"
+  - name: _WANT_REENT_SMALL
+    value: "1"
+  - name: NVM3_DEFAULT_NVM_SIZE
+    value: "40960"
+  - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
+    value: "4092"
+  - name: SI917_SOC
+    value: 1
+
+toolchain_settings:
+  - option: gcc_c++_compiler_option
+    value: -std=gnu++17
+  - option: nano_c_libs
+    value: enabled
+template_contribution:
+  - name: memory_flash_start
+    value: 0x08012000
+  - name: memory_flash_size
+    value: 0x400000
+  - name: memory_ram_start
+    value: 0x400
+  - name: memory_ram_size
+    value: 0x3E800
+
+readme:
+  - path: ./README_WiFi.md
+ui_hints:
+  highlight:
+    - path: README_WiFi.md
+      focus: false
+
+tag:
+  - hardware:component:led:2+
+
+post_build:
+  path: ../../../postbuild/matter_wifi_soc.slpb

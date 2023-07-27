@@ -8,6 +8,7 @@ quality: production
 provides:
 - name: matter_lwip
 - name: lwip
+- name: si91x_networking_model
 include:
 - path: src/lwip/silabs
   file_list:

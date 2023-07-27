@@ -1,0 +1,18 @@
+id: wiseconnect_sapi_ncp_mode
+package: wiseconnect
+description: >
+  WiSeConnect ncp_mode component
+label: sapi ncp_mode
+category: sapi|ncp_mode
+quality: alpha
+requires:
+  - name: wiseconnect_sapi_core
+provides:
+  - name: wiseconnect_sapi_ncp_mode
+
+define:
+  - name: WISECONNECT
+  - name: RSI_SAMPLE_HAL
+  - name: RSI_DEBUG_PRINTS
+  - name: RSI_WLAN_ENABLE
+  - name: CHIP_9117

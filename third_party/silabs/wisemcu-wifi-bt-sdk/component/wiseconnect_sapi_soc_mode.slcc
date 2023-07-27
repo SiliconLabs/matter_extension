@@ -1,0 +1,20 @@
+id: wiseconnect_sapi_soc_mode
+package: wiseconnect
+description: >
+  WiSeConnect soc_mode component
+label: sapi soc_mode
+category: sapi|soc_mode
+quality: alpha
+requires:
+  - name: wiseconnect_sapi_core
+provides:
+  - name: wiseconnect_sapi_soc_mode
+source:
+  - path: sapi/common/rsi_wisemcu_hardware_setup.c
+define:
+  - name: RSI_SAMPLE_HAL
+  - name: RSI_M4_INTERFACE
+  - name: RSI_DEBUG_PRINTS
+  - name: RSI_WLAN_ENABLE
+  - name: RSI_DEBUG_PRINTS
+  - name: CHIP_9117

@@ -1,0 +1,13 @@
+id: matter_psa_crypto_builtin_override
+package: "Matter"
+label: Matter PSA Crypto built-in override
+description: >-
+  Matter override for PSA Crypto built-in autogen file
+category: Platform
+quality: production
+
+provides:
+  - name: matter_psa_crypto_builtin_override
+
+config_file:
+  - path: slc/config/sli_psa_builtin_config_autogen.h

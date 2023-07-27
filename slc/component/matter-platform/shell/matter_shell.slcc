@@ -29,12 +29,18 @@ source:
 - path: src/lib/shell/commands/Dns.cpp
 - path: src/lib/shell/commands/BLE.cpp
   condition: [matter_ble]
+- path: src/lib/shell/commands/BLE.cpp
+  condition: [matter_wifi_ble]
 - path: src/lib/shell/commands/WiFi.cpp
   condition: [matter_wifi]
 - path: src/lib/shell/commands/NFC.cpp
   condition: [matter_nfc]
 - path: src/lib/shell/commands/Ota.cpp
   condition: [matter_ota_support]
+- path: examples/lock-app/silabs/efr32/src/EventHandlerLibShell.cpp
+  condition:
+    - matter_lock
+
 include:
 - path: src/lib/shell
   file_list:
@@ -51,6 +57,10 @@ include:
   file_list:
   - path: ChipShellCollection.h
   - path: Globals.h
+- path: examples/lock-app/silabs/efr32/include
+  file_list:
+    - path: EventHandlerLibShell.h
+      condition: matter_lock
 define:
 - name: ENABLE_CHIP_SHELL
 - name: OPENTHREAD_CONFIG_CLI_TRANSPORT

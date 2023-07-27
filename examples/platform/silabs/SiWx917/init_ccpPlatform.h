@@ -23,6 +23,7 @@ extern "C" {
 #endif
 
 void init_ccpPlatform(void);
+void Create_application_task(void);
 #ifdef __cplusplus
 }
 #endif

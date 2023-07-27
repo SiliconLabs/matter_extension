@@ -1,0 +1,15 @@
+id: wiseconnect_sapi_firmware_update
+package: wiseconnect
+description: >
+  WiSeConnect firmware_update component
+label: sapi firmware_update
+category: sapi|firmware_update
+quality: alpha
+requires:
+  - name: wiseconnect_sapi_core
+provides:
+  - name: wiseconnect_sapi_firmware_update
+source:
+  - path: sapi/network/protocols/rsi_firmware_upgradation.c
+include:
+  - path: sapi/network/protocols

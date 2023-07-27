@@ -33,7 +33,7 @@ declare_args() {
   sl_wfx_config_scan = true
 
   # Argument to force enable WPA3 security on rs91x
-  rs91x_wpa3_only = false
+  rs91x_wpa3_transition = false
 
   # use commissionable data for SiWx917
   siwx917_commissionable_data = false
@@ -50,7 +50,6 @@ import("${silabs_common_plat_dir}/SiWx917/args.gni")
 # Sanity check
 assert(chip_enable_wifi)
 import("${chip_root}/src/platform/silabs/SiWx917/args.gni")
-wisemcu_sdk_root = "${chip_root}/third_party/silabs/wisemcu-wifi-bt-sdk"
 silabs_common_plat_dir = "${chip_root}/examples/platform/silabs"
 
 config("chip_examples_project_config") {
@@ -108,8 +107,6 @@ source_set("siwx917-matter-shell") {
 
     sources = [
       "${silabs_common_plat_dir}/matter_shell.cpp",
-      "${wisemcu_sdk_root}/platforms/si91x/drivers/cmsis_driver/UDMA.c",
-      "${wisemcu_sdk_root}/platforms/si91x/drivers/cmsis_driver/USART.c",
     ]
     include_dirs = [
       ".",
@@ -218,8 +215,8 @@ config("silabs-wifi-config") {
     defines += [ "CHIP_DEVICE_CONFIG_ENABLE_IPV4" ]
   }
 
-  if (rs91x_wpa3_only) {
-    defines += [ "WIFI_ENABLE_SECURITY_WPA3=1" ]
+  if (rs91x_wpa3_transition) {
+    defines += [ "WIFI_ENABLE_SECURITY_WPA3_TRANSITION=1" ]
   }
 }
 
@@ -245,7 +242,7 @@ source_set("siwx917-common") {
     "${wifi_sdk_dir}/ethernetif.cpp",
     "${wifi_sdk_dir}/lwip_netif.cpp",
     "${wifi_sdk_dir}/wfx_notify.cpp",
-    "SiWx917/rsi_if.c",
+    "SiWx917/sl_wifi_if.c",
     "SiWx917/wfx_rsi_host.c",
     "init_ccpPlatform.cpp",
     "matter_config.cpp",

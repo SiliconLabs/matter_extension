@@ -1,0 +1,28 @@
+id: toolchain_gcc_dual
+label: GCC Toolchain
+package: Matter
+description: Toolchain support for GCC
+category: Platform|Toolchain
+quality: production
+root_path: slc/component
+tag:
+  - toolchain:id:gcc
+provides:
+  - name: toolchain_gcc_dual
+requires:
+  - name: toolchain_variant
+  - name: toolchain_variant_arm
+template_file:
+  - path: linkerfile_dual.ld.jinja
+    condition: [matter_si91x_dual_flash_nvm3_enabled]  
+library:
+  - system: gcc
+  - system: c
+  - system: m
+  - system: nosys
+toolchain_settings:
+  - option: linkerfile
+#    value: /home/sekumar/MatterSlc/matter/examples/platform/silabs/SiWx917/ldscripts/linkerfile_Dual_sharad.ld
+#    value: /examples/platform/silabs/SiWx917/ldscripts/linkerfile_Dual_sharad.ld
+    value: autogen/linkerfile_dual.ld
+    condition: [matter_si91x_dual_flash_nvm3_enabled]      

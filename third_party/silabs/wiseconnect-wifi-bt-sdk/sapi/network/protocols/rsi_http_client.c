@@ -29,7 +29,6 @@ uint8_t *rsi_itoa(uint32_t val, uint8_t *str);
 /*==============================================*/
 /**
  * @brief      Send HTTP get request to remote HTTP server. This is a non-blocking API.
- * @pre  \ref rsi_config_ipaddress() API needs to be called before this API.
  * @param[in]  flags            -  Select version and security \n
  *  
  *   Flags |     Macro       |          Description
@@ -53,25 +52,21 @@ uint8_t *rsi_itoa(uint32_t val, uint8_t *str);
  * @param[out]  status                           - Status of response from module. This will return failure upon an internal error only.
  * @param[out]  buffer                           - Buffer pointer
  * @param[out]  length                           - Length of data
- * @param[out]  more_data                        - 1  No more data, 0  More data present
- * @param[out]  status_code          HTTP response code as returned by server in HTTP header. e.g., 200, 201, 404, etc.
- *                                   This field is valid only when status field (first argument) is successful, indicating
- *                                   a response is received from HTTP server. A status_code equal to 0 indicates that
- *                                   there was no HTTP header in the received packet, probably a continuation of the frame
- *                                   body received in the previous chunk.
- *                                   This field is available, if the feature  RSI_HTTP_STATUS_INDICATION_EN
- *                                   is enabled in rsi_wlan_config.h
+ * @param[out]  more_data                        - 1  No more data, \n 0  More data present
+ * @param[out]  status_code                      - HTTP response code as returned by server in HTTP header. e.g., 200, 201, 404, etc. \n
+ *                                                 This field is valid only when status field (first argument) is successful, indicating a response is received from HTTP server. \n
+ *                                                 A status_code equal to 0 indicates that there was no HTTP header in the received packet, probably a continuation of the frame \n
+ *                                                 body received in the previous chunk. \n
+ *                                                 This field is available, if the feature  RSI_HTTP_STATUS_INDICATION_EN is enabled in rsi_wlan_config.h                                  
  * @return      0                 -  Success  \n
- *              Negative value    - Failure \n
- *              -2                - Invalid parameters \n
- *				      -3                - Command given in wrong state \n
- *				      -4                - Buffer not available to serve the command
- * @note        HTTP server port is configurable on non-standard port also \n 
- *              Refer to Error Codes section for the description of the above error codes \ref error-codes.
+ * @return      Negative value    - Failure (**Possible Error Codes** - 0xfffffffe, 0xfffffffd, 0xfffffffc) \n
+ * @note        **Precondition** - \ref rsi_config_ipaddress() API needs to be called before this API.
+ * @note        HTTP server port is configurable on non-standard port. \n 
+ * @note        Refer to \ref error-codes for the description of above error codes.
  *
  */
 
-int32_t rsi_http_client_get_async(uint8_t flags,
+int32_t rsi_http_client_get_async(uint16_t flags,
                                   uint8_t *ip_address,
                                   uint16_t port,
                                   uint8_t *resource,
@@ -115,7 +110,6 @@ int32_t rsi_http_client_get_async(uint8_t flags,
 /*==============================================*/
 /**
  * @brief      Send HTTP post request to remote HTTP server. This is a non-blocking API.
- * @pre  \ref rsi_config_ipaddress() API needs to be called before this API.
  * @param[in]  flags            -  Select version and security \n
  * 
  *   Flags |     Macro       |          Description
@@ -142,22 +136,18 @@ int32_t rsi_http_client_get_async(uint8_t flags,
  * @param[in]  buffer                            - Buffer pointer
  * @param[in]  length                            - Length of data
  * @param[in]  moredata                          - 1  No more data, 0  More data present, 2  HTTP post success response
- * @param[in]  status_code                        HTTP response code as returned by server in HTTP header. e.g., 200, 201, 404, etc.
- *                                                This field is valid only when status field (first argument) is successful, indicating
- *                                                a response is received from HTTP server. A status_code equal to 0 indicates that
- *                                                there was no HTTP header in the received packet, probably a continuation of the frame
- *                                                body received in the previous chunk.
- *                                                This field is available, if the feature  RSI_HTTP_STATUS_INDICATION_EN
- *                                                is enabled in rsi_wlan_config.h
- * @return      0                                -  Success  \n
- *              Negative Value                   - Failure \n
- *              -2                               - Invalid parameters \n
- *				      -3                               - Command given in wrong state \n
- *				      -4                               - Buffer not available to serve the command
- * @note        Refer to Error Codes section for the description of the above error codes \ref error-codes.
+ * @param[in]  status_code                         HTTP response code as returned by server in HTTP header. e.g., 200, 201, 404, etc. \n
+ *                                                 This field is valid only when status field (first argument) is successful, indicating \n
+ *                                                 a response is received from HTTP server. A status_code equal to 0 indicates that \n
+ *                                                 there was no HTTP header in the received packet, probably a continuation of the frame body received in the previous chunk. \n
+ *                                                 This field is available, if the feature  RSI_HTTP_STATUS_INDICATION_EN is enabled in rsi_wlan_config.h \n                                               
+ * @return      0                -  Success  \n
+ * @return      Negative value   - Failure (**Possible Error Codes** - 0xfffffffe, 0xfffffffd, 0xfffffffc) \n
+ * @note        **Precondition** - \ref rsi_config_ipaddress() API needs to be called before this API.
+ * @note        Refer to \ref error-codes for the description of above error codes.
  *
  */
-int32_t rsi_http_client_post_async(uint8_t flags,
+int32_t rsi_http_client_post_async(uint16_t flags,
                                    uint8_t *ip_address,
                                    uint16_t port,
                                    uint8_t *resource,
@@ -203,25 +193,26 @@ int32_t rsi_http_client_post_async(uint8_t flags,
 /*==============================================*/
 /**
  * @brief      Send HTTP get request/HTTP post request to remote HTTP server based on the type selected. This is a non-blocking API.
- * @pre   \ref rsi_config_ipaddress() API needs to be called before this API.
  * @param[in]  type             - 0  RSI_HTTP_GET, 1  RSI_HTTP_POST 
  * @param[in]  flags            - Select version and security \n
  * 
- *   Flags |     Macro       |          Description
- *  :------|:----------------|:-----------------------------------------------------------------------
- *  BIT(0) | RSI_IPV6        |    Set this bit to enable IPv6, by default, it is configured to IPv4
- *  BIT(1) | RSI_SSL_ENABLE  |    Set this bit to enable SSL feature
- *  BIT(2) | RSI_SSL_V_1_0   |    Set this bit to support SSL TLS Version 1.0 if HTTPS is enabled
- *  BIT(3) | RSI_SSL_V_1_2   |    Set this bit to support SSL_TLS Version 1.2 if HTTPS is enabled
- *  BIT(4) | RSI_SSL_V_1_1   |    Set this bit to support SSL_TLS Version 1.1 if HTTPS is enabled
- *  BIT(5) | HTTP_POST_DATA  |    Set this bit to enable Http_post large data feature
- *  BIT(6) | HTTP_V_1_1      |    Set this bit  to use HTTP version 1.1
+ *   Flags |     Macro          |          Description
+ *  :------|:-------------------|:-----------------------------------------------------------------------
+ *  BIT(0) | RSI_IPV6           |    Set this bit to enable IPv6, by default, it is configured to IPv4
+ *  BIT(1) | RSI_SSL_ENABLE     |    Set this bit to enable SSL feature
+ *  BIT(2) | RSI_SSL_V_1_0      |    Set this bit to support SSL TLS Version 1.0 if HTTPS is enabled
+ *  BIT(3) | RSI_SSL_V_1_2      |    Set this bit to support SSL_TLS Version 1.2 if HTTPS is enabled
+ *  BIT(4) | RSI_SSL_V_1_1      |    Set this bit to support SSL_TLS Version 1.1 if HTTPS is enabled
+ *  BIT(5) | HTTP_POST_DATA     |    Set this bit to enable Http_post large data feature
+ *  BIT(6) | HTTP_V_1_1         |    Set this bit  to use HTTP version 1.1
+ *  BIT(9) | HTTPS_CERT_INDEX_1 |    Set this bit to indicate cert at index 1 to be used for HTTPS 
+ *  BIT(10)| HTTPS_CERT_INDEX_2 |    Set this bit to indicate cert at index 2 to be used for HTTPS, Leave both unset for cert index 0
  *
  * 
  * @param[in]   ip_address       - Server IP address
  * @param[in]   port             - Port number of HTTP server
- * @param[in]   resource         - URL string for requested resource
- *						                    Note: HTTP server port is also configurable on a non-standard port
+ * @param[in]   resource         - URL string for requested resource. \n
+ *						                     Note: HTTP server port is also configurable on a non-standard port
  * @param[in]   host_name        - Host name
  * @param[in]   extended_header  - User-defined extended header, each member header should end by \r\c \n
  * @param[in]   username         - Username for server authentication
@@ -232,25 +223,21 @@ int32_t rsi_http_client_post_async(uint8_t flags,
  * @param[out]  status           - Status of response from module. This will return failure upon an internal error only.
  * @param[out]  buffer           - Buffer pointer
  * @param[out]  length           - Length of data
- * @param[out]  moredata         - 1   No more data, 0   More data present
- * @param[in]   status_code       HTTP response code as returned by server in HTTP header. e.g., 200, 201, 404, etc.
- *                                This field is valid only when status field (first argument) is successful, indicating
- *                                a response is received from HTTP server. A status_code equal to 0 indicates that
- *                                there was no HTTP header in the received packet, probably a continuation of the frame
- *                                body received in the previous chunk.
- *                                This field is available, if the feature  RSI_HTTP_STATUS_INDICATION_EN
- *                                is enabled in rsi_wlan_config.h
- * @return      0               -  Success  \n
- *              Negative Value  - Failure \n
- *              -2              - Invalid parameters \n
- *				      -3              - Command given in wrong state \n
- *				      -4              - Buffer not available to serve the command
- * @note        Refer to Error Codes section for the description of the above error codes \ref error-codes.
+ * @param[out]  moredata         - 1 - No more data, 0 - More data present
+ * @param[in]   status_code        HTTP response code as returned by server in HTTP header. e.g., 200, 201, 404, etc. \n
+ *                                 This field is valid only when status field (first argument) is successful, indicating \n
+ *                                 a response is received from HTTP server. A status_code equal to 0 indicates that \n
+ *                                 there was no HTTP header in the received packet, probably a continuation of the frame body received in the previous chunk. \n
+ *                                 This field is available, if the feature  RSI_HTTP_STATUS_INDICATION_EN is enabled in rsi_wlan_config.h. 
+ * @return      0                -  Success  \n
+ * @return      Negative value   - Failure (**Possible Error Codes** - 0xfffffffe, 0xfffffffd, 0xfffffffc) \n
+ * @note        **Precondition** - \ref rsi_config_ipaddress() API needs to be called before this API.
+ * @note        Refer to \ref error-codes for the description of above error codes.
  *
  */
 
 int32_t rsi_http_client_async(uint8_t type,
-                              uint8_t flags,
+                              uint16_t flags,
                               uint8_t *ip_address,
                               uint16_t port,
                               uint8_t *resource,
@@ -276,12 +263,12 @@ int32_t rsi_http_client_async(uint8_t type,
 {
   rsi_req_http_client_t *http_client;
   rsi_pkt_t *pkt;
-  int32_t status       = RSI_SUCCESS;
-  uint8_t https_enable = 0;
-  uint16_t http_length = 0;
-  uint32_t send_size   = 0;
-  uint8_t *host_desc   = NULL;
-  uint8_t tmp_str[7]   = { 0 };
+  int32_t status        = RSI_SUCCESS;
+  uint16_t https_enable = 0;
+  uint16_t http_length  = 0;
+  uint32_t send_size    = 0;
+  uint8_t *host_desc    = NULL;
+  uint8_t tmp_str[7]    = { 0 };
   SL_PRINTF(SL_HTTP_CLIENT_ASYNC_ENTRY, NETWORK, LOG_INFO);
   // Get WLAN CB structure pointer
   rsi_wlan_cb_t *wlan_cb = rsi_driver_cb->wlan_cb;
@@ -347,6 +334,7 @@ int32_t rsi_http_client_async(uint8_t type,
     if (flags & RSI_SSL_ENABLE) {
       // Set HTTPS feature
       https_enable = 1;
+      https_enable |= flags & (HTTPS_CERT_INDEX_1 | HTTPS_CERT_INDEX_2);
     }
 
     // Set default by NULL delimiter
@@ -458,14 +446,12 @@ int32_t rsi_http_client_async(uint8_t type,
 */
 /*==============================================*/
 /**
- * @brief      Abort any ongoing HTTP request from the client. This is a blocking API.
- * @pre   \ref rsi_config_ipaddress() API needs to be called before this API.
+ * @brief      Abort ongoing HTTP request from the client. This is a blocking API
  * @param[in]  Void
- * @return      0              -  Success  \n
- *              Negative Value - Failure \n
- *				      -3             - Command given in wrong state \n
- *				      -4             - Buffer not available to serve the command
- * @note        Refer to Error Codes section for the description of the above error codes \ref error-codes.
+ * @return     0              -  Success  \n
+ * @return     Negative Value - Failure (**Possible Error Codes** - 0xfffffffd, 0xfffffffc) \n
+ * @note        **Precondition** - \ref rsi_config_ipaddress() API needs to be called before this API.
+ * @note        Refer to \ref error-codes for the description of above error codes.
  */
 
 int32_t rsi_http_client_abort(void)
@@ -522,14 +508,12 @@ int32_t rsi_http_client_abort(void)
 */
 /*==============================================*/
 /**
- * @brief      Create the HTTP put client. This is a blocking API.
- * @pre   \ref rsi_config_ipaddress() API needs to be called before this API.
+ * @brief      Create the HTTP PUT client. This is a blocking API.
  * @param[in]  Void
- * @return      0              -  Success  \n
- *              Negative Value - Failure \n
- *				      -3             - Command given in wrong state \n
- *				      -4             - Buffer not available to serve the command
- * @note        Refer to Error Codes section for the description of the above error codes \ref error-codes.
+ * @return     0              -  Success  \n
+ * @return     Negative Value - Failure (**Possible Error Codes** - 0xfffffffd, 0xfffffffc) \n
+ * @note       **Precondition** - \ref rsi_config_ipaddress() API needs to be called before this API.
+ * @note       Refer to \ref error-codes for the description of above error codes.
  */
 
 int32_t rsi_http_client_put_create(void)
@@ -612,14 +596,12 @@ int32_t rsi_http_client_put_create(void)
 */
 /*==============================================*/
 /**
- * @brief      Delete the created HTTP put client. This is a non-blocking API.
- * @pre  \ref rsi_config_ipaddress() API needs to be called before this API
+ * @brief      Delete the created HTTP PUT client. This is a non-blocking API
  * @param[in]  Void
- * @return      0              -  Success  \n
- *              Negative Value - Failure \n
- *				      -3             - Command given in wrong state \n
- *				      -4             - Buffer not available to serve the command
- * @note        Refer to Error Codes section for the description of the above error codes \ref error-codes.
+ * @return     0              -  Success  \n
+ * @return     Negative Value - Failure (**Possible Error Codes** - 0xfffffffd, 0xfffffffc) \n
+ * @note       **Precondition** - \ref rsi_config_ipaddress() API needs to be called before this API.
+ * @note       Refer to \ref error-codes for the description of above error codes.
  */
 
 int32_t rsi_http_client_put_delete(void)
@@ -685,10 +667,7 @@ int32_t rsi_http_client_put_delete(void)
 */
 /*==============================================*/
 /**
- * @brief 	   Start the HTTP client put process. This is a non-blocking API.
- * @pre  \ref API needs to be called before this API  \n
- *            rsi_config_ipaddress  \n
- *            rsi_http_client_put_create.
+ * @brief 	   Start the HTTP client PUT process. This is a non-blocking API.
  * @param[in]  flags            -  Select version and security \n
  *    
  *   Flags |     Macro                      |          Description
@@ -713,27 +692,26 @@ int32_t rsi_http_client_put_delete(void)
  * @param[in]  post_data_length - HTTP data length to be posted to server
  * @param[in]  callback         - Callback when asyncronous response comes for the request
  * @param[in]  status           - Status code
- * @param[in]  type             - HTTP Client PUT command type \n
- *                                  2 - Put start response \n
- *                                  3 - Put packet response \n
- *                                  4 - Put delete response \n
- *                                  5 - Data from HTTP server
+ * @param[in]  type             - HTTP Client PUT command type. \n
+ *                                 2 - Put start response, \n
+ *                                 3 - Put packet response, \n
+ *                                 4 - Put delete response, \n
+ *                                 5 - Data from HTTP server
  * @param[in]  buffer           - Buffer pointer
  * @param[in]  length           - Length of data
- * @param[in]  end_of_put_pkt   - End of file or HTTP resource content \n
- *                                 0 - More data is pending from host  \n
- *                                 1 - End of HTTP file/resource content  \n
- *                                 8 - More data pending from server  \n
+ * @param[in]  end_of_put_pkt   - End of file or HTTP resource content. \n
+ *                                 0 - More data is pending from host,  \n
+ *                                 1 - End of HTTP file/resource content,  \n
+ *                                 8 - More data pending from server,  \n
  *                                 9 - End of HTTP file from server
- * @return      0               -  Success  \n
- *              Negative Value  - Failure \n
- *				      -3              - Command given in wrong state \n
- *				      -4              - Buffer not available to serve the command
- * @note        Refer to Error Codes section for the description of the above error codes \ref error-codes.
+ * @return     0              -  Success  \n
+ * @return     Negative Value - Failure (**Possible Error Codes** - 0xfffffffd, 0xfffffffc) \n
+ * @note       **Precondition** - \ref rsi_config_ipaddress() API and \ref rsi_http_client_put_create API needs to be called before this API.
+ * @note       Refer to \ref error-codes for the description of above error codes.
  */
 
 int32_t rsi_http_client_put_start(
-  uint8_t flags,
+  uint16_t flags,
   uint8_t *ip_address,
   uint32_t port_number,
   uint8_t *resource,
@@ -745,11 +723,11 @@ int32_t rsi_http_client_put_start(
   void (*callback)(uint16_t status, uint8_t type, const uint8_t *buffer, uint16_t length, const uint8_t end_of_put_pkt))
 {
   rsi_pkt_t *pkt;
-  int32_t status       = RSI_SUCCESS;
-  uint8_t https_enable = 0;
-  uint16_t http_length = 0;
-  uint16_t send_size   = 0;
-  uint8_t *host_desc   = NULL;
+  int32_t status        = RSI_SUCCESS;
+  uint16_t https_enable = 0;
+  uint16_t http_length  = 0;
+  uint16_t send_size    = 0;
+  uint8_t *host_desc    = NULL;
   rsi_http_client_put_req_t *http_put_req;
   rsi_http_client_put_start_t *http_put_start;
   SL_PRINTF(SL_HTTP_CLIENT_PUT_START_ENTRY, NETWORK, LOG_INFO);
@@ -803,6 +781,7 @@ int32_t rsi_http_client_put_start(
     if (flags & RSI_SSL_ENABLE) {
       // Set HTTPS feature
       https_enable = 1;
+      https_enable |= flags & (HTTPS_CERT_INDEX_1 | HTTPS_CERT_INDEX_2);
 
       // Set default by NULL delimiter
       https_enable |= BIT(1);
@@ -876,17 +855,12 @@ int32_t rsi_http_client_put_start(
 /*==============================================*/
 /**
  * @brief      Send HTTP data to HTTP server for the created URL resource. This is a blocking API.
- * @pre   \ref API needs to be called before this API  \n
- *             rsi_config_ipaddress  \n
- *             rsi_http_client_put_create  \n
- *             rsi_http_client_put_start.
  * @param[in]  file_content         - HTTP data content
  * @param[in]  current_chunk_length - HTTP data current chunk length
- * @return      0                   -  Success  \n
- *              Negative Value      - Failure \n
- *				     -3                   - Command given in wrong state \n
- *				     -4                   - Buffer not available to serve the command
- * @note        Refer to Error Codes section for the description of the above error codes \ref error-codes.
+ * @return     0              -  Success  \n
+ * @return     Negative Value - Failure (**Possible Error Codes** - 0xfffffffd, 0xfffffffc) \n
+ * @note       **Precondition** - \ref rsi_config_ipaddress(), \ref rsi_http_client_put_create() and \ref rsi_http_client_put_start() needs to be called before this API
+ * @note       Refer to \ref error-codes for the description of above error codes.
  */
 
 int32_t rsi_http_client_put_pkt(uint8_t *file_content, uint16_t current_chunk_length)
@@ -972,32 +946,28 @@ int32_t rsi_http_client_put_pkt(uint8_t *file_content, uint16_t current_chunk_le
 */
 /*==============================================*/
 /**
- * @brief      Send the HTTP post data packet to remote HTTP server. This is a non-blocking API.
- * @pre  \ref rsi_config_ipaddress() API needs to be called before this API.
+ * @brief      Send the HTTP POST data packet to remote HTTP server. This is a non-blocking API.
  * @param[in]  file_content         - User given http file content
  * @param[in]  current_chunk_length - Length of the current HTTP data
  * @param[in]  callback             - Callback when asynchronous response comes for the request.
  * @param[in]  status               - Status of response from module. This will return failure upon an internal error only.
  * @param[in]  buffer               - Buffer pointer
  * @param[in]  length               - Length of data
- * @param[in]  more_data            -  4- More data is pending from host \n
- *                                     5-End of HTTP data from host(Host sent total data content length) \n
- *                                     8–More data is pending from module to host. Further interrupts may be \n
- *                                       raised by the module till all the data is transferred to the Host. \n
- *                                     9– End of HTTP data from module to host.
- * @param[in]  status_code          - HTTP response code as returned by server in HTTP header. e.g., 200, 201, 404, etc.
- *                                    This field is valid only when status field (first argument) is successful, indicating
- *                                    a response is received from HTTP server. A status_code equal to 0 indicates that
- *                                    there was no HTTP header in the received packet, probably a continuation of the frame
- *                                    body received in the previous chunk.
- *                                    This field is available, if the feature  RSI_HTTP_STATUS_INDICATION_EN
- *                                    is enabled in rsi_wlan_config.h
- * @return       0                  - Success  \n
- *               Negative Value     - Failure \n
- *               -2                 - Invalid parameters \n
- *				       -3                 - Command given in wrong state \n
- *				       -4                 - Buffer not available to serve the command
- * @note        Refer to Error Codes section for the description of the above error codes \ref error-codes.
+ * @param[in]  more_data            -  4 - More data is pending from host. \n
+ *                                     5 - End of HTTP data from host(Host sent total data content length). \n
+ *                                     8 – More data is pending from module to host. Further interrupts may be \n
+ *                                         raised by the module till all the data is transferred to the Host. \n
+ *                                     9 – End of HTTP data from module to host.
+ * @param[in]  status_code          - HTTP response code as returned by server in HTTP header. e.g., 200, 201, 404, etc. \n
+ *                                    This field is valid only when status field (first argument) is successful, indicating \n
+ *                                    a response is received from HTTP server. A status_code equal to 0 indicates that \n
+ *                                    there was no HTTP header in the received packet, probably a continuation of the frame \n
+ *                                    body received in the previous chunk. \n 
+ *                                    This field is available, if the feature  RSI_HTTP_STATUS_INDICATION_EN is enabled in rsi_wlan_config.h \n
+ * @return     0              -  Success  \n
+ * @return     Negative Value - Failure (**Possible Error Codes** - 0xfffffffe, 0xfffffffd, 0xfffffffc) \n
+ * @note       **Precondition** - \ref rsi_config_ipaddress() API needs to be called before this API
+ * @note       Refer to \ref error-codes for the description of above error codes.
  */
 
 int32_t rsi_http_client_post_data(uint8_t *file_content,

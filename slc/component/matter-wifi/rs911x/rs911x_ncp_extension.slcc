@@ -3,7 +3,7 @@ label: rs911x_ncp_extension
 description: >
   example platform
 package: Matter
-category: Wifi
+category: Matter-WiFi
 provides:
 - name: rs911x_ncp_extension
 requires:
@@ -35,3 +35,4 @@ include:
   - path: rsi_board_configuration.h
 define:
 - name: RSI_BLE_ENABLE
+- name: BLE_ENABLE

@@ -50,6 +50,17 @@
 #include <lib/support/CodeUtils.h>
 
 #include <platform/CHIPDeviceLayer.h>
+
+#ifdef LCD_WITH_SLEEP
+#include "sl_sleeptimer.h"
+
+#define defaultTimeoutMs 10000
+#define timeoutMs 3000
+#define QRtimeoutMs 5000
+
+sl_sleeptimer_timer_handle_t timerHandle;
+#endif // LCD_WITH_SLEEP
+
 #define SYSTEM_STATE_LED 0
 #define LOCK_STATE_LED 1
 
@@ -267,6 +278,16 @@ CHIP_ERROR AppTask::StartAppTask()
     return BaseApplication::StartAppTask(AppTaskMain);
 }
 
+#ifdef LCD_WITH_SLEEP
+void lcdTimerCallback(sl_sleeptimer_timer_handle_t *handle, void *data)
+{
+    // Perform the desired task when the timer expires
+    (void)handle;
+    (void)data;
+    AppTask::GetLCD().TurnOff();
+}
+#endif // LCD_WITH_SLEEP
+
 void AppTask::AppTaskMain(void * pvParameter)
 {
     AppEvent event;
@@ -287,6 +308,10 @@ void AppTask::AppTaskMain(void * pvParameter)
 
     // Users and credentials should be checked once from nvm flash on boot
     LockMgr().ReadConfigValues();
+
+#ifdef LCD_WITH_SLEEP
+    sl_sleeptimer_start_timer_ms(&timerHandle, defaultTimeoutMs, lcdTimerCallback, NULL, 0, SL_SLEEPTIMER_NO_HIGH_PRECISION_HF_CLOCKS_REQUIRED_FLAG);
+#endif // LCD_WIth_SLEEP  
 
     while (true)
     {
@@ -376,6 +401,17 @@ void AppTask::ButtonEventHandler(const sl_button_t * buttonHandle, uint8_t btnAc
     }
     else if (buttonHandle == APP_FUNCTION_BUTTON)
     {
+#ifdef LCD_WITH_SLEEP
+        if(ConnectivityMgr().IsWiFiStationConnected())
+        {
+            GetLCD().TurnOff();
+        }
+        else
+        {
+            GetLCD().TurnOn();
+            sl_sleeptimer_restart_timer_ms(&timerHandle, QRtimeoutMs, lcdTimerCallback, NULL, 0, SL_SLEEPTIMER_NO_HIGH_PRECISION_HF_CLOCKS_REQUIRED_FLAG);
+        }
+#endif // LCD_WIth_SLEEP
         button_event.Handler = BaseApplication::ButtonHandler;
         sAppTask.PostEvent(&button_event);
     }
@@ -390,9 +426,15 @@ void AppTask::ActionInitiated(LockManager::Action_t aAction, int32_t aActor)
         SILABS_LOG("%s Action has been initiated", (locked) ? "Lock" : "Unlock");
         sLockLED.Set(!locked);
 
+#ifdef LCD_WITH_SLEEP
+        GetLCD().TurnOn();
+        // Start the timer with the specified duration and callback function
+        sl_sleeptimer_restart_timer_ms(&timerHandle, timeoutMs, lcdTimerCallback, NULL, 0, SL_SLEEPTIMER_NO_HIGH_PRECISION_HF_CLOCKS_REQUIRED_FLAG);
+#endif // LCD_WIth_SLEEP
 #ifdef DISPLAY_ENABLED
         sAppTask.GetLCD().WriteDemoUI(locked);
 #endif // DISPLAY_ENABLED
+
     }
 
     if (aActor == AppEvent::kEventType_Button)

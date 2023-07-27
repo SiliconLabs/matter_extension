@@ -1,0 +1,11 @@
+category: Matter|Examples
+package: Matter
+description: >
+  Provides example component for a On/Off Plug application. This component should be 
+  included in all On/Off Plug applications to help resolve SLC dependencies. Only applicable to On/Off Plug applications.
+id: matter_onoff_plug
+quality: production
+provides:
+  - name: matter_onoff_plug
+ui_hints:
+  visibility: never

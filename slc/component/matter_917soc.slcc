@@ -1,0 +1,101 @@
+id: matter_917soc
+label: Matter Core Components for SiWx917 SoC
+description: Bundles all necessary core Matter components for SiWx917 SoC
+package: "Matter"
+category: Stack
+quality: production
+config_file:
+  - path: slc/config/sl_matter_config.h
+    file_id: matter_config
+  - path: "examples/platform/silabs/SiWx917/FreeRTOSConfig.h"
+
+include:
+  - path: slc/inc
+
+toolchain_settings:
+  - option: gcc_compiler_option
+    value: -Wno-deprecated-declarations
+  - option: gcc_compiler_option
+    value: -Wno-maybe-uninitialized
+  - option: gcc_compiler_option
+    value: -Wno-missing-field-initializers
+  - option: gcc_compiler_option
+    value: -Wno-unused-parameter
+  - option: gcc_compiler_option
+    value: -Wno-cast-function-type
+  - option: gcc_compiler_option
+    value: -Wno-psabi
+
+  - option: gcc_compiler_option
+    value: -fno-strict-aliasing
+  - option: gcc_compiler_option
+    value: -fno-unwind-tables
+  - option: gcc_compiler_option
+    value: -fno-asynchronous-unwind-tables
+  - option: gcc_compiler_option
+    value: -fno-common
+
+  # flags for the SiWx917
+  - option: gcc_compiler_option
+    value: -Wno-empty-body
+  - option: gcc_compiler_option
+    value: -Wno-cpp
+  - option: gcc_compiler_option
+    value: -Wno-missing-braces
+  - option: gcc_compiler_option
+    value: -Wno-sign-compare
+  - option: gcc_compiler_option
+    value: -Wno-error
+  - option: gcc_compiler_option
+    value: -Wno-unused-variable
+  - option: gcc_compiler_option
+    value: -Wno-unused-function
+
+  # linker file for siwx917
+
+provides:
+  # Set provide used by SDK to suppress content that Matter provides
+  - name: matter_integration
+  - name: matter_917soc
+  - name: device
+  - name: wiseconnect_toolchain_gcc_override
+  - name: matter_si91x_dual_flash_nvm3_enabled  
+    condition: [brd4325b]   
+  - name: matter_si91x_common_flash_nvm3_enabled  
+    condition: [brd4325c] 
+  - name: matter_si91x_common_flash_nvm3_enabled  
+    condition: [brd4325g] 
+
+requires:
+  - name: cpp_support
+  - name: matter_dnssd_wifi
+  - name: matter_libinetlayer_wifi
+  - name: matter_libdevicelayer_wifi
+  - name: matter_platform_siwx917
+  - name: matter_address_resolve
+  - name: matter_libaccess
+  - name: matter_libasn1
+  - name: matter_libbdx
+  - name: matter_libchipappserver
+  - name: matter_libchipcontroller
+  - name: matter_libchipcore
+  - name: matter_libchipcrypto
+  - name: matter_libchipdatamodel
+  - name: matter_libchipprotocols
+  - name: matter_libclusterobjects
+  - name: matter_libcredentials
+  - name: matter_libmatterdeviceinfoproviderexample
+  - name: matter_libmessaginglayer
+  - name: matter_librawtransport
+  - name: matter_libsecurechannel
+  - name: matter_libsetuppayload
+  - name: matter_libsupportlayer
+  - name: matter_libsystemlayer
+  - name: matter_libtransportlayer
+  - name: configuration_over_swo
+  - name: siwx917_soc_custom_startup
+  - name: device_init_nvic
+
+recommends:
+  - id: matter_configuration_over_swo
+  - id: matter_segger_rtt

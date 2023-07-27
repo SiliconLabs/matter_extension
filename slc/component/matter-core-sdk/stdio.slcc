@@ -1,0 +1,22 @@
+category: Matter|Core
+define:
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+description: stdio
+id: stdio
+include:
+-   path: examples/platform/efr32
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: src/platform/EFR32
+-   path: zzz_generated/app-common
+label: stdio
+package: Matter
+provides:
+-   name: matter_stdio
+quality: production
+source:
+-   path: src/platform/logging/impl/stdio/Logging.cpp
+ui_hints:
+    visibility: never

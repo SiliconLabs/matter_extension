@@ -1,0 +1,13 @@
+id: wiseconnect_sapi_sntp
+package: wiseconnect
+description: >
+  WiSeConnect sntp component
+label: sapi sntp
+category: sapi|sntp
+quality: alpha
+requires:
+  - name: wiseconnect_sapi_core
+provides:
+  - name: wiseconnect_sapi_sntp
+source:
+  - path: sapi/network/protocols/rsi_sntp_client.c

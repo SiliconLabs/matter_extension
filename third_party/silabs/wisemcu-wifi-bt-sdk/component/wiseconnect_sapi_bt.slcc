@@ -1,0 +1,14 @@
+id: wiseconnect_sapi_bt
+package: wiseconnect
+description: >
+  WiSeConnect bt component
+label: sapi bt
+category: sapi|bt
+quality: alpha
+requires:
+  - name: wiseconnect_sapi_core
+provides:
+  - name: wiseconnect_sapi_bt
+
+define:
+  - name: RSI_BT_ENABLE

@@ -19,7 +19,7 @@
  ******************************************************************************/
 #include "stddef.h"
 #include <cstring>
-
+#include "dic_config.h"
 #include "dic_nvm_cert.h"
 #include <lib/core/CHIPError.h>
 #include <lib/support/logging/CHIPLogging.h>
@@ -29,7 +29,6 @@
 
 #if USE_AWS
 
-#define DIC_CLIENT_ID "DIC_2"
 #define DIC_SERVER_HOST	"a2m21kovu9tcsh-ats.iot.ap-southeast-1.amazonaws.com"
 
 /*

@@ -1,0 +1,14 @@
+id: wiseconnect_sapi_mdns
+package: wiseconnect
+description: >
+  WiSeConnect mdns component
+label: sapi mdns
+category: sapi|mdns
+quality: alpha
+requires:
+  - name: wiseconnect_sapi_core
+provides:
+  - name: wiseconnect_sapi_mdns
+source:
+  - path: sapi/network/protocols/rsi_mdnsd.c
+  - path: sapi/network/protocols/mdnsd_records/rsi_mdnsd_records.c

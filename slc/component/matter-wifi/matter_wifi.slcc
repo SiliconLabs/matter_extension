@@ -22,4 +22,8 @@ requires:
   - name: matter_lwip
   - name: matter_minimal_mdns
   - name: matter_src_platform_efr32
+    condition: [matter]
   - name: example_platform_efr32_common
+    condition: [matter]
+  - name: example_platform_siwx917_common
+    condition: [matter_917soc]

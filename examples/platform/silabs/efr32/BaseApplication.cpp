@@ -25,6 +25,7 @@
 #include "AppEvent.h"
 #include "AppTask.h"
 
+
 #if defined(ENABLE_WSTK_LEDS) && defined(SL_CATALOG_SIMPLE_LED_LED1_PRESENT)
 #include "LEDWidget.h"
 #include "sl_simple_led_instances.h"
@@ -294,6 +295,10 @@ void BaseApplication::FunctionEventHandler(AppEvent * aEvent)
 #endif // CHIP_DEVICE_CONFIG_ENABLE_SED
 
         ScheduleFactoryReset();
+
+#ifdef LCD_WITH_SLEEP
+        slLCD.TurnOn();
+#endif // LCD_WITH_SLEEP
     }
 }
 
@@ -383,6 +388,10 @@ void BaseApplication::LightEventHandler()
 #if defined(ENABLE_WSTK_LEDS) && defined(SL_CATALOG_SIMPLE_LED_LED1_PRESENT)
             sStatusLED.Blink(100, 100);
 #endif // ENABLE_WSTK_LEDS
+
+#ifdef LCD_WITH_SLEEP
+            slLCD.TurnOff();
+#endif // LCD_WITH_SLEEP
         }
         else
         {

@@ -6,7 +6,6 @@ description: libasn1
 id: libasn1
 include:
 - path: examples/platform/silabs
-- path: examples/platform/silabs/efr32
 - path: src
 - path: src/include
 - path: src/lib
@@ -15,7 +14,6 @@ include:
   - path: asn1/ASN1Macros.h
   - path: asn1/ASN1Error.h
   - path: asn1/ASN1Config.h
-- path: src/platform/silabs/efr32
 - path: third_party/nlassert/repo/include
 - path: third_party/nlio/repo/include
 - path: zzz_generated/app-common

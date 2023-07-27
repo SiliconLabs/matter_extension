@@ -24,7 +24,7 @@
 
 void appError(int err)
 {
-    SILABS_LOG("!!!!!!!!!!!! App Critical Error: %d !!!!!!!!!!!", err);
+		SILABS_LOG("!!!!!!!!!!!! App Critical Error: %d !!!!!!!!!!!", err);
     portDISABLE_INTERRUPTS();
     while (true)
         ;

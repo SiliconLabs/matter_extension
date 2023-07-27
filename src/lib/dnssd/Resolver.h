@@ -38,8 +38,7 @@ namespace Dnssd {
 /// Node resolution data common to both operational and commissionable discovery
 struct CommonResolutionData
 {
-    // MATTER GSDK SLC FIX
-    static const unsigned kMaxIPAddresses = CHIP_DEVICE_CONFIG_MAX_DISCOVERED_IP_ADDRESSES;
+    static constexpr unsigned kMaxIPAddresses = CHIP_DEVICE_CONFIG_MAX_DISCOVERED_IP_ADDRESSES;
 
     Inet::InterfaceId interfaceId;
 

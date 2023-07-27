@@ -6,7 +6,6 @@ category: Stack
 quality: production
 requires:
   - name: matter_libblelayer
-  - name: matter
 provides:
   - name: matter_wifi_ble
 template_contribution:

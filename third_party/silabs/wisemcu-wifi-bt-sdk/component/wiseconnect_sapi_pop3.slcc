@@ -1,0 +1,13 @@
+id: wiseconnect_sapi_pop3
+package: wiseconnect
+description: >
+  WiSeConnect pop3 component
+label: sapi pop3
+category: sapi|pop3
+quality: alpha
+requires:
+  - name: wiseconnect_sapi_core
+provides:
+  - name: wiseconnect_sapi_pop3
+source:
+  - path: sapi/network/protocols/rsi_pop3_client.c

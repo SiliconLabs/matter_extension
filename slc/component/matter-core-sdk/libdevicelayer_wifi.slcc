@@ -6,7 +6,6 @@ description: libdevicelayer_wifi
 id: libdevicelayer_wifi
 include:
 - path: examples/platform/silabs
-- path: examples/platform/silabs/efr32
 - path: src
 - path: src/include
   file_list:
@@ -62,7 +61,6 @@ include:
   - path: platform/internal/GenericConnectivityManagerImpl_NoWiFi.h
   - path: platform/internal/GenericConnectivityManagerImpl_WiFi.h
 - path: src/lib
-- path: src/platform/silabs/efr32
 - path: third_party/nlassert/repo/include
 - path: third_party/nlio/repo/include
 - path: zzz_generated/app-common

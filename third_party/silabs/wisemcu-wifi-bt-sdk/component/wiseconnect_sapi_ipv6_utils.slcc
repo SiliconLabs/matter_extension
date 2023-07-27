@@ -1,0 +1,13 @@
+id: wiseconnect_sapi_ipv6_utils
+package: wiseconnect
+description: >
+  WiSeConnect ipv6_utils component
+label: sapi ipv6_utils
+category: sapi|ipv6_utils
+quality: alpha
+requires:
+  - name: wiseconnect_sapi_core
+provides:
+  - name: wiseconnect_sapi_ipv6_utils
+source:
+  - path: utilities/ipv6_utils/inet6.c

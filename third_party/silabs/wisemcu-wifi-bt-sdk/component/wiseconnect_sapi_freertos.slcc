@@ -1,0 +1,18 @@
+id: wiseconnect_sapi_freertos
+package: wiseconnect
+description: >
+  WiSeConnect freertos component
+label: sapi freertos
+category: sapi|freertos
+quality: alpha
+requires:
+  - name: wiseconnect_sapi_core
+provides:
+  - name: wiseconnect_sapi_freertos
+source:
+  - path: sapi/rtos/freertos_wrapper/rsi_os_wrapper.c
+  - path: sapi/rtos/freertos_wrapper/port.c
+define:
+  - name: RSI_WITH_OS
+include:
+  - path: sapi/rtos/freertos_wrapper

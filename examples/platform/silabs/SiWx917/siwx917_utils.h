@@ -17,20 +17,22 @@
  *    limitations under the License.
  */
 
-#include "siwx917_utils.h"
-#include "init_ccpPlatform.h"
+#pragma once
 
-#include <matter_config.h>
+// SiWx917 Logging
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-void appError(int err)
-{
-    SILABS_LOG("!!!!!!!!!!!! App Critical Error: %d !!!!!!!!!!!", err);
-    portDISABLE_INTERRUPTS();
-    while (true)
-        ;
+void silabsInitLog(void);
+
+void efr32Log(const char * aFormat, ...);
+#define SILABS_LOG(...) efr32Log(__VA_ARGS__);
+void appError(int err);
+
+#ifdef __cplusplus
 }
 
-void appError(CHIP_ERROR error)
-{
-    appError(static_cast<int>(error.AsInteger()));
-}
+#include <lib/core/CHIPError.h>
+void appError(CHIP_ERROR error);
+#endif

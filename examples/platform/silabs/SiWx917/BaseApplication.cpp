@@ -25,7 +25,9 @@
 #include "AppEvent.h"
 #include "AppTask.h"
 
+#if defined(ENABLE_WSTK_LEDS)
 #include "LEDWidget.h"
+#endif // ENABLE_WSTK_LEDS
 
 #ifdef DISPLAY_ENABLED
 #include "lcd.h"
@@ -35,7 +37,6 @@
 #endif // DISPLAY_ENABLED
 
 #include "SilabsDeviceDataProvider.h"
-#include "rsi_board.h"
 #include "rsi_chip.h"
 #include "siwx917_utils.h"
 #include <app/server/OnboardingCodesUtil.h>
@@ -83,7 +84,9 @@ TimerHandle_t sLightTimer;
 TaskHandle_t sAppTaskHandle;
 QueueHandle_t sAppEventQueue;
 
+#if defined(ENABLE_WSTK_LEDS)
 LEDWidget sStatusLED;
+#endif // ENABLE_WSTK_LEDS
 
 #ifdef SL_WIFI
 app::Clusters::NetworkCommissioning::Instance
@@ -201,7 +204,10 @@ CHIP_ERROR BaseApplication::Init(Identify * identifyObj)
     SILABS_LOG("Current Software Version String: %s", CHIP_DEVICE_CONFIG_DEVICE_SOFTWARE_VERSION_STRING);
     SILABS_LOG("Current Software Version: %d", CHIP_DEVICE_CONFIG_DEVICE_SOFTWARE_VERSION);
 
+#if defined(ENABLE_WSTK_LEDS)
+    LEDWidget::InitGpio();
     sStatusLED.Init(APP_STATE_LED);
+#endif // ENABLE_WSTK_LEDS
 
     ConfigurationMgr().LogDeviceConfig();
 

@@ -1,0 +1,16 @@
+id: wiseconnect_sapi_common
+package: wiseconnect
+description: >
+  WiSeConnect common component
+label: sapi common
+category: sapi|common
+quality: alpha
+requires:
+  - name: wiseconnect_sapi_core
+provides:
+  - name: wiseconnect_sapi_common
+source:
+  - path: sapi/common/rsi_common_apis.c
+  - path: sapi/common/rsi_device_init_apis.c
+  - path: sapi/common/rsi_apis_rom.c
+  - path: sapi/common/rsi_apis_non_rom.c

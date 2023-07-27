@@ -12,16 +12,6 @@ include:
   - path: display//lcd.h
   - path: display//demo-ui.h
   - path: display//demo-ui-bitmaps.h
-- path: examples/platform/silabs/efr32
-  file_list:
-  - path: uart.h
-  - path: spi_multiplex.h
-  - path: init_efrPlatform.h
-  - path: efr32_utils.h
-  - path: TemperatureSensor.h
-  - path: wf200/sl_wfx_board.h
-  - path: wf200/sl_wfx_host.h
-  - path: wf200/sl_wfx_task.h
 - path: src
   file_list:
   - path: app/util/basic-types.h
@@ -109,7 +99,6 @@ include:
   - path: trace/trace.h
 - path: src/include
 - path: src/lib
-- path: src/platform/silabs/efr32
 - path: third_party/nlassert/repo/include
   file_list:
   - path: nlassert.h

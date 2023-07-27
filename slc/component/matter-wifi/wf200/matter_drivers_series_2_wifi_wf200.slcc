@@ -25,8 +25,7 @@ requires:
     condition:
     - device_series_2
   - name: power_manager_no_deepsleep
-    condition:
-    - device_series_2
+    condition: [device_series_2, matter_lcd]
 
 define:
   - name: ENABLE_WSTK_LEDS
