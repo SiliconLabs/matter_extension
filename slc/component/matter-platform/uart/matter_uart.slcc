@@ -8,30 +8,45 @@ requires:
    - name: uartdrv_usart
      condition:
      - device_series_1
+     - matter_platform_efr32
    - name: uartdrv_eusart
      condition:
      - device_series_2
+     - matter_platform_efr32
 provides:
   - name: matter_uart
 source:
   - path: examples/platform/silabs/efr32/uart.cpp
+    condition: [matter_platform_efr32]
+  - path: examples/platform/silabs/SiWx917/uart.cpp
+    condition: [matter_platform_siwx917]
 include:
 - path: examples/platform/silabs/efr32
   file_list:
   - path: uart.h
+    condition: [matter_platform_efr32]
+- path: examples/platform/silabs/SiWx917
+  file_list:
+  - path: uart.h
+    condition: [matter_platform_siwx917]
 define:
   - name: CONFIG_ENABLE_UART
     condition:
      - device_series_1
+     - matter_platform_efr32
   - name: CONFIG_ENABLE_EUART
     condition:
      - device_series_2
+     - matter_platform_efr32
   - name: EFR32MG12
     condition:
     - device_family_efr32mg12
+    - matter_platform_efr32
   - name: EFR32MG24
     condition:
     - device_family_efr32mg24
+    - matter_platform_efr32
   - name: MGM24
     condition:
     - device_family_mgm24
+    - matter_platform_efr32

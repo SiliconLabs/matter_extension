@@ -51,7 +51,6 @@ source:
   - path: examples/platform/silabs/SiWx917/init_ccpPlatform.cpp
   - path: examples/platform/silabs/SiWx917/matter_config.cpp
   - path: examples/platform/silabs/SiWx917/SiWx917/hal/rsi_hal_mcu_m4.c
-  - path: examples/platform/silabs/SiWx917/SiWx917/hal/rsi_hal_mcu_platform_init.c
 define:
   - name: SL_WFX_CONFIG_SCAN
     value: 1
@@ -60,6 +59,8 @@ define:
   - name: RS911X_WIFI
   - name: SL_CATALOG_MATTER_BLE_PRESENT
   - name: ROMDRIVER_PRESENT
+# TODO : should be removed after code clean-up.
+  - name: BRD4325A
 toolchain_settings:
   - option: gcc_linker_option
     value: "-Wl,--wrap=malloc"

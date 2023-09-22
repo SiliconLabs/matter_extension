@@ -2,7 +2,7 @@ id: wf200_ncp_extension
 label: wf200_ncp_extension
 package: Matter
 description: >
-  WiSeConnect Wi-Fi and BLE extension for the Gecko SDK
+  Adds support for the HAL and WiFi Driver layer for WF200 NCP devices
 category: Matter-WiFi
 provides:
 - name: wf200_ncp_extension

@@ -62,14 +62,6 @@ void init_ccpPlatform(void)
     // Configuration the clock rate
     soc_pll_config();
 
-    // BTN0 and BTN1 init
-    RSI_Wakeupsw_config();
-#ifdef SI917_RADIO_BOARD_V2
-    RSI_GPIO_button_config();
-#else
-    RSI_NPSSGPIO_button_config();
-#endif
-
 #if SILABS_LOG_ENABLED
     silabsInitLog();
 #endif

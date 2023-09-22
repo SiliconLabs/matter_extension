@@ -21,13 +21,14 @@
  *    limitations under the License.
  */
 #include "wfx_sl_ble_init.h"
-#include "rsi_ble_config.h"
-
+#include "ble_config.h"
+#include "cmsis_os2.h"
+#include "efr32_utils.h"
 // Global Variables
-rsi_ble_event_conn_status_t conn_event_to_app;
 rsi_ble_t att_list;
 sl_wfx_msg_t event_msg;
-extern rsi_semaphore_handle_t sl_ble_event_sem;
+
+extern osSemaphoreId_t sl_ble_event_sem;
 
 // Memory to initialize driver
 uint8_t bt_global_buf[BT_GLOBAL_BUFF_LEN];
@@ -44,7 +45,6 @@ const uint8_t ShortUUID_CHIPoBLEService[] = { 0xF6, 0xFF };
  */
 void rsi_ble_app_init_events()
 {
-    SILABS_LOG("%s: starting", __func__);
     event_msg.ble_app_event_map  = 0;
     event_msg.ble_app_event_mask = 0xFFFFFFFF;
     event_msg.ble_app_event_mask = event_msg.ble_app_event_mask; // To suppress warning while compiling
@@ -62,7 +62,6 @@ void rsi_ble_app_init_events()
  */
 void rsi_ble_app_clear_event(uint32_t event_num)
 {
-    SILABS_LOG("%s: starting", __func__);
     event_msg.event_num = event_num;
     event_msg.ble_app_event_map &= ~BIT(event_num);
     return;
@@ -79,7 +78,6 @@ void rsi_ble_app_clear_event(uint32_t event_num)
  */
 void rsi_ble_on_mtu_event(rsi_ble_event_mtu_t * rsi_ble_mtu)
 {
-    SILABS_LOG("%s: starting", __func__);
     memcpy(&event_msg.rsi_ble_mtu, rsi_ble_mtu, sizeof(rsi_ble_event_mtu_t));
     rsi_ble_app_set_event(RSI_BLE_MTU_EVENT);
 }
@@ -96,7 +94,6 @@ void rsi_ble_on_mtu_event(rsi_ble_event_mtu_t * rsi_ble_mtu)
  */
 void rsi_ble_on_gatt_write_event(uint16_t event_id, rsi_ble_event_write_t * rsi_ble_write)
 {
-    SILABS_LOG("%s: starting", __func__);
     event_msg.event_id = event_id;
     memcpy(&event_msg.rsi_ble_write, rsi_ble_write, sizeof(rsi_ble_event_write_t));
     rsi_ble_app_set_event(RSI_BLE_GATT_WRITE_EVENT);
@@ -113,7 +110,6 @@ void rsi_ble_on_gatt_write_event(uint16_t event_id, rsi_ble_event_write_t * rsi_
  */
 void rsi_ble_on_enhance_conn_status_event(rsi_ble_event_enhance_conn_status_t * resp_enh_conn)
 {
-    SILABS_LOG("%s: starting", __func__);
     event_msg.connectionHandle = 1;
     event_msg.bondingHandle    = 255;
     memcpy(event_msg.resp_enh_conn.dev_addr, resp_enh_conn->dev_addr, RSI_DEV_ADDR_LEN);
@@ -132,7 +128,6 @@ void rsi_ble_on_enhance_conn_status_event(rsi_ble_event_enhance_conn_status_t * 
  */
 void rsi_ble_on_disconnect_event(rsi_ble_event_disconnect_t * resp_disconnect, uint16_t reason)
 {
-    SILABS_LOG("%s: starting", __func__);
     event_msg.reason = reason;
     rsi_ble_app_set_event(RSI_BLE_DISCONN_EVENT);
 }
@@ -148,7 +143,6 @@ void rsi_ble_on_disconnect_event(rsi_ble_event_disconnect_t * resp_disconnect, u
  */
 void rsi_ble_on_event_indication_confirmation(uint16_t resp_status, rsi_ble_set_att_resp_t * rsi_ble_event_set_att_rsp)
 {
-    SILABS_LOG("%s: starting", __func__);
     event_msg.resp_status = resp_status;
     memcpy(&event_msg.rsi_ble_event_set_att_rsp, rsi_ble_event_set_att_rsp, sizeof(rsi_ble_set_att_resp_t));
     rsi_ble_app_set_event(RSI_BLE_GATT_INDICATION_CONFIRMATION);
@@ -193,7 +187,7 @@ void rsi_ble_app_set_event(uint32_t event_num)
 {
     SILABS_LOG("%s: starting", __func__);
     event_msg.ble_app_event_map |= BIT(event_num);
-    rsi_semaphore_post(&sl_ble_event_sem);
+    osSemaphoreRelease(sl_ble_event_sem);
     return;
 }
 
@@ -215,7 +209,7 @@ void rsi_gatt_add_attribute_to_list(rsi_ble_t * p_val, uint16_t handle, uint16_t
 {
     if ((p_val->DATA_ix + data_len) >= BLE_ATT_REC_SIZE)
     { //! Check for max data length for the characteristic value
-        LOG_PRINT("\r\n no data memory for att rec values \r\n");
+        SILABS_LOG("\r\n no data memory for att rec values \r\n");
         return;
     }
 

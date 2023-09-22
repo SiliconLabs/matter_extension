@@ -47,7 +47,7 @@ def main():
 
     subprocess.run([slc_path, "configuration", "--sdk", gsdk_root])
     subprocess.run([slc_path, "signature", "trust", "--development-trust"])
-    subprocess.run([slc_path, "signature", "trust", "--extension", "matter:2.1.0"])
+    subprocess.run([slc_path, "signature", "trust", "--extension", "matter:2.1.1"])
     #subprocess.run(["slc", "signature", "trust", "--sdk", gsdk_root, "--extension-path", wisconnect  ])
 
     try:

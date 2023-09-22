@@ -93,10 +93,8 @@ int32_t wfx_rsi_get_ap_info(wfx_wifi_scan_result_t * ap)
     ap->chan     = wfx_rsi.ap_chan;
     memcpy(&ap->bssid[0], &wfx_rsi.ap_mac.octet[0], BSSID_MAX_STR_LEN);
     sl_wifi_get_signal_strength(SL_WIFI_CLIENT_INTERFACE, &rssi);
-    if(status == SL_STATUS_OK)
-    {
-        ap->rssi =  rssi;
-    } 
+    ap->rssi = rssi;
+
     return status;
 }
 
@@ -339,6 +337,7 @@ sl_status_t show_scan_results(sl_wifi_scan_result_t *scan_result)
           ap.rssi     = (-1) * scan_result->scan_info[x].rssi_val;
           memcpy(&ap.bssid[0], &scan_result->scan_info[x].bssid[0], BSSID_MAX_STR_LEN);
           (*wfx_rsi.scan_cb)(&ap);
+          break;
         }
       }
       else

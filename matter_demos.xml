@@ -1935,7 +1935,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325b"/>
 		<property key="demos.imageFile" value="demos/BRD4325B/WiFi/SiWx917-lighting-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/siwx917/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4325B to be used with the 917 SoC</description>
@@ -1945,7 +1945,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325b"/>
 		<property key="demos.imageFile" value="demos/BRD4325B/WiFi/SiWx917-light-switch-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/siwx917/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application for BRD4325B to be used with the 917 SoC</description>
@@ -1955,7 +1955,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325b"/>
 		<property key="demos.imageFile" value="demos/BRD4325B/WiFi/SiWx917-lock-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/lock-app/siwx917/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4325B to be used with the 917 SoC</description>
@@ -1965,7 +1965,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325b"/>
 		<property key="demos.imageFile" value="demos/BRD4325B/WiFi/SiWx917-window-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/window-app/siwx917/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Application for BRD4325B to be used with the 917 SoC</description>
@@ -1975,7 +1975,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325b"/>
 		<property key="demos.imageFile" value="demos/BRD4325B/WiFi/SiWx917-onoff-plug-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/siwx917/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4325B to be used with the 917 SoC</description>
@@ -1985,7 +1985,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325c"/>
 		<property key="demos.imageFile" value="demos/BRD4325C/WiFi/SiWx917-lighting-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/siwx917/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4325C to be used with the 917 SoC</description>
@@ -1995,7 +1995,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325c"/>
 		<property key="demos.imageFile" value="demos/BRD4325C/WiFi/SiWx917-light-switch-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/siwx917/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application for BRD4325C to be used with the 917 SoC</description>
@@ -2005,7 +2005,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325c"/>
 		<property key="demos.imageFile" value="demos/BRD4325C/WiFi/SiWx917-lock-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/lock-app/siwx917/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4325C to be used with the 917 SoC</description>
@@ -2015,7 +2015,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325c"/>
 		<property key="demos.imageFile" value="demos/BRD4325C/WiFi/SiWx917-window-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/window-app/siwx917/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Application for BRD4325C to be used with the 917 SoC</description>
@@ -2025,7 +2025,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325c"/>
 		<property key="demos.imageFile" value="demos/BRD4325C/WiFi/SiWx917-onoff-plug-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/siwx917/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4325C to be used with the 917 SoC</description>
@@ -2035,7 +2035,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325g"/>
 		<property key="demos.imageFile" value="demos/BRD4325G/WiFi/SiWx917-lighting-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/siwx917/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4325G to be used with the 917 SoC</description>
@@ -2045,7 +2045,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325g"/>
 		<property key="demos.imageFile" value="demos/BRD4325G/WiFi/SiWx917-light-switch-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/siwx917/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application for BRD4325G to be used with the 917 SoC</description>
@@ -2055,7 +2055,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325g"/>
 		<property key="demos.imageFile" value="demos/BRD4325G/WiFi/SiWx917-light-switch-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/lock-app/siwx917/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4325G to be used with the 917 SoC</description>
@@ -2065,7 +2065,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325g"/>
 		<property key="demos.imageFile" value="demos/BRD4325G/WiFi/SiWx917-window-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/window-app/siwx917/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Application for BRD4325G to be used with the 917 SoC</description>
@@ -2075,7 +2075,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325g"/>
 		<property key="demos.imageFile" value="demos/BRD4325G/WiFi/SiWx917-onoff-plug-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/siwx917/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4325G to be used with the 917 SoC</description>
@@ -2085,7 +2085,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4338a"/>
 		<property key="demos.imageFile" value="demos/BRD4338A/WiFi/SiWx917-lighting-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/siwx917/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4338A to be used with the 917 SoC</description>
@@ -2095,7 +2095,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4338a"/>
 		<property key="demos.imageFile" value="demos/BRD4338A/WiFi/SiWx917-light-switch-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/siwx917/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application for BRD4338A to be used with the 917 SoC</description>
@@ -2105,7 +2105,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4338a"/>
 		<property key="demos.imageFile" value="demos/BRD4338A/WiFi/SiWx917-lock-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/lock-app/siwx917/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4338A to be used with the 917 SoC</description>
@@ -2115,7 +2115,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4338a"/>
 		<property key="demos.imageFile" value="demos/BRD4338A/WiFi/SiWx917-window-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/window-app/siwx917/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Application for BRD4338A to be used with the 917 SoC</description>
@@ -2125,7 +2125,7 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4338a"/>
 		<property key="demos.imageFile" value="demos/BRD4338A/WiFi/SiWx917-onoff-plug-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
+		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/siwx917/README_.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4338A to be used with the 917 SoC</description>

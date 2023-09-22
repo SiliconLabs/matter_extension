@@ -1,0 +1,56 @@
+id: siwx917_ncp_extension
+label: siwx917_ncp_extension
+description: >
+  Adds support for the HAL and WiFi Driver layer for SiWx917 NCP devices
+package: Matter
+category: Matter-WiFi
+provides:
+- name: siwx917_ncp_extension
+requires:
+- name: spidrv_core
+- name: freertos
+- name: psa_its
+source:
+- path: examples/platform/silabs/efr32/rs911x/sl_wifi_if.c
+- path: examples/platform/silabs/efr32/rs911x/wfx_rsi_host.c
+- path: examples/platform/silabs/efr32/rs911x/hal/efx_spi.c
+- path: examples/platform/silabs/efr32/rs911x/hal/rsi_hal_mcu_interrupt.c
+- path: src/platform/silabs/rs911x/BLEManagerImpl.cpp
+- path: src/platform/silabs/rs911x/wfx_sl_ble_init.c
+- path: third_party/silabs/wifi_sdk/components/si91x/platforms/efx32/efx32_ncp_host.c
+- path: third_party/silabs/wifi_sdk/components/si91x/spi_interface/sl_si91x_spi_driver.c
+
+include:
+- path: src/platform/silabs/rs911x
+  file_list:
+  - path: ble_config.h
+  - path: rsi_ble_config.h
+  - path: wfx_sl_ble_init.h
+- path: examples/platform/silabs/efr32/rs911x
+  file_list:
+  - path: wfx_rsi.h
+  - path: sl_wlan_config.h
+- path: examples/platform/silabs/efr32/rs911x/hal
+  file_list:
+  - path: rsi_hal.h
+  - path: sl_board_configuration.h
+define:
+- name: RS911X_WIFI
+- name: EXP_BOARD
+  value: 1
+- name: CHIP_9117
+  value: 1
+- name: SL_WFX_CONFIG_SCAN
+  value: 1
+- name: SL_WFX_CONFIG_SCAN
+  value: 1
+- name: SL_WFX_USE_SPI
+- name: EFX32_RS911X
+  value: 1
+- name: RS911X_WIFI
+- name: RSI_BLE_ENABLE
+  value: 1
+- name: RSI_WLAN_ENABLE
+- name: RSI_SPI_INTERFACE
+- name: RSI_WITH_OS
+- name: SL_WIFI_COMPONENT_INCLUDED
