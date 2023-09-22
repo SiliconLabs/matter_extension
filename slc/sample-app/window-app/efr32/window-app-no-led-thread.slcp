@@ -19,6 +19,8 @@ component:
 
   - id: matter
     from: matter
+  - id: matter_platform_efr32
+    from: matter
   - id: matter_ble
     from: matter
   - id: matter_thread_ftd
@@ -146,8 +148,6 @@ source:
 define:
   - name: CHIP_CRYPTO_PLATFORM
     value: "1"
-  - name: OPENTHREAD_CONFIG_LOG_OUTPUT
-    value: OPENTHREAD_CONFIG_LOG_OUTPUT_APP
   - name: _WANT_REENT_SMALL
     value: "1"
   - name: NVM3_DEFAULT_NVM_SIZE
@@ -156,6 +156,8 @@ define:
     value: "4092"
 
 configuration:
+  - name: OPENTHREAD_CONFIG_LOG_OUTPUT
+    value: OPENTHREAD_CONFIG_LOG_OUTPUT_APP
   - name: SL_BOARD_ENABLE_VCOM
     value: "1"
   - name: SL_BOARD_ENABLE_DISPLAY

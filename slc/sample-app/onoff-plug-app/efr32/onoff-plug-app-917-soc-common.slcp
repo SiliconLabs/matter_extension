@@ -9,12 +9,12 @@ sdk_extension:
   - id: matter
     version: "2.1.0"
   - id: wiseconnect3_sdk
-    version: "3.0.10"
+    version: "3.0.13"
 
 component:
   - id: matter_wstk_leds
     from: matter
-  - id: matter_917soc
+  - id: matter
     from: matter
   - id: matter_wifi_ble
     from: matter
@@ -61,8 +61,6 @@ component:
   - id: matter_localization_configuration
     from: matter
   - id: matter_network_commissioning
-    from: matter
-  - id: matter_occupancy_sensor
     from: matter
   - id: matter_on_off
     from: matter

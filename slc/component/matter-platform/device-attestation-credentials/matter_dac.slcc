@@ -6,12 +6,8 @@ category: Platform
 quality: production
 provides:
   - name: matter_dac
-include:
-  - path: examples/platform/silabs
-    file_list:
-    - path: SilabsDeviceAttestationCreds.h
-source:
-  - path: examples/platform/silabs/SilabsDeviceAttestationCreds.cpp
+requires:
+  - name: matter_efr32_attestation_credentials
 define:
   - name: SILABS_ATTESTATION_CREDENTIALS
   

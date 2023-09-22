@@ -24,6 +24,8 @@ component:
 
   - id: matter
     from: matter
+  - id: matter_platform_efr32
+    from: matter
   - id: matter_ble
     from: matter
   - id: matter_thread_ftd
@@ -150,8 +152,6 @@ source:
 define:
   - name: CHIP_CRYPTO_PLATFORM
     value: "1"
-  - name: OPENTHREAD_CONFIG_LOG_OUTPUT
-    value: OPENTHREAD_CONFIG_LOG_OUTPUT_APP
   - name: _WANT_REENT_SMALL
     value: "1"
   - name: NVM3_DEFAULT_NVM_SIZE
@@ -159,6 +159,8 @@ define:
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
     value: "4092"
 configuration:
+  - name: OPENTHREAD_CONFIG_LOG_OUTPUT
+    value: OPENTHREAD_CONFIG_LOG_OUTPUT_APP
   - name: SL_MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED
     value: 1
     condition: [matter_thread_cert_libs]

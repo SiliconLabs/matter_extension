@@ -21,6 +21,8 @@ component:
 
   - id: matter
     from: matter
+  - id: matter_platform_efr32
+    from: matter
   - id: matter_ble
     from: matter
   - id: matter_thread_ftd
@@ -55,8 +57,6 @@ component:
     from: matter
   - id: matter_diagnostic_logs
     from: matter
-  - id: matter_ethernet_network_diagnostics
-    from: matter
   - id: matter_fixed_label
     from: matter
   - id: matter_general_commissioning
@@ -75,8 +75,6 @@ component:
     from: matter
   - id: matter_network_commissioning
     from: matter
-  - id: matter_occupancy_sensor
-    from: matter
   - id: matter_on_off
     from: matter
   - id: matter_operational_credentials
@@ -85,15 +83,11 @@ component:
     from: matter
   - id: matter_software_diagnostics
     from: matter
-  - id: matter_switch
-    from: matter
   - id: matter_thread_network_diagnostics
     from: matter
   - id: matter_time_format_localization
     from: matter
   - id: matter_user_label
-    from: matter
-  - id: matter_wifi_network_diagnostics
     from: matter
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
@@ -118,7 +112,7 @@ requires:
      - device_series_2
 
 config_file:
-  - path: ../../../../examples/lighting-app/lighting-common/lighting-app.zap
+  - path: ../../../../examples/lighting-app/silabs/efr32/data_model/lighting-thread-app.zap
     directory: common
 
 include:
@@ -144,8 +138,6 @@ source:
 define:
   - name: CHIP_CRYPTO_PLATFORM
     value: "1"
-  - name: OPENTHREAD_CONFIG_LOG_OUTPUT
-    value: OPENTHREAD_CONFIG_LOG_OUTPUT_APP
   - name: _WANT_REENT_SMALL
     value: "1"
   - name: IS_DEMO_LIGHT
@@ -155,6 +147,8 @@ define:
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
     value: "4092"
 configuration:
+  - name: OPENTHREAD_CONFIG_LOG_OUTPUT
+    value: OPENTHREAD_CONFIG_LOG_OUTPUT_APP
   - name: SL_BOARD_ENABLE_VCOM
     value: "1"
   - name: SL_BOARD_ENABLE_DISPLAY

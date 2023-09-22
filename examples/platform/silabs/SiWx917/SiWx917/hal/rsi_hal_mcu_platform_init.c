@@ -141,8 +141,39 @@ void RSI_Wakeupsw_config(void)
     NVIC_SetPriority(NPSS_TO_MCU_GPIO_INTR_IRQn, 7);
 }
 
-void RSI_Wakeupsw_config_gpio0(void)
-{
+// TODO: can be removed once B0 2.0 board using button init from wifi-sdk platform
+#ifdef SI917_RADIO_BOARD_V2
+void RSI_GPIO_button_config(void) {
+
+  /*Enable clock for EGPIO module*/
+  RSI_CLK_PeripheralClkEnable(M4CLK, EGPIO_CLK, ENABLE_STATIC_CLK);
+
+  /*PAD selection*/
+  RSI_EGPIO_PadSelectionEnable(RSI_EGPIO_PAD_SEL);
+
+  RSI_EGPIO_SetDir(EGPIO, RSI_BTN1_PORT, RSI_BTN1_PIN, 1);
+  /*REN enable */
+  RSI_EGPIO_PadReceiverEnable(RSI_BTN1_PIN);
+
+  /*Configure default GPIO mode(0) */
+  RSI_EGPIO_SetPinMux(EGPIO, RSI_BTN1_PORT, RSI_BTN1_PIN, EGPIO_PIN_MUX_MODE0);
+
+  /*Selects the pin interrupt for the GPIO*/
+  RSI_EGPIO_PinIntSel(EGPIO, PIN_INT, RSI_BTN1_PORT, RSI_BTN1_PIN);
+  RSI_EGPIO_SetIntRiseEdgeEnable(EGPIO, PIN_INT);
+  RSI_EGPIO_SetIntFallEdgeEnable(EGPIO, PIN_INT);
+
+  /*Unmask the  interrupt*/
+  RSI_EGPIO_IntUnMask(EGPIO, PIN_INT);
+
+  /*NVIC enable */
+  NVIC_EnableIRQ(PININT_NVIC_NAME);
+  NVIC_SetPriority(PININT_NVIC_NAME, 7);
+  RSI_EGPIO_IntUnMask(EGPIO, PIN_INT);
+}
+#endif // SI917_RADIO_BOARD_V2
+
+void RSI_NPSSGPIO_button_config(void) {
     /*Configure the NPSS GPIO mode to wake up  */
     RSI_NPSSGPIO_SetPinMux(NPSS_GPIO_0, NPSSGPIO_PIN_MUX_MODE2);
 

@@ -10,6 +10,7 @@ include:
   file_list:
   - path: crypto/hsm/CHIPCryptoPALHsm.h
   - path: crypto/CHIPCryptoPAL.h
+  - path: crypto/hsm/CHIPCryptoPALHsm_config.h
   - path: crypto/SessionKeystore.h
   - path: crypto/RandUtils.h
   - path: crypto/OperationalKeystore.h

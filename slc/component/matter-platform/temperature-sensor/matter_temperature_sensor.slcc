@@ -9,5 +9,7 @@ provides:
   - name: matter_temperature_sensor
 include:
   - path: examples/platform/silabs/efr32
+    file_list:
+    - path: TemperatureSensor.h
 source:
   - path: examples/platform/silabs/efr32/TemperatureSensor.cpp

@@ -1,6 +1,6 @@
 label: window-app-wf200-bootloader
 quality: production
-description: Matter workspace container both a Matter bootloader and Lighting over WiFi Example
+description: Matter workspace container both a Matter bootloader and Window over WiFi Example
 project:
   - path: ../../../sample-app/window-app/efr32/window-app-wf200.slcp
     id: application

@@ -4,12 +4,33 @@ description: SiWx917 platform support for Matter
 package: "Matter"
 category: "Matter-WiFi|Platform"
 quality: production
+
+config_file:
+  - path: examples/platform/silabs/SiWx917/FreeRTOSConfig.h
+    override:
+      component: freertos
+      file_id: freertos_config
+
 requires:
   - name: matter_siwx917
   - name: matter_siwx917_common
+  - name: siwx917_soc_custom_startup
+  - name: device_init_nvic
+
 provides:
   - name: matter_platform_siwx917
   - name: freertos_heap
+  - name: device
+  - name: wiseconnect_toolchain_gcc_override
+  - name: matter_si91x_dual_flash_nvm3_enabled  
+    condition: [brd4325b]   
+  - name: matter_si91x_common_flash_nvm3_enabled  
+    condition: [brd4325c] 
+  - name: matter_si91x_common_flash_nvm3_enabled  
+    condition: [brd4325g] 
+  - name: matter_si91x_common_flash_nvm3_enabled
+    condition: [brd4338a]
+
 include:
   - path: examples/platform/silabs
     file_list:
@@ -33,10 +54,6 @@ source:
   - path: examples/platform/silabs/SiWx917/SiWx917/hal/rsi_hal_mcu_platform_init.c
 define:
   - name: SL_WFX_CONFIG_SCAN
-    value: 1
-  - name: SL_HEAP_SIZE
-    value: 32768
-  - name: SL_WIFI
     value: 1
   - name: CHIP_9117
     value: 1
@@ -64,3 +81,19 @@ toolchain_settings:
     value: "-Wl,--wrap=_free_r"
   - option: gcc_linker_option
     value: "-Wl,--wrap=_calloc_r"
+
+  # flags for the SiWx917
+  - option: gcc_compiler_option
+    value: -Wno-empty-body
+  - option: gcc_compiler_option
+    value: -Wno-cpp
+  - option: gcc_compiler_option
+    value: -Wno-missing-braces
+  - option: gcc_compiler_option
+    value: -Wno-sign-compare
+  - option: gcc_compiler_option
+    value: -Wno-error
+  - option: gcc_compiler_option
+    value: -Wno-unused-variable
+  - option: gcc_compiler_option
+    value: -Wno-unused-function

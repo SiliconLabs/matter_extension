@@ -28,7 +28,6 @@
       "pathRelativity": "relativeToZap",
       "path": "../../../src/app/zap-templates/app-templates.json",
       "type": "gen-templates-json",
-      "category": "matter",
       "version": "chip-v1"
     }
   ],
@@ -5607,7 +5606,7 @@
           "mfgCode": null,
           "define": "GROUPS_CLUSTER",
           "side": "server",
-          "enabled": 1,
+          "enabled": 0,
           "commands": [
             {
               "name": "AddGroupResponse",
@@ -7920,6 +7919,5 @@
       "endpointVersion": 1,
       "deviceIdentifier": 10
     }
-  ],
-  "log": []
+  ]
 }

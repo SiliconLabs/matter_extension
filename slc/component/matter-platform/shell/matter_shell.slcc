@@ -66,8 +66,11 @@ define:
 - name: OPENTHREAD_CONFIG_CLI_TRANSPORT
   value: OT_CLI_TRANSPORT_CONSOLE
   condition: [matter_thread]
+- name: SL_MATTER_CLI_ARG_PARSER
+  value: 1
 conflicts:
   - name: matter_low_power
   - name: matter_sed
   - name: matter_sed_wifi
   - name: matter_sed_wifi_917ncp
+  - name: matter_no_lcd_shell

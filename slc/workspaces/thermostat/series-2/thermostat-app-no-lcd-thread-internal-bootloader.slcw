@@ -1,0 +1,12 @@
+label: thermostat-no-lcd-thread-internal-bootloader
+quality: production
+description: Matter workspace container both a Matter bootloader and Thermostat over Thread Example
+project:
+  - path: ../../../sample-app/thermostat/efr32/thermostat-no-lcd-thread.slcp
+    id: application
+    output: thermostat-no-lcd-thread-bootloader
+  - path: ../../../sample-app/bootloaders/bootloader-storage-internal-single-series-2.slcp
+    id: bootloader
+    output: matter-bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

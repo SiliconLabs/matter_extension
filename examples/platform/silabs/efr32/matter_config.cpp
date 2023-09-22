@@ -60,6 +60,11 @@ static chip::DeviceLayer::Internal::Efr32PsaOperationalKeystore gOperationalKeys
 ICDSubscriptionCallback SilabsMatterConfig::mICDSubscriptionHandler;
 #endif // CHIP_CONFIG_USE_ICD_SUBSCRIPTION_CALLBACKS
 
+#ifdef PERFORMANCE_TEST_ENABLED // SLC-FIX
+// #include <app/TestEventTriggerDelegate.h>
+#include <performance_test_commands.h>
+#endif
+
 #if CHIP_ENABLE_OPENTHREAD
 #include <inet/EndPointStateOpenThread.h>
 #include <openthread/cli.h>
@@ -178,6 +183,12 @@ CHIP_ERROR SilabsMatterConfig::InitMatter(const char * appName)
     // instead of the default (insecure) one.
     gOperationalKeystore.Init();
     initParams.operationalKeystore = &gOperationalKeystore;
+#endif
+
+#ifdef PERFORMANCE_TEST_ENABLED // SLC-FIX
+    // Set up Test Even Trigger command of the General Diagnostics cluster. Used only in performace testing
+    static SilabsTestEventTriggerDelegate testEventTriggerDelegate{ ByteSpan(kTestEventTriggerEnableKey) };
+    initParams.testEventTriggerDelegate = &testEventTriggerDelegate;
 #endif
 
     // Initialize the remaining (not overridden) providers to the SDK example defaults

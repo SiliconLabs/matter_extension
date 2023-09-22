@@ -60,6 +60,9 @@
 #include <platform/silabs/NetworkCommissioningWiFiDriver.h>
 #endif // SL_WIFI
 
+#ifdef PERFORMANCE_TEST_ENABLED // SLC-FIX
+#include <performance_test_commands.h>
+#endif
 /**********************************************************
  * Defines and Constants
  *********************************************************/
@@ -239,6 +242,10 @@ CHIP_ERROR BaseApplication::Init(Identify * identifyObj)
     {
         SILABS_LOG("Getting QR code failed!");
     }
+
+#ifdef PERFORMANCE_TEST_ENABLED // SLC-FIX
+    RegisterPerfTestCommands();
+#endif
 
     PlatformMgr().AddEventHandler(OnPlatformEvent, 0);
     sIsProvisioned = ConnectivityMgr().IsThreadProvisioned();

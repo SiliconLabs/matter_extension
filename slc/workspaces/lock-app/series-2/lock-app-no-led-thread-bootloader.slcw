@@ -1,6 +1,6 @@
 label: lock-app-no-led-thread-bootloader
 quality: production
-description: Matter workspace container both a Matter bootloader and Lighting over Thread Example
+description: Matter workspace container both a Matter bootloader and Lock over Thread Example
 project:
   - path: ../../../sample-app/lock-app/efr32/lock-app-no-led-thread.slcp
     id: application

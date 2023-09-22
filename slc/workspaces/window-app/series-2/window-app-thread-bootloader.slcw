@@ -1,6 +1,6 @@
 label: window-app-thread-bootloader
 quality: production
-description: Matter workspace container both a Matter bootloader and Lighting over Thread Example
+description: Matter workspace container both a Matter bootloader and Window over Thread Example
 project:
   - path: ../../../sample-app/window-app/efr32/window-app-thread.slcp
     id: application

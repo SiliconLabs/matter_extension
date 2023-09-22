@@ -16,18 +16,23 @@ conflicts:
   - name: matter_low_power
   - name: matter_sed
   - name: matter_sed_wifi
+  - name: matter_no_lcd_shell
 include:
-  - path: examples/platform/silabs/display/
-  - path: examples/window-app/silabs/efr32/include
-    file_list:
-      - path: LcdPainter.h
-        condition: matter_window
-  - path: examples/thermostat/silabs/efr32/include
-    file_list:
-      - path: ThermostatIcons.h
-        condition: matter_thermostat_app
-      - path: ThermostatUI.h
-        condition: matter_thermostat_app
+- path: examples/platform/silabs/display/
+  file_list:
+  - path: demo-ui.h
+  - path: demo-ui-bitmaps.h
+  - path: lcd.h
+- path: examples/window-app/silabs/efr32/include
+  file_list:
+  - path: LcdPainter.h
+    condition: matter_window
+- path: examples/thermostat/silabs/efr32/include
+  file_list:
+  - path: ThermostatIcons.h
+    condition: matter_thermostat_app
+  - path: ThermostatUI.h
+    condition: matter_thermostat_app
 source:
   - path: examples/platform/silabs/display/demo-ui.c
   - path: examples/platform/silabs/display/lcd.cpp

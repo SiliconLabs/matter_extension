@@ -21,6 +21,8 @@ component:
     from: matter
   - id: matter
     from: matter
+  - id: matter_platform_efr32
+    from: matter
   - id: matter_wifi_ble
     from: matter
   - id: matter_ota_support
@@ -32,6 +34,8 @@ component:
 #  - id: matter_gatt
 #    from: matter
 
+  - id: matter_efr32_ncp
+    from: matter
   - id: matter_wifi
     from: matter
   - id: wiseconnect_sapi

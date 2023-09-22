@@ -9,12 +9,12 @@ sdk_extension:
   - id: matter
     version: "2.1.0"
   - id: wiseconnect3_sdk
-    version: "3.0.10"
+    version: "3.0.13"
 
 component:
   - id: matter_wstk_leds
     from: matter
-  - id: matter_917soc
+  - id: matter
     from: matter
   - id: matter_wifi_ble
     from: matter
@@ -42,8 +42,6 @@ component:
     from: matter
   - id: matter_diagnostic_logs
     from: matter
-  - id: matter_ethernet_network_diagnostics
-    from: matter
   - id: matter_fixed_label
     from: matter
   - id: matter_general_commissioning
@@ -62,17 +60,11 @@ component:
     from: matter
   - id: matter_network_commissioning
     from: matter
-  - id: matter_occupancy_sensor
-    from: matter
   - id: matter_on_off
     from: matter
   - id: matter_operational_credentials
     from: matter
   - id: matter_software_diagnostics
-    from: matter
-  - id: matter_switch
-    from: matter
-  - id: matter_thread_network_diagnostics
     from: matter
   - id: matter_time_format_localization
     from: matter
@@ -117,7 +109,7 @@ component:
     from: wiseconnect3_sdk
 
 config_file:
-  - path: ../../../../examples/lighting-app/lighting-common/lighting-app.zap
+  - path: ../../../../examples/lighting-app/silabs/efr32/data_model/lighting-wifi-app.zap
     directory: common
 
 include:

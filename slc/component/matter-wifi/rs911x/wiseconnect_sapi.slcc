@@ -99,10 +99,6 @@ source:
 define:
 - name: SL_WFX_CONFIG_SCAN
   value: 1
-- name: SL_HEAP_SIZE
-  value: 32768
-- name: SL_WIFI
-  value: 1
 - name: SL_WFX_USE_SPI
 - name: EFX32_RS911X
   value: 1

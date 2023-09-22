@@ -50,7 +50,8 @@ void initAntenna(void);
 // TODO: to be checked and add a header
 void soc_pll_config(void);
 void RSI_Wakeupsw_config(void);
-void RSI_Wakeupsw_config_gpio0(void);
+void RSI_NPSSGPIO_button_config(void);
+void RSI_GPIO_button_config(void);
 
 void init_ccpPlatform(void)
 {
@@ -63,7 +64,11 @@ void init_ccpPlatform(void)
 
     // BTN0 and BTN1 init
     RSI_Wakeupsw_config();
-    RSI_Wakeupsw_config_gpio0();
+#ifdef SI917_RADIO_BOARD_V2
+    RSI_GPIO_button_config();
+#else
+    RSI_NPSSGPIO_button_config();
+#endif
 
 #if SILABS_LOG_ENABLED
     silabsInitLog();

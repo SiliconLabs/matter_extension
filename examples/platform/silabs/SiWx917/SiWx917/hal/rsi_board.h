@@ -42,6 +42,27 @@ void RSI_Board_LED_Toggle(int);
 #ifdef __cplusplus
 }
 #endif
+
+#define BTN0 0
+#define BTN1 1
+#define BTN_PRESSED 1
+#define BTN_RELEASED 0
+
+// TODO: can be removed once B0 2.0 board using button init from wifi-sdk platform
+#ifdef SI917_RADIO_BOARD_V2
+#include "rsi_rom_egpio.h"
+
+#define PIN_INT 7
+#define RSI_BTN0_PORT 0
+#define RSI_BTN1_PORT 0
+#define RSI_BTN0_PIN 2
+#define RSI_BTN1_PIN 11
+#define PININT_NVIC_NAME EGPIO_PIN_7_IRQn
+#define RSI_EGPIO_PAD_SEL 6
+#else
+#define RSI_BTN0_PIN 0
+#define RSI_BTN1_PIN 2
+#endif // SI917_RADIO_BOARD_V2
 #endif /*__RSI_BOARD_H__*/
 
 /* @} end of Board_Drivers */

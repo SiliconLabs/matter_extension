@@ -103,7 +103,7 @@
 extern "C" {
 #endif
 
-#include "RS1xxxx_9117.h"
+#include "si91x_device.h"
 #include <CHIPProjectConfig.h>
 #include <stdint.h>
 
@@ -163,7 +163,7 @@ to all Cortex-M ports, and do not rely on any particular library functions. */
 #define configKERNEL_INTERRUPT_PRIORITY (255)
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
 See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
-#define configMAX_SYSCALL_INTERRUPT_PRIORITY 48
+#define configMAX_SYSCALL_INTERRUPT_PRIORITY 20
 #define configENABLE_FPU 0
 #define configENABLE_MPU 0
 /* FreeRTOS Secure Side Only and TrustZone Security Extension */
@@ -196,7 +196,7 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 
 #ifndef configTOTAL_HEAP_SIZE
 #ifdef DIC_ENABLE
-#define configTOTAL_HEAP_SIZE ((size_t)(50 * 1024))
+#define configTOTAL_HEAP_SIZE ((size_t)(68 * 1024)) // SLC-FIX
 #else
 #define configTOTAL_HEAP_SIZE ((size_t)(34 * 1024))
 #endif // DIC_ENABLE

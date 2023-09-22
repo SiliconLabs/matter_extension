@@ -4,12 +4,13 @@ description: EFR32 platform support for Matter
 package: Matter
 category: Platform
 quality: production
-requires:
-- name: matter
-- name: matter_efr32
-  condition: [matter_thread]
-- name: matter_efr32_wifi
-  condition: [matter_wifi]
+
+config_file:
+  - path: examples/platform/silabs/efr32/FreeRTOSConfig.h
+    override:
+      component: freertos
+      file_id: freertos_config
+
 provides:
 - name: matter_platform_efr32
 - name: freertos_heap
@@ -27,6 +28,7 @@ include:
   - path: matter_shell.h
   - path: MemMonitoring.h
   - path: efr32/BaseApplication.h
+  
 source:
 - path: examples/platform/silabs/efr32/BaseApplication.cpp
   unless: [window_app]
@@ -55,3 +57,25 @@ toolchain_settings:
   value: -Wl,--wrap=_free_r
 - option: gcc_linker_option
   value: -Wl,--wrap=_calloc_r
+
+requires:
+  - name: matter_efr32
+    condition: [matter_thread]
+  - name: matter_efr32_wifi
+    condition: [matter_wifi]
+  - name: bootloader_interface
+  - name: sl_system
+  - name: freertos
+  - name: sleeptimer
+  - name: dmadrv
+  - name: gpiointerrupt
+  - name: nvm3_default
+  - name: mpu
+  - name: udelay
+  - name: component_catalog
+  - name: rail_lib_multiprotocol
+  - name: rail_util_pti
+  - name: emlib
+    
+recommends:
+  - id: matter_psa_crypto_config

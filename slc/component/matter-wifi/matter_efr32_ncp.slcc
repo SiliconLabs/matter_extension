@@ -1,0 +1,111 @@
+id: matter_efr32_ncp
+package: Matter
+description: >
+  EFR32 based Wifi Interfaces for NCPs
+label: src_platform_EFR32_Components
+category: Matter-WiFi|Platform
+quality: production
+define:
+  - name: CORTEXM3_EFM32_MICRO
+  - name: EFR32_SERIES2_CONFIG4_MICRO
+  - name: NVM3_DEFAULT_NVM_SIZE
+    value: 40960
+  - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
+    value: 4092
+  - name: PHY
+    value: EMBER_PHY_RAIL
+  - name: CORTEXM3
+  - name: MICRO
+    value: EMBER_MICRO_CORTEXM3_EFR32
+  - name: SL_SUPRESS_DEPRECATION_WARNINGS_SDK_3_1
+  - name: SL_COMPONENT_CATALOG_PRESENT
+  - name: CONFIG_ENABLE_UART
+  - name: CONFIG_USE_EXTERNAL_FLASH
+    unless: [brd4186c]
+  - name: CONFIG_USE_EXTERNAL_FLASH
+    unless: [brd4187c]    
+  - name: EFR32_SERIES2_CONFIG4_MICRO
+    condition: [brd4186c]
+  - name: EFR32_SERIES2_CONFIG4_MICRO
+    condition: [brd4187c]
+  - name: EFR32MG12
+    condition: [brd4161a]
+  - name: EFR32MG12
+    condition: [brd4162a]
+  - name: EFR32MG12
+    condition: [brd4163a]
+  - name: EFR32MG12
+    condition: [brd4164a]
+  - name: EFR32MG12
+    condition: [brd4170a]
+  - name: EFR32MG12_BRD4161A
+    value: "1"
+    condition: [brd4161a]
+  - name: EFR32MG12_BRD4162A
+    value: "1"
+    condition: [brd4162a]
+  - name: EFR32MG12_BRD4163A
+    value: "1"
+    condition: [brd4163a]
+  - name: EFR32MG12_BRD4164A
+    value: "1"
+    condition: [brd4164a]
+  - name: EFR32MG12_BRD4170A
+    value: "1"
+    condition: [brd4170a]
+  - name: EFR32MG24
+    condition: [brd4186c]
+  - name: EFR32MG24
+    condition: [brd4187c]
+  - name: EFR32MG24_BRD4186C
+    value: "1"
+    condition: [brd4186c]
+  - name: EFR32MG24_BRD4187C
+    value: "1"
+    condition: [brd4187c]
+  - name: USE_NVM3
+    value: 1
+  - name: BOARD_ID
+    value: BRD4161A
+    condition: [brd4161a]
+  - name: BOARD_ID
+    value: BRD4162A
+    condition: [brd4162a]
+  - name: BOARD_ID
+    value: BRD4163A
+    condition: [brd4163a]
+  - name: BOARD_ID
+    value: BRD4164A
+    condition: [brd4164a]
+  - name: BOARD_ID
+    value: BRD4170A
+    condition: [brd4170a]
+  - name: BOARD_ID
+    value: BRD4186C
+    condition: [brd4186c]
+  - name: BOARD_ID
+    value: BRD4187C
+    condition: [brd4187c]
+  - name: OTA_PERIODIC_TIMEOUT
+    value: 86400
+  - name: SL_POWER_MANAGER_LOWEST_EM_ALLOWED
+    value: "1"
+  - name: SL_POWER_MANAGER_CONFIG_VOLTAGE_SCALING_FAST_WAKEUP
+    value: "1"
+provides:
+- name: matter_efr32_ncp
+include:
+- path: src/include/platform
+- path: src/platform/silabs/efr32
+- path: src/platform/silabs/efr32/wifi
+  file_list:
+  - path: wfx_host_events.h
+  - path: wfx_msgs.h
+  - path: dhcp_client.h
+  - path: wifi_config.h
+  - path: ethernetif.h
+source:
+- path: src/platform/silabs/efr32/wifi/dhcp_client.cpp
+- path: src/platform/silabs/efr32/wifi/ethernetif.cpp
+- path: src/platform/silabs/efr32/wifi/lwip_netif.cpp
+- path: src/platform/silabs/efr32/wifi/wfx_notify.cpp

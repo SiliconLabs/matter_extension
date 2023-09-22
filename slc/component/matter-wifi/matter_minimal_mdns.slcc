@@ -14,19 +14,16 @@ define:
     value: 0
 -   name: CHIP_MINMDNS_DEFAULT_POLICY
     value: 1
+requires:
+  - name: matter_core
+  - name: matter_default_policy
+  - name: matter_records
+  - name: matter_responders
+  - name: matter_address_policy
 include:
   - path: src/lib/dnssd/minimal_mdns
 source:
--   path: src/lib/dnssd/minimal_mdns/AddressPolicy.cpp
--   path: src/lib/dnssd/minimal_mdns/AddressPolicy_DefaultImpl.cpp
 -   path: src/lib/dnssd/minimal_mdns/Parser.cpp
 -   path: src/lib/dnssd/minimal_mdns/RecordData.cpp
 -   path: src/lib/dnssd/minimal_mdns/ResponseSender.cpp
 -   path: src/lib/dnssd/minimal_mdns/Server.cpp
--   path: src/lib/dnssd/minimal_mdns/core/QName.cpp
--   path: src/lib/dnssd/minimal_mdns/core/QNameString.cpp
--   path: src/lib/dnssd/minimal_mdns/core/RecordWriter.cpp
--   path: src/lib/dnssd/minimal_mdns/records/IP.cpp
--   path: src/lib/dnssd/minimal_mdns/records/ResourceRecord.cpp
--   path: src/lib/dnssd/minimal_mdns/responders/IP.cpp
--   path: src/lib/dnssd/minimal_mdns/responders/QueryResponder.cpp

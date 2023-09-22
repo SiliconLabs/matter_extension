@@ -12,10 +12,10 @@ define:
     value: '1'
 -   name: MBEDTLS_SSL_MAX_CONTENT_LEN
     value: "768"
-    condition: [matter]
+    condition: [matter_efr32_wifi]
 -   name: SIWX_917
     value: "1"
-    condition: [matter_917soc]
+    condition: [matter_platform_siwx917]
 description:
     This component enables Direct Internet connectivity feature for matter-wifi
 id: matter_dic
@@ -49,17 +49,17 @@ provides:
 -   name: matter_dic
 requires:
   - name: mbedtls_tls
-    condition: [matter]
+    condition: [matter_efr32_wifi]
   - name: mbedtls_rsa
-    condition: [matter]
+    condition: [matter_efr32_wifi]
   - name: mbedtls_pki
-    condition: [matter]
+    condition: [matter_efr32_wifi]
   - name: mbedtls_jpake
-    condition: [matter]
+    condition: [matter_efr32_wifi]
   - name: mbedtls_ecdhe_key_exchange
-    condition: [matter]
+    condition: [matter_efr32_wifi]
   - name: psa_crypto_tls12_prf
-    condition: [matter]
+    condition: [matter_efr32_wifi]
 template_contribution:
   - name: mbedtls_ssl_content_len_in_requirement
     value: 5120
