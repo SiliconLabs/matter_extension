@@ -1,5 +1,5 @@
 
-category: Clusters
+category: Clusters|Measurement
 description: Implementation of the Occupancy Sensor Server Cluster
 id: matter_occupancy_sensor
 label: Occupancy Sensor Server Cluster

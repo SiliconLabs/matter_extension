@@ -36,14 +36,14 @@
 #define DIC_KEEP_ALIVE 0
 
 #if USE_AWS
-#define DIC_CLIENT_ID "SQA_DIC_C3"
+#define DIC_CLIENT_ID ""
 #define DIC_CLIENT_USER NULL
 #define DIC_CLIENT_PASS NULL
 
 #elif USE_MOSQUITTO
 
-#define DIC_CLIENT_USER "explorer1"
-#define DIC_CLIENT_PASS "p@ssw0rd"
+#define DIC_CLIENT_USER ""
+#define DIC_CLIENT_PASS ""
 
 
 #endif //USE_MOSQUITTO

@@ -2,7 +2,7 @@ id: matter_lcd
 label: Matter Display
 description: Support for liquid crystal display on matter devboards
 package: "Matter"
-category: Platform
+category: Platform|Display
 quality: production
 requires:
   - name: matter

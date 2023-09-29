@@ -2,7 +2,7 @@ id: matter_dac
 label: Matter Device Attestation Credentials
 description: Enables Matter Device Attestation Credentials
 package: "Matter"
-category: Platform
+category: Platform|Security
 quality: production
 provides:
   - name: matter_dac

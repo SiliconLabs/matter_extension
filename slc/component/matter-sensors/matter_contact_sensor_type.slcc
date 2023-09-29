@@ -1,4 +1,4 @@
-category: Matter Sensors
+category: Platform|Sensors
 description: Add to enable contact sensor in sensor-app
 id: matter_contact_sensor_type
 label: Matter Contact Sensor

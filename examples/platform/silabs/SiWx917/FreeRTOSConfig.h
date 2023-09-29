@@ -106,6 +106,7 @@ extern "C" {
 #include "si91x_device.h"
 #include <CHIPProjectConfig.h>
 #include <stdint.h>
+#include <stdio.h>
 
 /*-----------------------------------------------------------
  * Application specific definitions.

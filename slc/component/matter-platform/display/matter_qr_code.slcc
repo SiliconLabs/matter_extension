@@ -2,12 +2,16 @@ id: matter_qr_code
 label: Matter QR Code Display
 description: Enables showing the QR Code on the LCD
 package: "Matter"
-category: Stack
+category: Platform|Display
 quality: production
 requires:
   - name: matter_lcd
+    condition: [matter_platform_efr32]
+  - name: matter_lcd_917SOC
+    condition: [brd4338a]
   - name: matter_libqrcode_common
   - name: matter_uart
+    condition: [matter_platform_efr32]
 provides:
   - name: matter_qr_code
 conflicts:

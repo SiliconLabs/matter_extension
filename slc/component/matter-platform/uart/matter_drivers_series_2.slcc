@@ -3,7 +3,7 @@ label: Matter UART and Clock for Series 2 Boards
 description: >
   Matter UART and clock selection for Series 2 boards
 package: "Matter"
-category: Platform
+category: Platform|Drivers
 quality: production
 provides:
   - name: matter_drivers_series_2

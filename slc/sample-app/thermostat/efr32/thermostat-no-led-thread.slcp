@@ -27,7 +27,7 @@ component:
   - id: rail_util_pti
   - id: matter_ota_support
     from: matter
-  - id: matter_mbedtls
+  - id: matter_crypto
     from: matter
   - id: matter_shell
     from: matter
@@ -106,11 +106,6 @@ component:
   # Override RTT
   - id: matter_segger_rtt
     from: matter
-  # Override psa crypto config
-  - id: matter_psa_crypto_config
-    from: matter
-  - id: matter_psa_crypto_builtin_override
-    from: matter
   - id: matter_wstk_no_leds
     from: matter
 
@@ -179,7 +174,6 @@ configuration:
     condition: [matter_thread_cert_libs]
   - name: SL_MBEDTLS_KEY_EXCHANGE_PSK_ENABLED
     value: 1
-    condition: [matter_thread_cert_libs]
   - name: OPENTHREAD_CONFIG_COAP_API_ENABLE
     value: 1
     condition: [matter_thread_coap_cert_libs]

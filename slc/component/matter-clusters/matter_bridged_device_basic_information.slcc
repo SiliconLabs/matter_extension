@@ -1,5 +1,5 @@
 
-category: Clusters
+category: Clusters|CHIP
 description: Implementation of the Bridged Device Basic Information Server Cluster
 id: matter_bridged_device_basic_information
 label: Bridged Device Basic Information Server Cluster

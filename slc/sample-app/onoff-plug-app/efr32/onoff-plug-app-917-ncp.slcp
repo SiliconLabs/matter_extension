@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.0"
+    version: "2.1.1"
   - id: wiseconnect3_sdk
     version: "3.1.0"
 
@@ -28,7 +28,7 @@ component:
     from: matter
   - id: matter_ota_support
     from: matter
-  - id: matter_mbedtls
+  - id: matter_crypto
     from: matter
   - id: silabs_factory_data_provider
     from: matter
@@ -105,9 +105,7 @@ component:
   # Override RTT
   - id: matter_segger_rtt
     from: matter
-  # Override psa crypto config
-  - id: matter_psa_crypto_config
-    from: matter
+
 
   - id: si91x
     from: wiseconnect3_sdk
@@ -118,8 +116,7 @@ component:
   - id: si91x_basic_buffers
     from: wiseconnect3_sdk
 
-  - id: matter_psa_crypto_builtin_override
-    from: matter
+
 
   - id: si91x_support
     from: wiseconnect3_sdk

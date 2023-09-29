@@ -1,124 +1,104 @@
 <?xml version="1.0" ?>
 <demos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.silabs.com/ss/Demo.ecore">
-	<demo name="brd4170a.demo.light_switch_app_rs911x" label="Matter - SoC Light Switch over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Light Switch app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4170a"/>
-		<property key="demos.imageFile" value="demos/BRD4170A/WiFi/light-switch-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4170A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
-	</demo>
 	<demo name="brd4170a.demo.thermostat_app_rs911x" label="Matter - SoC Thermostat over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4170a"/>
 		<property key="demos.imageFile" value="demos/BRD4170A/WiFi/thermostat-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4170A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4170a.demo.sensor_app_rs911x" label="Matter - SoC Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
+	<demo name="brd4170a.demo.sensor_app_rs911x" label="Matter - NCP Sensor over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4170a"/>
 		<property key="demos.imageFile" value="demos/BRD4170A/WiFi/sensor-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application for BRD4170A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4170a.demo.window_app_rs911x" label="Matter - SoC Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
+	<demo name="brd4170a.demo.window_app_rs911x" label="Matter - NCP Window Covering over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4170a"/>
 		<property key="demos.imageFile" value="demos/BRD4170A/WiFi/window-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application for BRD4170A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4170a.demo.lighting_app_rs911x" label="Matter - SoC Lighting over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
+	<demo name="brd4170a.demo.lighting_app_rs911x" label="Matter - NCP Lighting over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lighting app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4170a"/>
 		<property key="demos.imageFile" value="demos/BRD4170A/WiFi/lighting-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4170A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4170a.demo.lock_app_rs911x" label="Matter - SoC Lock over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lock app"/>
+	<demo name="brd4170a.demo.lock_app_rs911x" label="Matter - NCP Lock over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4170a"/>
 		<property key="demos.imageFile" value="demos/BRD4170A/WiFi/lock-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4170A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4170a.demo.onoff_plug_app_rs911x" label="Matter - SoC Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
+	<demo name="brd4170a.demo.onoff_plug_app_rs911x" label="Matter - NCP Onoff Plug over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4170a"/>
 		<property key="demos.imageFile" value="demos/BRD4170A/WiFi/onoff-plug-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4170A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4170a.demo.onoff_plug_app_wf200" label="Matter - SoC Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
+	<demo name="brd4170a.demo.onoff_plug_app_wf200" label="Matter - NCP Onoff Plug over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4170a"/>
 		<property key="demos.imageFile" value="demos/BRD4170A/WiFi/onoff-plug-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4170A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4170a.demo.window_app_wf200" label="Matter - SoC Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
+	<demo name="brd4170a.demo.window_app_wf200" label="Matter - NCP Window Covering over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4170a"/>
 		<property key="demos.imageFile" value="demos/BRD4170A/WiFi/window-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application for BRD4170A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4170a.demo.sensor_app_wf200" label="Matter - SoC Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
+	<demo name="brd4170a.demo.sensor_app_wf200" label="Matter - NCP Sensor over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4170a"/>
 		<property key="demos.imageFile" value="demos/BRD4170A/WiFi/sensor-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application for BRD4170A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4170a.demo.lock_app_wf200" label="Matter - SoC Lock over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lock app"/>
+	<demo name="brd4170a.demo.lock_app_wf200" label="Matter - NCP Lock over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4170a"/>
 		<property key="demos.imageFile" value="demos/BRD4170A/WiFi/lock-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4170A to be used with WF200 Wi-Fi expansion board</description>
-	</demo>
-	<demo name="brd4170a.demo.light_switch_app_wf200" label="Matter - SoC Light Switch over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Light Switch app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4170a"/>
-		<property key="demos.imageFile" value="demos/BRD4170A/WiFi/light-switch-app-wf200.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4170A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
 	<demo name="brd4170a.demo.lighting_app_wf200" label="Matter - SoC Lighting over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
@@ -126,29 +106,19 @@
 		<property key="core.boardCompatibility" value="brd4170a"/>
 		<property key="demos.imageFile" value="demos/BRD4170A/WiFi/lighting-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4170A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4170a.demo.thermostat_app_wf200" label="Matter - SoC Thermostat over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
+	<demo name="brd4170a.demo.thermostat_app_wf200" label="Matter - NCP Thermostat over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Thermostat app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4170a"/>
 		<property key="demos.imageFile" value="demos/BRD4170A/WiFi/thermostat-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4170A to be used with WF200 Wi-Fi expansion board</description>
-	</demo>
-	<demo name="brd4162a.demo.light_switch_app_rs911x" label="Matter - SoC Light Switch over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Light Switch app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4162a"/>
-		<property key="demos.imageFile" value="demos/BRD4162A/WiFi/light-switch-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4162A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4162a.demo.thermostat_app_rs911x" label="Matter - SoC Thermostat over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
@@ -156,109 +126,99 @@
 		<property key="core.boardCompatibility" value="brd4162a"/>
 		<property key="demos.imageFile" value="demos/BRD4162A/WiFi/thermostat-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4162A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4162a.demo.sensor_app_rs911x" label="Matter - SoC Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
+	<demo name="brd4162a.demo.sensor_app_rs911x" label="Matter - NCP Sensor over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4162a"/>
 		<property key="demos.imageFile" value="demos/BRD4162A/WiFi/sensor-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application for BRD4162A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4162a.demo.window_app_rs911x" label="Matter - SoC Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
+	<demo name="brd4162a.demo.window_app_rs911x" label="Matter - NCP Window Covering over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4162a"/>
 		<property key="demos.imageFile" value="demos/BRD4162A/WiFi/window-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application for BRD4162A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4162a.demo.lighting_app_rs911x" label="Matter - SoC Lighting over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
+	<demo name="brd4162a.demo.lighting_app_rs911x" label="Matter - NCP Lighting over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lighting app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4162a"/>
 		<property key="demos.imageFile" value="demos/BRD4162A/WiFi/lighting-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4162A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4162a.demo.lock_app_rs911x" label="Matter - SoC Lock over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lock app"/>
+	<demo name="brd4162a.demo.lock_app_rs911x" label="Matter - NCP Lock over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4162a"/>
 		<property key="demos.imageFile" value="demos/BRD4162A/WiFi/lock-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4162A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4162a.demo.onoff_plug_app_rs911x" label="Matter - SoC Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
+	<demo name="brd4162a.demo.onoff_plug_app_rs911x" label="Matter - NCP Onoff Plug over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4162a"/>
 		<property key="demos.imageFile" value="demos/BRD4162A/WiFi/onoff-plug-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4162A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4162a.demo.onoff_plug_app_wf200" label="Matter - SoC Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
+	<demo name="brd4162a.demo.onoff_plug_app_wf200" label="Matter - NCP Onoff Plug over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4162a"/>
 		<property key="demos.imageFile" value="demos/BRD4162A/WiFi/onoff-plug-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4162A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4162a.demo.window_app_wf200" label="Matter - SoC Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
+	<demo name="brd4162a.demo.window_app_wf200" label="Matter - NCP Window Covering over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4162a"/>
 		<property key="demos.imageFile" value="demos/BRD4162A/WiFi/window-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application for BRD4162A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4162a.demo.sensor_app_wf200" label="Matter - SoC Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
+	<demo name="brd4162a.demo.sensor_app_wf200" label="Matter - NCP Sensor over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4162a"/>
 		<property key="demos.imageFile" value="demos/BRD4162A/WiFi/sensor-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application for BRD4162A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4162a.demo.lock_app_wf200" label="Matter - SoC Lock over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lock app"/>
+	<demo name="brd4162a.demo.lock_app_wf200" label="Matter - NCP Lock over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4162a"/>
 		<property key="demos.imageFile" value="demos/BRD4162A/WiFi/lock-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4162A to be used with WF200 Wi-Fi expansion board</description>
-	</demo>
-	<demo name="brd4162a.demo.light_switch_app_wf200" label="Matter - SoC Light Switch over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Light Switch app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4162a"/>
-		<property key="demos.imageFile" value="demos/BRD4162A/WiFi/light-switch-app-wf200.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4162A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
 	<demo name="brd4162a.demo.lighting_app_wf200" label="Matter - SoC Lighting over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
@@ -266,17 +226,17 @@
 		<property key="core.boardCompatibility" value="brd4162a"/>
 		<property key="demos.imageFile" value="demos/BRD4162A/WiFi/lighting-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4162A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4162a.demo.thermostat_app_wf200" label="Matter - SoC Thermostat over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
+	<demo name="brd4162a.demo.thermostat_app_wf200" label="Matter - NCP Thermostat over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Thermostat app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4162a"/>
 		<property key="demos.imageFile" value="demos/BRD4162A/WiFi/thermostat-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4162A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
@@ -286,7 +246,7 @@
 		<property key="core.boardCompatibility" value="brd4162a"/>
 		<property key="demos.imageFile" value="demos/BRD4162A/OpenThread/window-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application over Thread for BRD4162A</description>
 	</demo>
@@ -296,7 +256,7 @@
 		<property key="core.boardCompatibility" value="brd4162a"/>
 		<property key="demos.imageFile" value="demos/BRD4162A/OpenThread/lighting-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application over Thread for BRD4162A</description>
 	</demo>
@@ -306,7 +266,7 @@
 		<property key="core.boardCompatibility" value="brd4162a"/>
 		<property key="demos.imageFile" value="demos/BRD4162A/OpenThread/light-switch-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application over Thread for BRD4162A</description>
 	</demo>
@@ -316,7 +276,7 @@
 		<property key="core.boardCompatibility" value="brd4162a"/>
 		<property key="demos.imageFile" value="demos/BRD4162A/OpenThread/thermostat-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application over Thread for BRD4162A</description>
 	</demo>
@@ -326,7 +286,7 @@
 		<property key="core.boardCompatibility" value="brd4162a"/>
 		<property key="demos.imageFile" value="demos/BRD4162A/OpenThread/sensor-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application over Thread for BRD4162A</description>
 	</demo>
@@ -336,7 +296,7 @@
 		<property key="core.boardCompatibility" value="brd4162a"/>
 		<property key="demos.imageFile" value="demos/BRD4162A/OpenThread/onoff-plug-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application over Thread for BRD4162A</description>
 	</demo>
@@ -346,7 +306,7 @@
 		<property key="core.boardCompatibility" value="brd4162a"/>
 		<property key="demos.imageFile" value="demos/BRD4162A/OpenThread/lock-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application over Thread for BRD4162A</description>
 	</demo>
@@ -356,7 +316,7 @@
 		<property key="core.boardCompatibility" value="brd4317a"/>
 		<property key="demos.imageFile" value="demos/BRD4317A/OpenThread/onoff-plug-app-no-led-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application over Thread for BRD4317A</description>
 	</demo>
@@ -366,7 +326,7 @@
 		<property key="core.boardCompatibility" value="brd4317a"/>
 		<property key="demos.imageFile" value="demos/BRD4317A/OpenThread/lock-app-no-led-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application over Thread for BRD4317A</description>
 	</demo>
@@ -376,7 +336,7 @@
 		<property key="core.boardCompatibility" value="brd4317a"/>
 		<property key="demos.imageFile" value="demos/BRD4317A/OpenThread/light-switch-app-no-led-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application over Thread for BRD4317A</description>
 	</demo>
@@ -386,7 +346,7 @@
 		<property key="core.boardCompatibility" value="brd4317a"/>
 		<property key="demos.imageFile" value="demos/BRD4317A/OpenThread/lighting-app-no-led-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application over Thread for BRD4317A</description>
 	</demo>
@@ -396,7 +356,7 @@
 		<property key="core.boardCompatibility" value="brd4317a"/>
 		<property key="demos.imageFile" value="demos/BRD4317A/OpenThread/thermostat-no-led-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application over Thread for BRD4317A</description>
 	</demo>
@@ -406,7 +366,7 @@
 		<property key="core.boardCompatibility" value="brd4317a"/>
 		<property key="demos.imageFile" value="demos/BRD4317A/OpenThread/sensor-app-no-led-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application over Thread for BRD4317A</description>
 	</demo>
@@ -416,19 +376,9 @@
 		<property key="core.boardCompatibility" value="brd4317a"/>
 		<property key="demos.imageFile" value="demos/BRD4317A/OpenThread/window-app-no-led-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application over Thread for BRD4317A</description>
-	</demo>
-	<demo name="brd4187c.demo.light_switch_app_rs911x" label="Matter - SoC Light Switch over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Light Switch app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4187c"/>
-		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/light-switch-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4187C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4187c.demo.thermostat_app_rs911x" label="Matter - SoC Thermostat over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
@@ -436,109 +386,99 @@
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/thermostat-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4187C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4187c.demo.sensor_app_rs911x" label="Matter - SoC Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
+	<demo name="brd4187c.demo.sensor_app_rs911x" label="Matter - NCP Sensor over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/sensor-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application for BRD4187C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4187c.demo.window_app_rs911x" label="Matter - SoC Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
+	<demo name="brd4187c.demo.window_app_rs911x" label="Matter - NCP Window Covering over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/window-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application for BRD4187C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4187c.demo.lighting_app_rs911x" label="Matter - SoC Lighting over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
+	<demo name="brd4187c.demo.lighting_app_rs911x" label="Matter - NCP Lighting over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lighting app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/lighting-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4187C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4187c.demo.lock_app_rs911x" label="Matter - SoC Lock over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lock app"/>
+	<demo name="brd4187c.demo.lock_app_rs911x" label="Matter - NCP Lock over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/lock-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4187C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4187c.demo.onoff_plug_app_rs911x" label="Matter - SoC Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
+	<demo name="brd4187c.demo.onoff_plug_app_rs911x" label="Matter - NCP Onoff Plug over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/onoff-plug-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4187C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4187c.demo.onoff_plug_app_wf200" label="Matter - SoC Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
+	<demo name="brd4187c.demo.onoff_plug_app_wf200" label="Matter - NCP Onoff Plug over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/onoff-plug-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4187C to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4187c.demo.window_app_wf200" label="Matter - SoC Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
+	<demo name="brd4187c.demo.window_app_wf200" label="Matter - NCP Window Covering over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/window-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application for BRD4187C to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4187c.demo.sensor_app_wf200" label="Matter - SoC Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
+	<demo name="brd4187c.demo.sensor_app_wf200" label="Matter - NCP Sensor over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/sensor-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application for BRD4187C to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4187c.demo.lock_app_wf200" label="Matter - SoC Lock over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lock app"/>
+	<demo name="brd4187c.demo.lock_app_wf200" label="Matter - NCP Lock over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/lock-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4187C to be used with WF200 Wi-Fi expansion board</description>
-	</demo>
-	<demo name="brd4187c.demo.light_switch_app_wf200" label="Matter - SoC Light Switch over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Light Switch app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4187c"/>
-		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/light-switch-app-wf200.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4187C to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
 	<demo name="brd4187c.demo.lighting_app_wf200" label="Matter - SoC Lighting over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
@@ -546,17 +486,17 @@
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/lighting-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4187C to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4187c.demo.thermostat_app_wf200" label="Matter - SoC Thermostat over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
+	<demo name="brd4187c.demo.thermostat_app_wf200" label="Matter - NCP Thermostat over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Thermostat app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/thermostat-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4187C to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
@@ -566,7 +506,7 @@
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="demos/BRD4187C/OpenThread/window-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application over Thread for BRD4187C</description>
 	</demo>
@@ -576,7 +516,7 @@
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="demos/BRD4187C/OpenThread/lighting-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application over Thread for BRD4187C</description>
 	</demo>
@@ -586,7 +526,7 @@
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="demos/BRD4187C/OpenThread/light-switch-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application over Thread for BRD4187C</description>
 	</demo>
@@ -596,7 +536,7 @@
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="demos/BRD4187C/OpenThread/thermostat-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application over Thread for BRD4187C</description>
 	</demo>
@@ -606,7 +546,7 @@
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="demos/BRD4187C/OpenThread/sensor-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application over Thread for BRD4187C</description>
 	</demo>
@@ -616,7 +556,7 @@
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="demos/BRD4187C/OpenThread/onoff-plug-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application over Thread for BRD4187C</description>
 	</demo>
@@ -626,19 +566,9 @@
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="demos/BRD4187C/OpenThread/lock-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application over Thread for BRD4187C</description>
-	</demo>
-	<demo name="brd4161a.demo.light_switch_app_rs911x" label="Matter - SoC Light Switch over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Light Switch app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4161a"/>
-		<property key="demos.imageFile" value="demos/BRD4161A/WiFi/light-switch-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4161A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4161a.demo.thermostat_app_rs911x" label="Matter - SoC Thermostat over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
@@ -646,109 +576,99 @@
 		<property key="core.boardCompatibility" value="brd4161a"/>
 		<property key="demos.imageFile" value="demos/BRD4161A/WiFi/thermostat-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4161A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4161a.demo.sensor_app_rs911x" label="Matter - SoC Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
+	<demo name="brd4161a.demo.sensor_app_rs911x" label="Matter - NCP Sensor over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4161a"/>
 		<property key="demos.imageFile" value="demos/BRD4161A/WiFi/sensor-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application for BRD4161A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4161a.demo.window_app_rs911x" label="Matter - SoC Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
+	<demo name="brd4161a.demo.window_app_rs911x" label="Matter - NCP Window Covering over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4161a"/>
 		<property key="demos.imageFile" value="demos/BRD4161A/WiFi/window-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application for BRD4161A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4161a.demo.lighting_app_rs911x" label="Matter - SoC Lighting over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
+	<demo name="brd4161a.demo.lighting_app_rs911x" label="Matter - NCP Lighting over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lighting app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4161a"/>
 		<property key="demos.imageFile" value="demos/BRD4161A/WiFi/lighting-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4161A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4161a.demo.lock_app_rs911x" label="Matter - SoC Lock over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lock app"/>
+	<demo name="brd4161a.demo.lock_app_rs911x" label="Matter - NCP Lock over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4161a"/>
 		<property key="demos.imageFile" value="demos/BRD4161A/WiFi/lock-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4161A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4161a.demo.onoff_plug_app_rs911x" label="Matter - SoC Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
+	<demo name="brd4161a.demo.onoff_plug_app_rs911x" label="Matter - NCP Onoff Plug over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4161a"/>
 		<property key="demos.imageFile" value="demos/BRD4161A/WiFi/onoff-plug-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4161A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4161a.demo.onoff_plug_app_wf200" label="Matter - SoC Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
+	<demo name="brd4161a.demo.onoff_plug_app_wf200" label="Matter - NCP Onoff Plug over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4161a"/>
 		<property key="demos.imageFile" value="demos/BRD4161A/WiFi/onoff-plug-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4161A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4161a.demo.window_app_wf200" label="Matter - SoC Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
+	<demo name="brd4161a.demo.window_app_wf200" label="Matter - NCP Window Covering over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4161a"/>
 		<property key="demos.imageFile" value="demos/BRD4161A/WiFi/window-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application for BRD4161A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4161a.demo.sensor_app_wf200" label="Matter - SoC Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
+	<demo name="brd4161a.demo.sensor_app_wf200" label="Matter - NCP Sensor over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4161a"/>
 		<property key="demos.imageFile" value="demos/BRD4161A/WiFi/sensor-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application for BRD4161A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4161a.demo.lock_app_wf200" label="Matter - SoC Lock over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lock app"/>
+	<demo name="brd4161a.demo.lock_app_wf200" label="Matter - NCP Lock over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4161a"/>
 		<property key="demos.imageFile" value="demos/BRD4161A/WiFi/lock-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4161A to be used with WF200 Wi-Fi expansion board</description>
-	</demo>
-	<demo name="brd4161a.demo.light_switch_app_wf200" label="Matter - SoC Light Switch over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Light Switch app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4161a"/>
-		<property key="demos.imageFile" value="demos/BRD4161A/WiFi/light-switch-app-wf200.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4161A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
 	<demo name="brd4161a.demo.lighting_app_wf200" label="Matter - SoC Lighting over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
@@ -756,17 +676,17 @@
 		<property key="core.boardCompatibility" value="brd4161a"/>
 		<property key="demos.imageFile" value="demos/BRD4161A/WiFi/lighting-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4161A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4161a.demo.thermostat_app_wf200" label="Matter - SoC Thermostat over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
+	<demo name="brd4161a.demo.thermostat_app_wf200" label="Matter - NCP Thermostat over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Thermostat app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4161a"/>
 		<property key="demos.imageFile" value="demos/BRD4161A/WiFi/thermostat-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4161A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
@@ -776,7 +696,7 @@
 		<property key="core.boardCompatibility" value="brd4161a"/>
 		<property key="demos.imageFile" value="demos/BRD4161A/OpenThread/window-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application over Thread for BRD4161A</description>
 	</demo>
@@ -786,7 +706,7 @@
 		<property key="core.boardCompatibility" value="brd4161a"/>
 		<property key="demos.imageFile" value="demos/BRD4161A/OpenThread/lighting-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application over Thread for BRD4161A</description>
 	</demo>
@@ -796,7 +716,7 @@
 		<property key="core.boardCompatibility" value="brd4161a"/>
 		<property key="demos.imageFile" value="demos/BRD4161A/OpenThread/light-switch-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application over Thread for BRD4161A</description>
 	</demo>
@@ -806,7 +726,7 @@
 		<property key="core.boardCompatibility" value="brd4161a"/>
 		<property key="demos.imageFile" value="demos/BRD4161A/OpenThread/thermostat-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application over Thread for BRD4161A</description>
 	</demo>
@@ -816,7 +736,7 @@
 		<property key="core.boardCompatibility" value="brd4161a"/>
 		<property key="demos.imageFile" value="demos/BRD4161A/OpenThread/sensor-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application over Thread for BRD4161A</description>
 	</demo>
@@ -826,7 +746,7 @@
 		<property key="core.boardCompatibility" value="brd4161a"/>
 		<property key="demos.imageFile" value="demos/BRD4161A/OpenThread/onoff-plug-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application over Thread for BRD4161A</description>
 	</demo>
@@ -836,7 +756,7 @@
 		<property key="core.boardCompatibility" value="brd4161a"/>
 		<property key="demos.imageFile" value="demos/BRD4161A/OpenThread/lock-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application over Thread for BRD4161A</description>
 	</demo>
@@ -846,7 +766,7 @@
 		<property key="core.boardCompatibility" value="brd4166a"/>
 		<property key="demos.imageFile" value="demos/BRD4166A/OpenThread/onoff-plug-app-no-lcd-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application over Thread for BRD4166A</description>
 	</demo>
@@ -856,7 +776,7 @@
 		<property key="core.boardCompatibility" value="brd4166a"/>
 		<property key="demos.imageFile" value="demos/BRD4166A/OpenThread/lock-app-no-lcd-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application over Thread for BRD4166A</description>
 	</demo>
@@ -866,7 +786,7 @@
 		<property key="core.boardCompatibility" value="brd4166a"/>
 		<property key="demos.imageFile" value="demos/BRD4166A/OpenThread/sensor-app-no-lcd-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application over Thread for BRD4166A</description>
 	</demo>
@@ -876,7 +796,7 @@
 		<property key="core.boardCompatibility" value="brd4166a"/>
 		<property key="demos.imageFile" value="demos/BRD4166A/OpenThread/window-app-no-lcd-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application over Thread for BRD4166A</description>
 	</demo>
@@ -886,7 +806,7 @@
 		<property key="core.boardCompatibility" value="brd4166a"/>
 		<property key="demos.imageFile" value="demos/BRD4166A/OpenThread/lighting-app-no-lcd-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application over Thread for BRD4166A</description>
 	</demo>
@@ -896,7 +816,7 @@
 		<property key="core.boardCompatibility" value="brd4166a"/>
 		<property key="demos.imageFile" value="demos/BRD4166A/OpenThread/light-switch-app-no-lcd-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application over Thread for BRD4166A</description>
 	</demo>
@@ -906,7 +826,7 @@
 		<property key="core.boardCompatibility" value="brd4166a"/>
 		<property key="demos.imageFile" value="demos/BRD4166A/OpenThread/thermostat-no-lcd-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application over Thread for BRD4166A</description>
 	</demo>
@@ -916,7 +836,7 @@
 		<property key="core.boardCompatibility" value="brd4319a"/>
 		<property key="demos.imageFile" value="demos/BRD4319A/OpenThread/sensor-app-minimal-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application over Thread for BRD4319A</description>
 	</demo>
@@ -926,7 +846,7 @@
 		<property key="core.boardCompatibility" value="brd4319a"/>
 		<property key="demos.imageFile" value="demos/BRD4319A/OpenThread/lighting-app-minimal-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application over Thread for BRD4319A</description>
 	</demo>
@@ -936,7 +856,7 @@
 		<property key="core.boardCompatibility" value="brd4319a"/>
 		<property key="demos.imageFile" value="demos/BRD4319A/OpenThread/onoff-plug-app-minimal-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application over Thread for BRD4319A</description>
 	</demo>
@@ -946,7 +866,7 @@
 		<property key="core.boardCompatibility" value="brd4319a"/>
 		<property key="demos.imageFile" value="demos/BRD4319A/OpenThread/lock-app-minimal-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application over Thread for BRD4319A</description>
 	</demo>
@@ -956,7 +876,7 @@
 		<property key="core.boardCompatibility" value="brd4319a"/>
 		<property key="demos.imageFile" value="demos/BRD4319A/OpenThread/window-app-minimal-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application over Thread for BRD4319A</description>
 	</demo>
@@ -966,7 +886,7 @@
 		<property key="core.boardCompatibility" value="brd4319a"/>
 		<property key="demos.imageFile" value="demos/BRD4319A/OpenThread/light-switch-app-minimal-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application over Thread for BRD4319A</description>
 	</demo>
@@ -976,7 +896,7 @@
 		<property key="core.boardCompatibility" value="brd2703a"/>
 		<property key="demos.imageFile" value="demos/BRD2703A/OpenThread/onoff-plug-app-no-lcd-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application over Thread for BRD2703A</description>
 	</demo>
@@ -986,7 +906,7 @@
 		<property key="core.boardCompatibility" value="brd2703a"/>
 		<property key="demos.imageFile" value="demos/BRD2703A/OpenThread/lock-app-no-lcd-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application over Thread for BRD2703A</description>
 	</demo>
@@ -996,7 +916,7 @@
 		<property key="core.boardCompatibility" value="brd2703a"/>
 		<property key="demos.imageFile" value="demos/BRD2703A/OpenThread/sensor-app-no-lcd-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application over Thread for BRD2703A</description>
 	</demo>
@@ -1006,7 +926,7 @@
 		<property key="core.boardCompatibility" value="brd2703a"/>
 		<property key="demos.imageFile" value="demos/BRD2703A/OpenThread/window-app-no-lcd-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application over Thread for BRD2703A</description>
 	</demo>
@@ -1016,7 +936,7 @@
 		<property key="core.boardCompatibility" value="brd2703a"/>
 		<property key="demos.imageFile" value="demos/BRD2703A/OpenThread/lighting-app-no-lcd-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application over Thread for BRD2703A</description>
 	</demo>
@@ -1026,7 +946,7 @@
 		<property key="core.boardCompatibility" value="brd2703a"/>
 		<property key="demos.imageFile" value="demos/BRD2703A/OpenThread/light-switch-app-no-lcd-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application over Thread for BRD2703A</description>
 	</demo>
@@ -1036,7 +956,7 @@
 		<property key="core.boardCompatibility" value="brd4318a"/>
 		<property key="demos.imageFile" value="demos/BRD4318A/OpenThread/sensor-app-minimal-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application over Thread for BRD4318A</description>
 	</demo>
@@ -1046,7 +966,7 @@
 		<property key="core.boardCompatibility" value="brd4318a"/>
 		<property key="demos.imageFile" value="demos/BRD4318A/OpenThread/lighting-app-minimal-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application over Thread for BRD4318A</description>
 	</demo>
@@ -1056,7 +976,7 @@
 		<property key="core.boardCompatibility" value="brd4318a"/>
 		<property key="demos.imageFile" value="demos/BRD4318A/OpenThread/thermostat-minimal-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application over Thread for BRD4318A</description>
 	</demo>
@@ -1066,7 +986,7 @@
 		<property key="core.boardCompatibility" value="brd4318a"/>
 		<property key="demos.imageFile" value="demos/BRD4318A/OpenThread/onoff-plug-app-minimal-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application over Thread for BRD4318A</description>
 	</demo>
@@ -1076,7 +996,7 @@
 		<property key="core.boardCompatibility" value="brd4318a"/>
 		<property key="demos.imageFile" value="demos/BRD4318A/OpenThread/lock-app-minimal-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application over Thread for BRD4318A</description>
 	</demo>
@@ -1086,7 +1006,7 @@
 		<property key="core.boardCompatibility" value="brd4318a"/>
 		<property key="demos.imageFile" value="demos/BRD4318A/OpenThread/window-app-minimal-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application over Thread for BRD4318A</description>
 	</demo>
@@ -1096,7 +1016,7 @@
 		<property key="core.boardCompatibility" value="brd4318a"/>
 		<property key="demos.imageFile" value="demos/BRD4318A/OpenThread/light-switch-app-minimal-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application over Thread for BRD4318A</description>
 	</demo>
@@ -1106,7 +1026,7 @@
 		<property key="core.boardCompatibility" value="brd4337a"/>
 		<property key="demos.imageFile" value="demos/BRD4337A/OpenThread/sensor-app-minimal-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application over Thread for BRD4337A</description>
 	</demo>
@@ -1116,7 +1036,7 @@
 		<property key="core.boardCompatibility" value="brd4337a"/>
 		<property key="demos.imageFile" value="demos/BRD4337A/OpenThread/lighting-app-minimal-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application over Thread for BRD4337A</description>
 	</demo>
@@ -1126,7 +1046,7 @@
 		<property key="core.boardCompatibility" value="brd4337a"/>
 		<property key="demos.imageFile" value="demos/BRD4337A/OpenThread/onoff-plug-app-minimal-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application over Thread for BRD4337A</description>
 	</demo>
@@ -1136,7 +1056,7 @@
 		<property key="core.boardCompatibility" value="brd4337a"/>
 		<property key="demos.imageFile" value="demos/BRD4337A/OpenThread/lock-app-minimal-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application over Thread for BRD4337A</description>
 	</demo>
@@ -1146,7 +1066,7 @@
 		<property key="core.boardCompatibility" value="brd4337a"/>
 		<property key="demos.imageFile" value="demos/BRD4337A/OpenThread/window-app-minimal-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application over Thread for BRD4337A</description>
 	</demo>
@@ -1156,19 +1076,9 @@
 		<property key="core.boardCompatibility" value="brd4337a"/>
 		<property key="demos.imageFile" value="demos/BRD4337A/OpenThread/light-switch-app-minimal-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application over Thread for BRD4337A</description>
-	</demo>
-	<demo name="brd4164a.demo.light_switch_app_rs911x" label="Matter - SoC Light Switch over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Light Switch app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4164a"/>
-		<property key="demos.imageFile" value="demos/BRD4164A/WiFi/light-switch-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4164A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4164a.demo.thermostat_app_rs911x" label="Matter - SoC Thermostat over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
@@ -1176,109 +1086,99 @@
 		<property key="core.boardCompatibility" value="brd4164a"/>
 		<property key="demos.imageFile" value="demos/BRD4164A/WiFi/thermostat-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4164A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4164a.demo.sensor_app_rs911x" label="Matter - SoC Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
+	<demo name="brd4164a.demo.sensor_app_rs911x" label="Matter - NCP Sensor over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4164a"/>
 		<property key="demos.imageFile" value="demos/BRD4164A/WiFi/sensor-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application for BRD4164A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4164a.demo.window_app_rs911x" label="Matter - SoC Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
+	<demo name="brd4164a.demo.window_app_rs911x" label="Matter - NCP Window Covering over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4164a"/>
 		<property key="demos.imageFile" value="demos/BRD4164A/WiFi/window-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application for BRD4164A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4164a.demo.lighting_app_rs911x" label="Matter - SoC Lighting over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
+	<demo name="brd4164a.demo.lighting_app_rs911x" label="Matter - NCP Lighting over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lighting app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4164a"/>
 		<property key="demos.imageFile" value="demos/BRD4164A/WiFi/lighting-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4164A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4164a.demo.lock_app_rs911x" label="Matter - SoC Lock over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lock app"/>
+	<demo name="brd4164a.demo.lock_app_rs911x" label="Matter - NCP Lock over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4164a"/>
 		<property key="demos.imageFile" value="demos/BRD4164A/WiFi/lock-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4164A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4164a.demo.onoff_plug_app_rs911x" label="Matter - SoC Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
+	<demo name="brd4164a.demo.onoff_plug_app_rs911x" label="Matter - NCP Onoff Plug over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4164a"/>
 		<property key="demos.imageFile" value="demos/BRD4164A/WiFi/onoff-plug-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4164A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4164a.demo.onoff_plug_app_wf200" label="Matter - SoC Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
+	<demo name="brd4164a.demo.onoff_plug_app_wf200" label="Matter - NCP Onoff Plug over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4164a"/>
 		<property key="demos.imageFile" value="demos/BRD4164A/WiFi/onoff-plug-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4164A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4164a.demo.window_app_wf200" label="Matter - SoC Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
+	<demo name="brd4164a.demo.window_app_wf200" label="Matter - NCP Window Covering over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4164a"/>
 		<property key="demos.imageFile" value="demos/BRD4164A/WiFi/window-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application for BRD4164A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4164a.demo.sensor_app_wf200" label="Matter - SoC Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
+	<demo name="brd4164a.demo.sensor_app_wf200" label="Matter - NCP Sensor over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4164a"/>
 		<property key="demos.imageFile" value="demos/BRD4164A/WiFi/sensor-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application for BRD4164A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4164a.demo.lock_app_wf200" label="Matter - SoC Lock over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lock app"/>
+	<demo name="brd4164a.demo.lock_app_wf200" label="Matter - NCP Lock over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4164a"/>
 		<property key="demos.imageFile" value="demos/BRD4164A/WiFi/lock-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4164A to be used with WF200 Wi-Fi expansion board</description>
-	</demo>
-	<demo name="brd4164a.demo.light_switch_app_wf200" label="Matter - SoC Light Switch over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Light Switch app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4164a"/>
-		<property key="demos.imageFile" value="demos/BRD4164A/WiFi/light-switch-app-wf200.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4164A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
 	<demo name="brd4164a.demo.lighting_app_wf200" label="Matter - SoC Lighting over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
@@ -1286,17 +1186,17 @@
 		<property key="core.boardCompatibility" value="brd4164a"/>
 		<property key="demos.imageFile" value="demos/BRD4164A/WiFi/lighting-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4164A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4164a.demo.thermostat_app_wf200" label="Matter - SoC Thermostat over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
+	<demo name="brd4164a.demo.thermostat_app_wf200" label="Matter - NCP Thermostat over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Thermostat app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4164a"/>
 		<property key="demos.imageFile" value="demos/BRD4164A/WiFi/thermostat-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4164A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
@@ -1306,7 +1206,7 @@
 		<property key="core.boardCompatibility" value="brd4164a"/>
 		<property key="demos.imageFile" value="demos/BRD4164A/OpenThread/window-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application over Thread for BRD4164A</description>
 	</demo>
@@ -1316,7 +1216,7 @@
 		<property key="core.boardCompatibility" value="brd4164a"/>
 		<property key="demos.imageFile" value="demos/BRD4164A/OpenThread/lighting-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application over Thread for BRD4164A</description>
 	</demo>
@@ -1326,7 +1226,7 @@
 		<property key="core.boardCompatibility" value="brd4164a"/>
 		<property key="demos.imageFile" value="demos/BRD4164A/OpenThread/light-switch-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application over Thread for BRD4164A</description>
 	</demo>
@@ -1336,7 +1236,7 @@
 		<property key="core.boardCompatibility" value="brd4164a"/>
 		<property key="demos.imageFile" value="demos/BRD4164A/OpenThread/thermostat-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application over Thread for BRD4164A</description>
 	</demo>
@@ -1346,7 +1246,7 @@
 		<property key="core.boardCompatibility" value="brd4164a"/>
 		<property key="demos.imageFile" value="demos/BRD4164A/OpenThread/sensor-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application over Thread for BRD4164A</description>
 	</demo>
@@ -1356,7 +1256,7 @@
 		<property key="core.boardCompatibility" value="brd4164a"/>
 		<property key="demos.imageFile" value="demos/BRD4164A/OpenThread/onoff-plug-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application over Thread for BRD4164A</description>
 	</demo>
@@ -1366,7 +1266,7 @@
 		<property key="core.boardCompatibility" value="brd4164a"/>
 		<property key="demos.imageFile" value="demos/BRD4164A/OpenThread/lock-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application over Thread for BRD4164A</description>
 	</demo>
@@ -1376,19 +1276,9 @@
 		<property key="core.boardCompatibility" value="brd2704a"/>
 		<property key="demos.imageFile" value="demos/BRD2704A/OpenThread/lighting-app-2704.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application over Thread for BRD2704A</description>
-	</demo>
-	<demo name="brd4163a.demo.light_switch_app_rs911x" label="Matter - SoC Light Switch over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Light Switch app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4163a"/>
-		<property key="demos.imageFile" value="demos/BRD4163A/WiFi/light-switch-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4163A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4163a.demo.thermostat_app_rs911x" label="Matter - SoC Thermostat over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
@@ -1396,109 +1286,99 @@
 		<property key="core.boardCompatibility" value="brd4163a"/>
 		<property key="demos.imageFile" value="demos/BRD4163A/WiFi/thermostat-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4163A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4163a.demo.sensor_app_rs911x" label="Matter - SoC Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
+	<demo name="brd4163a.demo.sensor_app_rs911x" label="Matter - NCP Sensor over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4163a"/>
 		<property key="demos.imageFile" value="demos/BRD4163A/WiFi/sensor-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application for BRD4163A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4163a.demo.window_app_rs911x" label="Matter - SoC Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
+	<demo name="brd4163a.demo.window_app_rs911x" label="Matter - NCP Window Covering over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4163a"/>
 		<property key="demos.imageFile" value="demos/BRD4163A/WiFi/window-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application for BRD4163A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4163a.demo.lighting_app_rs911x" label="Matter - SoC Lighting over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
+	<demo name="brd4163a.demo.lighting_app_rs911x" label="Matter - NCP Lighting over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lighting app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4163a"/>
 		<property key="demos.imageFile" value="demos/BRD4163A/WiFi/lighting-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4163A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4163a.demo.lock_app_rs911x" label="Matter - SoC Lock over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lock app"/>
+	<demo name="brd4163a.demo.lock_app_rs911x" label="Matter - NCP Lock over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4163a"/>
 		<property key="demos.imageFile" value="demos/BRD4163A/WiFi/lock-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4163A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4163a.demo.onoff_plug_app_rs911x" label="Matter - SoC Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
+	<demo name="brd4163a.demo.onoff_plug_app_rs911x" label="Matter - NCP Onoff Plug over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4163a"/>
 		<property key="demos.imageFile" value="demos/BRD4163A/WiFi/onoff-plug-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4163A to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4163a.demo.onoff_plug_app_wf200" label="Matter - SoC Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
+	<demo name="brd4163a.demo.onoff_plug_app_wf200" label="Matter - NCP Onoff Plug over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4163a"/>
 		<property key="demos.imageFile" value="demos/BRD4163A/WiFi/onoff-plug-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4163A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4163a.demo.window_app_wf200" label="Matter - SoC Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
+	<demo name="brd4163a.demo.window_app_wf200" label="Matter - NCP Window Covering over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4163a"/>
 		<property key="demos.imageFile" value="demos/BRD4163A/WiFi/window-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application for BRD4163A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4163a.demo.sensor_app_wf200" label="Matter - SoC Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
+	<demo name="brd4163a.demo.sensor_app_wf200" label="Matter - NCP Sensor over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4163a"/>
 		<property key="demos.imageFile" value="demos/BRD4163A/WiFi/sensor-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application for BRD4163A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4163a.demo.lock_app_wf200" label="Matter - SoC Lock over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lock app"/>
+	<demo name="brd4163a.demo.lock_app_wf200" label="Matter - NCP Lock over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4163a"/>
 		<property key="demos.imageFile" value="demos/BRD4163A/WiFi/lock-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4163A to be used with WF200 Wi-Fi expansion board</description>
-	</demo>
-	<demo name="brd4163a.demo.light_switch_app_wf200" label="Matter - SoC Light Switch over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Light Switch app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4163a"/>
-		<property key="demos.imageFile" value="demos/BRD4163A/WiFi/light-switch-app-wf200.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4163A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
 	<demo name="brd4163a.demo.lighting_app_wf200" label="Matter - SoC Lighting over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
@@ -1506,17 +1386,17 @@
 		<property key="core.boardCompatibility" value="brd4163a"/>
 		<property key="demos.imageFile" value="demos/BRD4163A/WiFi/lighting-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4163A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4163a.demo.thermostat_app_wf200" label="Matter - SoC Thermostat over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
+	<demo name="brd4163a.demo.thermostat_app_wf200" label="Matter - NCP Thermostat over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Thermostat app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4163a"/>
 		<property key="demos.imageFile" value="demos/BRD4163A/WiFi/thermostat-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4163A to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
@@ -1526,7 +1406,7 @@
 		<property key="core.boardCompatibility" value="brd4163a"/>
 		<property key="demos.imageFile" value="demos/BRD4163A/OpenThread/window-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application over Thread for BRD4163A</description>
 	</demo>
@@ -1536,7 +1416,7 @@
 		<property key="core.boardCompatibility" value="brd4163a"/>
 		<property key="demos.imageFile" value="demos/BRD4163A/OpenThread/lighting-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application over Thread for BRD4163A</description>
 	</demo>
@@ -1546,7 +1426,7 @@
 		<property key="core.boardCompatibility" value="brd4163a"/>
 		<property key="demos.imageFile" value="demos/BRD4163A/OpenThread/light-switch-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application over Thread for BRD4163A</description>
 	</demo>
@@ -1556,7 +1436,7 @@
 		<property key="core.boardCompatibility" value="brd4163a"/>
 		<property key="demos.imageFile" value="demos/BRD4163A/OpenThread/thermostat-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application over Thread for BRD4163A</description>
 	</demo>
@@ -1566,7 +1446,7 @@
 		<property key="core.boardCompatibility" value="brd4163a"/>
 		<property key="demos.imageFile" value="demos/BRD4163A/OpenThread/sensor-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application over Thread for BRD4163A</description>
 	</demo>
@@ -1576,7 +1456,7 @@
 		<property key="core.boardCompatibility" value="brd4163a"/>
 		<property key="demos.imageFile" value="demos/BRD4163A/OpenThread/onoff-plug-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application over Thread for BRD4163A</description>
 	</demo>
@@ -1586,19 +1466,9 @@
 		<property key="core.boardCompatibility" value="brd4163a"/>
 		<property key="demos.imageFile" value="demos/BRD4163A/OpenThread/lock-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application over Thread for BRD4163A</description>
-	</demo>
-	<demo name="brd4186c.demo.light_switch_app_rs911x" label="Matter - SoC Light Switch over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Light Switch app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4186c"/>
-		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/light-switch-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4186C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
 	<demo name="brd4186c.demo.thermostat_app_rs911x" label="Matter - SoC Thermostat over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
@@ -1606,109 +1476,99 @@
 		<property key="core.boardCompatibility" value="brd4186c"/>
 		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/thermostat-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4186C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4186c.demo.sensor_app_rs911x" label="Matter - SoC Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
+	<demo name="brd4186c.demo.sensor_app_rs911x" label="Matter - NCP Sensor over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4186c"/>
 		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/sensor-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application for BRD4186C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4186c.demo.window_app_rs911x" label="Matter - SoC Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
+	<demo name="brd4186c.demo.window_app_rs911x" label="Matter - NCP Window Covering over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4186c"/>
 		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/window-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application for BRD4186C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4186c.demo.lighting_app_rs911x" label="Matter - SoC Lighting over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
+	<demo name="brd4186c.demo.lighting_app_rs911x" label="Matter - NCP Lighting over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lighting app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4186c"/>
 		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/lighting-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4186C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4186c.demo.lock_app_rs911x" label="Matter - SoC Lock over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lock app"/>
+	<demo name="brd4186c.demo.lock_app_rs911x" label="Matter - NCP Lock over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4186c"/>
 		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/lock-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4186C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4186c.demo.onoff_plug_app_rs911x" label="Matter - SoC Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
+	<demo name="brd4186c.demo.onoff_plug_app_rs911x" label="Matter - NCP Onoff Plug over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4186c"/>
 		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/onoff-plug-app-rs911x.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4186C to be used with RS9116/917NCP Wi-Fi Evaluation kit</description>
 	</demo>
-	<demo name="brd4186c.demo.onoff_plug_app_wf200" label="Matter - SoC Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Onoff Plug app"/>
+	<demo name="brd4186c.demo.onoff_plug_app_wf200" label="Matter - NCP Onoff Plug over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4186c"/>
 		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/onoff-plug-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4186C to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4186c.demo.window_app_wf200" label="Matter - SoC Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
+	<demo name="brd4186c.demo.window_app_wf200" label="Matter - NCP Window Covering over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4186c"/>
 		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/window-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application for BRD4186C to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4186c.demo.sensor_app_wf200" label="Matter - SoC Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Sensor app"/>
+	<demo name="brd4186c.demo.sensor_app_wf200" label="Matter - NCP Sensor over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4186c"/>
 		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/sensor-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application for BRD4186C to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4186c.demo.lock_app_wf200" label="Matter - SoC Lock over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Lock app"/>
+	<demo name="brd4186c.demo.lock_app_wf200" label="Matter - NCP Lock over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4186c"/>
 		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/lock-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4186C to be used with WF200 Wi-Fi expansion board</description>
-	</demo>
-	<demo name="brd4186c.demo.light_switch_app_wf200" label="Matter - SoC Light Switch over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Light Switch app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4186c"/>
-		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/light-switch-app-wf200.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Light Switch Application for BRD4186C to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
 	<demo name="brd4186c.demo.lighting_app_wf200" label="Matter - SoC Lighting over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
@@ -1716,17 +1576,17 @@
 		<property key="core.boardCompatibility" value="brd4186c"/>
 		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/lighting-app-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4186C to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
-	<demo name="brd4186c.demo.thermostat_app_wf200" label="Matter - SoC Thermostat over Wi-Fi">
-		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
+	<demo name="brd4186c.demo.thermostat_app_wf200" label="Matter - NCP Thermostat over Wi-Fi">
+		<property key="demos.blurb" value="Matter - NCP Thermostat app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4186c"/>
 		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/thermostat-wf200.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
-		<property key="filters" value="Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4186C to be used with WF200 Wi-Fi expansion board</description>
 	</demo>
@@ -1736,7 +1596,7 @@
 		<property key="core.boardCompatibility" value="brd4186c"/>
 		<property key="demos.imageFile" value="demos/BRD4186C/OpenThread/window-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application over Thread for BRD4186C</description>
 	</demo>
@@ -1746,7 +1606,7 @@
 		<property key="core.boardCompatibility" value="brd4186c"/>
 		<property key="demos.imageFile" value="demos/BRD4186C/OpenThread/lighting-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application over Thread for BRD4186C</description>
 	</demo>
@@ -1756,7 +1616,7 @@
 		<property key="core.boardCompatibility" value="brd4186c"/>
 		<property key="demos.imageFile" value="demos/BRD4186C/OpenThread/light-switch-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application over Thread for BRD4186C</description>
 	</demo>
@@ -1766,7 +1626,7 @@
 		<property key="core.boardCompatibility" value="brd4186c"/>
 		<property key="demos.imageFile" value="demos/BRD4186C/OpenThread/thermostat-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application over Thread for BRD4186C</description>
 	</demo>
@@ -1776,7 +1636,7 @@
 		<property key="core.boardCompatibility" value="brd4186c"/>
 		<property key="demos.imageFile" value="demos/BRD4186C/OpenThread/sensor-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application over Thread for BRD4186C</description>
 	</demo>
@@ -1786,7 +1646,7 @@
 		<property key="core.boardCompatibility" value="brd4186c"/>
 		<property key="demos.imageFile" value="demos/BRD4186C/OpenThread/onoff-plug-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application over Thread for BRD4186C</description>
 	</demo>
@@ -1796,7 +1656,7 @@
 		<property key="core.boardCompatibility" value="brd4186c"/>
 		<property key="demos.imageFile" value="demos/BRD4186C/OpenThread/lock-app-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application over Thread for BRD4186C</description>
 	</demo>
@@ -1806,7 +1666,7 @@
 		<property key="core.boardCompatibility" value="brd4316a"/>
 		<property key="demos.imageFile" value="demos/BRD4316A/OpenThread/onoff-plug-app-no-led-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application over Thread for BRD4316A</description>
 	</demo>
@@ -1816,7 +1676,7 @@
 		<property key="core.boardCompatibility" value="brd4316a"/>
 		<property key="demos.imageFile" value="demos/BRD4316A/OpenThread/lock-app-no-led-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application over Thread for BRD4316A</description>
 	</demo>
@@ -1826,7 +1686,7 @@
 		<property key="core.boardCompatibility" value="brd4316a"/>
 		<property key="demos.imageFile" value="demos/BRD4316A/OpenThread/light-switch-app-no-led-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application over Thread for BRD4316A</description>
 	</demo>
@@ -1836,7 +1696,7 @@
 		<property key="core.boardCompatibility" value="brd4316a"/>
 		<property key="demos.imageFile" value="demos/BRD4316A/OpenThread/lighting-app-no-led-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application over Thread for BRD4316A</description>
 	</demo>
@@ -1846,7 +1706,7 @@
 		<property key="core.boardCompatibility" value="brd4316a"/>
 		<property key="demos.imageFile" value="demos/BRD4316A/OpenThread/thermostat-no-led-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application over Thread for BRD4316A</description>
 	</demo>
@@ -1856,7 +1716,7 @@
 		<property key="core.boardCompatibility" value="brd4316a"/>
 		<property key="demos.imageFile" value="demos/BRD4316A/OpenThread/sensor-app-no-led-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application over Thread for BRD4316A</description>
 	</demo>
@@ -1866,7 +1726,7 @@
 		<property key="core.boardCompatibility" value="brd4316a"/>
 		<property key="demos.imageFile" value="demos/BRD4316A/OpenThread/window-app-no-led-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application over Thread for BRD4316A</description>
 	</demo>
@@ -1876,7 +1736,7 @@
 		<property key="core.boardCompatibility" value="brd2601b"/>
 		<property key="demos.imageFile" value="demos/BRD2601B/OpenThread/onoff-plug-app-no-lcd-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application over Thread for BRD2601B</description>
 	</demo>
@@ -1886,7 +1746,7 @@
 		<property key="core.boardCompatibility" value="brd2601b"/>
 		<property key="demos.imageFile" value="demos/BRD2601B/OpenThread/lock-app-no-lcd-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application over Thread for BRD2601B</description>
 	</demo>
@@ -1896,7 +1756,7 @@
 		<property key="core.boardCompatibility" value="brd2601b"/>
 		<property key="demos.imageFile" value="demos/BRD2601B/OpenThread/sensor-app-no-lcd-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Sensor Application over Thread for BRD2601B</description>
 	</demo>
@@ -1906,7 +1766,7 @@
 		<property key="core.boardCompatibility" value="brd2601b"/>
 		<property key="demos.imageFile" value="demos/BRD2601B/OpenThread/window-app-no-lcd-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application over Thread for BRD2601B</description>
 	</demo>
@@ -1916,7 +1776,7 @@
 		<property key="core.boardCompatibility" value="brd2601b"/>
 		<property key="demos.imageFile" value="demos/BRD2601B/OpenThread/lighting-app-no-lcd-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application over Thread for BRD2601B</description>
 	</demo>
@@ -1926,7 +1786,7 @@
 		<property key="core.boardCompatibility" value="brd2601b"/>
 		<property key="demos.imageFile" value="demos/BRD2601B/OpenThread/light-switch-app-no-lcd-thread.s37"/>
 		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application over Thread for BRD2601B</description>
 	</demo>
@@ -1935,8 +1795,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325b"/>
 		<property key="demos.imageFile" value="demos/BRD4325B/WiFi/SiWx917-lighting-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/siwx917/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4325B to be used with the 917 SoC</description>
 	</demo>
@@ -1945,8 +1805,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325b"/>
 		<property key="demos.imageFile" value="demos/BRD4325B/WiFi/SiWx917-light-switch-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/siwx917/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application for BRD4325B to be used with the 917 SoC</description>
 	</demo>
@@ -1955,8 +1815,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325b"/>
 		<property key="demos.imageFile" value="demos/BRD4325B/WiFi/SiWx917-lock-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lock-app/siwx917/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/lock-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4325B to be used with the 917 SoC</description>
 	</demo>
@@ -1965,8 +1825,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325b"/>
 		<property key="demos.imageFile" value="demos/BRD4325B/WiFi/SiWx917-window-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/window-app/siwx917/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/window-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Application for BRD4325B to be used with the 917 SoC</description>
 	</demo>
@@ -1975,8 +1835,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325b"/>
 		<property key="demos.imageFile" value="demos/BRD4325B/WiFi/SiWx917-onoff-plug-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/siwx917/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4325B to be used with the 917 SoC</description>
 	</demo>
@@ -1985,8 +1845,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325c"/>
 		<property key="demos.imageFile" value="demos/BRD4325C/WiFi/SiWx917-lighting-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/siwx917/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4325C to be used with the 917 SoC</description>
 	</demo>
@@ -1995,8 +1855,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325c"/>
 		<property key="demos.imageFile" value="demos/BRD4325C/WiFi/SiWx917-light-switch-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/siwx917/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application for BRD4325C to be used with the 917 SoC</description>
 	</demo>
@@ -2005,8 +1865,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325c"/>
 		<property key="demos.imageFile" value="demos/BRD4325C/WiFi/SiWx917-lock-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lock-app/siwx917/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/lock-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4325C to be used with the 917 SoC</description>
 	</demo>
@@ -2015,8 +1875,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325c"/>
 		<property key="demos.imageFile" value="demos/BRD4325C/WiFi/SiWx917-window-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/window-app/siwx917/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/window-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Application for BRD4325C to be used with the 917 SoC</description>
 	</demo>
@@ -2025,8 +1885,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325c"/>
 		<property key="demos.imageFile" value="demos/BRD4325C/WiFi/SiWx917-onoff-plug-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/siwx917/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4325C to be used with the 917 SoC</description>
 	</demo>
@@ -2035,8 +1895,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325g"/>
 		<property key="demos.imageFile" value="demos/BRD4325G/WiFi/SiWx917-lighting-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/siwx917/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4325G to be used with the 917 SoC</description>
 	</demo>
@@ -2045,8 +1905,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325g"/>
 		<property key="demos.imageFile" value="demos/BRD4325G/WiFi/SiWx917-light-switch-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/siwx917/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application for BRD4325G to be used with the 917 SoC</description>
 	</demo>
@@ -2055,8 +1915,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325g"/>
 		<property key="demos.imageFile" value="demos/BRD4325G/WiFi/SiWx917-light-switch-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lock-app/siwx917/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/lock-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4325G to be used with the 917 SoC</description>
 	</demo>
@@ -2065,8 +1925,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325g"/>
 		<property key="demos.imageFile" value="demos/BRD4325G/WiFi/SiWx917-window-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/window-app/siwx917/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/window-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Application for BRD4325G to be used with the 917 SoC</description>
 	</demo>
@@ -2075,8 +1935,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4325g"/>
 		<property key="demos.imageFile" value="demos/BRD4325G/WiFi/SiWx917-onoff-plug-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/siwx917/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4325G to be used with the 917 SoC</description>
 	</demo>
@@ -2085,8 +1945,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4338a"/>
 		<property key="demos.imageFile" value="demos/BRD4338A/WiFi/SiWx917-lighting-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/siwx917/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lighting Application for BRD4338A to be used with the 917 SoC</description>
 	</demo>
@@ -2095,8 +1955,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4338a"/>
 		<property key="demos.imageFile" value="demos/BRD4338A/WiFi/SiWx917-light-switch-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/siwx917/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/light-switch-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Light Switch Application for BRD4338A to be used with the 917 SoC</description>
 	</demo>
@@ -2105,8 +1965,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4338a"/>
 		<property key="demos.imageFile" value="demos/BRD4338A/WiFi/SiWx917-lock-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lock-app/siwx917/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/lock-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4338A to be used with the 917 SoC</description>
 	</demo>
@@ -2115,8 +1975,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4338a"/>
 		<property key="demos.imageFile" value="demos/BRD4338A/WiFi/SiWx917-window-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/window-app/siwx917/README.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/window-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Application for BRD4338A to be used with the 917 SoC</description>
 	</demo>
@@ -2125,8 +1985,8 @@
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4338a"/>
 		<property key="demos.imageFile" value="demos/BRD4338A/WiFi/SiWx917-onoff-plug-example.rps"/>
-		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/siwx917/README_.md"/>
-		<property key="filters" value="Type|SoC Project\ Difficulty|Beginner Wireless\ Technology|Matter"/>
+		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Onoff Plug Application for BRD4338A to be used with the 917 SoC</description>
 	</demo>

@@ -21,11 +21,11 @@ source:
 -   path: src/platform/silabs/Logging.cpp
 -   path: src/platform/silabs/MigrationManager.cpp
 -   path: src/platform/silabs/NetworkCommissioningWiFiDriver.cpp
--   path: src/platform/silabs/SiWx917/BLEManagerImpl.cpp
+-   path: src/platform/silabs/rs911x/BLEManagerImpl.cpp
 -   path: src/platform/silabs/SiWx917/CHIPCryptoPALTinyCrypt.cpp
 -   path: src/platform/silabs/SiWx917/ConfigurationManagerImpl.cpp
 -   path: src/platform/silabs/SiWx917/PlatformManagerImpl.cpp
--   path: src/platform/silabs/SiWx917/bluetooth/wfx_sl_ble_init.c
+-   path: src/platform/silabs/rs911x/wfx_sl_ble_init.c
 -   path: src/platform/silabs/SilabsConfig.cpp
 -   path: src/platform/silabs/platformAbstraction/WiseMcuSpam.cpp
 ui_hints:

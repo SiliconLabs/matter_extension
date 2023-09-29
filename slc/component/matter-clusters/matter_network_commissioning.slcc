@@ -1,5 +1,5 @@
 
-category: Clusters
+category: Clusters|CHIP
 description: Implementation of the Network Commissioning Cluster
 id: matter_network_commissioning
 label: Network Commissioning Cluster

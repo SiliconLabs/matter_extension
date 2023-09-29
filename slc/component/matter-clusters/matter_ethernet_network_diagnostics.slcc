@@ -1,5 +1,5 @@
 
-category: Clusters
+category: Clusters|General
 description: Implementation of the Ethernet Network Diagnostics Server Cluster
 id: matter_ethernet_network_diagnostics
 label: Ethernet Network Diagnostics Server Cluster

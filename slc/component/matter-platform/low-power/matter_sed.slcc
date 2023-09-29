@@ -8,7 +8,7 @@ description: >
   using a Matter Sleepy End Device include: Matter shell, OpenThread CLI, UART, QR code display,
   and LCD.
 package: "Matter"
-category: Stack
+category: Platform|Low-power
 quality: production
 define:
   - name: CHIP_DEVICE_CONFIG_ENABLE_SED

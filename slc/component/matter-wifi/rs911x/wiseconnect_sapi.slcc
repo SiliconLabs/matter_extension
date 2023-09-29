@@ -2,8 +2,8 @@ id: wiseconnect_sapi
 package: wiseconnect
 description: >
   WiSeConnect sapi component
-label: wiseconnect_sapi
-category: Matter-WiFi|sapi_all
+label: Wiseconnect Sapi
+category: Matter-WiFi|Platform|Drivers
 quality: production
 provides:
 - name: wiseconnect_sapi

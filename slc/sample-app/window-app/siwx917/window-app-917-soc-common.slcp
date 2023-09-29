@@ -31,7 +31,6 @@ component:
 
   - id: matter_wifi
     from: matter
-    
   - id: app_common
     from: matter
 
@@ -118,6 +117,15 @@ component:
     instance: [btn0,btn1]
     from: wiseconnect3_sdk
 
+requires:
+  # SiWx917 LCD configurations
+  - name: memlcd_917
+    condition: [brd4338a]
+  - name: matter_lcd_917SOC
+    condition: [brd4338a]
+  - name: matter_qr_code
+    condition: [brd4338a]
+
 config_file:
   - path: ../../../../examples/window-app/common/window-app.zap
     directory: common
@@ -128,7 +136,7 @@ include:
     - path: AppConfig.h
     - path: CHIPProjectConfig.h
     - path: LcdPainter.h
-      condition: [matter_lcd]
+      condition: [matter_lcd_917SOC]
     - path: WindowAppImpl.h
     directory: include
 
@@ -139,7 +147,7 @@ include:
 
 source:
   - path: ../../../../examples/window-app/silabs/SiWx917/src/LcdPainter.cpp
-    condition: [matter_lcd]
+    condition: [matter_lcd_917SOC]
     directory: src
   - path: ../../../../examples/window-app/silabs/SiWx917/src/WindowAppImpl.cpp
     directory: src
@@ -162,6 +170,8 @@ define:
     value: "40960"
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
     value: "4092"
+  - name: SI917_SOC
+    value: 1
 
 toolchain_settings:
   - option: gcc_c++_compiler_option
@@ -178,8 +188,6 @@ template_contribution:
   - name: memory_ram_size
     value: 0x4E200
   - name: EXECUTION_FROM_RAM
-    value: 1
-  - name: SI917_SOC
     value: 1
 
 readme:

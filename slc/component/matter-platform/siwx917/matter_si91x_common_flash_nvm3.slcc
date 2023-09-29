@@ -1,5 +1,5 @@
 id: matter_si91x_common_flash_nvm3
-label: matter_si91x_common_flash_nvm3
+label: Matter Si91X Common Flash NVM3
 package: "Matter"
 description: >
   NVM3 component for 917SoC common Flash

@@ -6,7 +6,7 @@ description: >
   of a subscription request is what defines the frequency at which a device will send
   a liveness check if there are no attribute changes
 package: "Matter"
-category: Stack
+category: Platform|Low-power
 quality: production
 define:
   - name: CHIP_CONFIG_USE_ICD_SUBSCRIPTION_CALLBACKS

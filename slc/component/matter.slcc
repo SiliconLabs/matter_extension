@@ -79,7 +79,9 @@ requires:
   - name: matter_libsystemlayer
   - name: matter_libtransportlayer
   - name: configuration_over_swo
+  - name: matter_ot_thirdparty_override
 
 recommends:
   - id: matter_configuration_over_swo
   - id: matter_segger_rtt
+  - id: matter_ot_thirdparty_override

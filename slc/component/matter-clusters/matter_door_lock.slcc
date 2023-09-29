@@ -1,5 +1,5 @@
 
-category: Clusters
+category: Clusters|Closures
 description: Implementation of the Door Lock Server Callback Cluster
 id: matter_door_lock
 label: Door Lock Server Callback Cluster

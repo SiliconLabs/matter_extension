@@ -1,8 +1,8 @@
 id: matter_uart_wifi_wf200
-label: Uart_wifi_wf200
+label: UART WiFi WF200
 description: Enable sources and define for uart as used by matter components (WF200)
 package: "Matter"
-category: "Matter-WiFi|Platform"
+category: "Matter-WiFi|Platform|UART"
 quality: production
 requires:
   - name: uartdrv_usart

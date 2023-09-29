@@ -27,7 +27,7 @@ component:
     from: matter
   - id: matter_ota_support
     from: matter
-  - id: matter_mbedtls
+  - id: matter_crypto
     from: matter
   - id: silabs_factory_data_provider
     from: matter
@@ -97,11 +97,6 @@ component:
     from: matter
   # Override RTT
   - id: matter_segger_rtt
-    from: matter
-  # Override psa crypto config
-  - id: matter_psa_crypto_config
-    from: matter
-  - id: matter_psa_crypto_builtin_override
     from: matter
   - id: matter_occupancy_sensor_type
     from: matter

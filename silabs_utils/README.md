@@ -1,4 +1,4 @@
-# Matter Performance Testing 
+# Matter Performance Testing
 
 ## Overview
 
@@ -6,27 +6,25 @@ Matter Performance Testing commands are the "perf ping" and "perf mx" Matter She
 
 The node where the Matter Shell CLI commands are issued is referred to as "sender". The node that is supposed to process the command is referred to as "receiver".
 
-The Performance Testing commands are enabled on the sender and receiver nodes by installing the Performance Testing Utilities and CLI (matter_performance_testing.slcc) component in a Studio or SLC Matter project. 
+The Performance Testing commands are enabled on the sender and receiver nodes by installing the Performance Testing Utilities and CLI (matter_performance_testing.slcc) component in a Studio or SLC Matter project.
 
-## Commands 
+## Commands
 -   `perf ping <count> <fabricIndex> <destNodeId> <timeout_ms>`
     - count: Number of commands to send
     - fabricIndex: Fabric index on the sender node
     - destNodeId:  Receiver Node ID
-    - timeout_ms: Timeout in milliseconds before an individual ping (TestEventTrigger) command is considered to have failed 
+    - timeout_ms: Timeout in milliseconds before an individual ping (TestEventTrigger) command is considered to have failed
 
--   `perf mx <fabricIndex> <destGroupId> <sequence number>`  
+-   `perf mx <fabricIndex> <destGroupId> <sequence number>`
     - fabricIndex: Fabric index on the sender node
-    - destNodeId:  Group ID the command is sent to 
-    - sequence number: Sequence number (uint16_t) that will be printed to the PTI debug channel (with EM_DEBUG_LATENCY and "BBD" parameters) by the sender and the receiver node. 
+    - destNodeId:  Group ID the command is sent to
+    - sequence number: Sequence number (uint16_t) that will be printed to the PTI debug channel (with EM_DEBUG_LATENCY and "BBD" parameters) by the sender and the receiver node.
 
 ## Enabling the functionality
 
-- Simplicity Studio: Create any Matter over Thread project. Install the Performance Testing Utilities component under Silicon Labs Matter->Platform. In ZAP ( Configuration Tools -> Zigbee Cluster Configurator) enable the Groups cluster on Endpoint 0 (this step is only needed for the multicast command). Build the project, the resulting binary can be used as both the sender and the receiver. 
+- Simplicity Studio: Create any Matter over Thread project. Install the Performance Testing Utilities component under Silicon Labs Matter->Platform. In ZAP ( Configuration Tools -> Zigbee Cluster Configurator) enable the Groups cluster server on Endpoint 0 (this step is only needed for the multicast command). Build the project, the resulting binary can be used as both the sender and the receiver.
 
-- SLC CLI: Generate the Lighting Over Thread project supplying the `--with "matter_performance_testing;matter"` parameter to the `slc generate` command. The resulting binary can be used as both the sender and the receiver.
-
-Note: Projects other than Lighting can also be used with SLC CLI but they require an additional step to support multicast: Edit the ZAP file specified in the project's .slcp file under config_file and set "enabled:" to 1 in the "Groups" "server" cluster entry in the "MA-rootdevice" endpoint array entry. 
+- SLC CLI: In any Thread sample app edit the ZAP file specified in the project's .slcp file under config_file and set "enabled:" to 1 in the "Groups" "server" cluster entry in the "MA-rootdevice" endpoint array entry. Generate the project supplying the `--with "matter_performance_testing;matter"` parameter to the `slc generate` command. The resulting binary can be used as both the sender and the receiver.
 
 ## Network Configuration
 ### Ping
@@ -68,6 +66,6 @@ In the ping command the sender establishes a CASE session with the receiver and 
 
 In the multicast case there is no CASE session, the command is sent directly to the group address, no response is expected.
 
-For ping and multicast tests both sender and receiver Print a packet sequence number to the PTI channel: for multicast the sequence number the <sequence number> command parameter, for ping it is the magic number 1729. 
+For ping and multicast tests both sender and receiver print a packet sequence number to the PTI channel: for multicast the sequence number is the <sequence number> command parameter, for ping it is the magic number 1729.
 
  

@@ -1,4 +1,4 @@
-category: Matter-WiFi
+category: Matter-WiFi|Features
 define:
 -   name: DIC_ENABLE
     value: "1"
@@ -43,7 +43,7 @@ include:
     - path: MQTT_transport.h
     - path: tcpbase.h
 -   path: src/platform/silabs/efr32
-label: Direct Internet connectivity for matter-wifi
+label: Direct Internet connectivity for Matter WiFi
 package: Matter
 provides:
 -   name: matter_dic

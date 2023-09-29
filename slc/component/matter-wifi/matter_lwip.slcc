@@ -2,7 +2,7 @@ id: matter_lwip
 package: Matter
 description: >
   matter lwip for wifi
-label: matter_lwip
+label: Matter LwIP
 category: Matter-WiFi|lwip
 quality: production
 provides:

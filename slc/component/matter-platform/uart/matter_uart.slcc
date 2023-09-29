@@ -2,7 +2,7 @@ id: matter_uart
 label: Matter UART
 description: Enables sources and defines for UART as used by Matter components
 package: "Matter"
-category: Platform
+category: Platform|UART
 quality: production
 requires:
    - name: uartdrv_usart

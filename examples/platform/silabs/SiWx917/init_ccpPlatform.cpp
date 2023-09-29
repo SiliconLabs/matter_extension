@@ -36,6 +36,14 @@ extern "C" {
 #include <mbedtls/platform.h>
 #include <string.h>
 
+#include "sl_event_handler.h"
+#include "rsi_chip.h"
+#include "rsi_nvic_priorities_config.h"
+#include "sl_device_init_nvic.h"
+#include "sli_siwx917_soc.h"
+#include "rsi_board.h"
+#include "cmsis_os2.h"
+
 using namespace ::chip;
 using namespace ::chip::Inet;
 using namespace ::chip::DeviceLayer;
@@ -53,9 +61,27 @@ void RSI_Wakeupsw_config(void);
 void RSI_NPSSGPIO_button_config(void);
 void RSI_GPIO_button_config(void);
 
+void sl_si917_platform_init(void)
+{
+    SystemCoreClockUpdate();
+    sl_si91x_device_init_nvic();
+    sl_device_init_nvic();
+    sli_si91x_platform_init();
+    RSI_Board_Init();
+    osKernelInitialize();
+}
+
+void sl_si917_system_init(void)
+{
+    sl_si917_platform_init();
+    sl_driver_init();
+    sl_service_init();
+    sl_stack_init();
+    sl_internal_app_init();
+}
 void init_ccpPlatform(void)
 {
-    sl_system_init();
+    sl_si917_system_init();
     // TODO: Setting the highest priority for SVCall_IRQn to avoid the HardFault issue
     NVIC_SetPriority(SVCall_IRQn, CORE_INTERRUPT_HIGHEST_PRIORITY);
 

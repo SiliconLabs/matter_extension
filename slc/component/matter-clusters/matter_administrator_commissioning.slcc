@@ -1,5 +1,5 @@
 
-category: Clusters
+category: Clusters|General
 description: Implementation of the Administrator Commissioning Server Cluster
 id: matter_administrator_commissioning
 label: Administrator Commissioning Server Cluster

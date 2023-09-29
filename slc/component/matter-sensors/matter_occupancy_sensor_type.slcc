@@ -1,4 +1,4 @@
-category: Matter Sensors
+category: Platform|Sensors
 description: Add to enable occupancy sensor in sensor-app
 id: matter_occupancy_sensor_type
 label: Matter Occupancy Sensor

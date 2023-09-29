@@ -1,4 +1,4 @@
-category: Matter Sensors
+category: Platform|Sensors
 description: Add to enable temperature sensor in sensor-app
 id: matter_temperature_sensor_type
 label: Matter Temperature Sensor

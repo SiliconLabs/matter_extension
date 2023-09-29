@@ -30,7 +30,7 @@ include:
   - path: src/platform/silabs/SiWx917
     file_list:
     - path: siwx917-chip-mbedtls-config.h
-  - path: src/platform/silabs/SiWx917/bluetooth
+  - path: src/platform/silabs/rs911x
     file_list:
     - path: wfx_sl_ble_init.h
     - path: ble_config.h

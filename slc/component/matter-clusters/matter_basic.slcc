@@ -1,4 +1,4 @@
-category: Clusters
+category: Clusters|CHIP
 description: Implementation of the Basic Cluster
 id: matter_basic
 label: Basic Cluster

@@ -2,14 +2,14 @@ id: matter_wifi
 package: Matter
 description: >
   matter wifi
-label: "matter_wifi"
+label: Matter WiFi
 category: Matter-WiFi
 quality: production
 define: 
   - name: SL_WIFI
     value: 1
   - name: SL_HEAP_SIZE
-    value: 32768
+    value: 0
   - name: __STARTUP_CLEAR_BSS
   - name: PLAT
     value: EMBER_PLATFORM_CORTEXM3

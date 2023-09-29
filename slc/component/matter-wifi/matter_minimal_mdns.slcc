@@ -2,7 +2,7 @@ id: matter_minimal_mdns
 package: Matter
 description: >
   matter_minimal_mdns for wifi
-label: "matter_minimal_mdns"
+label: Matter Minimal mDNS
 category: Matter-WiFi|lwip
 quality: production
 provides:

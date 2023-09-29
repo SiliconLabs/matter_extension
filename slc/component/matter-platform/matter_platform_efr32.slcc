@@ -77,5 +77,3 @@ requires:
   - name: rail_util_pti
   - name: emlib
     
-recommends:
-  - id: matter_psa_crypto_config

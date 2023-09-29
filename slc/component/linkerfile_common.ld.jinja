@@ -224,7 +224,8 @@ SECTIONS
     KEEP(*(.simee*))
   } > rom
 
-  linker_nvm_end = __main_flash_end__;
+  /* Last page of flash is reserved for the manufacturing token space */
+  linker_nvm_end = __main_flash_end__ - 4096;
   linker_nvm_begin = linker_nvm_end - SIZEOF(.nvm);
   linker_nvm_size = SIZEOF(.nvm);
   linker_storage_end = linker_nvm_begin;
@@ -237,4 +238,3 @@ SECTIONS
   app_flash_end = 0x81c2000 + 0x200000;
   ASSERT( (linker_nvm_begin + SIZEOF(.nvm)) <= app_flash_end, "NVM3 is excessing the flash size !")
 }
-

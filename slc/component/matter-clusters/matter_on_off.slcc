@@ -1,4 +1,4 @@
-category: Clusters
+category: Clusters|General
 description: Implementation of the On/Off server cluster
 id: matter_on_off
 label: On/Off Server Cluster

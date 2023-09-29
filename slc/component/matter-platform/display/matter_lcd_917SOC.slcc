@@ -1,0 +1,76 @@
+id: matter_lcd_917SOC
+label: Matter Display for 917 SoC boards
+description: Support for liquid crystal display on matter 917 SOC boards
+package: "Matter"
+category: "Matter-WiFi|Platform"
+quality: production
+requires:
+  - name: matter
+  - name: glib
+provides:
+  - name: matter_lcd_917SOC
+conflicts:
+  - name: matter_low_power
+  - name: matter_sed
+  - name: matter_sed_wifi
+  - name: matter_no_lcd_shell
+component:
+include:
+- path: examples/platform/silabs/display/
+  file_list:
+  - path: demo-ui.h
+  - path: demo-ui-bitmaps.h
+  - path: lcd.h
+- path: examples/window-app/silabs/efr32/include
+  file_list:
+  - path: LcdPainter.h
+    condition: matter_window
+- path: examples/thermostat/silabs/efr32/include
+  file_list:
+  - path: ThermostatIcons.h
+    condition: matter_thermostat_app
+  - path: ThermostatUI.h
+    condition: matter_thermostat_app
+- path: third_party/silabs/gecko_sdk/platform/service/sleeptimer/inc/
+  file_list:
+  - path: sl_sleeptimer.h
+- path: third_party/silabs/wifi_sdk/components/siwx917_soc/drivers/hardware_drivers/memlcd/inc
+- path: third_party/silabs/wifi_sdk/components/siwx917_soc/drivers/hardware_drivers/memlcd/inc/memlcd_917
+- path: third_party/silabs/wifi_sdk/components/siwx917_soc/drivers/middleware/sleeptimer/inc
+- path: third_party/silabs/wifi_sdk/components/siwx917_soc/drivers/unified_api/inc
+- path: third_party/silabs/gecko_sdk/hardware/driver/memlcd/src/ls013b7dh03
+- path: third_party/silabs/gecko_sdk/platform/service/sleeptimer/inc
+- path: third_party/silabs/gecko_sdk/platform/service/sleeptimer/config
+- path: third_party/silabs/gecko_sdk/platform/service/sleeptimer/src
+- path: third_party/silabs/wifi_sdk/components/siwx917_soc/core/config
+source:
+  - path: examples/platform/silabs/display/demo-ui.c
+  - path: examples/platform/silabs/display/lcd.cpp
+  - path: examples/window-app/silabs/efr32/src/LcdPainter.cpp
+    condition:
+      - matter_window
+  - path: examples/thermostat/silabs/efr32/src/ThermostatUI.cpp
+    condition:
+      - matter_thermostat_app
+  - path: third_party/silabs/gecko_sdk/platform/service/sleeptimer/src/sl_sleeptimer.c
+  - path: third_party/silabs/wifi_sdk/components/siwx917_soc/drivers/cmsis_driver/SPI.c
+  - path: third_party/silabs/wifi_sdk/components/siwx917_soc/drivers/peripheral_drivers/src/rsi_sysrtc.c
+  - path: third_party/silabs/wifi_sdk/components/siwx917_soc/drivers/service/sleeptimer/src/sl_sleeptimer_hal_si91x_sysrtc.c
+  - path: third_party/silabs/wifi_sdk/components/siwx917_soc/drivers/unified_api/src/sl_si91x_ulp_timer.c
+define:
+  - name: DISPLAY_ENABLED
+  - name: RSI_M4_INTERFACE
+  - name: ROM_BYPASS
+    value: "1"
+  - name: SI917_RADIO_BOARD_V2
+    value: "1"
+  - name: SPI_MULTI_SLAVE
+    value: "1"
+  - name: SYSCALLS_WRITE
+    value: "1"
+  - name: SI91X_PLATFORM
+    value: "1"
+  - name: SI91X_SYSRTC_PRESENT
+    value: "1"
+  - name: SL_MEMLCD_EXTCOMIN_PORT
+    value: "0"

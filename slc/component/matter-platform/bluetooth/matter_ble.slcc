@@ -2,7 +2,7 @@ id: matter_ble
 label: Bluetooth Network Layer
 description: Adds EFR32 Bluetooth network layer for Matter.
 package: "Matter"
-category: Stack
+category: Stack|Bluetooth
 quality: production
 requires:
   - name: matter_libblelayer
@@ -16,6 +16,7 @@ requires:
   - name: bluetooth_stack
   - name: bluetooth_feature_system
   - name: bluetooth_feature_connection
+  - name: bluetooth_crypto
   
 provides:
   - name: matter_ble

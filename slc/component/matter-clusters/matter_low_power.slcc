@@ -1,5 +1,5 @@
 
-category: Clusters
+category: Clusters|General
 description: Implementation of the Low Power Server Cluster
 id: matter_low_power
 label: Low Power Server Cluster

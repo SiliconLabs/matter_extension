@@ -3,7 +3,7 @@ label: Matter UART selection for Series 1 boards (RS911x)
 description: >
   Matter UART selection for Series 1 boards
 package: "Matter"
-category: "Matter-WiFi|Platform"
+category: "Matter-WiFi|Platform|Drivers"
 quality: production
 provides:
   - name: matter_drivers_series_1_wifi_rs911x

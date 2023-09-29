@@ -1,5 +1,5 @@
 
-category: Clusters
+category: Clusters|Lighting
 description: Implementation of the Color Control Server Cluster
 id: matter_color_control
 label: Color Control Server Cluster

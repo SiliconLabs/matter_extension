@@ -2,7 +2,7 @@ id: matter_efr32_ncp
 package: Matter
 description: >
   EFR32 based Wifi Interfaces for NCPs
-label: src_platform_EFR32_Components
+label: Src Platform EFR32 Components
 category: Matter-WiFi|Platform
 quality: production
 define:

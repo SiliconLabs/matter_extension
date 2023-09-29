@@ -3,7 +3,7 @@ label: wf200_ncp_extension
 package: Matter
 description: >
   Adds support for the HAL and WiFi Driver layer for WF200 NCP devices
-category: Matter-WiFi
+category: Matter-WiFi|Platform|Drivers
 provides:
 - name: wf200_ncp_extension
 requires:

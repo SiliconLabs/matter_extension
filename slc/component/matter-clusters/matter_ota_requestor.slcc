@@ -1,5 +1,5 @@
 
-category: Clusters
+category: Clusters|CHIP
 description: Implementation of the Ota Requestor Server Cluster
 id: matter_ota_requestor
 label: OTA Requestor Server Cluster

@@ -2,7 +2,7 @@ id: matter_shell
 label: Matter Shell
 description: Enables the Matter Shell (CHIP Shell) functionality
 package: Matter
-category: Stack
+category: Stack|Shell
 quality: production
 requires:
 - name: matter_uart

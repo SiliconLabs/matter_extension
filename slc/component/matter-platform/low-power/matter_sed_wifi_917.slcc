@@ -2,7 +2,7 @@ id: matter_sed_wifi_917
 label: Sleepy end device component for 917
 description: Enables the sed for 917 matter wifi applications
 package: "WiFi|Platform|SED"
-category: Stack
+category: Platform|Low-power
 quality: production
 define:
   - name: CHIP_DEVICE_CONFIG_ENABLE_SED

@@ -16,6 +16,7 @@ requires:
   - name: matter_siwx917_common
   - name: siwx917_soc_custom_startup
   - name: device_init_nvic
+  - name: si91x_debug
 
 provides:
   - name: matter_platform_siwx917
@@ -54,10 +55,11 @@ source:
 define:
   - name: SL_WFX_CONFIG_SCAN
     value: 1
+  - name: SIWX_917
+    value: 1
   - name: CHIP_9117
     value: 1
   - name: RS911X_WIFI
-  - name: SL_CATALOG_MATTER_BLE_PRESENT
   - name: ROMDRIVER_PRESENT
 # TODO : should be removed after code clean-up.
   - name: BRD4325A

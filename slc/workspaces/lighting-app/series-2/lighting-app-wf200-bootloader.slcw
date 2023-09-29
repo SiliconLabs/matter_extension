@@ -5,7 +5,7 @@ project:
   - path: ../../../sample-app/lighting-app/efr32/lighting-app-wf200.slcp
     id: application
     output: lighting-app-wf200-bootloader
-  - path: ../../../sample-app/bootloaders/bootloader-storage-external-single-series-2.slcp
+  - path: ../../../sample-app/bootloaders/bootloader-storage-external-single-series-2/bootloader-storage-external-single-series-2.slcp
     id: bootloader
     output: matter-bootloader
 post_build:

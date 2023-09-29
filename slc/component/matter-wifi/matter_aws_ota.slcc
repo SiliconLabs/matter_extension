@@ -1,4 +1,4 @@
-category: Matter-WiFi
+category: Matter-WiFi|Features
 define:
 -   name: DIC_ENABLE
     value: "1"

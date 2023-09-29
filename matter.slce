@@ -17,7 +17,7 @@ component_path:
   - path: slc/component/matter-platform/display
   - path: slc/component/matter-platform/device-attestation-credentials
   - path: slc/component/matter-platform/low-power
-  - path: slc/component/matter-platform/mbedtls
+  - path: slc/component/matter-platform/crypto
   - path: slc/component/matter-platform/ota
   - path: slc/component/matter-platform/segger
   - path: slc/component/matter-platform/shell

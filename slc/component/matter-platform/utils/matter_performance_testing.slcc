@@ -2,7 +2,7 @@ id: matter_performance_testing
 label: Performance Testing Utilities and CLI
 description: Matter performance testing utilities and CLI. The component enables the "perf ping" and "perf mx" Matter Shell commands 
 package: "Matter"
-category: Platform
+category: Platform|Utils
 quality: production
 requires:
   - name: ot_debug_channel

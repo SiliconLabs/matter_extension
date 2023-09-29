@@ -5,7 +5,7 @@ project:
   - path: ../../../sample-app/window-app/efr32/window-app-thread.slcp
     id: application
     output: window-app-thread
-  - path: ../../../sample-app/bootloaders/bootloader-storage-external-single-series-2.slcp
+  - path: ../../../sample-app/bootloaders/bootloader-storage-external-single-series-2/bootloader-storage-external-single-series-2.slcp
     id: bootloader
     output: matter-bootloader
 post_build:

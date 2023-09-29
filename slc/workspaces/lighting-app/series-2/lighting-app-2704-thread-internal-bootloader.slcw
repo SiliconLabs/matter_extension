@@ -5,7 +5,7 @@ project:
   - path: ../../../sample-app/lighting-app/efr32/lighting-app-2704.slcp
     id: application
     output: lighting-app-2704-thread-bootloader
-  - path: ../../../sample-app/bootloaders/bootloader-storage-internal-single-series-2.slcp
+  - path: ../../../sample-app/bootloaders/bootloader-storage-internal-single-series-2/bootloader-storage-internal-single-series-2.slcp
     id: bootloader
     output: matter-bootloader
 post_build:
