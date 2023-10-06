@@ -164,12 +164,14 @@ if platform == "darwin":
         outfile.write("export ZAP_INSTALL_PATH=\"" + zap_path + "\"\n")
 elif platform == "win32":
     with open(os.path.expanduser(os.path.join(tools_folder_path,"sl_env_vars.bat")), "w") as outfile:
-        outfile.write('SETX PATH "%PATH%;{};{};{};{}"\n'.format(slc_cli_path,zap_path,arm_toolchain_path,java_path_win+"\\bin"))
         outfile.write('SETX SLC "{}"\n'.format(slc_cli_path))
-        outfile.write('SETX STUDIO_ADAPTER_PACK_PATH "{};{}"\n'.format(zap_path,commander_path+"\\Simplicity Commander"))
+        outfile.write('SETX STUDIO_ADAPTER_PACK_PATH "{}"\n'.format(zap_path))
+        outfile.write('SETX POST_BUILD_EXE "{}"\n'.format(os.path.join(commander_path,"Simplicity Commander","commander.exe")))
         outfile.write('SETX ARM_GCC_DIR "{}"\n'.format(arm_gcc_dir))
         outfile.write('SETX JAVA17_HOME "{}"\n'.format(java_path_win))
         outfile.write('SETX ZAP_INSTALL_PATH "{}"'.format(zap_path.replace("\\","/")))
+    with open(os.path.expanduser(os.path.join(tools_folder_path,"sl_windows_path.txt")), "w") as outfile2:
+        outfile2.write('{}\n{}\n{}\n{}\n'.format(slc_cli_path,zap_path,arm_toolchain_path,java_path_win+"\\bin"))
 elif platform == "linux":
     with open(os.path.expanduser("slc/tools/sl_env_vars.sh"), "w") as outfile:
         outfile.write("#!/usr/bin/env bash\n")
