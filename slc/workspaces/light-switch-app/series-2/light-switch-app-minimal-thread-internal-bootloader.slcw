@@ -1,0 +1,12 @@
+label: light-switch-app-minimal-thread-internal-bootloader
+quality: production
+description: Matter workspace container both a Matter bootloader and Light-switch over Thread Example
+project:
+  - path: ../../../sample-app/light-switch-app/efr32/light-switch-app-minimal-thread.slcp
+    id: application
+    output: light-switch-app-minimal-thread-bootloader
+  - path: ../../../sample-app/bootloaders/bootloader-storage-internal-single-series-2/bootloader-storage-internal-single-series-2.slcp
+    id: bootloader
+    output: matter-bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

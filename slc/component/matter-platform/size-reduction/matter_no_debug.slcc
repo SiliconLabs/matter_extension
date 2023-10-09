@@ -1,0 +1,23 @@
+id: matter_no_debug
+label: Matter No Debug
+description: Introduces defines and configuration settings for no logs/debug capabilities. Reduces image size.
+package: Matter
+category: Platform|Size Reduction
+quality: production
+
+provides:
+  - name: matter_no_debug
+
+define:
+  - name: NDEBUG
+    value: "1"
+  - name: SL_MATTER_LOG_LEVEL
+    value: "SL_MATTER_LOG_NONE"
+  - name: SILABS_LOG_ENABLED
+    value: "0"
+  - name: HARD_FAULT_LOG_ENABLE
+    value: "0"
+  - name: OPENTHREAD_CONFIG_LOG_OUTPUT
+    value: "OT_LOG_LEVEL_NONE"
+  - name: OPENTHREAD_CONFIG_LOG_LEVEL
+    value: "OPENTHREAD_CONFIG_LOG_OUTPUT_NONE"

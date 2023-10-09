@@ -1,10 +1,10 @@
 id: matter
-version: 2.1.0
+version: 2.1.1
 description: "Matter extension for Gecko SDK Suite"
 label: "Silicon Labs Matter"
 sdk:
   id: gecko_sdk
-  version: 4.3.1
+  version: 4.3.2
 upgrade_manifest:
   - path: upgrade.slcu
 component_path:
@@ -17,15 +17,17 @@ component_path:
   - path: slc/component/matter-platform/display
   - path: slc/component/matter-platform/device-attestation-credentials
   - path: slc/component/matter-platform/low-power
-  - path: slc/component/matter-platform/mbedtls
+  - path: slc/component/matter-platform/crypto
   - path: slc/component/matter-platform/ota
   - path: slc/component/matter-platform/segger
   - path: slc/component/matter-platform/shell
   - path: slc/component/matter-platform/siwx917
   - path: slc/component/matter-platform/temperature-sensor
   - path: slc/component/matter-platform/uart
+  - path: slc/component/matter-platform/utils
   - path: slc/component/matter-platform/wstk-leds
   - path: slc/component/matter-platform/memory-monitoring
+  - path: slc/component/matter-platform/size-reduction
   - path: slc/component/matter-clusters
   - path: slc/component/matter-sensors
   - path: slc/component/matter-thread

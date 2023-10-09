@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.0"
+    version: "2.1.1"
 
 component:
   - id: device_init
@@ -15,23 +15,25 @@ component:
     instance: [btn0, btn1]
   - id: simple_led
     instance: [led0, led1]
-  - id: uartdrv_usart
-    instance: [vcom]
   - id: matter_wstk_leds
     from: matter
   - id: matter
+    from: matter
+  - id: matter_platform_efr32
     from: matter
   - id: matter_wifi_ble
     from: matter
   - id: matter_ota_support
     from: matter
-  - id: matter_mbedtls
+  - id: matter_crypto
     from: matter
   - id: silabs_factory_data_provider
     from: matter
 #  - id: matter_gatt
 #    from: matter
 
+  - id: matter_efr32_ncp
+    from: matter
   - id: matter_wifi
     from: matter
   - id: wiseconnect_sapi
@@ -99,11 +101,6 @@ component:
     from: matter
   # Override RTT
   - id: matter_segger_rtt
-    from: matter
-  # Override psa crypto config
-  - id: matter_psa_crypto_config
-    from: matter
-  - id: matter_psa_crypto_builtin_override
     from: matter
   - id: matter_temperature_sensor
     from: matter

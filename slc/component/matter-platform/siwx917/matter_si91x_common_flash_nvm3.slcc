@@ -1,11 +1,11 @@
 id: matter_si91x_common_flash_nvm3
-label: matter_si91x_common_flash_nvm3
+label: Matter Si91X Common Flash NVM3
 package: "Matter"
 description: >
   NVM3 component for 917SoC common Flash
 category: Matter-WiFi|Platform|si91x|Middleware
 quality: production
-component_root_path: "third_party/silabs/wifi_sdk/components/siwx917_soc/drivers/middleware/nvm3"
+component_root_path: "third_party/silabs/wifi_sdk/components/siwx917_soc/drivers/service/nvm3"
 define:
   - name: EXT_IRQ_COUNT
     value: "75"

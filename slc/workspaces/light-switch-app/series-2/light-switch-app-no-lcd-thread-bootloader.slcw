@@ -5,7 +5,7 @@ project:
   - path: ../../../sample-app/light-switch-app/efr32/light-switch-app-no-lcd-thread.slcp
     id: application
     output: light-switch-app-no-lcd-thread-bootloader
-  - path: ../../../sample-app/bootloaders/bootloader-storage-external-single-series-2.slcp
+  - path: ../../../sample-app/bootloaders/bootloader-storage-external-single-series-2/bootloader-storage-external-single-series-2.slcp
     id: bootloader
     output: matter-bootloader
 post_build:

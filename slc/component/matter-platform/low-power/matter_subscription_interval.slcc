@@ -6,18 +6,14 @@ description: >
   of a subscription request is what defines the frequency at which a device will send
   a liveness check if there are no attribute changes
 package: "Matter"
-category: Stack
+category: Platform|Low-power
 quality: production
 define:
   - name: CHIP_CONFIG_USE_ICD_SUBSCRIPTION_CALLBACKS
     value: 1
-source:
-  - path: examples/platform/silabs/ICDSubscriptionCallback.cpp
-include:
-  - path: examples/platform/silabs
-    file_list: ICDSubscriptionCallback.h
 requires:
   - name: matter_sed
+  - name: matter_efr32_icd_subscription_callback
 provides:
   - name: matter_subscription_interval
 conflicts:

@@ -2,7 +2,7 @@ id: matter_sed_wf200_lcd
 label: Sleepy end device component for wf200 with LCD
 description: Enables the sed for wf200 matter wifi applications with LCD
 package: "Matter"
-category: Stack
+category: Platform|Low-power
 quality: production
 define:
   - name: CHIP_DEVICE_CONFIG_ENABLE_SED

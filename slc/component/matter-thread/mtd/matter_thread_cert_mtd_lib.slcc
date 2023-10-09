@@ -2,7 +2,7 @@ id: matter_thread_cert_mtd_lib
 label: Thread Network MTD Certified Library
 description: Adds Thread network certified library for minimal thread device
 package: "Matter"
-category: Matter-Thread
+category: Matter-Thread|Libraries|MTD
 quality: production
 define:
   - name: SL_OPENTHREAD_CERT_LIB

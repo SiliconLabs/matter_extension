@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.0"
+    version: "2.1.1"
 
 component:
   - id: device_init
@@ -21,6 +21,8 @@ component:
 
   - id: matter
     from: matter
+  - id: matter_platform_efr32
+    from: matter
   - id: matter_ble
     from: matter
   - id: matter_thread_ftd
@@ -28,7 +30,7 @@ component:
   - id: rail_util_pti
   - id: matter_ota_support
     from: matter
-  - id: matter_mbedtls
+  - id: matter_crypto
     from: matter
   - id: matter_shell
     from: matter
@@ -36,7 +38,7 @@ component:
     from: matter
 
   - id: matter_lighting
-    from: matter   
+    from: matter
   - id: app_common
     from: matter
 
@@ -54,8 +56,6 @@ component:
   - id: matter_descriptor
     from: matter
   - id: matter_diagnostic_logs
-    from: matter
-  - id: matter_ethernet_network_diagnostics
     from: matter
   - id: matter_fixed_label
     from: matter
@@ -75,8 +75,6 @@ component:
     from: matter
   - id: matter_network_commissioning
     from: matter
-  - id: matter_occupancy_sensor
-    from: matter
   - id: matter_on_off
     from: matter
   - id: matter_operational_credentials
@@ -85,30 +83,21 @@ component:
     from: matter
   - id: matter_software_diagnostics
     from: matter
-  - id: matter_switch
-    from: matter
   - id: matter_thread_network_diagnostics
     from: matter
   - id: matter_time_format_localization
     from: matter
   - id: matter_user_label
     from: matter
-  - id: matter_wifi_network_diagnostics
-    from: matter
   - id: matter_lcd
     from: matter
   - id: matter_qr_code
-    from: matter 
+    from: matter
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
   # Override RTT
   - id: matter_segger_rtt
-    from: matter
-  # Override psa crypto config
-  - id: matter_psa_crypto_config
-    from: matter
-  - id: matter_psa_crypto_builtin_override
     from: matter
 
 requires:
@@ -122,7 +111,7 @@ requires:
      - device_series_2
 
 config_file:
-  - path: ../../../../examples/lighting-app/lighting-common/lighting-app.zap
+  - path: ../../../../examples/lighting-app/silabs/efr32/data_model/lighting-thread-app.zap
     directory: common
 
 include:
@@ -148,8 +137,6 @@ source:
 define:
   - name: CHIP_CRYPTO_PLATFORM
     value: "1"
-  - name: OPENTHREAD_CONFIG_LOG_OUTPUT
-    value: OPENTHREAD_CONFIG_LOG_OUTPUT_APP
   - name: _WANT_REENT_SMALL
     value: "1"
   - name: IS_DEMO_LIGHT
@@ -159,12 +146,13 @@ define:
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
     value: "4092"
 configuration:
+  - name: OPENTHREAD_CONFIG_LOG_OUTPUT
+    value: OPENTHREAD_CONFIG_LOG_OUTPUT_APP
   - name: SL_MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED
     value: 1
     condition: [matter_thread_cert_libs]
   - name: SL_MBEDTLS_KEY_EXCHANGE_PSK_ENABLED
     value: 1
-    condition: [matter_thread_cert_libs]
   - name: OPENTHREAD_CONFIG_COAP_API_ENABLE
     value: 1
     condition: [matter_thread_coap_cert_libs]

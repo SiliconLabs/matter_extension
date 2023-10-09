@@ -28,18 +28,24 @@
 #include <platform/CHIPDeviceLayer.h>
 #include <zap-generated/gen_config.h>
 #include <app-common/zap-generated/ids/Clusters.h>
+
 #ifdef ENABLE_AWS_OTA_FEAT
 extern "C"{
    extern void aws_ota_init(void);
 }
 #endif
+
 #ifdef ZCL_USING_ON_OFF_CLUSTER_SERVER
 #include  <app/clusters/on-off-server/on-off-server.h>
 #endif //ZCL_USING_ON_OFF_CLUSTER_SERVER
- 
+
 #ifdef ZCL_USING_DOOR_LOCK_CLUSTER_SERVER
 #include <app/clusters/door-lock-server/door-lock-server.h>
 #endif // ZCL_USING_DOOR_LOCK_CLUSTER_SERVER
+
+#ifdef ZCL_USING_WINDOW_COVERING_CLUSTER_SERVER
+#include <app/clusters/window-covering-server/window-covering-server.h>
+#endif //ZCL_USING_WINDOW_COVERING_CLUSTER_SERVER
 
 #ifdef ZCL_USING_THERMOSTAT_CLUSTER_SERVER
 #include "TemperatureManager.h"
@@ -54,7 +60,7 @@ using namespace chip::app::Clusters;
 
 constexpr EndpointId kEndpointId = 1; // the clusters server could be configured on any endpoint
 constexpr uint8_t kStringNotFound = 0xFF;
-constexpr uint8_t kMaxCommandStrLength = 30; 
+constexpr uint8_t kMaxCommandStrLength = 30;
 
 struct mqttControlCommand {
     const char* cmdString;
@@ -68,8 +74,12 @@ struct mqttControlCommand {
         DlLockState lockState;
 #endif
 
+#ifdef ZCL_USING_WINDOW_COVERING_CLUSTER_SERVER
+     void (*setPosition)(EndpointId, chip::app::Clusters::WindowCovering::NPercent100ths); // Function pointer to set the position
+#endif //ZCL_USING_WINDOW_COVERING_CLUSTER_SERVER
+
 #ifdef ZCL_USING_THERMOSTAT_CLUSTER_SERVER
-        AttributeId attributeId;
+        void (*setAttribute)(EndpointId, int32_t); // Function pointer to set the attribute
 #endif //ZCL_USING_THERMOSTAT_CLUSTER_SERVER
 
     }action;
@@ -97,20 +107,47 @@ static constexpr mqttControlCommand DlMqttControlCmd[] = {
 };
 #endif // ZCL_USING_DOOR_LOCK_CLUSTER_SERVER
 
+#ifdef ZCL_USING_WINDOW_COVERING_CLUSTER_SERVER
+using namespace chip::app::Clusters::WindowCovering;
+static mqttControlCommand WindowMqttControlCmd[] = {
+   { .cmdString = "Lift", .action = {
+     .setPosition = [](EndpointId endpoint, chip::app::Clusters::WindowCovering::NPercent100ths value) {
+     LiftPositionSet(endpoint, value);
+   }
+   }},
+   { .cmdString = "Tilt", .action = {
+     .setPosition = [](EndpointId endpoint, chip::app::Clusters::WindowCovering::NPercent100ths value) {
+      TiltPositionSet(endpoint, value);
+   }
+   }},
+};
+#endif //ZCL_USING_WINDOW_COVERING_CLUSTER_SERVER
+
 #ifdef ZCL_USING_THERMOSTAT_CLUSTER_SERVER
 namespace ThermAttr = chip::app::Clusters::Thermostat::Attributes;
 static mqttControlCommand thermostatMqttControlCmd[] = {
-    { .cmdString = "SetMode", .action = { .attributeId = ThermAttr::SystemMode::Id } },
-    { .cmdString = "Heating", .action = { .attributeId = ThermAttr::OccupiedHeatingSetpoint::Id } },
-    { .cmdString = "Cooling", .action = { .attributeId = ThermAttr::OccupiedCoolingSetpoint::Id } },
+   { .cmdString = "SetMode", .action = {
+     .setAttribute = [](EndpointId endpoint, int32_t value) {
+     Thermostat::Attributes::SystemMode::Set(endpoint, value);
+   }
+   }},
+   { .cmdString = "Heating", .action = {
+     .setAttribute = [](EndpointId endpoint, int32_t value) {
+     Thermostat::Attributes::OccupiedHeatingSetpoint::Set(endpoint, value);
+   }
+   }},
+   { .cmdString = "Cooling", .action = {
+     .setAttribute = [](EndpointId endpoint, int32_t value) {
+     Thermostat::Attributes::OccupiedCoolingSetpoint::Set(endpoint, value);
+   }
+   }},
 };
-
-#endif
+#endif // ZCL_USING_THERMOSTAT_CLUSTER_SERVER
 
 // Macro to get the number of elemet of a given array
 #define COUNT_OF(A) (sizeof(A) / sizeof((A)[0]))
 
-/* 
+/*
  * This function returns the index where a exposed command is in a given
  * mqttControlCommand can be found.
  * If the command string is not found/not exposed. This function returns kStringNotFound
@@ -129,12 +166,13 @@ uint8_t GetCommandStringIndex(const mqttControlCommand* ctrlCmd,uint8_t size, ch
 namespace dic {
     namespace control {
 /*
- * This function received data from dic mqtt. The data received is expected to be a 
+ * This function received data from dic mqtt. The data received is expected to be a
  * string matching exposed cluster commands.
- * 
+ *
  * *** This function has no return for proof of concept sake,
  *     but error codes should be returned as many thing could happen here ***
  */
+
 #ifdef ENABLE_AWS_OTA_FEAT
 void aws_ota_init_task(void* parameters)
 {
@@ -155,7 +193,7 @@ void dic_incoming_data_cb(void* arg, const char* topic, uint16_t topic_len, cons
     uint8_t cmdIndex = kStringNotFound;
     char cmd[kMaxCommandStrLength] = { 0 };
     VerifyOrReturn(kMaxCommandStrLength > len);
-    CopyString(cmd, len+1,(const char*) data);
+        CopyString(cmd, len+1,(const char*) data);
     std::string cmdString(cmd);
     char *_cmd = strtok(const_cast<char *>(cmdString.c_str()), "/");
     char *value = strtok(NULL, "/");
@@ -164,21 +202,26 @@ void dic_incoming_data_cb(void* arg, const char* topic, uint16_t topic_len, cons
     {
     _value = std::stoi(value);
     }
-    SILABS_LOG("_value=%d",_value);
+    SILABS_LOG("_cmd=%s, _value=%d",_cmd,_value);
+
 #ifdef ENABLE_AWS_OTA_FEAT
     if(strcmp(cmd, "ota")==0)
     {
-    TaskHandle_t AWS_OTA;
-    if ((pdPASS != xTaskCreate(aws_ota_init_task, "AWS_OTA", AWS_OTA_TASK_STACK_SIZE, NULL, AWS_OTA_TASK_PRIORITY, &AWS_OTA)) ||
-      !AWS_OTA)
-    {
-        SILABS_LOG("Failed to create AWS OTA Task");
+        static TaskHandle_t AWS_OTA = NULL;
+        if(AWS_OTA == NULL)
+        {   
+            if ((pdPASS != xTaskCreate(aws_ota_init_task, "AWS_OTA", AWS_OTA_TASK_STACK_SIZE, NULL, AWS_OTA_TASK_PRIORITY, &AWS_OTA)) ||
+                !AWS_OTA)
+            {   
+                SILABS_LOG("Failed to create AWS OTA Task");
+                return;
+            }
+            SILABS_LOG("Task creation successfull for AWS OTA thread");
+        }
         return;
     }
-    SILABS_LOG("Task creation successfull for AWS OTA thread");
-    return;
-    }
 #endif
+
 #ifdef ZCL_USING_ON_OFF_CLUSTER_SERVER
     cmdIndex = GetCommandStringIndex(OnOffMqttControlCmd,COUNT_OF(OnOffMqttControlCmd),_cmd);
     if (cmdIndex != kStringNotFound) {
@@ -187,7 +230,6 @@ void dic_incoming_data_cb(void* arg, const char* topic, uint16_t topic_len, cons
         chip::DeviceLayer::PlatformMgr().UnlockChipStack();
         return;
     }
-
 #endif // ZCL_USING_ON_OFF_CLUSTER_SERVER
 
 #ifdef ZCL_USING_DOOR_LOCK_CLUSTER_SERVER
@@ -200,24 +242,23 @@ void dic_incoming_data_cb(void* arg, const char* topic, uint16_t topic_len, cons
     }
 #endif // ZCL_USING_DOOR_LOCK_CLUSTER_SERVER
 
-#ifdef ZCL_USING_THERMOSTAT_CLUSTER_SERVER
-    cmdIndex = GetCommandStringIndex(thermostatMqttControlCmd, COUNT_OF(thermostatMqttControlCmd), _cmd);
+#ifdef ZCL_USING_WINDOW_COVERING_CLUSTER_SERVER
+    cmdIndex = GetCommandStringIndex(WindowMqttControlCmd, COUNT_OF(WindowMqttControlCmd), _cmd);
     if (cmdIndex != kStringNotFound) {
         chip::DeviceLayer::PlatformMgr().LockChipStack();
-        if (thermostatMqttControlCmd[cmdIndex].action.attributeId == ThermAttr::SystemMode::Id)
-        {
-            Thermostat::Attributes::SystemMode::Set(kEndpointId, _value);
-        }
-        else if(thermostatMqttControlCmd[cmdIndex].action.attributeId == ThermAttr::OccupiedHeatingSetpoint::Id)
-        {
-            Thermostat::Attributes::OccupiedHeatingSetpoint::Set(kEndpointId, _value);
-        }
-        else if (thermostatMqttControlCmd[cmdIndex].action.attributeId == ThermAttr::OccupiedCoolingSetpoint::Id)
-        {
-            Thermostat::Attributes::OccupiedCoolingSetpoint::Set(kEndpointId, _value);
-        }
+        WindowMqttControlCmd[cmdIndex].action.setPosition(kEndpointId,(chip::app::Clusters::WindowCovering::NPercent100ths) _value);
         chip::DeviceLayer::PlatformMgr().UnlockChipStack();
         return;
+    }
+#endif //ZCL_USING_WINDOW_COVERING_CLUSTER_SERVER
+
+#ifdef ZCL_USING_THERMOSTAT_CLUSTER_SERVER
+cmdIndex = GetCommandStringIndex(thermostatMqttControlCmd, COUNT_OF(thermostatMqttControlCmd), _cmd);
+if (cmdIndex != kStringNotFound) {
+    chip::DeviceLayer::PlatformMgr().LockChipStack();
+    thermostatMqttControlCmd[cmdIndex].action.setAttribute(kEndpointId, _value);
+    chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+    return;
     }
 
 #endif // ZCL_USING_THERMOSTAT_CLUSTER_SERVER

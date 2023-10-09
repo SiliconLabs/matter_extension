@@ -1,5 +1,5 @@
 id: toolchain_gcc_common
-label: common flash GCC Toolchain
+label: Common Flash GCC Toolchain
 package: Matter
 description: Common Flash Toolchain support for GCC
 category: Platform|Toolchain

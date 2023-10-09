@@ -37,6 +37,8 @@
 #endif
 #include "spidrv.h"
 
+#include "efr32_utils.h"
+
 #include "gpiointerrupt.h"
 #include "sl_device_init_clocks.h"
 #include "sl_status.h"
@@ -48,18 +50,35 @@
 #include "wfx_host_events.h"
 #include "wfx_rsi.h"
 
+#ifdef CHIP_9117
+#include "sl_si91x_driver.h"
+#include "cmsis_os2.h"
+#include "sl_net.h"
+#include "sl_board_configuration.h"
+#include "sl_wifi_types.h"
+#include "sl_si91x_types.h"
+#include "sl_wifi_callback_framework.h"
+#include "sl_wifi_constants.h"
+#else
 #include "rsi_board_configuration.h"
 #include "rsi_driver.h"
+#endif
 
 #include "sl_device_init_hfxo.h"
 
+#define DEFAULT_SPI_TRASFER_MODE 0
+// Macro to drive semaphore block minimun timer in milli seconds
+#define RSI_SEM_BLOCK_MIN_TIMER_VALUE_MS (50)
 #if defined(SL_CATALOG_POWER_MANAGER_PRESENT)
 #include "sl_power_manager.h"
 #endif
 
+
 StaticSemaphore_t xEfxSpiIntfSemaBuffer;
 static SemaphoreHandle_t spiTransferLock;
 static TaskHandle_t spiInitiatorTaskHandle = NULL;
+
+static uint32_t dummy_buffer; /* Used for DMA - when results don't matter */
 
 #if defined(EFR32MG12)
 #include "sl_spidrv_exp_config.h"
@@ -150,6 +169,18 @@ void rsi_hal_board_init(void)
     SILABS_LOG("RSI_HAL: Init done");
 }
 
+// wifi-sdk
+sl_status_t sl_si91x_host_bus_init(void)
+{
+    rsi_hal_board_init();
+    return SL_STATUS_OK;
+}
+
+void sl_si91x_host_enable_high_speed_bus()
+{
+   //dummy function for wifi-sdk
+}
+
 /*****************************************************************************
  *@brief
  *    Spi dma transfer is complete Callback
@@ -184,20 +215,27 @@ static void spi_dmaTransfertComplete(SPIDRV_HandleData_t * pxHandle, Ecode_t tra
  **************************************************************************/
 int16_t rsi_spi_transfer(uint8_t * tx_buf, uint8_t * rx_buf, uint16_t xlen, uint8_t mode)
 {
-    if (xlen <= MIN_XLEN || (tx_buf == NULL && rx_buf == NULL)) // at least one buffer needs to be provided
+    /*
+        TODO: tx_buf and rx_buf needs to be replaced with a dummy buffer of length xlen to align with SDK of WiFi
+    */
+    if (xlen > 4 && (tx_buf == NULL && rx_buf == NULL))
     {
-        return RSI_ERROR_INVALID_PARAM;
+      return RSI_ERROR_INVALID_PARAM; // Ensuring that the dummy buffer won't corrupt the memory
+    }
+
+    if (xlen <= MIN_XLEN || (tx_buf == NULL && rx_buf == NULL))
+    {
+        rx_buf = (uint8_t *)&dummy_buffer;
+        tx_buf = (uint8_t *)&dummy_buffer;
     }
 
     (void) mode; // currently not used;
-    rsi_error_t rsiError = RSI_ERROR_NONE;
+    err_t rsiError = RSI_ERROR_NONE;
 
-    if (xSemaphoreTake(spiTransferLock, portMAX_DELAY) != pdTRUE)
-    {
-        return RSI_ERROR_SPI_BUSY;
-    }
+    xSemaphoreTake(spiTransferLock, portMAX_DELAY);
 
-    configASSERT(spiInitiatorTaskHandle == NULL); // No other task should currently be waiting for the dma completion
+    // No other task should currently be waiting for the dma completion
+    configASSERT(spiInitiatorTaskHandle == NULL);
     spiInitiatorTaskHandle = xTaskGetCurrentTaskHandle();
 
     Ecode_t spiError;
@@ -224,7 +262,7 @@ int16_t rsi_spi_transfer(uint8_t * tx_buf, uint8_t * rx_buf, uint16_t xlen, uint
             int itemsTransferred = 0;
             int itemsRemaining   = 0;
             SPIDRV_GetTransferStatus(SPI_HANDLE, &itemsTransferred, &itemsRemaining);
-            SILABS_LOG("SPI transfert timed out %d/%d (rx%x rx%x)", itemsTransferred, itemsRemaining, (uint32_t) tx_buf,
+            SILABS_LOG("ERR: SPI timed out %d/%d (rx%x rx%x)", itemsTransferred, itemsRemaining, (uint32_t) tx_buf,
                        (uint32_t) rx_buf);
 
             SPIDRV_AbortTransfer(SPI_HANDLE);
@@ -233,11 +271,28 @@ int16_t rsi_spi_transfer(uint8_t * tx_buf, uint8_t * rx_buf, uint16_t xlen, uint
     }
     else
     {
-        SILABS_LOG("SPI transfert failed with err:%x (tx%x rx%x)", spiError, (uint32_t) tx_buf, (uint32_t) rx_buf);
+        SILABS_LOG("ERR: SPI failed with error:%x (tx%x rx%x)", spiError, (uint32_t) tx_buf, (uint32_t) rx_buf);
         rsiError               = RSI_ERROR_SPI_FAIL;
         spiInitiatorTaskHandle = NULL; // SPI operation failed. No notification to received.
     }
 
     xSemaphoreGive(spiTransferLock);
     return rsiError;
+}
+
+
+/*********************************************************************
+ * @fn   int16_t rsi_spi_transfer(uint8_t *tx_buf, uint8_t *rx_buf, uint16_t xlen, uint8_t mode)
+ * @brief
+ *       Do a SPI transfer - Mode is 8/16 bit - But every 8 bit is aligned
+ * @param[in] tx_buf:
+ * @param[in] rx_buf:
+ * @param[in] xlen:
+ * @param[in] mode:
+ * @return
+ *        None
+ **************************************************************************/
+sl_status_t sl_si91x_host_spi_transfer(const void *tx_buf, void *rx_buf, uint16_t xlen)
+{
+    return(rsi_spi_transfer((uint8_t *)tx_buf, rx_buf, xlen, DEFAULT_SPI_TRASFER_MODE));
 }

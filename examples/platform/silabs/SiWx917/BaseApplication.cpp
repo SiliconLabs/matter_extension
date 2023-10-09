@@ -38,6 +38,7 @@
 
 #include "SilabsDeviceDataProvider.h"
 #include "rsi_chip.h"
+#include "sl_si91x_button_config.h"
 #include "siwx917_utils.h"
 #include <app/server/OnboardingCodesUtil.h>
 #include <app/server/Server.h>
@@ -373,7 +374,7 @@ void BaseApplication::ButtonHandler(AppEvent * aEvent)
         }
     }
 
-    while (!(RSI_NPSSGPIO_GetPin(NPSS_GPIO_0)))
+    while (!(RSI_NPSSGPIO_GetPin(SL_BUTTON_BTN0_PIN)))
     {
         if (count == 0)
         {

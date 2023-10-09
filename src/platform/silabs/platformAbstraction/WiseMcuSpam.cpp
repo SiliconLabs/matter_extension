@@ -29,6 +29,7 @@ SilabsPlatform SilabsPlatform::sSilabsPlatformAbstractionManager;
 CHIP_ERROR SilabsPlatform::Init(void)
 {
     init_ccpPlatform();
+    return CHIP_NO_ERROR;
 }
 
 #ifdef ENABLE_WSTK_LEDS

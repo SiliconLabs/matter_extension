@@ -2,7 +2,7 @@ id: "matter_segger_rtt"
 label: "Matter Segger RTT"
 package: "Matter"
 description: "Matter-specific version of the platform's Segger RTT component"
-category: Platform
+category: Platform|Utils
 quality: "production"
 config_file:
   - path: "third_party/silabs/gecko_sdk/util/third_party/segger/systemview/Config/SEGGER_RTT_Conf.h"

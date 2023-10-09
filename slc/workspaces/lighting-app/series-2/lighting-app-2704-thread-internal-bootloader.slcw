@@ -1,0 +1,12 @@
+label: lighting-app-2704-thread-internal-bootloader
+quality: production
+description: Matter workspace container both a Matter bootloader and Lighting over Thread Example
+project:
+  - path: ../../../sample-app/lighting-app/efr32/lighting-app-2704.slcp
+    id: application
+    output: lighting-app-2704-thread-bootloader
+  - path: ../../../sample-app/bootloaders/bootloader-storage-internal-single-series-2/bootloader-storage-internal-single-series-2.slcp
+    id: bootloader
+    output: matter-bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

@@ -9,4 +9,24 @@ upgrade:
         add:
            - matter_psa_crypto_config
            - matter_psa_crypto_builtin_override
-
+  - sdk:
+      id: matter
+      version: "2.1.1"
+    component:
+      - trigger: matter_psa_crypto_config
+        description: >
+          Upgrading project to Matter 2.1.1, removing the PSA Crypto config component
+        remove:
+           - matter_psa_crypto_config
+      - trigger: matter_psa_crypto_builtin_override
+        description: >
+          Upgrading project to Matter 2.1.1, removing the PSA build override component
+        remove:
+           - matter_psa_crypto_builtin_override
+      - trigger: matter_mbedtls
+        description: >
+          Upgrading project to Matter 2.1.1, replacing the Matter MbedTLS component with Matter MbedTLS Crypto 
+        remove:
+           - matter_mbedtls
+        add:
+           - matter_crypto

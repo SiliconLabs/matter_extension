@@ -3,7 +3,7 @@ label: GATT Configuration
 description: >
   Adds GATT Configuration for Matter.
 package: "Matter"
-category: Platform
+category: Stack|Bluetooth
 quality: production
 config_file:
 -   directory: btconf

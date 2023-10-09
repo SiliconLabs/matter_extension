@@ -3,7 +3,7 @@ label: GATT Additional Advertising
 description: >
   GATT Additional Advertising Configurations for Matter.
 package: "Matter"
-category: Platform
+category: Stack|Bluetooth
 quality: production
 define: 
   - name: CHIP_ENABLE_ROTATING_DEVICE_ID

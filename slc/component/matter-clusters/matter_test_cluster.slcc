@@ -1,5 +1,5 @@
 
-category: Clusters
+category: Clusters|CHIP
 description: Implementation of the Test Cluster Server Cluster
 id: matter_test_cluster
 label: Test Cluster Server Cluster

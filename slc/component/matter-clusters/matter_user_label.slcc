@@ -1,5 +1,5 @@
 
-category: Clusters
+category: Clusters|General
 description: Implementation of the User Label Server Cluster
 id: matter_user_label
 label: User Label Server Cluster

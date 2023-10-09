@@ -24,6 +24,10 @@ extern "C" {
 
 void init_ccpPlatform(void);
 void Create_application_task(void);
+
+void sl_si917_platform_init(void);
+void sl_si917_system_init(void);
+
 #ifdef __cplusplus
 }
 #endif

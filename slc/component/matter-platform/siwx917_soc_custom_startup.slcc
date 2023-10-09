@@ -2,7 +2,7 @@ id: siwx917_soc_custom_startup
 label: Matter startup component for SiWx917 SoC
 description: This component adds a customized startup file for SiWx917 SoC
 package: "Matter"
-category: Stack
+category: "Matter-WiFi|Platform"
 quality: production
 
 include:

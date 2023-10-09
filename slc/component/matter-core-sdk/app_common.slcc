@@ -8,10 +8,6 @@ description: app_common
 id: app_common
 include:
 - path: examples/platform/silabs
-  file_list:
-  - path: display//lcd.h
-  - path: display//demo-ui.h
-  - path: display//demo-ui-bitmaps.h
 - path: src
   file_list:
   - path: app/util/basic-types.h

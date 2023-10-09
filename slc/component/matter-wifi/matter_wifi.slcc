@@ -2,18 +2,19 @@ id: matter_wifi
 package: Matter
 description: >
   matter wifi
-label: "matter_wifi"
-category: Matter-WiFi|lwip
+label: Matter WiFi
+category: Matter-WiFi
 quality: production
-include:
-  - path: third_party/pigweed/repo/pw_hdlc/public/pw_hdlc
-    file_list:
-    - path: decoder.h
-    - path: encoded_size.h
-    - path: encoder.h
-    - path: rpc_channel.h
-    - path: rpc_packets.h
-    - path: wire_packet_parser.h
+define: 
+  - name: SL_WIFI
+    value: 1
+  - name: SL_HEAP_SIZE
+    value: 0
+  - name: __STARTUP_CLEAR_BSS
+  - name: PLAT
+    value: EMBER_PLATFORM_CORTEXM3
+  - name: PLATFORM_HEADER
+    value: "platform-header.h"
 config_file:
   - path: slc/config/sl_matter_wifi_config.h
 provides:
@@ -21,9 +22,3 @@ provides:
 requires:
   - name: matter_lwip
   - name: matter_minimal_mdns
-  - name: matter_src_platform_efr32
-    condition: [matter]
-  - name: example_platform_efr32_common
-    condition: [matter]
-  - name: example_platform_siwx917_common
-    condition: [matter_917soc]

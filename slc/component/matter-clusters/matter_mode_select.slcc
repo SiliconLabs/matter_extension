@@ -1,5 +1,5 @@
 
-category: Clusters
+category: Clusters|General
 description: Implementation of the Mode Select Server Cluster
 id: matter_mode_select
 label: Mode Select Server Cluster

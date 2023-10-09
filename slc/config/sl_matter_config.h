@@ -21,11 +21,15 @@
 #define SL_MATTER_LOG_LEVEL SL_MATTER_LOG_DETAIL
 #endif
 
-// <q SILABS_LOG_ENABLED> Enable EFR32 specific log used in matter
+// <q SILABS_LOG_ENABLED> Enable Silabs specific log used in matter
+#ifndef SILABS_LOG_ENABLED
 #define SILABS_LOG_ENABLED 1
+#endif
 
 // <q HARD_FAULT_LOG_ENABLE> Enable hard fault logging
+#ifndef HARD_FAULT_LOG_ENABLE
 #define HARD_FAULT_LOG_ENABLE 1
+#endif
 
 // <o CHIP_DEVICE_CONFIG_DEVICE_SOFTWARE_VERSION> Device software version
 #define CHIP_DEVICE_CONFIG_DEVICE_SOFTWARE_VERSION 1
@@ -37,7 +41,9 @@
 #define CHIP_DEVICE_CONFIG_DEFAULT_DEVICE_HARDWARE_VERSION 1
 
 // <q SL_MATTER_CLI_ARG_PARSER> Enable CLI Argument Parser
+#ifndef SL_MATTER_CLI_ARG_PARSER
 #define SL_MATTER_CLI_ARG_PARSER 1
+#endif
 
 // <o CHIP_DEVICE_CONFIG_MAX_DISCOVERED_IP_ADDRESSES> Define the default number of ip addresses to discover
 #define CHIP_DEVICE_CONFIG_MAX_DISCOVERED_IP_ADDRESSES 5

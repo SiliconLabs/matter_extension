@@ -1,4 +1,4 @@
-category: Matter-WiFi
+category: Matter-WiFi|Features
 define:
 -   name: DIC_ENABLE
     value: "1"
@@ -12,10 +12,10 @@ define:
     value: '1'
 -   name: MBEDTLS_SSL_MAX_CONTENT_LEN
     value: "768"
-    condition: [matter]
+    condition: [matter_efr32_wifi]
 -   name: SIWX_917
     value: "1"
-    condition: [matter_917soc]
+    condition: [matter_platform_siwx917]
 description:
     This component enables Direct Internet connectivity feature for matter-wifi
 id: matter_dic
@@ -43,23 +43,23 @@ include:
     - path: MQTT_transport.h
     - path: tcpbase.h
 -   path: src/platform/silabs/efr32
-label: Direct Internet connectivity for matter-wifi
+label: Direct Internet connectivity for Matter WiFi
 package: Matter
 provides:
 -   name: matter_dic
 requires:
   - name: mbedtls_tls
-    condition: [matter]
+    condition: [matter_efr32_wifi]
   - name: mbedtls_rsa
-    condition: [matter]
+    condition: [matter_efr32_wifi]
   - name: mbedtls_pki
-    condition: [matter]
+    condition: [matter_efr32_wifi]
   - name: mbedtls_jpake
-    condition: [matter]
+    condition: [matter_efr32_wifi]
   - name: mbedtls_ecdhe_key_exchange
-    condition: [matter]
+    condition: [matter_efr32_wifi]
   - name: psa_crypto_tls12_prf
-    condition: [matter]
+    condition: [matter_efr32_wifi]
 template_contribution:
   - name: mbedtls_ssl_content_len_in_requirement
     value: 5120

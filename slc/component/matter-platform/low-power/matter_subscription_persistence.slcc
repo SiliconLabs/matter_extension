@@ -5,7 +5,7 @@ description: >
   session to a subscriber in the event of a power cycle. Must be used in conjunction
   with Matter Sleepy Device.
 package: "Matter"
-category: Stack
+category: Platform|Low-power
 quality: production
 define:
   - name: CHIP_CONFIG_PERSIST_SUBSCRIPTIONS

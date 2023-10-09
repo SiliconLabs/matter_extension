@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.0"
+    version: "2.1.1"
 
 component:
   - id: device_init
@@ -15,25 +15,27 @@ component:
     instance: [btn0, btn1]
   - id: simple_led
     instance: [led0, led1]
-  - id: uartdrv_usart
-    instance: [vcom]
 
   - id: matter_wstk_leds
     from: matter
 
   - id: matter
     from: matter
+  - id: matter_platform_efr32
+    from: matter
   - id: matter_wifi_ble
     from: matter
   - id: matter_ota_support
     from: matter
-  - id: matter_mbedtls
+  - id: matter_crypto
     from: matter
   - id: silabs_factory_data_provider
     from: matter
   - id: matter_gatt
     from: matter
 
+  - id: matter_efr32_ncp
+    from: matter
   - id: matter_wifi
     from: matter
   - id: wiseconnect_sapi
@@ -76,8 +78,6 @@ component:
     from: matter
   - id: matter_network_commissioning
     from: matter
-  - id: matter_occupancy_sensor
-    from: matter
   - id: matter_on_off
     from: matter
   - id: matter_operational_credentials
@@ -107,11 +107,6 @@ component:
     from: matter
   # Override RTT
   - id: matter_segger_rtt
-    from: matter
-  # Override psa crypto config
-  - id: matter_psa_crypto_config
-    from: matter
-  - id: matter_psa_crypto_builtin_override
     from: matter
 
 # Require LCD and QR Code components only on the boards that support LCD
@@ -168,8 +163,6 @@ source:
 define:
   - name: CHIP_CRYPTO_PLATFORM
     value: "1"
-  - name: OPENTHREAD_CONFIG_LOG_OUTPUT
-    value: OPENTHREAD_CONFIG_LOG_OUTPUT_APP
   - name: _WANT_REENT_SMALL
     value: "1"
   - name: IS_DEMO_LIGHT
@@ -183,6 +176,8 @@ define:
     condition: [brd4161a]
 
 configuration:
+  - name: OPENTHREAD_CONFIG_LOG_OUTPUT
+    value: OPENTHREAD_CONFIG_LOG_OUTPUT_APP
   - name: SL_SPIDRV_EXP_BITRATE
     value: "10000000"
   - name: SL_SPIDRV_EUSART_EXP_BITRATE

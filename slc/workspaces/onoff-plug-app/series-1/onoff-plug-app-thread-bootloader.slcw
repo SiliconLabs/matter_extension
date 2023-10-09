@@ -5,7 +5,7 @@ project:
   - path: ../../../sample-app/onoff-plug-app/efr32/onoff-plug-app-thread.slcp
     id: application
     output: onoff-plug-app-thread
-  - path: ../../../sample-app/bootloaders/bootloader-storage-external-single-series-1.slcp
+  - path: ../../../sample-app/bootloaders/bootloader-storage-external-single-series-1/bootloader-storage-external-single-series-1.slcp
     id: bootloader
     output: matter-bootloader
 post_build:

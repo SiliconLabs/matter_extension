@@ -1,5 +1,5 @@
 
-category: Clusters
+category: Clusters|CHIP
 description: Implementation of the Switch Server Cluster
 id: matter_switch
 label: Switch Server Cluster

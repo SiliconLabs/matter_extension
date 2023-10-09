@@ -1,5 +1,5 @@
 
-category: Clusters
+category: Clusters|General
 description: Implementation of the Fixed Label Server Cluster
 id: matter_fixed_label
 label: Fixed Label Server Cluster

@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.0"
+    version: "2.1.1"
 
 component:
   - id: device_init
@@ -17,6 +17,8 @@ component:
     instance: [led0, led1]
   - id: matter
     from: matter
+  - id: matter_platform_efr32
+    from: matter
   - id: matter_wstk_leds
     from: matter
 
@@ -24,13 +26,15 @@ component:
     from: matter
   - id: matter_ota_support
     from: matter
-  - id: matter_mbedtls
+  - id: matter_crypto
     from: matter
   - id: silabs_factory_data_provider
     from: matter
   - id: matter_gatt
     from: matter
-  
+
+  - id: matter_efr32_ncp
+    from: matter  
   - id: matter_wifi
     from: matter
   - id: wf200_ncp_extension
@@ -71,8 +75,6 @@ component:
     from: matter
   - id: matter_network_commissioning
     from: matter
-  - id: matter_occupancy_sensor
-    from: matter
   - id: matter_on_off
     from: matter
   - id: matter_operational_credentials
@@ -101,11 +103,6 @@ component:
     from: matter
   # Override RTT
   - id: matter_segger_rtt
-    from: matter
-  # Override psa crypto config
-  - id: matter_psa_crypto_config
-    from: matter
-  - id: matter_psa_crypto_builtin_override
     from: matter
 
 # Require LCD and QR Code components only on the boards that support LCD

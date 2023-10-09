@@ -10,6 +10,5 @@ requires:
   - name: matter
   - name: ot_stack
   - name: matter_thread_variant
-  - name: mbedtls_dtls
 provides:
   - name: matter_thread

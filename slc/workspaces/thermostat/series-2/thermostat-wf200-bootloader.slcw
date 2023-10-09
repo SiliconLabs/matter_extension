@@ -1,11 +1,11 @@
 label: thermostat-wf200-bootloader
 quality: production
-description: Matter workspace container both a Matter bootloader and Lighting over WiFi Example
+description: Matter workspace container both a Matter bootloader and Thermostat over WiFi Example
 project:
   - path: ../../../sample-app/thermostat/efr32/thermostat-wf200.slcp
     id: application
     output: thermostat-wf200-bootloader
-  - path: ../../../sample-app/bootloaders/bootloader-storage-external-single-series-2.slcp
+  - path: ../../../sample-app/bootloaders/bootloader-storage-external-single-series-2/bootloader-storage-external-single-series-2.slcp
     id: bootloader
     output: matter-bootloader
 post_build:

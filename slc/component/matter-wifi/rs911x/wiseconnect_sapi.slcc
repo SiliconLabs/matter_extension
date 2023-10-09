@@ -2,8 +2,8 @@ id: wiseconnect_sapi
 package: wiseconnect
 description: >
   WiSeConnect sapi component
-label: wiseconnect_sapi
-category: Matter-WiFi|sapi_all
+label: Wiseconnect Sapi
+category: Matter-WiFi|Platform|Drivers
 quality: production
 provides:
 - name: wiseconnect_sapi
@@ -98,10 +98,6 @@ source:
 - path: third_party/silabs/wiseconnect-wifi-bt-sdk/sapi/driver/rsi_bt_ble.c
 define:
 - name: SL_WFX_CONFIG_SCAN
-  value: 1
-- name: SL_HEAP_SIZE
-  value: 32768
-- name: SL_WIFI
   value: 1
 - name: SL_WFX_USE_SPI
 - name: EFX32_RS911X

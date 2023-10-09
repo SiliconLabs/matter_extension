@@ -2,7 +2,7 @@ id: matter_shell
 label: Matter Shell
 description: Enables the Matter Shell (CHIP Shell) functionality
 package: Matter
-category: Stack
+category: Stack|Shell
 quality: production
 requires:
 - name: matter_uart
@@ -37,9 +37,17 @@ source:
   condition: [matter_nfc]
 - path: src/lib/shell/commands/Ota.cpp
   condition: [matter_ota_support]
+- path: src/lib/shell/commands/Ota.cpp
+  condition: [matter_platform_siwx917]
 - path: examples/lock-app/silabs/efr32/src/EventHandlerLibShell.cpp
   condition:
     - matter_lock
+    - matter_platform_efr32
+- path: examples/lock-app/silabs/SiWx917/src/EventHandlerLibShell.cpp
+  condition:
+    - matter_lock
+    - matter_platform_siwx917
+
 
 include:
 - path: src/lib/shell
@@ -60,14 +68,26 @@ include:
 - path: examples/lock-app/silabs/efr32/include
   file_list:
     - path: EventHandlerLibShell.h
-      condition: matter_lock
+      condition:
+        - matter_lock
+        - matter_platform_efr32
+- path: examples/lock-app/silabs/SiWx917/include
+  file_list:
+    - path: EventHandlerLibShell.h
+      condition:
+        - matter_lock
+        - matter_platform_siwx917
+
 define:
 - name: ENABLE_CHIP_SHELL
 - name: OPENTHREAD_CONFIG_CLI_TRANSPORT
   value: OT_CLI_TRANSPORT_CONSOLE
   condition: [matter_thread]
+- name: SL_MATTER_CLI_ARG_PARSER
+  value: 1
 conflicts:
   - name: matter_low_power
   - name: matter_sed
   - name: matter_sed_wifi
   - name: matter_sed_wifi_917ncp
+  - name: matter_no_lcd_shell

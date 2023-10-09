@@ -1,8 +1,8 @@
 id: matter_uart_wifi
-label: Uart_wifi_rs911x
+label: UART WiFi RS911x
 description: Enable sources and define for uart as used by matter components RS911x
 package: "Matter"
-category: "Matter-WiFi|Platform"
+category: "Matter-WiFi|Platform|UART"
 quality: production
 requires:
   - name: uartdrv_usart

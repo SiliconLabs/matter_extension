@@ -1,9 +1,7 @@
 #ifndef BLE_BLEBUILDCONFIG_H_
 #define BLE_BLEBUILDCONFIG_H_
 
-#ifndef CCP_SI917_BRINGUP
 #include "sl_component_catalog.h"
-#endif
 
 #if defined(SL_CATALOG_MATTER_BLE_PRESENT)
 #define CONFIG_NETWORK_LAYER_BLE        1

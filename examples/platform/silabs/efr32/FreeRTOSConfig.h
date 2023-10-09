@@ -212,7 +212,7 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #ifdef DIC_ENABLE
 #define configTOTAL_HEAP_SIZE ((size_t)(68 * 1024))
 #else
-#define configTOTAL_HEAP_SIZE ((size_t)(34 * 1024))
+#define configTOTAL_HEAP_SIZE ((size_t)(42 * 1024))
 #endif // DIC
 #else  // SL_WIFI
 #if SL_CONFIG_OPENTHREAD_LIB == 1
@@ -269,9 +269,19 @@ standard names. */
 #define SysTick_Handler xPortSysTickHandler
 
 /* Thread local storage pointers used by the SDK */
+#ifdef PERFORMANCE_TEST_ENABLED
+// ot_debug_channel component uses thread-local storage
+#define configNUM_SDK_THREAD_LOCAL_STORAGE_POINTERS 2
+#ifndef configNUM_USER_THREAD_LOCAL_STORAGE_POINTERS
+#define configNUM_USER_THREAD_LOCAL_STORAGE_POINTERS 0
+#define configNUM_THREAD_LOCAL_STORAGE_POINTERS (configNUM_USER_THREAD_LOCAL_STORAGE_POINTERS \
+           + configNUM_SDK_THREAD_LOCAL_STORAGE_POINTERS)
+#endif
+#else /* PERFORMANCE_TEST_ENABLED */
 #ifndef configNUM_SDK_THREAD_LOCAL_STORAGE_POINTERS
 #define configNUM_SDK_THREAD_LOCAL_STORAGE_POINTERS 0
 #endif
+#endif /* PERFORMANCE_TEST_ENABLED */
 
 #if defined(__GNUC__)
 /* For the linker. */

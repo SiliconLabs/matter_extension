@@ -1,5 +1,5 @@
 
-category: Clusters
+category: Clusters|HVAC
 description: Implementation of the Fan Control Server Cluster
 id: matter_fan_control
 label: Fan Control Server Cluster

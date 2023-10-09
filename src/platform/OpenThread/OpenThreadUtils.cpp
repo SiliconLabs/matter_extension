@@ -130,16 +130,13 @@ void LogOpenThreadStateChange(otInstance * otInst, uint32_t flags)
             meshPrefix.ToString(strBuf);
             ChipLogDetail(DeviceLayer, "   Mesh Prefix: %s/64", strBuf);
         }
+//SLC-FIX
 #if CHIP_CONFIG_SECURITY_TEST_MODE
         {
-#if OPENTHREAD_API_VERSION >= 126
-            const otNetworkKey * otKey = otThreadGetNetworkKey(otInst);
+            otNetworkKey otKey;
+            otThreadGetNetworkKey(otInst, &otKey);
             for (int i = 0; i < OT_NETWORK_KEY_SIZE; i++)
-#else
-            const otMasterKey * otKey = otThreadGetMasterKey(otInst);
-            for (int i = 0; i < OT_MASTER_KEY_SIZE; i++)
-#endif
-                snprintf(&strBuf[i * 2], 3, "%02X", otKey->m8[i]);
+                snprintf(&strBuf[i * 2], 3, "%02X", otKey.m8[i]);
             ChipLogDetail(DeviceLayer, "   Network Key: %s", strBuf);
         }
 #endif // CHIP_CONFIG_SECURITY_TEST_MODE

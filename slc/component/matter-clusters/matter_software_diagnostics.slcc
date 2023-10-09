@@ -1,5 +1,5 @@
 
-category: Clusters
+category: Clusters|General
 description: Implementation of the Software Diagnostics Server Cluster
 id: matter_software_diagnostics
 label: Software Diagnostics Server Cluster

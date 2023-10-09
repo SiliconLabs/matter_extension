@@ -7,10 +7,6 @@
 #define SL_MATTER_STACK_LOCK_TRACKING_FATAL     2
 
 #include "sl_matter_config.h"
-// configurable options
-#ifndef CCP_SI917_BRINGUP
-#include "sl_component_catalog.h"
-#endif
 
 // inferred options
 #include "sl_component_catalog.h"

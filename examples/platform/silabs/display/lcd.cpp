@@ -22,6 +22,10 @@
 #include "demo-ui.h"
 #include "lcd.h"
 
+#ifdef SI917_SOC
+#include "rsi_chip.h"
+#endif
+
 #include "dmd.h"
 #include "glib.h"
 
@@ -38,6 +42,8 @@
 #define QR_CODE_VERSION 4
 #define QR_CODE_MODULE_SIZE 3
 #define QR_CODE_BORDER_SIZE 0
+#define SL_BOARD_ENABLE_DISPLAY_PIN  0
+#define SL_BOARD_ENABLE_DISPLAY_PORT 0
 
 #ifdef QR_CODE_ENABLED
 static uint8_t qrCode[qrcodegen_BUFFER_LEN_FOR_VERSION(QR_CODE_VERSION)];
@@ -64,12 +70,19 @@ CHIP_ERROR SilabsLCD::Init(uint8_t * name, bool initialState)
     }
 
     /* Enable the memory lcd */
+#ifdef SI917_SOC
+    RSI_NPSSGPIO_InputBufferEn(SL_BOARD_ENABLE_DISPLAY_PIN, 1U);
+    RSI_NPSSGPIO_SetPinMux(SL_BOARD_ENABLE_DISPLAY_PIN, 0);
+    RSI_NPSSGPIO_SetDir(SL_BOARD_ENABLE_DISPLAY_PIN, 0);
+    RSI_NPSSGPIO_SetPin(SL_BOARD_ENABLE_DISPLAY_PIN, 1U);
+#else
     status = sl_board_enable_display();
     if (status != SL_STATUS_OK)
     {
         SILABS_LOG("Board Display enable fail %d", status);
         err = CHIP_ERROR_INTERNAL;
     }
+#endif
 #if 0 //TODO: SLC-FIX-WIFI
 #if (defined(EFR32MG24) && defined(WF200_WIFI))
     if(pr_type != LCD)

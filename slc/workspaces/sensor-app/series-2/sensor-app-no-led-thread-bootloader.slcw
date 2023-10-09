@@ -1,11 +1,11 @@
 label: sensor-app-no-led-thread-bootloader
 quality: production
-description: Matter workspace container both a Matter bootloader and Lighting over Thread Example
+description: Matter workspace container both a Matter bootloader and Sensor over Thread Example
 project:
   - path: ../../../sample-app/sensor-app/efr32/sensor-app-no-led-thread.slcp
     id: application
     output: sensor-app-no-led-thread-bootloader
-  - path: ../../../sample-app/bootloaders/bootloader-storage-external-single-series-2.slcp
+  - path: ../../../sample-app/bootloaders/bootloader-storage-external-single-series-2/bootloader-storage-external-single-series-2.slcp
     id: bootloader
     output: matter-bootloader
 post_build:
