@@ -20,6 +20,9 @@ include:
 - path: examples/platform/silabs/efr32/rs911x/hal
   file_list:
   - path: sl_board_configuration.h
+- path: examples/platform/silabs/efr32
+  file_list:
+  - path: spi_multiplex.h
 define:
 - name: RS911X_WIFI
 - name: EXP_BOARD

@@ -21,9 +21,7 @@ define:
   - name: SL_COMPONENT_CATALOG_PRESENT
   - name: CONFIG_ENABLE_UART
   - name: CONFIG_USE_EXTERNAL_FLASH
-    unless: [brd4186c]
-  - name: CONFIG_USE_EXTERNAL_FLASH
-    unless: [brd4187c]    
+    unless: [brd4186c, brd4187c]
   - name: EFR32_SERIES2_CONFIG4_MICRO
     condition: [brd4186c]
   - name: EFR32_SERIES2_CONFIG4_MICRO

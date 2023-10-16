@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.1"
+    version: "2.1.2"
 
 provides:
   - name: window_app
@@ -104,10 +104,10 @@ component:
   - id: matter_segger_rtt
     from: matter
 
-#  - id: matter_lcd // TODO: Enable this feature once MG24 has LCD and QR code support
-#    from: matter
-#  - id: matter_qr_code
-#    from: matter
+  - id: matter_lcd
+    from: matter
+  - id: matter_qr_code
+    from: matter
 
 # Require LCD and QR Code components only on the boards that support LCD
 requires:

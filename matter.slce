@@ -1,5 +1,5 @@
 id: matter
-version: 2.1.1
+version: 2.1.2
 description: "Matter extension for Gecko SDK Suite"
 label: "Silicon Labs Matter"
 sdk:
