@@ -1,0 +1,18 @@
+{
+  "gn_target_name": "//third_party/pigweed/repo/pw_tls_client/py:py",
+  "inputs": [
+
+  ],
+  "setup_sources": [
+    "../../../../../../third_party/pigweed/repo/pw_tls_client/py/pyproject.toml",
+    "../../../../../../third_party/pigweed/repo/pw_tls_client/py/setup.cfg",
+    "../../../../../../third_party/pigweed/repo/pw_tls_client/py/setup.py"
+  ],
+  "sources": [
+    "../../../../../../third_party/pigweed/repo/pw_tls_client/py/pw_tls_client/__init__.py",
+    "../../../../../../third_party/pigweed/repo/pw_tls_client/py/pw_tls_client/generate_test_data.py"
+  ],
+  "tests": [
+
+  ]
+}

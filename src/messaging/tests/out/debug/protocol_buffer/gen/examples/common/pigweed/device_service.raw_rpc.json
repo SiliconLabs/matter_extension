@@ -1,0 +1,12 @@
+{
+  "dependencies": [
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_protobuf/common_protos.raw_rpc.json"
+  ],
+  "label": "//examples/common/pigweed:device_service.raw_rpc",
+  "nested_in_python_package": "",
+  "package": "device_service",
+  "protoc_outputs": [
+    "protocol_buffer/gen/examples/common/pigweed/device_service.proto_library/raw_rpc/device_service/device_service.raw_rpc.pb.h"
+  ],
+  "root": "protocol_buffer/gen/examples/common/pigweed/device_service.proto_library/raw_rpc"
+}

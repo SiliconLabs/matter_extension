@@ -1,0 +1,6 @@
+python/gen/third_party/pigweed/repo/pw_env_setup/py/py/package_metadata.json
+python/gen/third_party/pigweed/repo/pw_cli/py/py/package_metadata.json
+python/gen/third_party/pigweed/repo/pw_protobuf_compiler/py/py/package_metadata.json
+python/gen/third_party/pigweed/repo/pw_symbolizer/py/py/package_metadata.json
+python/gen/third_party/pigweed/repo/pw_cpu_exception_cortex_m/cpu_state_protos.python/package_metadata.json
+python/gen/third_party/pigweed/repo/pw_cpu_exception_cortex_m/py/py/package_metadata.json

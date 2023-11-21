@@ -2,6 +2,7 @@
 category: Clusters|Media
 description: Implementation of the Account Login Server Cluster
 id: matter_account_login
+package: Matter
 label: Account Login Server Cluster
 quality: production
 provides:

@@ -2,6 +2,7 @@
 category: Clusters|CHIP
 description: Implementation of the Network Commissioning Cluster
 id: matter_network_commissioning
+package: Matter
 label: Network Commissioning Cluster
 quality: production
 provides:

@@ -1,0 +1,8 @@
+defines =
+framework_dirs =
+include_dirs = -I../../../../../third_party/pigweed/repo/pw_thread/public
+target_output_name = test_threads
+
+build obj/third_party/pigweed/repo/pw_thread/test_threads.inputdeps.stamp: stamp obj/third_party/pigweed/repo/pw_thread/id.NO_BACKEND_SET.stamp obj/third_party/pigweed/repo/pw_thread/thread.NO_BACKEND_SET.stamp
+
+build obj/third_party/pigweed/repo/pw_thread/test_threads.stamp: stamp || obj/third_party/pigweed/repo/pw_thread/thread.stamp obj/third_party/pigweed/repo/pw_thread/thread.facade.stamp obj/third_party/pigweed/repo/pw_thread/id.stamp obj/third_party/pigweed/repo/pw_thread/id.facade.stamp obj/third_party/pigweed/repo/pw_thread/thread_core.stamp

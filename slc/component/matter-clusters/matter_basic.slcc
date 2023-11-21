@@ -1,6 +1,7 @@
 category: Clusters|CHIP
 description: Implementation of the Basic Cluster
 id: matter_basic
+package: Matter
 label: Basic Cluster
 quality: production
 provides:

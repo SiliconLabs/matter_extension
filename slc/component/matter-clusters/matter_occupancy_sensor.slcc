@@ -2,6 +2,7 @@
 category: Clusters|Measurement
 description: Implementation of the Occupancy Sensor Server Cluster
 id: matter_occupancy_sensor
+package: Matter
 label: Occupancy Sensor Server Cluster
 quality: production
 provides:

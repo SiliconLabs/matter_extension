@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the User Label Server Cluster
 id: matter_user_label
+package: Matter
 label: User Label Server Cluster
 quality: production
 provides:

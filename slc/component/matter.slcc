@@ -74,14 +74,15 @@ requires:
   - name: matter_libmessaginglayer
   - name: matter_librawtransport
   - name: matter_libsecurechannel
+  - name: matter_libsecurechanneltypes
   - name: matter_libsetuppayload
   - name: matter_libsupportlayer
   - name: matter_libsystemlayer
   - name: matter_libtransportlayer
   - name: configuration_over_swo
   - name: matter_ot_thirdparty_override
+  - name: matter_syscall_stubs
 
 recommends:
   - id: matter_configuration_over_swo
-  - id: matter_segger_rtt
   - id: matter_ot_thirdparty_override

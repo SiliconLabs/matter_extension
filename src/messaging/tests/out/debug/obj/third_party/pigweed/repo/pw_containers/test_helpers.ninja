@@ -1,0 +1,10 @@
+defines =
+framework_dirs =
+include_dirs =
+cflags = -O0 -g2 -fno-common -ffunction-sections -fdata-sections -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables -fPIC -Wall -Werror -Wextra -Wshadow -Wunreachable-code -Wvla -Wformat -Wformat-nonliteral -Wformat-security -Wno-deprecated-declarations -Wno-missing-field-initializers -Wno-unknown-warning-option -Wno-unused-parameter -Wno-cast-function-type -Wno-psabi -Wno-maybe-uninitialized -fdiagnostics-color -fno-strict-aliasing -fdiagnostics-color -g -fno-common -fno-exceptions -ffunction-sections -fdata-sections -Wall -Wextra -Wimplicit-fallthrough -Wcast-qual -Wundef -Wpointer-arith -Werror -Wno-error=cpp -Wno-error=deprecated-declarations -ffile-prefix-map=/home/selissia/chip/matter/src/messaging/tests/out/debug/=out/ -ffile-prefix-map=/home/selissia/chip/matter/src/messaging/tests/out/debug= -ffile-prefix-map=/home/selissia/chip/matter/= -ffile-prefix-map=../../../../../= -ffile-prefix-map==out/ -ffile-prefix-map=../../../../../= -ffile-prefix-map=/home/selissia/chip/matter/= -ffile-prefix-map=/home/selissia/chip/matter/src/messaging/tests/out/debug= -ffile-prefix-map=/home/selissia/chip/matter/src/messaging/tests/out/debug/=out/
+cflags_cc = -std=gnu++14 -fno-rtti -Wnon-virtual-dtor -fno-rtti -Wnon-virtual-dtor -std=c++17 -Wno-register
+target_output_name = test_helpers
+
+build obj/third_party/pigweed/repo/pw_containers/test_helpers.test_helpers.cc.o: cxx ../../../../../third_party/pigweed/repo/pw_containers/test_helpers.cc
+
+build obj/third_party/pigweed/repo/pw_containers/test_helpers.stamp: stamp obj/third_party/pigweed/repo/pw_containers/test_helpers.test_helpers.cc.o

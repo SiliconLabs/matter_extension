@@ -1,0 +1,6 @@
+[
+  {
+    "name": "//third_party/pigweed/repo/pw_log:tests",
+    "type": "self"
+  }
+]

@@ -21,22 +21,28 @@
  *          Provides an implementation of the BLEManager singleton object
  *          for Linux platforms.
  */
-#include <platform/internal/CHIPDeviceLayerInternal.h>
 
-#include <ble/CHIPBleServiceData.h>
-#include <lib/support/CodeUtils.h>
-#include <lib/support/SafeInt.h>
-#include <new>
-#include <platform/CommissionableDataProvider.h>
-#include <platform/internal/BLEManager.h>
+/**
+ * Note: BLEManager requires ConnectivityManager to be defined beforehand,
+ *       otherwise we will face circular dependency between them. */
+#include <platform/ConnectivityManager.h>
+
+/**
+ * Note: Use public include for BLEManager which includes our local
+ *       platform/<PLATFORM>/BLEManagerImpl.h after defining interface class. */
+#include "platform/internal/BLEManager.h"
 
 #include <cassert>
 #include <type_traits>
 #include <utility>
 
-#if CHIP_DEVICE_CONFIG_ENABLE_CHIPOBLE
+#include <ble/CHIPBleServiceData.h>
+#include <lib/support/CodeUtils.h>
+#include <lib/support/SafeInt.h>
+#include <platform/CHIPDeviceLayer.h>
+#include <platform/CommissionableDataProvider.h>
 
-#include "bluez/Helper.h"
+#include "bluez/BluezEndpoint.h"
 
 using namespace ::nl;
 using namespace ::chip::Ble;
@@ -729,7 +735,12 @@ void BLEManagerImpl::NewConnection(BleLayer * bleLayer, void * appState, const S
 
 CHIP_ERROR BLEManagerImpl::CancelConnection()
 {
-    return CHIP_ERROR_NOT_IMPLEMENTED;
+    if (mBLEScanConfig.mBleScanState == BleScanState::kConnecting)
+        CancelConnect(mpEndpoint);
+    // If in discovery mode, stop scan.
+    else if (mBLEScanConfig.mBleScanState != BleScanState::kNotScanning)
+        mDeviceScanner->StopScan();
+    return CHIP_NO_ERROR;
 }
 
 void BLEManagerImpl::NotifyBLEPeripheralRegisterAppComplete(bool aIsSuccess, void * apAppstate)
@@ -768,9 +779,9 @@ void BLEManagerImpl::NotifyBLEPeripheralAdvStopComplete(bool aIsSuccess, void * 
     PlatformMgr().PostEventOrDie(&event);
 }
 
-void BLEManagerImpl::OnDeviceScanned(BluezDevice1 * device, const chip::Ble::ChipBLEDeviceIdentificationInfo & info)
+void BLEManagerImpl::OnDeviceScanned(BluezDevice1 & device, const chip::Ble::ChipBLEDeviceIdentificationInfo & info)
 {
-    ChipLogProgress(Ble, "New device scanned: %s", bluez_device1_get_address(device));
+    ChipLogProgress(Ble, "New device scanned: %s", bluez_device1_get_address(&device));
 
     if (mBLEScanConfig.mBleScanState == BleScanState::kScanForDiscriminator)
     {
@@ -782,7 +793,7 @@ void BLEManagerImpl::OnDeviceScanned(BluezDevice1 * device, const chip::Ble::Chi
     }
     else if (mBLEScanConfig.mBleScanState == BleScanState::kScanForAddress)
     {
-        if (strcmp(bluez_device1_get_address(device), mBLEScanConfig.mAddress.c_str()) != 0)
+        if (strcmp(bluez_device1_get_address(&device), mBLEScanConfig.mAddress.c_str()) != 0)
         {
             return;
         }
@@ -825,11 +836,10 @@ void BLEManagerImpl::OnScanComplete()
 
 void BLEManagerImpl::OnScanError(CHIP_ERROR err)
 {
+    BleConnectionDelegate::OnConnectionError(mBLEScanConfig.mAppState, err);
     ChipLogError(Ble, "BLE scan error: %" CHIP_ERROR_FORMAT, err.Format());
 }
 
 } // namespace Internal
 } // namespace DeviceLayer
 } // namespace chip
-
-#endif // CHIP_DEVICE_CONFIG_ENABLE_CHIPOBLE

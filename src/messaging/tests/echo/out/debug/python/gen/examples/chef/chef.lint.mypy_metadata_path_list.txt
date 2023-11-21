@@ -1,0 +1,1 @@
+python/gen/examples/chef/chef/package_metadata.json

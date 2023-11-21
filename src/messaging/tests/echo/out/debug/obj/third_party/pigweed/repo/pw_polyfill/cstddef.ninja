@@ -1,0 +1,7 @@
+defines =
+framework_dirs =
+include_dirs = -I../../../../../../third_party/pigweed/repo/pw_polyfill/standard_library_public -I../../../../../../third_party/pigweed/repo/pw_polyfill/cstddef_public_overrides
+target_output_name = cstddef
+
+
+build obj/third_party/pigweed/repo/pw_polyfill/cstddef.stamp: stamp || obj/third_party/pigweed/repo/pw_polyfill/standard_library.stamp

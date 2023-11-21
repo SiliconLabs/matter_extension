@@ -38,11 +38,7 @@
 
 #include <stdbool.h>
 
-#ifdef SIWX_917
-#include "siwx917_utils.h"
-#else
-#include "efr32_utils.h"
-#endif
+#include "silabs_utils.h"
 /**
  * @brief Represents a registered record of the topic filter and its associated callback
  * in the subscription manager registry.

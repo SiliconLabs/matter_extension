@@ -1,0 +1,26 @@
+id: matter_icd
+label: Intermittently Connected Devices
+description: >
+  Support for Matter ICDs
+package: "Matter"
+category: Platform|Low-power
+quality: production
+include:
+- path: src/app/icd
+  file_list:
+  - path: IcdManagementServer.h
+  - path: IcdMonitoringTable.h
+  - path: ICDManager.h
+  - path: ICDEventManager.h
+
+source:
+  - path: src/app/icd/IcdManagementServer.cpp
+  - path: src/app/icd/IcdMonitoringTable.cpp
+  - path: src/app/icd/ICDManager.cpp
+  - path: src/app/icd/ICDEventManager.cpp
+  
+# TODO: make this work
+#requires:
+#  - name: matter_thread_mtd
+provides:
+  - name: matter_icd

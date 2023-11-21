@@ -2,6 +2,7 @@
 category: Clusters|CHIP
 description: Implementation of the Ota Provider Cluster
 id: matter_ota_provider
+package: Matter
 label: OTA Provider Cluster
 quality: production
 provides:

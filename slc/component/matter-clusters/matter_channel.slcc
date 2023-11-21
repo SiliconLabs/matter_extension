@@ -2,6 +2,7 @@
 category: Clusters|Media
 description: Implementation of the Channel Server Cluster
 id: matter_channel
+package: Matter
 label: Channel Server Cluster
 quality: production
 provides:

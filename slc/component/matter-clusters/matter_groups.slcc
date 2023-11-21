@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Groups Server Cluster
 id: matter_groups
+package: Matter
 label: Groups Server Cluster
 quality: production
 provides:

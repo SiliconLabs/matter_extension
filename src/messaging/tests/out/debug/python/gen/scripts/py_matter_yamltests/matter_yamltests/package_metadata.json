@@ -1,0 +1,40 @@
+{
+  "gn_target_name": "//scripts/py_matter_yamltests:matter_yamltests",
+  "inputs": [
+
+  ],
+  "setup_sources": [
+    "../../../../../scripts/py_matter_yamltests/setup.py",
+    "../../../../../scripts/py_matter_yamltests/setup.cfg",
+    "../../../../../scripts/py_matter_yamltests/pyproject.toml"
+  ],
+  "sources": [
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/__init__.py",
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/adapter.py",
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/constraints.py",
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/definitions.py",
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/errors.py",
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/fixes.py",
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/hooks.py",
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/parser.py",
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/parser_builder.py",
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/parser_config.py",
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/pics_checker.py",
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/pseudo_clusters/__init__.py",
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/pseudo_clusters/clusters/delay_commands.py",
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/pseudo_clusters/clusters/log_commands.py",
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/pseudo_clusters/clusters/system_commands.py",
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/pseudo_clusters/pseudo_cluster.py",
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/pseudo_clusters/pseudo_clusters.py",
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/runner.py",
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/websocket_runner.py",
+    "../../../../../scripts/py_matter_yamltests/matter_yamltests/yaml_loader.py"
+  ],
+  "tests": [
+    "../../../../../scripts/py_matter_yamltests/test_spec_definitions.py",
+    "../../../../../scripts/py_matter_yamltests/test_pics_checker.py",
+    "../../../../../scripts/py_matter_yamltests/test_parser_builder.py",
+    "../../../../../scripts/py_matter_yamltests/test_pseudo_clusters.py",
+    "../../../../../scripts/py_matter_yamltests/test_yaml_loader.py"
+  ]
+}

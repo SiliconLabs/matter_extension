@@ -1,0 +1,12 @@
+{
+  "dependencies": [
+
+  ],
+  "label": "//third_party/pigweed/repo/pw_cpu_exception_cortex_m:cpu_state_protos.pwpb_rpc",
+  "nested_in_python_package": "",
+  "package": "pw_cpu_exception_cortex_m_protos",
+  "protoc_outputs": [
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_cpu_exception_cortex_m/cpu_state_protos.proto_library/pwpb_rpc/pw_cpu_exception_cortex_m_protos/cpu_state.rpc.pwpb.h"
+  ],
+  "root": "protocol_buffer/gen/third_party/pigweed/repo/pw_cpu_exception_cortex_m/cpu_state_protos.proto_library/pwpb_rpc"
+}

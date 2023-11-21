@@ -9,6 +9,8 @@ provides:
 - name: matter_lwip
 - name: lwip
 - name: si91x_networking_model
+- name: sl_si91x_network_stack
+- name: sl_si91x_internal_stack
 include:
 - path: src/lwip/silabs
   file_list:

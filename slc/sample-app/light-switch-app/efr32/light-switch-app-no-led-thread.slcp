@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.2"
+    version: "2.2.0"
 
 component:
   - id: device_init
@@ -82,6 +82,8 @@ component:
     from: matter
   - id: matter_time_format_localization
     from: matter
+  - id: matter_time_synchronization
+    from: matter
   - id: matter_user_label
     from: matter
   - id: matter_wifi_network_diagnostics
@@ -94,9 +96,7 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  # Override RTT
-  - id: matter_segger_rtt
-    from: matter
+  - id: segger_rtt
   - id: matter_wstk_no_leds
     from: matter
 
@@ -115,7 +115,7 @@ config_file:
     directory: common
 
 include:
-  - path: ../../../../examples/light-switch-app/silabs/efr32/include
+  - path: ../../../../examples/light-switch-app/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -123,25 +123,25 @@ include:
       - path: CHIPProjectConfig.h
     directory: include
 
-  - path: ../../../../examples/light-switch-app/silabs/common
+  - path: ../../../../examples/light-switch-app/silabs/include
     file_list:
       - path: BindingHandler.h
       - path: LightSwitchMgr.h
       - path: ShellCommands.h
-    directory: common
+    directory: include
 
 source:
-  - path: ../../../../examples/light-switch-app/silabs/efr32/src/AppTask.cpp
+  - path: ../../../../examples/light-switch-app/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/light-switch-app/silabs/efr32/src/main.cpp
+  - path: ../../../../examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/light-switch-app/silabs/efr32/src/ZclCallbacks.cpp
+  - path: ../../../../examples/light-switch-app/silabs/src/ZclCallbacks.cpp
     directory: src
-  - path: ../../../../examples/light-switch-app/silabs/common/BindingHandler.cpp
+  - path: ../../../../examples/light-switch-app/silabs/src/BindingHandler.cpp
     directory: src
-  - path: ../../../../examples/light-switch-app/silabs/common/LightSwitchMgr.cpp
+  - path: ../../../../examples/light-switch-app/silabs/src/LightSwitchMgr.cpp
     directory: src
-  - path: ../../../../examples/light-switch-app/silabs/common/ShellCommands.cpp
+  - path: ../../../../examples/light-switch-app/silabs/src/ShellCommands.cpp
     directory: src
 
 define:

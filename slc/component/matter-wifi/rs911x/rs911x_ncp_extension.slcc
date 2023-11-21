@@ -1,5 +1,6 @@
 id: rs911x_ncp_extension
-label: rs911x_ncp_extension
+label: RS911x NCP Extension
+quality: production
 description: >
   Adds support for the HAL and WiFi Driver layer for RS9116 NCP devices
 package: Matter
@@ -20,9 +21,3 @@ include:
 - path: examples/platform/silabs/efr32/rs911x/hal
   file_list:
   - path: rsi_board_configuration.h
-- path: examples/platform/silabs/efr32
-  file_list:
-  - path: spi_multiplex.h
-define:
-- name: RSI_BLE_ENABLE
-- name: BLE_ENABLE

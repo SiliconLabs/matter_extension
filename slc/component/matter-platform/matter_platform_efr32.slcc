@@ -6,7 +6,7 @@ category: Platform
 quality: production
 
 config_file:
-  - path: examples/platform/silabs/efr32/FreeRTOSConfig.h
+  - path: examples/platform/silabs/FreeRTOSConfig.h
     override:
       component: freertos
       file_id: freertos_config
@@ -19,23 +19,23 @@ include:
   file_list:
   - path: PigweedLogger.h
   - path: Rpc.h
+  - path: silabs_utils.h
   - path: LEDWidget.h
-  - path: efr32/efr32_utils.h
-  - path: efr32/init_efrPlatform.h
-  - path: matter_config.h
+  - path: MatterConfig.h
   - path: heap_4_silabs.h
   - path: OTAConfig.h
   - path: matter_shell.h
   - path: MemMonitoring.h
-  - path: efr32/BaseApplication.h
+  - path: BaseApplication.h
+  - path: SoftwareFaultReports.h
   
 source:
-- path: examples/platform/silabs/efr32/BaseApplication.cpp
-  unless: [window_app]
-- path: examples/platform/silabs/efr32/efr32_utils.cpp
+- path: examples/platform/silabs/BaseApplication.cpp
+- path: examples/platform/silabs/silabs_utils.cpp
 - path: examples/platform/silabs/heap_4_silabs.c
-- path: examples/platform/silabs/efr32/init_efrPlatform.cpp
-- path: examples/platform/silabs/efr32/matter_config.cpp
+- path: examples/platform/silabs/MatterConfig.cpp
+- path: examples/platform/silabs/SoftwareFaultReports.cpp
+
 toolchain_settings:
 - option: gcc_linker_option
   value: -Wl,--wrap=malloc
@@ -59,6 +59,7 @@ toolchain_settings:
   value: -Wl,--wrap=_calloc_r
 
 requires:
+  - name: matter_provision
   - name: matter_efr32
     condition: [matter_thread]
   - name: matter_efr32_wifi

@@ -1,0 +1,7 @@
+protocol_buffer/gen/third_party/pigweed/repo/pw_tokenizer/proto.proto_library/sources
+protocol_buffer/gen/third_party/pigweed/repo/pw_snapshot/metadata_proto.proto_library/sources
+protocol_buffer/gen/third_party/pigweed/repo/pw_chrono/protos.proto_library/sources
+protocol_buffer/gen/third_party/pigweed/repo/pw_cpu_exception_cortex_m/cpu_state_protos.proto_library/sources
+protocol_buffer/gen/third_party/pigweed/repo/pw_protobuf/common_protos.proto_library/sources
+protocol_buffer/gen/third_party/pigweed/repo/pw_log/protos.proto_library/sources
+protocol_buffer/gen/third_party/pigweed/repo/pw_thread/protos.proto_library/sources

@@ -2,6 +2,7 @@
 category: Clusters|CHIP
 description: Implementation of the Power Source Configuration Server Cluster
 id: matter_power_source_configuration
+package: Matter
 label: Power Source Configuration Server Cluster
 quality: production
 provides:

@@ -252,7 +252,7 @@ sl_status_t sl_wfx_host_spi_transfer_no_cs_assert(sl_wfx_host_bus_transfer_type_
     {
         for (uint8_t * buffer_ptr = header; header_length > 0; --header_length, ++buffer_ptr)
         {
-            MY_USART->TXDATA = (uint32_t)(*buffer_ptr);
+            MY_USART->TXDATA = (uint32_t) (*buffer_ptr);
 
             while (!(MY_USART->STATUS & USART_STATUS_TXC))
             {
@@ -347,7 +347,6 @@ static void sl_wfx_spi_wakeup_irq_callback(uint8_t irqNumber)
  *****************************************************************************/
 void sl_wfx_host_gpio_init(void)
 {
-    SILABS_LOG("WIFI: GPIO Init:IRQ=%d", wirq_irq_nb);
     // Enable GPIO clock.
     CMU_ClockEnable(cmuClock_GPIO, true);
 

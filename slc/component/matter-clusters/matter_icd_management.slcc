@@ -1,0 +1,16 @@
+category: Clusters|General
+description: Implementation of the ICD Management Server Cluster
+id: matter_icd_managment
+label: ICD Management Server Cluster
+quality: production
+provides:
+  - name: matter_icd_managment
+source:
+  - path: src/app/clusters/icd-management-server/icd-management-server.cpp
+include:
+  - path: src/app/clusters/icd-management-server/
+    file_list:
+      - path: icd-management-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_icd_managment

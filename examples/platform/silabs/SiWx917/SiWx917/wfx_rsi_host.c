@@ -20,10 +20,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "sl_status.h"
-
 #include "FreeRTOS.h"
 #include "event_groups.h"
+#include "silabs_utils.h"
+#include "sl_status.h"
 #include "task.h"
 
 #include "wfx_host_events.h"
@@ -190,7 +190,7 @@ sl_status_t wfx_connect_to_ap(void)
     return SL_STATUS_OK;
 }
 
-#if CHIP_DEVICE_CONFIG_ENABLE_SED
+#if SL_ICD_ENABLED
 /*********************************************************************
  * @fn  sl_status_t wfx_power_save()
  * @brief
@@ -207,7 +207,7 @@ sl_status_t wfx_power_save()
     }
     return SL_STATUS_OK;
 }
-#endif /* CHIP_DEVICE_CONFIG_ENABLE_SED */
+#endif /* SL_ICD_ENABLED */
 
 /*********************************************************************
  * @fn  void wfx_setup_ip6_link_local(sl_wfx_interface_t whichif)

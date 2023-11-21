@@ -1,0 +1,13 @@
+defines =
+framework_dirs =
+include_dirs = -I../../../../../third_party/nlunit-test/repo/src
+cflags = -O0 -g2 -fno-common -ffunction-sections -fdata-sections -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables -fPIC -Wall -Werror -Wextra -Wshadow -Wunreachable-code -Wvla -Wformat -Wformat-nonliteral -Wformat-security -Wno-deprecated-declarations -Wno-missing-field-initializers -Wno-unknown-warning-option -Wno-unused-parameter -Wno-cast-function-type -Wno-psabi -Wno-maybe-uninitialized -fdiagnostics-color -fno-strict-aliasing -Wno-conversion
+cflags_c = -std=gnu11
+target_output_name = libnlunit-test
+
+build obj/third_party/nlunit-test/repo/src/libnlunit-test.nlunit-test.c.o: cc ../../../../../third_party/nlunit-test/repo/src/nlunit-test.c
+
+build lib/libnlunit-test.a: alink obj/third_party/nlunit-test/repo/src/libnlunit-test.nlunit-test.c.o
+  arflags =
+  output_extension = .a
+  output_dir = lib

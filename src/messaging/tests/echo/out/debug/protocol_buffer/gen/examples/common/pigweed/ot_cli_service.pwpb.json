@@ -1,0 +1,12 @@
+{
+  "dependencies": [
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_protobuf/common_protos.pwpb.json"
+  ],
+  "label": "//examples/common/pigweed:ot_cli_service.pwpb",
+  "nested_in_python_package": "",
+  "package": "ot_cli_service",
+  "protoc_outputs": [
+    "protocol_buffer/gen/examples/common/pigweed/ot_cli_service.proto_library/pwpb/ot_cli_service/ot_cli_service.pwpb.h"
+  ],
+  "root": "protocol_buffer/gen/examples/common/pigweed/ot_cli_service.proto_library/pwpb"
+}

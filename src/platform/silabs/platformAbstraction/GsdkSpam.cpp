@@ -15,8 +15,9 @@
  *    limitations under the License.
  */
 
-#include "init_efrPlatform.h"
 #include <platform/silabs/platformAbstraction/SilabsPlatform.h>
+
+#include "sl_system_kernel.h"
 
 #ifdef ENABLE_WSTK_LEDS
 // SLC-FIX 
@@ -27,15 +28,98 @@ extern "C" {
 #endif
 #endif
 
+#ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
+#include "sl_simple_button_instances.h"
+#endif
+
+extern "C" {
+#include <mbedtls/platform.h>
+
+#if CHIP_ENABLE_OPENTHREAD
+#include "platform-efr32.h"
+
+#if OPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE
+#include "openthread/heap.h"
+#endif // OPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE
+
+#endif // CHIP_ENABLE_OPENTHREAD
+
+#include "sl_component_catalog.h"
+#include "sl_mbedtls.h"
+#include "sl_system_init.h"
+#if SILABS_LOG_OUT_UART || ENABLE_CHIP_SHELL || CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
+#include "uart.h"
+#endif
+
+#if SL_SYSTEM_VIEW
+#include "SEGGER_SYSVIEW.h"
+#endif
+}
+
+#if SILABS_LOG_ENABLED
+#include "silabs_utils.h"
+#endif
+
+#ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
+#include "sl_simple_button_instances.h"
+#endif
+
+extern "C" {
+#include <mbedtls/platform.h>
+
+#if CHIP_ENABLE_OPENTHREAD
+#include "platform-efr32.h"
+
+#if OPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE
+#include "openthread/heap.h"
+#endif // OPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE
+
+#endif // CHIP_ENABLE_OPENTHREAD
+
+#include "sl_component_catalog.h"
+#include "sl_mbedtls.h"
+#include "sl_system_init.h"
+#if SILABS_LOG_OUT_UART || ENABLE_CHIP_SHELL || CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
+#include "uart.h"
+#endif
+
+#if SL_SYSTEM_VIEW
+#include "SEGGER_SYSVIEW.h"
+#endif
+}
+
+#if SILABS_LOG_ENABLED
+#include "silabs_utils.h"
+#endif
+
 namespace chip {
 namespace DeviceLayer {
 namespace Silabs {
 
 SilabsPlatform SilabsPlatform::sSilabsPlatformAbstractionManager;
 
+SilabsPlatform::SilabsButtonCb SilabsPlatform::mButtonCallback = nullptr;
+
 CHIP_ERROR SilabsPlatform::Init(void)
 {
-    init_efrPlatform();
+    sl_system_init();
+
+#if CHIP_ENABLE_OPENTHREAD
+    sl_ot_sys_init();
+#endif
+
+#if SL_SYSTEM_VIEW
+    SEGGER_SYSVIEW_Conf();
+    SEGGER_SYSVIEW_Start();
+#endif
+
+#if SILABS_LOG_OUT_UART || ENABLE_CHIP_SHELL || CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
+    uartConsoleInit();
+#endif
+
+#if SILABS_LOG_ENABLED
+    silabsInitLog();
+#endif
     return CHIP_NO_ERROR;
 }
 
@@ -76,6 +160,49 @@ CHIP_ERROR SilabsPlatform::ToggleLed(uint8_t led)
     return CHIP_NO_ERROR;
 }
 #endif // ENABLE_WSTK_LEDS
+
+void SilabsPlatform::StartScheduler()
+{
+    sl_system_kernel_start();
+}
+
+#ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
+namespace {
+    sl_button_state_t sButtonStates[SL_SIMPLE_BUTTON_COUNT] = { 0 };
+}
+
+extern "C" {
+void sl_button_on_change(const sl_button_t * handle)
+{
+    if (Silabs::GetPlatform().mButtonCallback == nullptr)
+    {
+        return;
+    }
+
+    for (uint8_t i = 0; i < SL_SIMPLE_BUTTON_COUNT; i++)
+    {
+        if (SL_SIMPLE_BUTTON_INSTANCE(i) == handle)
+        {
+            sl_button_state_t state = sl_button_get_state(handle);
+            sButtonStates[i] = state;
+            Silabs::GetPlatform().mButtonCallback(i, state);
+            break;
+        }
+    }
+}
+}
+
+uint8_t SilabsPlatform::GetButtonState(uint8_t button)
+{
+    return (button < SL_SIMPLE_BUTTON_COUNT) ? sButtonStates[button] : 0;
+}
+
+#else
+uint8_t SilabsPlatform::GetButtonState(uint8_t button)
+{
+    return 0;
+}
+#endif
 
 } // namespace Silabs
 } // namespace DeviceLayer

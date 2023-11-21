@@ -36,7 +36,7 @@
 #define DIC_KEEP_ALIVE 0
 
 #if USE_AWS
-#define DIC_CLIENT_ID ""
+#define DIC_CLIENT_ID "SQA_DIC_C2"
 #define DIC_CLIENT_USER NULL
 #define DIC_CLIENT_PASS NULL
 

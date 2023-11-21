@@ -1,0 +1,12 @@
+{
+  "dependencies": [
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_protobuf/common_protos.raw_rpc.json"
+  ],
+  "label": "//examples/common/pigweed:echo_service.raw_rpc",
+  "nested_in_python_package": "",
+  "package": "echo_service",
+  "protoc_outputs": [
+    "protocol_buffer/gen/examples/common/pigweed/echo_service.proto_library/raw_rpc/echo_service/echo.raw_rpc.pb.h"
+  ],
+  "root": "protocol_buffer/gen/examples/common/pigweed/echo_service.proto_library/raw_rpc"
+}

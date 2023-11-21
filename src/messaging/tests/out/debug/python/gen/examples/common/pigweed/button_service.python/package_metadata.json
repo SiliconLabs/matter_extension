@@ -1,0 +1,23 @@
+{
+  "generate_setup": {
+    "metadata": {
+      "name": "examples_common_pigweed_button_service",
+      "version": "0.0.1"
+    }
+  },
+  "gn_target_name": "//examples/common/pigweed:button_service.python",
+  "inputs": [
+
+  ],
+  "setup_sources": [
+    "python/gen/examples/common/pigweed/button_service.python.generated_python_package/pyproject.toml",
+    "python/gen/examples/common/pigweed/button_service.python.generated_python_package/setup.cfg"
+  ],
+  "sources": [
+    "python/gen/examples/common/pigweed/button_service.python.generated_python_package/button_service/button_service_pb2.py",
+    "python/gen/examples/common/pigweed/button_service.python.generated_python_package/button_service/button_service_pb2.pyi"
+  ],
+  "tests": [
+
+  ]
+}

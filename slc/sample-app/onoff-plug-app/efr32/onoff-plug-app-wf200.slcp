@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.2"
+    version: "2.2.0"
 
 component:
   - id: device_init
@@ -101,9 +101,7 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  # Override RTT
-  - id: matter_segger_rtt
-    from: matter
+  - id: segger_rtt
 
 # Require LCD and QR Code components only on the boards that support LCD
 requires:
@@ -141,7 +139,7 @@ config_file:
     directory: common
 
 include:
-  - path: ../../../../silabs_examples/onoff-plug-app/efr32/include
+  - path: ../../../../silabs_examples/onoff-plug-app/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -151,13 +149,13 @@ include:
     directory: include
     
 source:
-  - path: ../../../../silabs_examples/onoff-plug-app/efr32/src/AppTask.cpp
+  - path: ../../../../silabs_examples/onoff-plug-app/src/AppTask.cpp
     directory: src
-  - path: ../../../../silabs_examples/onoff-plug-app/efr32/src/main.cpp
+  - path: ../../../../examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../silabs_examples/onoff-plug-app/efr32/src/ZclCallbacks.cpp
+  - path: ../../../../silabs_examples/onoff-plug-app/src/ZclCallbacks.cpp
     directory: src
-  - path: ../../../../silabs_examples/onoff-plug-app/efr32/src/OnOffPlugManager.cpp
+  - path: ../../../../silabs_examples/onoff-plug-app/src/OnOffPlugManager.cpp
     directory: src
 
 define:

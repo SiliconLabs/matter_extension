@@ -1,0 +1,12 @@
+{
+  "dependencies": [
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_protobuf/common_protos.pwpb.json"
+  ],
+  "label": "//examples/common/pigweed:descriptor_service.pwpb",
+  "nested_in_python_package": "",
+  "package": "descriptor_service",
+  "protoc_outputs": [
+    "protocol_buffer/gen/examples/common/pigweed/descriptor_service.proto_library/pwpb/descriptor_service/descriptor_service.pwpb.h"
+  ],
+  "root": "protocol_buffer/gen/examples/common/pigweed/descriptor_service.proto_library/pwpb"
+}

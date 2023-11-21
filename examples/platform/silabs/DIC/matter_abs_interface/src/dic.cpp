@@ -18,24 +18,24 @@
  *
  ******************************************************************************/
 
+#include "silabs_utils.h"
 #include "dic.h"
 #include "dic_config.h"
 #include "FreeRTOS.h"
 #include "event_groups.h"
 #include "task.h"
-
-extern "C"{
-#include "MQTT_transport.h"
-#include "mqtt.h"
-}
-
 #include "lib/core/CHIPError.h"
 #include "dic_nvm_cert.h"
 
-#ifdef SIWX_917
-#include "siwx917_utils.h"
-#else
-#include "efr32_utils.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "MQTT_transport.h"
+#include "mqtt.h"
+
+#ifdef __cplusplus
+}
 #endif
 
 #include <stdbool.h> //for bool

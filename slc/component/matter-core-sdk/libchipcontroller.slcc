@@ -54,7 +54,6 @@ source:
 - path: src/controller/CommissioningDelegate.cpp
 - path: src/controller/CommissioningWindowOpener.cpp
 - path: src/controller/CurrentFabricRemover.cpp
-- path: src/controller/EmptyDataModelHandler.cpp
 - path: src/controller/ExampleOperationalCredentialsIssuer.cpp
 - path: src/controller/SetUpCodePairer.cpp
 ui_hints:

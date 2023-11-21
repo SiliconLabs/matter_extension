@@ -2,6 +2,7 @@
 category: Clusters|Media
 description: Implementation of the Content Launch Server Cluster
 id: matter_content_launch
+package: Matter
 label: Content Launch Server Cluster
 quality: production
 provides:

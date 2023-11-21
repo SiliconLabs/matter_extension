@@ -14,7 +14,7 @@
 #define INET_UDP_END_POINT_IMPL_CONFIG_FILE <inet/UDPEndPointImplOpenThread.h>
 #else
 #define INET_CONFIG_ENABLE_IPV4             1
-#define INET_CONFIG_ENABLE_TCP_ENDPOINT     1
+#define INET_CONFIG_ENABLE_TCP_ENDPOINT     0
 #define INET_TCP_END_POINT_IMPL_CONFIG_FILE <inet/TCPEndPointImplLwIP.h>
 #define INET_UDP_END_POINT_IMPL_CONFIG_FILE <inet/UDPEndPointImplLwIP.h>
 #endif  // SL_WIFI

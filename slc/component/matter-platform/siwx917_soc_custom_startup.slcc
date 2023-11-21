@@ -6,15 +6,20 @@ category: "Matter-WiFi|Platform"
 quality: production
 
 include:
-- path: examples/platform/silabs/SiWx917/device/inc
+- path: third_party/silabs/matter_support/matter/si91x/siwx917/BRD4338A/support/inc
   file_list:
   - path: system_si917.h
 
 source:
-- path: examples/platform/silabs/SiWx917/device/src/startup_RS1xxxx.c
-  condition: [matter_si91x_dual_flash_nvm3]
-- path: examples/platform/silabs/SiWx917/device/src/startup_common_RS1xxxx.c
-  condition: [matter_si91x_common_flash_nvm3]
+- path: third_party/silabs/matter_support/matter/si91x/siwx917/BRD4338A/support/hal/rsi_hal_mcu_m4.c
+- path: third_party/silabs/matter_support/matter/si91x/siwx917/BRD4325x/support/src/startup_RS1xxxx.c
+  condition: [brd4325b]
+- path: third_party/silabs/matter_support/matter/si91x/siwx917/BRD4338A/support/src/startup_common_RS1xxxx.c
+  condition: [brd4338a]
+- path: third_party/silabs/matter_support/matter/si91x/siwx917/BRD4325x/support/src/startup_common_RS1xxxx.c
+  condition: [brd4325c]
+- path: third_party/silabs/matter_support/matter/si91x/siwx917/BRD4325x/support/src/startup_common_RS1xxxx.c
+  condition: [brd4325g]
 
 provides:
   - name: siwx917_soc_custom_startup

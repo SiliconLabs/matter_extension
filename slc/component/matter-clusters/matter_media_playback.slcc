@@ -2,6 +2,7 @@
 category: Clusters|Media
 description: Implementation of the Media Playback Server Cluster
 id: matter_media_playback
+package: Matter
 label: Media Playback Server Cluster
 quality: production
 provides:

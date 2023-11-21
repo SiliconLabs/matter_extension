@@ -1,0 +1,13 @@
+defines = -DCHIP_HAVE_CONFIG_H=1
+framework_dirs =
+include_dirs = -I../../../../../src/include -I../../../../../src -Igen/include -I../../../../../zzz_generated/app-common -I../../../../../config/standalone
+cflags = -O0 -g2 -fno-common -ffunction-sections -fdata-sections -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables -fPIC -Wall -Werror -Wextra -Wshadow -Wunreachable-code -Wvla -Wformat -Wformat-nonliteral -Wformat-security -Wno-deprecated-declarations -Wno-missing-field-initializers -Wno-unknown-warning-option -Wno-unused-parameter -Wno-cast-function-type -Wno-psabi -Wno-maybe-uninitialized -fdiagnostics-color -fno-strict-aliasing -fmacro-prefix-map=../../../../../=
+cflags_cc = -std=gnu++14 -fno-rtti -Wnon-virtual-dtor
+target_output_name = liblogging-stdio
+
+build obj/src/platform/logging/impl/stdio/liblogging-stdio.Logging.cpp.o: cxx ../../../../../src/platform/logging/impl/stdio/Logging.cpp || obj/src/ble/gen_ble_buildconfig.stamp obj/src/lib/core/gen_chip_buildconfig.stamp obj/src/platform/gen_platform_buildconfig.stamp obj/src/system/gen_system_buildconfig.stamp
+
+build ./liblogging-stdio.a: alink obj/src/platform/logging/impl/stdio/liblogging-stdio.Logging.cpp.o || obj/src/platform/logging/headers.stamp obj/src/lib/core/chip_config_header.stamp obj/src/lib/support/attributes.stamp obj/src/lib/support/logging_constants.stamp obj/src/platform/platform_buildconfig.stamp obj/src/lib/core/chip_buildconfig.stamp obj/src/ble/ble_config_header.stamp obj/src/ble/ble_buildconfig.stamp obj/src/system/system_config_header.stamp obj/src/system/system_buildconfig.stamp
+  arflags =
+  output_extension = .a
+  output_dir = .

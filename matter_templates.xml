@@ -9,7 +9,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -25,7 +25,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -41,7 +41,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -57,7 +57,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4319a:0.0.0.A00 brd4337a brd4318a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -73,7 +73,7 @@
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -89,7 +89,7 @@
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -105,7 +105,7 @@
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -121,7 +121,7 @@
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4319a:0.0.0.A00 brd4337a brd4318a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -137,7 +137,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -153,7 +153,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -169,7 +169,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -185,7 +185,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4319a:0.0.0.A00 brd4337a brd4318a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -201,7 +201,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd2704a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -217,7 +217,7 @@
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -233,7 +233,7 @@
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4166a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -249,7 +249,7 @@
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -265,7 +265,7 @@
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
     <properties key="boardCompatibility" value="com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -281,7 +281,7 @@
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -297,7 +297,7 @@
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -313,7 +313,7 @@
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -329,7 +329,7 @@
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4319a:0.0.0.A00 brd4337a brd4318a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -345,7 +345,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -361,7 +361,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -377,7 +377,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -393,7 +393,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4319a:0.0.0.A00 brd4337a brd4318a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -409,7 +409,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -425,7 +425,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -441,7 +441,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -457,7 +457,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -473,7 +473,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -489,7 +489,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -505,7 +505,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/siwx917/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4325g brd4325c brd4338a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m111mgtba.* .*siwg917m111mgtba.* .*siwg917m111mgtba.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -521,7 +521,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/siwx917/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4325a brd4325b com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*si917.* .*si917.* "/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -537,7 +537,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/siwx917/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4325g brd4325c brd4338a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m111mgtba.* .*siwg917m111mgtba.* .*siwg917m111mgtba.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -553,7 +553,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/siwx917/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4325a brd4325b com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*si917.* .*si917.* "/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -569,7 +569,7 @@
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/siwx917/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4325a brd4325b com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*si917.* .*si917.* "/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -585,7 +585,7 @@
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/siwx917/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4325g brd4325c brd4338a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m111mgtba.* .*siwg917m111mgtba.* .*siwg917m111mgtba.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -601,7 +601,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/siwx917/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4325a brd4325b com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*si917.* .*si917.* "/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -617,7 +617,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/siwx917/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4325g brd4325c brd4338a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m111mgtba.* .*siwg917m111mgtba.* .*siwg917m111mgtba.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -633,7 +633,7 @@
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -649,7 +649,7 @@
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -665,7 +665,7 @@
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -681,7 +681,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -697,7 +697,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -713,7 +713,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -729,7 +729,7 @@
     <properties key="readmeFiles" value="slc/sample-app/openthread-border-router-doc/README.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4166a brd4170a brd4186c brd4187c brd2601b brd2703a brd4316a brd4317a brd4319a:0.0.0.A00 "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -745,7 +745,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -761,7 +761,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4166a brd2601b brd2703a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -777,7 +777,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -793,7 +793,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4319a:0.0.0.A00 brd4337a brd4318a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -809,7 +809,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -825,7 +825,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -841,7 +841,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -857,7 +857,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/siwx917/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4325g brd4325c brd4338a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m111mgtba.* .*siwg917m111mgtba.* .*siwg917m111mgtba.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -873,7 +873,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/siwx917/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4325a brd4325b com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*si917.* .*si917.* "/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -889,7 +889,7 @@
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -905,7 +905,7 @@
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -921,7 +921,7 @@
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a brd4186c brd4187c com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -937,7 +937,7 @@
     <properties key="readmeFiles" value="slc/sample-app/bootloaders/bootloader-storage-external-single-series-1/readme.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4166a brd4170a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -953,7 +953,7 @@
     <properties key="readmeFiles" value="slc/sample-app/bootloaders/bootloader-storage-external-single-series-2/readme.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c brd4316a brd4317a brd4318a"/>
     <properties key="partCompatibility" value=".*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -969,7 +969,7 @@
     <properties key="readmeFiles" value="slc/sample-app/bootloaders/bootloader-storage-internal-single-series-2/readme.md"/>
     <properties key="boardCompatibility" value="brd4337a brd4319a:0.0.0.A00 brd2704a brd2703a"/>
     <properties key="partCompatibility" value=".*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -985,7 +985,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1002,7 +1002,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4166a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1019,7 +1019,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1036,7 +1036,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1053,7 +1053,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1070,7 +1070,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd2601b"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1087,7 +1087,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1104,7 +1104,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4318a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1121,7 +1121,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4337a brd4319a:0.0.0.A00"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1138,7 +1138,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd2703a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1155,7 +1155,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd2704a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1172,7 +1172,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1189,7 +1189,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1206,7 +1206,7 @@
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1223,7 +1223,7 @@
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4166a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1240,7 +1240,7 @@
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1257,7 +1257,7 @@
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd2601b"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1274,7 +1274,7 @@
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1291,7 +1291,7 @@
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4318a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1308,7 +1308,7 @@
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4337a brd4319a:0.0.0.A00"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1325,7 +1325,7 @@
     <properties key="readmeFiles" value="slc/sample-app/light-switch-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd2703a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1342,7 +1342,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1359,7 +1359,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4166a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1376,7 +1376,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1393,7 +1393,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1410,7 +1410,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1427,7 +1427,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd2601b"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1444,7 +1444,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1461,7 +1461,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4318a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1478,7 +1478,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4318a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1495,7 +1495,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4318a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1512,7 +1512,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1529,7 +1529,7 @@
     <properties key="readmeFiles" value="slc/sample-app/lock-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1546,7 +1546,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1563,7 +1563,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4166a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1580,7 +1580,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1597,7 +1597,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1614,7 +1614,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1631,7 +1631,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd2601b"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1648,7 +1648,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1665,7 +1665,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4318a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1682,7 +1682,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4337a brd4319a:0.0.0.A00"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1699,7 +1699,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd2703a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1716,7 +1716,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1733,7 +1733,7 @@
     <properties key="readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1750,7 +1750,7 @@
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1767,7 +1767,7 @@
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4166a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1784,7 +1784,7 @@
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1801,7 +1801,7 @@
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1818,7 +1818,7 @@
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1835,7 +1835,7 @@
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd2601b"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1852,7 +1852,7 @@
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1869,7 +1869,7 @@
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4318a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1886,7 +1886,7 @@
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4337a brd4319a:0.0.0.A00"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1903,7 +1903,7 @@
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd2703a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1920,7 +1920,7 @@
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1937,7 +1937,7 @@
     <properties key="readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1954,7 +1954,7 @@
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1971,7 +1971,7 @@
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4166a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -1988,7 +1988,7 @@
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -2005,7 +2005,7 @@
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -2022,7 +2022,7 @@
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -2039,7 +2039,7 @@
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd2601b"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -2056,7 +2056,7 @@
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -2073,7 +2073,7 @@
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4318a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -2090,7 +2090,7 @@
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -2107,7 +2107,7 @@
     <properties key="readmeFiles" value="slc/sample-app/thermostat/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -2124,7 +2124,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a  brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -2141,7 +2141,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4166a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -2158,7 +2158,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -2175,7 +2175,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4161a brd4162a brd4163a brd4164a brd4170a  "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -2192,7 +2192,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -2209,7 +2209,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd2601b"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -2226,7 +2226,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4316a brd4317a "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -2243,7 +2243,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4318a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -2260,7 +2260,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd4337a brd4319a:0.0.0.A00"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -2277,7 +2277,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README.md"/>
     <properties key="boardCompatibility" value="brd2703a"/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -2294,7 +2294,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.*"/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
@@ -2311,7 +2311,7 @@
     <properties key="readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
     <properties key="boardCompatibility" value="brd4186c brd4187c "/>
     <properties key="partCompatibility" value=".*efr32mg12p.* .*efr32mg24.* "/>
-    <properties key="ideCompatibility" value="makefile-ide simplicity-ide"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>

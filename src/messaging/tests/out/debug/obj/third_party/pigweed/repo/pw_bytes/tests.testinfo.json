@@ -1,0 +1,54 @@
+[
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_bytes/test",
+    "test_name": "array_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_bytes/test",
+    "test_name": "bit_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_bytes/test",
+    "test_name": "byte_builder_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_bytes/test",
+    "test_name": "endian_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_bytes/test",
+    "test_name": "units_test",
+    "type": "test"
+  },
+  {
+    "group": "//third_party/pigweed/repo/pw_preprocessor:tests",
+    "type": "dep"
+  },
+  {
+    "group": "//third_party/pigweed/repo/pw_status:tests",
+    "type": "dep"
+  },
+  {
+    "name": "//third_party/pigweed/repo/pw_bytes:tests",
+    "type": "self"
+  }
+]

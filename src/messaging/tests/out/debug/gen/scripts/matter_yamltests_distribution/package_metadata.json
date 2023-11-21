@@ -1,0 +1,16 @@
+{
+  "gn_target_name": "//scripts:matter_yamltests_distribution",
+  "inputs": [
+
+  ],
+  "setup_sources": [
+    "obj/scripts/matter_yamltests_distribution/pyproject.toml",
+    "obj/scripts/matter_yamltests_distribution/setup.cfg"
+  ],
+  "sources": [
+
+  ],
+  "tests": [
+
+  ]
+}

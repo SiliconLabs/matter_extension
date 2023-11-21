@@ -2,6 +2,7 @@
 category: Clusters|Media
 description: Implementation of the Application Launcher Server Cluster
 id: matter_application_launcher
+package: Matter
 label: Application Launcher Server Cluster
 quality: production
 provides:

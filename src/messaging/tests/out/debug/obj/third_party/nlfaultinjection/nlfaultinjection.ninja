@@ -1,0 +1,13 @@
+defines =
+framework_dirs =
+include_dirs = -I../../../../../third_party/nlfaultinjection/repo/include -I../../../../../third_party/nlassert/repo/include
+cflags = -O0 -g2 -fno-common -ffunction-sections -fdata-sections -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables -fPIC -Wall -Werror -Wextra -Wshadow -Wunreachable-code -Wvla -Wformat -Wformat-nonliteral -Wformat-security -Wno-deprecated-declarations -Wno-missing-field-initializers -Wno-unknown-warning-option -Wno-unused-parameter -Wno-cast-function-type -Wno-psabi -Wno-maybe-uninitialized -fdiagnostics-color -fno-strict-aliasing -Wno-error=array-bounds
+cflags_cc = -std=gnu++14 -fno-rtti -Wnon-virtual-dtor
+target_output_name = libnlfaultinjection
+
+build obj/third_party/nlfaultinjection/repo/src/libnlfaultinjection.nlfaultinjection.cpp.o: cxx ../../../../../third_party/nlfaultinjection/repo/src/nlfaultinjection.cpp
+
+build lib/libnlfaultinjection.a: alink obj/third_party/nlfaultinjection/repo/src/libnlfaultinjection.nlfaultinjection.cpp.o || obj/third_party/nlassert/nlassert.stamp
+  arflags =
+  output_extension = .a
+  output_dir = lib

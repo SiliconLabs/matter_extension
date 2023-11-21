@@ -1,0 +1,22 @@
+[
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_assert/test",
+    "test_name": "assert_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_assert/test",
+    "test_name": "assert_facade_test",
+    "type": "test"
+  },
+  {
+    "name": "//third_party/pigweed/repo/pw_assert:tests",
+    "type": "self"
+  }
+]

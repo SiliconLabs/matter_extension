@@ -2,6 +2,7 @@
 category: Clusters|CHIP
 description: Implementation of the Fault Injection Server Cluster
 id: matter_fault_injection
+package: Matter
 label: Fault Injection Server Cluster
 quality: production
 provides:

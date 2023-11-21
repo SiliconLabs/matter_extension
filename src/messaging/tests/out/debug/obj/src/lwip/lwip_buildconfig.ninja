@@ -1,0 +1,7 @@
+defines =
+framework_dirs =
+include_dirs =
+target_output_name = lwip_buildconfig
+
+
+build obj/src/lwip/lwip_buildconfig.stamp: stamp || obj/src/lwip/gen_lwip_buildconfig.stamp

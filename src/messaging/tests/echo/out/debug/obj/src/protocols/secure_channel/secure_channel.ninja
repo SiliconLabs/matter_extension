@@ -1,0 +1,43 @@
+defines = -DCHIP_HAVE_CONFIG_H=1 -DCHIP_MINMDNS_USE_EPHEMERAL_UNICAST_PORT=1 -DCHIP_MINMDNS_HIGH_VERBOSITY=0 -DCHIP_MINMDNS_DEFAULT_POLICY=1
+framework_dirs =
+include_dirs = -I../../../../../../src/include -I../../../../../../src -Igen/include -I../../../../../../zzz_generated/app-common -I../../../../../../config/standalone -I../../../../../../third_party/nlassert/repo/include -I../../../../../../third_party/nlio/repo/include -I../../../../../../third_party/nlfaultinjection/repo/include -I../../../../../../third_party/inipp/repo/inipp
+cflags = -Wconversion -O0 -g2 -fno-common -ffunction-sections -fdata-sections -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables -fPIC -Wall -Werror -Wextra -Wshadow -Wunreachable-code -Wvla -Wformat -Wformat-nonliteral -Wformat-security -Wno-deprecated-declarations -Wno-missing-field-initializers -Wno-unknown-warning-option -Wno-unused-parameter -Wno-cast-function-type -Wno-psabi -Wno-maybe-uninitialized -fdiagnostics-color -fno-strict-aliasing -fmacro-prefix-map=../../../../../../= -I/usr/include/gio-unix-2.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+cflags_cc = -std=gnu++14 -fno-rtti -Wnon-virtual-dtor
+target_output_name = libSecureChannel
+
+build obj/src/protocols/secure_channel/secure_channel.inputdeps.stamp: stamp obj/src/app/gen_app_buildconfig.stamp obj/src/ble/gen_ble_buildconfig.stamp obj/src/crypto/gen_crypto_buildconfig.stamp obj/src/inet/gen_inet_buildconfig.stamp obj/src/lib/asn1/gen_asn1oid.stamp obj/src/lib/core/gen_chip_buildconfig.stamp obj/src/lib/support/gen_chip_version.stamp obj/src/platform/gen_platform_buildconfig.stamp obj/src/platform/Linux/dbus/bluez/bluez_gen.stamp obj/src/platform/Linux/dbus/openthread/openthread_gen.stamp obj/src/platform/Linux/dbus/wpa/wpa_gen.stamp obj/src/setup_payload/gen_additional_data_payload_buildconfig.stamp obj/src/system/gen_system_buildconfig.stamp
+build obj/src/protocols/secure_channel/libSecureChannel.CASEDestinationId.cpp.o: cxx ../../../../../../src/protocols/secure_channel/CASEDestinationId.cpp || obj/src/protocols/secure_channel/secure_channel.inputdeps.stamp
+  source_file_part = CASEDestinationId.cpp
+  source_name_part = CASEDestinationId
+build obj/src/protocols/secure_channel/libSecureChannel.CASEServer.cpp.o: cxx ../../../../../../src/protocols/secure_channel/CASEServer.cpp || obj/src/protocols/secure_channel/secure_channel.inputdeps.stamp
+  source_file_part = CASEServer.cpp
+  source_name_part = CASEServer
+build obj/src/protocols/secure_channel/libSecureChannel.CASESession.cpp.o: cxx ../../../../../../src/protocols/secure_channel/CASESession.cpp || obj/src/protocols/secure_channel/secure_channel.inputdeps.stamp
+  source_file_part = CASESession.cpp
+  source_name_part = CASESession
+build obj/src/protocols/secure_channel/libSecureChannel.DefaultSessionResumptionStorage.cpp.o: cxx ../../../../../../src/protocols/secure_channel/DefaultSessionResumptionStorage.cpp || obj/src/protocols/secure_channel/secure_channel.inputdeps.stamp
+  source_file_part = DefaultSessionResumptionStorage.cpp
+  source_name_part = DefaultSessionResumptionStorage
+build obj/src/protocols/secure_channel/libSecureChannel.PASESession.cpp.o: cxx ../../../../../../src/protocols/secure_channel/PASESession.cpp || obj/src/protocols/secure_channel/secure_channel.inputdeps.stamp
+  source_file_part = PASESession.cpp
+  source_name_part = PASESession
+build obj/src/protocols/secure_channel/libSecureChannel.PairingSession.cpp.o: cxx ../../../../../../src/protocols/secure_channel/PairingSession.cpp || obj/src/protocols/secure_channel/secure_channel.inputdeps.stamp
+  source_file_part = PairingSession.cpp
+  source_name_part = PairingSession
+build obj/src/protocols/secure_channel/libSecureChannel.SessionEstablishmentExchangeDispatch.cpp.o: cxx ../../../../../../src/protocols/secure_channel/SessionEstablishmentExchangeDispatch.cpp || obj/src/protocols/secure_channel/secure_channel.inputdeps.stamp
+  source_file_part = SessionEstablishmentExchangeDispatch.cpp
+  source_name_part = SessionEstablishmentExchangeDispatch
+build obj/src/protocols/secure_channel/libSecureChannel.SimpleSessionResumptionStorage.cpp.o: cxx ../../../../../../src/protocols/secure_channel/SimpleSessionResumptionStorage.cpp || obj/src/protocols/secure_channel/secure_channel.inputdeps.stamp
+  source_file_part = SimpleSessionResumptionStorage.cpp
+  source_name_part = SimpleSessionResumptionStorage
+build obj/src/protocols/secure_channel/libSecureChannel.StatusReport.cpp.o: cxx ../../../../../../src/protocols/secure_channel/StatusReport.cpp || obj/src/protocols/secure_channel/secure_channel.inputdeps.stamp
+  source_file_part = StatusReport.cpp
+  source_name_part = StatusReport
+build obj/src/protocols/secure_channel/libSecureChannel.UnsolicitedStatusHandler.cpp.o: cxx ../../../../../../src/protocols/secure_channel/UnsolicitedStatusHandler.cpp || obj/src/protocols/secure_channel/secure_channel.inputdeps.stamp
+  source_file_part = UnsolicitedStatusHandler.cpp
+  source_name_part = UnsolicitedStatusHandler
+
+build obj/src/protocols/secure_channel/lib/libSecureChannel.a: alink obj/src/protocols/secure_channel/libSecureChannel.CASEDestinationId.cpp.o obj/src/protocols/secure_channel/libSecureChannel.CASEServer.cpp.o obj/src/protocols/secure_channel/libSecureChannel.CASESession.cpp.o obj/src/protocols/secure_channel/libSecureChannel.DefaultSessionResumptionStorage.cpp.o obj/src/protocols/secure_channel/libSecureChannel.PASESession.cpp.o obj/src/protocols/secure_channel/libSecureChannel.PairingSession.cpp.o obj/src/protocols/secure_channel/libSecureChannel.SessionEstablishmentExchangeDispatch.cpp.o obj/src/protocols/secure_channel/libSecureChannel.SimpleSessionResumptionStorage.cpp.o obj/src/protocols/secure_channel/libSecureChannel.StatusReport.cpp.o obj/src/protocols/secure_channel/libSecureChannel.UnsolicitedStatusHandler.cpp.o || obj/src/lib/core/lib/libChipCore.a obj/src/lib/support/lib/libSupportLayer.a obj/src/messaging/lib/libMessagingLayer.a obj/src/system/lib/libSystemLayer.a obj/src/trace/trace.stamp obj/src/lib/core/chip_config_header.stamp obj/src/lib/core/chip_buildconfig.stamp obj/src/ble/ble_config_header.stamp obj/src/ble/ble_buildconfig.stamp obj/src/platform/platform_buildconfig.stamp obj/src/system/system_config_header.stamp obj/src/system/system_buildconfig.stamp obj/src/ble/lib/libBleLayer.a obj/src/inet/lib/libInetLayer.a obj/src/inet/inet_config_header.stamp obj/src/inet/inet_buildconfig.stamp obj/src/lib/support/attributes.stamp obj/src/lib/support/chip_version_header.stamp obj/src/lib/support/logging_constants.stamp obj/src/platform/logging/headers.stamp obj/third_party/nlassert/nlassert.stamp obj/third_party/nlio/nlio.stamp lib/libnlfaultinjection.a obj/src/messaging/messaging_mrp_config.stamp obj/src/crypto/lib/libChipCrypto.a obj/src/crypto/public_headers.stamp obj/src/crypto/crypto_buildconfig.stamp obj/src/lib/asn1/lib/libASN1.a obj/src/lib/asn1/asn1oid_header.stamp obj/src/crypto/cryptopal_openssl.stamp obj/src/platform/lib/libDeviceLayer.a obj/src/setup_payload/additional_data_payload.stamp obj/src/setup_payload/additional_data_payload_buildconfig.stamp obj/src/app/app_config.stamp obj/src/app/app_buildconfig.stamp obj/src/app/common/lib/libClusterObjects.a obj/src/platform/Linux/lib/Linux.a obj/third_party/inipp/inipp.stamp obj/src/platform/Linux/dbus/openthread/lib/openthread.a obj/src/platform/Linux/dbus/wpa/lib/wpa.a obj/src/platform/Linux/dbus/bluez/lib/bluez.a obj/src/setup_payload/lib/libSetupPayload.a obj/src/transport/lib/libTransportLayer.a obj/src/access/lib/libaccess.a obj/src/credentials/lib/libCredentials.a obj/src/lib/dnssd/lib/dnssd.a obj/src/lib/dnssd/platform_header.stamp obj/src/lib/dnssd/minimal_mdns/lib/minimal_mdns.a obj/src/lib/dnssd/minimal_mdns/address_policy.stamp obj/src/lib/dnssd/minimal_mdns/core/lib/core.a obj/src/lib/dnssd/minimal_mdns/responders/lib/responders.a obj/src/lib/dnssd/minimal_mdns/records/lib/records.a obj/src/lib/dnssd/minimal_mdns/lib/default_policy.a obj/src/transport/raw/lib/libRawTransport.a
+  arflags =
+  output_extension = .a
+  output_dir = obj/src/protocols/secure_channel/lib

@@ -1,0 +1,20 @@
+
+category: Clusters|General
+description: Implementation of the Time Synchronization
+id: matter_time_synchronization
+label: Time Synchronization Cluster
+quality: production
+provides:
+  - name: matter_time_synchronization
+source:
+  - path: src/app/clusters/time-synchronization-server/DefaultTimeSyncDelegate.cpp
+  - path: src/app/clusters/time-synchronization-server/time-synchronization-server.cpp
+  - path: src/app/clusters/time-synchronization-server/TimeSyncDataProvider.cpp
+
+template_contribution:
+  - name: component_catalog
+    value: matter_time_synchronization
+
+define:
+  - name: TIME_SYNC_ENABLE_TSC_FEATURE
+    value: 0

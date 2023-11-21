@@ -2,6 +2,7 @@
 category: Clusters|HVAC
 description: Implementation of the Thermostat Server Cluster
 id: matter_thermostat
+package: Matter
 label: Thermostat Server Cluster
 quality: production
 provides:

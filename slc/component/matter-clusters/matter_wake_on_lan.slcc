@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Wake On Lan Server Cluster
 id: matter_wake_on_lan
+package: Matter
 label: Wake On Lan Server Cluster
 quality: production
 provides:

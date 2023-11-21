@@ -1,0 +1,1 @@
+python/gen/third_party/pigweed/repo/targets/lm3s6965evb_qemu/py/py/package_metadata.json

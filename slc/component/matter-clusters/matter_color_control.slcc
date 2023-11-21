@@ -2,6 +2,7 @@
 category: Clusters|Lighting
 description: Implementation of the Color Control Server Cluster
 id: matter_color_control
+package: Matter
 label: Color Control Server Cluster
 quality: production
 provides:

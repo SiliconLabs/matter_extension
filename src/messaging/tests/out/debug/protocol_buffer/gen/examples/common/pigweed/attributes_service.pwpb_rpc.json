@@ -1,0 +1,12 @@
+{
+  "dependencies": [
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_protobuf/common_protos.pwpb_rpc.json"
+  ],
+  "label": "//examples/common/pigweed:attributes_service.pwpb_rpc",
+  "nested_in_python_package": "",
+  "package": "attributes_service",
+  "protoc_outputs": [
+    "protocol_buffer/gen/examples/common/pigweed/attributes_service.proto_library/pwpb_rpc/attributes_service/attributes_service.rpc.pwpb.h"
+  ],
+  "root": "protocol_buffer/gen/examples/common/pigweed/attributes_service.proto_library/pwpb_rpc"
+}

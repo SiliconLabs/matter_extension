@@ -25,6 +25,7 @@ source:
 - path: src/lib/shell/commands/Meta.cpp
 - path: src/lib/shell/commands/Config.cpp
 - path: src/lib/shell/commands/Device.cpp
+- path: src/lib/shell/commands/Stat.cpp
 - path: src/lib/shell/commands/OnboardingCodes.cpp
 - path: src/lib/shell/commands/Dns.cpp
 - path: src/lib/shell/commands/BLE.cpp
@@ -39,11 +40,11 @@ source:
   condition: [matter_ota_support]
 - path: src/lib/shell/commands/Ota.cpp
   condition: [matter_platform_siwx917]
-- path: examples/lock-app/silabs/efr32/src/EventHandlerLibShell.cpp
+- path: examples/lock-app/silabs/src/EventHandlerLibShell.cpp
   condition:
     - matter_lock
     - matter_platform_efr32
-- path: examples/lock-app/silabs/SiWx917/src/EventHandlerLibShell.cpp
+- path: examples/lock-app/silabs/src/EventHandlerLibShell.cpp
   condition:
     - matter_lock
     - matter_platform_siwx917
@@ -65,18 +66,11 @@ include:
   file_list:
   - path: ChipShellCollection.h
   - path: Globals.h
-- path: examples/lock-app/silabs/efr32/include
+- path: examples/lock-app/silabs/include
   file_list:
     - path: EventHandlerLibShell.h
       condition:
         - matter_lock
-        - matter_platform_efr32
-- path: examples/lock-app/silabs/SiWx917/include
-  file_list:
-    - path: EventHandlerLibShell.h
-      condition:
-        - matter_lock
-        - matter_platform_siwx917
 
 define:
 - name: ENABLE_CHIP_SHELL

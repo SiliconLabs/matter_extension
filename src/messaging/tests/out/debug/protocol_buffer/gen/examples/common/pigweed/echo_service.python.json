@@ -1,0 +1,13 @@
+{
+  "dependencies": [
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_protobuf/common_protos.python.json"
+  ],
+  "label": "//examples/common/pigweed:echo_service.python",
+  "nested_in_python_package": "",
+  "package": "echo_service",
+  "protoc_outputs": [
+    "protocol_buffer/gen/examples/common/pigweed/echo_service.proto_library/python/echo_service/echo_pb2.py",
+    "protocol_buffer/gen/examples/common/pigweed/echo_service.proto_library/python/echo_service/echo_pb2.pyi"
+  ],
+  "root": "protocol_buffer/gen/examples/common/pigweed/echo_service.proto_library/python"
+}

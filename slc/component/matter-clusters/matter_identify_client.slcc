@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Identify Client Cluster
 id: matter_identify_client
+package: Matter
 label: Identify Client Cluster
 quality: production
 provides:

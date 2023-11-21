@@ -1,0 +1,22 @@
+[
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_result/test",
+    "test_name": "result_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_result/test",
+    "test_name": "expected_test",
+    "type": "test"
+  },
+  {
+    "name": "//third_party/pigweed/repo/pw_result:tests",
+    "type": "self"
+  }
+]

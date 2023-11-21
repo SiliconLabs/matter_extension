@@ -1,0 +1,18 @@
+{
+  "dependencies": [
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_protobuf/common_protos.python.json",
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_tokenizer/proto.python.json"
+  ],
+  "label": "//third_party/pigweed/repo/pw_software_update:protos.python",
+  "nested_in_python_package": "//third_party/pigweed/repo/pw_software_update/py:py",
+  "package": "pw_software_update",
+  "protoc_outputs": [
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_software_update/protos.proto_library/python/pw_software_update/bundled_update_pb2.py",
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_software_update/protos.proto_library/python/pw_software_update/bundled_update_pb2.pyi",
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_software_update/protos.proto_library/python/pw_software_update/tuf_pb2.py",
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_software_update/protos.proto_library/python/pw_software_update/tuf_pb2.pyi",
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_software_update/protos.proto_library/python/pw_software_update/update_bundle_pb2.py",
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_software_update/protos.proto_library/python/pw_software_update/update_bundle_pb2.pyi"
+  ],
+  "root": "protocol_buffer/gen/third_party/pigweed/repo/pw_software_update/protos.proto_library/python"
+}

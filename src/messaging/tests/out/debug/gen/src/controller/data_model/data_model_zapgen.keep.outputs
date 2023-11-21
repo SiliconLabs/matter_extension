@@ -1,0 +1,6 @@
+zap-generated/access.h
+zap-generated/gen_config.h
+zap-generated/endpoint_config.h
+zap-generated/CHIPClientCallbacks.h
+zap-generated/CHIPClusters.h
+zap-generated/IMClusterCommandHandler.cpp

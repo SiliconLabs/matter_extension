@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.2"
+    version: "2.2.0"
   - id: wiseconnect3_sdk
-    version: "3.1.0"
+    version: "3.1.1"
 
 component:
   - id: device_init
@@ -31,6 +31,8 @@ component:
   - id: matter_crypto
     from: matter
   - id: silabs_factory_data_provider
+    from: matter
+  - id: matter_gatt_additional_advertising
     from: matter
 
   - id: matter_efr32_ncp
@@ -98,22 +100,17 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  # Override RTT
-  - id: matter_segger_rtt
-    from: matter
+  - id: segger_rtt
 
-  - id: si91x
-    from: wiseconnect3_sdk
+  - id: efx_ncp_custom_host_mcu
+    from: matter
   - id: wifi
     from: wiseconnect3_sdk
-  - id: basic_network_manager
+  - id: basic_network_config_manager
     from: wiseconnect3_sdk
-  - id: si91x_basic_buffers
+  - id: sl_si91x_basic_buffers
     from: wiseconnect3_sdk
-
-
-    
-  - id: si91x_support
+  - id: sl_si91x_wireless
     from: wiseconnect3_sdk
   - id: wifi_resources
     from: wiseconnect3_sdk
@@ -153,7 +150,7 @@ config_file:
     directory: common
 
 include:
-  - path: ../../../../examples/lock-app/silabs/efr32/include
+  - path: ../../../../examples/lock-app/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -163,13 +160,13 @@ include:
     directory: include
 
 source:
-  - path: ../../../../examples/lock-app/silabs/efr32/src/AppTask.cpp
+  - path: ../../../../examples/lock-app/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/lock-app/silabs/efr32/src/LockManager.cpp
+  - path: ../../../../examples/lock-app/silabs/src/LockManager.cpp
     directory: src
-  - path: ../../../../examples/lock-app/silabs/efr32/src/main.cpp
+  - path: ../../../../examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/lock-app/silabs/efr32/src/ZclCallbacks.cpp
+  - path: ../../../../examples/lock-app/silabs/src/ZclCallbacks.cpp
     directory: src
     
 define:
@@ -190,6 +187,8 @@ configuration:
     value: "10000000"
   - name: SL_POWER_MANAGER_LOWEST_EM_ALLOWED
     value: "1"
+  - name: SL_PSA_KEY_USER_SLOT_COUNT
+    value: "21"
   - name: SL_POWER_MANAGER_CONFIG_VOLTAGE_SCALING_FAST_WAKEUP
     value: "1"
   - {name: SL_STACK_SIZE, value: '4608'} 

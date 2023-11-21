@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Low Power Server Cluster
 id: matter_low_power
+package: Matter
 label: Low Power Server Cluster
 quality: production
 provides:

@@ -2,6 +2,7 @@
 category: Clusters|HVAC
 description: Implementation of the Thermostat User Interface Configuration Server Cluster
 id: matter_thermostat_user_interface_configuration
+package: Matter
 label: Thermostat User Interface Configuration Server Cluster
 quality: production
 provides:

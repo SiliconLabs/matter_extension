@@ -1,0 +1,7 @@
+defines =
+framework_dirs =
+include_dirs =
+target_output_name = headers
+
+
+build obj/src/platform/logging/headers.stamp: stamp

@@ -99,9 +99,9 @@ typedef struct __attribute__((__packed__)) sl_wfx_mib_req_s
 #include "wfx_msgs.h"
 
 #if (SIWX_917 | EXP_BOARD)
-#include "sl_wifi_constants.h"
 #include "sl_si91x_types.h"
 #include "sl_status.h"
+#include "sl_wifi_constants.h"
 
 #define SL_WIFI_ALLOCATE_COMMAND_BUFFER_WAIT_TIME_MS 1000
 #endif
@@ -364,11 +364,10 @@ void * wfx_rsi_alloc_pkt(void);
 
 #ifdef RS911X_WIFI
 /* RSI Power Save */
-#if CHIP_DEVICE_CONFIG_ENABLE_SED
+#if SL_ICD_ENABLED
 sl_status_t wfx_power_save();
-#endif /* CHIP_DEVICE_CONFIG_ENABLE_SED */
+#endif /* SL_ICD_ENABLED */
 /* RSI for LWIP */
-void * wfx_rsi_alloc_pkt(void);
 void wfx_rsi_pkt_add_data(void * p, uint8_t * buf, uint16_t len, uint16_t off);
 int32_t wfx_rsi_send_data(void * p, uint16_t len);
 #endif /* RS911X_WIFI */
@@ -386,7 +385,6 @@ sl_status_t sl_si91x_driver_send_data_packet(sl_si91x_queue_type_t queue_type, s
 sl_status_t sl_si91x_allocate_command_buffer(sl_wifi_buffer_t ** host_buffer, void ** buffer, uint32_t requested_buffer_size,
                                              uint32_t wait_duration_ms);
 #endif
-
 void wfx_retry_interval_handler(bool is_wifi_disconnection_event, uint16_t retryJoin);
 
 #ifdef __cplusplus

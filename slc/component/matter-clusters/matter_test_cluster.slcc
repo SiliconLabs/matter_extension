@@ -2,6 +2,7 @@
 category: Clusters|CHIP
 description: Implementation of the Test Cluster Server Cluster
 id: matter_test_cluster
+package: Matter
 label: Test Cluster Server Cluster
 quality: production
 provides:

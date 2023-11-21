@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Group Key Mgmt Server Cluster
 id: matter_group_key_mgmt
+package: Matter
 label: Group Key Mgmt Server Cluster
 quality: production
 provides:

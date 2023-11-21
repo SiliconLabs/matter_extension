@@ -1,0 +1,18 @@
+{
+  "gn_target_name": "//third_party/pigweed/repo/pw_env_setup:generate_pw_system_distribution",
+  "inputs": [
+    "../../../../../../third_party/pigweed/repo/LICENSE",
+    "../../../../../../third_party/pigweed/repo/README.md",
+    "../../../../../../third_party/pigweed/repo/pw_env_setup/pypi_pyproject.toml"
+  ],
+  "setup_sources": [
+    "python/obj/third_party/pigweed/repo/pw_env_setup/generate_pw_system_distribution/pyproject.toml",
+    "python/obj/third_party/pigweed/repo/pw_env_setup/generate_pw_system_distribution/setup.cfg"
+  ],
+  "sources": [
+
+  ],
+  "tests": [
+
+  ]
+}

@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Ias Zone Server Cluster
 id: matter_ias_zone
+package: Matter
 label: Ias Zone Server Cluster
 quality: production
 provides:

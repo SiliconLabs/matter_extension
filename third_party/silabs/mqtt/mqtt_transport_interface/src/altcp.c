@@ -123,6 +123,7 @@
 #include "altcp_tcp.h"
 #include "lwip/tcp.h"
 #include "altcp_tls_mbedtls_structs.h"
+
 #include <string.h>
 
 extern const struct altcp_functions altcp_tcp_functions;

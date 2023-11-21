@@ -45,7 +45,8 @@ extern "C" {
 #include "lwip/ethip6.h"
 #include "lwip/timeouts.h"
 #include "netif/etharp.h"
-#include "siwx917_utils.h"
+#include "silabs_utils.h"
+
 StaticSemaphore_t xEthernetIfSemaBuffer;
 
 /*****************************************************************************
@@ -197,7 +198,8 @@ static err_t low_level_output(struct netif * netif, struct pbuf * p)
     void * rsipkt;
     struct pbuf * q;
     uint16_t framelength = 0;
-    uint16_t datalength = 0;
+    uint16_t datalength  = 0;
+
 #ifdef WIFI_DEBUG_ENABLED
     SILABS_LOG("LWIP : low_level_output");
 #endif
@@ -206,15 +208,18 @@ static err_t low_level_output(struct netif * netif, struct pbuf * p)
         return ERR_IF;
     }
     /* Calculate total packet size */
-    for (q = p, framelength = 0; q != NULL; q = q->next) {
+    for (q = p, framelength = 0; q != NULL; q = q->next)
+    {
         framelength += q->len;
     }
-    if (framelength < LWIP_FRAME_ALIGNMENT) {
+    if (framelength < LWIP_FRAME_ALIGNMENT)
+    {
         framelength = LWIP_FRAME_ALIGNMENT;
     }
+
     /* Confirm if packet is allocated */
     status = sl_si91x_allocate_command_buffer(&buffer, (void **) &packet, sizeof(sl_si91x_packet_t) + framelength,
-                                              SL_WIFI_ALLOCATE_COMMAND_BUFFER_WAIT_TIME);
+                                              SL_WIFI_ALLOCATE_COMMAND_BUFFER_WAIT_TIME_MS);
     VERIFY_STATUS_AND_RETURN(status);
     if (packet == NULL)
     {
@@ -268,6 +273,18 @@ static err_t low_level_output(struct netif * netif, struct pbuf * p)
     return ERR_OK;
 }
 
+/*****************************************************************************
+ *  @fn  void sl_si91x_host_process_data_frame(uint8_t *buf, int len)
+ *  @brief
+ *    host received frame cb
+ *
+ * @param[in] buf: buffer
+ *
+ * @param[in] len: length
+ *
+ * @return
+ *    None
+ ******************************************************************************/
 sl_status_t sl_si91x_host_process_data_frame(sl_wifi_interface_t interface, sl_wifi_buffer_t * buffer)
 {
     struct pbuf * pbuf_packet;
@@ -284,7 +301,6 @@ sl_status_t sl_si91x_host_process_data_frame(sl_wifi_interface_t interface, sl_w
     {
         low_level_input(ifp, rsi_pkt->data, rsi_pkt->length);
     }
-
     return SL_STATUS_OK;
 }
 

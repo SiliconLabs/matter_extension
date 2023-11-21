@@ -1,0 +1,12 @@
+{
+  "dependencies": [
+
+  ],
+  "label": "//third_party/pigweed/repo/pw_transfer:proto.pwpb_rpc",
+  "nested_in_python_package": "",
+  "package": "pw_transfer",
+  "protoc_outputs": [
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_transfer/proto.proto_library/pwpb_rpc/pw_transfer/transfer.rpc.pwpb.h"
+  ],
+  "root": "protocol_buffer/gen/third_party/pigweed/repo/pw_transfer/proto.proto_library/pwpb_rpc"
+}

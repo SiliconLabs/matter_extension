@@ -11,6 +11,7 @@ source:
   - path: third_party/mbedtls/repo/library/aes.c
   - path: third_party/mbedtls/repo/library/asn1parse.c
   - path: third_party/mbedtls/repo/library/asn1write.c
+  - path: third_party/mbedtls/repo/library/base64.c
   - path: third_party/mbedtls/repo/library/bignum.c
   - path: third_party/mbedtls/repo/library/ccm.c
   - path: third_party/mbedtls/repo/library/cipher.c
@@ -25,10 +26,12 @@ source:
   - path: third_party/mbedtls/repo/library/hkdf.c
   - path: third_party/mbedtls/repo/library/hmac_drbg.c
   - path: third_party/mbedtls/repo/library/md.c
+  - path: third_party/mbedtls/repo/library/pem.c
   - path: third_party/mbedtls/repo/library/pkcs5.c
   - path: third_party/mbedtls/repo/library/platform.c
   - path: third_party/mbedtls/repo/library/sha256.c
   - path: third_party/mbedtls/repo/library/sha512.c
+  - path: third_party/mbedtls/repo/library/x509.c
   - path: third_party/mbedtls/repo/library/x509_create.c
   - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/ecc.c
   - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/ecc_dh.c

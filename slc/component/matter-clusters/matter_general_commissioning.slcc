@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the General Commissioning Server Cluster
 id: matter_general_commissioning
+package: Matter
 label: General Commissioning Server Cluster
 quality: production
 provides:

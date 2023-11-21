@@ -1,0 +1,18 @@
+{
+  "gn_target_name": "//third_party/pigweed/repo/targets/lm3s6965evb_qemu/py:py",
+  "inputs": [
+
+  ],
+  "setup_sources": [
+    "../../../../../../third_party/pigweed/repo/targets/lm3s6965evb_qemu/py/pyproject.toml",
+    "../../../../../../third_party/pigweed/repo/targets/lm3s6965evb_qemu/py/setup.cfg",
+    "../../../../../../third_party/pigweed/repo/targets/lm3s6965evb_qemu/py/setup.py"
+  ],
+  "sources": [
+    "../../../../../../third_party/pigweed/repo/targets/lm3s6965evb_qemu/py/lm3s6965evb_qemu_utils/__init__.py",
+    "../../../../../../third_party/pigweed/repo/targets/lm3s6965evb_qemu/py/lm3s6965evb_qemu_utils/unit_test_runner.py"
+  ],
+  "tests": [
+
+  ]
+}

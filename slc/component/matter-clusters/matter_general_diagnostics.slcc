@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the General Diagnostics Server Cluster
 id: matter_general_diagnostics
+package: Matter
 label: General Diagnostics Server Cluster
 quality: production
 provides:

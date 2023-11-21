@@ -2,6 +2,7 @@
 category: Clusters|Media
 description: Implementation of the Application Basic Server Cluster
 id: matter_application_basic
+package: Matter
 label: Application Basic Server Cluster
 quality: production
 provides:

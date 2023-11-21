@@ -679,9 +679,6 @@ public final class ChipIdLookup {
       if (attributeId == 19L) {
         return "CapabilityMinima";
       }
-      if (attributeId == 20L) {
-        return "ProductAppearance";
-      }
       if (attributeId == 65528L) {
         return "GeneratedCommandList";
       }
@@ -1522,9 +1519,6 @@ public final class ChipIdLookup {
       if (attributeId == 18L) {
         return "UniqueID";
       }
-      if (attributeId == 20L) {
-        return "ProductAppearance";
-      }
       if (attributeId == 65528L) {
         return "GeneratedCommandList";
       }
@@ -1785,6 +1779,9 @@ public final class ChipIdLookup {
       }
       if (attributeId == 65533L) {
         return "ClusterRevision";
+      }
+      if (attributeId == 4293984257L) {
+        return "ManufacturerExtension";
       }
       return "";
     }

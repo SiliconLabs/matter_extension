@@ -1,0 +1,14 @@
+[
+  {
+    "extra_metadata": {
+      "extra_key": "extra_value"
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_unit_test/test",
+    "test_name": "metadata_only_test",
+    "type": "test"
+  },
+  {
+    "name": "//third_party/pigweed/repo/pw_unit_test:metadata_only_group",
+    "type": "self"
+  }
+]

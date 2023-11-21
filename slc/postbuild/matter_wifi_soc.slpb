@@ -10,4 +10,7 @@ steps:
   output: "{{build_dir}}/{{project_name}}.rps"
 - task: "convert"
   input: "{{build_dir}}/{{project_name}}.rps"
+  output: "{{build_dir}}/{{project_name}}.hex"
+- task: "convert"
+  input: "{{build_dir}}/{{project_name}}.rps"
   output: "{{build_dir}}/{{project_name}}_isp.bin"

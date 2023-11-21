@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Identify Server Cluster
 id: matter_identify
+package: Matter
 label: Identify Server Cluster
 quality: production
 provides:

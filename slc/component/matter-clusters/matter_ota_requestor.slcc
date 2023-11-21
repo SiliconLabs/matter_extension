@@ -2,6 +2,7 @@
 category: Clusters|CHIP
 description: Implementation of the Ota Requestor Server Cluster
 id: matter_ota_requestor
+package: Matter
 label: OTA Requestor Server Cluster
 quality: production
 provides:

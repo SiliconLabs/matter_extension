@@ -1,0 +1,14 @@
+[
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_base64/test",
+    "test_name": "base64_test",
+    "type": "test"
+  },
+  {
+    "name": "//third_party/pigweed/repo/pw_base64:tests",
+    "type": "self"
+  }
+]

@@ -101,6 +101,12 @@
   ]
 },
 {
+  "clusterCode": "icd management-server",
+  "value": [
+    "%extension-matter%matter_icd_management"
+  ]
+},
+{
   "clusterCode": "identify-server",
   "value": [
     "%extension-matter%matter_identify"
@@ -248,12 +254,6 @@
   "clusterCode": "barrier control-server",
   "value": [
     "%extension-matter%matter_barrier_control"
-  ]
-},
-{
-  "clusterCode": "scenes-client",
-  "value": [
-    "%extension-matter%matter_scenes_client"
   ]
 },
 {

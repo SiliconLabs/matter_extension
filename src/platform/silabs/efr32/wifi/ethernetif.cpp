@@ -60,7 +60,13 @@ extern "C" {
 #include "lwip/ethip6.h"
 #include "lwip/timeouts.h"
 #include "netif/etharp.h"
-#include "efr32_utils.h"
+
+#ifndef SILABS_LOG
+extern "C" {
+void silabsLog(const char * aFormat, ...);
+#define SILABS_LOG(...) silabsLog(__VA_ARGS__);
+}
+#endif
 
 StaticSemaphore_t xEthernetIfSemaBuffer;
 
@@ -351,7 +357,8 @@ static err_t low_level_output(struct netif * netif, struct pbuf * p)
     void * packet;
 #endif
     struct pbuf * q;
-    uint16_t framelength;
+    uint16_t framelength = 0;
+    uint16_t datalength  = 0;
 #ifdef WIFI_DEBUG_ENABLED
     SILABS_LOG("LWIP : low_level_output");
 #endif
@@ -379,7 +386,7 @@ static err_t low_level_output(struct netif * netif, struct pbuf * p)
     }
     /* Confirm if packet is allocated */
 #if (SIWX_917 | EXP_BOARD)
-    status = sl_si91x_allocate_command_buffer(&buffer, (void **) &packet, sizeof(sl_si91x_packet_t) + p->len,
+    status = sl_si91x_allocate_command_buffer(&buffer, (void **) &packet, sizeof(sl_si91x_packet_t) + framelength,
                                               SL_WIFI_ALLOCATE_COMMAND_BUFFER_WAIT_TIME_MS);
     VERIFY_STATUS_AND_RETURN(status);
     if (packet == NULL)
@@ -405,15 +412,15 @@ static err_t low_level_output(struct netif * netif, struct pbuf * p)
                b[4], b[5], b[6], b[7], b[8], b[9], b[10], b[11], b[12], b[13]);
 #endif
     /* Generate the packet */
-    for (q = p, framelength = 0; q != NULL; q = q->next)
+    for (q = p, datalength = 0; q != NULL; q = q->next)
     {
-        wfx_rsi_pkt_add_data(packet, (uint8_t *) (q->payload), (uint16_t) q->len, framelength);
-        framelength += q->len;
+        wfx_rsi_pkt_add_data(packet, (uint8_t *) (q->payload), (uint16_t) q->len, datalength);
+        datalength += q->len;
     }
-    if (framelength < LWIP_FRAME_ALIGNMENT)
+    if (datalength < LWIP_FRAME_ALIGNMENT)
     {
         /* Add junk data to the end for frame alignment if framelength is less than 60 */
-        wfx_rsi_pkt_add_data(packet, (uint8_t *) (p->payload), LWIP_FRAME_ALIGNMENT - framelength, framelength);
+        wfx_rsi_pkt_add_data(packet, (uint8_t *) (p->payload), LWIP_FRAME_ALIGNMENT - datalength, datalength);
     }
 #ifdef WIFI_DEBUG_ENABLED
     SILABS_LOG("EN-RSI: Sending %d", framelength);
@@ -423,14 +430,14 @@ static err_t low_level_output(struct netif * netif, struct pbuf * p)
      * send the data over wifi network
      */
 #if (SIWX_917 | EXP_BOARD)
-    packet->length  = p->len & 0xFFF;
+    packet->length  = framelength & 0xFFF;
     packet->command = RSI_SEND_RAW_DATA;
     if (sl_si91x_driver_send_data_packet(SI91X_WLAN_CMD_QUEUE, buffer, 1000))
 #else
      /* forward the generated packet to RSI to
      * send the data over wifi network
      */
-    if (wfx_rsi_send_data(packet, framelength))
+    if (wfx_rsi_send_data(packet, datalength))
 #endif
     {
         SILABS_LOG("*ERR*EN-RSI:Send fail");

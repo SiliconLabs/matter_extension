@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Wifi Network Diagnostics Server Cluster
 id: matter_wifi_network_diagnostics
+package: Matter
 label: Wifi Network Diagnostics Server Cluster
 quality: production
 provides:

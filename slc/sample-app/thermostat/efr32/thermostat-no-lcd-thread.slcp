@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.2"
+    version: "2.2.0"
 
 component:
   - id: device_init
@@ -81,8 +81,6 @@ component:
     from: matter
   - id: matter_ota_requestor
     from: matter
-  - id: matter_scenes
-    from: matter
   - id: matter_software_diagnostics
     from: matter
   - id: matter_thermostat
@@ -104,9 +102,7 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  # Override RTT
-  - id: matter_segger_rtt
-    from: matter
+  - id: segger_rtt
 
 requires:
 # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
@@ -123,7 +119,7 @@ config_file:
     directory: common
 
 include:
-  - path: ../../../../examples/thermostat/silabs/efr32/include
+  - path: ../../../../examples/thermostat/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -135,15 +131,15 @@ include:
 
 
 source:
-  - path: ../../../../examples/thermostat/silabs/efr32/src/AppTask.cpp
+  - path: ../../../../examples/thermostat/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/thermostat/silabs/efr32/src/TemperatureManager.cpp
+  - path: ../../../../examples/thermostat/silabs/src/TemperatureManager.cpp
     directory: src
-  - path: ../../../../examples/thermostat/silabs/efr32/src/main.cpp
+  - path: ../../../../examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/thermostat/silabs/efr32/src/ZclCallbacks.cpp
+  - path: ../../../../examples/thermostat/silabs/src/ZclCallbacks.cpp
     directory: src
-  - path: ../../../../examples/thermostat/silabs/efr32/src/SensorManager.cpp
+  - path: ../../../../examples/thermostat/silabs/src/SensorManager.cpp
     directory: src
 
 define:

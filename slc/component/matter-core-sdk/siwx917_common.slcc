@@ -4,7 +4,6 @@ define:
     value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
   - name: CHIP_HAVE_CONFIG_H
     value: '1'
-  - name: SILABS_OTA_ENABLED
 description: siwx917_common
 id: siwx917_common
 include:
@@ -19,7 +18,7 @@ include:
     - path: matter_shell.h
     - path: SilabsDeviceDataProvider.h
     - path: OTAConfig.h
-  - path: examples/platform/silabs/SiWx917
+  - path: examples/platform/silabs/
     file_list:
     - path: FreeRTOSConfig.h
     - path: uart.h

@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Fixed Label Server Cluster
 id: matter_fixed_label
+package: Matter
 label: Fixed Label Server Cluster
 quality: production
 provides:

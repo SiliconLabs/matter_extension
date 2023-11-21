@@ -1,0 +1,12 @@
+{
+  "dependencies": [
+
+  ],
+  "label": "//third_party/pigweed/repo/pw_tokenizer:proto.pwpb",
+  "nested_in_python_package": "",
+  "package": "pw_tokenizer",
+  "protoc_outputs": [
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_tokenizer/proto.proto_library/pwpb/pw_tokenizer/proto/options.pwpb.h"
+  ],
+  "root": "protocol_buffer/gen/third_party/pigweed/repo/pw_tokenizer/proto.proto_library/pwpb"
+}

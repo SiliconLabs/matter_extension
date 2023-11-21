@@ -2,6 +2,7 @@
 category: Clusters|Media
 description: Implementation of the Keypad Input Server Cluster
 id: matter_keypad_input
+package: Matter
 label: Keypad Input Server Cluster
 quality: production
 provides:

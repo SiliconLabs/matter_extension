@@ -1,0 +1,33 @@
+{
+  "files": [
+    {
+      "sources": [
+        "chip/ChipUtility.py",
+        "chip/clusters/CHIPClusters.py",
+        "chip/clusters/ClusterObjects.py",
+        "chip/clusters/Objects.py",
+        "chip/clusters/TestObjects.py",
+        "chip/clusters/Types.py",
+        "chip/tlv/__init__.py"
+      ],
+      "src_dir": "../../../../../../../../controller/python"
+    },
+    {
+      "sources": [
+        "LICENSE"
+      ],
+      "src_dir": "../../../../../../../../../"
+    }
+  ],
+  "package_reqs": [
+    "dacite"
+  ],
+  "packages": [
+    "chip",
+    "chip.clusters",
+    "chip.tlv"
+  ],
+  "scripts": [
+
+  ]
+}

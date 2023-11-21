@@ -2,6 +2,7 @@
 category: Clusters|Closures
 description: Implementation of the Door Lock Server Callback Cluster
 id: matter_door_lock
+package: Matter
 label: Door Lock Server Callback Cluster
 quality: production
 provides:

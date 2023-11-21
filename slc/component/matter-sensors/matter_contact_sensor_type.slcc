@@ -1,6 +1,7 @@
 category: Platform|Sensors
 description: Add to enable contact sensor in sensor-app
 id: matter_contact_sensor_type
+package: Matter
 label: Matter Contact Sensor
 quality: production
 
@@ -11,12 +12,12 @@ define:
       - matter_sensor
 
 config_file:
-  - path: silabs_examples/silabs-sensors/efr32/data_model/contact-sensor/contact-thread-app.zap
+  - path: silabs_examples/silabs-sensors/data_model/contact-sensor/contact-thread-app.zap
     directory: common
     condition:
       - matter_thread
       - matter_sensor
-  - path: silabs_examples/silabs-sensors/efr32/data_model/contact-sensor/contact-wifi-app.zap
+  - path: silabs_examples/silabs-sensors/data_model/contact-sensor/contact-wifi-app.zap
     directory: common
     condition:
       - matter_wifi

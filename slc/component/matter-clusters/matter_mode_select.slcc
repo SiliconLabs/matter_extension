@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Mode Select Server Cluster
 id: matter_mode_select
+package: Matter
 label: Mode Select Server Cluster
 quality: production
 provides:

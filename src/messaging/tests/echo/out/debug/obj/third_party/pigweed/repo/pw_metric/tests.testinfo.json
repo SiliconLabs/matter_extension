@@ -1,0 +1,30 @@
+[
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_metric/test",
+    "test_name": "metric_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_metric/test",
+    "test_name": "global_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_metric/test",
+    "test_name": "metric_service_pwpb_test",
+    "type": "test"
+  },
+  {
+    "name": "//third_party/pigweed/repo/pw_metric:tests",
+    "type": "self"
+  }
+]

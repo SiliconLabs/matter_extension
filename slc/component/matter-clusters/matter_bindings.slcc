@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Bindingmanager Cluster
 id: matter_bindings
+package: Matter
 label: Bindingmanager Cluster
 quality: production
 provides:

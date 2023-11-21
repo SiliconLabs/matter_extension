@@ -2,6 +2,7 @@
 category: Clusters|Closures
 description: Implementation of the Window Covering Server Cluster
 id: matter_window_covering
+package: Matter
 label: Window Covering Server Cluster
 quality: production
 provides:

@@ -102,7 +102,7 @@ void MatterPerfTest::PingPerfTestOnConnnection(Messaging::ExchangeManager & exch
                            EventTriggerPingMagicNumber);
 
     Clusters::GeneralDiagnostics::Commands::TestEventTrigger::Type triggerCommand;
-    triggerCommand.enableKey    = chip::ByteSpan(kTestEventTriggerEnableKey);
+    triggerCommand.enableKey    = chip::ByteSpan(kPerfTestTestEventTriggerEnableKey);
     triggerCommand.eventTrigger = EventTriggerPingMagicNumber;
     requestsSent++;
 
@@ -181,7 +181,7 @@ void MatterPerfTest::MxPerfTest(intptr_t  params)
 
     Messaging::ExchangeManager & exchangeMgr = Server::GetInstance().GetExchangeManager();
     Clusters::GeneralDiagnostics::Commands::TestEventTrigger::Type triggerCommand;
-    triggerCommand.enableKey    = chip::ByteSpan(kTestEventTriggerEnableKey);
+    triggerCommand.enableKey    = chip::ByteSpan(kPerfTestTestEventTriggerEnableKey);
     triggerCommand.eventTrigger = data->seqNum;
 
     Controller::InvokeGroupCommandRequest(&exchangeMgr, data->fabricIndex, data->groupId, triggerCommand);
@@ -274,14 +274,8 @@ void RegisterPerfTestCommands()
 /********************************************************************************************/
 /************************** TestEventTrigger Delegate implementaion *************************/
 /********************************************************************************************/
-namespace chip {
 
-bool SilabsTestEventTriggerDelegate::DoesEnableKeyMatch(const ByteSpan & enableKey) const
-{
-    return !mEnableKey.empty() && mEnableKey.data_equal(enableKey);
-}
-
-CHIP_ERROR SilabsTestEventTriggerDelegate::HandleEventTrigger(uint64_t eventTrigger)
+bool emberAfHandleEventTrigger(uint64_t eventTrigger)
 {
     ChipLogError(NotSpecified, "Printing to debug channel, seq num: 0x%lx", (uint32_t)eventTrigger);
 
@@ -292,7 +286,6 @@ CHIP_ERROR SilabsTestEventTriggerDelegate::HandleEventTrigger(uint64_t eventTrig
                            4,   // length of sequence number
                                (uint32_t)eventTrigger);
 
-    return CHIP_NO_ERROR;
+    return true;
 }
 
-} // namespace chip

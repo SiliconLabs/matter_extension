@@ -1,0 +1,46 @@
+[
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_preprocessor/test",
+    "test_name": "arguments_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_preprocessor/test",
+    "test_name": "boolean_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_preprocessor/test",
+    "test_name": "compiler_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_preprocessor/test",
+    "test_name": "concat_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_preprocessor/test",
+    "test_name": "util_test",
+    "type": "test"
+  },
+  {
+    "name": "//third_party/pigweed/repo/pw_preprocessor:tests",
+    "type": "self"
+  }
+]

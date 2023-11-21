@@ -28,11 +28,11 @@
 #include <credentials/examples/LastKnownGoodTimeCertificateValidityPolicyExample.h>
 #include <credentials/examples/StrictCertificateValidityPolicyExample.h>
 #include <crypto/CHIPCryptoPAL.h>
+#include <lib/core/ErrorStr.h>
 #include <lib/core/PeerId.h>
 #include <lib/core/TLV.h>
 #include <lib/support/CHIPMem.h>
 #include <lib/support/CodeUtils.h>
-#include <lib/support/ErrorStr.h>
 #include <lib/support/UnitTestRegistration.h>
 
 #include <nlunit-test.h>
@@ -186,7 +186,7 @@ static void TestChipCert_ChipToX509(nlTestSuite * inSuite, void * inContext)
 
     // Error Case:
     MutableByteSpan outCert(outCertBuf);
-    err = ConvertChipCertToX509Cert(ByteSpan(sTestCert_Node01_01_Err01_Chip, sTestCert_Node01_01_Err01_Chip_Len), outCert);
+    err = ConvertChipCertToX509Cert(sTestCert_Node01_01_Err01_Chip, outCert);
     NL_TEST_ASSERT(inSuite, err == CHIP_ERROR_INVALID_TLV_TAG);
 }
 
@@ -244,13 +244,13 @@ static void TestChipCert_GetCertType_ErrorCases(nlTestSuite * inSuite, void * in
 
     for (auto chipCert : gTestCert_GetCertType_ErrorCases)
     {
-        uint8_t certType;
+        CertType certType;
 
         err = certSet.LoadCert(chipCert, sNullDecodeFlag);
         NL_TEST_ASSERT(inSuite, err == CHIP_NO_ERROR);
 
         err = certSet.GetCertSet()->mSubjectDN.GetCertType(certType);
-        NL_TEST_ASSERT(inSuite, err != CHIP_NO_ERROR || certType == kCertType_NotSpecified);
+        NL_TEST_ASSERT(inSuite, err != CHIP_NO_ERROR || certType == CertType::kNotSpecified);
 
         certSet.Clear();
     }
@@ -302,13 +302,13 @@ static void TestChipCert_ChipDN(nlTestSuite * inSuite, void * inContext)
     const static CATValues noc_cats = { { 0xABCD0001, chip::kUndefinedCAT, chip::kUndefinedCAT } };
 
     ChipDN chip_dn;
-    uint8_t certType = kCertType_FirmwareSigning; // Start with non-default value
+    CertType certType = CertType::kFirmwareSigning; // Start with non-default value
 
     NL_TEST_ASSERT(inSuite, chip_dn.IsEmpty());
     NL_TEST_ASSERT(inSuite, chip_dn.RDNCount() == 0);
     NL_TEST_ASSERT(inSuite, chip_dn.GetCertType(certType) == CHIP_NO_ERROR);
     NL_TEST_ASSERT(inSuite, chip_dn.IsEmpty() == true);
-    NL_TEST_ASSERT(inSuite, certType == kCertType_NotSpecified);
+    NL_TEST_ASSERT(inSuite, certType == CertType::kNotSpecified);
 
     NL_TEST_ASSERT(inSuite, chip_dn.AddAttribute_CommonName(CharSpan(noc_rdn, strlen(noc_rdn)), false) == CHIP_NO_ERROR);
     NL_TEST_ASSERT(inSuite, chip_dn.AddAttribute_MatterNodeId(0xAAAABBBBCCCCDDDD) == CHIP_NO_ERROR);
@@ -321,7 +321,7 @@ static void TestChipCert_ChipDN(nlTestSuite * inSuite, void * inContext)
     NL_TEST_ASSERT(inSuite, chip_dn.RDNCount() == 5);
 
     NL_TEST_ASSERT(inSuite, chip_dn.GetCertType(certType) == CHIP_NO_ERROR);
-    NL_TEST_ASSERT(inSuite, certType == kCertType_Node);
+    NL_TEST_ASSERT(inSuite, certType == CertType::kNode);
 
     uint64_t certId;
     NL_TEST_ASSERT(inSuite, chip_dn.GetCertChipId(certId) == CHIP_NO_ERROR);
@@ -334,7 +334,7 @@ static void TestChipCert_ChipDN(nlTestSuite * inSuite, void * inContext)
     chip_dn.Clear();
     NL_TEST_ASSERT(inSuite, chip_dn.GetCertType(certType) == CHIP_NO_ERROR);
     NL_TEST_ASSERT(inSuite, chip_dn.IsEmpty() == true);
-    NL_TEST_ASSERT(inSuite, certType == kCertType_NotSpecified);
+    NL_TEST_ASSERT(inSuite, certType == CertType::kNotSpecified);
 
     CATValues noc_cats2;
     chip::CATValues::Serialized serializedCATs;
@@ -362,7 +362,7 @@ static void TestChipCert_CertValidation(nlTestSuite * inSuite, void * inContext)
     {
         int mSubjectCertIndex;
         uint8_t mValidateFlags;
-        uint8_t mRequiredCertType;
+        CertType mRequiredCertType;
         CHIP_ERROR mExpectedResult;
         int mExpectedCertIndex;
         int mExpectedTrustAnchorIndex;
@@ -375,13 +375,9 @@ static void TestChipCert_CertValidation(nlTestSuite * inSuite, void * inContext)
     };
 
     // Short-hand names to make the test cases table more concise.
-    enum
-    {
-        CTNS   = kCertType_NotSpecified,
-        CTCA   = kCertType_ICA,
-        CTNode = kCertType_Node,
-        CTFS   = kCertType_FirmwareSigning,
-    };
+    const auto CTNS   = CertType::kNotSpecified;
+    const auto CTCA   = CertType::kICA;
+    const auto CTNode = CertType::kNode;
 
     // clang-format off
     static const ValidationTestCase sValidationTestCases[] = {
@@ -1196,28 +1192,28 @@ static void TestChipCert_CertType(nlTestSuite * inSuite, void * inContext)
     struct TestCase
     {
         uint8_t Cert;
-        uint8_t ExpectedCertType;
+        CertType ExpectedCertType;
     };
 
     // clang-format off
     static TestCase sTestCases[] = {
         // Cert                        ExpectedCertType
         // =============================================================
-        {  TestCert::kRoot01,          kCertType_Root            },
-        {  TestCert::kRoot02,          kCertType_Root            },
-        {  TestCert::kICA01,           kCertType_ICA             },
-        {  TestCert::kICA02,           kCertType_ICA             },
-        {  TestCert::kICA01_1,         kCertType_ICA             },
-        {  TestCert::kFWSign01,        kCertType_FirmwareSigning },
-        {  TestCert::kNode01_01,       kCertType_Node            },
-        {  TestCert::kNode01_02,       kCertType_Node            },
-        {  TestCert::kNode02_01,       kCertType_Node            },
-        {  TestCert::kNode02_02,       kCertType_Node            },
+        {  TestCert::kRoot01,          CertType::kRoot            },
+        {  TestCert::kRoot02,          CertType::kRoot            },
+        {  TestCert::kICA01,           CertType::kICA             },
+        {  TestCert::kICA02,           CertType::kICA             },
+        {  TestCert::kICA01_1,         CertType::kICA             },
+        {  TestCert::kFWSign01,        CertType::kFirmwareSigning },
+        {  TestCert::kNode01_01,       CertType::kNode            },
+        {  TestCert::kNode01_02,       CertType::kNode            },
+        {  TestCert::kNode02_01,       CertType::kNode            },
+        {  TestCert::kNode02_02,       CertType::kNode            },
     };
     // clang-format on
     for (const auto & testCase : sTestCases)
     {
-        uint8_t certType;
+        CertType certType;
 
         err = certSet.Init(1);
         NL_TEST_ASSERT(inSuite, err == CHIP_NO_ERROR);
@@ -1344,6 +1340,23 @@ static void TestChipCert_GenerateRootCert(nlTestSuite * inSuite, void * inContex
 
     NL_TEST_ASSERT(inSuite, ConvertX509CertToChipCert(signed_cert_span2, outCert) == CHIP_NO_ERROR);
     NL_TEST_ASSERT(inSuite, DecodeChipCert(outCert, certData) == CHIP_NO_ERROR);
+
+    // Test with no defined notAfter time.
+    {
+        X509CertRequestParams root_params3 = { .SerialNumber  = 1234,
+                                               .ValidityStart = 631161876,
+                                               .ValidityEnd   = kNullCertTime,
+                                               .SubjectDN     = root_dn,
+                                               .IssuerDN      = root_dn };
+        MutableByteSpan signed_cert_span_no_expiry(signed_cert);
+
+        NL_TEST_ASSERT(inSuite, NewRootX509Cert(root_params3, keypair, signed_cert_span_no_expiry) == CHIP_NO_ERROR);
+        outCert = MutableByteSpan(outCertBuf);
+
+        NL_TEST_ASSERT(inSuite, ConvertX509CertToChipCert(signed_cert_span_no_expiry, outCert) == CHIP_NO_ERROR);
+        NL_TEST_ASSERT(inSuite, DecodeChipCert(outCert, certData) == CHIP_NO_ERROR);
+        NL_TEST_ASSERT(inSuite, certData.mNotAfterTime == kNullCertTime);
+    }
 
     // Test error case: root cert subject provided ICA OID Attribute.
     root_params.SubjectDN.Clear();
@@ -2046,12 +2059,12 @@ static void TestChipCert_ExtractPublicKeyAndSKID(nlTestSuite * inSuite, void * i
     struct TestCase
     {
         uint8_t Cert;
-        const uint8_t * ExpectedPublicKey;
-        const uint8_t * ExpectedSKID;
+        ByteSpan ExpectedPublicKey;
+        ByteSpan ExpectedSKID;
     };
 
     // clang-format off
-    static constexpr TestCase sTestCases[] = {
+    static const TestCase sTestCases[] = {
         // Cert                  ExpectedPublicKey              ExpectedSKID
         // =======================================================================================
         {  TestCert::kRoot01,    sTestCert_Root01_PublicKey,    sTestCert_Root01_SubjectKeyId    },
@@ -2081,12 +2094,12 @@ static void TestChipCert_ExtractPublicKeyAndSKID(nlTestSuite * inSuite, void * i
         P256PublicKeySpan publicKey;
         err = ExtractPublicKeyFromChipCert(cert, publicKey);
         NL_TEST_ASSERT(inSuite, err == CHIP_NO_ERROR);
-        NL_TEST_ASSERT(inSuite, publicKey.data_equal(P256PublicKeySpan(testCase.ExpectedPublicKey)));
+        NL_TEST_ASSERT(inSuite, publicKey.data_equal(testCase.ExpectedPublicKey));
 
         CertificateKeyId skid;
         err = ExtractSKIDFromChipCert(cert, skid);
         NL_TEST_ASSERT(inSuite, err == CHIP_NO_ERROR);
-        NL_TEST_ASSERT(inSuite, skid.data_equal(CertificateKeyId(testCase.ExpectedSKID)));
+        NL_TEST_ASSERT(inSuite, skid.data_equal(testCase.ExpectedSKID));
     }
 }
 

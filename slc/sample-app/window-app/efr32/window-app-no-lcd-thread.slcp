@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.2"
+    version: "2.2.0"
 
 provides:
   - name: window_app
@@ -80,8 +80,6 @@ component:
     from: matter
   - id: matter_power_source
     from: matter
-  - id: matter_scenes
-    from: matter
   - id: matter_software_diagnostics
     from: matter
   - id: matter_thread_network_diagnostics
@@ -98,9 +96,7 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  # Override RTT
-  - id: matter_segger_rtt
-    from: matter
+  - id: segger_rtt
 
 requires:
 # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
@@ -117,26 +113,23 @@ config_file:
     directory: common
 
 include:
-  - path: ../../../../examples/window-app/silabs/efr32/include
+  - path: ../../../../examples/window-app/silabs/include
     file_list:
     - path: AppConfig.h
     - path: CHIPProjectConfig.h
-    - path: WindowAppImpl.h
-    directory: include
-
-  - path: ../../../../examples/window-app/common/include
-    file_list:
-    - path: WindowApp.h
+    - path: WindowManager.h
+    - path: AppTask.h
+    - path: AppEvent.h
     directory: include
 
 source:
-  - path: ../../../../examples/window-app/silabs/efr32/src/WindowAppImpl.cpp
+  - path: ../../../../examples/window-app/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/window-app/silabs/efr32/src/main.cpp
+  - path: ../../../../examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/window-app/common/src/WindowApp.cpp
+  - path: ../../../../examples/window-app/silabs/src/WindowManager.cpp
     directory: src
-  - path: ../../../../examples/window-app/common/src/ZclCallbacks.cpp
+  - path: ../../../../examples/window-app/silabs/src/ZclCallbacks.cpp
     directory: src
 
 define:

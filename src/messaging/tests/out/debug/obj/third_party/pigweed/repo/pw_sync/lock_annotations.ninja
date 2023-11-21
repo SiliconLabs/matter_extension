@@ -1,0 +1,7 @@
+defines =
+framework_dirs =
+include_dirs = -I../../../../../third_party/pigweed/repo/pw_sync/public -I../../../../../third_party/pigweed/repo/pw_preprocessor/public
+target_output_name = lock_annotations
+
+
+build obj/third_party/pigweed/repo/pw_sync/lock_annotations.stamp: stamp || obj/third_party/pigweed/repo/pw_preprocessor/pw_preprocessor.stamp

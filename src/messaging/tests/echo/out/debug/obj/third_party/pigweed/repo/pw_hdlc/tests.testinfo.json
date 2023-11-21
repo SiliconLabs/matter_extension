@@ -1,0 +1,58 @@
+[
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_hdlc/test",
+    "test_name": "encoder_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_hdlc/test",
+    "test_name": "decoder_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_hdlc/test",
+    "test_name": "rpc_channel_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_hdlc/test",
+    "test_name": "encoded_size_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_hdlc/test",
+    "test_name": "wire_packet_parser_test",
+    "type": "test"
+  },
+  {
+    "group": "//third_party/pigweed/repo/pw_preprocessor:tests",
+    "type": "dep"
+  },
+  {
+    "group": "//third_party/pigweed/repo/pw_status:tests",
+    "type": "dep"
+  },
+  {
+    "group": "//third_party/pigweed/repo/pw_stream:tests",
+    "type": "dep"
+  },
+  {
+    "name": "//third_party/pigweed/repo/pw_hdlc:tests",
+    "type": "self"
+  }
+]

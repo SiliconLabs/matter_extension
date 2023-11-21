@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.2"
+    version: "2.2.0"
   - id: wiseconnect3_sdk
-    version: "3.1.0"
+    version: "3.1.1"
 
 component:
   - id: matter_wstk_leds
@@ -19,8 +19,6 @@ component:
   - id: matter_wifi_ble
     from: matter
   - id: matter_mbedtls_siwx917
-    from: matter
-  - id: matter_si91x_common_flash_nvm3
     from: matter
   - id: silabs_factory_data_provider
     from: matter
@@ -83,23 +81,27 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  # Override RTT
-  - id: matter_segger_rtt
-    from: matter  
+  - id: segger_rtt  
   - id: matter_ota_requestor
     from: matter
   - id: matter_lock
     from: matter
+  - id: toolchain_gcc_common
+    from: matter
 
-  - id: si91x
+  - id: sl_si91x_common_flash_nvm3
+    from: wiseconnect3_sdk
+  - id: sl_si91x_wireless
     from: wiseconnect3_sdk
   - id: wifi
     from: wiseconnect3_sdk
-  - id: basic_network_manager
+  - id: basic_network_config_manager
     from: wiseconnect3_sdk
-  - id: si91x_basic_buffers
+  - id: si917_memory_default_config
     from: wiseconnect3_sdk
-  - id: siwx917_soc
+  - id: sl_si91x_basic_buffers
+    from: wiseconnect3_sdk
+  - id: sl_si91x_mcu
     from: wiseconnect3_sdk
   - id: freertos
   - id: slist
@@ -109,7 +111,7 @@ component:
     from: matter
   - id: matter_platform_siwx917
     from: matter
-  - id: si91x_support
+  - id: wiseconnect3_common
     from: wiseconnect3_sdk
   - id: wifi_resources
     from: wiseconnect3_sdk
@@ -120,6 +122,12 @@ component:
   - id: sl_si91x_button_917
     instance: [btn0,btn1]
     from: wiseconnect3_sdk
+  - id: sl_si91x_led_917
+    instance: [led0,led1]
+    from: wiseconnect3_sdk
+  - instance: [timer0]
+    from: wiseconnect3_sdk
+    id: ulp_timers_instance
 
 requires:
   # SiWx917 LCD configurations
@@ -135,7 +143,7 @@ config_file:
     directory: common
 
 include:
-  - path: ../../../../examples/lock-app/silabs/SiWx917/include
+  - path: ../../../../examples/lock-app/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -145,13 +153,13 @@ include:
     directory: include
 
 source:
-  - path: ../../../../examples/lock-app/silabs/SiWx917/src/AppTask.cpp
+  - path: ../../../../examples/lock-app/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/lock-app/silabs/SiWx917/src/LockManager.cpp
+  - path: ../../../../examples/lock-app/silabs/src/LockManager.cpp
     directory: src
-  - path: ../../../../examples/lock-app/silabs/SiWx917/src/main.cpp
+  - path: ../../../../examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/lock-app/silabs/SiWx917/src/ZclCallbacks.cpp
+  - path: ../../../../examples/lock-app/silabs/src/ZclCallbacks.cpp
     directory: src
 
 define:

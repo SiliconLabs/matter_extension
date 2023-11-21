@@ -1,0 +1,12 @@
+{
+  "dependencies": [
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_protobuf/common_protos.pwpb.json"
+  ],
+  "label": "//examples/common/pigweed:wifi_service.pwpb",
+  "nested_in_python_package": "",
+  "package": "wifi_service",
+  "protoc_outputs": [
+    "protocol_buffer/gen/examples/common/pigweed/wifi_service.proto_library/pwpb/wifi_service/wifi_service.pwpb.h"
+  ],
+  "root": "protocol_buffer/gen/examples/common/pigweed/wifi_service.proto_library/pwpb"
+}

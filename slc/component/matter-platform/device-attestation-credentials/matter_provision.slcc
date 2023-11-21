@@ -1,0 +1,42 @@
+id: matter_provision
+label: Matter Provisioning
+description: Enables Matter Provisioning
+package: "Matter"
+category: Platform|Security
+quality: production
+provides:
+  - name: matter_provision
+
+include:
+- path: examples/platform/silabs/provision
+  file_list:
+  - path: RttStreamChannel.h
+  - path: ProvisionCommands.h
+  - path: ProvisionEncoder.h
+  - path: ProvisionManager.h
+  - path: ProvisionStorage.h
+  - path: AttestationKey.h
+  - path: ProvisionChannel.h
+  - path: AttestationKeyPSA.h
+  - path: ProvisionStorageDefault.h
+
+requires:
+  - name: iostream
+  - name: iostream_rtt
+
+source:
+  - path: examples/platform/silabs/provision/RttStreamChannel.cpp
+  - path: examples/platform/silabs/provision/ProvisionCommands.cpp
+  - path: examples/platform/silabs/provision/ProvisionEncoder.cpp
+  - path: examples/platform/silabs/provision/ProvisionManager.cpp
+  - path: examples/platform/silabs/provision/ProvisionStorage.cpp
+  - path: examples/platform/silabs/provision/AttestationKeyPSA.cpp
+    condition: [matter_platform_efr32]
+  - path: examples/platform/silabs/provision/AttestationKeyMbed.cpp
+    condition: [matter_platform_siwx917]
+  - path: examples/platform/silabs/provision/ProvisionStorageDefault.cpp
+  - path: examples/platform/silabs/provision/ProvisionManagerDefault.cpp
+
+define:
+  - name: CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS
+    value: 1

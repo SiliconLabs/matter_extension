@@ -1,0 +1,102 @@
+[
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_rpc/test",
+    "test_name": "call_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_rpc/test",
+    "test_name": "channel_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_rpc/test",
+    "test_name": "client_server_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_rpc/test",
+    "test_name": "fake_channel_output_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_rpc/test",
+    "test_name": "method_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_rpc/test",
+    "test_name": "ids_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_rpc/test",
+    "test_name": "packet_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_rpc/test",
+    "test_name": "packet_meta_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_rpc/test",
+    "test_name": "server_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_rpc/test",
+    "test_name": "service_test",
+    "type": "test"
+  },
+  {
+    "group": "//third_party/pigweed/repo/pw_rpc/fuzz:tests",
+    "type": "dep"
+  },
+  {
+    "group": "//third_party/pigweed/repo/pw_rpc/nanopb:tests",
+    "type": "dep"
+  },
+  {
+    "group": "//third_party/pigweed/repo/pw_rpc/pwpb:tests",
+    "type": "dep"
+  },
+  {
+    "group": "//third_party/pigweed/repo/pw_rpc/raw:tests",
+    "type": "dep"
+  },
+  {
+    "name": "//third_party/pigweed/repo/pw_rpc:tests",
+    "type": "self"
+  }
+]

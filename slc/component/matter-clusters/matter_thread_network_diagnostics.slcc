@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Thread Network Diagnostics Server Cluster
 id: matter_thread_network_diagnostics
+package: Matter
 label: Thread Network Diagnostics Server Cluster
 quality: production
 provides:

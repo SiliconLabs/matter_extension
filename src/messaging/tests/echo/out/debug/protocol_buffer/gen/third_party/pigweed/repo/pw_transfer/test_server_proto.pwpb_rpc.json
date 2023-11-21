@@ -1,0 +1,12 @@
+{
+  "dependencies": [
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_protobuf/common_protos.pwpb_rpc.json"
+  ],
+  "label": "//third_party/pigweed/repo/pw_transfer:test_server_proto.pwpb_rpc",
+  "nested_in_python_package": "",
+  "package": "pw_transfer_test",
+  "protoc_outputs": [
+    "protocol_buffer/gen/third_party/pigweed/repo/pw_transfer/test_server_proto.proto_library/pwpb_rpc/pw_transfer_test/test_server.rpc.pwpb.h"
+  ],
+  "root": "protocol_buffer/gen/third_party/pigweed/repo/pw_transfer/test_server_proto.proto_library/pwpb_rpc"
+}

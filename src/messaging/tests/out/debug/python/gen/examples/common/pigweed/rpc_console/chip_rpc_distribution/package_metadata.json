@@ -1,0 +1,16 @@
+{
+  "gn_target_name": "//examples/common/pigweed/rpc_console:chip_rpc_distribution",
+  "inputs": [
+
+  ],
+  "setup_sources": [
+    "python/obj/examples/common/pigweed/rpc_console/chip_rpc_distribution/pyproject.toml",
+    "python/obj/examples/common/pigweed/rpc_console/chip_rpc_distribution/setup.cfg"
+  ],
+  "sources": [
+
+  ],
+  "tests": [
+
+  ]
+}

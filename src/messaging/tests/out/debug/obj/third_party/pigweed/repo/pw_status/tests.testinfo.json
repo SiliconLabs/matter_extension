@@ -1,0 +1,30 @@
+[
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_status/test",
+    "test_name": "status_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_status/test",
+    "test_name": "status_with_size_test",
+    "type": "test"
+  },
+  {
+    "extra_metadata": {
+
+    },
+    "test_directory": "obj/third_party/pigweed/repo/pw_status/test",
+    "test_name": "try_test",
+    "type": "test"
+  },
+  {
+    "name": "//third_party/pigweed/repo/pw_status:tests",
+    "type": "self"
+  }
+]

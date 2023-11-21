@@ -1,0 +1,10 @@
+python/gen/third_party/pigweed/repo/pw_env_setup/py/py/package_metadata.json
+python/gen/third_party/pigweed/repo/pw_cli/py/py/package_metadata.json
+python/gen/third_party/pigweed/repo/pw_protobuf_compiler/py/py/package_metadata.json
+python/gen/third_party/pigweed/repo/pw_protobuf/codegen_protos.python/package_metadata.json
+python/gen/third_party/pigweed/repo/pw_protobuf/common_protos.python/package_metadata.json
+python/gen/third_party/pigweed/repo/pw_protobuf/py/py/package_metadata.json
+python/gen/third_party/pigweed/repo/pw_status/py/py/package_metadata.json
+python/gen/third_party/pigweed/repo/pw_rpc/py/py/package_metadata.json
+python/gen/third_party/pigweed/repo/pw_hdlc/py/py/package_metadata.json
+python/gen/integrations/mobly/chip_mobly/package_metadata.json

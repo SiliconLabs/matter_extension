@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Descriptor Cluster
 id: matter_descriptor
+package: Matter
 label: Descriptor Cluster
 quality: production
 provides:

@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.2"
+    version: "2.2.0"
 
 component:
   - id: device_init
@@ -80,8 +80,6 @@ component:
     from: matter
   - id: matter_ota_requestor
     from: matter
-  - id: matter_scenes
-    from: matter
   - id: matter_software_diagnostics
     from: matter
   - id: matter_thermostat
@@ -99,17 +97,15 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  # Override RTT
-  - id: matter_segger_rtt
-    from: matter
+  - id: segger_rtt
   - id: matter_temperature_sensor
     from: matter
   - id: sensor_rht
 
-  - id: matter_lcd
-    from: matter
-  - id: matter_qr_code
-    from: matter
+#  - id: matter_lcd // TODO: Enable this feature once MG24 has LCD and QR code support
+#    from: matter
+#  - id: matter_qr_code
+#    from: matter
 
 # Require LCD and QR Code components only on the boards that support LCD
 requires:
@@ -130,7 +126,7 @@ config_file:
     directory: common
 
 include:
-  - path: ../../../../examples/thermostat/silabs/efr32/include
+  - path: ../../../../examples/thermostat/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -141,15 +137,15 @@ include:
     directory: include
 
 source:
-  - path: ../../../../examples/thermostat/silabs/efr32/src/AppTask.cpp
+  - path: ../../../../examples/thermostat/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/thermostat/silabs/efr32/src/TemperatureManager.cpp
+  - path: ../../../../examples/thermostat/silabs/src/TemperatureManager.cpp
     directory: src
-  - path: ../../../../examples/thermostat/silabs/efr32/src/main.cpp
+  - path: ../../../../examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/thermostat/silabs/efr32/src/ZclCallbacks.cpp
+  - path: ../../../../examples/thermostat/silabs/src/ZclCallbacks.cpp
     directory: src
-  - path: ../../../../examples/thermostat/silabs/efr32/src/SensorManager.cpp
+  - path: ../../../../examples/thermostat/silabs/src/SensorManager.cpp
     directory: src
 
 define:
@@ -173,6 +169,8 @@ configuration:
     value: "10000000"
   - name: SL_POWER_MANAGER_LOWEST_EM_ALLOWED
     value: "1"
+  - name: SL_PSA_KEY_USER_SLOT_COUNT
+    value: "21"
   - name: SL_POWER_MANAGER_CONFIG_VOLTAGE_SCALING_FAST_WAKEUP
     value: "1"
   - {name: SL_STACK_SIZE, value: '4608'} 

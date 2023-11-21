@@ -3,6 +3,7 @@ description: Implementation of the Level Control server cluster
 label: Level Control Server Cluster
 quality: production
 id: matter_level_control
+package: Matter
 provides:
   - name: matter_level_control
 source:

@@ -1,0 +1,1 @@
+python/gen/scripts/build/build_examples/package_metadata.json

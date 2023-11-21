@@ -2,6 +2,7 @@
 category: Clusters|Media
 description: Implementation of the Target Navigator Server Cluster
 id: matter_target_navigator
+package: Matter
 label: Target Navigator Server Cluster
 quality: production
 provides:

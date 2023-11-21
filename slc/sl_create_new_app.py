@@ -3,12 +3,18 @@
 import os
 import sys
 import subprocess
+from dotenv import load_dotenv
+
+try:
+    env_path = os.path.join(os.getcwd(),"slc","tools",".env")
+    load_dotenv(env_path,override=True)
+    os.environ["PATH"] = os.getenv("TOOLS_PATH") +  os.environ["PATH"]
+    java_path = os.getenv("JAVA17_HOME")
+except:
+    print("Could not load the .env file. Run sl_setup_env.py generate .env file")
+    sys.exit(1)
 
 platform = sys.platform
-
-java_path = os.getenv("JAVA17_HOME")
-
-
 gsdk_root = os.path.join(os.getcwd() + os.sep + os.pardir + os.sep + os.pardir)
 
 EXAMPLE_USAGE = "python slc/sl_create_new_app.py <NewAppName> <PathToReferenceSlcpFile> <SilabsBoard>"
@@ -39,19 +45,20 @@ def main():
         print_usage_and_exit()
 
     slc_path = "slc"
-    if sys.platform == "win32":
+    if platform == "win32":
         try:
-            slc_path = os.path.join(os.environ["SLC"],"slc.bat")
+            slc_path = os.path.join(os.getenv("SLC"),"slc.bat")
         except:
             print("SLC undefined. Set SLC from the sl_env_vars.bat")
 
     subprocess.run([slc_path, "configuration", "--sdk", gsdk_root])
     subprocess.run([slc_path, "signature", "trust", "--development-trust"])
-    subprocess.run([slc_path, "signature", "trust", "--extension", "matter:2.1.2"])
+    subprocess.run([slc_path, "signature", "trust", "--extension", "matter:2.2.0"])
     #subprocess.run(["slc", "signature", "trust", "--sdk", gsdk_root, "--extension-path", wisconnect  ])
 
     try:
-        subprocess.run([slc_path, "--java-location", java_path, "generate", "-d", new_app_name, "-p", reference_slcp_file, "--with", silabs_board, "--new-project"], check=True)
+        cmd = [slc_path, "--java-location", java_path, "generate", "-d", new_app_name, "-p", reference_slcp_file, "--with", silabs_board, "--new-project"]
+        subprocess.run(cmd, check=True)
     except subprocess.CalledProcessError:
         print("Error running 'slc generate'")
         sys.exit(1)

@@ -18,16 +18,10 @@
  *
  ******************************************************************************/
 
-#ifdef SIWX_917
-#include "siwx917_utils.h"
-#else
-#include "efr32_utils.h"
-#endif
+#include "silabs_utils.h"
 #include "dic_control.h"
 #include "dic.h"
 #include <platform/CHIPDeviceLayer.h>
-#include <zap-generated/gen_config.h>
-#include <app-common/zap-generated/ids/Clusters.h>
 
 #ifdef ENABLE_AWS_OTA_FEAT
 extern "C"{
@@ -51,6 +45,13 @@ extern "C"{
 #include "TemperatureManager.h"
 #endif //ZCL_USING_THERMOSTAT_CLUSTER_SERVER
 
+#ifdef ZCL_USING_THERMOSTAT_CLUSTER_SERVER
+#define DECIMAL 10
+#define MSG_SIZE 5
+#include "dic.h"
+
+namespace ThermAttr = chip::app::Clusters::Thermostat::Attributes;
+#endif //ZCL_USING_THERMOSTAT_CLUSTER_SERVER
 
 using namespace chip;
 using namespace chip::Platform;
@@ -72,7 +73,7 @@ struct mqttControlCommand {
 
 #ifdef ZCL_USING_DOOR_LOCK_CLUSTER_SERVER
         DlLockState lockState;
-#endif
+#endif //ZCL_USING_DOOR_LOCK_CLUSTER_SERVER
 
 #ifdef ZCL_USING_WINDOW_COVERING_CLUSTER_SERVER
      void (*setPosition)(EndpointId, chip::app::Clusters::WindowCovering::NPercent100ths); // Function pointer to set the position
@@ -202,7 +203,7 @@ void dic_incoming_data_cb(void* arg, const char* topic, uint16_t topic_len, cons
     {
     _value = std::stoi(value);
     }
-    SILABS_LOG("_cmd=%s, _value=%d",_cmd,_value);
+    SILABS_LOG("_value=%d",_value);
 
 #ifdef ENABLE_AWS_OTA_FEAT
     if(strcmp(cmd, "ota")==0)
@@ -275,5 +276,70 @@ void SubscribeMQTT(intptr_t context){
 void subscribeCB(void){
      chip::DeviceLayer::PlatformMgr().ScheduleWork(SubscribeMQTT, reinterpret_cast<intptr_t>(nullptr));
 }
-    } //control
+
+#ifdef ZCL_USING_THERMOSTAT_CLUSTER_SERVER
+void AttributeHandler(EndpointId endpointId,AttributeId attributeId){
+  switch (attributeId)
+  {
+    case ThermAttr::LocalTemperature::Id: {
+      int8_t CurrentTemp = TempMgr().GetCurrentTemp();
+      char buffer[MSG_SIZE];
+      itoa(CurrentTemp, buffer, DECIMAL);
+      dic_sendmsg("LocalTemperature/Temp",(const char *)(buffer));    
+    }
+    break;
+
+    case ThermAttr::OccupiedCoolingSetpoint::Id: {
+      int8_t coolingTemp =  TempMgr().GetCoolingSetPoint();
+      char buffer[MSG_SIZE];
+      itoa(coolingTemp, buffer, DECIMAL);
+      dic_sendmsg("OccupiedCoolingSetpoint/coolingTemp",(const char *)(buffer));     
+    }
+    break;
+
+    case ThermAttr::OccupiedHeatingSetpoint::Id: {
+      int8_t heatingTemp = TempMgr().GetHeatingSetPoint();
+      char buffer[MSG_SIZE];
+      itoa(heatingTemp, buffer, DECIMAL);
+      dic_sendmsg("OccupiedHeatingSetpoint/heatingTemp", (const char *)(buffer));
+    }
+    break;
+
+    case ThermAttr::SystemMode::Id: {
+      int8_t mode = TempMgr().GetMode();
+      char buffer[MSG_SIZE];
+      const char* Mode;
+      switch (mode){
+        case 0:
+            Mode = "OFF";
+            break;
+        case 1:
+            Mode = "HEAT&COOL";
+            break;
+        case 3:
+            Mode ="COOL";
+            break;
+        case 4:
+            Mode ="HEAT";
+            break;
+        default:
+            Mode = "INVALID MODE";
+            break;
+      }
+      uint16_t current_temp = TempMgr().GetCurrentTemp();
+      itoa(current_temp, buffer, DECIMAL);
+      dic_sendmsg("thermostat/systemMode", Mode);
+      dic_sendmsg("thermostat/currentTemp", (const char *)(buffer));
+    }
+    break;
+
+    default: {
+      SILABS_LOG("Unhandled thermostat attribute %x", attributeId);
+      return;
+    }
+    break;
+  }
+}
+#endif //ZCL_USING_THERMOSTAT_CLUSTER_SERVER
+} //control
 } //dic

@@ -13,8 +13,9 @@ define:
 source:
   - path: src/app/SimpleSubscriptionResumptionStorage.cpp
 include:
-  - path: src/app
-    file_list: SimpleSubscriptionResumptionStorage.h
+- path: src/app
+  file_list: 
+  - path: SimpleSubscriptionResumptionStorage.h
 requires:
   - name: matter_sed
 provides:

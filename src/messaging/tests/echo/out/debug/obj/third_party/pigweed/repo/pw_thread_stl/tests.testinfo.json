@@ -1,0 +1,6 @@
+[
+  {
+    "name": "//third_party/pigweed/repo/pw_thread_stl:tests",
+    "type": "self"
+  }
+]

@@ -39,6 +39,7 @@ extern "C" {
 #endif
 
 int _close(int file);
+int _open(int file);
 int _fstat(int file, struct stat * st);
 int _isatty(int file);
 int _lseek(int file, int ptr, int dir);
@@ -56,6 +57,22 @@ int _write(int file, const char * ptr, int len);
  *  Returns 0 when the file is closed.
  **************************************************************************/
 int __attribute__((weak)) _close(int file)
+{
+    (void) file;
+    return 0;
+}
+
+/**************************************************************************
+ * @brief
+ *  Open a file.
+ *
+ * @param[in] file
+ *  File you want to open.
+ *
+ * @return
+ *  Returns 0 when the file is opened.
+ **************************************************************************/
+int __attribute__((weak)) _open(int file)
 {
     (void) file;
     return 0;
@@ -174,7 +191,7 @@ int __attribute__((weak)) _read(int file, char * ptr, int len)
 {
     (void) file;
 #if SILABS_LOG_OUT_UART
-    return = uartConsoleRead(ptr, len);
+    return uartConsoleRead(ptr, len);
 #else
     (void) ptr;
     (void) len;

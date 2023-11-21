@@ -1,0 +1,53 @@
+{
+  "gn_target_name": "//scripts/build:build_examples",
+  "inputs": [
+    "../../../../../../scripts/build/testdata/all_targets_linux_x64.txt",
+    "../../../../../../scripts/build/testdata/dry_run_android-arm64-chip-tool.txt",
+    "../../../../../../scripts/build/testdata/dry_run_efr32-brd4161a-light-rpc-no-version.txt",
+    "../../../../../../scripts/build/testdata/dry_run_esp32-devkitc-light-rpc.txt",
+    "../../../../../../scripts/build/testdata/dry_run_esp32-m5stack-all-clusters-minimal-rpc-ipv6only.txt",
+    "../../../../../../scripts/build/testdata/dry_run_linux-arm64-chip-tool-ipv6only-clang.txt",
+    "../../../../../../scripts/build/testdata/dry_run_linux-arm64-ota-requestor-nodeps-ipv6only.txt",
+    "../../../../../../scripts/build/testdata/dry_run_linux-x64-all-clusters-coverage.txt",
+    "../../../../../../scripts/build/testdata/dry_run_nrf-nrf52840dk-pump.txt",
+    "../../../../../../scripts/build/testdata/dry_run_openiotsdk-lock.txt",
+    "../../../../../../scripts/build/testdata/dry_run_openiotsdk-shell.txt"
+  ],
+  "setup_sources": [
+    "../../../../../../scripts/build/setup.py"
+  ],
+  "sources": [
+    "../../../../../../scripts/build/build/__init__.py",
+    "../../../../../../scripts/build/build/target.py",
+    "../../../../../../scripts/build/build/targets.py",
+    "../../../../../../scripts/build/build_examples.py",
+    "../../../../../../scripts/build/builders/__init__.py",
+    "../../../../../../scripts/build/builders/ameba.py",
+    "../../../../../../scripts/build/builders/android.py",
+    "../../../../../../scripts/build/builders/bouffalolab.py",
+    "../../../../../../scripts/build/builders/builder.py",
+    "../../../../../../scripts/build/builders/efr32.py",
+    "../../../../../../scripts/build/builders/esp32.py",
+    "../../../../../../scripts/build/builders/genio.py",
+    "../../../../../../scripts/build/builders/gn.py",
+    "../../../../../../scripts/build/builders/host.py",
+    "../../../../../../scripts/build/builders/imx.py",
+    "../../../../../../scripts/build/builders/infineon.py",
+    "../../../../../../scripts/build/builders/k32w.py",
+    "../../../../../../scripts/build/builders/mbed.py",
+    "../../../../../../scripts/build/builders/mw320.py",
+    "../../../../../../scripts/build/builders/nrf.py",
+    "../../../../../../scripts/build/builders/openiotsdk.py",
+    "../../../../../../scripts/build/builders/qpg.py",
+    "../../../../../../scripts/build/builders/telink.py",
+    "../../../../../../scripts/build/builders/tizen.py",
+    "../../../../../../scripts/build/runner/__init__.py",
+    "../../../../../../scripts/build/runner/printonly.py",
+    "../../../../../../scripts/build/runner/shell.py"
+  ],
+  "tests": [
+    "../../../../../../scripts/build/test.py",
+    "../../../../../../scripts/build/test_glob_matcher.py",
+    "../../../../../../scripts/build/build/test_target.py"
+  ]
+}

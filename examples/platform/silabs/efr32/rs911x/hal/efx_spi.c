@@ -42,11 +42,14 @@
 #include "sl_spidrv_instances.h"
 #include "sl_status.h"
 
-#include "efr32_utils.h"
+#include "silabs_utils.h"
 #include "spi_multiplex.h"
 #include "wfx_host_events.h"
 #include "wfx_rsi.h"
 
+#define DEFAULT_SPI_TRASFER_MODE 0
+// Macro to drive semaphore block minimun timer in milli seconds
+#define RSI_SEM_BLOCK_MIN_TIMER_VALUE_MS (50)
 #if defined(SL_CATALOG_POWER_MANAGER_PRESENT)
 #include "sl_power_manager.h"
 #endif
@@ -60,6 +63,10 @@
 #include "sl_wifi_callback_framework.h"
 #include "sl_wifi_constants.h"
 #include "sl_wifi_types.h"
+
+// macro to drive semaphore block minimum timer in milli seconds
+// ported from rsi_hal.h (rs911x)
+#define RSI_SEM_BLOCK_MIN_TIMER_VALUE_MS (50)
 #else
 #include "rsi_board_configuration.h"
 #include "rsi_driver.h"
@@ -75,9 +82,6 @@
 #include "sl_mx25_flash_shutdown_usart_config.h"
 #endif // SL_MX25CTRL_MUX
 
-#define DEFAULT_SPI_TRASFER_MODE 0
-// Macro to drive semaphore block minimun timer in milli seconds
-#define RSI_SEM_BLOCK_MIN_TIMER_VALUE_MS (50)
 #if defined(EFR32MG12)
 #include "em_usart.h"
 
@@ -85,7 +89,6 @@
 
 #elif defined(EFR32MG24)
 #include "em_eusart.h"
-#include "sl_device_init_dpll.h" // SLC-FIX
 #include "sl_spidrv_eusart_exp_config.h"
 
 #define SL_SPIDRV_HANDLE sl_spidrv_eusart_exp_handle
@@ -108,6 +111,16 @@ static SemaphoreHandle_t spiTransferLock;
 static TaskHandle_t spiInitiatorTaskHandle = NULL;
 
 static uint32_t dummy_buffer; /* Used for DMA - when results don't matter */
+
+#if defined(EFR32MG12)
+#include "sl_spidrv_exp_config.h"
+extern SPIDRV_Handle_t sl_spidrv_exp_handle;
+#define SL_SPIDRV_HANDLE sl_spidrv_exp_handle
+#elif defined(EFR32MG24)
+#include "spi_multiplex.h"
+#else
+#error "Unknown platform"
+#endif
 
 // variable to identify spi configured for expansion header
 // EUSART configuration available on the SPIDRV
@@ -142,7 +155,6 @@ void sl_wfx_host_gpio_init(void)
     GPIOINT_Init();
     GPIO_PinModeSet(WFX_INTERRUPT_PIN.port, WFX_INTERRUPT_PIN.pin, gpioModeInputPull, PINOUT_CLEAR);
     GPIO_ExtIntConfig(WFX_INTERRUPT_PIN.port, WFX_INTERRUPT_PIN.pin, SL_WFX_HOST_PINOUT_SPI_IRQ, true, false, true);
-    GPIOINT_CallbackRegister(SL_WFX_HOST_PINOUT_SPI_IRQ, rsi_gpio_irq_cb);
     GPIO_IntDisable(1 << SL_WFX_HOST_PINOUT_SPI_IRQ); /* Will be enabled by RSI */
 
     // Change GPIO interrupt priority (FreeRTOS asserts unless this is done here!)
@@ -173,6 +185,14 @@ void sl_wfx_host_reset_chip(void)
     vTaskDelay(pdMS_TO_TICKS(3));
 }
 
+void gpio_interrupt(uint8_t interrupt_number)
+{
+  UNUSED_PARAMETER(interrupt_number);
+#ifdef CHIP_9117
+  sl_si91x_host_set_bus_event(NCP_HOST_BUS_RX_EVENT);
+#endif
+}
+
 /*****************************************************************
  * @fn   void rsi_hal_board_init(void)
  * @brief
@@ -195,21 +215,32 @@ void rsi_hal_board_init(void)
 #endif /* SL_SPICTRL_MUX */
 
     /* GPIO INIT of MG12 & MG24 : Reset, Wakeup, Interrupt */
-    SILABS_LOG("RSI_HAL: init GPIO");
     sl_wfx_host_gpio_init();
 
     /* Reset of Wifi chip */
-    SILABS_LOG("RSI_HAL: Reset Wifi");
     sl_wfx_host_reset_chip();
-    SILABS_LOG("RSI_HAL: Init done");
 }
 
-// wifi-sdk
-sl_status_t sl_si91x_host_bus_init(void)
+#if (CHIP_9117)
+sl_status_t sl_si91x_host_init(void)
 {
-    rsi_hal_board_init();
-    return SL_STATUS_OK;
+  rsi_hal_board_init();
+
+  // Start reset line low
+  GPIO_PinModeSet(RESET_PIN.port, RESET_PIN.pin, gpioModePushPull, 0);
+
+  // configure packet pending interrupt priority
+  NVIC_SetPriority(GPIO_ODD_IRQn, PACKET_PENDING_INT_PRI);
+
+  // Configure interrupt, sleep and wake confirmation pins
+  GPIOINT_CallbackRegister(INTERRUPT_PIN.pin, gpio_interrupt);
+  GPIO_PinModeSet(INTERRUPT_PIN.port, INTERRUPT_PIN.pin, gpioModeInputPullFilter, 0);
+  GPIO_ExtIntConfig(INTERRUPT_PIN.port, INTERRUPT_PIN.pin, INTERRUPT_PIN.pin, true, false, true);
+  GPIO_PinModeSet(SLEEP_CONFIRM_PIN.port, SLEEP_CONFIRM_PIN.pin, gpioModeWiredOrPullDown, 1);
+  GPIO_PinModeSet(WAKE_INDICATOR_PIN.port, WAKE_INDICATOR_PIN.pin, gpioModeWiredOrPullDown, 0);
+  return SL_STATUS_OK;
 }
+#endif
 
 void sl_si91x_host_enable_high_speed_bus()
 {
@@ -229,7 +260,6 @@ void SPIDRV_SetBaudrate(uint32_t baudrate)
 
 sl_status_t sl_wfx_host_spi_cs_assert(void)
 {
-    // SILABS_LOG("sl_wfx_host_spi_cs_assert started.");
     xSemaphoreTake(spi_sem_sync_hdl, portMAX_DELAY);
 
     if (!spi_enabled) // Reduce sl_spidrv_init_instances
@@ -240,13 +270,11 @@ sl_status_t sl_wfx_host_spi_cs_assert(void)
 #endif // EFR32MG24
         spi_enabled = true;
     }
-    // SILABS_LOG("sl_wfx_host_spi_cs_assert completed.");
     return SL_STATUS_OK;
 }
 
 sl_status_t sl_wfx_host_spi_cs_deassert(void)
 {
-    // SILABS_LOG("sl_wfx_host_spi_cs_deassert started.");
     if (spi_enabled)
     {
         if (ECODE_EMDRV_SPIDRV_OK != SPIDRV_DeInit(SL_SPIDRV_HANDLE))
@@ -262,7 +290,6 @@ sl_status_t sl_wfx_host_spi_cs_deassert(void)
         spi_enabled = false;
     }
     xSemaphoreGive(spi_sem_sync_hdl);
-    // SILABS_LOG("sl_wfx_host_spi_cs_deassert completed.");
     return SL_STATUS_OK;
 }
 #endif // SL_SPICTRL_MUX
@@ -285,17 +312,11 @@ sl_status_t sl_wfx_host_spiflash_cs_deassert(void)
 sl_status_t sl_wfx_host_pre_bootloader_spi_transfer(void)
 {
 #if SL_SPICTRL_MUX
-    xSemaphoreTake(spi_sem_sync_hdl, portMAX_DELAY);
-    if (spi_enabled)
+    if (sl_wfx_host_spi_cs_deassert() != SL_STATUS_OK)
     {
-        if (ECODE_EMDRV_SPIDRV_OK != SPIDRV_DeInit(SL_SPIDRV_HANDLE))
-        {
-            xSemaphoreGive(spi_sem_sync_hdl);
-            SILABS_LOG("%s error.", __func__);
-            return SL_STATUS_FAIL;
-        }
-        spi_enabled = false;
+        return SL_STATUS_FAIL;
     }
+    xSemaphoreTake(spi_sem_sync_hdl, portMAX_DELAY);
 #endif // SL_SPICTRL_MUX
     // bootloader_init takes care of SPIDRV_Init()
     int32_t status = bootloader_init();
@@ -340,17 +361,11 @@ sl_status_t sl_wfx_host_post_bootloader_spi_transfer(void)
 sl_status_t sl_wfx_host_pre_lcd_spi_transfer(void)
 {
 #if SL_SPICTRL_MUX
-    xSemaphoreTake(spi_sem_sync_hdl, portMAX_DELAY);
-    if (spi_enabled)
+    if (sl_wfx_host_spi_cs_deassert() != SL_STATUS_OK)
     {
-        if (ECODE_EMDRV_SPIDRV_OK != SPIDRV_DeInit(SL_SPIDRV_HANDLE))
-        {
-            xSemaphoreGive(spi_sem_sync_hdl);
-            SILABS_LOG("%s error.", __func__);
-            return SL_STATUS_FAIL;
-        }
-        spi_enabled = false;
+        return SL_STATUS_FAIL;
     }
+    xSemaphoreTake(spi_sem_sync_hdl, portMAX_DELAY);
 #endif // SL_SPICTRL_MUX
     // sl_memlcd_refresh takes care of SPIDRV_Init()
     if (SL_STATUS_OK != sl_memlcd_refresh(sl_memlcd_get()))
@@ -398,7 +413,7 @@ static void spi_dmaTransfertComplete(SPIDRV_HandleData_t * pxHandle, Ecode_t tra
 }
 
 /*********************************************************************
- * @fn         int16_t rsi_spi_transfer(uint8_t *ptrBuf,uint16_t bufLen,uint8_t *valBuf,uint8_t mode)
+ * @fn         int16_t rsi_spi_transfer(uint8_t *ptrBuf, uint16_t bufLen, uint8_t *valBuf, uint8_t mode)
  * @param[in]  uint8_t *tx_buff, pointer to the buffer with the data to be transfered
  * @param[in]  uint8_t *rx_buff, pointer to the buffer to store the data received
  * @param[in]  uint16_t transfer_length, Number of bytes to send and receive
@@ -418,13 +433,13 @@ int16_t rsi_spi_transfer(uint8_t * tx_buf, uint8_t * rx_buf, uint16_t xlen, uint
     */
     if (xlen > 4 && (tx_buf == NULL && rx_buf == NULL))
     {
-        return RSI_ERROR_INVALID_PARAM; // Ensuring that the dummy buffer won't corrupt the memory
+      return RSI_ERROR_INVALID_PARAM; // Ensuring that the dummy buffer won't corrupt the memory
     }
 
     if (xlen <= MIN_XLEN || (tx_buf == NULL && rx_buf == NULL))
     {
-        rx_buf = (uint8_t *) &dummy_buffer;
-        tx_buf = (uint8_t *) &dummy_buffer;
+        rx_buf = (uint8_t *)&dummy_buffer;
+        tx_buf = (uint8_t *)&dummy_buffer;
     }
 
     (void) mode; // currently not used;
@@ -481,6 +496,7 @@ int16_t rsi_spi_transfer(uint8_t * tx_buf, uint8_t * rx_buf, uint16_t xlen, uint
     return rsiError;
 }
 
+#ifdef CHIP_9117
 /*********************************************************************
  * @fn   int16_t sl_si91x_host_spi_transfer(uint8_t *tx_buf, uint8_t *rx_buf, uint16_t xlen)
  * @param[in]  uint8_t *tx_buff, pointer to the buffer with the data to be transferred
@@ -493,5 +509,43 @@ int16_t rsi_spi_transfer(uint8_t * tx_buf, uint8_t * rx_buf, uint16_t xlen, uint
  **************************************************************************/
 sl_status_t sl_si91x_host_spi_transfer(const void * tx_buf, void * rx_buf, uint16_t xlen)
 {
-    return (rsi_spi_transfer((uint8_t *) tx_buf, rx_buf, xlen, DEFAULT_SPI_TRASFER_MODE));
+    return (rsi_spi_transfer((uint8_t *) tx_buf, rx_buf, xlen, RSI_MODE_8BIT));
 }
+
+
+void sl_si91x_host_set_sleep_indicator(void)
+{
+  GPIO_PinOutSet(SLEEP_CONFIRM_PIN.port, SLEEP_CONFIRM_PIN.pin);
+}
+
+uint32_t sl_si91x_host_get_wake_indicator(void)
+{
+  return GPIO_PinInGet(WAKE_INDICATOR_PIN.port, WAKE_INDICATOR_PIN.pin);
+}
+
+void sl_si91x_host_hold_in_reset(void)
+{
+  GPIO_PinModeSet(RESET_PIN.port, RESET_PIN.pin, gpioModePushPull, 1);
+  GPIO_PinOutClear(RESET_PIN.port, RESET_PIN.pin);
+}
+
+void sl_si91x_host_release_from_reset(void)
+{
+  GPIO_PinModeSet(RESET_PIN.port, RESET_PIN.pin, gpioModeWiredOrPullDown, 1);
+}
+
+void sl_si91x_host_enable_bus_interrupt(void)
+{
+  NVIC_EnableIRQ(GPIO_ODD_IRQn);
+}
+
+void sl_si91x_host_disable_bus_interrupt(void)
+{
+  NVIC_DisableIRQ(GPIO_ODD_IRQn);
+}
+
+void sl_si91x_host_clear_sleep_indicator(void)
+{
+  GPIO_PinOutClear(SLEEP_CONFIRM_PIN.port, SLEEP_CONFIRM_PIN.pin);
+}
+#endif // CHIP_9117

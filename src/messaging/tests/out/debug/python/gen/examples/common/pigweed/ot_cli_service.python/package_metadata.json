@@ -1,0 +1,23 @@
+{
+  "generate_setup": {
+    "metadata": {
+      "name": "examples_common_pigweed_ot_cli_service",
+      "version": "0.0.1"
+    }
+  },
+  "gn_target_name": "//examples/common/pigweed:ot_cli_service.python",
+  "inputs": [
+
+  ],
+  "setup_sources": [
+    "python/gen/examples/common/pigweed/ot_cli_service.python.generated_python_package/pyproject.toml",
+    "python/gen/examples/common/pigweed/ot_cli_service.python.generated_python_package/setup.cfg"
+  ],
+  "sources": [
+    "python/gen/examples/common/pigweed/ot_cli_service.python.generated_python_package/ot_cli_service/ot_cli_service_pb2.py",
+    "python/gen/examples/common/pigweed/ot_cli_service.python.generated_python_package/ot_cli_service/ot_cli_service_pb2.pyi"
+  ],
+  "tests": [
+
+  ]
+}

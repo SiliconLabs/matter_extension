@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Ias Zone Client Cluster
 id: matter_ias_zone_client
+package: Matter
 label: Ias Zone Client Cluster
 quality: production
 provides:

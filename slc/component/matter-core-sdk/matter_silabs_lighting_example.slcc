@@ -1,0 +1,36 @@
+category: Matter|Core
+define:
+-   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: DISPLAY_ENABLED
+-   name: QR_CODE_ENABLED
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
+description: matter_silabs_lighting_example
+id: matter_silabs_lighting_example
+include:
+-   path: examples/common/QRCode/repo/c
+-   path: examples/lighting-app/silabs/include
+-   path: examples/platform/silabs
+-   path: examples/platform/silabs/display
+-   path: examples/providers
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+-   path: zzz_generated/app-common
+label: matter_silabs_lighting_example
+package: Matter
+provides:
+-   name: matter_matter_silabs_lighting_example
+quality: production
+source:
+-   path: examples/lighting-app/silabs/src/AppTask.cpp
+-   path: examples/lighting-app/silabs/src/LightingManager.cpp
+-   path: examples/lighting-app/silabs/src/ZclCallbacks.cpp
+-   path: examples/platform/silabs/main.cpp
+ui_hints:
+    visibility: never

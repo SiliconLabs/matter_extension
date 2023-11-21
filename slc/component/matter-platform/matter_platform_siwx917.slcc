@@ -6,17 +6,20 @@ category: "Matter-WiFi|Platform"
 quality: production
 
 config_file:
-  - path: examples/platform/silabs/SiWx917/FreeRTOSConfig.h
-    override:
-      component: freertos
+  - override:
+      component: "%extension-wiseconnect3_sdk%board_configuration_headers"
       file_id: freertos_config
+    path: examples/platform/silabs/FreeRTOSConfig.h
 
 requires:
+  - name: matter_provision
   - name: matter_siwx917
   - name: matter_siwx917_common
   - name: siwx917_soc_custom_startup
   - name: device_init_nvic
   - name: si91x_debug
+  - name: sl_system_init
+  - name: nvm3_default
 
 provides:
   - name: matter_platform_siwx917
@@ -36,7 +39,7 @@ include:
   - path: examples/platform/silabs
     file_list:
     - path: heap_4_silabs.h
-    - path: matter_config.h
+    - path: MatterConfig.h
   - path: examples/platform/silabs/SiWx917
     file_list:
     - path: siwx917_utils.h
@@ -45,13 +48,11 @@ include:
     - path: board_config.h
     - path: main_task.h
 source:
-  - path: examples/platform/silabs/SiWx917/BaseApplication.cpp
-    unless: ["window_app"]
-  - path: examples/platform/silabs/SiWx917/siwx917_utils.cpp
+  - path: examples/platform/silabs/BaseApplication.cpp
+  - path: examples/platform/silabs/silabs_utils.cpp
   - path: examples/platform/silabs/heap_4_silabs.c
-  - path: examples/platform/silabs/SiWx917/init_ccpPlatform.cpp
-  - path: examples/platform/silabs/SiWx917/matter_config.cpp
-  - path: examples/platform/silabs/SiWx917/SiWx917/hal/rsi_hal_mcu_m4.c
+  - path: examples/platform/silabs/MatterConfig.cpp
+  - path: examples/platform/silabs/SoftwareFaultReports.cpp
 define:
   - name: SL_WFX_CONFIG_SCAN
     value: 1

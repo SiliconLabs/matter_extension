@@ -68,8 +68,9 @@ void
 mqtt_output_send(struct mqtt_ringbuf_t *rb, mqtt_transport_intf_t *trans);
 
 #ifdef MQTT_DEBUG
-extern void efr32Log(const char * aFormat, ...);
-#define MQTT_DEBUGF(x) efr32Log x;
+#include "silabs_utils.h"
+void silabsLog(const char * aFormat, ...);
+#define MQTT_DEBUGF(x) silabsLog x;
 #else
 #define MQTT_DEBUGF(x)
 #endif

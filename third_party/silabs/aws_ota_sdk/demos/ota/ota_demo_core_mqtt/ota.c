@@ -35,11 +35,8 @@
 #include <errno.h>
 #include <assert.h>
 
-#ifdef SIWX_917
-#include "siwx917_utils.h"
-#else
-#include "efr32_utils.h"
-#endif
+#include "silabs_utils.h"
+
 /* OTA agent includes. */
 #include "ota.h"
 
@@ -1307,7 +1304,6 @@ static OtaErr_t processDataHandler( const OtaEventData_t * pEventData )
         {
             /* Start the request timer. */
             ( void ) otaAgent.pOtaInterface->os.timer.start( OtaRequestTimer, "OtaRequestTimer", otaconfigFILE_REQUEST_WAIT_MS, otaTimerCallback );
-            SILABS_LOG("processDataHandler request timer started");
             eventMsg.eventId = OtaAgentEventRequestFileBlock;
 
             if( OTA_SignalEvent( &eventMsg ) == false )
@@ -1431,7 +1427,6 @@ static OtaErr_t jobNotificationHandler( const OtaEventData_t * pEventData )
 
     /* Stop the request timer. */
     ( void ) otaAgent.pOtaInterface->os.timer.stop( OtaRequestTimer );
-    SILABS_LOG("jobNotificationHandler request timer stopped");
     /* Abort the current job. */
     ( void ) otaAgent.pOtaInterface->pal.setPlatformImageState( &( otaAgent.fileContext ), OtaImageStateAborted );
     ( void ) otaClose( &( otaAgent.fileContext ) );
@@ -1578,7 +1573,6 @@ static DocParseErr_t validateJSON( const char * pJson,
     /* Check JSON document pointer is valid.*/
     if( pJson == NULL )
     {
-        SILABS_LOG( "Parameter check failed: pJson is NULL." );
         err = DocParseErrNullDocPointer;
     }
 
@@ -1624,10 +1618,6 @@ static DocParseErr_t decodeAndStoreKey( const char * pValueInJson,
     if( base64Status != Base64Success )
     {
         /* Stop processing on error. */
-        SILABS_LOG( "Failed to decode Base64 data: "
-                    "base64Decode returned error: "
-                    "error=%d",
-                    base64Status );
         err = DocParseErrBase64Decode;
     }
     else
@@ -2624,8 +2614,6 @@ static IngestResult_t processDataBlock( OtaFileContext_t * pFileContext,
         SILABS_LOG("processDataBlock: eIngestResult == IngestResultUninitialized");
         if( ( ( pFileContext->pRxBlockBitmap[ byte ] ) & bitMask ) == 0U )
         {
-            SILABS_LOG( "Received a duplicate block: Block index=%u, Block size=%u",
-                       uBlockIndex, uBlockSize );
             SILABS_LOG( "Number of blocks remaining: %u",
                         pFileContext->blocksRemaining );
 
@@ -2747,7 +2735,7 @@ static IngestResult_t ingestDataBlockCleanup( OtaFileContext_t * pFileContext,
                                               OtaPalStatus_t * pCloseResult )
 {
     IngestResult_t eIngestResult = IngestResultAccepted_Continue;
-    OtaPalMainStatus_t otaPalMainErr;
+    //OtaPalMainStatus_t otaPalMainErr;
     OtaPalSubStatus_t otaPalSubErr = 0;
 
     ( void ) otaPalSubErr; /* For suppressing compiler-warning: unused variable. */
@@ -2758,7 +2746,6 @@ static IngestResult_t ingestDataBlockCleanup( OtaFileContext_t * pFileContext,
 
         /* Stop the request timer. */
         ( void ) otaAgent.pOtaInterface->os.timer.stop( OtaRequestTimer );
-        SILABS_LOG("ingestDataBlockCleanup request timer stopped");
         /* Free the bitmap now that we're done with the download. */
         if( ( pFileContext->pRxBlockBitmap != NULL ) && ( pFileContext->blockBitmapMaxSize == 0u ) )
         {
@@ -2806,7 +2793,6 @@ static IngestResult_t ingestDataBlockCleanup( OtaFileContext_t * pFileContext,
         }
 #endif
         eIngestResult = IngestResultFileComplete;
-        SILABS_LOG( "IngestResultFileComplete" );
     }
     else
     {
@@ -2873,19 +2859,17 @@ static IngestResult_t ingestDataBlock( OtaFileContext_t * pFileContext,
  */
 static void agentShutdownCleanup( void )
 {
-    uint32_t index;
+   // uint32_t index;
 
     otaAgent.state = OtaAgentStateShuttingDown;
 
     /* Stop the timer in the handler thread to make sure no start timer will be called in the handler. */
     /* Stop and delete the request timer. */
     ( void ) otaAgent.pOtaInterface->os.timer.stop( OtaRequestTimer );
-    SILABS_LOG("agentShutdownCleanup request timer stopped");
     ( void ) otaAgent.pOtaInterface->os.timer.delete( OtaRequestTimer );
 
     /* Stop and delete the self-test timer. */
     ( void ) otaAgent.pOtaInterface->os.timer.stop( OtaSelfTestTimer );
-    SILABS_LOG("agentShutdownCleanup self timer stopped");
     ( void ) otaAgent.pOtaInterface->os.timer.delete( OtaSelfTestTimer );
 
     /* Control plane cleanup related to selected protocol. */
@@ -3031,12 +3015,6 @@ static void receiveAndProcessOtaEvent( void )
 
             if( i < transitionTableLen )
             {
-                SILABS_LOG( "Found valid event handler for state transition: "
-                            "State=[%s], "
-                            "Event=[%s]",
-                            pOtaAgentStateStrings[ otaAgent.state ],
-                            pOtaEventStrings[ eventMsg.eventId ] );
-
                 /*
                  * Execute the handler function.
                  */
@@ -3127,13 +3105,11 @@ bool OTA_SignalEvent( const OtaEventMsg_t * const pEventMsg )
         {
             otaAgent.statistics.otaPacketsReceived++;
         }
-        SILABS_LOG("Sending OTA singal event Event ID : %d", pEventMsg->eventId);
         err = otaAgent.pOtaInterface->os.event.send( NULL, pEventMsg, 0 );
 
         if( err == OtaOsSuccess )
         {
             retVal = true;
-            SILABS_LOG( "Added event message to OTA event queue." );
 
             if( pEventMsg->eventId == OtaAgentEventReceivedFileBlock )
             {
@@ -3143,10 +3119,6 @@ bool OTA_SignalEvent( const OtaEventMsg_t * const pEventMsg )
         else
         {
             retVal = false;
-            SILABS_LOG( "Failed to add even message to OTA event queue: "
-                        "send returned error: "
-                        "OtaOsStatus_t=%s",
-                        OTA_OsStatus_strerror( err ) );
 
             if( pEventMsg->eventId == OtaAgentEventReceivedFileBlock )
             {
@@ -3264,7 +3236,6 @@ static void resetEventQueue( void )
 
     while( otaAgent.pOtaInterface->os.event.recv( NULL, &eventMsg, 0 ) == OtaOsSuccess )
     {
-        SILABS_LOG("Event(%d) is dropped.\r\n", eventMsg.eventId );
 
         /* Call handleUnexpectedEvents to notify user to release resources if necessary. */
         handleUnexpectedEvents( &eventMsg );
@@ -3596,11 +3567,9 @@ OtaErr_t OTA_Suspend( void )
     {
         /* Stop the request timer. */
         ( void ) otaAgent.pOtaInterface->os.timer.stop( OtaRequestTimer );
-        SILABS_LOG("OTA_Suspend request timer stopped");
 
         /* Stop the self-test timer. */
         ( void ) otaAgent.pOtaInterface->os.timer.stop( OtaSelfTestTimer );
-        SILABS_LOG("OTA_Suspend self timer stopped");
 
         /*
          * Send event to OTA agent task.
@@ -3641,14 +3610,12 @@ OtaErr_t OTA_Resume( void )
                                                              "OtaSelfTestTimer",
                                                              otaconfigSELF_TEST_RESPONSE_WAIT_MS,
                                                              otaTimerCallback );
-            SILABS_LOG("OTA_Resume self timer started");
         }
 
         ( void ) otaAgent.pOtaInterface->os.timer.start( OtaRequestTimer,
                                                          "OtaRequestTimer",
                                                          otaconfigFILE_REQUEST_WAIT_MS,
                                                          otaTimerCallback );
-        SILABS_LOG("OTA_Resume request timer started");
         /*
          * Send event to OTA agent task.
          */

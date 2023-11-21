@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Groups Client Cluster
 id: matter_groups_client
+package: Matter
 label: Groups Client Cluster
 quality: production
 provides:

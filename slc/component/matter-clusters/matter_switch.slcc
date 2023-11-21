@@ -2,6 +2,7 @@
 category: Clusters|CHIP
 description: Implementation of the Switch Server Cluster
 id: matter_switch
+package: Matter
 label: Switch Server Cluster
 quality: production
 provides:

@@ -51,6 +51,10 @@
 // <o KVS_MAX_ENTRIES> Maximum amount of KVS Entries
 #define KVS_MAX_ENTRIES 255
 
+// GN flag that needs to be defined for Matter 1.2 to build
+// See: https://github.com/project-chip/connectedhomeip/pull/28149 add chip_enable_read_client in common_flags.gni
+#define CHIP_CONFIG_ENABLE_READ_CLIENT 1
+
 // <<< end of configuration section >>>
 
 #endif // SL_MATTER_CONFIG_H

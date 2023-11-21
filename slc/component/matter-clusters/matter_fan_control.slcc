@@ -2,6 +2,7 @@
 category: Clusters|HVAC
 description: Implementation of the Fan Control Server Cluster
 id: matter_fan_control
+package: Matter
 label: Fan Control Server Cluster
 quality: production
 provides:

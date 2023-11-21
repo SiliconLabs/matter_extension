@@ -1,5 +1,6 @@
 id: rs911x_ncp_common
-label: rs911x_ncp_common
+label: RS911x NCP Common
+quality: production
 description: >
   Adds support for the HAL and WiFi Driver layer for rs911x NCP devices
 package: Matter

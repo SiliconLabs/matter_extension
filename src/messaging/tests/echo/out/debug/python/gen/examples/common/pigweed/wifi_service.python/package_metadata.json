@@ -1,0 +1,23 @@
+{
+  "generate_setup": {
+    "metadata": {
+      "name": "examples_common_pigweed_wifi_service",
+      "version": "0.0.1"
+    }
+  },
+  "gn_target_name": "//examples/common/pigweed:wifi_service.python",
+  "inputs": [
+
+  ],
+  "setup_sources": [
+    "python/gen/examples/common/pigweed/wifi_service.python.generated_python_package/pyproject.toml",
+    "python/gen/examples/common/pigweed/wifi_service.python.generated_python_package/setup.cfg"
+  ],
+  "sources": [
+    "python/gen/examples/common/pigweed/wifi_service.python.generated_python_package/wifi_service/wifi_service_pb2.py",
+    "python/gen/examples/common/pigweed/wifi_service.python.generated_python_package/wifi_service/wifi_service_pb2.pyi"
+  ],
+  "tests": [
+
+  ]
+}

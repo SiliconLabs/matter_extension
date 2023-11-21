@@ -1,0 +1,36 @@
+{
+  "files": [
+    {
+      "sources": [
+        "chip/ChipBluezMgr.py",
+        "chip/ChipCoreBluetoothMgr.py",
+        "chip/ChipReplStartup.py",
+        "chip-device-ctrl.py",
+        "chip-repl.py"
+      ],
+      "src_dir": "../../../../../../../../controller/python"
+    },
+    {
+      "sources": [
+        "LICENSE"
+      ],
+      "src_dir": "../../../../../../../../../"
+    }
+  ],
+  "package_reqs": [
+    "coloredlogs",
+    "ipython!=8.1.0",
+    "rich",
+    "ipykernel",
+    "mobly",
+    "dbus-python==1.2.18",
+    "pygobject"
+  ],
+  "packages": [
+    "chip"
+  ],
+  "scripts": [
+    "chip-device-ctrl.py",
+    "chip-repl.py"
+  ]
+}

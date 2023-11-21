@@ -58,10 +58,10 @@ static_library("SiWx917") {
     "${silabs_platform_dir}/platformAbstraction/WiseMcuSpam.cpp",
     "../../FreeRTOS/SystemTimeSupport.cpp",
     "../../SingletonConfigurationManager.cpp",
-    "BLEManagerImpl.cpp",
-    "bluetooth/ble_config.h",
-    "bluetooth/wfx_sl_ble_init.c",
-    "bluetooth/wfx_sl_ble_init.h",
+    "../rs911x/BLEManagerImpl.cpp",
+    "../rs911x/rsi_ble_config.h",
+    "../rs911x/wfx_sl_ble_init.c",
+    "../rs911x/wfx_sl_ble_init.h",
     "ConfigurationManagerImpl.cpp",
     "PlatformManagerImpl.cpp",
   ]
@@ -75,6 +75,7 @@ static_library("SiWx917") {
   }
 
   public_deps = [ "${chip_root}/src/platform:platform_base" ]
+  deps = [ "${chip_root}/src/platform/logging:headers" ]
 
   # Add platform crypto implementation
   if (chip_crypto == "platform") {
