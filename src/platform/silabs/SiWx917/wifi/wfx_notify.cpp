@@ -27,6 +27,9 @@
 #include "task.h"
 #include "wfx_host_events.h"
 
+// SLC-FIX
+#include "sl_matter_wifi_config.h"
+
 #ifdef RS911X_WIFI
 #include "wfx_rsi.h"
 #endif

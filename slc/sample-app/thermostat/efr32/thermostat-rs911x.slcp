@@ -50,7 +50,7 @@ component:
     from: matter
   - id: matter_administrator_commissioning
     from: matter
-  - id: matter_basic
+  - id: matter_basic_information
     from: matter
   - id: matter_bindings
     from: matter
@@ -102,10 +102,10 @@ component:
     from: matter
   - id: sensor_rht
 
-#  - id: matter_lcd // TODO: Enable this feature once MG24 has LCD and QR code support
-#    from: matter
-#  - id: matter_qr_code
-#    from: matter
+  - id: matter_lcd
+    from: matter
+  - id: matter_qr_code
+    from: matter
 
 # Require LCD and QR Code components only on the boards that support LCD
 requires:
@@ -124,6 +124,8 @@ requires:
 config_file:
   - path: ../../../../examples/thermostat/thermostat-common/thermostat.zap
     directory: common
+  - path: ../../../../provision.mattpconfn
+    directory: provision
 
 include:
   - path: ../../../../examples/thermostat/silabs/include

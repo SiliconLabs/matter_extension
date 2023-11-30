@@ -48,6 +48,7 @@ Engine sShellPerfTestSubCommands;
 // Define static memebers
 MatterPerfTest *MatterPerfTest::globalInstance = nullptr;
 
+
 /********************************************************************************************/
 /************************* MatterPerfTest class implementation ******************************/
 /********************************************************************************************/
@@ -65,7 +66,8 @@ void MatterPerfTest::PingExecuteNextAction()
         DeviceLayer::SystemLayer().ScheduleLambda([this] { SendNextPing(); });
     } else {
         ChipLogError(NotSpecified, "Last ping completed");
-        streamer_printf(streamer_get(), "Ping: %d packets transmitted, %d packets received. \r\n", requestsSent, responsesReceived);
+        uint64_t now = chip::System::SystemClock().GetMonotonicMilliseconds64().count();
+        streamer_printf(streamer_get(), "Ping: %d packets transmitted, %d packets received in %lums \r\n", requestsSent, responsesReceived, (uint32_t)(now - pingStartTime));
 
         pingInProgress    = false;
         responsesReceived = 0;
@@ -97,7 +99,7 @@ void MatterPerfTest::PingPerfTestOnConnnection(Messaging::ExchangeManager & exch
 
     // Print message on debug backchannel
     sl_debug_binary_format(EM_DEBUG_LATENCY, "BBD",
-                           0,   // frame control
+                           0,   // frame control: Latency Start
                            4,   // length of the next field
                            EventTriggerPingMagicNumber);
 
@@ -123,7 +125,8 @@ void MatterPerfTest::PingPerfTestOnConnnectionFailure(const ScopedNodeId & peerI
     ChipLogError(NotSpecified, "Ping test Session establishment failure ");
 
     // Treat this as a test failure, do not retry, cancel the test (set pingInProgress to false) and report the results.
-    streamer_printf(streamer_get(), "Ping: %d packets transmitted, %d packets received. \r\n", requestsSent, responsesReceived);
+    uint64_t now = chip::System::SystemClock().GetMonotonicMilliseconds64().count();
+    streamer_printf(streamer_get(), "Ping: %d packets transmitted, %d packets received in %lums \r\n", requestsSent, responsesReceived, (uint32_t)(now - pingStartTime));
 
     pingInProgress    = false;
     responsesReceived = 0;
@@ -158,6 +161,8 @@ void MatterPerfTest::PingPerfTest(intptr_t param)
     pingCountTotal = data->count;
     Platform::Delete(data);
 
+    pingStartTime = chip::System::SystemClock().GetMonotonicMilliseconds64().count();
+
     requestsSent = 0;
     responsesReceived = 0;
     pingInProgress = true;
@@ -175,7 +180,7 @@ void MatterPerfTest::MxPerfTest(intptr_t  params)
 
     // Print message on debug backchannel
     sl_debug_binary_format(EM_DEBUG_LATENCY, "BBD",
-                           0,   // frame control
+                           0,   // frame control: Latency Start
                            4,   // length of sequence number
                            (uint32_t)data->seqNum);
 
@@ -282,7 +287,7 @@ bool emberAfHandleEventTrigger(uint64_t eventTrigger)
     // TODO: Define eventTrigger ranges, add a check against the range 
     // Print message on debug backchannel
     sl_debug_binary_format(EM_DEBUG_LATENCY, "BBD",
-                           0,   // frame control
+                           1,   // frame control: Latency Stop
                            4,   // length of sequence number
                                (uint32_t)eventTrigger);
 

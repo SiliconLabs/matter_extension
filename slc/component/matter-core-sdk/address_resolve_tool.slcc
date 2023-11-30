@@ -18,6 +18,11 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: zzz_generated/app-common
+-   path: src/lib/address_resolve
+    file_list:
+    -   path: TracingStructs.h
+    -   path: AddressResolve_DefaultImpl.h
+    -   path: AddressResolve.h
 label: address_resolve_tool
 package: Matter
 provides:

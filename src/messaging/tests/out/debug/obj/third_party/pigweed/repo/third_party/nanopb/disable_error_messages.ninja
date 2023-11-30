@@ -1,7 +1,0 @@
-defines = -DPB_NO_ERRMSG=1
-framework_dirs =
-include_dirs =
-target_output_name = disable_error_messages
-
-
-build obj/third_party/pigweed/repo/third_party/nanopb/disable_error_messages.stamp: stamp

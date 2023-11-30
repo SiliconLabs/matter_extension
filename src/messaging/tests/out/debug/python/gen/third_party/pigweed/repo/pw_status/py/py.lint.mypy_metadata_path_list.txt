@@ -1,1 +1,0 @@
-python/gen/third_party/pigweed/repo/pw_status/py/py/package_metadata.json

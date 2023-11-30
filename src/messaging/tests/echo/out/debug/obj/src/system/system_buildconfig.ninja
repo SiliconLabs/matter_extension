@@ -1,7 +1,0 @@
-defines =
-framework_dirs =
-include_dirs =
-target_output_name = system_buildconfig
-
-
-build obj/src/system/system_buildconfig.stamp: stamp || obj/src/system/gen_system_buildconfig.stamp

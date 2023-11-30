@@ -6,12 +6,16 @@ category: Stack
 quality: production
 requires:
   - name: matter
-  - name: matter_platform_efr32
   - name: bootloader_interface
+    condition: [matter_platform_efr32]
 provides:
   - name: matter_ota_support
 source:
-  - path: examples/platform/silabs/efr32/OTAConfig.cpp
+  - path: examples/platform/silabs/OTAConfig.cpp
+  - path: src/platform/silabs/efr32/OTAImageProcessorImpl.cpp
+    condition: [matter_platform_efr32]
+  - path: src/platform/silabs/SiWx917/OTAImageProcessorImpl.cpp
+    condition: [matter_platform_siwx917]
 config_file:
   - path: slc/config/sl_matter_ota_config.h
     file_id: matter_ota_config

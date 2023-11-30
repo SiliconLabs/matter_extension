@@ -2,7 +2,9 @@ category: Matter|Core
 define: []
 description: syscalls
 id: syscalls
-include: []
+include:
+-   path: third_party/jlink/segger_rtt/Syscalls
+    file_list: []
 label: syscalls
 package: Matter
 provides:

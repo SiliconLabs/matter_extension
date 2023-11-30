@@ -1,0 +1,21 @@
+
+category: Clusters|Measurement
+description: Implementation of the Resource Monitoring Server Cluster
+id: matter_resource_monitoring
+package: Matter
+label: Resource Monitoring Server Cluster
+quality: production
+provides:
+  - name: matter_resource_monitoring
+source:
+  - path: src/app/clusters/resource-monitoring-server/resource-monitoring-server.cpp
+  - path: src/app/clusters/resource-monitoring-server/resource-monitoring-cluster-objects.cpp
+include:
+  - path: src/app/clusters/resource-monitoring-server
+    file_list:
+      - path: resource-monitoring-cluster-objects.h
+      - path: resource-monitoring-server.h
+      - path: replacement-product-list-manager.h
+template_contribution:
+  - name: component_catalog
+    value: matter_resource_monitoring

@@ -17,6 +17,22 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: zzz_generated/app-common
+-   path: src/lib/dnssd
+    file_list:
+    -   path: Advertiser.h
+    -   path: Discovery_ImplPlatform.h
+    -   path: Advertiser_ImplMinimalMdnsAllocator.h
+    -   path: ServiceNaming.h
+    -   path: ActiveResolveAttempts.h
+    -   path: IPAddressSorter.h
+    -   path: TxtFields.h
+    -   path: Constants.h
+    -   path: ResolverProxy.h
+    -   path: IncrementalResolve.h
+    -   path: Resolver.h
+    -   path: MinimalMdnsServer.h
+    -   path: platform/Dnssd.h
+    -   path: platform/DnssdBrowseDelegate.h
 label: dnssd
 package: Matter
 provides:

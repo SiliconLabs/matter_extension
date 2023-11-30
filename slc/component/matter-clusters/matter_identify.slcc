@@ -10,7 +10,7 @@ provides:
 source:
   - path: src/app/clusters/identify-server/identify-server.cpp
 include:
-  - path: src/app/clusters/identify-server/
+  - path: src/app/clusters/identify-server
     file_list:
       - path: identify-server.h
 template_contribution:

@@ -46,6 +46,10 @@
 #include "sl_wifi.h"
 #include "wfx_host_events.h"
 #include "wfx_rsi.h"
+
+// SLC-FIX
+#include "sl_matter_wifi_config.h"
+
 #define ADV_SCAN_THRESHOLD -40
 #define ADV_RSSI_TOLERANCE_THRESHOLD 5
 #define ADV_ACTIVE_SCAN_DURATION 15

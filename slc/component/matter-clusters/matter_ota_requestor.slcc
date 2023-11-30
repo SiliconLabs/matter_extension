@@ -1,36 +1,36 @@
 
 category: Clusters|CHIP
-description: Implementation of the Ota Requestor Server Cluster
+description: Implementation of the OTA Requestor Cluster
 id: matter_ota_requestor
 package: Matter
-label: OTA Requestor Server Cluster
+label: OTA Requestor Cluster
 quality: production
 provides:
   - name: matter_ota_requestor
 source:
   - path: src/app/clusters/ota-requestor/ota-requestor-server.cpp
   - path: src/app/clusters/ota-requestor/BDXDownloader.cpp
+  - path: src/app/clusters/ota-requestor/OTATestEventTriggerDelegate.cpp
   - path: src/app/clusters/ota-requestor/DefaultOTARequestor.cpp
+  - path: src/app/clusters/ota-requestor/ExtendedOTARequestorDriver.cpp
   - path: src/app/clusters/ota-requestor/DefaultOTARequestorDriver.cpp
   - path: src/app/clusters/ota-requestor/DefaultOTARequestorStorage.cpp
-  - path: src/app/clusters/ota-requestor/ExtendedOTARequestorDriver.cpp 
-  - path: src/app/clusters/ota-requestor/OTATestEventTriggerDelegate.cpp
 include:
   - path: src/app/clusters/ota-requestor
     file_list:
-      - path: ota-requestor-server.h
-      - path: BDXDownloader.h
-      - path: DefaultOTARequestor.h
-      - path: DefaultOTARequestorDriver.h
-      - path: DefaultOTARequestorStorage.h
       - path: DefaultOTARequestorUserConsent.h
-      - path: ExtendedOTARequestorDriver.h
-      - path: OTADownloader.h
-      - path: OTARequestorDriver.h
+      - path: DefaultOTARequestorDriver.h
       - path: OTARequestorInterface.h
       - path: OTARequestorStorage.h
-      - path: OTARequestorUserConsentDelegate.h
+      - path: DefaultOTARequestor.h
+      - path: OTADownloader.h
+      - path: OTARequestorDriver.h
+      - path: ota-requestor-server.h
       - path: OTATestEventTriggerDelegate.h
+      - path: ExtendedOTARequestorDriver.h
+      - path: OTARequestorUserConsentDelegate.h
+      - path: DefaultOTARequestorStorage.h
+      - path: BDXDownloader.h
 template_contribution:
   - name: component_catalog
     value: matter_ota_requestor

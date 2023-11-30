@@ -21,3 +21,6 @@ include:
 - path: examples/platform/silabs/efr32/rs911x/hal
   file_list:
   - path: rsi_board_configuration.h
+- path: examples/platform/silabs/efr32
+  file_list:
+  - path: spi_multiplex.h

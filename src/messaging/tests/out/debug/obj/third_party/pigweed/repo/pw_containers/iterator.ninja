@@ -1,7 +1,0 @@
-defines =
-framework_dirs =
-include_dirs = -I../../../../../third_party/pigweed/repo/pw_containers/public -I../../../../../third_party/pigweed/repo/pw_polyfill/public -I../../../../../third_party/pigweed/repo/pw_polyfill/standard_library_public
-target_output_name = iterator
-
-
-build obj/third_party/pigweed/repo/pw_containers/iterator.stamp: stamp || obj/third_party/pigweed/repo/pw_polyfill/pw_polyfill.stamp obj/third_party/pigweed/repo/pw_polyfill/standard_library.stamp

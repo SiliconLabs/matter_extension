@@ -1,7 +1,0 @@
-defines = -DCHIP_HAVE_CONFIG_H=1
-framework_dirs =
-include_dirs = -I../../../../../../src/include -I../../../../../../src -Igen/include -I../../../../../../zzz_generated/app-common -I../../../../../../config/standalone -I../../../../../../third_party/nlassert/repo/include -I../../../../../../third_party/nlio/repo/include -I../../../../../../third_party/nlfaultinjection/repo/include
-target_output_name = retransmit
-
-
-build obj/src/transport/retransmit/retransmit.stamp: stamp || obj/src/lib/core/lib/libChipCore.a obj/src/lib/core/chip_config_header.stamp obj/src/lib/core/chip_buildconfig.stamp obj/src/ble/ble_config_header.stamp obj/src/ble/ble_buildconfig.stamp obj/src/platform/platform_buildconfig.stamp obj/src/system/system_config_header.stamp obj/src/system/system_buildconfig.stamp obj/src/ble/lib/libBleLayer.a obj/src/inet/lib/libInetLayer.a obj/src/inet/inet_config_header.stamp obj/src/inet/inet_buildconfig.stamp obj/src/lib/support/lib/libSupportLayer.a obj/src/lib/support/attributes.stamp obj/src/lib/support/chip_version_header.stamp obj/src/lib/support/logging_constants.stamp obj/src/platform/logging/headers.stamp obj/third_party/nlassert/nlassert.stamp obj/third_party/nlio/nlio.stamp lib/libnlfaultinjection.a obj/src/system/lib/libSystemLayer.a

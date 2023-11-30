@@ -1,2 +1,0 @@
-python/gen/scripts/py_matter_idl/matter_idl/package_metadata.json
-python/gen/scripts/py_matter_yamltests/matter_yamltests/package_metadata.json

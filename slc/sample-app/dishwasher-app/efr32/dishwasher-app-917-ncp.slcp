@@ -1,0 +1,226 @@
+project_name: dishwasher-app-917-ncp
+label: Matter Dishwasher
+description: >
+  Matter Dishwasher App
+quality: production
+package: Matter
+
+sdk_extension:
+  - id: matter
+    version: "2.2.0"
+  - id: wiseconnect3_sdk
+    version: "3.1.1"
+
+component:
+  - id: device_init
+  - id: simple_button
+    instance: [btn0, btn1]
+  - id: simple_led
+    instance: [led0, led1]
+
+  - id: matter_wstk_leds
+    from: matter
+
+  - id: matter
+    from: matter
+  - id: matter_platform_efr32
+    from: matter
+  - id: matter_wifi_ble
+    from: matter
+  - id: matter_ota_support
+    from: matter
+  - id: matter_crypto
+    from: matter
+  - id: silabs_factory_data_provider
+    from: matter
+  - id: matter_efr32_ncp
+    from: matter
+  - id: matter_wifi
+    from: matter
+  - id: siwx917_ncp_extension
+    from: matter
+  - id: matter_gatt_additional_advertising
+    from: matter
+
+  - id: matter_dishwasher
+    from: matter
+  - id: app_common
+    from: matter
+
+  - id: matter_access_control
+    from: matter
+  - id: matter_administrator_commissioning
+    from: matter
+  - id: matter_basic_information
+    from: matter
+  - id: matter_bindings
+    from: matter
+  - id: matter_descriptor
+    from: matter
+  - id: matter_diagnostic_logs
+    from: matter
+  - id: matter_fixed_label
+    from: matter
+  - id: matter_general_commissioning
+    from: matter
+  - id: matter_general_diagnostics
+    from: matter
+  - id: matter_group_key_mgmt
+    from: matter
+  - id: matter_groups
+    from: matter
+  - id: matter_identify
+    from: matter
+  - id: matter_localization_configuration
+    from: matter
+  - id: matter_network_commissioning
+    from: matter
+  - id: matter_operational_credentials
+    from: matter
+  - id: matter_operational_state
+    from: matter
+  - id: matter_ota_requestor
+    from: matter
+  - id: matter_power_source
+    from: matter
+  - id: matter_software_diagnostics
+    from: matter
+  - id: matter_time_format_localization
+    from: matter
+  - id: matter_user_label
+    from: matter
+  - id: matter_wifi_network_diagnostics
+    from: matter
+  # Override configuration for JTAG use
+  - id: matter_configuration_over_swo
+    from: matter
+  - id: segger_rtt
+
+  - id: efx_ncp_custom_host_mcu
+    from: matter
+  - id: wifi
+    from: wiseconnect3_sdk
+  - id: basic_network_config_manager
+    from: wiseconnect3_sdk
+  - id: sl_si91x_basic_buffers
+    from: wiseconnect3_sdk
+  - id: sl_si91x_wireless
+    from: wiseconnect3_sdk
+  - id: wifi_resources
+    from: wiseconnect3_sdk
+  - id: ble
+    from: wiseconnect3_sdk
+  - id: network_manager
+    from: wiseconnect3_sdk
+
+# Require LCD and QR Code components only on the boards that support LCD 
+requires:
+  - name: matter_lcd
+    condition:
+    - device_series_1
+#  - name: matter_lcd
+#    condition:
+#    - device_series_2
+  - name: matter_qr_code
+    condition:
+    - device_series_1
+#  - name: matter_qr_code
+#    condition:
+#    - device_series_2
+  - name: spidrv_instance
+  - name: uartdrv_eusart
+    condition:
+    - device_series_2
+# Select UART/EUART drivers based on device series
+  - name: matter_drivers_series_1_wifi_rs911x
+    condition:
+     - device_series_1
+  - name: matter_drivers_series_2_wifi_rs911x
+    condition:
+     - device_series_2
+
+config_file:
+  - path: ../../../../silabs_examples/dishwasher-app/silabs/data_model/dishwasher-wifi-app.zap
+    directory: common
+  - path: ../../../../provision.mattpconfn
+    directory: provision
+
+include:
+  - path: ../../../../silabs_examples/dishwasher-app/silabs/include
+    file_list:
+      - path: AppConfig.h
+      - path: AppEvent.h
+      - path: AppTask.h
+      - path: CHIPProjectConfig.h
+      - path: DishwasherManager.h
+      - path: operational-state-delegate-impl.h
+    directory: include
+
+source:
+  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/AppTask.cpp
+    directory: src
+  - path: ../../../../examples/platform/silabs/main.cpp
+    directory: src
+  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/DishwasherManager.cpp
+    directory: src
+  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/operational-state-delegate-impl.cpp
+    directory: src
+  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/ZclCallbacks.cpp
+    directory: src
+
+define:
+  - name: CHIP_CRYPTO_PLATFORM
+    value: "1"
+  - name: _WANT_REENT_SMALL
+    value: "1"
+  - name: NVM3_DEFAULT_NVM_SIZE
+    value: "40960"
+  - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
+    value: "4092"
+
+configuration:
+  - name: SL_SPIDRV_EXP_BITRATE
+    value: "10000000"
+  - name: SL_SPIDRV_EUSART_EXP_BITRATE
+    value: "10000000"
+  - name: SL_POWER_MANAGER_LOWEST_EM_ALLOWED
+    value: "1"
+  - name: SL_POWER_MANAGER_CONFIG_VOLTAGE_SCALING_FAST_WAKEUP
+    value: "1"
+  - name: SL_PSA_KEY_USER_SLOT_COUNT
+    value: "21"
+  - {name: SL_STACK_SIZE, value: '4608'} 
+
+toolchain_settings:
+  - option: gcc_c++_compiler_option
+    value: -std=gnu++17
+    
+template_contribution:
+  - name: memory_flash_start
+    value: 0x0
+    condition: [device_series_1]
+  - name: memory_flash_size
+    value: 0x000FF800
+    condition: [device_series_1]
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_series_2]
+  - name: memory_flash_size
+    value: 0x00178000
+    condition: [device_series_2]
+  - name: memory_ram_start
+    value: 0x20000000
+  - name: memory_ram_size
+    value: 0x42000
+
+readme:
+  - path: ./README_WiFi.md
+ui_hints:
+  highlight:
+    - path: README_WiFi.md
+      focus: false
+
+tag:
+  - hardware:component:led:2+
+post_build:
+  profile: application

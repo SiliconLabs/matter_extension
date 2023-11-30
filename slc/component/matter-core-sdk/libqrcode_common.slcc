@@ -4,6 +4,9 @@ description: libqrcode_common
 id: libqrcode_common
 include:
 -   path: examples/common/QRCode/repo/c
+-   path: examples/common/QRCode/repo/c
+    file_list:
+    -   path: qrcodegen.h
 label: libqrcode_common
 package: Matter
 provides:

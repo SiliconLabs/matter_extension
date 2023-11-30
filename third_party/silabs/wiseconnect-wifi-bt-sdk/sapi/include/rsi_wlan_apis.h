@@ -120,6 +120,9 @@
 
 //To enable high SSL streaming throughput
 #define SSL_HIGH_STREAMING_BIT BIT(10)
+
+//To enable certificate pathlength feature
+#define TLS_PATH_LENGTH_SUPPORT BIT(11)
 /*=========================================================================*/
 
 // BT feature bit map
@@ -558,7 +561,6 @@
 // Feature enable paramters
 #define RSI_FEAT_FRAME_PREAMBLE_DUTY_CYCLE       BIT(0)
 #define RSI_FEAT_FRAME_PERMIT_UNDESTINED_PACKETS BIT(1)
-#define RSI_FEAT_FRAME_DISABLE_DPD               BIT(3)
 #define RSI_FEAT_FRAME_LP_CHAIN                  BIT(4)
 #define RSI_FEAT_FRAME_IN_PACKET_DUTY_CYCLE      BIT(5)
 /*=========================================================================*/
@@ -964,7 +966,8 @@ typedef enum rsi_wlan_query_cmd_e {
   RSI_SOCKETS_INFO      = 7,
   RSI_CFG_GET           = 8,
   RSI_GET_WLAN_STATS    = 9,
-  RSI_WLAN_EXT_STATS    = 10
+  RSI_WLAN_EXT_STATS    = 10,
+  RSI_WMM_PARAMS        = 11,
 } rsi_wlan_query_cmd_t;
 
 /******************************************************
@@ -1721,8 +1724,7 @@ typedef struct rsi_calib_read_s {
 #define READ_FROM_EFUSE 0
 #define READ_FROM_FLASH 1
   uint8_t target;
-  uint8_t reserved0[3];
-  int8_t gain_offset[3];
+  int8_t gain_offset[6];
   int8_t xo_ctune;
 } rsi_calib_read_t;
 

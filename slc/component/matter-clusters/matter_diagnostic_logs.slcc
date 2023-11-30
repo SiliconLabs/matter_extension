@@ -1,5 +1,5 @@
 
-category: Clusters|General
+category: Clusters|CHIP
 description: Implementation of the Diagnostic Logs Server Cluster
 id: matter_diagnostic_logs
 package: Matter
@@ -10,7 +10,7 @@ provides:
 source:
   - path: src/app/clusters/diagnostic-logs-server/diagnostic-logs-server.cpp
 include:
-  - path: src/app/clusters/diagnostic-logs-server/
+  - path: src/app/clusters/diagnostic-logs-server
     file_list:
       - path: diagnostic-logs-server.h
 template_contribution:

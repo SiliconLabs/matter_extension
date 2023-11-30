@@ -10,7 +10,7 @@ provides:
 source:
   - path: src/app/clusters/network-commissioning/network-commissioning.cpp
 include:
-  - path: src/app/clusters/network-commissioning/
+  - path: src/app/clusters/network-commissioning
     file_list:
       - path: network-commissioning.h
 template_contribution:

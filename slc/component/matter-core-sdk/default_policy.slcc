@@ -12,6 +12,22 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: zzz_generated/app-common
+-   path: src/lib/dnssd/minimal_mdns
+    file_list:
+    -   path: ListenIterator.h
+    -   path: ServerIPAddresses.h
+    -   path: Query.h
+    -   path: Parser.h
+    -   path: AddressPolicy_DefaultImpl.h
+    -   path: QueryReplyFilter.h
+    -   path: Logging.h
+    -   path: ResponseBuilder.h
+    -   path: ResponseSender.h
+    -   path: QueryBuilder.h
+    -   path: AddressPolicy.h
+    -   path: AddressPolicy_LibNlImpl.h
+    -   path: Server.h
+    -   path: RecordData.h
 label: default_policy
 package: Matter
 provides:

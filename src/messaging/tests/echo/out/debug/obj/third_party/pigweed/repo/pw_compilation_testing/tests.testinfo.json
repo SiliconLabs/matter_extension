@@ -1,6 +1,0 @@
-[
-  {
-    "name": "//third_party/pigweed/repo/pw_compilation_testing:tests",
-    "type": "self"
-  }
-]

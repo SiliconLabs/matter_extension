@@ -48,7 +48,7 @@ component:
     from: matter
   - id: matter_administrator_commissioning
     from: matter
-  - id: matter_basic
+  - id: matter_basic_information
     from: matter
   - id: matter_bindings
     from: matter
@@ -125,6 +125,8 @@ requires:
 config_file:
   - path: ../../../../examples/thermostat/thermostat-common/thermostat.zap
     directory: common
+  - path: ../../../../provision.mattpconfn
+    directory: provision
 
 include:
   - path: ../../../../examples/thermostat/silabs/include

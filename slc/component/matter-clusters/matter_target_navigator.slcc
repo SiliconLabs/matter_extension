@@ -10,10 +10,10 @@ provides:
 source:
   - path: src/app/clusters/target-navigator-server/target-navigator-server.cpp
 include:
-  - path: src/app/clusters/target-navigator-server/
+  - path: src/app/clusters/target-navigator-server
     file_list:
-      - path: target-navigator-server.h
       - path: target-navigator-delegate.h
+      - path: target-navigator-server.h
 template_contribution:
   - name: component_catalog
     value: matter_target_navigator

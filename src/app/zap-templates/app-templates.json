@@ -4,7 +4,8 @@
     "version": "chip-v1",
     "options": {
         "generator": {
-            "appendDirectory": "zap-generated"
+            "appendDirectory": "zap-generated",
+            "disableUcComponentOnZclClusterUpdate": "true"
         }
     },
     "helpers": [

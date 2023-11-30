@@ -10,7 +10,7 @@ provides:
 source:
   - path: src/app/clusters/media-input-server/media-input-server.cpp
 include:
-  - path: src/app/clusters/media-input-server/
+  - path: src/app/clusters/media-input-server
     file_list:
       - path: media-input-server.h
       - path: media-input-delegate.h

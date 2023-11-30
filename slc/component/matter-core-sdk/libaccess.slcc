@@ -17,6 +17,17 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: zzz_generated/app-common
+-   path: src/access/examples
+    file_list:
+    -   path: ExampleAccessControlDelegate.h
+    -   path: PermissiveAccessControlDelegate.h
+-   path: src/access
+    file_list:
+    -   path: SubjectDescriptor.h
+    -   path: AccessControl.h
+    -   path: AuthMode.h
+    -   path: Privilege.h
+    -   path: RequestPath.h
 label: libaccess
 package: Matter
 provides:

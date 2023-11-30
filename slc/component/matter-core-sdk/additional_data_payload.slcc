@@ -15,6 +15,20 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: zzz_generated/app-common
+-   path: src/setup_payload
+    file_list:
+    -   path: Base38Encode.h
+    -   path: Base38Decode.h
+    -   path: AdditionalDataPayloadParser.h
+    -   path: QRCodeSetupPayloadGenerator.h
+    -   path: AdditionalDataPayloadGenerator.h
+    -   path: SetupPayload.h
+    -   path: SetupPayloadHelper.h
+    -   path: Base38.h
+    -   path: ManualSetupPayloadParser.h
+    -   path: QRCodeSetupPayloadParser.h
+    -   path: ManualSetupPayloadGenerator.h
+    -   path: AdditionalDataPayload.h
 label: additional_data_payload
 package: Matter
 provides:

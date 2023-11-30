@@ -10,7 +10,7 @@ provides:
 source:
   - path: src/app/clusters/barrier-control-server/barrier-control-server.cpp
 include:
-  - path: src/app/clusters/barrier-control-server/
+  - path: src/app/clusters/barrier-control-server
     file_list:
       - path: barrier-control-server.h
 template_contribution:

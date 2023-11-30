@@ -17,6 +17,15 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: zzz_generated/app-common
+-   path: src/transport/raw
+    file_list:
+    -   path: TCP.h
+    -   path: BLE.h
+    -   path: PeerAddress.h
+    -   path: Tuple.h
+    -   path: MessageHeader.h
+    -   path: UDP.h
+    -   path: Base.h
 label: librawtransport
 package: Matter
 provides:

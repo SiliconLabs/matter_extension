@@ -19,6 +19,36 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: zzz_generated/app-common
+-   path: examples/common/tracing/decoder/bdx
+    file_list:
+    -   path: Decoder.h
+-   path: examples/common/tracing/decoder/secure_channel
+    file_list:
+    -   path: Decoder.h
+-   path: examples/common/tracing/decoder
+    file_list:
+    -   path: TraceDecoderProtocols.h
+-   path: examples/common/tracing
+    file_list:
+    -   path: TracingCommandLineArgument.h
+    -   path: TraceDecoderOptions.h
+    -   path: TraceDecoderArgumentParser.h
+    -   path: TraceHandlers.h
+    -   path: TraceDecoder.h
+-   path: examples/common/tracing/decoder/interaction_model
+    file_list:
+    -   path: DecoderCustomLog.h
+    -   path: Decoder.h
+-   path: examples/common/tracing/decoder/udc
+    file_list:
+    -   path: Decoder.h
+-   path: examples/common/tracing/decoder/echo
+    file_list:
+    -   path: Decoder.h
+-   path: examples/common/tracing/decoder/logging
+    file_list:
+    -   path: ToCertificateString.h
+    -   path: Log.h
 label: trace_handlers_decoder
 package: Matter
 provides:

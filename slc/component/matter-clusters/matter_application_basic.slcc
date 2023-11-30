@@ -10,10 +10,10 @@ provides:
 source:
   - path: src/app/clusters/application-basic-server/application-basic-server.cpp
 include:
-  - path: src/app/clusters/application-basic-server/
+  - path: src/app/clusters/application-basic-server
     file_list:
-      - path: application-basic-server.h
       - path: application-basic-delegate.h
+      - path: application-basic-server.h
 template_contribution:
   - name: component_catalog
     value: matter_application_basic

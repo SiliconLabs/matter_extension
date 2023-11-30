@@ -28,6 +28,8 @@ component_path:
   - path: slc/component/matter-platform/wstk-leds
   - path: slc/component/matter-platform/memory-monitoring
   - path: slc/component/matter-platform/size-reduction
+  - path: slc/component/matter-platform/config
+  - path: slc/component/matter-platform/third_party
   - path: slc/component/matter-clusters
   - path: slc/component/matter-sensors
   - path: slc/component/matter-thread

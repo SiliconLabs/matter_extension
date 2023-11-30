@@ -17,6 +17,17 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: zzz_generated/app-common
+-   path: src/app/server
+    file_list:
+    -   path: AppDelegate.h
+    -   path: EchoHandler.h
+    -   path: AclStorage.h
+    -   path: DefaultAclStorage.h
+    -   path: OnboardingCodesUtil.h
+    -   path: CommissioningWindowManager.h
+    -   path: Dnssd.h
+    -   path: Server.h
+    -   path: CommissioningModeProvider.h
 label: libchipappserver
 package: Matter
 provides:

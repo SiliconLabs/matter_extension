@@ -4,13 +4,55 @@ define:
     value: '1'
 description: siwx917
 id: siwx917
+include:
+-   path: src/platform/silabs/rs911x
+    file_list:
+    -   path: ble_config.h
+    -   path: wfx_sl_ble_init.h
+    -   path: rsi_ble_config.h
+-   path: src/platform/silabs
+    file_list:
+    -   path: OTAImageProcessorImpl.h
+    -   path: InetPlatformConfig.h
+    -   path: DiagnosticDataProviderImpl.h
+    -   path: ConfigurationManagerImpl.h
+    -   path: MigrationManager.h
+    -   path: PlatformManagerImpl.h
+    -   path: WarmPlatformConfig.h
+    -   path: NetworkCommissioningWiFiDriver.h
+    -   path: CHIPDevicePlatformEvent.h
+    -   path: ThreadStackManagerImpl.h
+    -   path: CHIPDevicePlatformConfig.h
+    -   path: SilabsConfig.h
+    -   path: BLEManagerImpl.h
+    -   path: CHIPPlatformConfig.h
+    -   path: ConnectivityManagerImpl.h
+    -   path: BlePlatformConfig.h
+    -   path: KeyValueStoreManagerImpl.h
+    -   path: SystemPlatformConfig.h
+-   path: src/platform/silabs/SiWx917
+    file_list:
+    -   path: siwx917-chip-mbedtls-config.h
+-   path: src/platform/silabs/platformAbstraction
+    file_list:
+    -   path: SilabsPlatformBase.h
+    -   path: SilabsPlatform.h
+-   path: src/platform
+    file_list:
+    -   path: DeviceSafeQueue.h
+    -   path: GLibTypeDeleter.h
+-   path: src/platform/FreeRTOS
+    file_list:
+    -   path: SystemTimeSupport.h
+    -   path: GenericThreadStackManagerImpl_FreeRTOS.h
+    -   path: GenericThreadStackManagerImpl_FreeRTOS.hpp
 label: siwx917
 package: Matter
-requires:
-  - name: matter_siwx917_common
 provides:
 -   name: matter_siwx917
 quality: production
+requires:
+-   name: matter_siwx917_common
 source:
 -   path: src/platform/FreeRTOS/SystemTimeSupport.cpp
 -   path: src/platform/SingletonConfigurationManager.cpp

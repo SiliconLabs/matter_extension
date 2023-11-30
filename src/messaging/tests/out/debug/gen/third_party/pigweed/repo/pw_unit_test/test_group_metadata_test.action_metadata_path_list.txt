@@ -1,1 +1,0 @@
-python/gen/third_party/pigweed/repo/pw_unit_test/test_group_metadata_test/package_metadata.json

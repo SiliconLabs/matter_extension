@@ -29,6 +29,9 @@ include:
 - path: examples/platform/silabs/efr32/rs911x/hal
   file_list:
   - path: rsi_hal.h
+- path: examples/platform/silabs/efr32
+  file_list:
+  - path: spi_multiplex.h
 define:
 - name: RSI_BLE_ENABLE
   value: 1

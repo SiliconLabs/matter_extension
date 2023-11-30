@@ -10,7 +10,7 @@ provides:
 source:
   - path: src/app/clusters/software-diagnostics-server/software-diagnostics-server.cpp
 include:
-  - path: src/app/clusters/software-diagnostics-server/
+  - path: src/app/clusters/software-diagnostics-server
     file_list:
       - path: software-diagnostics-server.h
 template_contribution:

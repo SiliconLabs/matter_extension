@@ -47,7 +47,7 @@ component:
     from: matter
   - id: matter_administrator_commissioning
     from: matter
-  - id: matter_basic
+  - id: matter_basic_information
     from: matter
   - id: matter_descriptor
     from: matter
@@ -123,6 +123,8 @@ requires:
 config_file:
   - path: ../../../../examples/lock-app/lock-common/lock-app.zap
     directory: common
+  - path: ../../../../provision.mattpconfn
+    directory: provision
 
 include:
   - path: ../../../../examples/lock-app/silabs/include

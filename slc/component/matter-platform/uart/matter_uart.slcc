@@ -21,7 +21,7 @@ source:
   - path: examples/platform/silabs/SiWx917/uart.cpp
     condition: [matter_platform_siwx917]
 include:
-- path: examples/platform/silabs/efr32
+- path: examples/platform/silabs
   file_list:
   - path: uart.h
     condition: [matter_platform_efr32]

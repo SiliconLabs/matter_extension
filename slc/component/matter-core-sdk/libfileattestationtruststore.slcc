@@ -17,6 +17,14 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: zzz_generated/app-common
+-   path: src/credentials/attestation_verifier
+    file_list:
+    -   path: DefaultDeviceAttestationVerifier.h
+    -   path: DacOnlyPartialAttestationVerifier.h
+    -   path: DeviceAttestationDelegate.h
+    -   path: FileAttestationTrustStore.h
+    -   path: TestPAAStore.h
+    -   path: DeviceAttestationVerifier.h
 label: libfileattestationtruststore
 package: Matter
 provides:

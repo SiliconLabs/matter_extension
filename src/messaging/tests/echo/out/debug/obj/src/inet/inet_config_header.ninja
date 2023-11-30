@@ -1,7 +1,0 @@
-defines = -DCHIP_HAVE_CONFIG_H=1
-framework_dirs =
-include_dirs = -I../../../../../../src/include -I../../../../../../src -Igen/include -I../../../../../../zzz_generated/app-common -I../../../../../../config/standalone
-target_output_name = inet_config_header
-
-
-build obj/src/inet/inet_config_header.stamp: stamp || obj/src/inet/inet_buildconfig.stamp obj/src/system/system_config_header.stamp obj/src/system/system_buildconfig.stamp obj/src/platform/platform_buildconfig.stamp

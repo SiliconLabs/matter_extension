@@ -1,0 +1,20 @@
+
+category: Clusters|Measurement
+description: Implementation of the Smoke Co Alarm Server Cluster
+id: matter_smoke_co_alarm
+package: Matter
+label: Smoke Co Alarm Server Cluster
+quality: production
+provides:
+  - name: matter_smoke_co_alarm
+source:
+  - path: src/app/clusters/smoke-co-alarm-server/smoke-co-alarm-server.cpp
+  - path: src/app/clusters/smoke-co-alarm-server/SmokeCOTestEventTriggerDelegate.cpp
+include:
+  - path: src/app/clusters/smoke-co-alarm-server
+    file_list:
+      - path: SmokeCOTestEventTriggerDelegate.h
+      - path: smoke-co-alarm-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_smoke_co_alarm

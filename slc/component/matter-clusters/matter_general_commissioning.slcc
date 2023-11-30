@@ -10,7 +10,7 @@ provides:
 source:
   - path: src/app/clusters/general-commissioning-server/general-commissioning-server.cpp
 include:
-  - path: src/app/clusters/general-commissioning-server/
+  - path: src/app/clusters/general-commissioning-server
     file_list:
       - path: general-commissioning-server.h
 template_contribution:

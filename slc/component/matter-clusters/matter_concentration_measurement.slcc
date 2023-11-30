@@ -1,0 +1,17 @@
+
+category: Clusters|Measurement
+description: Implementation of the Concentration Measurement Server Cluster
+id: matter_concentration_measurement
+package: Matter
+label: Concentration Measurement Server Cluster
+quality: production
+provides:
+  - name: matter_concentration_measurement
+include:
+  - path: src/app/clusters/concentration-measurement-server
+    file_list:
+      - path: concentration-measurement-server.h
+      - path: concentration-measurement-cluster-objects.h
+template_contribution:
+  - name: component_catalog
+    value: matter_concentration_measurement

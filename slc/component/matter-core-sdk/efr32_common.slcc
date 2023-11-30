@@ -34,6 +34,34 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: zzz_generated/app-common
+-   path: examples/platform/silabs
+    file_list:
+    -   path: SilabsDeviceDataProvider.h
+    -   path: board_config.h
+    -   path: OTAConfig.h
+    -   path: SoftwareFaultReports.h
+    -   path: silabs_utils.h
+    -   path: matter_shell.h
+    -   path: uart.h
+    -   path: MatterConfig.h
+    -   path: LEDWidget.h
+    -   path: PigweedLogger.h
+    -   path: FreeRTOSConfig.h
+    -   path: Rpc.h
+    -   path: heap_4_silabs.h
+    -   path: TemperatureSensor.h
+    -   path: silabs_creds.h
+    -   path: SilabsTestEventTriggerDelegate.h
+    -   path: MemMonitoring.h
+    -   path: BaseApplication.h
+-   path: examples/platform/silabs/display
+    file_list:
+    -   path: lcd.h
+    -   path: demo-ui-bitmaps.h
+    -   path: demo-ui.h
+-   path: examples/platform/silabs/efr32
+    file_list:
+    -   path: spi_multiplex.h
 label: efr32_common
 package: Matter
 provides:

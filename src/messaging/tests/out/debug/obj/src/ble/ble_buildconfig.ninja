@@ -1,7 +1,0 @@
-defines =
-framework_dirs =
-include_dirs =
-target_output_name = ble_buildconfig
-
-
-build obj/src/ble/ble_buildconfig.stamp: stamp || obj/src/ble/gen_ble_buildconfig.stamp

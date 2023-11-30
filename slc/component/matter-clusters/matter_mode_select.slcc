@@ -9,6 +9,10 @@ provides:
   - name: matter_mode_select
 source:
   - path: src/app/clusters/mode-select-server/mode-select-server.cpp
+include:
+  - path: src/app/clusters/mode-select-server
+    file_list:
+      - path: supported-modes-manager.h
 template_contribution:
   - name: component_catalog
     value: matter_mode_select

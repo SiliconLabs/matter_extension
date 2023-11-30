@@ -10,10 +10,10 @@ provides:
 source:
   - path: src/app/clusters/account-login-server/account-login-server.cpp
 include:
- - path: src/app/clusters/account-login-server/
-   file_list:
-    - path: account-login-server.h
-    - path: account-login-delegate.h
+  - path: src/app/clusters/account-login-server
+    file_list:
+      - path: account-login-delegate.h
+      - path: account-login-server.h
 template_contribution:
   - name: component_catalog
     value: matter_account_login

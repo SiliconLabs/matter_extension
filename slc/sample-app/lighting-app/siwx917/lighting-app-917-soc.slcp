@@ -22,6 +22,8 @@ component:
     from: matter
   - id: matter_si91x_dual_flash_nvm3
     from: matter
+  - id: matter_fw_upgrade_917
+    from: matter
   - id: silabs_factory_data_provider
     from: matter
 
@@ -34,7 +36,7 @@ component:
     from: matter
   - id: matter_administrator_commissioning
     from: matter
-  - id: matter_basic
+  - id: matter_basic_information
     from: matter
   - id: matter_color_control
     from: matter
@@ -78,6 +80,8 @@ component:
   - id: segger_rtt  
   - id: matter_ota_requestor
     from: matter
+  - id: matter_ota_support
+    from: matter
   - id: matter_gatt_additional_advertising
     from: matter
   - id: toolchain_gcc_dual
@@ -107,6 +111,8 @@ component:
     from: wiseconnect3_sdk
   - id: wifi_resources
     from: wiseconnect3_sdk
+  - id: sl_si91x_soc_soft_reset
+    from: wiseconnect3_sdk
   - id: ble
     from: wiseconnect3_sdk
   - id: network_manager
@@ -118,6 +124,8 @@ component:
 config_file:
   - path: ../../../../examples/lighting-app/silabs/data_model/lighting-wifi-app.zap
     directory: common
+  - path: ../../../../provision.mattpconfn
+    directory: provision
 
 include:
   - path: ../../../../examples/lighting-app/silabs/include

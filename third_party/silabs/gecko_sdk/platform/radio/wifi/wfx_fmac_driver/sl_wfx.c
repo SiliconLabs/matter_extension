@@ -165,7 +165,7 @@ sl_status_t sl_wfx_init(sl_wfx_context_t *context)
   // when the Wi-Fi chip is in *Trusted* mode
 
   /* Get secure link mode */
-  link_mode = startup_info->body.capabilities.linkmode;
+  link_mode = (sl_wfx_secure_link_mode_t)startup_info->body.capabilities.linkmode;
 
   result = sl_wfx_host_get_secure_link_mac_key(sl_wfx_context->secure_link_mac_key);
 

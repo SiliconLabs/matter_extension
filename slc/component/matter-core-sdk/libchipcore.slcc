@@ -15,6 +15,43 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: zzz_generated/app-common
+-   path: src/lib/core
+    file_list:
+    -   path: PeerId.h
+    -   path: CHIPVendorIdentifiers.hpp
+    -   path: GroupId.h
+    -   path: CHIPCore.h
+    -   path: TLVCommon.h
+    -   path: ScopedNodeId.h
+    -   path: ErrorStr.h
+    -   path: CASEAuthTag.h
+    -   path: CHIPEncoding.h
+    -   path: TLVWriter.h
+    -   path: Global.h
+    -   path: TLVTags.h
+    -   path: PasscodeId.h
+    -   path: DataModelTypes.h
+    -   path: CHIPConfig.h
+    -   path: ClusterEnums.h
+    -   path: TLVBackingStore.h
+    -   path: Optional.h
+    -   path: InPlace.h
+    -   path: TLVReader.h
+    -   path: CHIPError.h
+    -   path: TLVData.h
+    -   path: CHIPCallback.h
+    -   path: CHIPSafeCasts.h
+    -   path: ReferenceCounted.h
+    -   path: NodeId.h
+    -   path: CHIPKeyIds.h
+    -   path: TLVCircularBuffer.h
+    -   path: TLVTypes.h
+    -   path: TLVUpdater.h
+    -   path: OTAImageHeader.h
+    -   path: TLVDebug.h
+    -   path: TLVUtilities.h
+    -   path: CHIPPersistentStorageDelegate.h
+    -   path: TLV.h
 label: libchipcore
 package: Matter
 provides:

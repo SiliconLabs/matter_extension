@@ -1,1 +1,0 @@
-python/gen/examples/common/pigweed/rpc_console/chip_rpc_distribution/package_metadata.json

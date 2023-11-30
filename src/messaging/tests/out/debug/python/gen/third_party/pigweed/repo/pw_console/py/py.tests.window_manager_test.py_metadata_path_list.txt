@@ -1,4 +1,0 @@
-python/gen/third_party/pigweed/repo/pw_env_setup/py/py/package_metadata.json
-python/gen/third_party/pigweed/repo/pw_cli/py/py/package_metadata.json
-python/gen/third_party/pigweed/repo/pw_log_tokenized/py/py/package_metadata.json
-python/gen/third_party/pigweed/repo/pw_console/py/py/package_metadata.json

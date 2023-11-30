@@ -52,7 +52,7 @@ component:
     from: matter
   - id: matter_administrator_commissioning
     from: matter
-  - id: matter_basic
+  - id: matter_basic_information
     from: matter
   - id: matter_descriptor
     from: matter
@@ -112,15 +112,15 @@ requires:
   - name: matter_lcd
     condition:
     - device_series_1
-#  - name: matter_lcd // TODO: We need enable this feature after CSA changes merged
-#    condition:
-#    - device_series_2
+  - name: matter_lcd
+    condition:
+    - device_series_2
   - name: matter_qr_code
     condition:
     - device_series_1
-#  - name: matter_qr_code // TODO: We need enable this feature after CSA changes merged
-#    condition:
-#    - device_series_2
+  - name: matter_qr_code
+    condition:
+    - device_series_2
   - name: spidrv_instance
   - name: uartdrv_eusart
     condition:
@@ -137,6 +137,8 @@ requires:
 config_file:
   - path: ../../../../silabs_examples/onoff-plug-app/onoff-plug-common/onoff-plug-app.zap
     directory: common
+  - path: ../../../../provision.mattpconfn
+    directory: provision
 
 include:
   - path: ../../../../silabs_examples/onoff-plug-app/include

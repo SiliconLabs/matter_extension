@@ -87,7 +87,7 @@ component:
     from: matter
   - id: matter_lcd
     from: matter
-  - id: matter_basic
+  - id: matter_basic_information
     from: matter
   - id: matter_qr_code
     from: matter 
@@ -118,6 +118,8 @@ requires:
 config_file:
   - path: ../../../../silabs_examples/onoff-plug-app/onoff-plug-common/onoff-plug-app.zap
     directory: common
+  - path: ../../../../provision.mattpconfn
+    directory: provision
 
 include:
   - path: ../../../../silabs_examples/onoff-plug-app/include

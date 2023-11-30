@@ -36,7 +36,7 @@ if platform == "win32":
     zap_url = "https://github.com/project-chip/zap/releases/download/v2023.11.14-nightly/zap-win-x64.zip"
     commander_url = "https://www.silabs.com/documents/public/software/SimplicityCommander-Windows.zip"
     commander_path = os.path.join(tools_folder_path,"SimplicityCommander-Windows")
-    commander_zip = os.path.join(commander_path,"Commander_win32_x64_1v16p1b1501.zip")
+    os_name_commander = "Commander_win32"
     java_path = os.path.join(silabs_chip_root, "slc","tools","jdk17.0.8_8")
     arm_gcc_dir = os.path.join(tools_folder_path,"arm-gnu-toolchain-12.2.rel1-mingw-w64-i686-arm-none-eabi")
     arm_toolchain_path = os.path.join(tools_folder_path,"gcc","bin")
@@ -47,7 +47,7 @@ elif platform == "darwin":
     zap_url = "https://github.com/project-chip/zap/releases/download/v2023.11.14-nightly/zap-mac-x64.zip"
     commander_url = "https://www.silabs.com/documents/public/software/SimplicityCommander-Mac.zip"
     commander_path = os.path.join(tools_folder_path,"SimplicityCommander-Mac")
-    commander_zip = os.path.join(commander_path,"Commander_osx_1v16p1b1501.zip")
+    os_name_commander = "Commander_osx"
     commander_app_path = os.path.join(commander_path,"Commander.app","Contents","MacOS")
     java_path = os.path.join(silabs_chip_root, "slc","tools","amazon-corretto-17.jdk")
     arm_gcc_dir = os.path.join(tools_folder_path,"arm-gnu-toolchain-12.2.rel1-darwin-arm64-arm-none-eabi")
@@ -59,7 +59,7 @@ elif platform =="linux":
     zap_url = "https://github.com/project-chip/zap/releases/download/v2023.11.14-nightly/zap-linux-x64.zip"
     commander_url = "https://www.silabs.com/documents/public/software/SimplicityCommander-Linux.zip"
     commander_path = os.path.join(tools_folder_path,"SimplicityCommander-Linux")
-    commander_zip = os.path.join(commander_path,"Commander_linux_x86_64_1v16p1b1501.tar.bz")
+    os_name_commander = "Commander_linux_x86_64"
     java_path = os.path.join(silabs_chip_root, "slc","tools","amazon-corretto-17.0.8.8.1-linux-x64")
     commander_app_path = os.path.join(commander_path,"commander")
     arm_gcc_dir = os.path.join(tools_folder_path,"arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi")
@@ -148,7 +148,13 @@ else:
 if not os.path.isfile(os.path.join(commander_path,"Commander.app","Contents","MacOS","commander")) and not os.path.isfile(os.path.join(commander_path,"Simplicity Commander","commander.exe")) and not os.path.isfile(os.path.join(commander_path,"commander","commander")) :
     print("Downloading and unzipping Simplicity Commander ...")
     dload.save_unzip(commander_url, tools_folder_path, delete_after=True)
-    
+    for filename in os.listdir(commander_path):
+        if os_name_commander in filename:
+            commander_zip = os.path.join(commander_path,filename)
+            break
+    else:
+        print("Cannot find Simplicity Commander ...")
+        sys.ext(1)
     if platform == "darwin":
         command = "unzip "+ commander_zip + " -d " + commander_path
         os.system(command)

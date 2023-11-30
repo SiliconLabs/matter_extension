@@ -17,6 +17,18 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: zzz_generated/app-common
+-   path: src/platform
+    file_list:
+    -   path: DeviceSafeQueue.h
+    -   path: GLibTypeDeleter.h
+-   path: src/platform/OpenThread
+    file_list:
+    -   path: OpenThreadUtils.h
+    -   path: GenericThreadStackManagerImpl_OpenThread_LwIP.h
+    -   path: GenericNetworkCommissioningThreadDriver.h
+    -   path: GenericThreadStackManagerImpl_OpenThread.hpp
+    -   path: GenericThreadStackManagerImpl_OpenThread.h
+    -   path: OpenThreadDnssdImpl.h
 label: libdevicelayer
 package: Matter
 provides:

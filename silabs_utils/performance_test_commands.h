@@ -62,10 +62,11 @@ private:
 
     bool    pingInProgress = false;
 
-    uint8_t  responsesReceived = 0;
-    uint8_t  requestsSent      = 0;
-    uint8_t  pingCountTotal    = 0;
-    uint32_t timeoutMs         = kPingDefaultTimeoutMs;
+    uint16_t  responsesReceived = 0;
+    uint16_t  requestsSent      = 0;
+    uint16_t  pingCountTotal    = 0;
+    uint32_t  timeoutMs         = kPingDefaultTimeoutMs;
+    uint64_t  pingStartTime     = 0;
 
     chip::NodeId nodeId           = chip::kUndefinedNodeId;
     chip::FabricIndex fabricIndex = chip::kUndefinedFabricIndex;

@@ -1,2 +1,0 @@
-python/gen/third_party/pigweed/repo/pw_chrono/protos.python/package_metadata.json
-python/gen/third_party/pigweed/repo/pw_chrono/py/py/package_metadata.json

@@ -1,0 +1,19 @@
+
+category: Clusters|General
+description: Implementation of the Laundry Washer Controls Server Cluster
+id: matter_laundry_washer_controls
+package: Matter
+label: Laundry Washer Controls Server Cluster
+quality: production
+provides:
+  - name: matter_laundry_washer_controls
+source:
+  - path: src/app/clusters/laundry-washer-controls-server/laundry-washer-controls-server.cpp
+include:
+  - path: src/app/clusters/laundry-washer-controls-server
+    file_list:
+      - path: laundry-washer-controls-server.h
+      - path: laundry-washer-controls-delegate.h
+template_contribution:
+  - name: component_catalog
+    value: matter_laundry_washer_controls

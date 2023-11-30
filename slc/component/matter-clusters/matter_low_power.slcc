@@ -10,7 +10,7 @@ provides:
 source:
   - path: src/app/clusters/low-power-server/low-power-server.cpp
 include:
-  - path: src/app/clusters/low-power-server/
+  - path: src/app/clusters/low-power-server
     file_list:
       - path: low-power-server.h
       - path: low-power-delegate.h

@@ -12,6 +12,16 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: zzz_generated/app-common
+-   path: src/lib/dnssd/minimal_mdns/responders
+    file_list:
+    -   path: Srv.h
+    -   path: RecordResponder.h
+    -   path: QueryResponder.h
+    -   path: Ptr.h
+    -   path: IP.h
+    -   path: ReplyFilter.h
+    -   path: Responder.h
+    -   path: Txt.h
 label: responders
 package: Matter
 provides:

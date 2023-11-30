@@ -305,6 +305,12 @@ int32_t rsi_driver_wlan_send_cmd(rsi_wlan_cmd_request_t cmd, rsi_pkt_t *pkt)
       rsi_join->data_rate           = RSI_DATA_RATE;
       rsi_join->power_level         = RSI_POWER_LEVEL;
       rsi_join->join_feature_bitmap = RSI_JOIN_FEAT_BIT_MAP;
+      if (rsi_join->security_type == SME_WPA3) {
+        rsi_join->join_feature_bitmap |= RSI_JOIN_FEAT_MFP_CAPABLE_REQUIRED;
+      } else if (rsi_join->security_type == SME_WPA3_TRANSITION) {
+        rsi_join->join_feature_bitmap &= ~(RSI_JOIN_FEAT_MFP_CAPABLE_REQUIRED);
+        rsi_join->join_feature_bitmap |= RSI_JOIN_FEAT_MFP_CAPABLE_ONLY;
+      }
       rsi_uint32_to_4bytes(rsi_join->listen_interval, RSI_LISTEN_INTERVAL);
       memcpy(rsi_join->join_bssid, rsi_wlan_cb_non_rom->join_bssid_non_rom, 6);
 
@@ -741,6 +747,7 @@ int32_t rsi_driver_wlan_send_cmd(rsi_wlan_cmd_request_t cmd, rsi_pkt_t *pkt)
     case RSI_WLAN_REQ_GET_RANDOM:
     case RSI_WLAN_REQ_GET_STATS:
     case RSI_WLAN_REQ_EXT_STATS:
+    case RSI_WLAN_REQ_WMM_PARAMS:
       break;
 
     default: {
@@ -996,6 +1003,19 @@ int32_t rsi_driver_process_wlan_recv_cmd(rsi_pkt_t *pkt)
 
       if (status == RSI_SUCCESS) {
         // check the length of application buffer and copy firmware version
+        if ((rsi_wlan_cb->app_buffer != NULL) && (rsi_wlan_cb->app_buffer_length != 0)) {
+          copy_length = (payload_length < rsi_wlan_cb->app_buffer_length) ? (payload_length)
+                                                                          : (rsi_wlan_cb->app_buffer_length);
+          memcpy(rsi_wlan_cb->app_buffer, payload, copy_length);
+          rsi_wlan_cb->app_buffer = NULL;
+        }
+      }
+
+    } break;
+    case RSI_WLAN_RSP_WMM_PARAMS: {
+
+      if (status == RSI_SUCCESS) {
+        // check the length of application buffer and copy WMM_PARAMS into wmm_info_t structure
         if ((rsi_wlan_cb->app_buffer != NULL) && (rsi_wlan_cb->app_buffer_length != 0)) {
           copy_length = (payload_length < rsi_wlan_cb->app_buffer_length) ? (payload_length)
                                                                           : (rsi_wlan_cb->app_buffer_length);
@@ -1300,6 +1320,7 @@ int32_t rsi_driver_process_wlan_recv_cmd(rsi_pkt_t *pkt)
         }
         // Check for Auto config done
         if (host_desc[15] & RSI_AUTO_CONFIG_DONE) {
+          rsi_driver_cb->common_cb->state = RSI_COMMON_OPERMODE_DONE;
           // Set auto config state to done
           rsi_driver_cb->wlan_cb->auto_config_state = RSI_WLAN_STATE_AUTO_CONFIG_DONE;
 
@@ -1378,7 +1399,8 @@ int32_t rsi_driver_process_wlan_recv_cmd(rsi_pkt_t *pkt)
         // Check for Auto config done
         if (host_desc[15] & RSI_AUTO_CONFIG_DONE) {
           // Set auto config state to done
-          rsi_wlan_cb->auto_config_state = RSI_WLAN_STATE_AUTO_CONFIG_DONE;
+          rsi_driver_cb->common_cb->state = RSI_COMMON_OPERMODE_DONE;
+          rsi_wlan_cb->auto_config_state  = RSI_WLAN_STATE_AUTO_CONFIG_DONE;
 
           // Call auto config response handler
           if (rsi_wlan_cb_non_rom->callback_list.auto_config_rsp_handler) {
@@ -2337,7 +2359,7 @@ int32_t rsi_driver_process_wlan_recv_cmd(rsi_pkt_t *pkt)
              || (cmd_type == RSI_WLAN_REQ_GAIN_TABLE) || (cmd_type == RSI_WLAN_REQ_RX_STATS)
              || (cmd_type == RSI_WLAN_REQ_RADIO) || (cmd_type == RSI_WLAN_REQ_GET_STATS)
              || (cmd_type == RSI_WLAN_REQ_11AX_PARAMS) || (cmd_type == RSI_WLAN_REQ_TWT_PARAMS)
-             || (cmd_type == RSI_WLAN_REQ_EXT_STATS)
+             || (cmd_type == RSI_WLAN_REQ_EXT_STATS) || (cmd_type == RSI_WLAN_REQ_WMM_PARAMS)
 #ifdef RSI_WAC_MFI_ENABLE
              || (cmd_type == RSI_WLAN_REQ_ADD_MFI_IE)
 #endif

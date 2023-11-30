@@ -258,10 +258,6 @@ CHIP_ERROR BaseApplication::Init()
     RegisterPerfTestCommands();
 #endif // PERFORMANCE_TEST_ENABLED
 
-#ifdef PERFORMANCE_TEST_ENABLED // SLC-FIX
-    RegisterPerfTestCommands();
-#endif
-
     PlatformMgr().AddEventHandler(OnPlatformEvent, 0);
 #ifdef SL_WIFI
     BaseApplication::sIsProvisioned = ConnectivityMgr().IsWiFiStationProvisioned();

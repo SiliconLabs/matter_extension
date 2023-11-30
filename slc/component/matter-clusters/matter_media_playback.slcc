@@ -10,7 +10,7 @@ provides:
 source:
   - path: src/app/clusters/media-playback-server/media-playback-server.cpp
 include:
-  - path: src/app/clusters/media-playback-server/
+  - path: src/app/clusters/media-playback-server
     file_list:
       - path: media-playback-server.h
       - path: media-playback-delegate.h

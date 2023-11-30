@@ -18,6 +18,9 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: zzz_generated/app-common
+-   path: src/tracing/json
+    file_list:
+    -   path: json_tracing.h
 label: json
 package: Matter
 provides:

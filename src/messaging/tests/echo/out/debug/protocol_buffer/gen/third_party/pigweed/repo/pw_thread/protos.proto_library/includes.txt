@@ -1,1 +1,0 @@
-protocol_buffer/gen/third_party/pigweed/repo/pw_tokenizer/proto.proto_library/sources

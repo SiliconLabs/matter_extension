@@ -1,2 +1,0 @@
-protocol_buffer/gen/third_party/pigweed/repo/pw_protobuf/codegen_test_deps_protos.proto_library/sources
-protocol_buffer/gen/third_party/pigweed/repo/pw_protobuf/common_protos.proto_library/sources

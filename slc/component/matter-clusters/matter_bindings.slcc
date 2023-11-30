@@ -1,22 +1,22 @@
 
 category: Clusters|General
-description: Implementation of the Bindingmanager Cluster
+description: Implementation of the Bindings Cluster
 id: matter_bindings
 package: Matter
-label: Bindingmanager Cluster
+label: Bindings Cluster
 quality: production
 provides:
   - name: matter_bindings
 source:
   - path: src/app/clusters/bindings/BindingManager.cpp
-  - path: src/app/clusters/bindings/bindings.cpp
   - path: src/app/clusters/bindings/PendingNotificationMap.cpp
+  - path: src/app/clusters/bindings/bindings.cpp
 include:
-  - path: src/app/clusters/bindings/
+  - path: src/app/clusters/bindings
     file_list:
+      - path: PendingNotificationMap.h
       - path: BindingManager.h
       - path: bindings.h
-      - path: PendingNotificationMap.h
 template_contribution:
   - name: component_catalog
     value: matter_bindings

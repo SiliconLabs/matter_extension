@@ -15,6 +15,12 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: zzz_generated/app-common
+-   path: src/lib/asn1
+    file_list:
+    -   path: ASN1.h
+    -   path: ASN1Config.h
+    -   path: ASN1Error.h
+    -   path: ASN1Macros.h
 label: libasn1
 package: Matter
 provides:

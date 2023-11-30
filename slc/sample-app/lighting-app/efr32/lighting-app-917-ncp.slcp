@@ -50,7 +50,7 @@ component:
     from: matter
   - id: matter_administrator_commissioning
     from: matter
-  - id: matter_basic
+  - id: matter_basic_information
     from: matter
   - id: matter_color_control
     from: matter
@@ -143,6 +143,8 @@ requires:
 config_file:
   - path: ../../../../examples/lighting-app/silabs/data_model/lighting-wifi-app.zap
     directory: common
+  - path: ../../../../provision.mattpconfn
+    directory: provision
 
 include:
   - path: ../../../../examples/lighting-app/silabs/include

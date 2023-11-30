@@ -22,7 +22,7 @@ provides:
 source:
   - path: examples/platform/silabs/efr32/uart.cpp
 include:
-- path: examples/platform/silabs/efr32
+- path: examples/platform/silabs
   file_list:
   - path: uart.h
 define:

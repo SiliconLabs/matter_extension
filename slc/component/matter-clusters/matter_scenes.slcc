@@ -1,25 +1,24 @@
 
 category: Clusters|General
-description: Implementation of the Scenes Cluster
+description: Implementation of the Scenes Server Cluster
 id: matter_scenes
 package: Matter
-label: Scenes Cluster
+label: Scenes Server Cluster
 quality: experimental
 provides:
   - name: matter_scenes
 source:
+  - path: src/app/clusters/scenes-server/ExtensionFieldSetsImpl.cpp
   - path: src/app/clusters/scenes-server/scenes-server.cpp
   - path: src/app/clusters/scenes-server/SceneTableImpl.cpp
-  - path: src/app/clusters/scenes-server/ExtensionFieldSetsImpl.cpp
 include:
-  - path: src/app/clusters/scenes-server/
+  - path: src/app/clusters/scenes-server
     file_list:
-      - path: SceneTable.h
       - path: SceneTableImpl.h
+      - path: scenes-server.h
       - path: ExtensionFieldSets.h
       - path: ExtensionFieldSetsImpl.h
-      - path: scenes-server.h
-
+      - path: SceneTable.h
 template_contribution:
   - name: component_catalog
     value: matter_scenes

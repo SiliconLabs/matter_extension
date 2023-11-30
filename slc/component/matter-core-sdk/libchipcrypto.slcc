@@ -15,6 +15,19 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: zzz_generated/app-common
+-   path: src/crypto
+    file_list:
+    -   path: OperationalKeystore.h
+    -   path: RawKeySessionKeystore.h
+    -   path: CHIPCryptoPAL.h
+    -   path: RandUtils.h
+    -   path: CHIPCryptoPALmbedTLS.h
+    -   path: SessionKeystore.h
+    -   path: PSAOperationalKeystore.h
+    -   path: DefaultSessionKeystore.h
+    -   path: CHIPCryptoPALPSA.h
+    -   path: PersistentStorageOperationalKeystore.h
+    -   path: PSASessionKeystore.h
 label: libchipcrypto
 package: Matter
 provides:

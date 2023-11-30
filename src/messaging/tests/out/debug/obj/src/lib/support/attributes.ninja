@@ -1,7 +1,0 @@
-defines =
-framework_dirs =
-include_dirs =
-target_output_name = attributes
-
-
-build obj/src/lib/support/attributes.stamp: stamp

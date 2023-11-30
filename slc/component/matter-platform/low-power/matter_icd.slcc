@@ -11,13 +11,14 @@ include:
   - path: IcdManagementServer.h
   - path: IcdMonitoringTable.h
   - path: ICDManager.h
-  - path: ICDEventManager.h
+  - path: ICDNotifier.h
+  - path: ICDStateObserver.h
 
 source:
   - path: src/app/icd/IcdManagementServer.cpp
   - path: src/app/icd/IcdMonitoringTable.cpp
   - path: src/app/icd/ICDManager.cpp
-  - path: src/app/icd/ICDEventManager.cpp
+  - path: src/app/icd/ICDNotifier.cpp
   
 # TODO: make this work
 #requires:

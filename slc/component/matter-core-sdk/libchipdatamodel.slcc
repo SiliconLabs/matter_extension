@@ -17,6 +17,134 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: zzz_generated/app-common
+-   path: src/app/reporting
+    file_list:
+    -   path: ReportSchedulerImpl.h
+    -   path: Engine.h
+    -   path: SynchronizedReportSchedulerImpl.h
+    -   path: reporting.h
+    -   path: ReportScheduler.h
+-   path: src/app
+    file_list:
+    -   path: AttributeAccessToken.h
+    -   path: InteractionModelTimeout.h
+    -   path: SubscriptionResumptionStorage.h
+    -   path: AttributePersistenceProvider.h
+    -   path: EventLoggingDelegate.h
+    -   path: TimedRequest.h
+    -   path: WriteHandler.h
+    -   path: AttributePathParams.h
+    -   path: CASEClient.h
+    -   path: CommandPathParams.h
+    -   path: FailSafeContext.h
+    -   path: ObjectList.h
+    -   path: CASESessionManager.h
+    -   path: OperationalSessionSetup.h
+    -   path: ConcreteEventPath.h
+    -   path: AttributePathExpandIterator.h
+    -   path: TimerDelegates.h
+    -   path: ConcreteClusterPath.h
+    -   path: CommandHandler.h
+    -   path: DefaultAttributePersistenceProvider.h
+    -   path: DataModelRevision.h
+    -   path: SimpleSubscriptionResumptionStorage.h
+    -   path: CompatEnumNames.h
+    -   path: DeviceProxy.h
+    -   path: ChunkedWriteCallback.h
+    -   path: att-storage.h
+    -   path: TimedHandler.h
+    -   path: DeferredAttributePersistenceProvider.h
+    -   path: TestEventTriggerDelegate.h
+    -   path: EventLogging.h
+    -   path: GlobalAttributes.h
+    -   path: CommandSender.h
+    -   path: AppConfig.h
+    -   path: ConcreteAttributePath.h
+    -   path: EventManagement.h
+    -   path: InteractionModelHelper.h
+    -   path: InteractionModelEngine.h
+    -   path: EventLoggingTypes.h
+    -   path: ReadClient.h
+    -   path: StatusResponse.h
+    -   path: ReadPrepareParams.h
+    -   path: WriteClient.h
+    -   path: BufferedReadCallback.h
+    -   path: EventPathParams.h
+    -   path: CommandResponseHelper.h
+    -   path: CommandHandlerInterface.h
+    -   path: DataVersionFilter.h
+    -   path: RequiredPrivilege.h
+    -   path: ConcreteCommandPath.h
+    -   path: AttributeAccessInterface.h
+    -   path: SafeAttributePersistenceProvider.h
+    -   path: EventHeader.h
+    -   path: ClusterStateCache.h
+    -   path: CASEClientPool.h
+    -   path: InteractionModelRevision.h
+    -   path: OperationalSessionSetupPool.h
+    -   path: ReadHandler.h
+    -   path: OTAUserConsentCommon.h
+    -   path: data-model/BasicTypes.h
+    -   path: data-model/DecodableList.h
+    -   path: data-model/Decode.h
+    -   path: data-model/Encode.h
+    -   path: data-model/FabricScoped.h
+    -   path: data-model/List.h
+    -   path: data-model/NullObject.h
+    -   path: data-model/Nullable.h
+    -   path: data-model/TagBoundEncoder.h
+    -   path: data-model/WrappedStructEncoder.h
+    -   path: icd/ICDStateObserver.h
+    -   path: icd/ICDNotifier.h
+-   path: src/app/MessageDef
+    file_list:
+    -   path: AttributePathIBs.h
+    -   path: MessageDefHelper.h
+    -   path: DataVersionFilterIBs.h
+    -   path: ListParser.h
+    -   path: InvokeResponseIB.h
+    -   path: EventFilterIB.h
+    -   path: EventPathIB.h
+    -   path: ArrayParser.h
+    -   path: ListBuilder.h
+    -   path: AttributeStatusIB.h
+    -   path: EventStatusIB.h
+    -   path: CommandPathIB.h
+    -   path: SubscribeResponseMessage.h
+    -   path: InvokeRequests.h
+    -   path: StatusIB.h
+    -   path: TimedRequestMessage.h
+    -   path: AttributeDataIB.h
+    -   path: EventFilterIBs.h
+    -   path: Parser.h
+    -   path: MessageBuilder.h
+    -   path: StatusResponseMessage.h
+    -   path: AttributeReportIB.h
+    -   path: ClusterPathIB.h
+    -   path: EventReportIB.h
+    -   path: ReportDataMessage.h
+    -   path: EventReportIBs.h
+    -   path: AttributeStatusIBs.h
+    -   path: ArrayBuilder.h
+    -   path: MessageParser.h
+    -   path: InvokeResponseIBs.h
+    -   path: AttributeDataIBs.h
+    -   path: DataVersionFilterIB.h
+    -   path: SubscribeRequestMessage.h
+    -   path: AttributeReportIBs.h
+    -   path: Builder.h
+    -   path: CommandStatusIB.h
+    -   path: EventPathIBs.h
+    -   path: InvokeResponseMessage.h
+    -   path: StructBuilder.h
+    -   path: EventDataIB.h
+    -   path: WriteRequestMessage.h
+    -   path: ReadRequestMessage.h
+    -   path: StructParser.h
+    -   path: CommandDataIB.h
+    -   path: WriteResponseMessage.h
+    -   path: AttributePathIB.h
+    -   path: InvokeRequestMessage.h
 label: libchipdatamodel
 package: Matter
 provides:
