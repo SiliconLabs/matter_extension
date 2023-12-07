@@ -107,6 +107,9 @@ component:
     from: matter
   - id: segger_rtt
 
+  - id: matter_subscription_timeout_resumption
+    from: matter
+
 # Require LCD and QR Code components only on the boards that support LCD
 requires:
   - name: matter_lcd
@@ -137,7 +140,7 @@ requires:
 config_file:
   - path: ../../../../silabs_examples/onoff-plug-app/onoff-plug-common/onoff-plug-app.zap
     directory: common
-  - path: ../../../../provision.mattpconfn
+  - path: ../../../../provision.mattpconf
     directory: provision
 
 include:

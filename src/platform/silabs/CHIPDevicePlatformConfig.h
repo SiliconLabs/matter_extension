@@ -24,6 +24,10 @@
 
 #pragma once
 
+#if (SL_ICD_ENABLED && CHIP_ENABLE_OPENTHREAD)
+#include "sl_matter_icd_config.h" // SLC-FIX
+#endif // SL_ICD_ENABLED && CHIP_ENABLE_OPENTHREAD
+
 // ==================== Platform Adaptations ====================
 
 #define CHIP_DEVICE_CONFIG_SILABS_NVM3_ERROR_MIN 0xB00000

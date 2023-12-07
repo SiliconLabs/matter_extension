@@ -96,6 +96,9 @@ component:
   - id: matter_configuration_over_swo
     from: matter
   - id: segger_rtt
+
+  - id: matter_subscription_timeout_resumption
+    from: matter
   - id: matter_temperature_sensor
     from: matter
   - id: sensor_rht
@@ -125,7 +128,7 @@ requires:
 config_file:
   - path: ../../../../examples/thermostat/thermostat-common/thermostat.zap
     directory: common
-  - path: ../../../../provision.mattpconfn
+  - path: ../../../../provision.mattpconf
     directory: provision
 
 include:

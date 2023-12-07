@@ -27,6 +27,8 @@ component:
     from: matter
   - id: matter_thread_ftd
     from: matter
+  - id: matter_thread_example
+    from: matter
   - id: rail_util_pti
   - id: matter_ota_support
     from: matter
@@ -96,6 +98,9 @@ component:
     from: matter
   - id: segger_rtt
 
+  - id: matter_subscription_timeout_resumption
+    from: matter
+
 requires:
 # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
 # Select UART/EUART drivers based on device series
@@ -109,7 +114,7 @@ requires:
 config_file:
   - path: ../../../../examples/lighting-app/silabs/data_model/lighting-thread-app.zap
     directory: common
-  - path: ../../../../provision.mattpconfn
+  - path: ../../../../provision.mattpconf
     directory: provision
 
 include:

@@ -43,6 +43,9 @@
 
 #ifdef SIWX_917
 #include "wfx_rsi.h"
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
+extern "C" void M4_sleep_wakeup(void);
+#endif /* CHIP_CONFIG_ENABLE_ICD_SERVER */
 #endif /* SIWX_917 */
 
 using namespace ::chip;
@@ -298,5 +301,10 @@ CHIP_ERROR SilabsMatterConfig::InitWiFi(void)
 // ================================================================================
 extern "C" void vApplicationIdleHook(void)
 {
-    // FreeRTOS Idle callback
+#if SIWX_917 && CHIP_CONFIG_ENABLE_ICD_SERVER
+    if(ConnectivityMgr().IsWiFiStationConnected()) {
+        // Let the M4 sleep once commissioning is done and device is in idle state
+        M4_sleep_wakeup();
+    }
+#endif
 }

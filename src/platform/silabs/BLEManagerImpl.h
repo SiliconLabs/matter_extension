@@ -25,15 +25,15 @@
 #pragma once
 #if CHIP_DEVICE_CONFIG_ENABLE_CHIPOBLE
 
-#if (BLE_ENABLE || RSI_BLE_ENABLE)
+#if (SLI_SI91X_ENABLE_BLE || RSI_BLE_ENABLE)
 #define BLE_MIN_CONNECTION_INTERVAL_MS 45 // 45 msec
 #define BLE_MAX_CONNECTION_INTERVAL_MS 45 // 45 msec
 #define BLE_SLAVE_LATENCY_MS 0
 #define BLE_TIMEOUT_MS 400
-#endif // BLE_ENABLE
+#endif // SLI_SI91X_ENABLE_BLE
 #include "FreeRTOS.h"
 #include "timers.h"
-#if (BLE_ENABLE || RSI_BLE_ENABLE)
+#if (SLI_SI91X_ENABLE_BLE || RSI_BLE_ENABLE)
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -47,7 +47,7 @@ extern "C" {
 #include "gatt_db.h"
 #include "sl_bgapi.h"
 #include "sl_bt_api.h"
-#endif // BLE_ENABLE
+#endif // SLI_SI91X_ENABLE_BLE
 
 namespace chip {
 namespace DeviceLayer {
@@ -64,7 +64,7 @@ class BLEManagerImpl final : public BLEManager, private BleLayer, private BlePla
 public:
     void HandleBootEvent(void);
 
-#if (BLE_ENABLE || RSI_BLE_ENABLE)
+#if (SLI_SI91X_ENABLE_BLE || RSI_BLE_ENABLE)
     void HandleConnectEvent(void);
     void HandleConnectionCloseEvent(uint16_t reason);
     void HandleWriteEvent(rsi_ble_event_write_t evt);
@@ -86,7 +86,7 @@ public:
     CHIP_ERROR StopAdvertising(void);
 
 #if CHIP_ENABLE_ADDITIONAL_DATA_ADVERTISING
-#ifdef BLE_ENABLE
+#ifdef SLI_SI91X_ENABLE_BLE
     // This defination is used by Wi-Fi devices
     static void HandleC3ReadRequest(rsi_ble_read_req_t * rsi_ble_read_req);
 #else
@@ -157,13 +157,13 @@ private:
     enum
     {
         kMaxConnections      = BLE_LAYER_NUM_BLE_ENDPOINTS,
-        kMaxDeviceNameLength = 16,
+        kMaxDeviceNameLength = 27,
         kUnusedIndex         = 0xFF,
     };
 
     struct CHIPoBLEConState
     {
-#if !(BLE_ENABLE || RSI_BLE_ENABLE)
+#if !(SLI_SI91X_ENABLE_BLE || RSI_BLE_ENABLE)
         bd_addr address;
 #endif
         uint16_t mtu : 10;
@@ -192,7 +192,7 @@ private:
     CHIP_ERROR EncodeAdditionalDataTlv();
 #endif
 
-#if (BLE_ENABLE || RSI_BLE_ENABLE)
+#if (SLI_SI91X_ENABLE_BLE || RSI_BLE_ENABLE)
     void HandleRXCharWrite(rsi_ble_event_write_t * evt);
 #else
     void HandleRXCharWrite(volatile sl_bt_msg_t * evt);

@@ -52,6 +52,6 @@ if platform == "win32":
     except:
         print("ERROR: SLC undefined. Please run sl_setup_env.py")
 
-subprocess.run([slc_path, "--java-location", java_path, "generate", "-d", output_dir, "-p", silabs_app_path, "--with", silabs_board])
+subprocess.run([slc_path, "--java-location", java_path, "generate", "-d", output_dir, "-p", silabs_app_path, "--with", silabs_board, "--force"])
 
 subprocess.run(["make", "-C", output_dir, "-f", makefile_path, "-j13"])

@@ -43,12 +43,6 @@ source:
 - path: examples/lock-app/silabs/src/EventHandlerLibShell.cpp
   condition:
     - matter_lock
-    - matter_platform_efr32
-- path: examples/lock-app/silabs/src/EventHandlerLibShell.cpp
-  condition:
-    - matter_lock
-    - matter_platform_siwx917
-
 
 include:
 - path: src/lib/shell
@@ -81,7 +75,4 @@ define:
   value: 1
 conflicts:
   - name: matter_low_power
-  - name: matter_sed
-  - name: matter_sed_wifi
-  - name: matter_sed_wifi_917ncp
   - name: matter_no_lcd_shell

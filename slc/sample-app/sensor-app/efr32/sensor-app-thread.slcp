@@ -27,6 +27,8 @@ component:
     from: matter
   - id: matter_thread_ftd
     from: matter
+  - id: matter_thread_example
+    from: matter
   - id: rail_util_pti
   - id: matter_ota_support
     from: matter
@@ -99,6 +101,9 @@ component:
   - id: matter_configuration_over_swo
     from: matter
   - id: segger_rtt
+
+  - id: matter_subscription_timeout_resumption
+    from: matter
   - id: matter_occupancy_sensor_type
     from: matter
 

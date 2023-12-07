@@ -76,6 +76,7 @@ struct wfx_rsi
     sl_wfx_mac_address_t ap_bssid; /* To which our STA is connected */
     uint16_t join_retries;
     uint8_t ip4_addr[4]; /* Not sure if this is enough */
+    uint8_t ta_power_save_done;
 };
 
 extern struct wfx_rsi wfx_rsi;

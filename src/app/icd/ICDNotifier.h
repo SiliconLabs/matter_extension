@@ -19,8 +19,6 @@
 #include <app/AppConfig.h>
 #include <lib/core/CHIPError.h>
 
-// SLC-FIX: figure out proper place for this
-#define ICD_MAX_NOTIFICATION_SUBSCRIBERS 1
 
 class ICDListener;
 

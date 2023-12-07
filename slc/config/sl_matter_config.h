@@ -55,6 +55,9 @@
 // See: https://github.com/project-chip/connectedhomeip/pull/28149 add chip_enable_read_client in common_flags.gni
 #define CHIP_CONFIG_ENABLE_READ_CLIENT 1
 
+// <o ICD_MAX_NOTIFICATION_SUBSCRIBERS> Maximum amount of ICD notification subscribers
+#define ICD_MAX_NOTIFICATION_SUBSCRIBERS 1
+
 // <<< end of configuration section >>>
 
 #endif // SL_MATTER_CONFIG_H

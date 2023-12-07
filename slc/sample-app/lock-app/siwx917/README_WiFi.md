@@ -13,7 +13,8 @@ information for the BLE connection and starting the Rendez-vous procedure.
     
 The lock example is intended to serve both as a means to explore the
 workings of Matter as well as a template for creating real products based on the
-Silicon Labs platform.
+Silicon Labs platform. **This example is defaulted to use full ICD functionality
+out-of-the-box and therefore has the matter_icd component enabled.**
 
 For more general information on running matter applications and pre-requisites please look at online 
 documentation for Matter available on docs.silabs.com. Follow Wi-Fi instructions depending on the example you are running.
@@ -24,10 +25,15 @@ documentation for Matter available on docs.silabs.com. Follow Wi-Fi instructions
 **LCD** 
 
 The LCD on Silabs WSTK shows a QR Code. This QR Code is be scanned by the 
-CHIP Tool app For the Rendez-vous procedure over BLE
+CHIP Tool app For the Rendez-vous procedure over BLE.
 
-On devices that do not have or support the LCD Display like the BRD4166A Thunderboard Sense 2, 
-a URL can be found in the RTT logs. For example:
+On devices that do not have or support the LCD Display like the BRD4166A Thunderboard Sense 2, a URL can be found in the **RTT logs upon startup OR by issuing the following matter shell command:**
+
+```shell
+matterCli> onboardingcodes ble qrcodeurl
+```
+
+Log output example:
 
 ```shell
 [SVR] Copy/paste the below URL in a browser to see the QR Code:
@@ -56,7 +62,9 @@ Simulates the Lock The following states are possible:
 
 **Push Button 0**
 
--   _Press and Release_ : Start, or restart, BLE advertisement in fast mode. It will advertise in this mode for 30 seconds. The device will then switch to a slower interval advertisement. After 15 minutes, the advertisement stops.
+-   _Press and Release_ : Start, or restart, BLE advertisement in fast mode. It will advertise in this mode
+for 30 seconds. The device will then switch to a slower interval advertisement.
+After 15 minutes, the advertisement stops. In addition, this button should also print the QR Code URL to the RTT logs.
 
 -   _Pressed and hold for 6 s_ : Initiates the factory reset of the device. Releasing the button within the 6-second window cancels the factory reset procedure. **LEDs** blink in unison when the factory reset procedure is initiated.
 

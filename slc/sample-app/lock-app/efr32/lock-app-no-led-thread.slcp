@@ -20,7 +20,9 @@ component:
     from: matter
   - id: matter_ble
     from: matter
-  - id: matter_thread_ftd
+  - id: matter_thread_mtd
+    from: matter
+  - id: matter_thread_example
     from: matter
   - id: rail_util_pti
   - id: matter_ota_support
@@ -98,6 +100,11 @@ component:
   - id: matter_configuration_over_swo
     from: matter
   - id: segger_rtt
+
+  - id: matter_icd
+    from: matter
+  - id: matter_subscription_synchronization
+    from: matter
   - id: matter_wstk_no_leds
     from: matter
 
@@ -114,7 +121,7 @@ requires:
 config_file:
   - path: ../../../../examples/lock-app/lock-common/lock-app.zap
     directory: common
-  - path: ../../../../provision.mattpconfn
+  - path: ../../../../provision.mattpconf
     directory: provision
 
 include:
@@ -172,6 +179,12 @@ configuration:
     value: 1
     condition: [matter_thread_coap_cert_libs]
   - {name: SL_STACK_SIZE, value: '4608'} 
+# Default ICD configurations for lock-app
+  - {name: SL_ACTIVE_MODE_THRESHOLD, value: '1000'}
+  - {name: SL_ACTIVE_MODE_INTERVAL, value: '10000'}
+  - {name: SL_IDLE_MODE_INTERVAL, value: '600'}
+  - {name: SL_OT_IDLE_INTERVAL, value: '5000'}
+  - {name: SL_OT_ACTIVE_INTERVAL, value: '500'}
 
 toolchain_settings:
   - option: gcc_c++_compiler_option

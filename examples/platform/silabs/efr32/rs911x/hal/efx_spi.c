@@ -54,23 +54,8 @@
 #include "sl_power_manager.h"
 #endif
 
-#ifdef CHIP_9117
-#include "cmsis_os2.h"
-#include "sl_board_configuration.h"
-#include "sl_net.h"
-#include "sl_si91x_driver.h"
-#include "sl_si91x_types.h"
-#include "sl_wifi_callback_framework.h"
-#include "sl_wifi_constants.h"
-#include "sl_wifi_types.h"
-
-// macro to drive semaphore block minimum timer in milli seconds
-// ported from rsi_hal.h (rs911x)
-#define RSI_SEM_BLOCK_MIN_TIMER_VALUE_MS (50)
-#else
 #include "rsi_board_configuration.h"
 #include "rsi_driver.h"
-#endif // CHIP_9117
 
 #if SL_BTLCTRL_MUX
 #include "btl_interface.h"
@@ -189,9 +174,6 @@ void sl_wfx_host_reset_chip(void)
 void gpio_interrupt(uint8_t interrupt_number)
 {
   UNUSED_PARAMETER(interrupt_number);
-#ifdef CHIP_9117
-  sl_si91x_host_set_bus_event(NCP_HOST_BUS_RX_EVENT);
-#endif
 }
 
 /*****************************************************************
@@ -221,27 +203,6 @@ void rsi_hal_board_init(void)
     /* Reset of Wifi chip */
     sl_wfx_host_reset_chip();
 }
-
-#if (CHIP_9117)
-sl_status_t sl_si91x_host_init(void)
-{
-  rsi_hal_board_init();
-
-  // Start reset line low
-  GPIO_PinModeSet(RESET_PIN.port, RESET_PIN.pin, gpioModePushPull, 0);
-
-  // configure packet pending interrupt priority
-  NVIC_SetPriority(GPIO_ODD_IRQn, PACKET_PENDING_INT_PRI);
-
-  // Configure interrupt, sleep and wake confirmation pins
-  GPIOINT_CallbackRegister(INTERRUPT_PIN.pin, gpio_interrupt);
-  GPIO_PinModeSet(INTERRUPT_PIN.port, INTERRUPT_PIN.pin, gpioModeInputPullFilter, 0);
-  GPIO_ExtIntConfig(INTERRUPT_PIN.port, INTERRUPT_PIN.pin, INTERRUPT_PIN.pin, true, false, true);
-  GPIO_PinModeSet(SLEEP_CONFIRM_PIN.port, SLEEP_CONFIRM_PIN.pin, gpioModeWiredOrPullDown, 1);
-  GPIO_PinModeSet(WAKE_INDICATOR_PIN.port, WAKE_INDICATOR_PIN.pin, gpioModeWiredOrPullDown, 0);
-  return SL_STATUS_OK;
-}
-#endif
 
 void sl_si91x_host_enable_high_speed_bus()
 {
@@ -496,57 +457,3 @@ int16_t rsi_spi_transfer(uint8_t * tx_buf, uint8_t * rx_buf, uint16_t xlen, uint
 #endif // SL_SPICTRL_MUX
     return rsiError;
 }
-
-#ifdef CHIP_9117
-/*********************************************************************
- * @fn   int16_t sl_si91x_host_spi_transfer(uint8_t *tx_buf, uint8_t *rx_buf, uint16_t xlen)
- * @param[in]  uint8_t *tx_buff, pointer to the buffer with the data to be transferred
- * @param[in]  uint8_t *rx_buff, pointer to the buffer to store the data received
- * @param[in]  uint16_t transfer_length, Number of bytes to send and receive
- * @param[out] None
- * @return     0, 0=success
- * @section description
- * This API is used to transfer/receive data to the Wi-Fi module through the SPI interface.
- **************************************************************************/
-sl_status_t sl_si91x_host_spi_transfer(const void * tx_buf, void * rx_buf, uint16_t xlen)
-{
-    return (rsi_spi_transfer((uint8_t *) tx_buf, rx_buf, xlen, RSI_MODE_8BIT));
-}
-
-
-void sl_si91x_host_set_sleep_indicator(void)
-{
-  GPIO_PinOutSet(SLEEP_CONFIRM_PIN.port, SLEEP_CONFIRM_PIN.pin);
-}
-
-uint32_t sl_si91x_host_get_wake_indicator(void)
-{
-  return GPIO_PinInGet(WAKE_INDICATOR_PIN.port, WAKE_INDICATOR_PIN.pin);
-}
-
-void sl_si91x_host_hold_in_reset(void)
-{
-  GPIO_PinModeSet(RESET_PIN.port, RESET_PIN.pin, gpioModePushPull, 1);
-  GPIO_PinOutClear(RESET_PIN.port, RESET_PIN.pin);
-}
-
-void sl_si91x_host_release_from_reset(void)
-{
-  GPIO_PinModeSet(RESET_PIN.port, RESET_PIN.pin, gpioModeWiredOrPullDown, 1);
-}
-
-void sl_si91x_host_enable_bus_interrupt(void)
-{
-  NVIC_EnableIRQ(GPIO_ODD_IRQn);
-}
-
-void sl_si91x_host_disable_bus_interrupt(void)
-{
-  NVIC_DisableIRQ(GPIO_ODD_IRQn);
-}
-
-void sl_si91x_host_clear_sleep_indicator(void)
-{
-  GPIO_PinOutClear(SLEEP_CONFIRM_PIN.port, SLEEP_CONFIRM_PIN.pin);
-}
-#endif // CHIP_9117

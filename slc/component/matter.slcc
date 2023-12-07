@@ -84,6 +84,7 @@ requires:
   - name: matter_tracing
   - name: matter_im_status
   - name: matter_includes
+  - name: matter_icd_core
 
 recommends:
   - id: matter_configuration_over_swo

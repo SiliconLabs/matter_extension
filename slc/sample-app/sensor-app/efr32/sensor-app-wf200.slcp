@@ -96,6 +96,9 @@ component:
   - id: matter_configuration_over_swo
     from: matter
   - id: segger_rtt
+
+  - id: matter_subscription_timeout_resumption
+    from: matter
   - id: matter_occupancy_sensor_type
     from: matter
 

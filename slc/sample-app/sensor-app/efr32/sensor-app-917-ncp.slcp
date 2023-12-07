@@ -39,6 +39,8 @@ component:
     from: matter
   - id: siwx917_ncp_extension
     from: matter
+  - id: matter_gatt_additional_advertising
+    from: matter
 
   - id: matter_sensor
     from: matter   
@@ -96,6 +98,9 @@ component:
     from: matter
   - id: segger_rtt
 
+  - id: matter_subscription_timeout_resumption
+    from: matter
+
 
   - id: efx_ncp_custom_host_mcu
     from: matter
@@ -133,17 +138,11 @@ requires:
 #  - name: matter_qr_code
 #    condition:
 #    - device_series_2
-  - name: spidrv_instance
-  - name: uartdrv_eusart
-    condition:
-    - device_series_2
+
 # Select UART/EUART drivers based on device series
   - name: matter_drivers_series_1_wifi_rs911x
     condition:
      - device_series_1
-  - name: matter_drivers_series_2_wifi_rs911x
-    condition:
-     - device_series_2
 
 include:
   - path: ../../../../silabs_examples/silabs-sensors/include

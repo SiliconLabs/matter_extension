@@ -96,6 +96,9 @@ component:
   - id: matter_configuration_over_swo
     from: matter
   - id: segger_rtt
+
+  - id: matter_subscription_timeout_resumption
+    from: matter
   - id: matter_lcd
     from: matter
   - id: matter_qr_code
@@ -122,7 +125,7 @@ requires:
 config_file:
   - path: ../../../../examples/window-app/common/window-app.zap
     directory: common
-  - path: ../../../../provision.mattpconfn
+  - path: ../../../../provision.mattpconf
     directory: provision
 
 include:

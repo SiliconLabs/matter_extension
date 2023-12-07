@@ -25,9 +25,15 @@ documentation for Matter available on docs.silabs.com. Follow Thread demo instru
 
 **LCD** 
 
-The LCD on Silabs WSTK shows a QR Code. This QR Code is be scanned by the CHIP Tool app For the Rendez-vous procedure over BLE
+The LCD on Silabs WSTK shows a QR Code. This QR Code is be scanned by the CHIP Tool app For the Rendez-vous procedure over BLE.
 
-* On devices that do not have or support the LCD Display like the BRD4166A Thunderboard Sense 2, a URL can be found in the RTT logs. For example:
+On devices that do not have or support the LCD Display like the BRD4166A Thunderboard Sense 2, a URL can be found in the **RTT logs upon startup OR by issuing the following matter shell command:**
+
+```shell
+matterCli> onboardingcodes ble qrcodeurl
+```
+
+Log output example:
 
 ```shell
 [SVR] Copy/paste the below URL in a browser to see the QR Code:
@@ -48,7 +54,9 @@ LED 0 shows the overall state of the device and its connectivity. The following 
 
 **Push Button 0**
 
--   _Press and Release_ : Start, or restart, BLE advertisement in fast mode. It will advertise in this mode for 30 seconds. The device will then switch to a slower interval advertisement. After 15 minutes, the advertisement stops.
+-   _Press and Release_ : Start, or restart, BLE advertisement in fast mode. It will advertise in this mode
+for 30 seconds. The device will then switch to a slower interval advertisement.
+After 15 minutes, the advertisement stops. In addition, this button should also print the QR Code URL to the RTT logs.
 
 -   _Pressed and hold for 6 s_ : Initiates the factory reset of the device. Releasing the button within the 6-second window cancels the factory reset procedure. **LEDs** blink in unison when the factory reset procedure is initiated.
 

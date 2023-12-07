@@ -9,14 +9,12 @@ requires:
   - name: glib
   - name: cmsis_spi
   - name: sleeptimer_sysrtc
-  - name: sleeptimer_core
+  - name: sleeptimer
   - name: memlcd_917
 provides:
   - name: matter_lcd_917SOC
 conflicts:
   - name: matter_low_power
-  - name: matter_sed
-  - name: matter_sed_wifi
   - name: matter_no_lcd_shell
 include:
 - path: examples/platform/silabs/display/

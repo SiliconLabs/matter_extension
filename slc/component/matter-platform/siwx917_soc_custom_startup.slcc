@@ -12,14 +12,7 @@ include:
 
 source:
 - path: third_party/silabs/matter_support/matter/si91x/siwx917/BRD4338A/support/hal/rsi_hal_mcu_m4.c
-- path: third_party/silabs/matter_support/matter/si91x/siwx917/BRD4325x/support/src/startup_RS1xxxx.c
-  condition: [brd4325b]
 - path: third_party/silabs/matter_support/matter/si91x/siwx917/BRD4338A/support/src/startup_common_RS1xxxx.c
-  condition: [brd4338a]
-- path: third_party/silabs/matter_support/matter/si91x/siwx917/BRD4325x/support/src/startup_common_RS1xxxx.c
-  condition: [brd4325c]
-- path: third_party/silabs/matter_support/matter/si91x/siwx917/BRD4325x/support/src/startup_common_RS1xxxx.c
-  condition: [brd4325g]
 
 provides:
   - name: siwx917_soc_custom_startup

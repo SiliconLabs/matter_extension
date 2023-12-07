@@ -27,6 +27,8 @@ component:
     from: matter
   - id: matter_thread_ftd
     from: matter
+  - id: matter_thread_example
+    from: matter
   - id: rail_util_pti
   - id: matter_ota_support
     from: matter
@@ -65,8 +67,6 @@ component:
     from: matter
   - id: matter_group_key_mgmt
     from: matter
-  - id: matter_groups
-    from: matter
   - id: matter_identify
     from: matter
   - id: matter_localization_configuration
@@ -93,6 +93,8 @@ component:
   - id: matter_configuration_over_swo
     from: matter
   - id: segger_rtt
+  - id: matter_subscription_timeout_resumption
+    from: matter
 
 requires:
 # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
@@ -107,7 +109,7 @@ requires:
 config_file:
   - path: ../../../../silabs_examples/dishwasher-app/silabs/data_model/dishwasher-thread-app.zap
     directory: common
-  - path: ../../../../provision.mattpconfn
+  - path: ../../../../provision.mattpconf
     directory: provision
 
 include:

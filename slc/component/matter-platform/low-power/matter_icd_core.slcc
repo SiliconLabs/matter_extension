@@ -1,0 +1,40 @@
+id: matter_icd_core
+label: ICD Core Configuration
+description: >
+  Support for basic configuration for power management on all Silabs Matter devices.
+  This component is enabled on all Silicon Labs Matter devices. This component
+  requires either 1) matter_subscription_timeout_resumption or 2) matter_icd.
+  Subscription timeout resumption causes significant energy consumption and
+  cannot be combined with the full ICD functionality that matter_icd provides.
+package: "Matter"
+category: Platform|Low-power
+quality: production
+
+define:
+  - name: CHIP_CONFIG_PERSIST_SUBSCRIPTIONS
+    value: 1
+
+include:
+  - path: src/app/icd
+    file_list:
+    - path: ICDNotifier.h
+    - path: ICDStateObserver.h
+  - path: src/app
+    file_list: 
+    - path: SimpleSubscriptionResumptionStorage.h
+
+source:
+  - path: src/app/icd/ICDNotifier.cpp
+  - path: src/app/SimpleSubscriptionResumptionStorage.cpp
+
+requires:
+  - name: matter_icd_config
+
+provides:
+  - name: matter_icd_core
+
+recommends:
+  - id: matter_subscription_timeout_resumption
+  
+ui_hints:
+    visibility: never

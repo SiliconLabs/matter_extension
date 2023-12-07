@@ -13,8 +13,6 @@ requires:
 - name: psa_its
 source:
 - path: examples/platform/silabs/efr32/rs911x/wfx_rsi_host.c
-- path: examples/platform/silabs/efr32/rs911x/hal/efx_spi.c
-- path: examples/platform/silabs/efr32/rs911x/hal/rsi_hal_mcu_interrupt.c
 - path: src/platform/silabs/rs911x/BLEManagerImpl.cpp
 - path: src/platform/silabs/rs911x/wfx_sl_ble_init.c
 include:
@@ -35,5 +33,5 @@ include:
 define:
 - name: RSI_BLE_ENABLE
   value: 1
-- name: BLE_ENABLE
+- name: SLI_SI91X_ENABLE_BLE
   value: 1

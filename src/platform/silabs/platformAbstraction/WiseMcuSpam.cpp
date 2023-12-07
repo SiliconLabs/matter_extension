@@ -22,7 +22,6 @@
 #include <task.h>
 
 #if SILABS_LOG_ENABLED
-
 #include "silabs_utils.h"
 #endif
 
@@ -66,6 +65,9 @@ void sl_si917_platform_init(void)
     sl_device_init_nvic();
     sli_si91x_platform_init();
     RSI_Board_Init();
+#if CHIP_CONFIG_ENABLE_ICD_SERVER && !(defined(DISPLAY_ENABLED))
+    sl_si91x_hardware_setup();
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER && !(defined(DISPLAY_ENABLED)
     osKernelInitialize();
 }
 

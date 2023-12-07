@@ -26,14 +26,7 @@ provides:
   - name: freertos_heap
   - name: device
   - name: wiseconnect_toolchain_gcc_override
-  - name: matter_si91x_dual_flash_nvm3_enabled  
-    condition: [brd4325b]   
-  - name: matter_si91x_common_flash_nvm3_enabled  
-    condition: [brd4325c] 
-  - name: matter_si91x_common_flash_nvm3_enabled  
-    condition: [brd4325g] 
   - name: matter_si91x_common_flash_nvm3_enabled
-    condition: [brd4338a]
 
 include:
   - path: examples/platform/silabs

@@ -43,12 +43,12 @@ environment(provisionenv:macosx.x86_64) {
 
 # Set up environments to execute provision script on Win OS
 environment(provisionenv:win32.x86_64) {
-  PATH=$(PATH);$(exe.commander);$(lib.libjlinkarm)
+  PATH=$(PATH);$(exe.commander);$(lib.libjlinkarm);$(studio.install)/developer/adapter_packs/cpms/applications
   STUDIO_PYTHONPATH=$(STUDIO_PYTHONPATH);$(this)/modules;$(studio.install)/developer/adapter_packs/cpms/site-packages
 }
 
 # Function to execute Matter provision script 
-function(matter_provision:mcu.arm.e.*32mg12.*,mcu.arm.e.*mg24.*) {
+function(matter_provision) {
   env=$(provisionenv)
   cmd=$(python) provision.py  -c ${configFile} ( -j ${serialnum} | -j ${ipaddress} )
 }

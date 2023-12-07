@@ -13,6 +13,8 @@ requires:
      condition:
      - device_series_2
      - matter_platform_efr32
+   - name: sl_usart
+     condition: [matter_platform_siwx917]
 provides:
   - name: matter_uart
 source:
@@ -24,11 +26,6 @@ include:
 - path: examples/platform/silabs
   file_list:
   - path: uart.h
-    condition: [matter_platform_efr32]
-- path: examples/platform/silabs/SiWx917
-  file_list:
-  - path: uart.h
-    condition: [matter_platform_siwx917]
 define:
   - name: CONFIG_ENABLE_UART
     condition:

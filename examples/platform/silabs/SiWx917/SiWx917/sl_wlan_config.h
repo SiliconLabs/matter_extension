@@ -19,19 +19,25 @@
 #define RSI_CONFIG_H
 
 #include "ble_config.h"
-#include "sl_wifi_device.h"
-
-#if SIWX_917
 #include "rsi_wisemcu_hardware_setup.h"
 #include "rsi_wlan_defines.h"
-#endif
+#include "sl_wifi_device.h"
 
 //! Enable feature
 #define RSI_ENABLE 1
 //! Disable feature
 #define RSI_DISABLE 0
 
-#define SI91X_LISTEN_INTERVAL 0
+#define IVT_OFFSET_ADDR 0x8202000  /*<!Application IVT location VTOR offset>        */
+#define WKP_RAM_USAGE_LOCATION 0x24061EFC /*<!Bootloader RAM usage location upon wake up  */
+
+#define WIRELESS_WAKEUP_IRQHandler NPSS_TO_MCU_WIRELESS_INTR_IRQn
+#define WIRELESS_WAKEUP_IRQHandler_Priority 17
+
+/* Constants required to manipulate the NVIC. */
+#define portNVIC_SHPR3_REG (*((volatile uint32_t *)0xe000ed20))
+#define portNVIC_PENDSV_PRI  (((uint32_t)(0x3f << 4)) << 16UL)
+#define portNVIC_SYSTICK_PRI (((uint32_t)(0x3f << 4)) << 24UL)
 
 static const sl_wifi_device_configuration_t config = {
     .boot_option = LOAD_NWP_FW,
@@ -41,7 +47,7 @@ static const sl_wifi_device_configuration_t config = {
     .boot_config = { .oper_mode = SL_SI91X_CLIENT_MODE,
                      .coex_mode = SL_SI91X_WLAN_BLE_MODE,
                      .feature_bit_map =
-#ifdef RSI_M4_INTERFACE
+#ifdef SLI_SI91X_MCU_INTERFACE
                          (SL_SI91X_FEAT_SECURITY_OPEN | SL_SI91X_FEAT_WPS_DISABLE),
 #else
                          (SL_SI91X_FEAT_SECURITY_OPEN | SL_SI91X_FEAT_AGGREGATION),
@@ -52,12 +58,12 @@ static const sl_wifi_device_configuration_t config = {
                                                 | SL_SI91X_TCP_IP_FEAT_DHCPV6_CLIENT | SL_SI91X_TCP_IP_FEAT_IPV6
 #endif
                                                 | SL_SI91X_TCP_IP_FEAT_ICMP | SL_SI91X_TCP_IP_FEAT_EXTENSION_VALID),
-                     .custom_feature_bit_map     = (SL_SI91X_FEAT_CUSTOM_FEAT_EXTENTION_VALID | RSI_CUSTOM_FEATURE_BIT_MAP),
+                     .custom_feature_bit_map     = (SL_SI91X_CUSTOM_FEAT_EXTENTION_VALID | RSI_CUSTOM_FEATURE_BIT_MAP),
                      .ext_custom_feature_bit_map = (
-#ifdef CHIP_917
+#ifdef SLI_SI917
                          (RSI_EXT_CUSTOM_FEATURE_BIT_MAP)
 #else // defaults
-#ifdef RSI_M4_INTERFACE
+#ifdef SLI_SI91X_MCU_INTERFACE
                          (SL_SI91X_EXT_FEAT_256K_MODE | RSI_EXT_CUSTOM_FEATURE_BIT_MAP)
 #else
                          (SL_SI91X_EXT_FEAT_384K_MODE | RSI_EXT_CUSTOM_FEATURE_BIT_MAP)

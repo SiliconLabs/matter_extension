@@ -22,6 +22,7 @@
  * That can be extended to other families as well.
  */
 
+#include "sl_status.h"
 #pragma once
 
 #ifndef SL_LCDCTRL_MUX

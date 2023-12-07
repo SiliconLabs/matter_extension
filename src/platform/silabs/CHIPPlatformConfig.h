@@ -26,6 +26,10 @@
 
 #include <stdint.h>
 
+#ifdef SL_ICD_ENABLED
+#include "sl_matter_icd_config.h" // SLC-FIX
+#endif // SL_ICD_ENABLED 
+
 // ==================== General Platform Adaptations ====================
 
 #define CHIP_CONFIG_ABORT() abort()

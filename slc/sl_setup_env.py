@@ -33,7 +33,7 @@ if platform == "win32":
     arm_toolchain_url = "https://developer.arm.com/-/media/Files/downloads/gnu/12.2.rel1/binrel/arm-gnu-toolchain-12.2.rel1-mingw-w64-i686-arm-none-eabi.zip?rev=709f3f15b2ee4763b186c10153ee6ca9&hash=8C0761A17A1E4861B96DDB604C177F5B"
     java_url = "https://corretto.aws/downloads/resources/17.0.8.8.1/amazon-corretto-17.0.8.8.1-windows-x64-jdk.zip"
     slc_cli_url = "https://www.silabs.com/documents/login/software/slc_cli_windows.zip"
-    zap_url = "https://github.com/project-chip/zap/releases/download/v2023.11.14-nightly/zap-win-x64.zip"
+    zap_url = "https://github.com/project-chip/zap/releases/download/v2023.12.06-nightly/zap-win-x64.zip"
     commander_url = "https://www.silabs.com/documents/public/software/SimplicityCommander-Windows.zip"
     commander_path = os.path.join(tools_folder_path,"SimplicityCommander-Windows")
     os_name_commander = "Commander_win32"
@@ -44,7 +44,7 @@ elif platform == "darwin":
     arm_toolchain_url = "https://developer.arm.com/-/media/Files/downloads/gnu/12.2.rel1/binrel/arm-gnu-toolchain-12.2.rel1-darwin-arm64-arm-none-eabi.tar.xz?rev=41f9ad86e18d43cf9999c4bada07f7df&hash=C458A8BF74CBA545BDCA38B7FB40AAF5"
     java_url = "https://corretto.aws/downloads/resources/17.0.8.8.1/amazon-corretto-17.0.8.8.1-macosx-x64.tar.gz"
     slc_cli_url = "https://www.silabs.com/documents/login/software/slc_cli_mac.zip"
-    zap_url = "https://github.com/project-chip/zap/releases/download/v2023.11.14-nightly/zap-mac-x64.zip"
+    zap_url = "https://github.com/project-chip/zap/releases/download/v2023.12.06-nightly/zap-mac-x64.zip"
     commander_url = "https://www.silabs.com/documents/public/software/SimplicityCommander-Mac.zip"
     commander_path = os.path.join(tools_folder_path,"SimplicityCommander-Mac")
     os_name_commander = "Commander_osx"
@@ -56,7 +56,7 @@ elif platform =="linux":
     arm_toolchain_url = "https://developer.arm.com/-/media/Files/downloads/gnu/12.2.rel1/binrel/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz?rev=7bd049b7a3034e64885fa1a71c12f91d&hash=732D909FA8F68C0E1D0D17D08E057619"
     java_url = "https://corretto.aws/downloads/resources/17.0.8.8.1/amazon-corretto-17.0.8.8.1-linux-x64.tar.gz"
     slc_cli_url = "https://www.silabs.com/documents/login/software/slc_cli_linux.zip"
-    zap_url = "https://github.com/project-chip/zap/releases/download/v2023.11.14-nightly/zap-linux-x64.zip"
+    zap_url = "https://github.com/project-chip/zap/releases/download/v2023.12.06-nightly/zap-linux-x64.zip"
     commander_url = "https://www.silabs.com/documents/public/software/SimplicityCommander-Linux.zip"
     commander_path = os.path.join(tools_folder_path,"SimplicityCommander-Linux")
     os_name_commander = "Commander_linux_x86_64"
@@ -180,6 +180,7 @@ if platform == "darwin":
         outfile.write("JAVA17_HOME={}\n".format(os.path.join(java_path, "Contents", "Home")))
         outfile.write("ZAP_INSTALL_PATH={}\n".format(zap_path))
         outfile.write("TOOLS_PATH={}:{}:{}:{}:\n".format(arm_toolchain_path,slc_cli_path,os.path.join(java_path, "Contents", "Home", "bin"),commander_app_path))
+        outfile.write("silabs_chip_root={}".format(silabs_chip_root))
 elif platform == "win32":
     with open(os.path.expanduser(os.path.join(tools_folder_path,".env")), "w") as outfile:
         outfile.write('STUDIO_ADAPTER_PACK_PATH={}\n'.format(zap_path))
@@ -189,6 +190,7 @@ elif platform == "win32":
         outfile.write('ZAP_INSTALL_PATH={}\n'.format(zap_path.replace("\\","/")))
         outfile.write('TOOLS_PATH={};{};{};{};\n'.format(slc_cli_path,zap_path,arm_toolchain_path,java_path+"\\bin"))
         outfile.write('SLC={}\n'.format(slc_cli_path))
+        outfile.write("silabs_chip_root={}".format(silabs_chip_root))
 elif platform == "linux":
     with open(os.path.expanduser("slc/tools/.env"), "w") as outfile:
         outfile.write("STUDIO_ADAPTER_PACK_PATH={}\n".format(zap_path))
@@ -197,3 +199,4 @@ elif platform == "linux":
         outfile.write("JAVA17_HOME={}\n".format(java_path))
         outfile.write("ZAP_INSTALL_PATH={}\n".format(zap_path))
         outfile.write("TOOLS_PATH={}:{}:{}:{}\n".format(arm_toolchain_path,slc_cli_path,os.path.join(java_path, "bin"),commander_app_path))
+        outfile.write("silabs_chip_root={}".format(silabs_chip_root))

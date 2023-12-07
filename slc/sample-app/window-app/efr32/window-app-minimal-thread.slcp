@@ -25,6 +25,8 @@ component:
     from: matter
   - id: matter_thread_ftd
     from: matter
+  - id: matter_thread_example
+    from: matter
   - id: rail_util_pti
   - id: matter_ota_support
     from: matter
@@ -92,6 +94,9 @@ component:
   - id: matter_configuration_over_swo
     from: matter
   - id: segger_rtt
+
+  - id: matter_subscription_timeout_resumption
+    from: matter
   - id: matter_wstk_no_leds
     from: matter
 
@@ -108,7 +113,7 @@ requires:
 config_file:
   - path: ../../../../examples/window-app/common/window-app.zap
     directory: common
-  - path: ../../../../provision.mattpconfn
+  - path: ../../../../provision.mattpconf
     directory: provision
 
 include:

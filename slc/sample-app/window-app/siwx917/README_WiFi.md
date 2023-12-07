@@ -25,9 +25,15 @@ documentation for Matter available on docs.silabs.com. Follow Wi-Fi demo instruc
 
 **LCD** 
 
-The LCD on Silabs WSTK shows a QR Code. This QR Code is be scanned by the CHIP Tool app For the Rendez-vous procedure over BLE
+The LCD on Silabs WSTK shows a QR Code. This QR Code is be scanned by the CHIP Tool app For the Rendez-vous procedure over BLE.
 
-* On devices that do not have or support the LCD Display like the BRD4166A Thunderboard Sense 2, a URL can be found in the RTT logs.
+On devices that do not have or support the LCD Display like the BRD4166A Thunderboard Sense 2, a URL can be found in the **RTT logs upon startup OR by issuing the following matter shell command:**
+
+```shell
+matterCli> onboardingcodes ble qrcodeurl
+```
+
+Log output example:
 
 ```shell
 [SVR] Copy/paste the below URL in a browser to see the QR Code:

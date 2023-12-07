@@ -97,6 +97,9 @@ component:
     from: matter
   - id: segger_rtt
 
+  - id: matter_subscription_timeout_resumption
+    from: matter
+
   - id: efx_ncp_custom_host_mcu
     from: matter
   - id: wifi
@@ -128,22 +131,19 @@ requires:
 #  - name: matter_qr_code
 #    condition:
 #    - device_series_2
-  - name: spidrv_instance
-  - name: uartdrv_eusart
-    condition:
-    - device_series_2
+
 # Select UART/EUART drivers based on device series
   - name: matter_drivers_series_1_wifi_rs911x
     condition:
      - device_series_1
-  - name: matter_drivers_series_2_wifi_rs911x
-    condition:
-     - device_series_2
+#  - name: matter_drivers_series_2_wifi_rs911x
+#    condition:
+#     - device_series_2
      
 config_file:
   - path: ../../../../examples/lighting-app/silabs/data_model/lighting-wifi-app.zap
     directory: common
-  - path: ../../../../provision.mattpconfn
+  - path: ../../../../provision.mattpconf
     directory: provision
 
 include:
