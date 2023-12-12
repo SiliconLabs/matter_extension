@@ -2,6 +2,7 @@
 category: Clusters|Measurement
 description: Implementation of the Occupancy Sensor Server Cluster
 id: matter_occupancy_sensor
+package: Matter
 label: Occupancy Sensor Server Cluster
 quality: production
 provides:
@@ -9,10 +10,10 @@ provides:
 source:
   - path: src/app/clusters/occupancy-sensor-server/occupancy-sensor-server.cpp
 include:
-  - path: src/app/clusters/occupancy-sensor-server/
+  - path: src/app/clusters/occupancy-sensor-server
     file_list:
-      - path: occupancy-sensor-server.h
       - path: occupancy-hal.h
+      - path: occupancy-sensor-server.h
 template_contribution:
   - name: component_catalog
     value: matter_occupancy_sensor

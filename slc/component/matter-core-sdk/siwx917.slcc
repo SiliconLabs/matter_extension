@@ -4,13 +4,128 @@ define:
     value: '1'
 description: siwx917
 id: siwx917
+include:
+-   path: examples/platform/silabs
+-   path: examples/platform/silabs/efr32
+-   path: src/include
+-   path: src/lib
+-   path: third_party/nlassert/repo/include
+-   path: zzz_generated/app-common
+-   path: src/include/platform
+    file_list:
+    -   path: RuntimeOptionsProvider.h
+    -   path: DeviceInfoProvider.h
+    -   path: ConnectivityManager.h
+    -   path: GeneralUtils.h
+    -   path: AttributeList.h
+    -   path: DiagnosticDataProvider.h
+    -   path: PlatformManager.h
+    -   path: KeyValueStoreManager.h
+    -   path: OTAImageProcessor.h
+    -   path: PersistedStorage.h
+    -   path: KvsPersistentStorageDelegate.h
+    -   path: LockTracker.h
+    -   path: CommissionableDataProvider.h
+    -   path: NetworkCommissioning.h
+    -   path: CHIPDeviceConfig.h
+    -   path: DeviceControlServer.h
+    -   path: DeviceInstanceInfoProvider.h
+    -   path: CHIPDeviceLayer.h
+    -   path: ConfigurationManager.h
+    -   path: GeneralFaults.h
+    -   path: CHIPDeviceEvent.h
+    -   path: BuildTime.h
+    -   path: NFCManager.h
+    -   path: ThreadStackManager.h
+    -   path: TestOnlyCommissionableDataProvider.h
+    -   path: CHIPDeviceError.h
+-   path: src/include/platform/internal
+    file_list:
+    -   path: GenericPlatformManagerImpl.ipp
+    -   path: GenericConnectivityManagerImpl_UDP.h
+    -   path: GenericPlatformManagerImpl_POSIX.h
+    -   path: GenericConnectivityManagerImpl_NoThread.h
+    -   path: GenericConnectivityManagerImpl_WiFi.ipp
+    -   path: GenericPlatformManagerImpl_POSIX.ipp
+    -   path: GenericPlatformManagerImpl_Zephyr.ipp
+    -   path: GenericConfigurationManagerImpl.h
+    -   path: GenericPlatformManagerImpl.h
+    -   path: GenericConnectivityManagerImpl_Thread.h
+    -   path: GenericPlatformManagerImpl_FreeRTOS.h
+    -   path: BLEManager.h
+    -   path: CHIPDeviceLayerInternal.h
+    -   path: GenericConnectivityManagerImpl.h
+    -   path: GenericConnectivityManagerImpl_Thread.ipp
+    -   path: EventLogging.h
+    -   path: GenericConnectivityManagerImpl_NoBLE.h
+    -   path: GenericDeviceInstanceInfoProvider.h
+    -   path: DeviceNetworkInfo.h
+    -   path: GenericPlatformManagerImpl_Zephyr.h
+    -   path: GenericConnectivityManagerImpl_BLE.ipp
+    -   path: GenericConnectivityManagerImpl_UDP.ipp
+    -   path: GenericDeviceInstanceInfoProvider.ipp
+    -   path: GenericConfigurationManagerImpl.ipp
+    -   path: GenericConnectivityManagerImpl_NoWiFi.h
+    -   path: GenericPlatformManagerImpl_FreeRTOS.ipp
+    -   path: GenericConnectivityManagerImpl_BLE.h
+    -   path: GenericConnectivityManagerImpl_TCP.h
+    -   path: GenericConnectivityManagerImpl_WiFi.h
+    -   path: GenericConnectivityManagerImpl_TCP.ipp
+-   path: src/platform/logging
+    file_list:
+    -   path: LogV.h
+-   path: src/include/platform/internal/testing
+    file_list:
+    -   path: ConfigUnitTest.h
+-   path: src/platform/silabs
+    file_list:
+    -   path: OTAImageProcessorImpl.h
+    -   path: InetPlatformConfig.h
+    -   path: DiagnosticDataProviderImpl.h
+    -   path: ConfigurationManagerImpl.h
+    -   path: MigrationManager.h
+    -   path: PlatformManagerImpl.h
+    -   path: WarmPlatformConfig.h
+    -   path: NetworkCommissioningWiFiDriver.h
+    -   path: CHIPDevicePlatformEvent.h
+    -   path: ThreadStackManagerImpl.h
+    -   path: CHIPDevicePlatformConfig.h
+    -   path: SilabsConfig.h
+    -   path: BLEManagerImpl.h
+    -   path: CHIPPlatformConfig.h
+    -   path: ConnectivityManagerImpl.h
+    -   path: BlePlatformConfig.h
+    -   path: KeyValueStoreManagerImpl.h
+    -   path: SystemPlatformConfig.h
+-   path: src/platform/silabs/rs911x
+    file_list:
+    -   path: ble_config.h
+    -   path: rsi_ble_config.h
+    -   path: wfx_sl_ble_init.h
+-   path: src/platform/silabs/SiWx917
+    file_list:
+    -   path: siwx917-chip-mbedtls-config.h
+-   path: src/platform/silabs/platformAbstraction
+    file_list:
+    -   path: SilabsPlatformBase.h
+    -   path: SilabsPlatform.h
+-   path: src/platform
+    file_list:
+    -   path: DeviceSafeQueue.h
+    -   path: GLibTypeDeleter.h
+-   path: src/platform/FreeRTOS
+    file_list:
+    -   path: SystemTimeSupport.h
+    -   path: GenericThreadStackManagerImpl_FreeRTOS.h
+    -   path: GenericThreadStackManagerImpl_FreeRTOS.hpp
 label: siwx917
 package: Matter
-requires:
-  - name: matter_siwx917_common
 provides:
 -   name: matter_siwx917
 quality: production
+requires:
+-   name: matter_siwx917_common
+-   name: sl_si91x_trng
 source:
 -   path: src/platform/FreeRTOS/SystemTimeSupport.cpp
 -   path: src/platform/SingletonConfigurationManager.cpp

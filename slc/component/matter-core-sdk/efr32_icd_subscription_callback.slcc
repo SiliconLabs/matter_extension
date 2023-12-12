@@ -1,31 +1,48 @@
 category: Matter|Core
 define:
-- name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
-  value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
-- name: CHIP_CONFIG_USE_ICD_SUBSCRIPTION_CALLBACKS
-  value: '1'
-- name: CHIP_HAVE_CONFIG_H
-  value: '1'
+-   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
+-   name: CHIP_CONFIG_USE_ICD_SUBSCRIPTION_CALLBACKS
+    value: '1'
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
 description: efr32_icd_subscription_callback
 id: efr32_icd_subscription_callback
 include:
-- path: examples/platform/silabs
-  file_list:
-  - path: ICDSubscriptionCallback.h
-- path: examples/platform/silabs/efr32
-- path: src
-- path: src/include
-- path: src/lib
-- path: src/platform/silabs/efr32
-- path: third_party/nlassert/repo/include
-- path: third_party/nlio/repo/include
-- path: zzz_generated/app-common
+-   path: examples/platform/silabs/efr32
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: src/platform/silabs/efr32
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+-   path: zzz_generated/app-common
+-   path: examples/platform/silabs
+    file_list:
+    -   path: SilabsDeviceDataProvider.h
+    -   path: board_config.h
+    -   path: OTAConfig.h
+    -   path: SoftwareFaultReports.h
+    -   path: silabs_utils.h
+    -   path: matter_shell.h
+    -   path: uart.h
+    -   path: MatterConfig.h
+    -   path: LEDWidget.h
+    -   path: PigweedLogger.h
+    -   path: FreeRTOSConfig.h
+    -   path: Rpc.h
+    -   path: heap_4_silabs.h
+    -   path: TemperatureSensor.h
+    -   path: silabs_creds.h
+    -   path: SilabsTestEventTriggerDelegate.h
+    -   path: MemMonitoring.h
+    -   path: BaseApplication.h
 label: efr32_icd_subscription_callback
 package: Matter
 provides:
-- name: matter_efr32_icd_subscription_callback
+-   name: matter_efr32_icd_subscription_callback
 quality: production
 source:
-- path: examples/platform/silabs/ICDSubscriptionCallback.cpp
+-   path: examples/platform/silabs/ICDSubscriptionCallback.cpp
 ui_hints:
-  visibility: never
+    visibility: never

@@ -39,9 +39,12 @@
 #endif
 
 #include <platform/CHIPDeviceLayer.h>
-//#include <app/server/Mdns.h>
+// #include <app/server/Mdns.h>
 #include <app/server/Dnssd.h>
 #include <app/server/Server.h>
+
+// SLC-FIX
+#include "sl_matter_wifi_config.h"
 
 using namespace ::chip;
 using namespace ::chip::DeviceLayer;

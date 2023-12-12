@@ -1,0 +1,26 @@
+category: Matter|Stack
+description: >
+  Includes interfaces for safely performing simple, memory-mapped accesses, 
+  potentially to unaligned memory locations, with or without byte reordering and with or without pointer management
+id: matter_nlio
+label: Stack
+package: Matter
+provides:
+  - name: matter_nlio
+quality: production
+include:
+  - path: third_party/nlio/repo/include   
+    file_list:
+    - path: nlbyteorder.hpp
+    - path: nlio-byteorder.hpp
+    - path: nlio.hpp
+    - path: nlbyteorder.h
+    - path: nlio-private.h
+    - path: nlbyteorder-little.h
+    - path: nlbyteorder-big.h
+    - path: nlio-base.hpp
+    - path: nlio-byteorder-big.hpp
+    - path: nlio-byteorder-little.hpp
+    - path: nlio-base.h
+ui_hints:
+    visibility: never

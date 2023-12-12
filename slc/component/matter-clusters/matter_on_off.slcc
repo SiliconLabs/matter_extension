@@ -1,16 +1,25 @@
+
 category: Clusters|General
-description: Implementation of the On/Off server cluster
+description: Implementation of the On Off Server Cluster
 id: matter_on_off
-label: On/Off Server Cluster
+package: Matter
+label: On Off Server Cluster
 quality: production
 provides:
   - name: matter_on_off
 source:
   - path: src/app/clusters/on-off-server/on-off-server.cpp
 include:
-  - path: src/app/clusters/on-off-server/
+  - path: src/app/clusters/on-off-server
     file_list:
       - path: on-off-server.h
+  - path: src/app/clusters/scenes-server/
+    file_list:
+      - path: SceneTable.h
+      - path: SceneTableImpl.h
+      - path: ExtensionFieldSets.h
+      - path: ExtensionFieldSetsImpl.h
+      - path: scenes-server.h
 template_contribution:
   - name: component_catalog
     value: matter_on_off

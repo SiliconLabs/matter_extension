@@ -1,0 +1,12 @@
+id: matter_ot_mbedtls_override
+label: OT mbedtls override
+description: Replaces ot_mbedtls component (not needed)
+package: "Matter"
+category: Matter-Thread
+quality: production
+provides:
+  - name: ot_mbedtls
+  - name: matter_ot_mbedtls_override
+
+ui_hints:
+  visibility: never

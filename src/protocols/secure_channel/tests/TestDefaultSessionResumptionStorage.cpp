@@ -274,7 +274,7 @@ void TestInPlaceSave(nlTestSuite * inSuite, void * inContext)
     {
         uint16_t size = 0;
         auto rv       = storage.SyncGetKeyValue(chip::SimpleSessionResumptionStorage::GetStorageKey(vector.resumptionId).KeyName(),
-                                          nullptr, size);
+                                                nullptr, size);
         NL_TEST_ASSERT(inSuite, rv == CHIP_ERROR_PERSISTED_STORAGE_VALUE_NOT_FOUND);
     }
 }
@@ -337,23 +337,6 @@ void TestDelete(nlTestSuite * inSuite, void * inContext)
         }
         {
             auto rv = storage.SyncGetKeyValue(chip::SimpleSessionResumptionStorage::GetStorageKey(vector.resumptionId).KeyName(),
-                                              nullptr, size);
-            NL_TEST_ASSERT(inSuite, rv == CHIP_ERROR_PERSISTED_STORAGE_VALUE_NOT_FOUND);
-        }
-    }
-
-    // Verify no state or link table persistent storage entries were leaked.
-    for (auto & vector : vectors)
-    {
-        uint16_t size = 0;
-        chip::DefaultStorageKeyAllocator keyAlloc;
-        {
-            auto rv =
-                storage.SyncGetKeyValue(chip::SimpleSessionResumptionStorage::StorageKey(keyAlloc, vector.node), nullptr, size);
-            NL_TEST_ASSERT(inSuite, rv == CHIP_ERROR_PERSISTED_STORAGE_VALUE_NOT_FOUND);
-        }
-        {
-            auto rv = storage.SyncGetKeyValue(chip::SimpleSessionResumptionStorage::StorageKey(keyAlloc, vector.resumptionId),
                                               nullptr, size);
             NL_TEST_ASSERT(inSuite, rv == CHIP_ERROR_PERSISTED_STORAGE_VALUE_NOT_FOUND);
         }

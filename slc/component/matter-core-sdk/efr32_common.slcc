@@ -4,14 +4,28 @@ define:
     value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
 -   name: CHIP_HAVE_CONFIG_H
     value: '1'
--   name: SILABS_OTA_ENABLED
+-   name: DISPLAY_ENABLED
+-   name: OPENTHREAD_CORE_CONFIG_PLATFORM_CHECK_FILE
+    value: \openthread-core-efr32-config-check.h\""
+-   name: OPENTHREAD_PROJECT_CORE_CONFIG_FILE
+    value: \OpenThreadConfig.h\""
+-   name: PACKAGE_NAME
+    value: \OPENTHREAD\""
+-   name: PACKAGE_VERSION
+    value: \1.0.0\""
+-   name: QR_CODE_ENABLED
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
 description: efr32_common
 id: efr32_common
 include:
 -   path: examples/common/QRCode/repo/c
+-   path: examples/lighting-app/silabs/include
+-   path: examples/platform/efr32
 -   path: examples/platform/silabs
 -   path: examples/platform/silabs/display
 -   path: examples/platform/silabs/efr32
+-   path: examples/platform/silabs/efr32/project_include
 -   path: examples/providers
 -   path: src
 -   path: src/include
@@ -20,20 +34,50 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: zzz_generated/app-common
+-   path: examples/platform/silabs
+    file_list:
+    -   path: SilabsDeviceDataProvider.h
+    -   path: board_config.h
+    -   path: OTAConfig.h
+    -   path: SoftwareFaultReports.h
+    -   path: silabs_utils.h
+    -   path: matter_shell.h
+    -   path: uart.h
+    -   path: MatterConfig.h
+    -   path: LEDWidget.h
+    -   path: PigweedLogger.h
+    -   path: FreeRTOSConfig.h
+    -   path: Rpc.h
+    -   path: heap_4_silabs.h
+    -   path: TemperatureSensor.h
+    -   path: silabs_creds.h
+    -   path: SilabsTestEventTriggerDelegate.h
+    -   path: MemMonitoring.h
+    -   path: BaseApplication.h
+-   path: examples/platform/silabs/display
+    file_list:
+    -   path: lcd.h
+    -   path: demo-ui-bitmaps.h
+    -   path: demo-ui.h
+-   path: examples/platform/silabs/efr32
+    file_list:
+    -   path: spi_multiplex.h
 label: efr32_common
 package: Matter
 provides:
 -   name: matter_efr32_common
 quality: production
 source:
+-   path: examples/platform/silabs/BaseApplication.cpp
 -   path: examples/platform/silabs/LEDWidget.cpp
+-   path: examples/platform/silabs/MatterConfig.cpp
 -   path: examples/platform/silabs/OTAConfig.cpp
--   path: examples/platform/silabs/efr32/BaseApplication.cpp
--   path: examples/platform/silabs/efr32/efr32_utils.cpp
--   path: examples/platform/silabs/efr32/init_efrPlatform.cpp
--   path: examples/platform/silabs/efr32/matter_config.cpp
+-   path: examples/platform/silabs/SoftwareFaultReports.cpp
+-   path: examples/platform/silabs/display/demo-ui.c
+-   path: examples/platform/silabs/display/lcd.cpp
+-   path: examples/platform/silabs/efr32/uart.cpp
 -   path: examples/platform/silabs/heap_4_silabs.c
+-   path: examples/platform/silabs/silabs_utils.cpp
 -   path: examples/platform/silabs/syscalls_stubs.cpp
--   path: src/platform/silabs/efr32/wifi/wfx_notify.cpp
 ui_hints:
     visibility: never

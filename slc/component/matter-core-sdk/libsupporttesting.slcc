@@ -2,9 +2,12 @@ category: Matter|Core
 define:
 -   name: CHIP_HAVE_CONFIG_H
     value: '1'
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
 description: libsupporttesting
 id: libsupporttesting
 include:
+-   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
@@ -13,6 +16,74 @@ include:
 -   path: third_party/nlio/repo/include
 -   path: third_party/nlunit-test/repo/src
 -   path: zzz_generated/app-common
+-   path: src/lib/support
+    file_list:
+    -   path: StringSplitter.h
+    -   path: PersistentStorageAudit.h
+    -   path: UnitTestRegistration.h
+    -   path: CHIPPlatformMemory.h
+    -   path: SafeString.h
+    -   path: ScopedBuffer.h
+    -   path: IntrusiveList.h
+    -   path: Pool.h
+    -   path: CHIPMemString.h
+    -   path: BufferReader.h
+    -   path: TestPersistentStorageDelegate.h
+    -   path: JniTypeWrappers.h
+    -   path: Base64.h
+    -   path: UnitTestUtils.h
+    -   path: SetupDiscriminator.h
+    -   path: CHIPJNIError.h
+    -   path: TypeTraits.h
+    -   path: CHIPCounter.h
+    -   path: EnforceFormat.h
+    -   path: IniEscaping.h
+    -   path: CHIPFaultInjection.h
+    -   path: StateMachine.h
+    -   path: PrivateHeap.h
+    -   path: BitMask.h
+    -   path: OwnerOf.h
+    -   path: SafeInt.h
+    -   path: TimeUtils.h
+    -   path: CHIPMem.h
+    -   path: SerializableIntegerSet.h
+    -   path: BufferWriter.h
+    -   path: CommonPersistentData.h
+    -   path: CodeUtils.h
+    -   path: JniReferences.h
+    -   path: DefaultStorageKeyAllocator.h
+    -   path: FunctionTraits.h
+    -   path: BytesToHex.h
+    -   path: TestGroupData.h
+    -   path: LambdaBridge.h
+    -   path: PersistedCounter.h
+    -   path: Fold.h
+    -   path: ReferenceCountedHandle.h
+    -   path: LifetimePersistedCounter.h
+    -   path: Span.h
+    -   path: Defer.h
+    -   path: StringBuilder.h
+    -   path: ObjectLifeCycle.h
+    -   path: CHIPArgParser.hpp
+    -   path: CHIPListUtils.h
+    -   path: SortUtils.h
+    -   path: ZclString.h
+    -   path: PersistentStorageMacros.h
+    -   path: VerificationMacrosNoLogging.h
+    -   path: CommonIterator.h
+    -   path: Iterators.h
+    -   path: PersistentData.h
+    -   path: SafePointerCast.h
+    -   path: FixedBufferAllocator.h
+    -   path: DLLUtil.h
+    -   path: BytesCircularBuffer.h
+    -   path: BitFlags.h
+    -   path: UnitTestContext.h
+    -   path: FibonacciUtils.h
+    -   path: ThreadOperationalDataset.h
+    -   path: UnitTestExtendedAssertions.h
+    -   path: Variant.h
+    -   path: PoolWrapper.h
 label: libsupporttesting
 package: Matter
 provides:

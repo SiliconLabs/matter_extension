@@ -1,0 +1,7 @@
+#ifndef SL_MATTER_TEST_EVENT_TRIGGER_CONFIG_H
+#define SL_MATTER_TEST_EVENT_TRIGGER_CONFIG_H
+
+// <s.16 SILABS_TEST_EVENT_TRIGGER_ENABLE_KEY> The EnableKey parameter for the TestEventTrigger command represented as a 16-character string
+#define SILABS_TEST_EVENT_TRIGGER_ENABLE_KEY "00112233445566778899aabbccddeeff"
+
+#endif // SL_MATTER_TEST_EVENT_TRIGGER_CONFIG_H

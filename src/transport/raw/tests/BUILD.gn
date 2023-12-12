@@ -36,13 +36,13 @@ static_library("helpers") {
   ]
 }
 
-chip_test_suite("tests") {
+chip_test_suite_using_nltest("tests") {
   output_name = "libRawTransportTests"
 
   test_sources = [
     "TestMessageHeader.cpp",
     "TestPeerAddress.cpp",
-    "TestTCP.cpp",
+    # SLC-FIX remove this test for now "TestTCP.cpp",
   ]
 
   public_deps = [

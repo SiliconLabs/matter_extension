@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.1"
+    version: "2.2.0"
   - id: wiseconnect3_sdk
-    version: "3.1.0"
+    version: "3.1.1"
 
 component:
   - id: matter_wstk_leds
@@ -20,7 +20,7 @@ component:
     from: matter
   - id: matter_mbedtls_siwx917
     from: matter
-  - id: matter_si91x_dual_flash_nvm3
+  - id: matter_fw_upgrade_917
     from: matter
   - id: silabs_factory_data_provider
     from: matter
@@ -34,7 +34,7 @@ component:
     from: matter
   - id: matter_administrator_commissioning
     from: matter
-  - id: matter_basic
+  - id: matter_basic_information
     from: matter
   - id: matter_color_control
     from: matter
@@ -75,21 +75,34 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  # Override RTT
-  - id: matter_segger_rtt
+  - id: segger_rtt
+
+  - id: matter_subscription_timeout_resumption
+    from: matter
+  - id: matter_subscription_persistence
     from: matter  
   - id: matter_ota_requestor
     from: matter
+  - id: matter_ota_support
+    from: matter
+  - id: toolchain_gcc_common
+    from: matter
+  - id: matter_power_source
+    from: matter
 
-  - id: si91x
+  - id: sl_si91x_common_flash_nvm3
+    from: wiseconnect3_sdk
+  - id: sl_si91x_wireless
     from: wiseconnect3_sdk
   - id: wifi
     from: wiseconnect3_sdk
-  - id: basic_network_manager
+  - id: basic_network_config_manager
     from: wiseconnect3_sdk
-  - id: si91x_basic_buffers
+  - id: si917_mem_config_3
     from: wiseconnect3_sdk
-  - id: siwx917_soc
+  - id: sl_si91x_basic_buffers
+    from: wiseconnect3_sdk
+  - id: sl_si91x_mcu
     from: wiseconnect3_sdk
   - id: freertos
   - id: slist
@@ -99,9 +112,11 @@ component:
     from: matter
   - id: matter_platform_siwx917
     from: matter
-  - id: si91x_support
+  - id: wiseconnect3_common
     from: wiseconnect3_sdk
   - id: wifi_resources
+    from: wiseconnect3_sdk
+  - id: sl_si91x_soc_soft_reset
     from: wiseconnect3_sdk
   - id: ble
     from: wiseconnect3_sdk
@@ -110,13 +125,28 @@ component:
   - id: sl_si91x_button_917
     instance: [btn0,btn1]
     from: wiseconnect3_sdk
+  - id: sl_si91x_led_917
+    instance: [led0,led1]
+    from: wiseconnect3_sdk
+  - instance: [timer0]
+    from: wiseconnect3_sdk
+    id: ulp_timers_instance
+
+requires:
+  # SiWx917 LCD configurations
+  - name: matter_lcd_917SOC
+    condition: [brd4338a]
+  - name: matter_qr_code
+    condition: [brd4338a]
 
 config_file:
-  - path: ../../../../examples/lighting-app/silabs/efr32/data_model/lighting-wifi-app.zap
+  - path: ../../../../examples/lighting-app/silabs/data_model/lighting-wifi-app.zap
     directory: common
+  - path: ../../../../provision.mattpconf
+    directory: provision
 
 include:
-  - path: ../../../../examples/lighting-app/silabs/SiWx917/include
+  - path: ../../../../examples/lighting-app/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -126,13 +156,13 @@ include:
     directory: include
 
 source:
-  - path: ../../../../examples/lighting-app/silabs/SiWx917/src/AppTask.cpp
+  - path: ../../../../examples/lighting-app/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/lighting-app/silabs/SiWx917/src/LightingManager.cpp
+  - path: ../../../../examples/lighting-app/silabs/src/LightingManager.cpp
     directory: src
-  - path: ../../../../examples/lighting-app/silabs/SiWx917/src/main.cpp
+  - path: ../../../../examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/lighting-app/silabs/SiWx917/src/ZclCallbacks.cpp
+  - path: ../../../../examples/lighting-app/silabs/src/ZclCallbacks.cpp
     directory: src
 
 define:
@@ -149,6 +179,8 @@ define:
     value: "40960"
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
     value: "4092"
+  - name: SI917_SOC
+    value: 1
 toolchain_settings:
   - option: gcc_c++_compiler_option
     value: -std=gnu++17
@@ -156,14 +188,14 @@ toolchain_settings:
     value: enabled
 template_contribution:
   - name: memory_flash_start
-    value: 0x08012000
+    value: 0x081C2000
   - name: memory_flash_size
-    value: 0x400000
+    value: 0x200000
   - name: memory_ram_start
     value: 0x400
   - name: memory_ram_size
-    value: 0x3E800
-  - name: SI917_SOC
+    value: 0x4E200
+  - name: EXECUTION_FROM_RAM
     value: 1
 
 readme:

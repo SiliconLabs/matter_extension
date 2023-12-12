@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Low Power Server Cluster
 id: matter_low_power
+package: Matter
 label: Low Power Server Cluster
 quality: production
 provides:
@@ -9,7 +10,7 @@ provides:
 source:
   - path: src/app/clusters/low-power-server/low-power-server.cpp
 include:
-  - path: src/app/clusters/low-power-server/
+  - path: src/app/clusters/low-power-server
     file_list:
       - path: low-power-server.h
       - path: low-power-delegate.h

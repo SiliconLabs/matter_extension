@@ -42,7 +42,7 @@ char device_key[] = "";
 
 #elif USE_MOSQUITTO
 
-#define DIC_CLIENT_ID ""
+#define DIC_CLIENT_ID "test_client"
 #define DIC_SERVER_HOST	""
 
 /*

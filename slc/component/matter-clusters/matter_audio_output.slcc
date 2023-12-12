@@ -2,6 +2,7 @@
 category: Clusters|Media
 description: Implementation of the Audio Output Server Cluster
 id: matter_audio_output
+package: Matter
 label: Audio Output Server Cluster
 quality: production
 provides:
@@ -9,10 +10,10 @@ provides:
 source:
   - path: src/app/clusters/audio-output-server/audio-output-server.cpp
 include:
-  - path: src/app/clusters/audio-output-server/
+  - path: src/app/clusters/audio-output-server
     file_list:
-     - path: audio-output-server.h
-     - path: audio-output-delegate.h
+      - path: audio-output-delegate.h
+      - path: audio-output-server.h
 template_contribution:
   - name: component_catalog
     value: matter_audio_output

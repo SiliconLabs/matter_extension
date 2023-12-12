@@ -1,0 +1,11 @@
+id: efx_ncp_custom_host_mcu
+label: RS911x NCP custom host mcu
+quality: production
+description: >
+  Adds support for the HAL and WiFi Driver layer for rs911x NCP devices
+package: Matter
+category: Matter-WiFi|Platform|Drivers
+source:
+- path: examples/platform/silabs/efr32/rs911x/hal/efx32_ncp_host.c
+provides:
+- name: efx_ncp_custom_host_mcu

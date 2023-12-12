@@ -2,12 +2,17 @@
 category: Clusters|CHIP
 description: Implementation of the Power Source Server Cluster
 id: matter_power_source
+package: Matter
 label: Power Source Server Cluster
 quality: production
 provides:
   - name: matter_power_source
 source:
   - path: src/app/clusters/power-source-server/power-source-server.cpp
+include:
+  - path: src/app/clusters/power-source-server
+    file_list:
+      - path: power-source-server.h
 template_contribution:
   - name: component_catalog
     value: matter_power_source

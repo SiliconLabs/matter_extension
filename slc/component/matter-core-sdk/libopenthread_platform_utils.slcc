@@ -1,24 +1,27 @@
 category: Matter|Core
 define:
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
 -   name: OPENTHREAD_CORE_CONFIG_PLATFORM_CHECK_FILE
-    value: \"openthread-core-efr32-config-check.h\"
+    value: \openthread-core-efr32-config-check.h\""
 -   name: OPENTHREAD_PROJECT_CORE_CONFIG_FILE
-    value: \"OpenThreadConfig.h\"
+    value: \OpenThreadConfig.h\""
 -   name: PACKAGE_NAME
-    value: \"OPENTHREAD\"
+    value: \OPENTHREAD\""
 -   name: PACKAGE_VERSION
-    value: \"1.0.0\"
+    value: \1.0.0\""
 -   name: RADIO_CONFIG_DMP_SUPPORT
     value: '1'
 description: libopenthread_platform_utils
 id: libopenthread_platform_utils
 include:
+-   path: examples/lighting-app/silabs/include
 -   path: examples/platform/efr32
 -   path: examples/platform/silabs
--   path: examples/platform/silabs/efr32
--   path: examples/platform/silabs/efr32/project_include
+-   path: src
+-   path: src/include
 -   path: src/lib
--   path: src/platform/silabs/efr32
+-   path: zzz_generated/app-common
 label: libopenthread_platform_utils
 package: Matter
 provides:

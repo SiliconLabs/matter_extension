@@ -17,6 +17,9 @@
 
 #ifndef _WFX_RSI_H_
 #define _WFX_RSI_H_
+
+#include "event_groups.h"
+
 /*
  * Interface to RSI Sapis
  */
@@ -73,6 +76,7 @@ struct wfx_rsi
     sl_wfx_mac_address_t ap_bssid; /* To which our STA is connected */
     uint16_t join_retries;
     uint8_t ip4_addr[4]; /* Not sure if this is enough */
+    uint8_t ta_power_save_done;
 };
 
 extern struct wfx_rsi wfx_rsi;
@@ -81,7 +85,6 @@ extern "C" {
 #endif
 void wfx_rsidev_init(void);
 void wfx_rsi_task(void * arg);
-void efr32Log(const char * aFormat, ...);
 #if CHIP_DEVICE_CONFIG_ENABLE_IPV4
 void wfx_ip_changed_notify(int got_ip);
 #endif /* CHIP_DEVICE_CONFIG_ENABLE_IPV4 */
@@ -89,10 +92,10 @@ int32_t wfx_rsi_get_ap_info(wfx_wifi_scan_result_t * ap);
 int32_t wfx_rsi_get_ap_ext(wfx_wifi_scan_ext_t * extra_info);
 int32_t wfx_rsi_reset_count();
 int32_t wfx_rsi_disconnect();
-#if CHIP_DEVICE_CONFIG_ENABLE_SED
+#if SL_ICD_ENABLED
 int32_t wfx_rsi_power_save();
-#endif /* CHIP_DEVICE_CONFIG_ENABLE_SED */
-#define SILABS_LOG(...) efr32Log(__VA_ARGS__);
+#endif /* SL_ICD_ENABLED */
+int32_t wfx_wifi_rsi_init(void);
 
 #ifdef __cplusplus
 }

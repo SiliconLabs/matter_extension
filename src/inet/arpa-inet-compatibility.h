@@ -20,7 +20,7 @@
 
 #include <system/SystemConfig.h>
 
-#if CHIP_SYSTEM_CONFIG_USE_SOCKETS
+#if CHIP_SYSTEM_CONFIG_USE_POSIX_SOCKETS
 #include <arpa/inet.h>
 
 #else // !CHIP_SYSTEM_CONFIG_USE_SOCKETS
@@ -68,7 +68,7 @@
 
 #elif __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
 #ifndef htons
-#define htons(x) ((u16_t)((((x) & (u16_t) 0x00ffU) << 8) | (((x) & (u16_t) 0xff00U) >> 8)))
+#define htons(x) ((u16_t) ((((x) & (u16_t) 0x00ffU) << 8) | (((x) & (u16_t) 0xff00U) >> 8)))
 #endif
 #ifndef ntohs
 #define ntohs(x) htons(x)

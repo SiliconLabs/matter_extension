@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.1"
+    version: "2.2.0"
 
 component:
   - id: device_init
@@ -50,7 +50,7 @@ component:
     from: matter
   - id: matter_administrator_commissioning
     from: matter
-  - id: matter_basic
+  - id: matter_basic_information
     from: matter
   - id: matter_descriptor
     from: matter
@@ -99,14 +99,19 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  # Override RTT
-  - id: matter_segger_rtt
-    from: matter
+  - id: segger_rtt
 
-#  - id: matter_lcd // TODO: Enable this feature once MG24 has LCD and QR code support
+#  - id: matter_lcd
 #    from: matter
 #  - id: matter_qr_code
 #    from: matter
+
+  - id: matter_icd
+    from: matter
+  - id: matter_subscription_persistence
+    from: matter
+  - id: matter_subscription_synchronization
+    from: matter
 
 # Require LCD and QR Code components only on the boards that support LCD
 requires:
@@ -125,9 +130,11 @@ requires:
 config_file:
   - path: ../../../../examples/lock-app/lock-common/lock-app.zap
     directory: common
+  - path: ../../../../provision.mattpconf
+    directory: provision
 
 include:
-  - path: ../../../../examples/lock-app/silabs/efr32/include
+  - path: ../../../../examples/lock-app/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -137,13 +144,13 @@ include:
     directory: include
 
 source:
-  - path: ../../../../examples/lock-app/silabs/efr32/src/AppTask.cpp
+  - path: ../../../../examples/lock-app/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/lock-app/silabs/efr32/src/LockManager.cpp
+  - path: ../../../../examples/lock-app/silabs/src/LockManager.cpp
     directory: src
-  - path: ../../../../examples/lock-app/silabs/efr32/src/main.cpp
+  - path: ../../../../examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/lock-app/silabs/efr32/src/ZclCallbacks.cpp
+  - path: ../../../../examples/lock-app/silabs/src/ZclCallbacks.cpp
     directory: src
     
 define:
@@ -164,9 +171,17 @@ configuration:
     value: "10000000"
   - name: SL_POWER_MANAGER_LOWEST_EM_ALLOWED
     value: "1"
+  - name: SL_PSA_KEY_USER_SLOT_COUNT
+    value: "21"
   - name: SL_POWER_MANAGER_CONFIG_VOLTAGE_SCALING_FAST_WAKEUP
     value: "1"
   - {name: SL_STACK_SIZE, value: '4608'} 
+# Default ICD configurations for lock-app
+  - {name: SL_ACTIVE_MODE_THRESHOLD, value: '1000'}
+  - {name: SL_ACTIVE_MODE_INTERVAL, value: '10000'}
+  - {name: SL_IDLE_MODE_INTERVAL, value: '600'}
+  - {name: SL_OT_IDLE_INTERVAL, value: '5000'}
+  - {name: SL_OT_ACTIVE_INTERVAL, value: '500'}
 
 toolchain_settings:
   - option: gcc_c++_compiler_option

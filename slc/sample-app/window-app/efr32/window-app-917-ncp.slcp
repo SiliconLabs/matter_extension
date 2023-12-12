@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.1"
+    version: "2.2.0"
   - id: wiseconnect3_sdk
-    version: "3.1.0"
+    version: "3.1.1"
 
 provides:
   - name: window_app
@@ -35,6 +35,8 @@ component:
     from: matter
   - id: silabs_factory_data_provider
     from: matter
+  - id: matter_gatt_additional_advertising
+    from: matter
 
   - id: matter_efr32_ncp
     from: matter
@@ -52,7 +54,7 @@ component:
     from: matter
   - id: matter_administrator_commissioning
     from: matter
-  - id: matter_basic
+  - id: matter_basic_information
     from: matter
   - id: matter_descriptor
     from: matter
@@ -80,8 +82,6 @@ component:
     from: matter
   - id: matter_power_source
     from: matter
-  - id: matter_scenes
-    from: matter
   - id: matter_software_diagnostics
     from: matter
   - id: matter_thread_network_diagnostics
@@ -97,23 +97,22 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  # Override RTT
-  - id: matter_segger_rtt
+  - id: segger_rtt
+
+  - id: matter_subscription_timeout_resumption
+    from: matter
+  - id: matter_subscription_persistence
     from: matter
 
-
-  - id: si91x
-    from: wiseconnect3_sdk
+  - id: efx_ncp_custom_host_mcu
+    from: matter
   - id: wifi
     from: wiseconnect3_sdk
-  - id: basic_network_manager
+  - id: basic_network_config_manager
     from: wiseconnect3_sdk
-  - id: si91x_basic_buffers
+  - id: sl_si91x_basic_buffers
     from: wiseconnect3_sdk
-
-
-    
-  - id: si91x_support
+  - id: sl_si91x_wireless
     from: wiseconnect3_sdk
   - id: wifi_resources
     from: wiseconnect3_sdk
@@ -136,10 +135,6 @@ requires:
 #  - name: matter_qr_code
 #    condition:
 #    - device_series_2
-  - name: spidrv_instance
-  - name: uartdrv_eusart
-    condition:
-    - device_series_2
 # Select UART/EUART drivers based on device series
   - name: matter_drivers_series_1_wifi_rs911x
     condition:
@@ -151,28 +146,27 @@ requires:
 config_file:
   - path: ../../../../examples/window-app/common/window-app.zap
     directory: common
+  - path: ../../../../provision.mattpconf
+    directory: provision
 
 include:
-  - path: ../../../../examples/window-app/silabs/efr32/include
+  - path: ../../../../examples/window-app/silabs/include
     file_list:
     - path: AppConfig.h
     - path: CHIPProjectConfig.h
-    - path: WindowAppImpl.h
-    directory: include
-
-  - path: ../../../../examples/window-app/common/include
-    file_list:
-    - path: WindowApp.h
+    - path: WindowManager.h
+    - path: AppTask.h
+    - path: AppEvent.h
     directory: include
 
 source:
-  - path: ../../../../examples/window-app/silabs/efr32/src/WindowAppImpl.cpp
+  - path: ../../../../examples/window-app/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/window-app/silabs/efr32/src/main.cpp
+  - path: ../../../../examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/window-app/common/src/WindowApp.cpp
+  - path: ../../../../examples/window-app/silabs/src/WindowManager.cpp
     directory: src
-  - path: ../../../../examples/window-app/common/src/ZclCallbacks.cpp
+  - path: ../../../../examples/window-app/silabs/src/ZclCallbacks.cpp
     directory: src
 
 define:
@@ -191,6 +185,8 @@ configuration:
     value: "10000000"
   - name: SL_POWER_MANAGER_LOWEST_EM_ALLOWED
     value: "1"
+  - name: SL_PSA_KEY_USER_SLOT_COUNT
+    value: "21"
   - name: SL_POWER_MANAGER_CONFIG_VOLTAGE_SCALING_FAST_WAKEUP
     value: "1"
   - {name: SL_STACK_SIZE, value: '4608'} 

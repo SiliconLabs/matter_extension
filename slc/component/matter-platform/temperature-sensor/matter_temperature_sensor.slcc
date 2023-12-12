@@ -8,8 +8,8 @@ quality: production
 provides:
   - name: matter_temperature_sensor
 include:
-  - path: examples/platform/silabs/efr32
+  - path: examples/platform/silabs
     file_list:
     - path: TemperatureSensor.h
 source:
-  - path: examples/platform/silabs/efr32/TemperatureSensor.cpp
+  - path: examples/platform/silabs/TemperatureSensor.cpp

@@ -1,61 +1,59 @@
 category: Matter|Core
 define:
-- name: CHIP_HAVE_CONFIG_H
-  value: '1'
+-   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
 description: libtransportlayer
 id: libtransportlayer
 include:
-- path: examples/platform/silabs
-- path: src
-  file_list:
-  - path: transport/SessionManager.h
-  - path: transport/raw/MessageHeader.h
-  - path: transport/CryptoContext.h
-  - path: transport/GroupPeerMessageCounter.h
-  - path: transport/GroupSession.h
-  - path: transport/MessageCounterManagerInterface.h
-  - path: transport/SecureSessionTable.h
-  - path: transport/SessionDelegate.h
-  - path: transport/SessionHandle.h
-  - path: transport/SessionHolder.h
-  - path: transport/SessionMessageDelegate.h
-  - path: transport/TransportMgr.h
-  - path: transport/UnauthenticatedSessionTable.h
-  - path: transport/raw/Base.h
-  - path: transport/raw/PeerAddress.h
-  - path: transport/raw/Tuple.h
-  - path: transport/PeerMessageCounter.h
-  - path: transport/Session.h
-  - path: transport/SecureSession.h
-  - path: transport/SessionMessageCounter.h
-  - path: transport/MessageCounter.h
-  - path: transport/TransportMgrBase.h
-  - path: transport/SessionUpdateDelegate.h
-  - path: transport/raw/UDP.h
-  - path: transport/raw/BLE.h
-  - path: transport/SecureMessageCodec.h
-  - path: transport/TraceMessage.h
-  - path: transport/raw/TCP.h
-- path: src/include
-- path: src/lib
-- path: third_party/nlassert/repo/include
-- path: third_party/nlio/repo/include
-- path: zzz_generated/app-common
+-   path: examples/lighting-app/silabs/include
+-   path: examples/platform/silabs
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+-   path: zzz_generated/app-common
+-   path: src/transport
+    file_list:
+    -   path: TracingStructs.h
+    -   path: TransportMgr.h
+    -   path: MessageCounterManagerInterface.h
+    -   path: UnauthenticatedSessionTable.h
+    -   path: GroupPeerMessageCounter.h
+    -   path: GroupSession.h
+    -   path: CryptoContext.h
+    -   path: SessionUpdateDelegate.h
+    -   path: SecureMessageCodec.h
+    -   path: Session.h
+    -   path: SessionHolder.h
+    -   path: SessionMessageDelegate.h
+    -   path: SecureSessionTable.h
+    -   path: SessionDelegate.h
+    -   path: MessageCounter.h
+    -   path: TraceMessage.h
+    -   path: PeerMessageCounter.h
+    -   path: SessionMessageCounter.h
+    -   path: TransportMgrBase.h
+    -   path: SecureSession.h
+    -   path: SessionManager.h
 label: libtransportlayer
 package: Matter
 provides:
-- name: matter_libtransportlayer
+-   name: matter_libtransportlayer
 quality: production
 source:
-- path: src/transport/CryptoContext.cpp
-- path: src/transport/GroupPeerMessageCounter.cpp
-- path: src/transport/SecureMessageCodec.cpp
-- path: src/transport/SecureSession.cpp
-- path: src/transport/SecureSessionTable.cpp
-- path: src/transport/Session.cpp
-- path: src/transport/SessionHandle.cpp
-- path: src/transport/SessionHolder.cpp
-- path: src/transport/SessionManager.cpp
-- path: src/transport/TransportMgrBase.cpp
+-   path: src/transport/CryptoContext.cpp
+-   path: src/transport/GroupPeerMessageCounter.cpp
+-   path: src/transport/SecureMessageCodec.cpp
+-   path: src/transport/SecureSession.cpp
+-   path: src/transport/SecureSessionTable.cpp
+-   path: src/transport/Session.cpp
+-   path: src/transport/SessionHolder.cpp
+-   path: src/transport/SessionManager.cpp
+-   path: src/transport/TransportMgrBase.cpp
 ui_hints:
-  visibility: never
+    visibility: never

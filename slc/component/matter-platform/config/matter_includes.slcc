@@ -1,0 +1,27 @@
+category: Matter|Stack
+description: Includes core configuration settings for Matter applications
+id: matter_includes
+label: Stack
+package: Matter
+provides:
+  - name: matter_includes
+quality: production
+include:
+  - path: slc/inc
+    file_list:
+    - path: core/CHIPBuildConfig.h
+    - path: app/AppBuildConfig.h
+    - path: asn1/ASN1OID.h
+    - path: ble/BleBuildConfig.h
+    - path: crypto/CryptoBuildConfig.h
+    - path: inet/InetBuildConfig.h
+    - path: lwip/lwip_buildconfig.h
+    - path: matter/tracing/build_config.h
+    - path: openthread/platform/openthread-system.h
+    - path: platform/CHIPDeviceBuildConfig.h
+    - path: setup_payload/CHIPAdditionalDataPayloadBuildConfig.h
+    - path: system/SystemBuildConfig.h
+    - path: CHIPVersion.h
+    - path: FirmwareBuildTime.h
+ui_hints:
+    visibility: never

@@ -1,79 +1,47 @@
 category: Matter|Core
 define:
-- name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
-  value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
-- name: CHIP_HAVE_CONFIG_H
-  value: '1'
+-   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
 description: dnssd
 id: dnssd
 include:
-- path: examples/platform/silabs
-- path: examples/platform/silabs/efr32
-- path: src
-- path: src/include
-- path: src/lib
-  file_list:
-  - path: dnssd/minimal_mdns/core/Constants.h
-  - path: dnssd/minimal_mdns/core/DnsHeader.h
-  - path: dnssd/minimal_mdns/core/QName.h
-  - path: dnssd/minimal_mdns/core/RecordWriter.h
-  - path: dnssd/minimal_mdns/core/BytesRange.h
-  - path: dnssd/minimal_mdns/ListenIterator.h
-  - path: dnssd/minimal_mdns/ServerIPAddresses.h
-  - path: dnssd/Resolver.h
-  - path: dnssd/Constants.h
-  - path: dnssd/Advertiser_ImplMinimalMdnsAllocator.h
-  - path: dnssd/minimal_mdns/AddressPolicy.h
-  - path: dnssd/minimal_mdns/ResponseSender.h
-  - path: dnssd/minimal_mdns/Server.h
-  - path: dnssd/minimal_mdns/core/FlatAllocatedQName.h
-  - path: dnssd/minimal_mdns/responders/IP.h
-  - path: dnssd/minimal_mdns/responders/Ptr.h
-  - path: dnssd/minimal_mdns/responders/QueryResponder.h
-  - path: dnssd/minimal_mdns/responders/Srv.h
-  - path: dnssd/minimal_mdns/responders/Txt.h
-  - path: dnssd/minimal_mdns/responders/RecordResponder.h
-  - path: dnssd/minimal_mdns/responders/Responder.h
-  - path: dnssd/minimal_mdns/records/ResourceRecord.h
-  - path: dnssd/minimal_mdns/Parser.h
-  - path: dnssd/minimal_mdns/records/Ptr.h
-  - path: dnssd/minimal_mdns/records/Srv.h
-  - path: dnssd/minimal_mdns/records/Txt.h
-  - path: dnssd/IPAddressSorter.h
-  - path: dnssd/IncrementalResolve.h
-  - path: dnssd/ServiceNaming.h
-  - path: dnssd/TxtFields.h
-  - path: dnssd/minimal_mdns/Logging.h
-  - path: dnssd/minimal_mdns/RecordData.h
-  - path: dnssd/minimal_mdns/Query.h
-  - path: dnssd/minimal_mdns/AddressPolicy_DefaultImpl.h
-  - path: dnssd/minimal_mdns/AddressPolicy_LibNlImpl.h
-  - path: dnssd/ActiveResolveAttempts.h
-  - path: dnssd/MinimalMdnsServer.h
-  - path: dnssd/ResolverProxy.h
-  - path: dnssd/minimal_mdns/QueryBuilder.h
-  - path: dnssd/minimal_mdns/core/HeapQName.h
-  - path: dnssd/Advertiser.h
-  - path: dnssd/platform/Dnssd.h
-  - path: dnssd/Discovery_ImplPlatform.h
-  - path: dnssd/minimal_mdns/core/QNameString.h
-  - path: dnssd/minimal_mdns/records/IP.h
-  - path: dnssd/minimal_mdns/responders/ReplyFilter.h
-  - path: dnssd/minimal_mdns/ResponseBuilder.h
-  - path: dnssd/minimal_mdns/QueryReplyFilter.h
-- path: src/platform/silabs/efr32
-- path: third_party/nlassert/repo/include
-- path: third_party/nlio/repo/include
-- path: zzz_generated/app-common
+-   path: examples/lighting-app/silabs/include
+-   path: examples/platform/silabs
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+-   path: zzz_generated/app-common
+-   path: src/lib/dnssd
+    file_list:
+    -   path: Advertiser.h
+    -   path: Discovery_ImplPlatform.h
+    -   path: Advertiser_ImplMinimalMdnsAllocator.h
+    -   path: ServiceNaming.h
+    -   path: ActiveResolveAttempts.h
+    -   path: IPAddressSorter.h
+    -   path: TxtFields.h
+    -   path: Constants.h
+    -   path: ResolverProxy.h
+    -   path: IncrementalResolve.h
+    -   path: Resolver.h
+    -   path: MinimalMdnsServer.h
+    -   path: platform/Dnssd.h
+    -   path: platform/DnssdBrowseDelegate.h
 label: dnssd
 package: Matter
 provides:
-- name: matter_dnssd
+-   name: matter_dnssd
 quality: production
 source:
-- path: src/lib/dnssd/Discovery_ImplPlatform.cpp
-- path: src/lib/dnssd/IPAddressSorter.cpp
-- path: src/lib/dnssd/ServiceNaming.cpp
-- path: src/lib/dnssd/TxtFields.cpp
+-   path: src/lib/dnssd/Discovery_ImplPlatform.cpp
+-   path: src/lib/dnssd/IPAddressSorter.cpp
+-   path: src/lib/dnssd/ServiceNaming.cpp
+-   path: src/lib/dnssd/TxtFields.cpp
 ui_hints:
-  visibility: never
+    visibility: never

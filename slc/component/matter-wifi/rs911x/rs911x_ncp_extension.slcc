@@ -1,5 +1,6 @@
 id: rs911x_ncp_extension
-label: rs911x_ncp_extension
+label: RS911x NCP Extension
+quality: production
 description: >
   Adds support for the HAL and WiFi Driver layer for RS9116 NCP devices
 package: Matter
@@ -11,6 +12,8 @@ requires:
 - name: wiseconnect_sapi
 source:
 - path: examples/platform/silabs/efr32/rs911x/rsi_if.c
+- path: examples/platform/silabs/efr32/rs911x/hal/efx_spi.c
+- path: examples/platform/silabs/efr32/rs911x/hal/rsi_hal_mcu_interrupt.c
 - path: examples/platform/silabs/efr32/rs911x/hal/rsi_hal_mcu_ioports.c
 - path: examples/platform/silabs/efr32/rs911x/hal/rsi_hal_mcu_timer.c
 include:
@@ -20,3 +23,7 @@ include:
 - path: examples/platform/silabs/efr32/rs911x/hal
   file_list:
   - path: rsi_board_configuration.h
+  - path: sl_board_configuration.h
+- path: examples/platform/silabs/efr32
+  file_list:
+  - path: spi_multiplex.h

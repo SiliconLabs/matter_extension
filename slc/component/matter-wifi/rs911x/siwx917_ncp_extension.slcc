@@ -1,5 +1,6 @@
 id: siwx917_ncp_extension
-label: siwx917_ncp_extension
+label: SiWx917 NCP Extension
+quality: production
 description: >
   Adds support for the HAL and WiFi Driver layer for SiWx917 NCP devices
 package: Matter
@@ -10,16 +11,18 @@ requires:
 - name: rs911x_ncp_common
 source:
 - path: examples/platform/silabs/efr32/rs911x/sl_wifi_if.c
-- path: third_party/silabs/wifi_sdk/components/si91x/platforms/efx32/efx32_ncp_host.c
-- path: third_party/silabs/wifi_sdk/components/si91x/spi_interface/sl_si91x_spi_driver.c
-
+- path: examples/platform/silabs/efr32/rs911x/hal/sl_si91x_ncp_utility.c
 include:
+- path: examples/platform/silabs/efr32/rs911x/hal
+  file_list:
+  - path: sl_board_configuration_SiWx917.h
+  - path: sl_si91x_ncp_utility.h
 - path: examples/platform/silabs/efr32/rs911x
   file_list:
   - path: sl_wlan_config.h
-- path: examples/platform/silabs/efr32/rs911x/hal
+- path: examples/platform/silabs/efr32
   file_list:
-  - path: sl_board_configuration.h
+  - path: spi_multiplex.h
 define:
 - name: RS911X_WIFI
 - name: EXP_BOARD
@@ -38,3 +41,5 @@ define:
 - name: RSI_SPI_INTERFACE
 - name: RSI_WITH_OS
 - name: SL_WIFI_COMPONENT_INCLUDED
+- name: __WEAK
+  value: "__attribute__((weak))"

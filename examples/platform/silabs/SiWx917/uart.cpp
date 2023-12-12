@@ -19,10 +19,8 @@
 #include "USART.h"
 #include "matter_shell.h"
 #include "rsi_rom_egpio.h"
-#include "siwx917_utils.h"
+#include "silabs_utils.h"
 #include "sl_si91x_usart.h"
-#include "rsi_usart.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -33,10 +31,9 @@ extern "C" {
 #include <string.h>
 
 #define USART_BAUDRATE 115200 // Baud rate <9600-7372800>
-#define UART_CONSOLE_ERR -1 // Negative value in case of UART Console action failed. Triggers a failure for PW_RPC
+#define UART_CONSOLE_ERR -1   // Negative value in case of UART Console action failed. Triggers a failure for PW_RPC
 
 sl_usart_handle_t usart_handle;
-volatile boolean_t send_complete = false, transfer_complete = false, receive_complete = false;
 
 void callback_event(uint32_t event);
 
@@ -45,18 +42,15 @@ void callback_event(uint32_t event);
  ******************************************************************************/
 void callback_event(uint32_t event)
 {
-    switch (event) {
-      case SL_USART_EVENT_SEND_COMPLETE:
-        send_complete = true;
+    switch (event)
+    {
+    case SL_USART_EVENT_SEND_COMPLETE:
         break;
-      case SL_USART_EVENT_RECEIVE_COMPLETE:
-        receive_complete = true;
-  #ifdef ENABLE_CHIP_SHELL
-          chip::NotifyShellProcessFromISR();
-  #endif;
-        break;
-      case SL_USART_EVENT_TRANSFER_COMPLETE:
-        transfer_complete = true;
+    case SL_USART_EVENT_RECEIVE_COMPLETE:
+#ifdef ENABLE_CHIP_SHELL
+        chip::NotifyShellProcessFromISR();
+#endif
+    case SL_USART_EVENT_TRANSFER_COMPLETE:
         break;
     }
 }
@@ -78,36 +72,25 @@ void uartConsoleInit(void)
     usart_config.synch_mode    = DISABLE;
     sl_si91x_usart_control_config_t get_config;
 
-    // Initialized board UART
-    DEBUGINIT();
-
     // Initialize the UART
-    status = sl_si91x_usart_init((usart_peripheral_t)usart_config.usart_module, &usart_handle);
-    if (status != SL_STATUS_OK) {
-      DEBUGOUT("sl_si91x_usart_initialize: Error Code : %lu \n", status);
-    }
-
-    // Setting the GPIO 30 of the radio board (TX)
-    // Setting the GPIO 29 of the radio board (RX)
-    RSI_EGPIO_HostPadsGpioModeEnable(30);
-    RSI_EGPIO_HostPadsGpioModeEnable(29);
-
-    // Power up the UART peripheral
-    status = sl_si91x_usart_set_power_mode(usart_handle, SL_POWER_FULL);
-    if (status != SL_STATUS_OK) {
-      DEBUGOUT("sl_si91x_usart_configure_power_mode: Error Code : %lu \n", status);
+    status = sl_si91x_usart_init((usart_peripheral_t) usart_config.usart_module, &usart_handle);
+    if (status != SL_STATUS_OK)
+    {
+        SILABS_LOG("sl_si91x_usart_initialize: Error Code : %lu \n", status);
     }
 
     // Configure the USART configurations
     status = sl_si91x_usart_set_configuration(usart_handle, &usart_config);
-    if (status != SL_STATUS_OK) {
-      DEBUGOUT("sl_si91x_usart_set_configuration: Error Code : %lu \n", status);
+    if (status != SL_STATUS_OK)
+    {
+        SILABS_LOG("sl_si91x_usart_set_configuration: Error Code : %lu \n", status);
     }
 
     // Register user callback function
     status = sl_si91x_usart_register_event_callback(callback_event);
-    if (status != SL_STATUS_OK) {
-      DEBUGOUT("sl_si91x_usart_register_event_callback: Error Code : %lu \n", status);
+    if (status != SL_STATUS_OK)
+    {
+        SILABS_LOG("sl_si91x_usart_register_event_callback: Error Code : %lu \n", status);
     }
 
     NVIC_EnableIRQ(USART0_IRQn);

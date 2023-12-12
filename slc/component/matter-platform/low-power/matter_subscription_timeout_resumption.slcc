@@ -1,0 +1,19 @@
+id: matter_subscription_timeout_resumption
+label: Subscription Timout Resumption
+description: >
+  Provides a retry mechanism for devices to re-establish a lost subscription 
+  with a client. This component is enabled by default on most Silicon Labs Matter
+  applications (door-lock and light-switch not included). This component conflicts
+  with full ICD functionality (matter_icd) as it can cause an increase in power consumption.
+package: "Matter"
+category: Platform|Low-power
+provides:
+  - name: matter_subscription_timeout_resumption
+quality: production
+
+define:
+  - name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION
+    value: 1
+
+conflicts:
+  - name: matter_icd

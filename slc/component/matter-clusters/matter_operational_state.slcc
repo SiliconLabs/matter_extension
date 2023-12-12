@@ -1,0 +1,19 @@
+
+category: Clusters|General
+description: Implementation of the Operational State Server Cluster
+id: matter_operational_state
+package: Matter
+label: Operational State Server Cluster
+quality: production
+provides:
+  - name: matter_operational_state
+source:
+  - path: src/app/clusters/operational-state-server/operational-state-server.cpp
+include:
+  - path: src/app/clusters/operational-state-server
+    file_list:
+      - path: operational-state-cluster-objects.h
+      - path: operational-state-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_operational_state

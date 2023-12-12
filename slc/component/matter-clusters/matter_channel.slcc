@@ -2,6 +2,7 @@
 category: Clusters|Media
 description: Implementation of the Channel Server Cluster
 id: matter_channel
+package: Matter
 label: Channel Server Cluster
 quality: production
 provides:
@@ -9,10 +10,10 @@ provides:
 source:
   - path: src/app/clusters/channel-server/channel-server.cpp
 include:
-  - path: src/app/clusters/channel-server/
+  - path: src/app/clusters/channel-server
     file_list:
-      - path: channel-server.h
       - path: channel-delegate.h
+      - path: channel-server.h
 template_contribution:
   - name: component_catalog
     value: matter_channel

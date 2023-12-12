@@ -6,52 +6,48 @@ category: "Matter-WiFi|Platform"
 quality: production
 
 config_file:
-  - path: examples/platform/silabs/SiWx917/FreeRTOSConfig.h
-    override:
-      component: freertos
+  - override:
+      component: "%extension-wiseconnect3_sdk%board_configuration_headers"
       file_id: freertos_config
+    path: examples/platform/silabs/FreeRTOSConfig.h
 
 requires:
+  - name: matter_provision
   - name: matter_siwx917
   - name: matter_siwx917_common
   - name: siwx917_soc_custom_startup
   - name: device_init_nvic
   - name: si91x_debug
+  - name: sl_system_init
+  - name: nvm3_default
 
 provides:
   - name: matter_platform_siwx917
   - name: freertos_heap
   - name: device
   - name: wiseconnect_toolchain_gcc_override
-  - name: matter_si91x_dual_flash_nvm3_enabled  
-    condition: [brd4325b]   
-  - name: matter_si91x_common_flash_nvm3_enabled  
-    condition: [brd4325c] 
-  - name: matter_si91x_common_flash_nvm3_enabled  
-    condition: [brd4325g] 
   - name: matter_si91x_common_flash_nvm3_enabled
-    condition: [brd4338a]
 
 include:
-  - path: examples/platform/silabs
-    file_list:
-    - path: heap_4_silabs.h
-    - path: matter_config.h
-  - path: examples/platform/silabs/SiWx917
-    file_list:
-    - path: siwx917_utils.h
-    - path: BaseApplication.h
-    - path: init_ccpPlatform.h
-    - path: board_config.h
-    - path: main_task.h
+- path: examples/platform/silabs
+  file_list:
+  - path: PigweedLogger.h
+  - path: Rpc.h
+  - path: silabs_utils.h
+  - path: LEDWidget.h
+  - path: MatterConfig.h
+  - path: heap_4_silabs.h
+  - path: OTAConfig.h
+  - path: matter_shell.h
+  - path: MemMonitoring.h
+  - path: BaseApplication.h
+  - path: SoftwareFaultReports.h
 source:
-  - path: examples/platform/silabs/SiWx917/BaseApplication.cpp
-    unless: ["window_app"]
-  - path: examples/platform/silabs/SiWx917/siwx917_utils.cpp
+  - path: examples/platform/silabs/BaseApplication.cpp
+  - path: examples/platform/silabs/silabs_utils.cpp
   - path: examples/platform/silabs/heap_4_silabs.c
-  - path: examples/platform/silabs/SiWx917/init_ccpPlatform.cpp
-  - path: examples/platform/silabs/SiWx917/matter_config.cpp
-  - path: examples/platform/silabs/SiWx917/SiWx917/hal/rsi_hal_mcu_m4.c
+  - path: examples/platform/silabs/MatterConfig.cpp
+  - path: examples/platform/silabs/SoftwareFaultReports.cpp
 define:
   - name: SL_WFX_CONFIG_SCAN
     value: 1
@@ -60,7 +56,7 @@ define:
   - name: CHIP_9117
     value: 1
   - name: RS911X_WIFI
-  - name: ROMDRIVER_PRESENT
+  - name: SL_SI91x_DUAL_INTERRUPTS_ERRATA
 # TODO : should be removed after code clean-up.
   - name: BRD4325A
 toolchain_settings:

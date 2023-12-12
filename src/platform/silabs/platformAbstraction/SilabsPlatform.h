@@ -29,6 +29,14 @@ class SilabsPlatform : virtual public SilabsPlatformAbstractionBase
 {
 
 public:
+    enum class ButtonAction : uint8_t
+    {
+        ButtonReleased = 0,
+        ButtonPressed,
+        ButtonDisabled,
+        InvalidAction
+    };
+
     // Generic Peripherical methods
     CHIP_ERROR Init(void) override;
 
@@ -39,6 +47,13 @@ public:
     bool GetLedState(uint8_t led) override;
     CHIP_ERROR ToggleLed(uint8_t led) override;
 #endif
+
+    // Buttons
+    inline void SetButtonsCb(SilabsButtonCb callback) override { mButtonCallback = callback; }
+    static SilabsButtonCb mButtonCallback;
+    uint8_t GetButtonState(uint8_t button) override;
+
+    void StartScheduler(void) override;
 
 private:
     friend SilabsPlatform & GetPlatform(void);

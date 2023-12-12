@@ -14,6 +14,7 @@ import tarfile
 import dload
 import stat
 from zipfile import ZipFile
+
 # Use SILABS_MATTER_ROOT or use relative path
 if "SILABS_MATTER_ROOT" not in os.environ:
     print("Using default path for Matter root")
@@ -26,68 +27,82 @@ os.makedirs(os.path.join(silabs_chip_root, "slc/tools"), exist_ok=True)
 
 tools_folder_path = os.path.join(silabs_chip_root, "slc","tools")
 
+#setting variables to different tools url and paths
 platform = sys.platform
-
 if platform == "win32":
-    arm_toolchain_url = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-win32.zip/?"
-    java_url = "https://corretto.aws/downloads/latest/amazon-corretto-17-x64-windows-jdk.zip"
+    arm_toolchain_url = "https://developer.arm.com/-/media/Files/downloads/gnu/12.2.rel1/binrel/arm-gnu-toolchain-12.2.rel1-mingw-w64-i686-arm-none-eabi.zip?rev=709f3f15b2ee4763b186c10153ee6ca9&hash=8C0761A17A1E4861B96DDB604C177F5B"
+    java_url = "https://corretto.aws/downloads/resources/17.0.8.8.1/amazon-corretto-17.0.8.8.1-windows-x64-jdk.zip"
     slc_cli_url = "https://www.silabs.com/documents/login/software/slc_cli_windows.zip"
-    zap_url = "https://github.com/project-chip/zap/releases/download/v2023.09.22-nightly/zap-win-x64.zip"
+    zap_url = "https://github.com/project-chip/zap/releases/download/v2023.12.06-nightly/zap-win-x64.zip"
     commander_url = "https://www.silabs.com/documents/public/software/SimplicityCommander-Windows.zip"
     commander_path = os.path.join(tools_folder_path,"SimplicityCommander-Windows")
-    commander_zip = os.path.join(commander_path,"Commander_win32_x64_1v16p0b1441.zip")
+    os_name_commander = "Commander_win32"
+    java_path = os.path.join(silabs_chip_root, "slc","tools","jdk17.0.8_8")
+    arm_gcc_dir = os.path.join(tools_folder_path,"arm-gnu-toolchain-12.2.rel1-mingw-w64-i686-arm-none-eabi")
+    arm_toolchain_path = os.path.join(tools_folder_path,"gcc","bin")
 elif platform == "darwin":
-    arm_toolchain_url = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-mac.tar.bz2?rev=58ed196feb7b4ada8288ea521fa87ad5&hash=62C9BE56E5F15D7C2D98F48BFCF2E839D7933597"
-    java_url = "https://corretto.aws/downloads/latest/amazon-corretto-17-x64-macos-jdk.tar.gz"
+    arm_toolchain_url = "https://developer.arm.com/-/media/Files/downloads/gnu/12.2.rel1/binrel/arm-gnu-toolchain-12.2.rel1-darwin-arm64-arm-none-eabi.tar.xz?rev=41f9ad86e18d43cf9999c4bada07f7df&hash=C458A8BF74CBA545BDCA38B7FB40AAF5"
+    java_url = "https://corretto.aws/downloads/resources/17.0.8.8.1/amazon-corretto-17.0.8.8.1-macosx-x64.tar.gz"
     slc_cli_url = "https://www.silabs.com/documents/login/software/slc_cli_mac.zip"
-    zap_url = "https://github.com/project-chip/zap/releases/download/v2023.09.22-nightly/zap-mac-x64.zip"
+    zap_url = "https://github.com/project-chip/zap/releases/download/v2023.12.06-nightly/zap-mac-x64.zip"
     commander_url = "https://www.silabs.com/documents/public/software/SimplicityCommander-Mac.zip"
     commander_path = os.path.join(tools_folder_path,"SimplicityCommander-Mac")
-    commander_zip = os.path.join(commander_path,"Commander_osx_1v16p0b1441.zip")
+    os_name_commander = "Commander_osx"
     commander_app_path = os.path.join(commander_path,"Commander.app","Contents","MacOS")
+    java_path = os.path.join(silabs_chip_root, "slc","tools","amazon-corretto-17.jdk")
+    arm_gcc_dir = os.path.join(tools_folder_path,"arm-gnu-toolchain-12.2.rel1-darwin-arm64-arm-none-eabi")
+    arm_toolchain_path = os.path.join(arm_gcc_dir,"bin")
 elif platform =="linux":
-    arm_toolchain_url = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2?rev=78196d3461ba4c9089a67b5f33edf82a&hash=5631ACEF1F8F237389F14B41566964EC"
-    java_url = "https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.tar.gz"
+    arm_toolchain_url = "https://developer.arm.com/-/media/Files/downloads/gnu/12.2.rel1/binrel/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz?rev=7bd049b7a3034e64885fa1a71c12f91d&hash=732D909FA8F68C0E1D0D17D08E057619"
+    java_url = "https://corretto.aws/downloads/resources/17.0.8.8.1/amazon-corretto-17.0.8.8.1-linux-x64.tar.gz"
     slc_cli_url = "https://www.silabs.com/documents/login/software/slc_cli_linux.zip"
-    zap_url = "https://github.com/project-chip/zap/releases/download/v2023.09.22-nightly/zap-linux-x64.zip"
+    zap_url = "https://github.com/project-chip/zap/releases/download/v2023.12.06-nightly/zap-linux-x64.zip"
     commander_url = "https://www.silabs.com/documents/public/software/SimplicityCommander-Linux.zip"
     commander_path = os.path.join(tools_folder_path,"SimplicityCommander-Linux")
-    commander_zip = os.path.join(commander_path,"Commander_linux_x86_64_1v16p0b1441.tar.bz")
+    os_name_commander = "Commander_linux_x86_64"
+    java_path = os.path.join(silabs_chip_root, "slc","tools","amazon-corretto-17.0.8.8.1-linux-x64")
+    commander_app_path = os.path.join(commander_path,"commander")
+    arm_gcc_dir = os.path.join(tools_folder_path,"arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi")
+    arm_toolchain_path = os.path.join(arm_gcc_dir,"bin")
 else:
     print("ERROR: Platform ", platform, " is not supported")
     sys.exit()
-    
-arm_toolchain_path = os.path.join(silabs_chip_root, "slc", "tools","gcc-arm-none-eabi-10.3-2021.10","bin")
-java_path = os.path.join(silabs_chip_root, "slc","tools","amazon-corretto-17.jdk")
-java_path_win = os.path.join(silabs_chip_root, "slc","tools","jdk17.0.8_8")
-java_path_linux = os.path.join(silabs_chip_root, "slc","tools","amazon-corretto-17.0.8.8.1-linux-x64")
+
+
 slc_cli_path = os.path.join(silabs_chip_root, "slc","tools","slc_cli")
 zap_path = os.path.join(silabs_chip_root, "slc","tools","zap")
-arm_gcc_dir = os.path.join(tools_folder_path,"gcc-arm-none-eabi-10.3-2021.10")
+
 
 # Download and extract arm toolchain
 if not os.path.isfile(os.path.join(arm_toolchain_path, "arm-none-eabi-gcc")) and not os.path.isfile(os.path.join(arm_toolchain_path, "arm-none-eabi-gcc.exe")):
     print("Downloading and unzipping arm-none-eabi-gcc ...")
     if platform =="win32":
-        dload.save_unzip(arm_toolchain_url,tools_folder_path, delete_after=True)
+        dload.save(arm_toolchain_url,os.path.join(tools_folder_path,"gcc.zip"))
+        with ZipFile(os.path.join(tools_folder_path,"gcc.zip"), 'r') as zObject:
+            zObject.extractall(path=tools_folder_path)
+        os.remove(os.path.join(tools_folder_path,"gcc.zip"))
+        os.chmod(arm_gcc_dir, stat.S_IEXEC)
+        os.rename(arm_gcc_dir,os.path.join(tools_folder_path,"gcc"))
+        arm_gcc_dir = os.path.join(tools_folder_path,"gcc")
     else:
-        dload.save(arm_toolchain_url, os.path.join(tools_folder_path,"gcc.tar.bz2"))
-    
-        tar = tarfile.open(os.path.join(tools_folder_path,"gcc.tar.bz2"), "r:bz2")  
+        dload.save(arm_toolchain_url, os.path.join(tools_folder_path,"gcc.tar.xz"))
+        tar = tarfile.open(os.path.join(tools_folder_path,"gcc.tar.xz"), "r:xz")  
         tar.extractall(path=tools_folder_path)
         tar.close()
-        os.remove("slc/tools/gcc.tar.bz2")
+        os.remove("slc/tools/gcc.tar.xz")
 else:
     print("arm-none-eabi-gcc already installed")
 
 # Download and unzip java
-if not os.path.isdir(java_path) and not os.path.isdir(java_path_win):
+if not os.path.isdir(java_path):
     print("Downloading and unzipping java ...")
     if platform =="win32":
-        dload.save_unzip(java_url,tools_folder_path, delete_after=True)
+        dload.save(java_url,os.path.join(tools_folder_path,"java.zip"))
+        with ZipFile(os.path.join(tools_folder_path,"java.zip"), 'r') as zObject:
+            zObject.extractall(path=tools_folder_path)
+        os.remove(os.path.join(tools_folder_path,"java.zip"))
     else:
         dload.save(java_url, os.path.join(tools_folder_path,"java.tar.gz"))
-    
         tar = tarfile.open(os.path.join(tools_folder_path,"java.tar.gz"), "r:gz")
         tar.extractall(path=tools_folder_path)
         tar.close()
@@ -133,7 +148,13 @@ else:
 if not os.path.isfile(os.path.join(commander_path,"Commander.app","Contents","MacOS","commander")) and not os.path.isfile(os.path.join(commander_path,"Simplicity Commander","commander.exe")) and not os.path.isfile(os.path.join(commander_path,"commander","commander")) :
     print("Downloading and unzipping Simplicity Commander ...")
     dload.save_unzip(commander_url, tools_folder_path, delete_after=True)
-    
+    for filename in os.listdir(commander_path):
+        if os_name_commander in filename:
+            commander_zip = os.path.join(commander_path,filename)
+            break
+    else:
+        print("Cannot find Simplicity Commander ...")
+        sys.ext(1)
     if platform == "darwin":
         command = "unzip "+ commander_zip + " -d " + commander_path
         os.system(command)
@@ -142,7 +163,6 @@ if not os.path.isfile(os.path.join(commander_path,"Commander.app","Contents","Ma
         with ZipFile(commander_zip, 'r') as zObject:
             zObject.extractall(path=commander_path)
         os.remove(commander_zip)
-
     if platform == "linux":
         tar = tarfile.open(commander_zip, "r:bz2")  
         tar.extractall(path=commander_path)
@@ -150,35 +170,33 @@ if not os.path.isfile(os.path.join(commander_path,"Commander.app","Contents","Ma
         os.remove(commander_zip)
 else:
     print("Simplicity Commander already installed")
+
+#Save PATHs in .env file for future use. 
 if platform == "darwin":
-    with open(os.path.expanduser("slc/tools/sl_env_vars.sh"), "w") as outfile:
-        outfile.write("#!/usr/bin/env bash\n")
-        outfile.write("export PATH=\"$PATH:" + arm_toolchain_path + "\"\n")
-        outfile.write("export PATH=\"$PATH:" + slc_cli_path + "\"\n")
-        outfile.write("export PATH=\"" + os.path.join(java_path, "Contents", "Home", "bin") + ":$PATH\"\n")
-        outfile.write("export PATH=\""+ os.path.join(commander_app_path) + ":$PATH\"\n")
-        outfile.write("export POST_BUILD_EXE=\""+os.path.join(commander_app_path,"commander") + "\"\n")
-        outfile.write("export STUDIO_ADAPTER_PACK_PATH=\"" + zap_path + "\"\n")
-        outfile.write("export ARM_GCC_DIR=\"" + arm_gcc_dir+ "\"\n")
-        outfile.write("export JAVA17_HOME=\"" + os.path.join(java_path, "Contents", "Home\"\n"))
-        outfile.write("export ZAP_INSTALL_PATH=\"" + zap_path + "\"\n")
+    with open(os.path.expanduser("slc/tools/.env"), "w") as outfile:
+        outfile.write("STUDIO_ADAPTER_PACK_PATH={}\n".format(zap_path))
+        outfile.write("POST_BUILD_EXE={}\n".format(os.path.join(commander_app_path,"commander")))
+        outfile.write("ARM_GCC_DIR={}\n".format(arm_gcc_dir))
+        outfile.write("JAVA17_HOME={}\n".format(os.path.join(java_path, "Contents", "Home")))
+        outfile.write("ZAP_INSTALL_PATH={}\n".format(zap_path))
+        outfile.write("TOOLS_PATH={}:{}:{}:{}:\n".format(arm_toolchain_path,slc_cli_path,os.path.join(java_path, "Contents", "Home", "bin"),commander_app_path))
+        outfile.write("silabs_chip_root={}".format(silabs_chip_root))
 elif platform == "win32":
-    with open(os.path.expanduser(os.path.join(tools_folder_path,"sl_env_vars.bat")), "w") as outfile:
-        outfile.write('SETX SLC "{}"\n'.format(slc_cli_path))
-        outfile.write('SETX STUDIO_ADAPTER_PACK_PATH "{}"\n'.format(zap_path))
-        outfile.write('SETX POST_BUILD_EXE "{}"\n'.format(os.path.join(commander_path,"Simplicity Commander","commander.exe")))
-        outfile.write('SETX ARM_GCC_DIR "{}"\n'.format(arm_gcc_dir))
-        outfile.write('SETX JAVA17_HOME "{}"\n'.format(java_path_win))
-        outfile.write('SETX ZAP_INSTALL_PATH "{}"'.format(zap_path.replace("\\","/")))
-    with open(os.path.expanduser(os.path.join(tools_folder_path,"sl_windows_path.txt")), "w") as outfile2:
-        outfile2.write('{}\n{}\n{}\n{}\n'.format(slc_cli_path,zap_path,arm_toolchain_path,java_path_win+"\\bin"))
+    with open(os.path.expanduser(os.path.join(tools_folder_path,".env")), "w") as outfile:
+        outfile.write('STUDIO_ADAPTER_PACK_PATH={}\n'.format(zap_path))
+        outfile.write('POST_BUILD_EXE={}\n'.format(os.path.join(commander_path,"Simplicity Commander","commander.exe")))
+        outfile.write('ARM_GCC_DIR={}\n'.format(arm_gcc_dir))
+        outfile.write('JAVA17_HOME={}\n'.format(java_path))
+        outfile.write('ZAP_INSTALL_PATH={}\n'.format(zap_path.replace("\\","/")))
+        outfile.write('TOOLS_PATH={};{};{};{};\n'.format(slc_cli_path,zap_path,arm_toolchain_path,java_path+"\\bin"))
+        outfile.write('SLC={}\n'.format(slc_cli_path))
+        outfile.write("silabs_chip_root={}".format(silabs_chip_root))
 elif platform == "linux":
-    with open(os.path.expanduser("slc/tools/sl_env_vars.sh"), "w") as outfile:
-        outfile.write("#!/usr/bin/env bash\n")
-        outfile.write("export PATH=\"$PATH:" + arm_toolchain_path + "\"\n")
-        outfile.write("export PATH=\"$PATH:" + slc_cli_path + "\"\n")
-        outfile.write("export PATH=\"" + os.path.join(java_path_linux, "bin") + ":$PATH\"\n")
-        outfile.write("export STUDIO_ADAPTER_PACK_PATH=\"" + zap_path + ":" + commander_path+ "\"\n")
-        outfile.write("export ARM_GCC_DIR=\"" + arm_gcc_dir+ "\"\n")
-        outfile.write("export JAVA17_HOME=\"" + java_path_linux + "\"\n")
-        outfile.write("export ZAP_INSTALL_PATH=\"" + zap_path + "\"\n")
+    with open(os.path.expanduser("slc/tools/.env"), "w") as outfile:
+        outfile.write("STUDIO_ADAPTER_PACK_PATH={}\n".format(zap_path))
+        outfile.write("POST_BUILD_EXE={}\n".format(os.path.join(commander_app_path,"commander")))
+        outfile.write("ARM_GCC_DIR={}\n".format(arm_gcc_dir))
+        outfile.write("JAVA17_HOME={}\n".format(java_path))
+        outfile.write("ZAP_INSTALL_PATH={}\n".format(zap_path))
+        outfile.write("TOOLS_PATH={}:{}:{}:{}\n".format(arm_toolchain_path,slc_cli_path,os.path.join(java_path, "bin"),commander_app_path))
+        outfile.write("silabs_chip_root={}".format(silabs_chip_root))

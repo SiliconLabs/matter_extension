@@ -39,11 +39,7 @@
 
 #include "semphr.h"
 #include <string.h>
-#ifdef SIWX_917
-#include "siwx917_utils.h"
-#else
-#include "efr32_utils.h"
-#endif
+#include "silabs_utils.h"
 #include "ota_cbor_private.h"
 /* pthread include. */
 /* semaphore include. */
@@ -442,12 +438,9 @@ static SubscriptionManagerCallback_t otaMessageCallback[] = { mqttJobCallback, m
 
 void otaEventBufferFree( OtaEventData_t * const pxBuffer )
 {
-    SILABS_LOG("triggered otaEventBufferFree");
     if( xSemaphoreTake( sem_buffer, portMAX_DELAY ) == pdTRUE )
     {
-        SILABS_LOG("acquired sem for otaEventBufferGet");
         pxBuffer->bufferUsed = false;
-        SILABS_LOG("releasing sem in otaEventBufferFree");
         ( void ) xSemaphoreGive( sem_buffer );
     }
     else
@@ -464,10 +457,8 @@ OtaEventData_t * otaEventBufferGet( void )
 {
     uint32_t ulIndex = 0;
     OtaEventData_t * pFreeBuffer = NULL;
-    SILABS_LOG("triggered otaEventBufferGet");
     if( xSemaphoreTake( sem_buffer, portMAX_DELAY) == pdTRUE )
     {
-        SILABS_LOG("acquired sem for otaEventBufferGet");
         for( ulIndex = 0; ulIndex < otaconfigMAX_NUM_OTA_DATA_BUFFERS; ulIndex++ )
         {
             if( eventBuffer[ ulIndex ].bufferUsed == false )
@@ -477,7 +468,6 @@ OtaEventData_t * otaEventBufferGet( void )
                 break;
             }
         }
-        SILABS_LOG("releasing sem in otaEventBufferGet");
         ( void ) xSemaphoreGive( sem_buffer );
     }
     else
@@ -499,7 +489,6 @@ static void otaAppCallback( OtaJobEvent_t event,
     {
         case OtaJobEventUpdateComplete:
         case OtaJobEventActivate:
-            SILABS_LOG("Received OtaJobEventActivate callback from OTA Agent." );
 
             /* Shutdown OTA Agent, if it is required that the unsubscribe operations are not
              * performed while shutting down please set the second parameter to 0 instead of 1. */
@@ -507,7 +496,6 @@ static void otaAppCallback( OtaJobEvent_t event,
 
             /* Activate the new firmware image. */
             OTA_ActivateNewImage();
-            SILABS_LOG("After OTA_ActivateNewImage " );
             /* Requires manual activation of new image.*/
             SILABS_LOG("New image activation failed." );
 
@@ -527,7 +515,6 @@ static void otaAppCallback( OtaJobEvent_t event,
              * image, this would be the place to kick off those tests before calling
              * OTA_SetImageState() with the final result of either accepted or rejected. */
 
-            SILABS_LOG("Received OtaJobEventStartTest callback from OTA Agent.");
             err = OTA_SetImageState( OtaImageStateAccepted );
 
             if( err != OtaErrNone )
@@ -538,7 +525,6 @@ static void otaAppCallback( OtaJobEvent_t event,
             break;
 
         case OtaJobEventProcessed:
-            SILABS_LOG("Received OtaJobEventProcessed callback from OTA Agent.");
 
             if( pData != NULL )
             {
@@ -548,11 +534,9 @@ static void otaAppCallback( OtaJobEvent_t event,
             break;
 
         case OtaJobEventSelfTestFailed:
-            SILABS_LOG("Received OtaJobEventSelfTestFailed callback from OTA Agent." );
 
             /* Requires manual activation of previous image as self-test for
              * new image downloaded failed.*/
-            SILABS_LOG("Self-test failed, shutting down OTA Agent." );
 
             /* Shutdown OTA Agent, if it is required that the unsubscribe operations are not
              * performed while shutting down please set the second parameter to 0 instead of 1. */
@@ -591,7 +575,6 @@ jobMessageType_t getJobMessageType( const char * pTopicName,
                                       pJobTopicFilters[ index ],
                                       strlen( pJobTopicFilters[ index ] ),
                                       &isMatch );
-        SILABS_LOG("getJobMessageType mqttStatus %d is Match %d\n", mqttStatus, isMatch);
         assert( mqttStatus == 0 );
 
         if( isMatch )
@@ -615,7 +598,6 @@ static void mqttJobCallback( const char * pTopicName,
 
     jobMessageType = getJobMessageType( pTopicName, topicNameLength );
 
-    SILABS_LOG("jobMessageType %d", jobMessageType);
     switch( jobMessageType )
     {
         case jobMessageTypeNextGetAccepted:
@@ -656,8 +638,6 @@ static void mqttDataCallback( const char * pTopicName, uint16_t topicNameLength,
     (void) pTopicName;
     (void) topicNameLength;
 
-    SILABS_LOG("Received data message callback, size %d\n", payloadLength );
-
     pData = otaEventBufferGet();
 
     if( pData != NULL )
@@ -684,10 +664,12 @@ static void mqttEventCallback( const char * pTopicFilter,
     /* Handle incoming publish. The lower 4 bits of the publish packet
      * type is used for the dup, QoS, and retain flags. Hence masking
      * out the lower bits to check if the packet is publish. */
-        // assert( pDeserializedInfo->pPublishInfo != NULL );
-        /* Handle incoming publish. */
-        SILABS_LOG("subscribing to the callback for incoming publish with payload");
-        SubscriptionManager_DispatchHandler(  pTopicFilter, topicFilterLength , pPayload, payloadLength );
+    /* Handle incoming publish. */
+    assert( pTopicFilter != NULL );
+    assert( topicFilterLength != 0 );
+    assert( pPayload != NULL );
+    assert( payloadLength != 0);
+    SubscriptionManager_DispatchHandler(  pTopicFilter, topicFilterLength , pPayload, payloadLength );
 
 }
 
@@ -778,7 +760,6 @@ static OtaMqttStatus_t mqttSubscribe( const char * pTopicFilter,
 
     if( xSemaphoreTake( sem_mutex, portMAX_DELAY ) == pdTRUE )
     {
-        SILABS_LOG("qos %d", qos);
         mqttStatus = dic_aws_ota_subscribe(pTopicFilter, qos, mqttEventCallback);
 
         xSemaphoreGive( sem_mutex );
@@ -792,9 +773,6 @@ static OtaMqttStatus_t mqttSubscribe( const char * pTopicFilter,
 
     if( mqttStatus != 0 )
     {
-        SILABS_LOG("Failed to send SUBSCRIBE packet to broker with error = %u.",
-                    mqttStatus );
-
         otaRet = OtaMqttSubscribeFailed;
     }
     else
@@ -824,11 +802,8 @@ static OtaMqttStatus_t mqttPublish( const char * const pacTopic,
     if( xSemaphoreTake( sem_mutex, portMAX_DELAY ) == pdTRUE )
     {
         mqttStatus = dic_aws_ota_publish(pacTopic, pMsg, msgSize, qos);
-        SILABS_LOG("DIC publish %s %s %d %d",pacTopic, pMsg, msgSize, qos);
         if( mqttStatus != 0 )
         {
-            SILABS_LOG("Failed to send PUBLISH packet to broker with error = %u.", mqttStatus );
-
             otaRet = OtaMqttPublishFailed;
         }
 
@@ -851,7 +826,6 @@ static OtaMqttStatus_t mqttPublish( const char * const pacTopic,
 
         if( ret != pdTRUE )
         {
-            SILABS_LOG("Failed to receive ack for publish, error=%ld", ret);
             otaRet = OtaMqttPublishFailed;
         }else{
             SILABS_LOG("receive ack for publish, ret=%ld", ret);
@@ -896,9 +870,6 @@ static OtaMqttStatus_t mqttUnsubscribe( const char * pTopicFilter,
 
     if( mqttStatus != 0 )
     {
-        SILABS_LOG("Failed to send UNSUBSCRIBE packet to broker with error = %u.",
-                    mqttStatus );
-
         otaRet = OtaMqttUnsubscribeFailed;
     }
     else
@@ -960,7 +931,6 @@ static int startOTADemo( void )
     /* coreMQTT library return status. */
     int mqttStatus;
 
-    vTaskDelay(5000);
     /* OTA library return status. */
     OtaErr_t otaRet = OtaErrNone;
 
@@ -998,9 +968,6 @@ static int startOTADemo( void )
                                  ( const uint8_t * ) ( CLIENT_IDENTIFIER ),
                                  otaAppCallback ) ) != OtaErrNone )
         {
-            SILABS_LOG("Failed to initialize OTA Agent, exiting = %u.",
-                        otaRet );
-
             returnStatus = EXIT_FAILURE;
         }
         SILABS_LOG("OTA Init is Successfull");
@@ -1012,7 +979,6 @@ static int startOTADemo( void )
     {
         if((pdPASS != xTaskCreate(otaThread, "OTA_THREAD", OTA_TASK_STACK_SIZE, NULL, OTA_TASK_PRIORITY, &OTAThreadTask )) || !OTAThreadTask)
         {
-            SILABS_LOG( "Failed to create OTA thread");
             returnStatus = EXIT_FAILURE;
         }
         SILABS_LOG("Task creation successfull for OTA thread");    
@@ -1026,18 +992,15 @@ static int startOTADemo( void )
          * OTA job */
         while( ( ( state = OTA_GetState() ) != OtaAgentStateStopped ) )
         {
-            // vTaskDelay(5000);
             if( mqttSessionEstablished != true )
             {
                 /* Connect to MQTT broker and create MQTT connection. */
                 if( EXIT_SUCCESS == establishConnection() )
                 {
-                    SILABS_LOG("Connection established log from ota demo");
                     /* Check if OTA process was suspended and resume if required. */
                     if( state == OtaAgentStateSuspended )
                     {
                         /* Resume OTA operations. */
-                        SILABS_LOG("resuming OTA operations");
                         OTA_Resume();
                     }
                     else
@@ -1045,7 +1008,6 @@ static int startOTADemo( void )
                         /* Send start event to OTA Agent.*/
                         eventMsg.eventId = OtaAgentEventStart;
                         OTA_SignalEvent( &eventMsg );
-                        SILABS_LOG("event to OTA Agent");
                     }
                 }
             }
@@ -1060,7 +1022,6 @@ static int startOTADemo( void )
                 }
                 else
                 {
-                    SILABS_LOG("MQTT_ProcessLoop returned with status");
                     /* Suspend OTA operations. */
                     otaRet = OTA_Suspend();
 
@@ -1088,7 +1049,6 @@ static int startOTADemo( void )
     /****************************** Wait for OTA Thread. ******************************/
     if( returnStatus == EXIT_SUCCESS )
     {
-        SILABS_LOG("wait for OTA thread");
         eTaskState task_state = eTaskGetState(OTAThreadTask);
 
     switch(task_state){
@@ -1150,7 +1110,6 @@ int aws_ota_init( void* parameters )
     }
     else
     {
-        SILABS_LOG("initialized buffer semaphore");
         bufferSemInitialized = true;
     }
 
@@ -1164,8 +1123,6 @@ int aws_ota_init( void* parameters )
     }
     else
     {
-
-        SILABS_LOG("initialized acksem semaphore");
         ackSemInitialized = true;
     }
 
@@ -1179,7 +1136,6 @@ int aws_ota_init( void* parameters )
     }
     else
     {
-        SILABS_LOG( "initialized mutex semaphore" );
         mqttMutexInitialized = true;
     }
 
@@ -1194,36 +1150,30 @@ int aws_ota_init( void* parameters )
 
     if( bufferSemInitialized == true )
     {   
-        SILABS_LOG( "Deleting buffer semaphore" );
         /* Cleanup semaphore created for buffer operations. */
         vSemaphoreDelete( sem_buffer );
         if( sem_buffer != NULL )
         {
-            SILABS_LOG("failed to delete buffer semaphore");
             returnStatus = EXIT_FAILURE;
         }
     }
 
     if( ackSemInitialized == true )
     {
-        SILABS_LOG( "Deleting ackSem semaphore" );
         /* Cleanup semaphore created for ack. */
         vSemaphoreDelete( sem_ack );
         if( sem_ack != NULL )
         {
-            SILABS_LOG("failed to delete ack semaphore");
             returnStatus = EXIT_FAILURE;
         }
     }
 
     if( mqttMutexInitialized == true )
     {
-        SILABS_LOG( "Deleting mutex semaphore" );
         /* Cleanup mutex created for MQTT operations. */
         vSemaphoreDelete( sem_mutex );
         if( sem_mutex != NULL )
         {
-            SILABS_LOG("failed to delete mutex");
             returnStatus = EXIT_FAILURE;
         }
     }
@@ -1233,8 +1183,6 @@ int aws_ota_init( void* parameters )
     {
         vTaskDelay( OTA_EXAMPLE_TASK_DELAY_MS );
         waitTimeoutMs -= OTA_EXAMPLE_TASK_DELAY_MS;
-
-        SILABS_LOG("Exiting demo in %d sec", waitTimeoutMs / 1000);
     }
 
     return returnStatus;

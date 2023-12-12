@@ -78,6 +78,8 @@ namespace chip {
 namespace DeviceLayer {
 namespace Internal {
 
+static_assert(OPENTHREAD_API_VERSION >= 219, "OpenThread version too old");
+
 // Network commissioning
 namespace {
 #ifndef _NO_NETWORK_COMMISSIONING_DRIVER_
@@ -189,17 +191,6 @@ void GenericThreadStackManagerImpl_OpenThread<ImplClass>::_OnPlatformEvent(const
 {
     if (event->Type == DeviceEventType::kThreadStateChange)
     {
-#if CHIP_DEVICE_CONFIG_ENABLE_THREAD_SRP_CLIENT && (OPENTHREAD_API_VERSION < 218)
-        if (event->ThreadStateChange.AddressChanged)
-        {
-            const otSrpClientHostInfo * hostInfo = otSrpClientGetHostInfo(Impl()->OTInstance());
-            if (hostInfo && hostInfo->mName)
-            {
-                Impl()->_SetupSrpHost(hostInfo->mName);
-            }
-        }
-#endif
-
         bool isThreadAttached = Impl()->_IsThreadAttached();
         // Avoid sending muliple events if the attachement state didn't change (Child->router or disable->Detached)
         if (event->ThreadStateChange.RoleChanged && (isThreadAttached != mIsAttached))
@@ -385,10 +376,9 @@ CHIP_ERROR
 GenericThreadStackManagerImpl_OpenThread<ImplClass>::_StartThreadScan(NetworkCommissioning::ThreadDriver::ScanCallback * callback)
 {
     CHIP_ERROR error = CHIP_NO_ERROR;
-#if CHIP_DEVICE_CONFIG_ENABLE_SED
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
     otLinkModeConfig linkMode;
 #endif
-
     // If there is another ongoing scan request, reject the new one.
     VerifyOrReturnError(mpScanCallback == nullptr, CHIP_ERROR_INCORRECT_STATE);
 
@@ -402,7 +392,7 @@ GenericThreadStackManagerImpl_OpenThread<ImplClass>::_StartThreadScan(NetworkCom
         SuccessOrExit(error = MapOpenThreadError(otIp6SetEnabled(mOTInst, true)));
     }
 
-#if CHIP_DEVICE_CONFIG_ENABLE_SED
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
     // Thread network discovery makes Sleepy End Devices detach from a network, so temporarily disable the SED mode.
     linkMode = otThreadGetLinkMode(mOTInst);
 
@@ -440,7 +430,7 @@ void GenericThreadStackManagerImpl_OpenThread<ImplClass>::_OnNetworkScanFinished
 {
     if (aResult == nullptr) // scan completed
     {
-#if CHIP_DEVICE_CONFIG_ENABLE_SED
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
         if (mTemporaryRxOnWhenIdle)
         {
             otLinkModeConfig linkMode = otThreadGetLinkMode(mOTInst);
@@ -1052,6 +1042,35 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_WriteThreadNetw
 
     namespace ThreadNetworkDiagnostics = app::Clusters::ThreadNetworkDiagnostics;
 
+    if (!otDatasetIsCommissioned(mOTInst))
+    {
+        // For the following nullable attributes of the cluster, encodeNull since
+        // thread instance cannot provide the related data when it is not currently configured.
+        //
+        // Note that RoutingRole is nullable but not listed here as thread provides
+        // valid data even when disabled or detached
+        switch (attributeId)
+        {
+        case ThreadNetworkDiagnostics::Attributes::Channel::Id:
+        case ThreadNetworkDiagnostics::Attributes::NetworkName::Id:
+        case ThreadNetworkDiagnostics::Attributes::PanId::Id:
+        case ThreadNetworkDiagnostics::Attributes::ExtendedPanId::Id:
+        case ThreadNetworkDiagnostics::Attributes::MeshLocalPrefix::Id:
+        case ThreadNetworkDiagnostics::Attributes::PartitionId::Id:
+        case ThreadNetworkDiagnostics::Attributes::Weighting::Id:
+        case ThreadNetworkDiagnostics::Attributes::DataVersion::Id:
+        case ThreadNetworkDiagnostics::Attributes::StableDataVersion::Id:
+        case ThreadNetworkDiagnostics::Attributes::LeaderRouterId::Id:
+        case ThreadNetworkDiagnostics::Attributes::ActiveTimestamp::Id:
+        case ThreadNetworkDiagnostics::Attributes::PendingTimestamp::Id:
+        case ThreadNetworkDiagnostics::Attributes::Delay::Id:
+        case ThreadNetworkDiagnostics::Attributes::SecurityPolicy::Id:
+        case ThreadNetworkDiagnostics::Attributes::ChannelPage0Mask::Id:
+        case ThreadNetworkDiagnostics::Attributes::OperationalDatasetComponents::Id:
+            return encoder.EncodeNull();
+        }
+    }
+
     switch (attributeId)
     {
     case ThreadNetworkDiagnostics::Attributes::Channel::Id: {
@@ -1061,24 +1080,25 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_WriteThreadNetw
     break;
 
     case ThreadNetworkDiagnostics::Attributes::RoutingRole::Id: {
-        ThreadNetworkDiagnostics::RoutingRole routingRole;
+        using ThreadNetworkDiagnostics::RoutingRoleEnum;
+        RoutingRoleEnum routingRole;
         otDeviceRole otRole = otThreadGetDeviceRole(mOTInst);
 
         if (otRole == OT_DEVICE_ROLE_DISABLED)
         {
-            routingRole = EMBER_ZCL_ROUTING_ROLE_UNSPECIFIED;
+            routingRole = RoutingRoleEnum::kUnspecified;
         }
         else if (otRole == OT_DEVICE_ROLE_DETACHED)
         {
-            routingRole = EMBER_ZCL_ROUTING_ROLE_UNASSIGNED;
+            routingRole = RoutingRoleEnum::kUnassigned;
         }
         else if (otRole == OT_DEVICE_ROLE_ROUTER)
         {
-            routingRole = EMBER_ZCL_ROUTING_ROLE_ROUTER;
+            routingRole = RoutingRoleEnum::kRouter;
         }
         else if (otRole == OT_DEVICE_ROLE_LEADER)
         {
-            routingRole = EMBER_ZCL_ROUTING_ROLE_LEADER;
+            routingRole = RoutingRoleEnum::kLeader;
         }
         else if (otRole == OT_DEVICE_ROLE_CHILD)
         {
@@ -1086,17 +1106,17 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_WriteThreadNetw
 
             if (linkMode.mRxOnWhenIdle)
             {
-                routingRole = EMBER_ZCL_ROUTING_ROLE_END_DEVICE;
+                routingRole = RoutingRoleEnum::kEndDevice;
 #if CHIP_DEVICE_CONFIG_THREAD_FTD
                 if (otThreadIsRouterEligible(mOTInst))
                 {
-                    routingRole = EMBER_ZCL_ROUTING_ROLE_REED;
+                    routingRole = RoutingRoleEnum::kReed;
                 }
 #endif
             }
             else
             {
-                routingRole = EMBER_ZCL_ROUTING_ROLE_SLEEPY_END_DEVICE;
+                routingRole = RoutingRoleEnum::kSleepyEndDevice;
             }
         }
 
@@ -1149,7 +1169,7 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_WriteThreadNetw
 
             while (otThreadGetNextNeighborInfo(mOTInst, &iterator, &neighInfo) == OT_ERROR_NONE)
             {
-                ThreadNetworkDiagnostics::Structs::NeighborTable::Type neighborTable;
+                ThreadNetworkDiagnostics::Structs::NeighborTableStruct::Type neighborTable;
                 app::DataModel::Nullable<int8_t> averageRssi;
                 app::DataModel::Nullable<int8_t> lastRssi;
 
@@ -1209,7 +1229,7 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_WriteThreadNetw
             {
                 if (otThreadGetRouterInfo(mOTInst, i, &routerInfo) == OT_ERROR_NONE)
                 {
-                    ThreadNetworkDiagnostics::Structs::RouteTable::Type routeTable;
+                    ThreadNetworkDiagnostics::Structs::RouteTableStruct::Type routeTable;
 
                     routeTable.extAddress      = Encoding::BigEndian::Get64(routerInfo.mExtAddress.m8);
                     routeTable.rloc16          = routerInfo.mRloc16;
@@ -1233,7 +1253,7 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_WriteThreadNetw
             otError otErr = otThreadGetParentInfo(mOTInst, &routerInfo);
             ReturnErrorOnFailure(MapOpenThreadError(otErr));
 
-            ThreadNetworkDiagnostics::Structs::RouteTable::Type routeTable;
+            ThreadNetworkDiagnostics::Structs::RouteTableStruct::Type routeTable;
 
             routeTable.extAddress      = Encoding::BigEndian::Get64(routerInfo.mExtAddress.m8);
             routeTable.rloc16          = routerInfo.mRloc16;
@@ -1536,132 +1556,99 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_WriteThreadNetw
     break;
 
     case ThreadNetworkDiagnostics::Attributes::ActiveTimestamp::Id: {
-        err = CHIP_ERROR_INCORRECT_STATE;
-        if (otDatasetIsCommissioned(mOTInst))
-        {
-            otOperationalDataset activeDataset;
-            otError otErr = otDatasetGetActive(mOTInst, &activeDataset);
-            VerifyOrExit(otErr == OT_ERROR_NONE, err = MapOpenThreadError(otErr));
-#if OPENTHREAD_API_VERSION >= 219
-            uint64_t activeTimestamp = (activeDataset.mActiveTimestamp.mSeconds << 16) |
-                (activeDataset.mActiveTimestamp.mTicks << 1) | activeDataset.mActiveTimestamp.mAuthoritative;
-#else
-            uint64_t activeTimestamp  = activeDataset.mActiveTimestamp;
-#endif
-            err = encoder.Encode(activeTimestamp);
-        }
+        otOperationalDataset activeDataset;
+        otError otErr = otDatasetGetActive(mOTInst, &activeDataset);
+        VerifyOrReturnError(otErr == OT_ERROR_NONE, MapOpenThreadError(otErr));
+        uint64_t activeTimestamp = (activeDataset.mActiveTimestamp.mSeconds << 16) | (activeDataset.mActiveTimestamp.mTicks << 1) |
+            activeDataset.mActiveTimestamp.mAuthoritative;
+        err = encoder.Encode(activeTimestamp);
     }
     break;
 
     case ThreadNetworkDiagnostics::Attributes::PendingTimestamp::Id: {
-        err = CHIP_ERROR_INCORRECT_STATE;
-        if (otDatasetIsCommissioned(mOTInst))
-        {
-            otOperationalDataset activeDataset;
-            otError otErr = otDatasetGetActive(mOTInst, &activeDataset);
-            VerifyOrExit(otErr == OT_ERROR_NONE, err = MapOpenThreadError(otErr));
-#if OPENTHREAD_API_VERSION >= 219
-            uint64_t pendingTimestamp = (activeDataset.mPendingTimestamp.mSeconds << 16) |
-                (activeDataset.mPendingTimestamp.mTicks << 1) | activeDataset.mPendingTimestamp.mAuthoritative;
-#else
-            uint64_t pendingTimestamp = activeDataset.mPendingTimestamp;
-#endif
-            err = encoder.Encode(pendingTimestamp);
-        }
+        otOperationalDataset activeDataset;
+        otError otErr = otDatasetGetActive(mOTInst, &activeDataset);
+        VerifyOrReturnError(otErr == OT_ERROR_NONE, MapOpenThreadError(otErr));
+        uint64_t pendingTimestamp = (activeDataset.mPendingTimestamp.mSeconds << 16) |
+            (activeDataset.mPendingTimestamp.mTicks << 1) | activeDataset.mPendingTimestamp.mAuthoritative;
+        err = encoder.Encode(pendingTimestamp);
     }
     break;
 
     case ThreadNetworkDiagnostics::Attributes::Delay::Id: {
-        err = CHIP_ERROR_INCORRECT_STATE;
-        if (otDatasetIsCommissioned(mOTInst))
-        {
-            otOperationalDataset activeDataset;
-            otError otErr = otDatasetGetActive(mOTInst, &activeDataset);
-            VerifyOrExit(otErr == OT_ERROR_NONE, err = MapOpenThreadError(otErr));
-            uint32_t delay = activeDataset.mDelay;
-            err            = encoder.Encode(delay);
-        }
+        otOperationalDataset activeDataset;
+        otError otErr = otDatasetGetActive(mOTInst, &activeDataset);
+        VerifyOrReturnError(otErr == OT_ERROR_NONE, MapOpenThreadError(otErr));
+        uint32_t delay = activeDataset.mDelay;
+        err            = encoder.Encode(delay);
     }
     break;
 
     case ThreadNetworkDiagnostics::Attributes::SecurityPolicy::Id: {
-        err = CHIP_ERROR_INCORRECT_STATE;
+        otOperationalDataset activeDataset;
+        otError otErr = otDatasetGetActive(mOTInst, &activeDataset);
+        VerifyOrReturnError(otErr == OT_ERROR_NONE, MapOpenThreadError(otErr));
 
-        if (otDatasetIsCommissioned(mOTInst))
-        {
-            otOperationalDataset activeDataset;
-            otError otErr = otDatasetGetActive(mOTInst, &activeDataset);
-            VerifyOrExit(otErr == OT_ERROR_NONE, err = MapOpenThreadError(otErr));
-
-            ThreadNetworkDiagnostics::Structs::SecurityPolicy::Type securityPolicy;
-            static_assert(sizeof(securityPolicy) == sizeof(activeDataset.mSecurityPolicy),
-                          "securityPolicy Struct do not match otSecurityPolicy");
-            uint16_t policyAsInts[2];
-            static_assert(sizeof(policyAsInts) == sizeof(activeDataset.mSecurityPolicy),
-                          "We're missing some members of otSecurityPolicy?");
-            memcpy(&policyAsInts, &activeDataset.mSecurityPolicy, sizeof(policyAsInts));
-            securityPolicy.rotationTime = policyAsInts[0];
-            securityPolicy.flags        = policyAsInts[1];
-
-            err = encoder.Encode(securityPolicy);
-        }
+        ThreadNetworkDiagnostics::Structs::SecurityPolicy::Type securityPolicy;
+        static_assert(sizeof(securityPolicy) == sizeof(activeDataset.mSecurityPolicy),
+                      "securityPolicy Struct do not match otSecurityPolicy");
+        uint16_t policyAsInts[2];
+        static_assert(sizeof(policyAsInts) == sizeof(activeDataset.mSecurityPolicy),
+                      "We're missing some members of otSecurityPolicy?");
+        memcpy(&policyAsInts, &activeDataset.mSecurityPolicy, sizeof(policyAsInts));
+        securityPolicy.rotationTime = policyAsInts[0];
+        securityPolicy.flags        = policyAsInts[1];
+        err                         = encoder.Encode(securityPolicy);
     }
     break;
 
     case ThreadNetworkDiagnostics::Attributes::ChannelPage0Mask::Id: {
-        err = CHIP_ERROR_INCORRECT_STATE;
-        if (otDatasetIsCommissioned(mOTInst))
+        otOperationalDataset activeDataset;
+        otError otErr = otDatasetGetActive(mOTInst, &activeDataset);
+        VerifyOrReturnError(otErr == OT_ERROR_NONE, MapOpenThreadError(otErr));
+
+        // In the resultant Octet string, the most significant bit of the left-most byte indicates channel 0
+        // We have to bitswap the entire uint32_t before converting to octet string
+        uint32_t bitSwappedChannelMask = 0;
+        for (int i = 0, j = 31; i < 32; i++, j--)
         {
-            otOperationalDataset activeDataset;
-            otError otErr = otDatasetGetActive(mOTInst, &activeDataset);
-            VerifyOrExit(otErr == OT_ERROR_NONE, err = MapOpenThreadError(otErr));
-
-            // In the resultant Octet string, the most significant bit of the left-most byte indicates channel 0
-            // We have to bitswap the entire uint32_t before converting to octet string
-            uint32_t bitSwappedChannelMask = 0;
-            for (int i = 0, j = 31; i < 32; i++, j--)
-            {
-                bitSwappedChannelMask |= ((activeDataset.mChannelMask >> j) & 1) << i;
-            }
-
-            uint8_t buffer[sizeof(uint32_t)] = { 0 };
-            Encoding::BigEndian::Put32(buffer, bitSwappedChannelMask);
-            err = encoder.Encode(ByteSpan(buffer));
+            bitSwappedChannelMask |= ((activeDataset.mChannelMask >> j) & 1) << i;
         }
+
+        uint8_t buffer[sizeof(uint32_t)] = { 0 };
+        Encoding::BigEndian::Put32(buffer, bitSwappedChannelMask);
+        err = encoder.Encode(ByteSpan(buffer));
     }
     break;
 
     case ThreadNetworkDiagnostics::Attributes::OperationalDatasetComponents::Id: {
-        err = CHIP_ERROR_INCORRECT_STATE;
-        if (otDatasetIsCommissioned(mOTInst))
-        {
-            otOperationalDataset activeDataset;
-            otError otErr = otDatasetGetActive(mOTInst, &activeDataset);
-            VerifyOrExit(otErr == OT_ERROR_NONE, err = MapOpenThreadError(otErr));
-            ThreadNetworkDiagnostics::Structs::OperationalDatasetComponents::Type OpDatasetComponents;
+        otOperationalDataset activeDataset;
+        otError otErr = otDatasetGetActive(mOTInst, &activeDataset);
+        VerifyOrReturnError(otErr == OT_ERROR_NONE, MapOpenThreadError(otErr));
+        ThreadNetworkDiagnostics::Structs::OperationalDatasetComponents::Type OpDatasetComponents;
 
-            OpDatasetComponents.activeTimestampPresent  = activeDataset.mComponents.mIsActiveTimestampPresent;
-            OpDatasetComponents.pendingTimestampPresent = activeDataset.mComponents.mIsPendingTimestampPresent;
-            OpDatasetComponents.masterKeyPresent        = activeDataset.mComponents.mIsNetworkKeyPresent;
-            OpDatasetComponents.networkNamePresent      = activeDataset.mComponents.mIsNetworkNamePresent;
-            OpDatasetComponents.extendedPanIdPresent    = activeDataset.mComponents.mIsExtendedPanIdPresent;
-            OpDatasetComponents.meshLocalPrefixPresent  = activeDataset.mComponents.mIsMeshLocalPrefixPresent;
-            OpDatasetComponents.delayPresent            = activeDataset.mComponents.mIsDelayPresent;
-            OpDatasetComponents.panIdPresent            = activeDataset.mComponents.mIsPanIdPresent;
-            OpDatasetComponents.channelPresent          = activeDataset.mComponents.mIsChannelPresent;
-            OpDatasetComponents.pskcPresent             = activeDataset.mComponents.mIsPskcPresent;
-            OpDatasetComponents.securityPolicyPresent   = activeDataset.mComponents.mIsSecurityPolicyPresent;
-            OpDatasetComponents.channelMaskPresent      = activeDataset.mComponents.mIsChannelMaskPresent;
+        OpDatasetComponents.activeTimestampPresent  = activeDataset.mComponents.mIsActiveTimestampPresent;
+        OpDatasetComponents.pendingTimestampPresent = activeDataset.mComponents.mIsPendingTimestampPresent;
+        OpDatasetComponents.masterKeyPresent        = activeDataset.mComponents.mIsNetworkKeyPresent;
+        OpDatasetComponents.networkNamePresent      = activeDataset.mComponents.mIsNetworkNamePresent;
+        OpDatasetComponents.extendedPanIdPresent    = activeDataset.mComponents.mIsExtendedPanIdPresent;
+        OpDatasetComponents.meshLocalPrefixPresent  = activeDataset.mComponents.mIsMeshLocalPrefixPresent;
+        OpDatasetComponents.delayPresent            = activeDataset.mComponents.mIsDelayPresent;
+        OpDatasetComponents.panIdPresent            = activeDataset.mComponents.mIsPanIdPresent;
+        OpDatasetComponents.channelPresent          = activeDataset.mComponents.mIsChannelPresent;
+        OpDatasetComponents.pskcPresent             = activeDataset.mComponents.mIsPskcPresent;
+        OpDatasetComponents.securityPolicyPresent   = activeDataset.mComponents.mIsSecurityPolicyPresent;
+        OpDatasetComponents.channelMaskPresent      = activeDataset.mComponents.mIsChannelMaskPresent;
 
-            err = encoder.Encode(OpDatasetComponents);
-        }
+        err = encoder.Encode(OpDatasetComponents);
     }
     break;
 
     case ThreadNetworkDiagnostics::Attributes::ActiveNetworkFaultsList::Id: {
         err = encoder.EncodeList([](const auto & aEncoder) -> CHIP_ERROR {
             // TODO activeNetworkFaultsList isn't tracked. Encode the list of 4 entries at 0 none the less
-            ThreadNetworkDiagnostics::NetworkFault activeNetworkFaultsList[4] = { ThreadNetworkDiagnostics::NetworkFault(0) };
+            ThreadNetworkDiagnostics::NetworkFaultEnum activeNetworkFaultsList[4] = { ThreadNetworkDiagnostics::NetworkFaultEnum(
+                0) };
             for (auto fault : activeNetworkFaultsList)
             {
                 ReturnErrorOnFailure(aEncoder.Encode(fault));
@@ -1678,11 +1665,6 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_WriteThreadNetw
     break;
     }
 
-exit:
-    if (err != CHIP_NO_ERROR)
-    {
-        ChipLogError(DeviceLayer, "_WriteThreadNetworkDiagnosticAttributeToTlv failed: %s", ErrorStr(err));
-    }
     return err;
 }
 
@@ -1693,19 +1675,6 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_GetPollPeriod(u
     buf = otLinkGetPollPeriod(mOTInst);
     Impl()->UnlockThreadStack();
     return CHIP_NO_ERROR;
-}
-
-template <class ImplClass>
-void GenericThreadStackManagerImpl_OpenThread<ImplClass>::_SetRouterPromotion(bool val)
-{
-#if CHIP_DEVICE_CONFIG_THREAD_FTD
-    Impl()->LockThreadStack();
-    if (otThreadGetDeviceRole(DeviceLayer::ThreadStackMgrImpl().OTInstance()) != OT_DEVICE_ROLE_ROUTER)
-    {
-        otThreadSetRouterEligible(DeviceLayer::ThreadStackMgrImpl().OTInstance(), val);
-    }
-    Impl()->UnlockThreadStack();
-#endif
 }
 
 template <class ImplClass>
@@ -1733,19 +1702,6 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::DoInit(otInstanc
 
     mOTInst = otInst;
 
-#if CHIP_DEVICE_CONFIG_ENABLE_SED
-    ConnectivityManager::SEDIntervalsConfig sedIntervalsConfig;
-    using namespace System::Clock::Literals;
-    sedIntervalsConfig.ActiveIntervalMS = CHIP_DEVICE_CONFIG_SED_ACTIVE_INTERVAL;
-    sedIntervalsConfig.IdleIntervalMS   = CHIP_DEVICE_CONFIG_SED_IDLE_INTERVAL;
-    err                                 = _SetSEDIntervalsConfig(sedIntervalsConfig);
-    if (err != CHIP_NO_ERROR)
-    {
-        ChipLogError(DeviceLayer, "Failed to set sleepy end device intervals: %s", ErrorStr(err));
-    }
-    SuccessOrExit(err);
-#endif
-
     // Arrange for OpenThread to call the OnOpenThreadStateChange method whenever a
     // state change occurs.  Note that we reference the OnOpenThreadStateChange method
     // on the concrete implementation class so that that class can override the default
@@ -1754,7 +1710,7 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::DoInit(otInstanc
     VerifyOrExit(otErr == OT_ERROR_NONE, err = MapOpenThreadError(otErr));
 
     // Enable automatic assignment of Thread advertised addresses.
-#if OPENTHREAD_CONFIG_IP6_SLAAC_ENABLE
+#if defined(OPENTHREAD_CONFIG_IP6_SLAAC_ENABLE) && OPENTHREAD_CONFIG_IP6_SLAAC_ENABLE
     otIp6SetSlaacEnabled(otInst, true);
 #endif
 
@@ -1798,62 +1754,12 @@ bool GenericThreadStackManagerImpl_OpenThread<ImplClass>::IsThreadInterfaceUpNoL
     return otIp6IsEnabled(mOTInst);
 }
 
-#if CHIP_DEVICE_CONFIG_ENABLE_SED
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
 template <class ImplClass>
-CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_GetSEDIntervalsConfig(
-    ConnectivityManager::SEDIntervalsConfig & intervalsConfig)
-{
-    intervalsConfig = mIntervalsConfig;
-    return CHIP_NO_ERROR;
-}
-
-template <class ImplClass>
-CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_SetSEDIntervalsConfig(
-    const ConnectivityManager::SEDIntervalsConfig & intervalsConfig)
-{
-    using namespace System::Clock::Literals;
-    if ((intervalsConfig.IdleIntervalMS < intervalsConfig.ActiveIntervalMS) || (intervalsConfig.IdleIntervalMS == 0_ms32) ||
-        (intervalsConfig.ActiveIntervalMS == 0_ms32))
-    {
-        return CHIP_ERROR_INVALID_ARGUMENT;
-    }
-    mIntervalsConfig = intervalsConfig;
-
-    CHIP_ERROR err = SetSEDIntervalMode(mIntervalsMode);
-
-    if (err == CHIP_NO_ERROR)
-    {
-        ChipDeviceEvent event;
-        event.Type = DeviceEventType::kSEDIntervalChange;
-        err        = chip::DeviceLayer::PlatformMgr().PostEvent(&event);
-    }
-
-    return err;
-}
-
-template <class ImplClass>
-CHIP_ERROR
-GenericThreadStackManagerImpl_OpenThread<ImplClass>::SetSEDIntervalMode(ConnectivityManager::SEDIntervalMode intervalType)
+CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_SetPollingInterval(System::Clock::Milliseconds32 pollingInterval)
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
-    System::Clock::Milliseconds32 interval;
-
-    if (intervalType == ConnectivityManager::SEDIntervalMode::Idle)
-    {
-        interval = mIntervalsConfig.IdleIntervalMS;
-    }
-    else if (intervalType == ConnectivityManager::SEDIntervalMode::Active)
-    {
-        interval = mIntervalsConfig.ActiveIntervalMS;
-    }
-    else
-    {
-        return CHIP_ERROR_INVALID_ARGUMENT;
-    }
-
     Impl()->LockThreadStack();
-
-    mIntervalsMode = intervalType;
 
 // For Thread devices, the intervals are defined as:
 // * poll period for SED devices that poll the parent for data
@@ -1865,14 +1771,14 @@ GenericThreadStackManagerImpl_OpenThread<ImplClass>::SetSEDIntervalMode(Connecti
     uint32_t curIntervalMS = otLinkGetPollPeriod(mOTInst);
 #endif
     otError otErr = OT_ERROR_NONE;
-    if (interval.count() != curIntervalMS)
+    if (pollingInterval.count() != curIntervalMS)
     {
 #if CHIP_DEVICE_CONFIG_THREAD_SSED
         // Set CSL period in units of 10 symbols, convert it to microseconds and divide by 1000 to get milliseconds.
-        otErr         = otLinkCslSetPeriod(mOTInst, interval.count() * 1000 / OT_US_PER_TEN_SYMBOLS);
+        otErr         = otLinkCslSetPeriod(mOTInst, pollingInterval.count() * 1000 / OT_US_PER_TEN_SYMBOLS);
         curIntervalMS = otLinkCslGetPeriod(mOTInst) * OT_US_PER_TEN_SYMBOLS / 1000;
 #else
-        otErr         = otLinkSetPollPeriod(mOTInst, interval.count());
+        otErr         = otLinkSetPollPeriod(mOTInst, pollingInterval.count());
         curIntervalMS = otLinkGetPollPeriod(mOTInst);
 #endif
         err = MapOpenThreadError(otErr);
@@ -1882,87 +1788,13 @@ GenericThreadStackManagerImpl_OpenThread<ImplClass>::SetSEDIntervalMode(Connecti
 
     if (otErr != OT_ERROR_NONE)
     {
-        ChipLogError(DeviceLayer, "Failed to set SED interval to %" PRId32 "ms. Defaulting to %" PRId32 "ms", interval.count(),
-                     curIntervalMS);
-    }
-    else
-    {
-        ChipLogProgress(DeviceLayer, "OpenThread SED interval is %" PRId32 "ms", curIntervalMS);
+        ChipLogError(DeviceLayer, "Failed to set SED interval to %" PRId32 "ms. Defaulting to %" PRId32 "ms",
+                     pollingInterval.count(), curIntervalMS);
     }
 
     return err;
 }
-
-template <class ImplClass>
-CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_RequestSEDActiveMode(bool onOff, bool delayIdle)
-{
-    CHIP_ERROR err = CHIP_NO_ERROR;
-
-    if (onOff)
-    {
-        mActiveModeConsumers++;
-    }
-    else
-    {
-        if (mActiveModeConsumers > 0)
-            mActiveModeConsumers--;
-    }
-
-    if (!onOff && delayIdle && CHIP_DEVICE_CONFIG_SED_ACTIVE_THRESHOLD.count() != 0)
-    {
-        // StartTimer will cancel a timer if the same callback & context is used.
-        // This will have the effect of canceling the previous one (if any) and starting
-        // a new timer of the same duration. This effectively prolongs the active threshold
-        // without consuming additional resources.
-        err = DeviceLayer::SystemLayer().StartTimer(CHIP_DEVICE_CONFIG_SED_ACTIVE_THRESHOLD, RequestSEDModeUpdate, this);
-        if (CHIP_NO_ERROR == err)
-        {
-            if (!mDelayIdleTimerRunning)
-            {
-                mDelayIdleTimerRunning = true;
-                mActiveModeConsumers++;
-            }
-            return err;
-        }
-
-        ChipLogError(DeviceLayer, "Failed to postpone Idle Mode with error %" CHIP_ERROR_FORMAT, err.Format());
-    }
-
-    return SEDUpdateMode();
-}
-
-template <class ImplClass>
-CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::SEDUpdateMode()
-{
-    CHIP_ERROR err = CHIP_NO_ERROR;
-    ConnectivityManager::SEDIntervalMode mode;
-
-    mode = mActiveModeConsumers > 0 ? ConnectivityManager::SEDIntervalMode::Active : ConnectivityManager::SEDIntervalMode::Idle;
-
-    if (mIntervalsMode != mode)
-        err = SetSEDIntervalMode(mode);
-
-    return err;
-}
-
-template <class ImplClass>
-void GenericThreadStackManagerImpl_OpenThread<ImplClass>::RequestSEDModeUpdate(chip::System::Layer * apSystemLayer,
-                                                                               void * apAppState)
-{
-    if (apAppState != nullptr)
-    {
-        GenericThreadStackManagerImpl_OpenThread * obj = static_cast<GenericThreadStackManagerImpl_OpenThread *>(apAppState);
-        if (obj->mActiveModeConsumers > 0)
-        {
-            obj->mActiveModeConsumers--;
-        }
-
-        obj->mDelayIdleTimerRunning = false;
-
-        obj->SEDUpdateMode();
-    }
-}
-#endif
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 
 template <class ImplClass>
 void GenericThreadStackManagerImpl_OpenThread<ImplClass>::_ErasePersistentInfo(void)
@@ -2076,8 +1908,6 @@ void GenericThreadStackManagerImpl_OpenThread<ImplClass>::_UpdateNetworkStatus()
 }
 
 #if CHIP_DEVICE_CONFIG_ENABLE_THREAD_SRP_CLIENT
-
-static_assert(OPENTHREAD_API_VERSION >= 156, "SRP Client requires a more recent OpenThread version");
 
 template <class ImplClass>
 void GenericThreadStackManagerImpl_OpenThread<ImplClass>::OnSrpClientNotification(otError aError,
@@ -2418,9 +2248,6 @@ template <class ImplClass>
 CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_SetupSrpHost(const char * aHostName)
 {
     CHIP_ERROR error = CHIP_NO_ERROR;
-#if OPENTHREAD_API_VERSION < 218
-    Inet::IPAddress hostAddress;
-#endif
 
     VerifyOrReturnError(mSrpClient.mIsInitialized, CHIP_ERROR_WELL_UNINITIALIZED);
 
@@ -2436,20 +2263,8 @@ CHIP_ERROR GenericThreadStackManagerImpl_OpenThread<ImplClass>::_SetupSrpHost(co
         error = MapOpenThreadError(otSrpClientSetHostName(mOTInst, mSrpClient.mHostName));
         SuccessOrExit(error);
 
-#if OPENTHREAD_API_VERSION >= 218
         error = MapOpenThreadError(otSrpClientEnableAutoHostAddress(mOTInst));
-#endif
     }
-
-#if OPENTHREAD_API_VERSION < 218
-    // Check if device has any external IPv6 assigned. If not, host will be set without IPv6 addresses
-    // and updated later on.
-    if (ThreadStackMgr().GetExternalIPv6Address(hostAddress) == CHIP_NO_ERROR)
-    {
-        memcpy(&mSrpClient.mHostAddress.mFields.m32, hostAddress.Addr, sizeof(hostAddress.Addr));
-        error = MapOpenThreadError(otSrpClientSetHostAddresses(mOTInst, &mSrpClient.mHostAddress, 1));
-    }
-#endif
 
 exit:
     Impl()->UnlockThreadStack();

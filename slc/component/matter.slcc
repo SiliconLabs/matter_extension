@@ -8,9 +8,6 @@ config_file:
   - path: slc/config/sl_matter_config.h
     file_id: matter_config
 
-include:
-  - path: slc/inc
-
 toolchain_settings:
   - option: gcc_compiler_option
     value: -Wno-deprecated-declarations
@@ -74,14 +71,21 @@ requires:
   - name: matter_libmessaginglayer
   - name: matter_librawtransport
   - name: matter_libsecurechannel
+  - name: matter_libsecurechanneltypes
   - name: matter_libsetuppayload
   - name: matter_libsupportlayer
   - name: matter_libsystemlayer
   - name: matter_libtransportlayer
   - name: configuration_over_swo
-  - name: matter_ot_thirdparty_override
+  - name: matter_ot_mbedtls_override
+  - name: matter_syscall_stubs
+  - name: matter_nlassert
+  - name: matter_nlio
+  - name: matter_tracing
+  - name: matter_im_status
+  - name: matter_includes
+  - name: matter_icd_core
 
 recommends:
   - id: matter_configuration_over_swo
-  - id: matter_segger_rtt
-  - id: matter_ot_thirdparty_override
+  - id: matter_ot_mbedtls_override

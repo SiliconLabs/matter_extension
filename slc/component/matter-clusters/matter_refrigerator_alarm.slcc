@@ -1,0 +1,18 @@
+
+category: Clusters|Appliances
+description: Implementation of the Refrigerator Alarm Server Cluster
+id: matter_refrigerator_alarm
+package: Matter
+label: Refrigerator Alarm Server Cluster
+quality: production
+provides:
+  - name: matter_refrigerator_alarm
+source:
+  - path: src/app/clusters/refrigerator-alarm-server/refrigerator-alarm-server.cpp
+include:
+  - path: src/app/clusters/refrigerator-alarm-server
+    file_list:
+      - path: refrigerator-alarm-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_refrigerator_alarm

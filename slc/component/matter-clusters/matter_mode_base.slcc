@@ -1,0 +1,20 @@
+
+category: Clusters|General
+description: Implementation of the Mode Base Server Cluster
+id: matter_mode_base
+package: Matter
+label: Mode Base Server Cluster
+quality: production
+provides:
+  - name: matter_mode_base
+source:
+  - path: src/app/clusters/mode-base-server/mode-base-cluster-objects.cpp
+  - path: src/app/clusters/mode-base-server/mode-base-server.cpp
+include:
+  - path: src/app/clusters/mode-base-server
+    file_list:
+      - path: mode-base-cluster-objects.h
+      - path: mode-base-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_mode_base

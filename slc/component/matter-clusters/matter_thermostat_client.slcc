@@ -2,6 +2,7 @@
 category: Clusters|HVAC
 description: Implementation of the Thermostat Client Cluster
 id: matter_thermostat_client
+package: Matter
 label: Thermostat Client Cluster
 quality: production
 provides:

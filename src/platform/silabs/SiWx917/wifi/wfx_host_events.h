@@ -19,6 +19,7 @@
 
 #include "sl_si91x_types.h"
 #include "stdbool.h"
+
 #include "wfx_msgs.h"
 
 /* LwIP includes. */
@@ -31,8 +32,7 @@
 
 #include "sl_status.h"
 
-#define SL_WIFI_ALLOCATE_COMMAND_BUFFER_WAIT_TIME 1000
-
+#define SL_WIFI_ALLOCATE_COMMAND_BUFFER_WAIT_TIME_MS 1000
 /* Wi-Fi events*/
 #define SL_WFX_STARTUP_IND_ID (1)
 #define SL_WFX_CONNECT_IND_ID (2)
@@ -244,9 +244,10 @@ void wfx_ip_changed_notify(int got_ip);
 
 sl_status_t sl_si91x_host_process_data_frame(sl_wifi_interface_t interface, sl_wifi_buffer_t * buffer);
 void * sl_si91x_host_get_buffer_data(sl_wifi_buffer_t * buffer, uint16_t offset, uint16_t * data_length);
-#if CHIP_DEVICE_CONFIG_ENABLE_SED
+
+#if SL_ICD_ENABLED
 sl_status_t wfx_power_save();
-#endif /* CHIP_DEVICE_CONFIG_ENABLE_SED */
+#endif /* SL_ICD_ENABLED */
 
 void wfx_ipv6_notify(int got_ip);
 

@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Software Diagnostics Server Cluster
 id: matter_software_diagnostics
+package: Matter
 label: Software Diagnostics Server Cluster
 quality: production
 provides:
@@ -9,7 +10,7 @@ provides:
 source:
   - path: src/app/clusters/software-diagnostics-server/software-diagnostics-server.cpp
 include:
-  - path: src/app/clusters/software-diagnostics-server/
+  - path: src/app/clusters/software-diagnostics-server
     file_list:
       - path: software-diagnostics-server.h
 template_contribution:

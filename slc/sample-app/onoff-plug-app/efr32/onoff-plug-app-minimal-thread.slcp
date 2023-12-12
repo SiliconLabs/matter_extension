@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.1"
+    version: "2.2.0"
 
 component:
   - id: device_init
@@ -21,6 +21,8 @@ component:
   - id: matter_ble
     from: matter
   - id: matter_thread_ftd
+    from: matter
+  - id: matter_thread_example
     from: matter
   - id: rail_util_pti
   - id: matter_ota_support
@@ -85,7 +87,7 @@ component:
     from: matter
   - id: matter_level_control
     from: matter
-  - id: matter_basic
+  - id: matter_basic_information
     from: matter
   - id: matter_bindings
     from: matter
@@ -96,8 +98,11 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  # Override RTT
-  - id: matter_segger_rtt
+  - id: segger_rtt
+
+  - id: matter_subscription_timeout_resumption
+    from: matter
+  - id: matter_subscription_persistence
     from: matter
   - id: matter_wstk_no_leds
     from: matter
@@ -115,9 +120,11 @@ requires:
 config_file:
   - path: ../../../../silabs_examples/onoff-plug-app/onoff-plug-common/onoff-plug-app.zap
     directory: common
+  - path: ../../../../provision.mattpconf
+    directory: provision
 
 include:
-  - path: ../../../../silabs_examples/onoff-plug-app/efr32/include
+  - path: ../../../../silabs_examples/onoff-plug-app/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -127,13 +134,13 @@ include:
     directory: include
     
 source:
-  - path: ../../../../silabs_examples/onoff-plug-app/efr32/src/AppTask.cpp
+  - path: ../../../../silabs_examples/onoff-plug-app/src/AppTask.cpp
     directory: src
-  - path: ../../../../silabs_examples/onoff-plug-app/efr32/src/main.cpp
+  - path: ../../../../examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../silabs_examples/onoff-plug-app/efr32/src/ZclCallbacks.cpp
+  - path: ../../../../silabs_examples/onoff-plug-app/src/ZclCallbacks.cpp
     directory: src
-  - path: ../../../../silabs_examples/onoff-plug-app/efr32/src/OnOffPlugManager.cpp
+  - path: ../../../../silabs_examples/onoff-plug-app/src/OnOffPlugManager.cpp
     directory: src
 
 define:

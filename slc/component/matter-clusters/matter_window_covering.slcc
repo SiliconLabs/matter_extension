@@ -2,6 +2,7 @@
 category: Clusters|Closures
 description: Implementation of the Window Covering Server Cluster
 id: matter_window_covering
+package: Matter
 label: Window Covering Server Cluster
 quality: production
 provides:
@@ -9,10 +10,10 @@ provides:
 source:
   - path: src/app/clusters/window-covering-server/window-covering-server.cpp
 include:
-  - path: src/app/clusters/window-covering-server/
+  - path: src/app/clusters/window-covering-server
     file_list:
-      - path: window-covering-server.h
       - path: window-covering-delegate.h
+      - path: window-covering-server.h
 template_contribution:
   - name: component_catalog
     value: matter_window_covering

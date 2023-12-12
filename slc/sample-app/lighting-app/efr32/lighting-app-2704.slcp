@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.1"
+    version: "2.2.0"
 
 component:
   - id: device_init
@@ -25,6 +25,8 @@ component:
   - id: matter_ble
     from: matter
   - id: matter_thread_ftd
+    from: matter
+  - id: matter_thread_example
     from: matter
   - id: rail_util_pti
   - id: matter_ota_support
@@ -48,7 +50,7 @@ component:
     from: matter
   - id: matter_administrator_commissioning
     from: matter
-  - id: matter_basic
+  - id: matter_basic_information
     from: matter
   - id: matter_color_control
     from: matter
@@ -80,6 +82,8 @@ component:
     from: matter
   - id: matter_ota_requestor
     from: matter
+  - id: matter_power_source
+    from: matter
   - id: matter_software_diagnostics
     from: matter
   - id: matter_thread_network_diagnostics
@@ -91,8 +95,11 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  # Override RTT
-  - id: matter_segger_rtt
+  - id: segger_rtt
+
+  - id: matter_subscription_timeout_resumption
+    from: matter
+  - id: matter_subscription_persistence
     from: matter
 
 requires:
@@ -107,11 +114,13 @@ requires:
   - name: brd2704a
 
 config_file:
-  - path: ../../../../examples/lighting-app/silabs/efr32/data_model/lighting-thread-app.zap
+  - path: ../../../../examples/lighting-app/silabs/data_model/lighting-thread-app.zap
     directory: common
+  - path: ../../../../provision.mattpconf
+    directory: provision
 
 include:
-  - path: ../../../../examples/lighting-app/silabs/efr32/include
+  - path: ../../../../examples/lighting-app/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -121,13 +130,13 @@ include:
     directory: include
 
 source:
-  - path: ../../../../examples/lighting-app/silabs/efr32/src/AppTask.cpp
+  - path: ../../../../examples/lighting-app/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/lighting-app/silabs/efr32/src/LightingManager.cpp
+  - path: ../../../../examples/lighting-app/silabs/src/LightingManager.cpp
     directory: src
-  - path: ../../../../examples/lighting-app/silabs/efr32/src/main.cpp
+  - path: ../../../../examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/lighting-app/silabs/efr32/src/ZclCallbacks.cpp
+  - path: ../../../../examples/lighting-app/silabs/src/ZclCallbacks.cpp
     directory: src
 
 define:

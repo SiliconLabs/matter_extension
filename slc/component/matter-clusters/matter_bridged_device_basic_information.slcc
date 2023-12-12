@@ -2,6 +2,7 @@
 category: Clusters|CHIP
 description: Implementation of the Bridged Device Basic Information Server Cluster
 id: matter_bridged_device_basic_information
+package: Matter
 label: Bridged Device Basic Information Server Cluster
 quality: production
 provides:

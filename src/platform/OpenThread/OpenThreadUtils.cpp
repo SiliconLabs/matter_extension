@@ -26,7 +26,7 @@
 
 #include <inet/IPAddress.h>
 #include <lib/core/CHIPEncoding.h>
-#include <lib/support/ErrorStr.h>
+#include <lib/core/ErrorStr.h>
 #include <lib/support/logging/CHIPLogging.h>
 #include <platform/internal/CHIPDeviceLayerInternal.h>
 
@@ -96,14 +96,8 @@ void LogOpenThreadStateChange(otInstance * otInst, uint32_t flags)
 {
 #if CHIP_DETAIL_LOGGING
 
-#if OPENTHREAD_API_VERSION >= 126
     const uint32_t kParamsChanged = (OT_CHANGED_THREAD_NETWORK_NAME | OT_CHANGED_THREAD_PANID | OT_CHANGED_THREAD_EXT_PANID |
                                      OT_CHANGED_THREAD_CHANNEL | OT_CHANGED_NETWORK_KEY | OT_CHANGED_PSKC);
-#else
-    const uint32_t kParamsChanged = (OT_CHANGED_THREAD_NETWORK_NAME | OT_CHANGED_THREAD_PANID | OT_CHANGED_THREAD_EXT_PANID |
-                                     OT_CHANGED_THREAD_CHANNEL | OT_CHANGED_MASTER_KEY | OT_CHANGED_PSKC);
-#endif
-
     static char strBuf[64];
 
     ChipLogDetail(DeviceLayer, "OpenThread State Changed (Flags: 0x%08" PRIx32 ")", flags);

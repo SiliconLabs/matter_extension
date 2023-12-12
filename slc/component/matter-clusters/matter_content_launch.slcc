@@ -2,6 +2,7 @@
 category: Clusters|Media
 description: Implementation of the Content Launch Server Cluster
 id: matter_content_launch
+package: Matter
 label: Content Launch Server Cluster
 quality: production
 provides:
@@ -9,10 +10,10 @@ provides:
 source:
   - path: src/app/clusters/content-launch-server/content-launch-server.cpp
 include:
-  - path: src/app/clusters/content-launch-server/
+  - path: src/app/clusters/content-launch-server
     file_list:
-      - path: content-launch-server.h
       - path: content-launch-delegate.h
+      - path: content-launch-server.h
 template_contribution:
   - name: component_catalog
     value: matter_content_launch

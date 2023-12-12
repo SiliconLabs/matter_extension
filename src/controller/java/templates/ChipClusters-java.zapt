@@ -1,6 +1,4 @@
 {{> header}}
-{{#if_enabled_clusters side='client'}}
-
 package chip.devicecontroller;
 
 import javax.annotation.Nullable;
@@ -102,9 +100,9 @@ public class ChipClusters {
     }
   }
 
-  {{#all_user_clusters side='client'}}
+  {{#zcl_clusters}}
   public static class {{asUpperCamelCase name}}Cluster extends BaseChipCluster {
-    public static final long CLUSTER_ID = {{code}}L;
+    public static final long CLUSTER_ID = {{asMEI manufacturerCode code}}L;
 
     public {{asUpperCamelCase name}}Cluster(long devicePtr, int endpointId) {
       super(devicePtr, endpointId);
@@ -112,9 +110,8 @@ public class ChipClusters {
 
     @Override
     public native long initWithDevice(long devicePtr, int endpointId);
-  {{#all_user_cluster_generated_commands}}
-    {{#if_compare clusterId ../id operator='=='}}
-      {{#if (is_str_equal commandSource 'client')}}
+  {{#zcl_commands}}
+      {{#if (is_str_equal source 'client')}}
 
     {{#unless mustUseTimedInvoke}}
     public void {{asLowerCamelCase name}}({{#if hasSpecificResponse}}{{asUpperCamelCase responseName}}Callback{{else}}DefaultClusterCallback{{/if}} callback
@@ -129,29 +126,24 @@ public class ChipClusters {
       {{asLowerCamelCase name}}(chipClusterPtr, callback{{#zcl_command_arguments}}, {{asLowerCamelCase label}}{{/zcl_command_arguments}}, timedInvokeTimeoutMs);
     }
       {{/if}}
-    {{/if_compare}}
-  {{/all_user_cluster_generated_commands}}
-  {{#all_user_cluster_generated_commands}}
-    {{#if_compare clusterId ../id operator='=='}}
-      {{#if (is_str_equal commandSource 'client')}}
+  {{/zcl_commands}}
+  {{#zcl_commands}}
+      {{#if (is_str_equal source 'client')}}
     private native void {{asLowerCamelCase name}}(long chipClusterPtr, {{#if hasSpecificResponse}}{{asUpperCamelCase responseName}}Callback{{else}}DefaultClusterCallback{{/if}} Callback
       {{#zcl_command_arguments}}, {{asJavaType type chipType parent.parent.name includeAnnotations=true clusterId=parent.parent.id}} {{asLowerCamelCase label}}{{/zcl_command_arguments}}
       , @Nullable Integer timedInvokeTimeoutMs);
       {{/if}}
-    {{/if_compare}}
-  {{/all_user_cluster_generated_commands}}
-    {{#all_user_cluster_generated_commands}}
-      {{#if_compare clusterId ../id operator='=='}}
-        {{#if (is_str_equal commandSource 'server')}}
+  {{/zcl_commands}}
+  {{#zcl_commands}}
+     {{#if (is_str_equal source 'server')}}
     public interface {{asUpperCamelCase name}}Callback {
       void onSuccess({{#zcl_command_arguments}}{{#not_first}}, {{/not_first}}{{asJavaType type chipType parent.parent.name includeAnnotations=true clusterId=parent.parent.id}} {{asLowerCamelCase label}}{{/zcl_command_arguments}});
-      
+
       void onError(Exception error);
     }
 
-        {{/if}}
-    {{/if_compare}}
-  {{/all_user_cluster_generated_commands}}
+     {{/if}}
+  {{/zcl_commands}}
 
   {{#zcl_attributes_server removeKeys='isOptional'}}
   {{#if_unsupported_attribute_callback type isArray ../id}}
@@ -189,8 +181,20 @@ public class ChipClusters {
       {{asUpperCamelCase name}}AttributeCallback callback
     {{/if_basic_attribute}}
     ) {
-      read{{asUpperCamelCase name}}Attribute(chipClusterPtr, callback);
+      read{{asUpperCamelCase name}}Attribute(chipClusterPtr, callback{{#if_is_fabric_scoped_struct type}}, true{{/if_is_fabric_scoped_struct}});
     }
+  {{#if_is_fabric_scoped_struct type}}
+    public void read{{asUpperCamelCase name}}AttributeWithFabricFilter(
+    {{#if_basic_attribute type ../id}}
+      {{as_underlying_java_zcl_type type ../id boolean="Boolean"}}AttributeCallback callback
+    {{else}}
+      {{asUpperCamelCase name}}AttributeCallback callback
+    {{/if_basic_attribute}},
+      boolean isFabricFiltered
+    ) {
+      read{{asUpperCamelCase name}}Attribute(chipClusterPtr, callback, isFabricFiltered);
+    }
+  {{/if_is_fabric_scoped_struct}}
   {{#if isWritableAttribute}}
     {{#unless mustUseTimedWrite}}
     public void write{{asUpperCamelCase name}}Attribute(DefaultClusterCallback callback, {{asJavaType type chipType parent.name}} value) {
@@ -226,6 +230,9 @@ public class ChipClusters {
       {{else}}
         {{asUpperCamelCase name}}AttributeCallback callback
       {{/if_basic_attribute}}
+      {{#if_is_fabric_scoped_struct type}}
+      , boolean isFabricFiltered
+      {{/if_is_fabric_scoped_struct}}
     );
   {{#if isWritableAttribute}}
 
@@ -245,6 +252,6 @@ public class ChipClusters {
   {{#not_last}}
 
   {{/not_last}}
-  {{/all_user_clusters}}
+  {{/zcl_clusters}}
 }
-{{/if_enabled_clusters}}
+

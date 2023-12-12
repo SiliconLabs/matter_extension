@@ -2,6 +2,7 @@
 category: Clusters|CHIP
 description: Implementation of the Network Commissioning Cluster
 id: matter_network_commissioning
+package: Matter
 label: Network Commissioning Cluster
 quality: production
 provides:
@@ -9,7 +10,7 @@ provides:
 source:
   - path: src/app/clusters/network-commissioning/network-commissioning.cpp
 include:
-  - path: src/app/clusters/network-commissioning/
+  - path: src/app/clusters/network-commissioning
     file_list:
       - path: network-commissioning.h
 template_contribution:

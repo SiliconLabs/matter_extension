@@ -5,10 +5,18 @@ import sys
 import subprocess
 import shutil
 import sys
+from dotenv import load_dotenv
+
+try:
+    env_path = os.path.join(os.getcwd(),"slc","tools",".env")
+    load_dotenv(env_path,override=True)
+    os.environ["PATH"] = os.getenv("TOOLS_PATH") + os.environ["PATH"]
+    java_path = os.getenv("JAVA17_HOME")
+except:
+    print("Could not load the .env file. Please run sl_setup_env.p' generate .env file")
+    sys.exit(1)
 
 platform = sys.platform
-
-java_path = os.getenv("JAVA17_HOME")
 
 EXAMPLE_USAGE = "python slc/sl_build.py <PathToSlcpFile> <SilabsBoard>"
 
@@ -42,8 +50,8 @@ if platform == "win32":
     try:
         slc_path = os.path.join(os.environ["SLC"],"slc.bat")
     except:
-        print("SLC undefined. Set SLC from the sl_env_vars.bat")
+        print("ERROR: SLC undefined. Please run sl_setup_env.py")
 
-subprocess.run([slc_path, "--java-location", java_path, "generate", "-d", output_dir, "-p", silabs_app_path, "--with", silabs_board])
+subprocess.run([slc_path, "--java-location", java_path, "generate", "-d", output_dir, "-p", silabs_app_path, "--with", silabs_board, "--force"])
 
 subprocess.run(["make", "-C", output_dir, "-f", makefile_path, "-j13"])

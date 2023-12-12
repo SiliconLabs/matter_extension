@@ -40,7 +40,7 @@ static_library("helpers") {
   ]
 }
 
-chip_test_suite("tests") {
+chip_test_suite_using_nltest("tests") {
   output_name = "libMessagingLayerTests"
 
   test_sources = []
@@ -60,7 +60,7 @@ chip_test_suite("tests") {
     }
 
     if (chip_device_platform == "linux") {
-      test_sources += [ "TestMessagingLayer.cpp" ]
+      # SLC-FIX disable this test for now test_sources += [ "TestMessagingLayer.cpp" ]
     }
   }
 

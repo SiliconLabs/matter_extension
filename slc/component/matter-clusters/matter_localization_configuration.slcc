@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Localization Configuration Server Cluster
 id: matter_localization_configuration
+package: Matter
 label: Localization Configuration Server Cluster
 quality: production
 provides:

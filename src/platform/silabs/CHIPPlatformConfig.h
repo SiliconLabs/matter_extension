@@ -26,6 +26,10 @@
 
 #include <stdint.h>
 
+#ifdef SL_ICD_ENABLED
+#include "sl_matter_icd_config.h" // SLC-FIX
+#endif // SL_ICD_ENABLED 
+
 // ==================== General Platform Adaptations ====================
 
 #define CHIP_CONFIG_ABORT() abort()
@@ -45,10 +49,18 @@
 #if CHIP_HAVE_CONFIG_H
 #include <crypto/CryptoBuildConfig.h>
 #endif
-#if !defined(CHIP_CONFIG_SHA256_CONTEXT_SIZE) && (CHIP_CRYPTO_PLATFORM == 1)
+#if ((CHIP_CRYPTO_PLATFORM == 1) && !defined(SIWX_917))
 #include "psa/crypto.h"
+
+#if !defined(CHIP_CONFIG_SHA256_CONTEXT_SIZE)
 #define CHIP_CONFIG_SHA256_CONTEXT_SIZE (sizeof(psa_hash_operation_t))
 #endif
+
+#if !defined(CHIP_CONFIG_SHA256_CONTEXT_ALIGN)
+#define CHIP_CONFIG_SHA256_CONTEXT_ALIGN psa_hash_operation_t
+#endif
+
+#endif // CHIP_CRYPTO_PLATFORM
 
 // ==================== General Configuration Overrides ====================
 
@@ -83,6 +95,26 @@
 #ifndef CHIP_CONFIG_MAX_FABRICS
 #define CHIP_CONFIG_MAX_FABRICS 5 // 4 fabrics + 1 for rotation slack
 #endif
+
+#ifdef SL_ICD_ENABLED
+
+#ifndef CHIP_CONFIG_ICD_IDLE_MODE_INTERVAL_SEC
+#define CHIP_CONFIG_ICD_IDLE_MODE_INTERVAL_SEC SL_IDLE_MODE_INTERVAL
+#endif // CHIP_CONFIG_ICD_IDLE_MODE_INTERVAL_SEC
+
+#ifndef CHIP_CONFIG_ICD_ACTIVE_MODE_INTERVAL_MS
+#define CHIP_CONFIG_ICD_ACTIVE_MODE_INTERVAL_MS SL_ACTIVE_MODE_INTERVAL
+#endif // CHIP_CONFIG_ICD_ACTIVE_MODE_INTERVAL_MS
+
+#ifndef CHIP_CONFIG_ICD_ACTIVE_MODE_THRESHOLD_MS
+#define CHIP_CONFIG_ICD_ACTIVE_MODE_THRESHOLD_MS SL_ACTIVE_MODE_THRESHOLD
+#endif // CHIP_CONFIG_ICD_ACTIVE_MODE_THRESHOLD_MS
+
+#ifndef CHIP_CONFIG_ICD_CLIENTS_SUPPORTED_PER_FABRIC
+#define CHIP_CONFIG_ICD_CLIENTS_SUPPORTED_PER_FABRIC SL_ICD_SUPPORTED_CLIENTS_PER_FABRIC
+#endif // CHIP_CONFIG_ICD_CLIENTS_SUPPORTED_PER_FABRIC
+
+#endif // SL_ICD_ENABLED
 
 // ==================== FreeRTOS Configuration Overrides ====================
 #ifndef CHIP_CONFIG_FREERTOS_USE_STATIC_TASK

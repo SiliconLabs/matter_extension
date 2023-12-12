@@ -31,6 +31,8 @@
 #include "event_groups.h"
 #include "task.h"
 
+#include "silabs_utils.h"
+
 #include "wfx_host_events.h"
 
 #include "rsi_driver.h"
@@ -51,6 +53,9 @@
 #include "lwip/nd6.h"
 #include "wfx_host_events.h"
 #include "wfx_rsi.h"
+
+// SLC-FIX
+#include "sl_matter_wifi_config.h"
 
 // TODO convert this file to cpp and use CodeUtils.h
 #ifndef MIN
@@ -197,7 +202,7 @@ int32_t wfx_rsi_disconnect()
     return status;
 }
 
-#if CHIP_DEVICE_CONFIG_ENABLE_SED
+#if SL_ICD_ENABLED
 /******************************************************************
  * @fn   wfx_rsi_power_save()
  * @brief
@@ -228,7 +233,7 @@ int32_t wfx_rsi_power_save()
     SILABS_LOG("Powersave Config Success");
     return status;
 }
-#endif /* CHIP_DEVICE_CONFIG_ENABLE_SED */
+#endif /* SL_ICD_ENABLED */
 
 /******************************************************************
  * @fn   wfx_rsi_join_cb(uint16_t status, const uint8_t *buf, const uint16_t len)
@@ -706,6 +711,7 @@ void wfx_rsi_task(void * arg)
             {
                 rsi_rsp_scan_t scan_rsp = { 0 };
                 int32_t status          = rsi_wlan_bgscan_profile(1, &scan_rsp, sizeof(scan_rsp));
+
                 if (status)
                 {
                     SILABS_LOG("SSID scan failed: %02x ", status);
@@ -736,6 +742,7 @@ void wfx_rsi_task(void * arg)
                         }
                     }
                 }
+
                 wfx_rsi.dev_state &= ~WFX_RSI_ST_SCANSTARTED;
                 /* Terminate with end of scan which is no ap sent back */
                 (*wfx_rsi.scan_cb)((wfx_wifi_scan_result_t *) 0);

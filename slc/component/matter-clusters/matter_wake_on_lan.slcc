@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Wake On Lan Server Cluster
 id: matter_wake_on_lan
+package: Matter
 label: Wake On Lan Server Cluster
 quality: production
 provides:
@@ -9,7 +10,7 @@ provides:
 source:
   - path: src/app/clusters/wake-on-lan-server/wake-on-lan-server.cpp
 include:
-  - path: src/app/clusters/wake-on-lan-server/
+  - path: src/app/clusters/wake-on-lan-server
     file_list:
       - path: wake-on-lan-server.h
       - path: wake-on-lan-delegate.h

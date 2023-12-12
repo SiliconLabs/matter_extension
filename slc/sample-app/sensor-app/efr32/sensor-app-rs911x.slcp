@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.1"
+    version: "2.2.0"
 
 component:
   - id: device_init
@@ -51,7 +51,7 @@ component:
     from: matter
   - id: matter_administrator_commissioning
     from: matter
-  - id: matter_basic
+  - id: matter_basic_information
     from: matter
   - id: matter_descriptor
     from: matter
@@ -96,8 +96,11 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  # Override RTT
-  - id: matter_segger_rtt
+  - id: segger_rtt
+
+  - id: matter_subscription_timeout_resumption
+    from: matter
+  - id: matter_subscription_persistence
     from: matter
   - id: matter_occupancy_sensor_type
     from: matter
@@ -107,15 +110,15 @@ requires:
   - name: matter_lcd
     condition:
     - device_series_1
-#  - name: matter_lcd // TODO: We need enable this feature after CSA changes merged
-#    condition:
-#    - device_series_2
+  - name: matter_lcd
+    condition:
+    - device_series_2
   - name: matter_qr_code
     condition:
     - device_series_1
-#  - name: matter_qr_code // TODO: We need enable this feature after CSA changes merged
-#    condition:
-#    - device_series_2
+  - name: matter_qr_code
+    condition:
+    - device_series_2
   - name: spidrv_instance
   - name: uartdrv_eusart
     condition:
@@ -129,7 +132,7 @@ requires:
      - device_series_2
 
 include:
-  - path: ../../../../silabs_examples/silabs-sensors/efr32/include
+  - path: ../../../../silabs_examples/silabs-sensors/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -139,13 +142,13 @@ include:
     directory: include
 
 source:
-  - path: ../../../../silabs_examples/silabs-sensors/efr32/src/AppTask.cpp
+  - path: ../../../../silabs_examples/silabs-sensors/src/AppTask.cpp
     directory: src
-  - path: ../../../../silabs_examples/silabs-sensors/efr32/src/SensorsCallbacks.cpp
+  - path: ../../../../silabs_examples/silabs-sensors/src/SensorsCallbacks.cpp
     directory: src
-  - path: ../../../../silabs_examples/silabs-sensors/efr32/src/main.cpp
+  - path: ../../../../examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../silabs_examples/silabs-sensors/efr32/src/ZclCallbacks.cpp
+  - path: ../../../../silabs_examples/silabs-sensors/src/ZclCallbacks.cpp
     directory: src
 
 define:

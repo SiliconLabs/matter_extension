@@ -1,0 +1,17 @@
+category: Matter|Stack
+description: Includes defines macros and interfaces for performing both compile and run-time assertion checking and run-time exception handling
+id: matter_nlassert
+label: Stack
+package: Matter
+provides:
+  - name: matter_nlassert
+quality: production
+include:
+  - path: third_party/nlassert/repo/include
+    file_list:
+    - path: nlassert-production.h
+    - path: nlassert-nonproduction.h
+    - path: nlassert-internal.h
+    - path: nlassert.h
+ui_hints:
+    visibility: never

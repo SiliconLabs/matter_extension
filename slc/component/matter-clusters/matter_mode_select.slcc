@@ -2,12 +2,17 @@
 category: Clusters|General
 description: Implementation of the Mode Select Server Cluster
 id: matter_mode_select
+package: Matter
 label: Mode Select Server Cluster
 quality: production
 provides:
   - name: matter_mode_select
 source:
   - path: src/app/clusters/mode-select-server/mode-select-server.cpp
+include:
+  - path: src/app/clusters/mode-select-server
+    file_list:
+      - path: supported-modes-manager.h
 template_contribution:
   - name: component_catalog
     value: matter_mode_select

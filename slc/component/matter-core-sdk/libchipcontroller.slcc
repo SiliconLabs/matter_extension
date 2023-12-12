@@ -1,61 +1,60 @@
 category: Matter|Core
 define:
-- name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
-  value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
-- name: CHIP_HAVE_CONFIG_H
-  value: '1'
+-   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
 description: libchipcontroller
 id: libchipcontroller
 include:
-- path: examples/platform/silabs
-- path: src
-  file_list:
-  - path: controller/AbstractDnssdDiscoveryController.h
-  - path: controller/DeviceDiscoveryDelegate.h
-  - path: controller/AutoCommissioner.h
-  - path: controller/CHIPDeviceController.h
-  - path: controller/CommissioneeDeviceProxy.h
-  - path: controller/CommissioningDelegate.h
-  - path: controller/CHIPDeviceControllerSystemState.h
-  - path: controller/OperationalCredentialsDelegate.h
-  - path: controller/CHIPCluster.h
-  - path: controller/DevicePairingDelegate.h
-  - path: controller/SetUpCodePairer.h
-  - path: controller/InvokeInteraction.h
-  - path: controller/ReadInteraction.h
-  - path: controller/WriteInteraction.h
-  - path: controller/CommandSenderAllocator.h
-  - path: controller/TypedCommandCallback.h
-  - path: controller/TypedReadCallback.h
-  - path: controller/CHIPCommissionableNodeController.h
-  - path: controller/CurrentFabricRemover.h
-  - path: controller/CHIPDeviceControllerFactory.h
-  - path: controller/CommissionerDiscoveryController.h
-  - path: controller/CommissioningWindowOpener.h
-  - path: controller/ExampleOperationalCredentialsIssuer.h
-- path: src/include
-- path: src/lib
-- path: third_party/nlassert/repo/include
-- path: third_party/nlio/repo/include
-- path: zzz_generated/app-common
+-   path: src/include
+-   path: src/lib
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+-   path: zzz_generated/app-common
+-   path: src/controller
+    file_list:
+    -   path: CHIPDeviceControllerFactory.h
+    -   path: WriteInteraction.h
+    -   path: CHIPCluster.h
+    -   path: CHIPDeviceControllerSystemState.h
+    -   path: DevicePairingDelegate.h
+    -   path: CommandSenderAllocator.h
+    -   path: CommissioningWindowOpener.h
+    -   path: ReadInteraction.h
+    -   path: InvokeInteraction.h
+    -   path: CHIPCommissionableNodeController.h
+    -   path: CHIPDeviceController.h
+    -   path: CommissionerDiscoveryController.h
+    -   path: ExamplePersistentStorage.h
+    -   path: OperationalCredentialsDelegate.h
+    -   path: CurrentFabricRemover.h
+    -   path: CommissioningDelegate.h
+    -   path: SetUpCodePairer.h
+    -   path: AbstractDnssdDiscoveryController.h
+    -   path: ExampleOperationalCredentialsIssuer.h
+    -   path: TypedCommandCallback.h
+    -   path: AutoCommissioner.h
+    -   path: DeviceDiscoveryDelegate.h
+    -   path: TypedReadCallback.h
+    -   path: CommissioneeDeviceProxy.h
 label: libchipcontroller
 package: Matter
 provides:
-- name: matter_libchipcontroller
+-   name: matter_libchipcontroller
 quality: production
 source:
-- path: src/controller/AbstractDnssdDiscoveryController.cpp
-- path: src/controller/AutoCommissioner.cpp
-- path: src/controller/CHIPCommissionableNodeController.cpp
-- path: src/controller/CHIPDeviceController.cpp
-- path: src/controller/CHIPDeviceControllerFactory.cpp
-- path: src/controller/CommissioneeDeviceProxy.cpp
-- path: src/controller/CommissionerDiscoveryController.cpp
-- path: src/controller/CommissioningDelegate.cpp
-- path: src/controller/CommissioningWindowOpener.cpp
-- path: src/controller/CurrentFabricRemover.cpp
-- path: src/controller/EmptyDataModelHandler.cpp
-- path: src/controller/ExampleOperationalCredentialsIssuer.cpp
-- path: src/controller/SetUpCodePairer.cpp
+-   path: src/controller/AbstractDnssdDiscoveryController.cpp
+-   path: src/controller/AutoCommissioner.cpp
+-   path: src/controller/CHIPCommissionableNodeController.cpp
+-   path: src/controller/CHIPDeviceController.cpp
+-   path: src/controller/CHIPDeviceControllerFactory.cpp
+-   path: src/controller/CommissioneeDeviceProxy.cpp
+-   path: src/controller/CommissionerDiscoveryController.cpp
+-   path: src/controller/CommissioningDelegate.cpp
+-   path: src/controller/CommissioningWindowOpener.cpp
+-   path: src/controller/CurrentFabricRemover.cpp
+-   path: src/controller/ExampleOperationalCredentialsIssuer.cpp
+-   path: src/controller/SetUpCodePairer.cpp
 ui_hints:
-  visibility: never
+    visibility: never

@@ -23,16 +23,19 @@
 
 #include "FreeRTOS.h"
 #include "event_groups.h"
+#include "silabs_utils.h"
 #include "task.h"
-
 #include "wfx_host_events.h"
+
+// SLC-FIX
+#include "sl_matter_wifi_config.h"
 
 #ifdef RS911X_WIFI
 #include "wfx_rsi.h"
 #endif
 
 #include <platform/CHIPDeviceLayer.h>
-//#include <app/server/Mdns.h>
+// #include <app/server/Mdns.h>
 #include <app/server/Dnssd.h>
 #include <app/server/Server.h>
 
@@ -198,7 +201,7 @@ void wfx_retry_interval_handler(bool is_wifi_disconnection_event, uint16_t retry
          */
         if (retryJoin < MAX_JOIN_RETRIES_COUNT)
         {
-            SILABS_LOG("%s: Next attempt after %d Seconds", __func__, CONVERT_MS_TO_SEC(WLAN_RETRY_TIMER_MS));
+            SILABS_LOG("wfx_retry_interval_handler : Next attempt after %d Seconds", CONVERT_MS_TO_SEC(WLAN_RETRY_TIMER_MS));
             vTaskDelay(pdMS_TO_TICKS(WLAN_RETRY_TIMER_MS));
         }
         else
@@ -217,7 +220,7 @@ void wfx_retry_interval_handler(bool is_wifi_disconnection_event, uint16_t retry
         {
             retryInterval = WLAN_MAX_RETRY_TIMER_MS;
         }
-        SILABS_LOG("%s: Next attempt after %d Seconds", __func__, CONVERT_MS_TO_SEC(retryInterval));
+        SILABS_LOG("wfx_retry_interval_handler : Next attempt after %d Seconds", CONVERT_MS_TO_SEC(retryInterval));
         vTaskDelay(pdMS_TO_TICKS(retryInterval));
         retryInterval += retryInterval;
     }

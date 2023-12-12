@@ -2,6 +2,7 @@
 category: Clusters|General
 description: Implementation of the Administrator Commissioning Server Cluster
 id: matter_administrator_commissioning
+package: Matter
 label: Administrator Commissioning Server Cluster
 quality: production
 provides:

@@ -2,6 +2,7 @@
 category: Clusters|Media
 description: Implementation of the Application Launcher Server Cluster
 id: matter_application_launcher
+package: Matter
 label: Application Launcher Server Cluster
 quality: production
 provides:
@@ -9,7 +10,7 @@ provides:
 source:
   - path: src/app/clusters/application-launcher-server/application-launcher-server.cpp
 include:
-  - path: src/app/clusters/application-launcher-server/
+  - path: src/app/clusters/application-launcher-server
     file_list:
       - path: application-launcher-server.h
       - path: application-launcher-delegate.h

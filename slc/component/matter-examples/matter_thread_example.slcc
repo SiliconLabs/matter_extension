@@ -1,0 +1,11 @@
+category: Matter|Examples
+package: Matter
+description: >
+  Provides example component for an OpenThread application. This component should be 
+  included in all OpenThread applications to help resolve SLC dependencies. Only applicable to OpenThread applications.
+id: matter_thread_example
+quality: production
+provides:
+  - name: matter_thread_example
+ui_hints:
+  visibility: never

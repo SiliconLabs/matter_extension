@@ -1,5 +1,6 @@
 id: rs911x_ncp_common
-label: rs911x_ncp_common
+label: RS911x NCP Common
+quality: production
 description: >
   Adds support for the HAL and WiFi Driver layer for rs911x NCP devices
 package: Matter
@@ -12,8 +13,6 @@ requires:
 - name: psa_its
 source:
 - path: examples/platform/silabs/efr32/rs911x/wfx_rsi_host.c
-- path: examples/platform/silabs/efr32/rs911x/hal/efx_spi.c
-- path: examples/platform/silabs/efr32/rs911x/hal/rsi_hal_mcu_interrupt.c
 - path: src/platform/silabs/rs911x/BLEManagerImpl.cpp
 - path: src/platform/silabs/rs911x/wfx_sl_ble_init.c
 include:
@@ -28,8 +27,11 @@ include:
 - path: examples/platform/silabs/efr32/rs911x/hal
   file_list:
   - path: rsi_hal.h
+- path: examples/platform/silabs/efr32
+  file_list:
+  - path: spi_multiplex.h
 define:
 - name: RSI_BLE_ENABLE
   value: 1
-- name: BLE_ENABLE
+- name: SLI_SI91X_ENABLE_BLE
   value: 1

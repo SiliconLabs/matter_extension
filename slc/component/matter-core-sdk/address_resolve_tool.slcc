@@ -4,9 +4,13 @@ define:
     value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
 -   name: CHIP_HAVE_CONFIG_H
     value: '1'
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
 description: address_resolve_tool
 id: address_resolve_tool
 include:
+-   path: examples/common/tracing
+-   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
@@ -14,6 +18,11 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: zzz_generated/app-common
+-   path: src/lib/address_resolve
+    file_list:
+    -   path: TracingStructs.h
+    -   path: AddressResolve_DefaultImpl.h
+    -   path: AddressResolve.h
 label: address_resolve_tool
 package: Matter
 provides:

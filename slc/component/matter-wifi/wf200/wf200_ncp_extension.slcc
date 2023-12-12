@@ -1,5 +1,6 @@
 id: wf200_ncp_extension
-label: wf200_ncp_extension
+label: WF200 NCP Extension
+quality: production
 package: Matter
 description: >
   Adds support for the HAL and WiFi Driver layer for WF200 NCP devices
@@ -11,10 +12,6 @@ requires:
 - name: freertos
 - name: psa_its
 
-component:
-- id: spidrv_core
-  instance: [exp]
-
 source:
 - path: examples/platform/silabs/efr32/wf200/host_if.cpp
 - path: examples/platform/silabs/efr32/wf200/efr_spi.c
@@ -22,7 +19,6 @@ source:
 - path: examples/platform/silabs/efr32/wf200/sl_wfx_securelink_task.c
 - path: examples/platform/silabs/efr32/wf200/sl_wfx_task.c
 - path: examples/platform/silabs/efr32/wf200/wf200_init.c
-- path: examples/platform/silabs/efr32/spi_multiplex.c
 - path: third_party/silabs/gecko_sdk/platform/radio/wifi/wfx_fmac_driver/bus/sl_wfx_bus.c
 - path: third_party/silabs/gecko_sdk/platform/radio/wifi/wfx_fmac_driver/bus/sl_wfx_bus_spi.c
 - path: third_party/silabs/gecko_sdk/platform/radio/wifi/wfx_fmac_driver/sl_wfx.c

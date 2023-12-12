@@ -2,6 +2,7 @@
 category: Clusters|CHIP
 description: Implementation of the Switch Server Cluster
 id: matter_switch
+package: Matter
 label: Switch Server Cluster
 quality: production
 provides:
@@ -9,7 +10,7 @@ provides:
 source:
   - path: src/app/clusters/switch-server/switch-server.cpp
 include:
-  - path: src/app/clusters/switch-server/
+  - path: src/app/clusters/switch-server
     file_list:
       - path: switch-server.h
 template_contribution:

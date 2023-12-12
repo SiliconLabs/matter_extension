@@ -16,34 +16,12 @@
  * the sections of the MSLA applicable to Source Code.
  */
 
-#include <app/TestEventTriggerDelegate.h>
+#include <SilabsTestEventTriggerDelegate.h>
 
-
-namespace chip {
-
-class SilabsTestEventTriggerDelegate : public TestEventTriggerDelegate
-{
-public:
-    static constexpr uint64_t kMcastPacketTrigger         = 0x0A0A;
-    // static constexpr uint64_t kOtaQueryFabricIndexMask = 0xff;
-
-    explicit SilabsTestEventTriggerDelegate(const ByteSpan & enableKey) : mEnableKey(enableKey) {}
-
-    bool DoesEnableKeyMatch(const ByteSpan & enableKey) const override;
-    CHIP_ERROR HandleEventTrigger(uint64_t eventTrigger) override;
-
-private:
-    ByteSpan mEnableKey;
-};
-
-}  // namespace chip
-
-// TODO change key
-// NOTE! This key is for test/certification only and should not be available in production devices.
-// Ideally, it should be a part of the factory data set.
-constexpr  uint8_t kTestEventTriggerEnableKey[16] = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
-                                                     0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff };
-
+// This must correspond to the SILABS_TEST_EVENT_TRIGGER_ENABLE_KEY set at compile time
+constexpr uint8_t kPerfTestTestEventTriggerEnableKey[chip::TestEventTriggerDelegate::kEnableKeyLength] = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55,
+                                                                                          0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb,
+                                                                                          0xcc, 0xdd, 0xee, 0xff };
 constexpr uint32_t EventTriggerPingMagicNumber = 1729;
 constexpr uint32_t kPingDefaultTimeoutMs       = 1000;
 
@@ -59,7 +37,7 @@ struct PerfTestCommandData
     };
     uint32_t seqNum;
     uint16_t count;
-    uint32_t timeoutMs; 
+    uint32_t timeoutMs;
 };
 
 class MatterPerfTest {
@@ -84,10 +62,11 @@ private:
 
     bool    pingInProgress = false;
 
-    uint8_t  responsesReceived = 0;
-    uint8_t  requestsSent      = 0;
-    uint8_t  pingCountTotal    = 0;
-    uint32_t timeoutMs         = kPingDefaultTimeoutMs;
+    uint16_t  responsesReceived = 0;
+    uint16_t  requestsSent      = 0;
+    uint16_t  pingCountTotal    = 0;
+    uint32_t  timeoutMs         = kPingDefaultTimeoutMs;
+    uint64_t  pingStartTime     = 0;
 
     chip::NodeId nodeId           = chip::kUndefinedNodeId;
     chip::FabricIndex fabricIndex = chip::kUndefinedFabricIndex;

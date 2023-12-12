@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.1.1"
+    version: "2.2.0"
 
 component:
   - id: device_init
@@ -20,7 +20,9 @@ component:
     from: matter
   - id: matter_ble
     from: matter
-  - id: matter_thread_ftd
+  - id: matter_thread_mtd
+    from: matter
+  - id: matter_thread_example
     from: matter
   - id: rail_util_pti
   - id: matter_ota_support
@@ -44,7 +46,7 @@ component:
     from: matter
   - id: matter_administrator_commissioning
     from: matter
-  - id: matter_basic
+  - id: matter_basic_information
     from: matter
   - id: matter_bindings
     from: matter
@@ -82,6 +84,8 @@ component:
     from: matter
   - id: matter_time_format_localization
     from: matter
+  - id: matter_time_synchronization
+    from: matter
   - id: matter_user_label
     from: matter
   - id: matter_wifi_network_diagnostics
@@ -94,8 +98,13 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  # Override RTT
-  - id: matter_segger_rtt
+  - id: segger_rtt
+
+  - id: matter_icd
+    from: matter
+  - id: matter_subscription_persistence
+    from: matter
+  - id: matter_subscription_synchronization
     from: matter
   - id: matter_wstk_no_leds
     from: matter
@@ -113,9 +122,11 @@ requires:
 config_file:
   - path: ../../../../examples/light-switch-app/light-switch-common/light-switch-app.zap
     directory: common
+  - path: ../../../../provision.mattpconf
+    directory: provision
 
 include:
-  - path: ../../../../examples/light-switch-app/silabs/efr32/include
+  - path: ../../../../examples/light-switch-app/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -123,25 +134,25 @@ include:
       - path: CHIPProjectConfig.h
     directory: include
 
-  - path: ../../../../examples/light-switch-app/silabs/common
+  - path: ../../../../examples/light-switch-app/silabs/include
     file_list:
       - path: BindingHandler.h
       - path: LightSwitchMgr.h
       - path: ShellCommands.h
-    directory: common
+    directory: include
 
 source:
-  - path: ../../../../examples/light-switch-app/silabs/efr32/src/AppTask.cpp
+  - path: ../../../../examples/light-switch-app/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/light-switch-app/silabs/efr32/src/main.cpp
+  - path: ../../../../examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/light-switch-app/silabs/efr32/src/ZclCallbacks.cpp
+  - path: ../../../../examples/light-switch-app/silabs/src/ZclCallbacks.cpp
     directory: src
-  - path: ../../../../examples/light-switch-app/silabs/common/BindingHandler.cpp
+  - path: ../../../../examples/light-switch-app/silabs/src/BindingHandler.cpp
     directory: src
-  - path: ../../../../examples/light-switch-app/silabs/common/LightSwitchMgr.cpp
+  - path: ../../../../examples/light-switch-app/silabs/src/LightSwitchMgr.cpp
     directory: src
-  - path: ../../../../examples/light-switch-app/silabs/common/ShellCommands.cpp
+  - path: ../../../../examples/light-switch-app/silabs/src/ShellCommands.cpp
     directory: src
 
 define:
@@ -177,6 +188,12 @@ configuration:
     value: 1
     condition: [matter_thread_coap_cert_libs]
   - {name: SL_STACK_SIZE, value: '4608'} 
+# Default ICD configurations for light-switch application
+  - {name: SL_ACTIVE_MODE_THRESHOLD, value: '1000'}
+  - {name: SL_ACTIVE_MODE_INTERVAL, value: '60000'}
+  - {name: SL_IDLE_MODE_INTERVAL, value: '3600'}
+  - {name: SL_OT_IDLE_INTERVAL, value: '30000'}
+  - {name: SL_OT_ACTIVE_INTERVAL, value: '500'}
 
 toolchain_settings:
   - option: gcc_c++_compiler_option

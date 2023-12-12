@@ -30,3 +30,34 @@ upgrade:
            - matter_mbedtls
         add:
            - matter_crypto
+  - sdk:
+      id: matter
+      version: "2.2.0"
+    component:
+      - trigger: matter
+        description: >
+          Upgrading project to Matter 2.2.0.
+          !!! WARNING !!!
+          Project upgrade to this version requires manual user actions, see the Release Notes for Matter Extension v2.2.0-1.2.
+          Adding matter_subscription_timeout_resumption and matter_subscription_persistence components.
+        add:
+           - matter_subscription_timeout_resumption
+           - matter_subscription_persistence
+      - trigger: matter_thread_ftd
+        description: >
+          Adding matter_thread_example
+        add:
+           - matter_thread_example
+      - trigger: matter_thread_mtd
+        description: >
+          Adding matter_thread_example
+        add:
+           - matter_thread_example
+      - trigger: matter_basic
+        description: >
+          Renaming matter_basic to matter_basic_information
+        remove:
+           - matter_basic
+        add:
+           - matter_basic_information
+

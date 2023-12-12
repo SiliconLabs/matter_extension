@@ -1,0 +1,18 @@
+id: matter_fw_upgrade_917
+label: matter_fw_upgrade_917
+package: "Matter"
+description: >
+  FW component for 917SoC common Flash
+category: Platform|si91x|Middleware
+quality: production
+component_root_path: "third_party/silabs/wifi_sdk/components/device/silabs/si91x/wireless"
+
+source:
+  - path: "firmware_upgrade/firmware_upgradation.c"
+include:
+- path: firmware_upgrade
+  file_list:
+    - path: "firmware_upgradation.h"
+
+provides:
+  - name: matter_fw_upgrade_917

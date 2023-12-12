@@ -2,6 +2,7 @@
 category: Clusters|Closures
 description: Implementation of the Barrier Control Server Cluster
 id: matter_barrier_control
+package: Matter
 label: Barrier Control Server Cluster
 quality: production
 provides:
@@ -9,7 +10,7 @@ provides:
 source:
   - path: src/app/clusters/barrier-control-server/barrier-control-server.cpp
 include:
-  - path: src/app/clusters/barrier-control-server/
+  - path: src/app/clusters/barrier-control-server
     file_list:
       - path: barrier-control-server.h
 template_contribution:

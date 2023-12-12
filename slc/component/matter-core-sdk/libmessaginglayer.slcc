@@ -1,43 +1,49 @@
 category: Matter|Core
 define:
-- name: CHIP_HAVE_CONFIG_H
-  value: '1'
+-   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
 description: libmessaginglayer
 id: libmessaginglayer
 include:
-- path: examples/platform/silabs
-- path: src
-  file_list:
-  - path: messaging/ExchangeContext.h
-  - path: messaging/ExchangeMgr.h
-  - path: messaging/Flags.h
-  - path: messaging/ExchangeDelegate.h
-  - path: messaging/ReliableMessageContext.h
-  - path: messaging/ApplicationExchangeDispatch.h
-  - path: messaging/ExchangeMessageDispatch.h
-  - path: messaging/ReliableMessageProtocolConfig.h
-  - path: messaging/ReliableMessageMgr.h
-  - path: messaging/ExchangeHolder.h
-  - path: messaging/ErrorCategory.h
-  - path: messaging/EphemeralExchangeDispatch.h
-- path: src/include
-- path: src/lib
-- path: third_party/nlassert/repo/include
-- path: third_party/nlio/repo/include
-- path: zzz_generated/app-common
+-   path: examples/lighting-app/silabs/include
+-   path: examples/platform/silabs
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+-   path: zzz_generated/app-common
+-   path: src/messaging
+    file_list:
+    -   path: ExchangeDelegate.h
+    -   path: ReliableMessageMgr.h
+    -   path: ExchangeMessageDispatch.h
+    -   path: ReliableMessageContext.h
+    -   path: ExchangeContext.h
+    -   path: ErrorCategory.h
+    -   path: Flags.h
+    -   path: ReliableMessageProtocolConfig.h
+    -   path: ApplicationExchangeDispatch.h
+    -   path: ExchangeMgr.h
+    -   path: ExchangeHolder.h
+    -   path: EphemeralExchangeDispatch.h
 label: libmessaginglayer
 package: Matter
 provides:
-- name: matter_libmessaginglayer
+-   name: matter_libmessaginglayer
 quality: production
 source:
-- path: src/messaging/ApplicationExchangeDispatch.cpp
-- path: src/messaging/ErrorCategory.cpp
-- path: src/messaging/ExchangeContext.cpp
-- path: src/messaging/ExchangeMessageDispatch.cpp
-- path: src/messaging/ExchangeMgr.cpp
-- path: src/messaging/ReliableMessageContext.cpp
-- path: src/messaging/ReliableMessageMgr.cpp
-- path: src/messaging/ReliableMessageProtocolConfig.cpp
+-   path: src/messaging/ApplicationExchangeDispatch.cpp
+-   path: src/messaging/ErrorCategory.cpp
+-   path: src/messaging/ExchangeContext.cpp
+-   path: src/messaging/ExchangeMessageDispatch.cpp
+-   path: src/messaging/ExchangeMgr.cpp
+-   path: src/messaging/ReliableMessageContext.cpp
+-   path: src/messaging/ReliableMessageMgr.cpp
+-   path: src/messaging/ReliableMessageProtocolConfig.cpp
 ui_hints:
-  visibility: never
+    visibility: never
