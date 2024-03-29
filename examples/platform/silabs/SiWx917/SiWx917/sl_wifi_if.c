@@ -61,10 +61,19 @@
 #define ADV_MULTIPROBE 1
 #define ADV_SCAN_PERIODICITY 10
 
+#ifdef SIWX_917
+#include "sl_si91x_trng.h"
+#define TRNGKEY_SIZE 4
+#endif
+
 struct wfx_rsi wfx_rsi;
 
 /* Declare a variable to hold the data associated with the created event group. */
 StaticEventGroup_t rsiDriverEventGroup;
+
+// TODO: should be removed once we are getting the press interrupt for button 0 with sleep
+#define BUTTON_PRESSED 1
+bool btn0_pressed = false;
 
 bool hasNotifiedIPV6 = false;
 #if (CHIP_DEVICE_CONFIG_ENABLE_IPV4)
@@ -86,7 +95,7 @@ extern osSemaphoreId_t sl_rs_ble_init_sem;
  * This file implements the interface to the wifi sdk
  */
 
-wfx_wifi_scan_ext_t * temp_reset;
+static wfx_wifi_scan_ext_t temp_reset;
 
 volatile sl_status_t callback_status = SL_STATUS_OK;
 
@@ -124,13 +133,13 @@ int32_t wfx_rsi_get_ap_ext(wfx_wifi_scan_ext_t * extra_info)
     sl_wifi_statistics_t test = { 0 };
     status                    = sl_wifi_get_statistics(SL_WIFI_CLIENT_INTERFACE, &test);
     VERIFY_STATUS_AND_RETURN(status);
-    extra_info->beacon_lost_count = test.beacon_lost_count - temp_reset->beacon_lost_count;
-    extra_info->beacon_rx_count   = test.beacon_rx_count - temp_reset->beacon_rx_count;
-    extra_info->mcast_rx_count    = test.mcast_rx_count - temp_reset->mcast_rx_count;
-    extra_info->mcast_tx_count    = test.mcast_tx_count - temp_reset->mcast_tx_count;
-    extra_info->ucast_rx_count    = test.ucast_rx_count - temp_reset->ucast_rx_count;
-    extra_info->ucast_tx_count    = test.ucast_tx_count - temp_reset->ucast_tx_count;
-    extra_info->overrun_count     = test.overrun_count - temp_reset->overrun_count;
+    extra_info->beacon_lost_count = test.beacon_lost_count - temp_reset.beacon_lost_count;
+    extra_info->beacon_rx_count   = test.beacon_rx_count - temp_reset.beacon_rx_count;
+    extra_info->mcast_rx_count    = test.mcast_rx_count - temp_reset.mcast_rx_count;
+    extra_info->mcast_tx_count    = test.mcast_tx_count - temp_reset.mcast_tx_count;
+    extra_info->ucast_rx_count    = test.ucast_rx_count - temp_reset.ucast_rx_count;
+    extra_info->ucast_tx_count    = test.ucast_tx_count - temp_reset.ucast_tx_count;
+    extra_info->overrun_count     = test.overrun_count - temp_reset.overrun_count;
     return status;
 }
 
@@ -148,13 +157,13 @@ int32_t wfx_rsi_reset_count()
     sl_status_t status        = SL_STATUS_OK;
     status                    = sl_wifi_get_statistics(SL_WIFI_CLIENT_INTERFACE, &test);
     VERIFY_STATUS_AND_RETURN(status);
-    temp_reset->beacon_lost_count = test.beacon_lost_count;
-    temp_reset->beacon_rx_count   = test.beacon_rx_count;
-    temp_reset->mcast_rx_count    = test.mcast_rx_count;
-    temp_reset->mcast_tx_count    = test.mcast_tx_count;
-    temp_reset->ucast_rx_count    = test.ucast_rx_count;
-    temp_reset->ucast_tx_count    = test.ucast_tx_count;
-    temp_reset->overrun_count     = test.overrun_count;
+    temp_reset.beacon_lost_count = test.beacon_lost_count;
+    temp_reset.beacon_rx_count   = test.beacon_rx_count;
+    temp_reset.mcast_rx_count    = test.mcast_rx_count;
+    temp_reset.mcast_tx_count    = test.mcast_tx_count;
+    temp_reset.ucast_rx_count    = test.ucast_rx_count;
+    temp_reset.ucast_tx_count    = test.ucast_tx_count;
+    temp_reset.overrun_count     = test.overrun_count;
     return status;
 }
 
@@ -174,8 +183,6 @@ int32_t wfx_rsi_disconnect()
 sl_status_t join_callback_handler(sl_wifi_event_t event, char * result, uint32_t result_length, void * arg)
 {
     wfx_rsi.dev_state &= ~(WFX_RSI_ST_STA_CONNECTING);
-    temp_reset = (wfx_wifi_scan_ext_t *) malloc(sizeof(wfx_wifi_scan_ext_t));
-    memset(temp_reset, 0, sizeof(wfx_wifi_scan_ext_t));
     if (SL_WIFI_CHECK_IF_EVENT_FAILED(event))
     {
         SILABS_LOG("F: Join Event received with %u bytes payload\n", result_length);
@@ -192,6 +199,7 @@ sl_status_t join_callback_handler(sl_wifi_event_t event, char * result, uint32_t
     /*
      * Join was complete - Do the DHCP
      */
+    memset(&temp_reset, 0, sizeof(wfx_wifi_scan_ext_t));
     SILABS_LOG("join_callback_handler: join completed.");
     SILABS_LOG("%c: Join Event received with %u bytes payload\n", *result, result_length);
     xEventGroupSetBits(wfx_rsi.events, WFX_EVT_STA_CONN);
@@ -254,7 +262,13 @@ void wakeup_source_config(void)
  *********************************************************************/
 void M4_sleep_wakeup() {
   if (wfx_rsi.ta_power_save_done == 1) {
+    // TODO: should be removed once we are getting the press interrupt for button 0 with sleep
+    if (!RSI_NPSSGPIO_GetPin(SL_BUTTON_BTN0_PIN) && !btn0_pressed) {
+      sl_button_on_change(SL_BUTTON_BTN0_NUMBER, BUTTON_PRESSED);
+      btn0_pressed = true;
+    }
     if (RSI_NPSSGPIO_GetPin(SL_BUTTON_BTN0_PIN)) {
+      btn0_pressed = false;
 #ifdef DISPLAY_ENABLED
       // if LCD is enabled, power down the lcd before setting the M4 to sleep
       sl_si91x_hardware_setup();
@@ -405,6 +419,23 @@ static sl_status_t wfx_rsi_init(void)
         SILABS_LOG("sl_wifi_get_mac_address failed: %x", status);
         return status;
     }
+#ifdef SIWX_917
+    uint32_t trngKey[TRNGKEY_SIZE] = { 0x16157E2B, 0xA6D2AE28, 0x8815F7AB, 0x3C4FCF09 };
+
+    // To check the Entropy of TRNG and verify TRNG functioning.
+    status = sl_si91x_trng_entropy();
+    if (status != SL_STATUS_OK) {
+        SILABS_LOG("TRNG Entropy Failed");
+        return status;
+    }
+
+    // Initiate and program the key required for TRNG hardware engine
+    status = sl_si91x_trng_program_key(trngKey, 4);
+    if (status != SL_STATUS_OK) {
+        SILABS_LOG("TRNG Key Programming Failed");
+        return status;
+    }
+#endif
     wfx_rsi.events = xEventGroupCreateStatic(&rsiDriverEventGroup);
     wfx_rsi.dev_state |= WFX_RSI_ST_DEV_READY;
     osSemaphoreRelease(sl_rs_ble_init_sem);

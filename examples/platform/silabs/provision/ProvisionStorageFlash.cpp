@@ -77,8 +77,8 @@ public:
         Add(kUniqueId, kUniqueIdLengthMax, true);
         Add(kDiscriminator, sizeof(uint16_t));
         Add(kSpake2pIterations, sizeof(uint32_t));
-        Add(kSpake2pSalt, kSpake2pSaltLengthMax, true);
-        Add(kSpake2pVerifier, kSpake2pVerifierLengthMax, true);
+        Add(kSpake2pSalt, kSpake2pSaltB64LengthMax, true);
+        Add(kSpake2pVerifier, kSpake2pVerifierB64LengthMax, true);
         Add(kFirmwareInfo, kFirmwareInfoSizeMax, true);
         // Add(kBaseAddress, sizeof(uint32_t));
         Add(kCertificationDeclaration, kCertificationSizeMax, true);

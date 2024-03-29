@@ -1,6 +1,8 @@
 
 category: Clusters|CHIP
-description: Implementation of the OTA Requestor Cluster
+description: >
+  Implementation of the OTA Requestor Cluster.
+  The user has to enable the OTA Requestor Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_ota_requestor
 package: Matter
 label: OTA Requestor Cluster

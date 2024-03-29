@@ -790,6 +790,16 @@
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application for BRD4338A to be used with Wi-Fi SiWx917</description>
 	</demo>
+	<demo name="brd4338a.demo.thermostat_app_siwx917" label="Matter - SoC Thermostat over Wi-Fi">
+		<property key="demos.blurb" value="Matter - SoC Thermostat app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4338a"/>
+		<property key="demos.imageFile" value="demos/BRD4338A/WiFi/SiWx917-thermostat-example.rps"/>
+		<property key="core.readmeFiles" value="slc/sample-app/thermostat/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Thermostat Application for BRD4338A to be used with Wi-Fi SiWx917</description>
+	</demo>
 	<demo name="brd4161a.demo.window_app_thread" label="Matter - SoC Window Covering over Thread">
 		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
 		<property key="core.partCompatibility" value=".*"/>

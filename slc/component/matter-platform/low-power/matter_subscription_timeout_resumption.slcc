@@ -9,7 +9,6 @@ package: "Matter"
 category: Platform|Low-power
 provides:
   - name: matter_subscription_timeout_resumption
-  - name: matter_icd_config
 quality: production
 
 define:

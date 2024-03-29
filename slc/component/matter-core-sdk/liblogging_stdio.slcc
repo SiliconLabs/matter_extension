@@ -12,7 +12,6 @@ include:
 -   path: src
 -   path: src/include
 -   path: src/lib
--   path: zzz_generated/app-common
 -   path: src/platform/logging/impl/stdio
     file_list: []
 label: liblogging_stdio

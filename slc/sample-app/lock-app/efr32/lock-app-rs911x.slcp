@@ -7,16 +7,15 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.0"
+    version: "2.2.1"
 
 component:
   - id: device_init
-  - id: simple_button
-    instance: [btn0, btn1]
-  - id: simple_led
-    instance: [led0, led1]
+  - id: matter_buttons
+    from: matter
   - id: matter_wstk_leds
     from: matter
+    
   - id: matter
     from: matter
   - id: matter_platform_efr32
@@ -106,7 +105,9 @@ component:
 #  - id: matter_qr_code
 #    from: matter
 
-  - id: matter_icd
+  - id: matter_icd_management
+    from: matter
+  - id: matter_subscription_persistence
     from: matter
   - id: matter_subscription_synchronization
     from: matter
@@ -124,12 +125,6 @@ requires:
   - name: matter_drivers_series_2_wifi_rs911x
     condition:
      - device_series_2
-
-config_file:
-  - path: ../../../../examples/lock-app/lock-common/lock-app.zap
-    directory: common
-  - path: ../../../../provision.mattpconf
-    directory: provision
 
 include:
   - path: ../../../../examples/lock-app/silabs/include
@@ -182,8 +177,8 @@ configuration:
   - {name: SL_OT_ACTIVE_INTERVAL, value: '500'}
 
 toolchain_settings:
-  - option: gcc_c++_compiler_option
-    value: -std=gnu++17
+  - option: cxx_standard
+    value: gnu++17
 template_contribution:
   - name: memory_flash_start
     value: 0x0

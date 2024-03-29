@@ -1,6 +1,8 @@
 
 category: Clusters|HVAC
-description: Implementation of the Pump Configuration And Control Client Cluster
+description: >
+  Implementation of the Pump Configuration And Control Client Cluster.
+  The user has to enable the Pump Configuration And Control Client Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_pump_configuration_and_control_client
 package: Matter
 label: Pump Configuration And Control Client Cluster

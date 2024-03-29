@@ -42,7 +42,7 @@ public:
     void OnSubscriptionReportSent(ReadHandler * aReadHandler) final;
     void OnReadHandlerDestroyed(ReadHandler * aReadHandler) override;
 
-    bool IsReportScheduled(ReadHandler * aReadHandler);
+    virtual bool IsReportScheduled(ReadHandler * aReadHandler);
 
     void ReportTimerCallback() override;
 

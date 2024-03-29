@@ -1,6 +1,8 @@
 
 category: Clusters|Appliances
-description: Implementation of the Dishwasher Alarm Server Cluster
+description: >
+  Implementation of the Dishwasher Alarm Server Cluster.
+  The user has to enable the Dishwasher Alarm Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_dishwasher_alarm
 package: Matter
 label: Dishwasher Alarm Server Cluster

@@ -151,10 +151,10 @@ private:
     // spake2p_iterations
     uint32_t _spake2p_iterations = 0;
     // spake2p_salt
-    char _spake2p_salt[kSpake2pSaltLengthMax] = { 0 };
+    char _spake2p_salt[kSpake2pSaltB64LengthMax] = { 0 };
     size_t _spake2p_salt_size = 0;
     // spake2p_verifier
-    char _spake2p_verifier[kSpake2pVerifierLengthMax] = { 0 };
+    char _spake2p_verifier[kSpake2pVerifierB64LengthMax] = { 0 };
     size_t _spake2p_verifier_size = 0;
     // passcode
     uint32_t _passcode = 0;

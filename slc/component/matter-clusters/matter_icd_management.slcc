@@ -1,18 +1,63 @@
 
 category: Clusters|General
-description: Implementation of the Icd Management Server Cluster
+description: >
+  Implementation of the Icd Management Server Cluster. ICD support for Matter end devices.
+  This component enables ultra low power consumption while in idle mode. Polling, wake, 
+  and active time frames can be further manipulated within sl_matter_icd_config.h. This 
+  component requires that the Thread MTD library be used. This component conflicts with
+  matter_subscription_timeout_resumption as it can cause an increase in power consumption 
+  if both are enabled. Components that must be disabled when using a Matter ICD End Device
+  to achieve the most optimial power consumption include: Matter shell, OpenThread CLI, UART, 
+  QR code display, and LCD. The user has to enable the Icd Management Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_icd_management
 package: Matter
 label: Icd Management Server Cluster
 quality: production
 provides:
   - name: matter_icd_management
+define:
+  - name: CHIP_CONFIG_ENABLE_ICD_SERVER
+    value: 1
+  - name: SL_ICD_ENABLED
+    value: 1
+  - name: WIFI_DEBUG_ENABLED
+    value: 1
+    condition: [matter_wifi]
+  - name: LCD_WITH_SLEEP
+    value: 1
+    condition: [matter_lcd]
+config_file:
+  - path: slc/config/sl_matter_icd_config.h
+    file_id: matter_icd_config
 source:
   - path: src/app/clusters/icd-management-server/icd-management-server.cpp
+  - path: src/app/icd/ICDManagementServer.cpp
+  - path: src/app/icd/ICDMonitoringTable.cpp
+  - path: src/app/icd/ICDManager.cpp
 include:
   - path: src/app/clusters/icd-management-server
     file_list:
       - path: icd-management-server.h
+  - path: src/app/icd
+    file_list:
+    - path: ICDManagementServer.h
+    - path: ICDMonitoringTable.h
+    - path: ICDManager.h
+requires:
+  - name: ot_stack_mtd
+    condition: [matter_thread]
+  - name: power_manager
+    condition: [matter_platform_efr32]
+  - name: sleeptimer
+    condition: [matter_platform_efr32]
+recommends:
+  - id: ot_stack_mtd
+conflicts:
+  - name: ot_stack_ftd
+  - name: matter_subscription_timeout_resumption
 template_contribution:
   - name: component_catalog
     value: matter_icd_management
+documentation:
+  docset: matter
+  document: matter-overview-guides/matter-icd

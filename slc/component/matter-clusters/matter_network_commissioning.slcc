@@ -1,6 +1,8 @@
 
 category: Clusters|CHIP
-description: Implementation of the Network Commissioning Cluster
+description: >
+  Implementation of the Network Commissioning Cluster.
+  The user has to enable the Network Commissioning Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_network_commissioning
 package: Matter
 label: Network Commissioning Cluster

@@ -16,14 +16,8 @@
  * the sections of the MSLA applicable to Source Code.
  */
 
-#include <SilabsTestEventTriggerDelegate.h>
-
-// This must correspond to the SILABS_TEST_EVENT_TRIGGER_ENABLE_KEY set at compile time
-constexpr uint8_t kPerfTestTestEventTriggerEnableKey[chip::TestEventTriggerDelegate::kEnableKeyLength] = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55,
-                                                                                          0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb,
-                                                                                          0xcc, 0xdd, 0xee, 0xff };
-constexpr uint32_t EventTriggerPingMagicNumber = 1729;
-constexpr uint32_t kPingDefaultTimeoutMs       = 1000;
+constexpr uint32_t PerformanceTestPingMagicNumber = 1729;
+constexpr uint32_t kPingDefaultTimeoutMs          = 1000;
 
 void RegisterPerfTestCommands();
 
@@ -35,6 +29,7 @@ struct PerfTestCommandData
         chip::NodeId nodeId;
         chip::GroupId groupId;
     };
+    uint16_t length;
     uint32_t seqNum;
     uint16_t count;
     uint32_t timeoutMs;
@@ -60,13 +55,17 @@ public:
 private:
     static MatterPerfTest *globalInstance;
 
-    bool    pingInProgress = false;
+    bool      pingInProgress = false; // Indicates whether the "perf ping" command is in progress
 
-    uint16_t  responsesReceived = 0;
-    uint16_t  requestsSent      = 0;
-    uint16_t  pingCountTotal    = 0;
-    uint32_t  timeoutMs         = kPingDefaultTimeoutMs;
-    uint64_t  pingStartTime     = 0;
+    uint16_t  responsesReceived = 0;  // Number of successfully acknowledged pings
+    uint16_t  requestsSent      = 0;  // Number of pings sent
+    uint16_t  pingCountTotal    = 0;  // Total number of pings to be sent by "perf ping"
+    uint16_t  length            = 0;  // Length of the ping command payload
+    uint32_t  timeoutMs         = kPingDefaultTimeoutMs; // Command timeout
+    uint64_t  pingStartTime     = 0;  // Timestamp for the individual ping in progress
+    uint32_t  minResponseTime   = -1; // Minimum roundtrip time across all pings sent by "perf ping"
+    uint32_t  maxResponseTime   = 0;  // Maximum roundtrip time across all pings sent by "perf ping"
+    uint32_t  totalResponseTime = 0;  // Cumulative roundtrip time across all pings sent by "perf ping"
 
     chip::NodeId nodeId           = chip::kUndefinedNodeId;
     chip::FabricIndex fabricIndex = chip::kUndefinedFabricIndex;
@@ -80,12 +79,12 @@ private:
     }
     chip::Callback::Callback<chip::OnDeviceConnected> _PingPerfTestOnConnnection;
 
-    // Failure callback FindOrEstablishSession()
+    // Failure callback for FindOrEstablishSession()
     void PingPerfTestOnConnnectionFailure(const chip::ScopedNodeId & peerId, CHIP_ERROR error);
     static void sPingPerfTestOnConnnectionFailure(void * context, const chip::ScopedNodeId & peerId, CHIP_ERROR error)
     {
       MatterPerfTest   * _this = static_cast<MatterPerfTest *>(context);
       _this->PingPerfTestOnConnnectionFailure(peerId, error);
     }
-    chip::Callback::Callback<chip::OnDeviceConnectionFailure> _PingPerfTestOnConnnectionFailure; 
+    chip::Callback::Callback<chip::OnDeviceConnectionFailure> _PingPerfTestOnConnnectionFailure;
 };

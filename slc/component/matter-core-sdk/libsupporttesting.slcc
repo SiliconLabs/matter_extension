@@ -15,7 +15,6 @@ include:
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
 -   path: third_party/nlunit-test/repo/src
--   path: zzz_generated/app-common
 -   path: src/lib/support
     file_list:
     -   path: StringSplitter.h

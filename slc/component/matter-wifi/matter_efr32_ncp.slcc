@@ -21,9 +21,7 @@ define:
   - name: SL_COMPONENT_CATALOG_PRESENT
   - name: CONFIG_ENABLE_UART
   - name: CONFIG_USE_EXTERNAL_FLASH
-    unless: [brd4186c]
-  - name: CONFIG_USE_EXTERNAL_FLASH
-    unless: [brd4187c]    
+    unless: [brd4186c, brd4187c]
   - name: EFR32_SERIES2_CONFIG4_MICRO
     condition: [brd4186c]
   - name: EFR32_SERIES2_CONFIG4_MICRO
@@ -93,19 +91,19 @@ define:
   - name: SL_POWER_MANAGER_CONFIG_VOLTAGE_SCALING_FAST_WAKEUP
     value: "1"
 provides:
-- name: matter_efr32_ncp
+  - name: matter_efr32_ncp
 include:
-- path: src/include/platform
-- path: src/platform/silabs/efr32
-- path: src/platform/silabs/efr32/wifi
-  file_list:
-  - path: wfx_host_events.h
-  - path: wfx_msgs.h
-  - path: dhcp_client.h
-  - path: wifi_config.h
-  - path: ethernetif.h
+  - path: src/include/platform
+  - path: src/platform/silabs/efr32
+  - path: src/platform/silabs/efr32/wifi
+    file_list:
+      - path: wfx_host_events.h
+      - path: wfx_msgs.h
+      - path: dhcp_client.h
+      - path: wifi_config.h
+      - path: ethernetif.h
 source:
-- path: src/platform/silabs/efr32/wifi/dhcp_client.cpp
-- path: src/platform/silabs/efr32/wifi/ethernetif.cpp
-- path: src/platform/silabs/efr32/wifi/lwip_netif.cpp
-- path: src/platform/silabs/efr32/wifi/wfx_notify.cpp
+  - path: src/platform/silabs/efr32/wifi/dhcp_client.cpp
+  - path: src/platform/silabs/efr32/wifi/ethernetif.cpp
+  - path: src/platform/silabs/efr32/wifi/lwip_netif.cpp
+  - path: src/platform/silabs/efr32/wifi/wfx_notify.cpp

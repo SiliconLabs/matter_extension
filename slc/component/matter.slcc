@@ -77,7 +77,7 @@ requires:
   - name: matter_libsystemlayer
   - name: matter_libtransportlayer
   - name: configuration_over_swo
-  - name: matter_ot_thirdparty_override
+  - name: matter_ot_mbedtls_override
   - name: matter_syscall_stubs
   - name: matter_nlassert
   - name: matter_nlio
@@ -88,4 +88,4 @@ requires:
 
 recommends:
   - id: matter_configuration_over_swo
-  - id: matter_ot_thirdparty_override
+  - id: matter_ot_mbedtls_override

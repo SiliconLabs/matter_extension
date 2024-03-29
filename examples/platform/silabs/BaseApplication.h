@@ -105,11 +105,18 @@ public:
      */
     static void PostEvent(const AppEvent * event);
 
+    /**
+     * @brief Overridable function used to update display on button press
+     */
+    virtual void UpdateDisplay();
+
 #ifdef DISPLAY_ENABLED
     /**
      * @brief Return LCD object
      */
     static SilabsLCD & GetLCD(void);
+
+    static void UpdateLCDStatusScreen(void);
 #endif
 
     /**

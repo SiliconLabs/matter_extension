@@ -14,7 +14,6 @@ include:
 -   path: src/lib
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
--   path: zzz_generated/app-common
 label: silabs_lighting_codegen
 package: Matter
 provides:

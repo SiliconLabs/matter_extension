@@ -10,7 +10,6 @@ include:
 -   path: src/include
 -   path: src/lib
 -   path: third_party/nlassert/repo/include
--   path: zzz_generated/app-common
 -   path: src/include/platform
     file_list:
     -   path: RuntimeOptionsProvider.h

@@ -7,19 +7,17 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.0"
+    version: "2.2.1"
   - id: wiseconnect3_sdk
-    version: "3.1.1"
+    version: "3.2.0"
 
 component:
   - id: device_init
-  - id: simple_button
-    instance: [btn0, btn1]
-  - id: simple_led
-    instance: [led0, led1]
-
+  - id: matter_buttons
+    from: matter
   - id: matter_wstk_leds
     from: matter
+    
   - id: matter
     from: matter
   - id: matter_platform_efr32
@@ -108,6 +106,8 @@ component:
 
   - id: matter_subscription_timeout_resumption
     from: matter
+  - id: matter_subscription_persistence
+    from: matter
 
   - id: efx_ncp_custom_host_mcu
     from: matter
@@ -144,12 +144,9 @@ requires:
   - name: matter_drivers_series_1_wifi_rs911x
     condition:
      - device_series_1
-
-config_file:
-  - path: ../../../../silabs_examples/onoff-plug-app/onoff-plug-common/onoff-plug-app.zap
-    directory: common
-  - path: ../../../../provision.mattpconf
-    directory: provision
+  - name: matter_drivers_series_2_wifi_rs911x
+    condition:
+     - device_series_2
 
 include:
   - path: ../../../../silabs_examples/onoff-plug-app/include
@@ -196,8 +193,8 @@ configuration:
   - {name: SL_STACK_SIZE, value: '4608'} 
 
 toolchain_settings:
-  - option: gcc_c++_compiler_option
-    value: -std=gnu++17
+  - option: cxx_standard
+    value: gnu++17
 template_contribution:
   - name: memory_flash_start
     value: 0x0

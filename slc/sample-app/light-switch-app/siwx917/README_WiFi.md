@@ -15,11 +15,11 @@ Rendez-vous procedure.
 The light switch example is intended to serve both as a means to explore the
 workings of Matter as well as a template for creating real products based on the
 Silicon Labs platform. **This example is defaulted to use full ICD functionality
-out-of-the-box and therefore has the matter_icd component enabled.**
+out-of-the-box and therefore has the matter_icd_management component enabled.**
 
 For more general information on running matter applications and pre-requisites please look at online 
 documentation for Matter available on docs.silabs.com. Follow Wi-Fi instructions depending on the example you are running.
-[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.1.1/matter-wifi)
+[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.2.0/matter-wifi)
 
 ## Light Switch Specific Interface
 

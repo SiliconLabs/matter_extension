@@ -1,6 +1,8 @@
 
 category: Clusters|Lighting
-description: Implementation of the Color Control Server Cluster
+description: >
+  Implementation of the Color Control Server Cluster.
+  The user has to enable the Color Control Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_color_control
 package: Matter
 label: Color Control Server Cluster

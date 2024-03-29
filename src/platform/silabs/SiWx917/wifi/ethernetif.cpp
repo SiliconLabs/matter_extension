@@ -218,7 +218,7 @@ static err_t low_level_output(struct netif * netif, struct pbuf * p)
     }
 
     /* Confirm if packet is allocated */
-    status = sl_si91x_allocate_command_buffer(&buffer, (void **) &packet, sizeof(sl_si91x_packet_t) + framelength,
+    status = sl_si91x_allocate_data_buffer(&buffer, (void **) &packet, sizeof(sl_si91x_packet_t) + framelength,
                                               SL_WIFI_ALLOCATE_COMMAND_BUFFER_WAIT_TIME_MS);
     VERIFY_STATUS_AND_RETURN(status);
     if (packet == NULL)
@@ -258,7 +258,7 @@ static err_t low_level_output(struct netif * netif, struct pbuf * p)
 #endif
     packet->length  = framelength & 0xFFF;
     packet->command = RSI_SEND_RAW_DATA;
-    if (sl_si91x_driver_send_data_packet(SI91X_WLAN_CMD_QUEUE, buffer, 1000))
+    if (sl_si91x_driver_send_data_packet(SI91X_SOCKET_DATA_QUEUE, buffer, 1000))
     {
         SILABS_LOG("*ERR*EN-RSI:Send fail");
         xSemaphoreGive(ethout_sem);

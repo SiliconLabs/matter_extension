@@ -18,7 +18,6 @@ include:
 -   path: src/platform/silabs/efr32
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
--   path: zzz_generated/app-common
 -   path: src/include/platform
     file_list:
     -   path: RuntimeOptionsProvider.h

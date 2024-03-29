@@ -56,7 +56,7 @@ exit:
 CHIP_ERROR Storage::GetSpake2pSalt(MutableByteSpan & value)
 {
     // Base64
-    char salt_b64[kSpake2pSaltLengthMax + 1] = { 0 };
+    char salt_b64[kSpake2pSaltB64LengthMax + 1] = { 0 };
     size_t size_b64                       = 0;
     ReturnErrorOnFailure(this->GetSpake2pSalt(salt_b64, sizeof(salt_b64), size_b64));
 
@@ -74,7 +74,7 @@ CHIP_ERROR Storage::GetSpake2pSalt(MutableByteSpan & value)
 CHIP_ERROR Storage::GetSpake2pVerifier(MutableByteSpan & out_value, size_t & out_size)
 {
     // Base64
-    char verifier_b64[kSpake2pVerifierLengthMax + 1] = { 0 };
+    char verifier_b64[kSpake2pVerifierB64LengthMax + 1] = { 0 };
     size_t size_b64                                     = 0;
     ReturnErrorOnFailure(this->GetSpake2pVerifier(verifier_b64, sizeof(verifier_b64), size_b64));
 

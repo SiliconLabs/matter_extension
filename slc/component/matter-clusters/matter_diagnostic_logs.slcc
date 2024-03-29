@@ -1,6 +1,8 @@
 
 category: Clusters|CHIP
-description: Implementation of the Diagnostic Logs Server Cluster
+description: >
+  Implementation of the Diagnostic Logs Server Cluster.
+  The user has to enable the Diagnostic Logs Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_diagnostic_logs
 package: Matter
 label: Diagnostic Logs Server Cluster

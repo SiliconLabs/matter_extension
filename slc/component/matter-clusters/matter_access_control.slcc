@@ -1,6 +1,8 @@
 
 category: Clusters|General
-description: Implementation of the Access Control Server Cluster
+description: >
+  Implementation of the Access Control Server Cluster.
+  The user has to enable the Access Control Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_access_control
 package: Matter
 label: Access Control Server Cluster

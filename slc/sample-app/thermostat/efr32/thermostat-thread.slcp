@@ -7,22 +7,20 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.0"
+    version: "2.2.1"
 
 component:
   - id: device_init
-  - id: simple_button
-    instance: [btn0, btn1]
-  - id: simple_led
-    instance: [led0, led1]
+  - id: matter_buttons
+    from: matter
+  - id: matter_wstk_leds
+    from: matter
 
   - id: uartdrv_usart
     instance: [vcom]
   - id: i2cspm
     instance: [sensor]
 
-  - id: matter_wstk_leds
-    from: matter
 
   - id: matter
     from: matter
@@ -30,9 +28,8 @@ component:
     from: matter
   - id: matter_ble
     from: matter
-  - id: matter_thread_ftd
-    from: matter
-  - id: matter_thread_example
+  - id: ot_stack_ftd
+  - id: matter_thread
     from: matter
   - id: rail_util_pti
   - id: matter_ota_support
@@ -115,6 +112,8 @@ component:
 
   - id: matter_subscription_timeout_resumption
     from: matter
+  - id: matter_subscription_persistence
+    from: matter
 
 requires:
 # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
@@ -125,12 +124,6 @@ requires:
   - name: matter_drivers_series_2
     condition:
      - device_series_2
-
-config_file:
-  - path: ../../../../examples/thermostat/thermostat-common/thermostat.zap
-    directory: common
-  - path: ../../../../provision.mattpconf
-    directory: provision
 
 include:
   - path: ../../../../examples/thermostat/silabs/include
@@ -189,8 +182,8 @@ configuration:
   - {name: SL_STACK_SIZE, value: '4608'} 
 
 toolchain_settings:
-  - option: gcc_c++_compiler_option
-    value: -std=gnu++17
+  - option: cxx_standard
+    value: gnu++17
 template_contribution:
   - name: memory_flash_start
     value: 0x0

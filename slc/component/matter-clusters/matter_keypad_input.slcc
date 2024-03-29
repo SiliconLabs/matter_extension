@@ -1,6 +1,8 @@
 
 category: Clusters|Media
-description: Implementation of the Keypad Input Server Cluster
+description: >
+  Implementation of the Keypad Input Server Cluster.
+  The user has to enable the Keypad Input Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_keypad_input
 package: Matter
 label: Keypad Input Server Cluster

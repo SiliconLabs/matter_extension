@@ -1,6 +1,8 @@
 
 category: Clusters|General
-description: Implementation of the Bindings Cluster
+description: >
+  Implementation of the Bindings Cluster.
+  The user has to enable the Bindings Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_bindings
 package: Matter
 label: Bindings Cluster

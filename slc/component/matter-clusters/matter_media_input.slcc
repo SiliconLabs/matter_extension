@@ -1,6 +1,8 @@
 
 category: Clusters|Media
-description: Implementation of the Media Input Server Cluster
+description: >
+  Implementation of the Media Input Server Cluster.
+  The user has to enable the Media Input Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_media_input
 package: Matter
 label: Media Input Server Cluster

@@ -1,12 +1,16 @@
 id: matter_provision
-label: Matter Provisioning
-description: Enables Matter Provisioning
+label: Attestation Certificate provisioning configuration
+description: Configuration of the Attestation Certificate provisioning. Set ENABLE_EXAMPLE_CREDENTIALS in this component's configuration to select certificate provisioning options.
 package: "Matter"
 category: Platform|Security
 quality: production
 provides:
   - name: matter_provision
 
+config_file:
+  - path: slc/config/sl_matter_provision_config.h
+    file_id: matter_provision_config
+    
 include:
 - path: examples/platform/silabs/provision
   file_list:
@@ -18,6 +22,7 @@ include:
   - path: AttestationKey.h
   - path: ProvisionChannel.h
   - path: AttestationKeyPSA.h
+  - path: AttestationKeyMbed.h
   - path: ProvisionStorageDefault.h
 
 requires:
@@ -36,7 +41,3 @@ source:
     condition: [matter_platform_siwx917]
   - path: examples/platform/silabs/provision/ProvisionStorageDefault.cpp
   - path: examples/platform/silabs/provision/ProvisionManagerDefault.cpp
-
-define:
-  - name: CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS
-    value: 1

@@ -2,7 +2,9 @@
 #include <sl_iostream_rtt.h>
 #include <sl_iostream_init_instances.h>
 // #include <hardware/board/inc/sl_board_control.h>
+#ifndef SIWX_917
 #include "em_chip.h"
+#endif // SIWX_917
 
 namespace chip {
 namespace DeviceLayer {
@@ -11,7 +13,9 @@ namespace Provision {
 
 CHIP_ERROR RttStreamChannel::Init()
 {
+#ifndef SIWX_917
     CHIP_Init();
+#endif
     sl_iostream_rtt_init();
     return CHIP_NO_ERROR;
 }

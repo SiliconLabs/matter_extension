@@ -1,6 +1,8 @@
 
 category: Clusters|General
-description: Implementation of the Software Diagnostics Server Cluster
+description: >
+  Implementation of the Software Diagnostics Server Cluster.
+  The user has to enable the Software Diagnostics Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_software_diagnostics
 package: Matter
 label: Software Diagnostics Server Cluster

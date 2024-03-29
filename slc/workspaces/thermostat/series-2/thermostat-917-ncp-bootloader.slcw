@@ -4,7 +4,7 @@ description: Matter workspace container both a Matter bootloader and Thermostat 
 project:
   - path: ../../../sample-app/thermostat/efr32/thermostat-917-ncp.slcp
     id: application
-    output: thermostat-917-ncp-bootloader
+    output: thermostat-917-ncp
   - path: ../../../sample-app/bootloaders/bootloader-storage-internal-single-series-2/bootloader-storage-internal-single-series-2.slcp
     id: bootloader
     output: matter-bootloader

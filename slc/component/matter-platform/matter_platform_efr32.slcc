@@ -35,6 +35,7 @@ source:
 - path: examples/platform/silabs/heap_4_silabs.c
 - path: examples/platform/silabs/MatterConfig.cpp
 - path: examples/platform/silabs/SoftwareFaultReports.cpp
+- path: examples/platform/silabs/LEDWidget.cpp
 
 toolchain_settings:
 - option: gcc_linker_option

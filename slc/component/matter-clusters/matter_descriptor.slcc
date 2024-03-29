@@ -1,6 +1,8 @@
 
 category: Clusters|General
-description: Implementation of the Descriptor Cluster
+description: >
+  Implementation of the Descriptor Cluster.
+  The user has to enable the Descriptor Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_descriptor
 package: Matter
 label: Descriptor Cluster

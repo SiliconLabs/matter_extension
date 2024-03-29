@@ -9,6 +9,8 @@ provides:
 - name: siwx917_ncp_extension
 requires:
 - name: rs911x_ncp_common
+- name: wiseconnect3_common
+- name: sl_si91x_spi_bus
 source:
 - path: examples/platform/silabs/efr32/rs911x/sl_wifi_if.c
 - path: examples/platform/silabs/efr32/rs911x/hal/sl_si91x_ncp_utility.c

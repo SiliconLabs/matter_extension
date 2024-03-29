@@ -1,6 +1,8 @@
 
 category: Clusters|Media
-description: Implementation of the Application Basic Server Cluster
+description: >
+  Implementation of the Application Basic Server Cluster.
+  The user has to enable the Application Basic Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_application_basic
 package: Matter
 label: Application Basic Server Cluster

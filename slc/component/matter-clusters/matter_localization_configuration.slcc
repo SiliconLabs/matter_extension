@@ -1,6 +1,8 @@
 
 category: Clusters|General
-description: Implementation of the Localization Configuration Server Cluster
+description: >
+  Implementation of the Localization Configuration Server Cluster.
+  The user has to enable the Localization Configuration Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_localization_configuration
 package: Matter
 label: Localization Configuration Server Cluster

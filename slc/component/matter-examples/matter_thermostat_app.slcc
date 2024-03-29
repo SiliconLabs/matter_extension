@@ -7,6 +7,13 @@ id: matter_thermostat_app
 quality: production
 provides:
   - name: matter_thermostat_app
+
+config_file:
+  - path: examples/thermostat/thermostat-common/thermostat.zap
+    directory: common
+  - path: provision.mattpconf
+    directory: provision
+
 define:
   - name: IS_DEMO_THERMOSTAT
     value: "1"

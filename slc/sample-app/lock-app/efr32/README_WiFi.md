@@ -17,7 +17,7 @@ Silicon Labs platform.
 
 For more general information on running matter applications and pre-requisites please look at online 
 documentation for Matter available on docs.silabs.com. Follow Wi-Fi instructions depending on the example you are running.
-[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.1.1/matter-wifi)
+[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.2.0/matter-wifi)
 
 ## Lock Application User Interface
 
@@ -41,15 +41,28 @@ Log output example:
 
 **LED 0** 
 
-Shows the overall state of the device and its connectivity. The following states are possible:
+-   **ICD Configuration (Default)** - LED is only active under two circumstances:
 
--   _Short Flash On (50 ms on/950 ms off)_ ; The device is in the unprovisioned (unpaired) state and is waiting for a commissioning application to connect.
+    1. Factory reset sequence - LED will blink when initiated upon press and hold of
+    Button 0 after 3 seconds
+    2. An Identify command was received
 
--   _Rapid Even Flashing_ ; (100 ms on/100 ms off)_ &mdash; The device is in the unprovisioned state and a commissioning application is connected through Bluetooth LE.
+-   **Non-ICD Configuration** - shows the overall state of the device and its connectivity. The
+    following states are possible:
 
--   _Short Flash Off_ ; (950ms on/50ms off)_ &mdash; The device is fully provisioned, but does not yet have full service connectivity.
+    - *Short Flash On* (50 ms on/950 ms off): The device is in the
+    unprovisioned (unpaired) state and is waiting for a commissioning
+    application to connect.
 
--   _Solid On_ ; The device is fully provisioned and has full service connectivity.
+    - *Rapid Even Flashing* (100 ms on/100 ms off): The device is in the
+    unprovisioned state and a commissioning application is connected through
+    Bluetooth LE.
+
+    - *Short Flash Off* (950ms on/50ms off): The device is fully
+    provisioned, but does not yet have full network or service
+    connectivity.
+
+    - *Solid On*: The device is fully provisioned and has full service connectivity.
 
 **LED 1** 
 
@@ -73,9 +86,9 @@ After 15 minutes, the advertisement stops. In addition, this button should also 
 
 ## Provision and Control
 
-You can provision and control the Matter device using the python controller, Chip tool standalone, Android, iOS app or the Matter Hub provided by Silicon Labs. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.1.1/matter-thread/raspi-img)
+You can provision and control the Matter device using the python controller, Chip tool standalone, Android, iOS app or the Matter Hub provided by Silicon Labs. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.2.0/matter-thread/raspi-img)
 
-The pre-built chip-tool instance ships with the Matter Hub image which is available from Silicon Labs here: [Silicon Labs Matter Hub](https://www.silabs.com/documents/public/software/SilabsMatterPi_2.1.0-1.1.zip)
+The pre-built chip-tool instance ships with the Matter Hub image which is available from Silicon Labs here: [Silicon Labs Matter Hub](https://www.silabs.com/documents/public/software/SilabsMatterPi_2.2.0-1.2-extension.zip)
     
 More information on using the chip-tool directly can be found here: [CHIPTool](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
 

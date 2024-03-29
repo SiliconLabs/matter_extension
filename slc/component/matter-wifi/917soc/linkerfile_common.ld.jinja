@@ -40,7 +40,7 @@ SECTIONS
 	{
 		KEEP(*(.isr_vector))
      	KEEP(*(.reset_handler))
-		*(EXCLUDE_FILE(*sl_si91x_bus.o *sl_si91x_driver.o *sli_si91x_multithreaded.o *rsi_hal_mcu_m4_ram.o *rsi_deepsleep_soc.o *croutine.o *event_groups.o *list.o *queue.o *stream_buffer.o *tasks.o *timers.o *cmsis_os2.o *freertos_umm_malloc_host.o *port.o *heap_*.o) .text*)
+		*(EXCLUDE_FILE(*sl_si91x_bus.o *sl_si91x_driver.o *sli_si91x_multithreaded.o *rsi_hal_mcu_m4_ram.o *rsi_deepsleep_soc.o *croutine.o *event_groups.o *list.o *queue.o *stream_buffer.o *tasks.o *timers.o *cmsis_os2.o *freertos_umm_malloc_host.o *malloc_buffers.o *sl_rsi_utility.o *port.o *heap_*.o) .text*)
 		
     /* .ctors */
     *crtbegin.o(.ctors)
@@ -131,7 +131,7 @@ SECTIONS
 		*sl_si91x_driver.o(.text*)
 		*sli_si91x_multithreaded.o(.text*)
 		*rsi_hal_mcu_m4_ram.o(.text*)
-  	*rsi_deepsleep_soc.o(.text*)
+  	    *rsi_deepsleep_soc.o(.text*)
 		*croutine.o(.text*)
 		*event_groups.o(.text*)
 		*list.o(.text*)
@@ -141,6 +141,8 @@ SECTIONS
 		*tasks.o(.text*)
 		*timers.o(.text*)
 		*freertos_umm_malloc_host.o(.text*)
+		*malloc_buffers.o(.text*)
+		*sl_rsi_utility.o(.text*)
 		*port.o(.text*)
 		*heap_*.o(.text*)
 
@@ -222,8 +224,8 @@ SECTIONS
   } > ram
   
 	__heap_size = __HeapLimit - __HeapBase;
-  __ram_end__ = 0x400 + 0x4e200;
-  __main_flash_end__ = 0x8202000 + 0x200000;
+  __ram_end__ = 0x400 + 0x4fc00;
+  __main_flash_end__ = 0x8202000 + 0x1fe000;
   
 	   /* This is where we handle flash storage blocks. We use dummy sections for finding the configured
    * block sizes and then "place" them at the end of flash when the size is known. */
@@ -247,6 +249,6 @@ SECTIONS
   linker_storage_size = SIZEOF(.internal_storage);
   ASSERT((linker_storage_begin >= (__etext + SIZEOF(.data))), "FLASH memory overflowed !")
 
-  app_flash_end = 0x8202000 + 0x200000;
+  app_flash_end = 0x8202000 + 0x1fe000;
   ASSERT( (linker_nvm_begin + SIZEOF(.nvm)) <= app_flash_end, "NVM3 is excessing the flash size !")
 }

@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.0"
+    version: "2.2.1"
   - id: wiseconnect3_sdk
-    version: "3.1.1"
+    version: "3.2.0"
 
 component:
 
@@ -19,7 +19,7 @@ component:
     from: matter
   - id: matter_wifi_ble
     from: matter
-  - id: matter_mbedtls_siwx917
+  - id: matter_crypto_tinycrypt_siwx917
     from: matter
   - id: matter_fw_upgrade_917
     from: matter
@@ -28,7 +28,9 @@ component:
 
   - id: matter_wifi
     from: matter
-    
+ 
+  - id: matter_light_switch
+    from: matter      
   - id: app_common
     from: matter
 
@@ -84,7 +86,11 @@ component:
   - id: matter_configuration_over_swo
     from: matter
   - id: segger_rtt
-  - id: matter_subscription_timeout_resumption
+  - id: matter_icd_management
+    from: matter
+  - id: matter_subscription_persistence
+    from: matter
+  - id: matter_subscription_synchronization
     from: matter
   - id: toolchain_gcc_common
     from: matter
@@ -140,11 +146,6 @@ requires:
   - name: matter_qr_code
     condition: [brd4338a]
 
-config_file:
-  - path: ../../../../examples/light-switch-app/light-switch-common/light-switch-app.zap
-    directory: common
-  - path: ../../../../provision.mattpconf
-    directory: provision
 
 include:
   - path: ../../../../examples/light-switch-app/silabs/include
@@ -194,8 +195,8 @@ configuration:
   - {name: SL_IDLE_MODE_INTERVAL, value: '3600'}
   
 toolchain_settings:
-  - option: gcc_c++_compiler_option
-    value: -std=gnu++17
+  - option: cxx_standard
+    value: gnu++17
   - option: nano_c_libs
     value: enabled
 template_contribution:

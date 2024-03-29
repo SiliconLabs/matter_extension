@@ -1,17 +1,34 @@
 id: matter_wstk_leds
 label: WSTK LED Support
+package: Matter
 description: WSTK LED Support for Matter applications
-package: "Matter"
 category: Platform
 quality: production
-
 provides:
   - name: matter_wstk_leds
-include:
-  - path: examples/platform/silabs
+requires:
+# This should cover all supported boards that use LEDs
+  - name: simple_led_recommended_instance
+    condition:
+      - device_family_efr32mg12
+  - name: simple_led_recommended_instance
+    condition:
+      - device_family_efr32mg24
+  - name: simple_led_recommended_instance
+    condition:
+      - brd2704a
 
-source:
-  - path: examples/platform/silabs/LEDWidget.cpp
 define:
+# This should cover all supported boards that use LEDs
   - name: ENABLE_WSTK_LEDS
     value: "1"
+    condition:
+      - device_family_efr32mg24
+  - name: ENABLE_WSTK_LEDS
+    value: "1"
+    condition:
+      - device_family_efr32mg12
+  - name: ENABLE_WSTK_LEDS
+    value: "1"
+    condition:
+      - brd2704a

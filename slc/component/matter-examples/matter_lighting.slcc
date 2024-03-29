@@ -7,6 +7,17 @@ id: matter_lighting
 quality: production
 provides:
   - name: matter_lighting
+
+config_file:
+  - path: examples/lighting-app/silabs/data_model/lighting-wifi-app.zap
+    directory: common
+    condition: [matter_wifi]
+  - path: examples/lighting-app/silabs/data_model/lighting-thread-app.zap
+    directory: common
+    condition: [matter_thread]
+  - path: provision.mattpconf
+    directory: provision
+
 define:
   - name: IS_DEMO_LIGHT
     value: "1"

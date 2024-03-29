@@ -15,11 +15,11 @@ information for the BLE connection and starting the Rendez-vous procedure.
 The lock example is intended to serve both as a means to explore the
 workings of Matter as well as a template for creating real products based on the
 Silicon Labs platform. **This example is defaulted to use full ICD functionality
-out-of-the-box and therefore has the matter_icd component enabled.**
+out-of-the-box and therefore has the matter_icd_management component enabled.**
 
 For more general information on running matter applications and pre-requisites please look at online 
 documentation for Matter available on docs.silabs.com. Follow Thread demo instructions depending on the example you are running.
-[Demo instructions for Thread](https://docs.silabs.com/matter/2.1.1/matter-thread)
+[Demo instructions for Thread](https://docs.silabs.com/matter/2.2.0/matter-thread)
 
 ## Lock Application User Interface
 
@@ -43,15 +43,29 @@ Log output example:
 
 **LED 0** 
 
-Shows the overall state of the device and its connectivity. The following states are possible:
+-   **ICD Configuration (Default)** - LED is only active under two circumstances:
 
--   _Short Flash On (50 ms on/950 ms off)_ ; The device is in the unprovisioned (unpaired) state and is waiting for a commissioning application to connect.
+    1. Factory reset sequence - LED will blink when initiated upon press and hold of
+    Button 0 after 3 seconds
+    2. An Identify command was received
 
--   _Rapid Even Flashing_ ; (100 ms on/100 ms off)_ &mdash; The device is in the unprovisioned state and a commissioning application is connected through Bluetooth LE.
+-   **Non-ICD Configuration** - shows the overall state of the device and its connectivity. The
+    following states are possible:
 
--   _Short Flash Off_ ; (950ms on/50ms off)_ &mdash; The device is fully provisioned, but does not yet have full Thread network or service connectivity.
+    - *Short Flash On* (50 ms on/950 ms off): The device is in the
+    unprovisioned (unpaired) state and is waiting for a commissioning
+    application to connect.
 
--   _Solid On_ ; The device is fully provisioned and has full Thread network and service connectivity.
+    - *Rapid Even Flashing* (100 ms on/100 ms off): The device is in the
+    unprovisioned state and a commissioning application is connected through
+    Bluetooth LE.
+
+    - *Short Flash Off* (950ms on/50ms off): The device is fully
+    provisioned, but does not yet have full Thread network or service
+    connectivity.
+
+    - *Solid On*: The device is fully provisioned and has full Thread
+    network and service connectivity.
 
 **LED 1** 
 
@@ -85,9 +99,9 @@ If LEDs are supported by the board but not enabled in a project they can be enab
 
 ## Provision and Control
 
-You can provision and control the Matter device using the python controller, Chip tool standalone, Android, iOS app or the Matter Hub provided by Silicon Labs. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.1.1/matter-thread/raspi-img)
+You can provision and control the Matter device using the python controller, Chip tool standalone, Android, iOS app or the Matter Hub provided by Silicon Labs. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.2.0/matter-thread/raspi-img)
 
-The pre-built chip-tool instance ships with the Matter Hub image which is available from Silicon Labs here: [Silicon Labs Matter Hub](https://www.silabs.com/documents/public/software/SilabsMatterPi_2.1.0-1.1.zip)
+The pre-built chip-tool instance ships with the Matter Hub image which is available from Silicon Labs here: [Silicon Labs Matter Hub](https://www.silabs.com/documents/public/software/SilabsMatterPi_2.2.0-1.2-extension.zip)
     
 More information on using the chip-tool directly can be found here: [CHIPTool](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
 

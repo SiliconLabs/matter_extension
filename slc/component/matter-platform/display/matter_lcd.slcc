@@ -9,7 +9,6 @@ requires:
   - name: matter_platform_efr32
   - name: matter_uart
   - name: glib
-  - name: memlcd_usart
 provides:
   - name: matter_lcd
 conflicts:
@@ -42,3 +41,26 @@ source:
       - matter_thermostat_app
 define:
   - name: DISPLAY_ENABLED
+  - name: MEMLCD # Makes errors go away in sl_memlcd.h
+
+# List all boards that don't have LCD here
+# memlcd_custom points to stubbed out Display fuctions
+recommends:
+  - id: memlcd_custom
+    condition: 
+      - brd4166a
+  - id: memlcd_custom
+    condition: 
+      - brd2703a
+  - id: memlcd_custom
+    condition: 
+      - brd2704a
+  - id: memlcd_custom
+    condition: 
+      - brd2601b
+  - id: memlcd_custom
+    condition: 
+      - brd4319a
+  - id: memlcd_custom
+    condition: 
+      - brd4337a

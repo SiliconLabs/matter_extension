@@ -4,7 +4,7 @@ description: Matter workspace container both a Matter bootloader and Lighting ov
 project:
   - path: ../../../sample-app/sensor-app/efr32/sensor-app-wf200.slcp
     id: application
-    output: sensor-app-wf200-bootloader
+    output: sensor-app-wf200
   - path: ../../../sample-app/bootloaders/bootloader-storage-external-single-series-1/bootloader-storage-external-single-series-1.slcp
     id: bootloader
     output: matter-bootloader

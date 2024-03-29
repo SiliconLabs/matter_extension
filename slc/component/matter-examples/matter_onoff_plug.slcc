@@ -7,5 +7,12 @@ id: matter_onoff_plug
 quality: production
 provides:
   - name: matter_onoff_plug
+
+config_file:
+  - path: silabs_examples/onoff-plug-app/onoff-plug-common/onoff-plug-app.zap
+    directory: common
+  - path: provision.mattpconf
+    directory: provision
+
 ui_hints:
   visibility: never

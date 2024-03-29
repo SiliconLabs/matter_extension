@@ -1,6 +1,8 @@
 
 category: Clusters|Appliances
-description: Implementation of the Temperature Control Server Cluster
+description: >
+  Implementation of the Temperature Control Server Cluster.
+  The user has to enable the Temperature Control Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_temperature_control
 package: Matter
 label: Temperature Control Server Cluster

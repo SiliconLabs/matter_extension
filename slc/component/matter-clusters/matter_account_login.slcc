@@ -1,6 +1,8 @@
 
 category: Clusters|Media
-description: Implementation of the Account Login Server Cluster
+description: >
+  Implementation of the Account Login Server Cluster.
+  The user has to enable the Account Login Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_account_login
 package: Matter
 label: Account Login Server Cluster

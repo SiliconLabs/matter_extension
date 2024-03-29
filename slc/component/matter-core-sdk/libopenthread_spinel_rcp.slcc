@@ -25,7 +25,6 @@ include:
 -   path: src
 -   path: src/include
 -   path: src/lib
--   path: zzz_generated/app-common
 label: libopenthread_spinel_rcp
 package: Matter
 provides:

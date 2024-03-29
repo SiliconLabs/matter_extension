@@ -41,7 +41,8 @@
  * @param[in] type
  *   Valid values are: 0 - HTTPGET, 1 - HTTPPOST
  * @param[in] flags 
- *   Select version and security: \n 
+ *   Select version and security: 
+* 
  *   |Flags  |     Macro       |          Description |
  *   |:------|:----------------|:-----------------------------------------------------------------------|
  *   |BIT(0) | HTTPS_SUPPORT   |    Set this bit to enable HTTPS_SUPPORT to use HTTPS feature. |
@@ -60,7 +61,8 @@
  * @param[in] host_name       
  *   Host name.
  * @param[in] extended_header 
- *   Extender header if present, after each header member append \r\c \n
+ *   Extender header if present, after each header member append \r\c 
+*
  * @param[in] username        
  *   Username for server authentication.
  * @param[in] password         

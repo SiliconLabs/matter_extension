@@ -57,7 +57,7 @@ class Paths:
         self.config = toOsPath("{}/config/latest.json".format(base))
         self.cd = toOsPath("{}/cd.der".format(self.temp))
         self.csr_pem = toOsPath(self.temp + '/csr.pem')
-        self.gen_fw = toOsPath("{}/images/{}.s37".format(base, info.image))
+        self.gen_fw = toOsPath("{}/images/{}".format(base, info.image))
         self.template = toOsPath("{}/silabs_creds.tmpl".format(base))
         self.header = toOsPath("{}/silabs_creds.h".format(self.temp))
         if not os.path.isdir(self.temp):
@@ -267,11 +267,11 @@ def main(argv):
     args.load()
 
     # Gather device info
-    cmmd = Commander(args.conn)
+    cmmd = Commander(args)
     info = cmmd.info()
     paths = Paths(info, args)
-    if args.part_number is None:
-        args.part_number = info.part
+    if args.device is None:
+        args.device = info.part
     print("\n◆ Device Info:\n{}".format(info))
 
     # Flash Production Firmware
@@ -297,7 +297,7 @@ def main(argv):
         exit()
 
     print("\n◆ Connecting to device")
-    conn = Connection(args, paths, info.part)
+    conn = Connection(args, paths, args.device)
     conn.open(args.conn)
 
     # Initialize device

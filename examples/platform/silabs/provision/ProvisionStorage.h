@@ -7,6 +7,7 @@
 #include <lib/support/Span.h>
 #include <lib/core/CHIPError.h>
 #include <crypto/CHIPCryptoPAL.h>
+#include <lib/support/Base64.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -24,8 +25,8 @@ static constexpr size_t kPartNumberLengthMax            = 32;
 static constexpr size_t kHardwareVersionStrLengthMax    = 32;
 static constexpr size_t kManufacturingDateLengthMax     = 11; // yyyy-mm-dd + \0
 static constexpr size_t kUniqueIdLengthMax              = 16;
-static constexpr size_t kSpake2pVerifierLengthMax       = 150;
-static constexpr size_t kSpake2pSaltLengthMax           = 32;
+static constexpr size_t kSpake2pVerifierB64LengthMax    = BASE64_ENCODED_LEN(chip::Crypto::kSpake2p_VerifierSerialized_Length) + 1;
+static constexpr size_t kSpake2pSaltB64LengthMax        = BASE64_ENCODED_LEN(chip::Crypto::kSpake2p_Max_PBKDF_Salt_Length) + 1;
 static constexpr size_t kFirmwareInfoSizeMax            = 32;
 static constexpr size_t kCertificateSizeMax             = 500;
 static constexpr size_t kCertificationSizeMax           = 350;

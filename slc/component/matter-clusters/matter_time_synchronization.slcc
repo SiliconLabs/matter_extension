@@ -1,6 +1,8 @@
 
 category: Clusters|General
-description: Implementation of the Time Synchronization Server Cluster
+description: >
+  Implementation of the Time Synchronization Server Cluster.
+  The user has to enable the Time Synchronization Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_time_synchronization
 package: Matter
 label: Time Synchronization Server Cluster

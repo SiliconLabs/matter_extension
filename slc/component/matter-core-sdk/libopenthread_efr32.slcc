@@ -24,7 +24,6 @@ include:
 -   path: src/include
 -   path: src/lib
 -   path: src/platform/silabs/efr32
--   path: zzz_generated/app-common
 label: libopenthread_efr32
 package: Matter
 provides:

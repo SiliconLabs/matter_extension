@@ -1,6 +1,8 @@
 
 category: Clusters|General
-description: Implementation of the Groups Server Cluster
+description: >
+  Implementation of the Groups Server Cluster.
+  The user has to enable the Groups Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_groups
 package: Matter
 label: Groups Server Cluster
