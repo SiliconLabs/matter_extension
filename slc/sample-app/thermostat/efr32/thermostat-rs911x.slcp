@@ -106,9 +106,7 @@ component:
     from: matter
   - id: sensor_rht
 
-  - id: matter_lcd
-    from: matter
-  - id: matter_qr_code
+  - id: matter_default_lcd_config
     from: matter
 
 # Require LCD and QR Code components only on the boards that support LCD
@@ -124,6 +122,14 @@ requires:
   - name: matter_drivers_series_2_wifi_rs911x
     condition:
      - device_series_2
+
+config_file:
+  - path: ../../../../examples/thermostat/thermostat-common/thermostat.zap
+    directory: common
+    file_id: zap_config
+  - path: ../../../../provision.mattpconf
+    directory: provision
+    file_id: provision_config
 
 include:
   - path: ../../../../examples/thermostat/silabs/include

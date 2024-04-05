@@ -39,12 +39,20 @@
 #include "rsi_bt_common_apis.h"
 #endif
 
-#include "rsi_m4.h"
-#include "rsi_board.h"
-
 #include "ble_config.h"
+
+#if SL_ICD_ENABLED
+#include "sl_si91x_driver.h"
+#if SI917_M4_SLEEP_ENABLED
 #include "rsi_rom_power_save.h"
 #include "sl_si91x_button_pin_config.h"
+#include "sl_si91x_m4_ps.h"
+
+// TODO: should be removed once we are getting the press interrupt for button 0 with sleep
+#define BUTTON_PRESSED 1
+bool btn0_pressed = false;
+#endif // SI917_M4_SLEEP_ENABLED
+#endif // SL_ICD_ENABLED
 
 #include "dhcp_client.h"
 #include "sl_wifi.h"
@@ -70,10 +78,6 @@ struct wfx_rsi wfx_rsi;
 
 /* Declare a variable to hold the data associated with the created event group. */
 StaticEventGroup_t rsiDriverEventGroup;
-
-// TODO: should be removed once we are getting the press interrupt for button 0 with sleep
-#define BUTTON_PRESSED 1
-bool btn0_pressed = false;
 
 bool hasNotifiedIPV6 = false;
 #if (CHIP_DEVICE_CONFIG_ENABLE_IPV4)
@@ -205,7 +209,8 @@ sl_status_t join_callback_handler(sl_wifi_event_t event, char * result, uint32_t
     xEventGroupSetBits(wfx_rsi.events, WFX_EVT_STA_CONN);
     wfx_rsi.join_retries = 0;
     retryInterval        = WLAN_MIN_RETRY_TIMER_MS;
-    if (is_wifi_disconnection_event) {
+    if (is_wifi_disconnection_event)
+    {
         is_wifi_disconnection_event = false;
     }
     callback_status = SL_STATUS_OK;
@@ -213,127 +218,73 @@ sl_status_t join_callback_handler(sl_wifi_event_t event, char * result, uint32_t
 }
 
 #if SL_ICD_ENABLED
-#if SIWX_917
-void IRQ026_Handler()
-{
-  RSI_PS_GetWkpUpStatus();
-
-  /*Clear interrupt */
-  RSI_PS_ClrWkpUpStatus(NPSS_TO_MCU_WIRELESS_INTR);
-
-  return;
-}
-
-void wakeup_source_config(void)
-{
-    /*Configure the NPSS GPIO mode to wake up  */
-    RSI_NPSSGPIO_SetPinMux(NPSS_GPIO_2, NPSSGPIO_PIN_MUX_MODE2);
-
-    /*Configure the NPSS GPIO direction to input */
-    RSI_NPSSGPIO_SetDir(NPSS_GPIO_2, NPSS_GPIO_DIR_INPUT);
-
-    /*Configure the NPSS GPIO interrupt polarity */
-    RSI_NPSSGPIO_SetPolarity(NPSS_GPIO_2, NPSS_GPIO_INTR_LOW);
-
-    /*Enable the REN*/
-    RSI_NPSSGPIO_InputBufferEn(NPSS_GPIO_2, 1);
-
-    /* Set the GPIO to wake from deep sleep */
-    RSI_NPSSGPIO_SetWkpGpio(NPSS_GPIO_2_INTR);
-
-    /* Un mask the NPSS GPIO interrupt*/
-    RSI_NPSSGPIO_IntrUnMask(NPSS_GPIO_2_INTR);
-
-    /*Select wake up sources */
-    RSI_PS_SetWkpSources(GPIO_BASED_WAKEUP);
-
-    /*Enable the NPSS GPIO interrupt slot*/
-    NVIC_EnableIRQ(NPSS_TO_MCU_GPIO_INTR_IRQn);
-}
-
+#if SI917_M4_SLEEP_ENABLED
 /******************************************************************
- * @fn   M4_sleep_wakeup()
+ * @fn   sl_wfx_host_si91x_sleep_wakeup()
  * @brief
- *       Setting the M4 to sleep
+ *       M4 going to sleep
  *
  * @param[in] None
  * @return
  *        None
  *********************************************************************/
-void M4_sleep_wakeup() {
-  if (wfx_rsi.ta_power_save_done == 1) {
-    // TODO: should be removed once we are getting the press interrupt for button 0 with sleep
-    if (!RSI_NPSSGPIO_GetPin(SL_BUTTON_BTN0_PIN) && !btn0_pressed) {
-      sl_button_on_change(SL_BUTTON_BTN0_NUMBER, BUTTON_PRESSED);
-      btn0_pressed = true;
-    }
-    if (RSI_NPSSGPIO_GetPin(SL_BUTTON_BTN0_PIN)) {
-      btn0_pressed = false;
-#ifdef DISPLAY_ENABLED
-      // if LCD is enabled, power down the lcd before setting the M4 to sleep
-      sl_si91x_hardware_setup();
+void sl_wfx_host_si91x_sleep_wakeup()
+{
+    if (wfx_rsi.dev_state & WFX_RSI_ST_SLEEP_READY)
+    {
+        // TODO: should be removed once we are getting the press interrupt for button 0 with sleep
+        if (!RSI_NPSSGPIO_GetPin(SL_BUTTON_BTN0_PIN) && !btn0_pressed)
+        {
+            sl_button_on_change(SL_BUTTON_BTN0_NUMBER, BUTTON_PRESSED);
+            btn0_pressed = true;
+        }
+        if (RSI_NPSSGPIO_GetPin(SL_BUTTON_BTN0_PIN))
+        {
+            btn0_pressed = false;
+            /* Configure RAM Usage and Retention Size */
+            sl_si91x_m4_sleep_wakeup();
+#if SILABS_LOG_ENABLED
+            silabsInitLog();
 #endif
-      /* Configure RAM Usage and Retention Size */
-      sl_si91x_configure_ram_retention(WISEMCU_256KB_RAM_IN_USE, WISEMCU_RETAIN_DEFAULT_RAM_DURING_SLEEP);
-      sl_si91x_trigger_sleep(SLEEP_WITH_RETENTION,
-                             DISABLE_LF_MODE,
-                             WKP_RAM_USAGE_LOCATION,
-                             (uint32_t)RSI_PS_RestoreCpuContext,
-                             IVT_OFFSET_ADDR,
-                             RSI_WAKEUP_FROM_FLASH_MODE);
-      sli_m4_ta_interrupt_init();
-      fpuInit();
-      wakeup_source_config();
-      silabsInitLog();
+        }
     }
-  }
 }
+#endif /* SI917_M4_SLEEP_ENABLED */
 
-/******************************************************************
- * @fn   InitWakeupSource()
- * @brief
- *       Setting the Wakeup Source of the M4
- *
- * @param[in] None
- * @return
- *        None
- *********************************************************************/
-void InitWakeupSource() {
-  /* Configure Wakeup-Source */
-  RSI_PS_SetWkpSources(WIRELESS_BASED_WAKEUP);
-  NVIC_SetPriority(WIRELESS_WAKEUP_IRQHandler, WIRELESS_WAKEUP_IRQHandler_Priority);
-
-  /* Enable NVIC */
-  NVIC_EnableIRQ(WIRELESS_WAKEUP_IRQHandler);
-}
-#endif /* SIWX_917 */
 /******************************************************************
  * @fn   wfx_rsi_power_save()
  * @brief
  *       Setting the RS911x in DTIM sleep based mode
  *
- * @param[in] None
+ * @param[in] sl_si91x_ble_state : State to set for the BLE
+              sl_si91x_wifi_state : State to set for the WiFi
  * @return
  *        None
  *********************************************************************/
-int32_t wfx_rsi_power_save()
+int32_t wfx_rsi_power_save(rsi_power_save_profile_mode_t sl_si91x_ble_state,sl_si91x_performance_profile_t sl_si91x_wifi_state)
 {
     int32_t status;
-    status = rsi_bt_power_save_profile(2, 0);
+
+    status = rsi_bt_power_save_profile(sl_si91x_ble_state, 0);
     if (status != RSI_SUCCESS)
     {
         SILABS_LOG("BT Powersave Config Failed, Error Code : 0x%lX", status);
         return status;
     }
-
-    sl_wifi_performance_profile_t wifi_profile = { .profile = ASSOCIATED_POWER_SAVE };
+    sl_wifi_performance_profile_t wifi_profile = { .profile = sl_si91x_wifi_state };
     status                                     = sl_wifi_set_performance_profile(&wifi_profile);
     if (status != RSI_SUCCESS)
     {
         SILABS_LOG("Powersave Config Failed, Error Code : 0x%lX", status);
         return status;
     }
-    wfx_rsi.ta_power_save_done = 1;
+    if(sl_si91x_wifi_state == HIGH_PERFORMANCE)
+    {
+        wfx_rsi.dev_state &= ~(WFX_RSI_ST_SLEEP_READY);
+    }
+    else{
+        wfx_rsi.dev_state |= WFX_RSI_ST_SLEEP_READY;
+    }
     return status;
 }
 #endif /* SL_ICD_ENABLED */
@@ -358,17 +309,11 @@ int32_t wfx_wifi_rsi_init(void)
     return status;
 }
 
-static void sl_print_firmware_version(sl_wifi_firmware_version_t *firmware_version)
+static void sl_print_firmware_version(sl_wifi_firmware_version_t * firmware_version)
 {
-  SILABS_LOG("Firmware version is: %x%x.%d.%d.%d.%d.%d.%d",
-         firmware_version->chip_id,
-         firmware_version->rom_id,
-         firmware_version->major,
-         firmware_version->minor,
-         firmware_version->security_version,
-         firmware_version->patch_num,
-         firmware_version->customer_id,
-         firmware_version->build_num);
+    SILABS_LOG("Firmware version is: %x%x.%d.%d.%d.%d.%d.%d", firmware_version->chip_id, firmware_version->rom_id,
+               firmware_version->major, firmware_version->minor, firmware_version->security_version, firmware_version->patch_num,
+               firmware_version->customer_id, firmware_version->build_num);
 }
 
 /*************************************************************************************
@@ -391,20 +336,19 @@ static sl_status_t wfx_rsi_init(void)
         return status;
     }
 #else // For SoC
-#if SL_ICD_ENABLED 
+#if SL_ICD_ENABLED
     uint8_t xtal_enable = 1;
     status              = sl_si91x_m4_ta_secure_handshake(SL_SI91X_ENABLE_XTAL, 1, &xtal_enable, 0, NULL);
-    if (status != SL_STATUS_OK) {
+    if (status != SL_STATUS_OK)
+    {
         SILABS_LOG("Failed to bring m4_ta_secure_handshake: 0x%lx\r\n", status);
         return status;
     }
-    SILABS_LOG("m4_ta_secure_handshake Success\r\n");
-    InitWakeupSource();
 #endif /* SL_ICD_ENABLED */
 #endif /* !RSI_M4_INTERFACE */
 
     sl_wifi_firmware_version_t version = { 0 };
-    status                           = sl_wifi_get_firmware_version(&version);
+    status                             = sl_wifi_get_firmware_version(&version);
     if (status != SL_STATUS_OK)
     {
         SILABS_LOG("Get fw version failed:");
@@ -424,14 +368,16 @@ static sl_status_t wfx_rsi_init(void)
 
     // To check the Entropy of TRNG and verify TRNG functioning.
     status = sl_si91x_trng_entropy();
-    if (status != SL_STATUS_OK) {
+    if (status != SL_STATUS_OK)
+    {
         SILABS_LOG("TRNG Entropy Failed");
         return status;
     }
 
     // Initiate and program the key required for TRNG hardware engine
     status = sl_si91x_trng_program_key(trngKey, 4);
-    if (status != SL_STATUS_OK) {
+    if (status != SL_STATUS_OK)
+    {
         SILABS_LOG("TRNG Key Programming Failed");
         return status;
     }
@@ -464,7 +410,7 @@ sl_status_t scan_callback_handler(sl_wifi_event_t event, sl_wifi_scan_result_t *
 #if WIFI_ENABLE_SECURITY_WPA3_TRANSITION
         wfx_rsi.sec.security = WFX_SEC_WPA3;
 #else
-        wfx_rsi.sec.security = WFX_SEC_WPA2;
+        wfx_rsi.sec.security  = WFX_SEC_WPA2;
 #endif /* WIFI_ENABLE_SECURITY_WPA3_TRANSITION */
         return SL_STATUS_FAIL;
     }
@@ -478,9 +424,9 @@ sl_status_t scan_callback_handler(sl_wifi_event_t event, sl_wifi_scan_result_t *
         break;
     case SL_WIFI_WPA:
     case SL_WIFI_WPA_ENTERPRISE:
-    case SL_WIFI_WPA_WPA2_MIXED:
         wfx_rsi.sec.security = WFX_SEC_WPA;
         break;
+    case SL_WIFI_WPA_WPA2_MIXED:
     case SL_WIFI_WPA2:
     case SL_WIFI_WPA2_ENTERPRISE:
         wfx_rsi.sec.security = WFX_SEC_WPA2;
@@ -493,7 +439,7 @@ sl_status_t scan_callback_handler(sl_wifi_event_t event, sl_wifi_scan_result_t *
     case SL_WIFI_WPA3:
         wfx_rsi.sec.security = WFX_SEC_WPA3;
 #else
-        wfx_rsi.sec.security = WFX_SEC_WPA2;
+        wfx_rsi.sec.security  = WFX_SEC_WPA2;
 #endif /* WIFI_ENABLE_SECURITY_WPA3_TRANSITION */
         break;
     default:
@@ -601,8 +547,14 @@ static sl_status_t wfx_rsi_do_join(void)
         connect_security_mode = SL_WIFI_WEP;
         break;
     case WFX_SEC_WPA:
-    case WFX_SEC_WPA2:
         connect_security_mode = SL_WIFI_WPA_WPA2_MIXED;
+        break;
+    case WFX_SEC_WPA2:
+#if WIFI_ENABLE_SECURITY_WPA3_TRANSITION
+        connect_security_mode = SL_WIFI_WPA3_TRANSITION;
+#else
+        connect_security_mode = SL_WIFI_WPA_WPA2_MIXED;
+#endif // WIFI_ENABLE_SECURITY_WPA3_TRANSITION
         break;
 #if WIFI_ENABLE_SECURITY_WPA3_TRANSITION
     case WFX_SEC_WPA3:
@@ -619,12 +571,11 @@ static sl_status_t wfx_rsi_do_join(void)
 
     if (wfx_rsi.dev_state & (WFX_RSI_ST_STA_CONNECTING | WFX_RSI_ST_STA_CONNECTED))
     {
-        SILABS_LOG("%s: not joining - already in progress", __func__);
+        SILABS_LOG("wfx_rsi_do_join: not joining - already in progress");
     }
     else
     {
-        SILABS_LOG("%s: WLAN: connecting to %s==%s, sec=%d", __func__, &wfx_rsi.sec.ssid[0], &wfx_rsi.sec.passkey[0],
-                   wfx_rsi.sec.security);
+        SILABS_LOG("wfx_rsi_do_join: SSID:%s, SEC:%d", &wfx_rsi.sec.ssid[0], wfx_rsi.sec.security);
 
         /*
          * Join the network
@@ -637,8 +588,8 @@ static sl_status_t wfx_rsi_do_join(void)
         sl_wifi_set_join_callback(join_callback_handler, NULL);
 
         // Setting the listen interval to 0 which will set it to DTIM interval
-        sl_wifi_listen_interval_t sleep_interval = { .listen_interval = 0};
-        status = sl_wifi_set_listen_interval(SL_WIFI_CLIENT_INTERFACE, sleep_interval);
+        sl_wifi_listen_interval_t sleep_interval = { .listen_interval = 0 };
+        status                                   = sl_wifi_set_listen_interval(SL_WIFI_CLIENT_INTERFACE, sleep_interval);
 
         /* Try to connect Wifi with given Credentials
          * untill there is a success or maximum number of tries allowed
@@ -684,7 +635,7 @@ static sl_status_t wfx_rsi_do_join(void)
                            wfx_rsi.join_retries);
                 wfx_rsi.join_retries += 1;
                 wfx_rsi.dev_state &= ~(WFX_RSI_ST_STA_CONNECTING | WFX_RSI_ST_STA_CONNECTED);
-                if (is_wifi_disconnection_event ||  wfx_rsi.join_retries <= MAX_JOIN_RETRIES_COUNT)
+                if (is_wifi_disconnection_event || wfx_rsi.join_retries <= MAX_JOIN_RETRIES_COUNT)
                 {
                     xEventGroupSetBits(wfx_rsi.events, WFX_EVT_STA_START_JOIN);
                 }
@@ -849,7 +800,7 @@ void wfx_rsi_task(void * arg)
                 wifi_scan_configuration.periodic_scan_interval = ADV_SCAN_PERIODICITY;
                 sl_wifi_set_scan_callback(bg_scan_callback_handler, NULL);
                 scan_results_complete = false;
-                status = sl_wifi_start_scan(SL_WIFI_CLIENT_2_4GHZ_INTERFACE, NULL, &wifi_scan_configuration);
+                status                = sl_wifi_start_scan(SL_WIFI_CLIENT_2_4GHZ_INTERFACE, NULL, &wifi_scan_configuration);
                 if (SL_STATUS_IN_PROGRESS == status)
                 {
                     const uint32_t start = osKernelGetTickCount();

@@ -102,16 +102,10 @@ component:
 # Require LCD and QR Code components only on the boards that support LCD
 requires:
   - name: wf200_ncp_extension
-#  - name: matter_lcd
+#  - name: matter_default_lcd_config
 #    condition:
 #    - device_series_1
-  - name: matter_lcd
-    condition:
-    - device_series_2
-#  - name: matter_qr_code
-#    condition:
-#    - device_series_1
-  - name: matter_qr_code
+  - name: matter_default_lcd_config
     condition:
     - device_series_2
   - name: spidrv_instance
@@ -128,7 +122,14 @@ requires:
   - name: matter_drivers_series_2_wifi_wf200
     condition:
      - device_series_2
-
+     
+config_file:
+  - path: ../../../../examples/lighting-app/silabs/data_model/lighting-wifi-app.zap
+    directory: common
+    file_id: zap_config
+  - path: ../../../../provision.mattpconf
+    directory: provision
+    file_id: provision_config
 
 include:
   - path: ../../../../examples/lighting-app/silabs/include

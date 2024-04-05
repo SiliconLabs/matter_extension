@@ -9,7 +9,7 @@ sdk_extension:
   - id: matter
     version: "2.2.1"
   - id: wiseconnect3_sdk
-    version: "3.2.0"
+    version: "3.1.4"
 
 component:
   - id: device_init
@@ -126,27 +126,26 @@ component:
 
 # Require LCD and QR Code components only on the boards that support LCD
 requires:
-  - name: matter_lcd
+  - name: matter_default_lcd_config
     condition:
     - device_series_1
-#  - name: matter_lcd
-#    condition:
-#    - device_series_2
-  - name: matter_qr_code
+  - name: matter_default_lcd_config
     condition:
-    - device_series_1
-#  - name: matter_qr_code
-#    condition:
-#    - device_series_2
+    - device_series_2
 
 # Select UART/EUART drivers based on device series
   - name: matter_drivers_series_1_wifi_rs911x
     condition:
      - device_series_1
-  - name: matter_drivers_series_2_wifi_rs911x
-    condition:
-     - device_series_2
      
+config_file:
+  - path: ../../../../examples/lock-app/lock-common/lock-app.zap
+    directory: common
+    file_id: zap_config
+  - path: ../../../../provision.mattpconf
+    directory: provision
+    file_id: provision_config
+
 include:
   - path: ../../../../examples/lock-app/silabs/include
     file_list:

@@ -1,0 +1,67 @@
+id: matter_default_lcd_config
+label: Matter Default LCD/Display Configuration
+description: Default configurations for liquid crystal display on matter devboards
+package: "Matter"
+category: Platform|Display
+quality: production
+# Boards that support LCD with Matter projects
+requires:
+  - name: matter_lcd
+    condition: 
+      - brd4161a
+  - name: matter_lcd
+    condition: 
+      - brd4162a
+  - name: matter_lcd
+    condition: 
+      - brd4163a
+  - name: matter_lcd
+    condition: 
+      - brd4164a
+  - name: matter_lcd
+    condition: 
+      - brd4170a
+  - name: matter_lcd
+    condition: 
+      - brd4186c
+  - name: matter_lcd
+    condition: 
+      - brd4187c
+  - name: matter_lcd
+    condition: 
+      - brd4316a
+  - name: matter_lcd
+    condition: 
+      - brd4317a
+  - name: matter_qr_code
+    condition: 
+      - brd4161A
+  - name: matter_qr_code
+    condition: 
+      - brd4162a
+  - name: matter_qr_code
+    condition: 
+      - brd4163a
+  - name: matter_qr_code
+    condition: 
+      - brd4164a
+  - name: matter_qr_code
+    condition: 
+      - brd4170a
+  - name: matter_qr_code
+    condition: 
+      - brd4186c
+  - name: matter_qr_code
+    condition: 
+      - brd4187c
+  - name: matter_qr_code
+    condition: 
+      - brd4316a
+  - name: matter_qr_code
+    condition: 
+      - brd4317a
+provides:
+  - name: matter_default_lcd_config
+conflicts:
+  - name: matter_low_power
+  - name: matter_no_lcd_shell

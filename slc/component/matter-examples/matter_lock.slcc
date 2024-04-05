@@ -7,13 +7,6 @@ id: matter_lock
 quality: production
 provides:
   - name: matter_lock
-
-config_file:
-  - path: examples/lock-app/lock-common/lock-app.zap
-    directory: common
-  - path: provision.mattpconf
-    directory: provision
-
 define:
   - name: IS_DEMO_LOCK
     value: "1"

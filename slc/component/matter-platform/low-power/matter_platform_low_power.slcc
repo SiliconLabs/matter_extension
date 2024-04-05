@@ -11,5 +11,6 @@ provides:
 conflicts:
   - name: matter_shell
   - name: matter_thread_cli
+  - name: matter_default_lcd_config
   - name: matter_qr_code
   - name: matter_lcd

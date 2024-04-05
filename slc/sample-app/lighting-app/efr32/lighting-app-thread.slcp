@@ -89,9 +89,7 @@ component:
     from: matter
   - id: matter_user_label
     from: matter
-  - id: matter_lcd
-    from: matter
-  - id: matter_qr_code
+  - id: matter_default_lcd_config
     from: matter
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
@@ -114,6 +112,13 @@ requires:
     condition:
      - device_series_2
 
+config_file:
+  - path: ../../../../examples/lighting-app/silabs/data_model/lighting-thread-app.zap
+    directory: common
+    file_id: zap_config
+  - path: ../../../../provision.mattpconf
+    directory: provision
+    file_id: provision_config
 
 include:
   - path: ../../../../examples/lighting-app/silabs/include

@@ -9,7 +9,7 @@ sdk_extension:
   - id: matter
     version: "2.2.1"
   - id: wiseconnect3_sdk
-    version: "3.2.0"
+    version: "3.1.4"
 
 component:
   - id: matter_wstk_leds
@@ -129,6 +129,13 @@ requires:
   - name: matter_qr_code
     condition: [brd4338a]
 
+config_file:
+  - path: ../../../../silabs_examples/dishwasher-app/silabs/data_model/dishwasher-wifi-app.zap
+    directory: common
+    file_id: zap_config
+  - path: ../../../../provision.mattpconf
+    directory: provision
+    file_id: provision_config
 
 include:
   - path: ../../../../silabs_examples/dishwasher-app/silabs/include

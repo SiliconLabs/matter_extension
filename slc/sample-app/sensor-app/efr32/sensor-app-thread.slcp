@@ -89,10 +89,8 @@ component:
     from: matter
   - id: matter_wifi_network_diagnostics
     from: matter
-  - id: matter_lcd
+  - id: matter_default_lcd_config
     from: matter
-  - id: matter_qr_code
-    from: matter 
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
@@ -112,6 +110,16 @@ requires:
   - name: matter_drivers_series_2
     condition:
      - device_series_2
+
+config_file:
+  - path: ../../../../silabs_examples/silabs-sensors/data_model/sensor-thread-app.zap
+    directory: common
+    file_id: zap_config
+    condition:
+      - matter_thread
+  - path: ../../../../provision.mattpconf
+    directory: provision
+    file_id: provision_config
 
 include:
   - path: ../../../../silabs_examples/silabs-sensors/include

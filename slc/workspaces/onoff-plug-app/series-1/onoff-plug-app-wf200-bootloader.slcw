@@ -1,6 +1,6 @@
 label: onoff-plug-app-wf200-bootloader
 quality: production
-description: Matter workspace container both a Matter bootloader and Lighting over WiFi Example
+description: Matter workspace container both a Matter bootloader and OnOff Plug over WiFi Example
 project:
   - path: ../../../sample-app/onoff-plug-app/efr32/onoff-plug-app-wf200.slcp
     id: application

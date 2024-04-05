@@ -9,15 +9,3 @@ provides:
   - name: matter_sensor
 ui_hints:
   visibility: never
-
-config_file:
-  - path: silabs_examples/silabs-sensors/data_model/sensor-thread-app.zap
-    directory: common
-    condition:
-      - matter_thread
-  - path: silabs_examples/silabs-sensors/data_model/sensor-wifi-app.zap
-    directory: common
-    condition:
-      - matter_wifi
-  - path: provision.mattpconf
-    directory: provision

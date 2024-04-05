@@ -91,9 +91,7 @@ component:
     from: matter
   - id: matter_wifi_network_diagnostics
     from: matter
-  - id: matter_lcd
-    from: matter
-  - id: matter_qr_code
+  - id: matter_default_lcd_config
     from: matter
     
   # Override configuration for JTAG use
@@ -118,6 +116,13 @@ requires:
     condition:
      - device_series_2
 
+config_file:
+  - path: ../../../../examples/light-switch-app/light-switch-common/light-switch-app.zap
+    directory: common
+    file_id: zap_config
+  - path: ../../../../provision.mattpconf
+    directory: provision
+    file_id: provision_config
 
 include:
   - path: ../../../../examples/light-switch-app/silabs/include
@@ -180,7 +185,7 @@ configuration:
   - {name: SL_ACTIVE_MODE_THRESHOLD, value: '1000'}
   - {name: SL_ACTIVE_MODE_INTERVAL, value: '60000'}
   - {name: SL_IDLE_MODE_INTERVAL, value: '3600'}
-  - {name: SL_OT_IDLE_INTERVAL, value: '30000'}
+  - {name: SL_OT_IDLE_INTERVAL, value: '5000'}
   - {name: SL_OT_ACTIVE_INTERVAL, value: '500'}
 
 toolchain_settings:

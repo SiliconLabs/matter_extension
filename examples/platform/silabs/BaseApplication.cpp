@@ -146,6 +146,9 @@ Identify gIdentify = {
 bool BaseApplication::sIsProvisioned           = false;
 bool BaseApplication::sIsFactoryResetTriggered = false;
 LEDWidget * BaseApplication::sAppActionLed     = nullptr;
+#if CHIP_CONFIG_ENABLE_ICD_SERVER && SI917_M4_SLEEP_ENABLED
+BaseApplicationDelegate BaseApplication::sAppDelegate = BaseApplicationDelegate();
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER && SI917_M4_SLEEP_ENABLED
 
 #ifdef DIC_ENABLE
 namespace {
@@ -162,6 +165,22 @@ void AppSpecificConnectivityEventCallback(const ChipDeviceEvent * event, intptr_
 }
 } // namespace
 #endif // DIC_ENABLE
+
+#if CHIP_CONFIG_ENABLE_ICD_SERVER && SI917_M4_SLEEP_ENABLED
+void BaseApplicationDelegate::OnCommissioningSessionStarted() { isComissioningStarted = true; }
+void BaseApplicationDelegate::OnCommissioningSessionStopped() { isComissioningStarted = false; }
+void BaseApplicationDelegate::OnCommissioningWindowClosed()
+{
+    if (!BaseApplication::GetProvisionStatus() && !isComissioningStarted)
+    {
+        int32_t status = wfx_power_save(RSI_SLEEP_MODE_8, STANDBY_POWER_SAVE_WITH_RAM_RETENTION);
+        if (status != SL_STATUS_OK)
+        {
+            ChipLogError(DeviceLayer, "Failed to enable the TA Deep Sleep, status: %x", status);
+        }
+    }
+}
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER && SI917_M4_SLEEP_ENABLED
 
 /**********************************************************
  * AppTask Definitions

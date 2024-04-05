@@ -7,12 +7,5 @@ id: matter_light_switch
 quality: production
 provides:
   - name: matter_light_switch
-
-config_file:
-  - path: examples/light-switch-app/light-switch-common/light-switch-app.zap
-    directory: common
-  - path: provision.mattpconf
-    directory: provision
-
 ui_hints:
   visibility: never

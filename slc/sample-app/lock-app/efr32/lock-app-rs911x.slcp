@@ -100,9 +100,7 @@ component:
     from: matter
   - id: segger_rtt
 
-#  - id: matter_lcd
-#    from: matter
-#  - id: matter_qr_code
+#  - id: matter_default_lcd_config
 #    from: matter
 
   - id: matter_icd_management
@@ -125,6 +123,14 @@ requires:
   - name: matter_drivers_series_2_wifi_rs911x
     condition:
      - device_series_2
+
+config_file:
+  - path: ../../../../examples/lock-app/lock-common/lock-app.zap
+    directory: common
+    file_id: zap_config
+  - path: ../../../../provision.mattpconf
+    directory: provision
+    file_id: provision_config
 
 include:
   - path: ../../../../examples/lock-app/silabs/include

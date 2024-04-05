@@ -319,9 +319,9 @@ sl_status_t scan_callback_handler(sl_wifi_event_t event, sl_wifi_scan_result_t *
         break;
     case SL_WIFI_WPA:
     case SL_WIFI_WPA_ENTERPRISE:
-    case SL_WIFI_WPA_WPA2_MIXED:
         wfx_rsi.sec.security = WFX_SEC_WPA;
         break;
+    case SL_WIFI_WPA_WPA2_MIXED:
     case SL_WIFI_WPA2:
     case SL_WIFI_WPA2_ENTERPRISE:
         wfx_rsi.sec.security = WFX_SEC_WPA2;
@@ -442,8 +442,14 @@ static sl_status_t wfx_rsi_do_join(void)
         connect_security_mode = SL_WIFI_WEP;
         break;
     case WFX_SEC_WPA:
-    case WFX_SEC_WPA2:
         connect_security_mode = SL_WIFI_WPA_WPA2_MIXED;
+        break;
+    case WFX_SEC_WPA2:
+#if WIFI_ENABLE_SECURITY_WPA3_TRANSITION
+        connect_security_mode = SL_WIFI_WPA3_TRANSITION;
+#else
+        connect_security_mode = SL_WIFI_WPA_WPA2_MIXED;
+#endif // WIFI_ENABLE_SECURITY_WPA3_TRANSITION
         break;
 #if WIFI_ENABLE_SECURITY_WPA3_TRANSITION
     case WFX_SEC_WPA3:
@@ -460,12 +466,11 @@ static sl_status_t wfx_rsi_do_join(void)
 
     if (wfx_rsi.dev_state & (WFX_RSI_ST_STA_CONNECTING | WFX_RSI_ST_STA_CONNECTED))
     {
-        SILABS_LOG("%s: not joining - already in progress", __func__);
+        SILABS_LOG("wfx_rsi_do_join: not joining - already in progress");
     }
     else
     {
-        SILABS_LOG("%s: WLAN: connecting to %s==%s, sec=%d", __func__, &wfx_rsi.sec.ssid[0], &wfx_rsi.sec.passkey[0],
-                   wfx_rsi.sec.security);
+        SILABS_LOG("wfx_rsi_do_join: SSID:%s, SEC:%d", &wfx_rsi.sec.ssid[0], wfx_rsi.sec.security);
 
         /*
          * Join the network

@@ -22,7 +22,7 @@ define:
     value: 1
   - name: WIFI_DEBUG_ENABLED
     value: 1
-    condition: [matter_wifi]
+    condition: [matter_efr32_ncp]
   - name: LCD_WITH_SLEEP
     value: 1
     condition: [matter_lcd]

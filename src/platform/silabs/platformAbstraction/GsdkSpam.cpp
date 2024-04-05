@@ -43,7 +43,6 @@ extern "C" {
 
 #include "sl_component_catalog.h"
 #include "sl_mbedtls.h"
-#include "sl_system_init.h"
 #if SILABS_LOG_OUT_UART || ENABLE_CHIP_SHELL || CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
 #include "uart.h"
 #endif
@@ -75,7 +74,6 @@ extern "C" {
 
 #include "sl_component_catalog.h"
 #include "sl_mbedtls.h"
-#include "sl_system_init.h"
 #if SILABS_LOG_OUT_UART || ENABLE_CHIP_SHELL || CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
 #include "uart.h"
 #endif
@@ -99,8 +97,6 @@ SilabsPlatform::SilabsButtonCb SilabsPlatform::mButtonCallback = nullptr;
 
 CHIP_ERROR SilabsPlatform::Init(void)
 {
-    sl_system_init();
-
 #if CHIP_ENABLE_OPENTHREAD
     sl_ot_sys_init();
 #endif

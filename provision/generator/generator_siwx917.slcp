@@ -7,7 +7,7 @@ description: >
 category: Example|Platform
 sdk_extension:
   - id: wiseconnect3_sdk
-    version: "3.2.0"
+    version: "3.1.4"
 toolchain_settings:
   - option: gcc_c++_compiler_option
     value: -std=gnu++17
@@ -123,6 +123,7 @@ include:
 component:
   - id: freertos
   - id: cpp_support
+  - id: sl_syscalls
   - id: iostream_rtt
   - id: segger_rtt
   - id: sl_system_init
@@ -162,3 +163,4 @@ define:
   - name: TINYCRYPT_PRIMITIVES
   - name: MBEDTLS_CONFIG_FILE
     value: \"siwx917-chip-mbedtls-config.h\"
+  - name: CHIP_CRYPTO_MBEDTLS

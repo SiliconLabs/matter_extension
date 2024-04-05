@@ -20,7 +20,7 @@ out-of-the-box and therefore has the matter_icd_management component enabled.**
 
 For more general information on running matter applications and pre-requisites please look at online
 documentation for Matter available on docs.silabs.com. Follow Thread demo instructions depending on the example you are running.
-[Demo instructions for Thread](https://docs.silabs.com/matter/2.2.0/matter-thread)
+[Demo instructions for Thread](https://docs.silabs.com/matter/2.2.1/matter-thread)
 
 ## Light Switch Specific Interface
 

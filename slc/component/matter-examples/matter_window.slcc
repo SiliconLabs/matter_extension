@@ -7,12 +7,5 @@ id: matter_window
 quality: production
 provides:
   - name: matter_window
-
-config_file:
-  - path: examples/window-app/common/window-app.zap
-    directory: common
-  - path: provision.mattpconf
-    directory: provision
-
 ui_hints:
   visibility: never

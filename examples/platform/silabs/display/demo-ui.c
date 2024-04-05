@@ -23,9 +23,11 @@
 #include "dmd/dmd.h"
 #include "em_types.h"
 #include "glib.h"
-#if SL_WIFI && !SIWX_917
+#include "sl_component_catalog.h"
+#include "sl_memlcd.h"
+#if SL_WIFI && !SLI_SI91X_MCU_INTERFACE
 #include "spi_multiplex.h"
-#endif // SL_WIFI && !SIWX_917
+#endif // SL_WIFI && !SLI_SI91X_MCU_INTERFACE
 #include <stdio.h>
 #include <string.h>
 
@@ -102,15 +104,30 @@ void demoUIInit(GLIB_Context_t * context)
 
 sl_status_t updateDisplay(void)
 {
+    sl_status_t status = SL_STATUS_OK;
 #if SL_LCDCTRL_MUX
-    sl_wfx_host_pre_lcd_spi_transfer();
+    status = sl_wfx_host_pre_lcd_spi_transfer();
+    if (status != SL_STATUS_OK)
+    {
+        SILABS_LOG("sl_wfx_host_pre_lcd_spi_transfer failed with error: %x", status);
+        return status;
+    }
 #endif // SL_LCDCTRL_MUX
-    sl_status_t status = DMD_updateDisplay();
-#if SL_LCDCTRL_MUX
-    sl_wfx_host_post_lcd_spi_transfer();
-#endif // SL_LCDCTRL_MUX
+    status = DMD_updateDisplay();
     if (status != DMD_OK)
+    {
+        SILABS_LOG("DMD_updateDisplay failed with error: %x", status);
         return SL_STATUS_FAIL;
+    }
+#if SL_LCDCTRL_MUX
+    status = sl_wfx_host_post_lcd_spi_transfer();
+    if (status != SL_STATUS_OK)
+    {
+        SILABS_LOG("sl_wfx_host_post_lcd_spi_transfer failed with error: %x", status);
+        return status;
+    }
+#endif // SL_LCDCTRL_MUX
+
     return SL_STATUS_OK;
 }
 

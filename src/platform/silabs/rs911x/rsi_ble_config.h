@@ -18,6 +18,9 @@
 #ifndef RSI_BLE_CONFIG_H
 #define RSI_BLE_CONFIG_H
 
+// SLC-FIX
+#include "sl_matter_wifi_config.h"
+
 #include "rsi_ble_apis.h"
 #if (SIWX_917 | EXP_BOARD)
 #include "rsi_bt_common_apis.h"

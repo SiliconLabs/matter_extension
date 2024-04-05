@@ -88,11 +88,9 @@ component:
     from: matter
   - id: matter_level_control
     from: matter
-  - id: matter_lcd
+  - id: matter_default_lcd_config
     from: matter
   - id: matter_basic_information
-    from: matter
-  - id: matter_qr_code
     from: matter
   - id: matter_bindings
     from: matter
@@ -120,6 +118,14 @@ requires:
   - name: matter_drivers_series_2
     condition:
      - device_series_2
+
+config_file:
+  - path: ../../../../silabs_examples/onoff-plug-app/onoff-plug-common/onoff-plug-app.zap
+    directory: common
+    file_id: zap_config
+  - path: ../../../../provision.mattpconf
+    directory: provision
+    file_id: provision_config
 
 include:
   - path: ../../../../silabs_examples/onoff-plug-app/include

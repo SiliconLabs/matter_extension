@@ -9,7 +9,7 @@ sdk_extension:
   - id: matter
     version: "2.2.1"
   - id: wiseconnect3_sdk
-    version: "3.2.0"
+    version: "3.1.4"
 
 provides:
   - name: window_app
@@ -141,6 +141,14 @@ requires:
     condition: [brd4338a]
   - name: matter_qr_code
     condition: [brd4338a]
+
+config_file:
+  - path: ../../../../examples/window-app/common/window-app.zap
+    directory: common
+    file_id: zap_config
+  - path: ../../../../provision.mattpconf
+    directory: provision
+    file_id: provision_config
 
 include:
   - path: ../../../../examples/window-app/silabs/include

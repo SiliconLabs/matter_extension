@@ -7,16 +7,5 @@ id: matter_dishwasher
 quality: production
 provides:
   - name: matter_dishwasher
-
-config_file:
-  - path: silabs_examples/dishwasher-app/silabs/data_model/dishwasher-wifi-app.zap
-    directory: common
-    condition: [matter_wifi]
-  - path: silabs_examples/dishwasher-app/silabs/data_model/dishwasher-thread-app.zap
-    directory: common
-    condition: [matter_thread]
-  - path: provision.mattpconf
-    directory: provision
-
 ui_hints:
   visibility: never

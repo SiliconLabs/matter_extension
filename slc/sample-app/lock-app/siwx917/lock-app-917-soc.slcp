@@ -9,7 +9,7 @@ sdk_extension:
   - id: matter
     version: "2.2.1"
   - id: wiseconnect3_sdk
-    version: "3.2.0"
+    version: "3.1.4"
 
 component:
   - id: matter_wstk_leds
@@ -146,6 +146,14 @@ requires:
     condition: [brd4338a]
   - name: matter_qr_code
     condition: [brd4338a]
+
+config_file:
+  - path: ../../../../examples/lock-app/lock-common/lock-app.zap
+    directory: common
+    file_id: zap_config
+  - path: ../../../../provision.mattpconf
+    directory: provision
+    file_id: provision_config
 
 include:
   - path: ../../../../examples/lock-app/silabs/include

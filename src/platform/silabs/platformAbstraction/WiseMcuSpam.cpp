@@ -28,17 +28,12 @@
 // TODO add includes ?
 extern "C" {
 #include "em_core.h"
-#include "sl_event_handler.h"
-#include "rsi_chip.h"
-#include "rsi_nvic_priorities_config.h"
-#include "sl_device_init_nvic.h"
-#include "sli_siwx917_soc.h"
 #include "rsi_board.h"
-#include "rsi_wisemcu_hardware_setup.h"
-#include "cmsis_os2.h"
+#include "sl_event_handler.h"
+#include "sl_si91x_led.h"
 #include "sl_si91x_led_config.h"
-#include "sl_system_init.h"
 #include "sl_si91x_button.h"
+#include "sl_si91x_led.h"
 void soc_pll_config(void);
 }
 
@@ -62,7 +57,6 @@ SilabsPlatform::SilabsButtonCb SilabsPlatform::mButtonCallback = nullptr;
 CHIP_ERROR SilabsPlatform::Init(void)
 {
     mButtonCallback = nullptr;
-    sl_system_init();
 
 #ifndef SL_ICD_ENABLED
     // Configuration the clock rate

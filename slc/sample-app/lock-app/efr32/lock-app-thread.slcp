@@ -93,9 +93,7 @@ component:
     from: matter
   - id: matter_wifi_network_diagnostics
     from: matter
-  - id: matter_lcd
-    from: matter
-  - id: matter_qr_code
+  - id: matter_default_lcd_config
     from: matter
 # Override configuration for JTAG use
   - id: matter_configuration_over_swo
@@ -118,6 +116,14 @@ requires:
   - name: matter_drivers_series_2
     condition:
      - device_series_2
+
+config_file:
+  - path: ../../../../examples/lock-app/lock-common/lock-app.zap
+    directory: common
+    file_id: zap_config
+  - path: ../../../../provision.mattpconf
+    directory: provision
+    file_id: provision_config
 
 include:
   - path: ../../../../examples/lock-app/silabs/include

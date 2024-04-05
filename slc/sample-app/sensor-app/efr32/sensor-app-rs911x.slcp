@@ -103,16 +103,10 @@ component:
 
 # Require LCD and QR Code components only on the boards that support LCD
 requires:
-  - name: matter_lcd
+  - name: matter_default_lcd_config
     condition:
     - device_series_1
-  - name: matter_lcd
-    condition:
-    - device_series_2
-  - name: matter_qr_code
-    condition:
-    - device_series_1
-  - name: matter_qr_code
+  - name: matter_default_lcd_config
     condition:
     - device_series_2
   - name: spidrv_instance
@@ -126,6 +120,16 @@ requires:
   - name: matter_drivers_series_2_wifi_rs911x
     condition:
      - device_series_2
+
+config_file:
+  - path: ../../../../silabs_examples/silabs-sensors/data_model/sensor-wifi-app.zap
+    directory: common
+    file_id: zap_config
+    condition:
+      - matter_wifi
+  - path: ../../../../provision.mattpconf
+    directory: provision
+    file_id: provision_config
 
 include:
   - path: ../../../../silabs_examples/silabs-sensors/include

@@ -1,4 +1,4 @@
-project_name: performance-test-thread
+project_name: performance-test-app-thread
 label: Performance Test Application
 description: >
   Matter Performance Test Application
@@ -91,9 +91,7 @@ component:
     from: matter
   - id: matter_user_label
     from: matter
-  - id: matter_lcd
-    from: matter
-  - id: matter_qr_code
+  - id: matter_default_lcd_config
     from: matter
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
@@ -191,10 +189,13 @@ template_contribution:
 config_file:
   - path: performance-test-app-thread.zap
     directory: common
+    file_id: zap_config
   - path: performance-test-cluster.xml
     directory: common
+    file_id: xml_config
   - path: ../../../../provision.mattpconf
     directory: provision
+    file_id: provision_config
 
 readme:
   - path: ./README.md

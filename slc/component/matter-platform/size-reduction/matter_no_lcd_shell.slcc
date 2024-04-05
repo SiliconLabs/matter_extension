@@ -9,6 +9,7 @@ provides:
   - name: matter_no_lcd_shell
 
 conflicts:
+  - name: matter_default_lcd_config
   - name: matter_qr_code
   - name: matter_lcd
   - name: matter_shell

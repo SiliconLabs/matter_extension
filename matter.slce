@@ -42,4 +42,4 @@ component_path:
   - path: slc/component/matter-wifi/917soc
 documentation:
   - docset: matter
-    version: "2.2.0"
+    version: 2.2.1
