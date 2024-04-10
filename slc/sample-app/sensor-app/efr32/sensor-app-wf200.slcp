@@ -7,15 +7,12 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.0"
+    version: "2.2.1"
 
 component:
   - id: device_init
-  - id: simple_button
-    instance: [btn0, btn1]
-  - id: simple_led
-    instance: [led0, led1]
-
+  - id: matter_buttons
+    from: matter
   - id: matter_wstk_leds
     from: matter
 
@@ -101,22 +98,14 @@ component:
     from: matter
   - id: matter_subscription_persistence
     from: matter
-  - id: matter_occupancy_sensor_type
-    from: matter
 
 # Require LCD and QR Code components only on the boards that support LCD
 requires:
   - name: wf200_ncp_extension
-#  - name: matter_lcd
+#  - name: matter_default_lcd_config
 #    condition:
 #    - device_series_1
-  - name: matter_lcd
-    condition:
-    - device_series_2
-#  - name: matter_qr_code
-#    condition:
-#    - device_series_1
-  - name: matter_qr_code
+  - name: matter_default_lcd_config
     condition:
     - device_series_2
   - name: spidrv_instance
@@ -134,6 +123,16 @@ requires:
     condition:
      - device_series_2 
 
+config_file:
+  - path: ../../../../silabs_examples/silabs-sensors/data_model/sensor-wifi-app.zap
+    directory: common
+    file_id: zap_config
+    condition:
+      - matter_wifi
+  - path: ../../../../provision.mattpconf
+    directory: provision
+    file_id: provision_config
+
 include:
   - path: ../../../../silabs_examples/silabs-sensors/include
     file_list:
@@ -141,6 +140,9 @@ include:
       - path: AppEvent.h
       - path: AppTask.h
       - path: SensorsCallbacks.h
+      - path: SensorsUI.h
+        condition:
+        - matter_lcd
       - path: CHIPProjectConfig.h
     directory: include
 
@@ -149,6 +151,10 @@ source:
     directory: src
   - path: ../../../../silabs_examples/silabs-sensors/src/SensorsCallbacks.cpp
     directory: src
+  - path: ../../../../silabs_examples/silabs-sensors/src/SensorsUI.cpp
+    directory: src
+    condition:
+    - matter_lcd
   - path: ../../../../examples/platform/silabs/main.cpp
     directory: src
   - path: ../../../../silabs_examples/silabs-sensors/src/ZclCallbacks.cpp
@@ -191,8 +197,8 @@ configuration:
     value: 1536
 
 toolchain_settings:
-  - option: gcc_c++_compiler_option
-    value: -std=gnu++17
+  - option: cxx_standard
+    value: gnu++17
 
 template_contribution:
   - name: memory_flash_start

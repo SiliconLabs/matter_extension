@@ -18,6 +18,9 @@
 #ifndef RSI_BLE_CONFIG_H
 #define RSI_BLE_CONFIG_H
 
+// SLC-FIX
+#include "sl_matter_wifi_config.h"
+
 #include "rsi_ble_apis.h"
 #if (SIWX_917 | EXP_BOARD)
 #include "rsi_bt_common_apis.h"
@@ -26,8 +29,6 @@
 #include <rsi_data_types.h>
 #endif
 
-// SLC-FIX
-#include "sl_matter_wifi_config.h"
 /******************************************************
  * *                      Macros
  * ******************************************************/
@@ -77,7 +78,7 @@
 #define RSI_BLE_MATTER_CUSTOM_SERVICE_DATA_LENGTH 240
 
 #define GATT_READ_ZERO_OFFSET 0x00
-#define GATT_READ_RESP      0x00
+#define GATT_READ_RESP 0x00
 #define ALL_PHYS (0x00)
 
 #define RSI_BLE_DEV_ADDR_RESOLUTION_ENABLE (0)

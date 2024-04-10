@@ -466,7 +466,7 @@ CHIP_ERROR SilabsConfig::FactoryResetConfig(void)
                         exit:
                             return err2;
                         });
-
+    ClearConfigValue(SilabsConfig::kConfigKey_BootCount);
     return err;
 }
 

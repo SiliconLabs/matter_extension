@@ -1,6 +1,8 @@
 
 category: Clusters|Closures
-description: Implementation of the Barrier Control Server Cluster
+description: >
+  Implementation of the Barrier Control Server Cluster.
+  The user has to enable the Barrier Control Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_barrier_control
 package: Matter
 label: Barrier Control Server Cluster

@@ -1,6 +1,8 @@
 
 category: Clusters|General
-description: Implementation of the Low Power Server Cluster
+description: >
+  Implementation of the Low Power Server Cluster.
+  The user has to enable the Low Power Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_low_power
 package: Matter
 label: Low Power Server Cluster

@@ -1,6 +1,8 @@
 
 category: Clusters|Measurement
-description: Implementation of the Air Quality Server Cluster
+description: >
+  Implementation of the Air Quality Server Cluster.
+  The user has to enable the Air Quality Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_air_quality
 package: Matter
 label: Air Quality Server Cluster

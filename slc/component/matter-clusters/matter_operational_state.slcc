@@ -1,6 +1,8 @@
 
 category: Clusters|General
-description: Implementation of the Operational State Server Cluster
+description: >
+  Implementation of the Operational State Server Cluster.
+  The user has to enable the Operational State Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_operational_state
 package: Matter
 label: Operational State Server Cluster

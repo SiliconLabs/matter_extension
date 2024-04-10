@@ -1,6 +1,8 @@
 
 category: Clusters|CHIP
-description: Implementation of the Test Cluster Server Cluster
+description: >
+  Implementation of the Test Cluster Server Cluster.
+  The user has to enable the Test Cluster Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_test_cluster
 package: Matter
 label: Test Cluster Server Cluster

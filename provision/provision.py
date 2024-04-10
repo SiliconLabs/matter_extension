@@ -267,11 +267,11 @@ def main(argv):
     args.load()
 
     # Gather device info
-    cmmd = Commander(args.conn)
+    cmmd = Commander(args)
     info = cmmd.info()
     paths = Paths(info, args)
-    if args.part_number is None:
-        args.part_number = info.part
+    if args.device is None:
+        args.device = info.part
     print("\n◆ Device Info:\n{}".format(info))
 
     # Flash Production Firmware
@@ -297,7 +297,7 @@ def main(argv):
         exit()
 
     print("\n◆ Connecting to device")
-    conn = Connection(args, paths, info.part)
+    conn = Connection(args, paths, args.device)
     conn.open(args.conn)
 
     # Initialize device

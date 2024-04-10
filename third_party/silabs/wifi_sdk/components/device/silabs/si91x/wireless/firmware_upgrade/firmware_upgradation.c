@@ -23,7 +23,7 @@
 #include <string.h>
 #include "firmware_upgradation.h"
 
-#define SI91X_HTTP_BUFFER_LEN 1200
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 extern bool device_initialized;
 
@@ -99,6 +99,7 @@ sl_status_t sl_si91x_http_otaf(uint8_t type,
   sl_si91x_http_client_request_t http_client = { 0 };
   uint32_t send_size                         = 0;
   uint16_t http_length                       = 0;
+  uint16_t length                            = 0;
   uint8_t https_enable                       = 0;
 
   if (!device_initialized) {
@@ -137,14 +138,17 @@ sl_status_t sl_si91x_http_otaf(uint8_t type,
 
   // Fill port no
   http_client.port_number = port;
+  memset(http_client.buffer, 0, sizeof(http_client.buffer));
 
   // Fill username
-  strcpy((char *)http_client.buffer, (char *)user_name);
-  http_length += strlen((char *)user_name) + 1;
+  length = MIN((sizeof(http_client.buffer) - 1), strlen((char *)user_name));
+  memcpy(http_client.buffer, user_name, length);
+  http_length += length + 1;
 
   // Fill password
-  strcpy((char *)((http_client.buffer) + http_length), (char *)password);
-  http_length += strlen((char *)password) + 1;
+  length = MIN((sizeof(http_client.buffer) - 1 - http_length), strlen((char *)password));
+  memcpy(((http_client.buffer) + http_length), password, length);
+  http_length += length + 1;
 
   // Check for HTTP_V_1.1 and Empty host name
   if ((flags & SL_SI91X_HTTP_V_1_1) && (strlen((char *)host_name) == 0)) {
@@ -152,21 +156,25 @@ sl_status_t sl_si91x_http_otaf(uint8_t type,
   }
 
   // Copy  Host name
-  strcpy((char *)((http_client.buffer) + http_length), (char *)host_name);
-  http_length += strlen((char *)host_name) + 1;
+  length = MIN((sizeof(http_client.buffer) - 1 - http_length), strlen((char *)host_name));
+  memcpy(((http_client.buffer) + http_length), host_name, length);
+  http_length += length + 1;
 
   // Copy IP address
-  strcpy((char *)((http_client.buffer) + http_length), (char *)ip_address);
-  http_length += strlen((char *)ip_address) + 1;
+  length = MIN((sizeof(http_client.buffer) - 1 - http_length), strlen((char *)ip_address));
+  memcpy(((http_client.buffer) + http_length), ip_address, length);
+  http_length += length + 1;
 
   // Copy URL resource
-  strcpy((char *)((http_client.buffer) + http_length), (char *)resource);
-  http_length += strlen((char *)resource) + 1;
+  length = MIN((sizeof(http_client.buffer) - 1 - http_length), strlen((char *)resource));
+  memcpy(((http_client.buffer) + http_length), resource, length);
+  http_length += length + 1;
 
   // Copy Extended header
   if (extended_header != NULL) {
-    strcpy((char *)((http_client.buffer) + http_length), (char *)extended_header);
-    http_length += strlen((char *)extended_header);
+    length = MIN((sizeof(http_client.buffer) - 1 - http_length), strlen((char *)extended_header));
+    memcpy(((http_client.buffer) + http_length), extended_header, length);
+    http_length += length;
   }
   // Copy Httppost data
   if (type) {

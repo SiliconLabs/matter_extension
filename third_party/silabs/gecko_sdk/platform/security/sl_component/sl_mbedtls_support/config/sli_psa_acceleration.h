@@ -74,9 +74,7 @@
 // -------------------------------------
 // MAC
 
-#if !defined(SLI_MBEDTLS_DEVICE_SI91X)
-  #define MBEDTLS_PSA_ACCEL_ALG_CMAC
-#endif
+#define MBEDTLS_PSA_ACCEL_ALG_CMAC
 
 #if defined(SLI_MBEDTLS_DEVICE_S2) || defined(SLI_MBEDTLS_DEVICE_SI91X)
   #define MBEDTLS_PSA_ACCEL_ALG_HMAC
@@ -100,21 +98,21 @@
   #define MBEDTLS_PSA_ACCEL_ECC_SECP_R1_224
 #endif
 
-#if defined(SLI_MBEDTLS_DEVICE_HSE_VAULT_HIGH) || defined(SLI_MBEDTLS_DEVICE_SI91X)
+#if defined(SLI_MBEDTLS_DEVICE_HSE_VAULT_HIGH)
   #define MBEDTLS_PSA_ACCEL_ECC_SECP_R1_384
   #define MBEDTLS_PSA_ACCEL_ECC_SECP_R1_521
 #endif
 
-#if defined(SLI_MBEDTLS_DEVICE_VSE) || defined(SLI_MBEDTLS_DEVICE_SI91X)
+#if defined(SLI_MBEDTLS_DEVICE_VSE)
   #define MBEDTLS_PSA_ACCEL_ECC_SECP_K1_256
 #endif
 
 #if defined(SLI_MBEDTLS_DEVICE_HSE_V1) && defined(SLI_MBEDTLS_DEVICE_HSE_VAULT_HIGH) \
-  || defined(SLI_MBEDTLS_DEVICE_HSE_V2) || defined(SLI_MBEDTLS_DEVICE_SI91X)
+  || defined(SLI_MBEDTLS_DEVICE_HSE_V2)
   #define MBEDTLS_PSA_ACCEL_ECC_MONTGOMERY_255
 #endif
 
-#if defined(SLI_MBEDTLS_DEVICE_HSE_VAULT_HIGH) || defined(SLI_MBEDTLS_DEVICE_SI91X)
+#if defined(SLI_MBEDTLS_DEVICE_HSE_VAULT_HIGH)
   #define MBEDTLS_PSA_ACCEL_ECC_MONTGOMERY_448
 #endif
 
@@ -128,7 +126,7 @@
 // -------------------------------------
 // Signature
 
-#if defined(SLI_MBEDTLS_DEVICE_S2)
+#if defined(SLI_MBEDTLS_DEVICE_S2) || defined(SLI_MBEDTLS_DEVICE_SI91X)
   #define MBEDTLS_PSA_ACCEL_ALG_ECDSA
 #endif
 

@@ -4,7 +4,7 @@ description: Matter workspace container both a Matter bootloader and Window over
 project:
   - path: ../../../sample-app/window-app/efr32/window-app-wf200.slcp
     id: application
-    output: window-app-wf200-bootloader
+    output: window-app-wf200
   - path: ../../../sample-app/bootloaders/bootloader-storage-external-single-series-2/bootloader-storage-external-single-series-2.slcp
     id: bootloader
     output: matter-bootloader

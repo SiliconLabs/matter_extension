@@ -14,27 +14,10 @@ include:
 -   path: src/lib
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
--   path: zzz_generated/app-common
--   path: zzz_generated/app-common/app-common/zap-generated
-    file_list:
-    -   path: attribute-type.h
-    -   path: attribute-size.h
-    -   path: print-cluster.h
-    -   path: cluster-objects.h
-    -   path: enums.h
-    -   path: cluster-enums.h
-    -   path: cluster-enums-check.h
-    -   path: callback.h
-    -   path: ids/Commands.h
-    -   path: ids/Events.h
-    -   path: ids/Attributes.h
-    -   path: ids/Clusters.h
 label: libclusterobjects
 package: Matter
 provides:
 -   name: matter_libclusterobjects
 quality: production
-source:
--   path: zzz_generated/app-common/app-common/zap-generated/cluster-objects.cpp
 ui_hints:
     visibility: never

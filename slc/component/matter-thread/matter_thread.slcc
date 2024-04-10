@@ -9,6 +9,10 @@ quality: production
 requires:
   - name: matter
   - name: ot_stack
-  - name: matter_thread_variant
 provides:
   - name: matter_thread
+define:
+  - name: SL_OPENTHREAD_CERT_LIB
+    value: 1
+    condition:
+      - ot_cert_libs

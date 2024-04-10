@@ -6,7 +6,6 @@ category: Platform|Utils
 quality: production
 requires:
   - name: ot_debug_channel
-  - name: matter_test_event_trigger
 provides:
   - name: matter_performance_testing
 source:

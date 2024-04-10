@@ -1,6 +1,8 @@
 
 category: Clusters|CHIP
-description: Implementation of the Basic Information Cluster
+description: >
+  Implementation of the Basic Information Cluster.
+  The user has to enable the Basic Information Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_basic_information
 package: Matter
 label: Basic Information Cluster

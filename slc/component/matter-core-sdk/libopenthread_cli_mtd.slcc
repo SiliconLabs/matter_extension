@@ -27,7 +27,6 @@ include:
 -   path: src
 -   path: src/include
 -   path: src/lib
--   path: zzz_generated/app-common
 label: libopenthread_cli_mtd
 package: Matter
 provides:

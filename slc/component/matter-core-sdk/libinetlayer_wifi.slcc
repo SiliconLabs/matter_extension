@@ -11,7 +11,6 @@ include:
 -   path: src/lib
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
--   path: zzz_generated/app-common
 -   path: src/inet
     file_list:
     -   path: TCPEndPointImplLwIP.h

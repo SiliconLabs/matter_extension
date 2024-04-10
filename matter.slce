@@ -1,10 +1,10 @@
 id: matter
-version: 2.2.0
+version: 2.2.1
 description: "Matter extension for Gecko SDK Suite"
 label: "Silicon Labs Matter"
 sdk:
   id: gecko_sdk
-  version: 4.4.0
+  version: 4.4.2
 upgrade_manifest:
   - path: upgrade.slcu
 component_path:
@@ -12,6 +12,7 @@ component_path:
   - path: slc/component/matter-core-sdk
   - path: slc/component/matter-examples
   - path: slc/component/matter-platform
+  - path: slc/component/matter-platform/buttons
   - path: slc/component/matter-platform/nvm3
   - path: slc/component/matter-platform/bluetooth
   - path: slc/component/matter-platform/display
@@ -39,3 +40,6 @@ component_path:
   - path: slc/component/matter-wifi/rs911x
   - path: slc/component/matter-wifi/wf200
   - path: slc/component/matter-wifi/917soc
+documentation:
+  - docset: matter
+    version: 2.2.1

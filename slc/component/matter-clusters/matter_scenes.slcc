@@ -1,6 +1,8 @@
 
 category: Clusters|General
-description: Implementation of the Scenes Server Cluster
+description: >
+  Implementation of the Scenes Server Cluster.
+  The user has to enable the Scenes Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_scenes
 package: Matter
 label: Scenes Server Cluster

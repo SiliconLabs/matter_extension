@@ -16,11 +16,11 @@ Rendez-vous procedure.
 The light switch example is intended to serve both as a means to explore the
 workings of Matter as well as a template for creating real products based on the
 Silicon Labs platform. **This example is defaulted to use full ICD functionality
-out-of-the-box and therefore has the matter_icd component enabled.**
+out-of-the-box and therefore has the matter_icd_management component enabled.**
 
 For more general information on running matter applications and pre-requisites please look at online
 documentation for Matter available on docs.silabs.com. Follow Thread demo instructions depending on the example you are running.
-[Demo instructions for Thread](https://docs.silabs.com/matter/2.2.0/matter-thread)
+[Demo instructions for Thread](https://docs.silabs.com/matter/2.2.1/matter-thread)
 
 ## Light Switch Specific Interface
 
@@ -43,19 +43,29 @@ Log output example:
 
 **LED 0** 
 
-Led 0 shows the overall state of the device and its connectivity. The
-following states are possible:
+-   **ICD Configuration (Default)** - LED is only active under two circumstances:
 
--   Short Flash On (50 ms on/950 ms off): The device is in the
-unprovisioned (unpaired) state and is waiting for a commissioning
-application to connect.
+    1. Factory reset sequence - LED will blink when initiated upon press and hold of
+    Button 0 after 3 seconds
+    2. An Identify command was received
 
--   Rapid Even Flashing (100 ms on/100 ms off): The device is in the
-    unprovisioned state and a commissioning application is connected through Bluetooth LE.
+-   **Non-ICD Configuration** - shows the overall state of the device and its connectivity. The
+    following states are possible:
 
--   Short Flash Off (950ms on/50ms off): The device is fully provisioned, but does not yet have full Thread network or service connectivity.
+    - *Short Flash On* (50 ms on/950 ms off): The device is in the
+    unprovisioned (unpaired) state and is waiting for a commissioning
+    application to connect.
 
--   Solid On: The device is fully provisioned and has full Thread network and service connectivity.
+    - *Rapid Even Flashing* (100 ms on/100 ms off): The device is in the
+    unprovisioned state and a commissioning application is connected through
+    Bluetooth LE.
+
+    - *Short Flash Off* (950ms on/50ms off): The device is fully
+    provisioned, but does not yet have full Thread network or service
+    connectivity.
+
+    - *Solid On*: The device is fully provisioned and has full Thread
+    network and service connectivity.
 
 **Push Button 0**
 

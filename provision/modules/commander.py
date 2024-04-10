@@ -12,23 +12,20 @@ socs = {
 
 class DeviceInfo:
     def __init__(self, text):
-        lines = text.decode('utf-8').splitlines()
-        d = dict(map(str.strip, x.split(':')) for x in lines[0:len(lines)-1])
-        self.part = d['Part Number'].lower()
-        self.uid = d['Unique ID']
-        self.revision = d['Die Revision']
-        self.version = d['Production Ver']
-        self.flash_size = self.parseSize(d['Flash Size'])
+        d = self.parseLines(text.decode('utf-8').splitlines())
+        self.part = self.parseField(d, 'Part Number')
+        self.uid = self.parseField(d, 'Unique ID')
+        self.revision = self.parseField(d, 'Die Revision')
+        self.version = self.parseField(d, 'Production Ver')
+        self.flash_size = self.parseSize(d, 'Flash Size')
         self.family = self.part[0:9].lower()
 
         # Only MG12 and MG24 are supported in matter currently
-        if "efr32mg12" in self.part:
+        if self.part.startswith('efr32mg12'):
             soc = socs['mg12']
-        elif "efr32mg24" in self.part:
+        elif self.part.startswith('efr32mg24') or self.part.startswith('mgm24'):
             soc = socs['mg24']
-        elif "mgm24" in self.part:
-            soc = socs['mg24']
-        elif "si917" in self.part:
+        elif self.part.startswith('si917') or self.part.startswith('siwg917'):
             soc = socs['si917']
         else:
             raise Exception('Invalid MCU')
@@ -37,27 +34,40 @@ class DeviceInfo:
         self.flash_addr = soc['flash_addr']
         self.image = soc['image']
 
-    def parseSize(self, text):
+    def parseLines(self, lines):
+        m = {}
+        for l in lines:
+            pair = l.split(':')
+            if len(pair) > 1:
+                m[pair[0].strip()] = pair[1].strip().lower()
+        return m
+
+    def parseField(self, d, tag, default_value = '?'):
+        v =  tag in d and d[tag] or default_value
+        return isinstance(v, str) and v.lower() or v
+
+    def parseSize(self, d, tag):
+        text = self.parseField(d, tag, '0')
+        if text is None: return 0
         parts = text.split()
         value = int(parts[0])
         multiplier = 1
-        if 'kb' == parts[1].lower():
+        if len(parts) > 0 and ('kb' == parts[1].lower()):
             multiplier = 1024
         return value * multiplier
 
     def __str__(self):
         text =  "  ∙ part: '{}'\n".format(self.part)
         text += "  ∙ family: '{}'\n".format(self.family)
-        text += "  ∙ version: '{}'\n".format(self.version)
-        text += "  ∙ revision: '{}'\n".format(self.revision)
         text += "  ∙ flash_addr: 0x{:08x}\n".format(self.flash_addr)
-        text += "  ∙ flash_size: 0x{:08x}\n".format(self.flash_size)
+        text += "  ∙ flash_size: 0x{:08x}".format(self.flash_size)
         return text
 
 class Commander:
 
-    def __init__(self, conn):
-        self.conn = conn
+    def __init__(self, args):
+        self.conn = args.conn
+        self.device = args.device
 
     def execute(self, args, output = True, check = False):
         args.insert(0, 'commander')
@@ -68,6 +78,9 @@ class Commander:
                 args.extend(["--ip", "{}:{}".format(self.conn.ip_addr, self.conn.port)])
             else:
                 args.extend(["--ip", self.conn.ip_addr])
+        if self.device:
+            args.extend(["--device", self.device])
+
         cmd = ' '.join(args)
         return execute(args, output, check)
 

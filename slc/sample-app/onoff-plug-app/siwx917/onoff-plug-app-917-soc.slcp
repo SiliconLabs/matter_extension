@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.0"
+    version: "2.2.1"
   - id: wiseconnect3_sdk
-    version: "3.1.1"
+    version: "3.1.4"
 
 component:
   - id: matter_wstk_leds
@@ -18,7 +18,7 @@ component:
     from: matter
   - id: matter_wifi_ble
     from: matter
-  - id: matter_mbedtls_siwx917
+  - id: matter_crypto_tinycrypt_siwx917
     from: matter
   - id: matter_fw_upgrade_917
     from: matter
@@ -116,8 +116,6 @@ component:
   - id: slist
   - id: sl_assert
   - id: cmsis_rtos2_init
-  - id: matter_mbedtls_siwx917
-    from: matter
   - id: matter_platform_siwx917
     from: matter
   - id: wiseconnect3_common
@@ -150,8 +148,10 @@ requires:
 config_file:
   - path: ../../../../silabs_examples/onoff-plug-app/onoff-plug-common/onoff-plug-app.zap
     directory: common
+    file_id: zap_config
   - path: ../../../../provision.mattpconf
     directory: provision
+    file_id: provision_config
 
 include:
   - path: ../../../../silabs_examples/onoff-plug-app/include
@@ -188,8 +188,8 @@ define:
   - name: SI917_SOC
     value: 1
 toolchain_settings:
-  - option: gcc_c++_compiler_option
-    value: -std=gnu++17
+  - option: cxx_standard
+    value: gnu++17
   - option: nano_c_libs
     value: enabled
 template_contribution:

@@ -5,7 +5,7 @@ description: >
   This component is enabled on all Silicon Labs Matter devices. This component
   requires either 1) matter_subscription_timeout_resumption or 2) matter_icd.
   Subscription timeout resumption causes significant energy consumption and
-  cannot be combined with the full ICD functionality that matter_icd provides.
+  cannot be combined with the full ICD functionality that matter_icd_management provides.
 package: "Matter"
 category: Platform|Low-power
 quality: production

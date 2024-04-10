@@ -1,6 +1,8 @@
 
 category: Clusters|Media
-description: Implementation of the Target Navigator Server Cluster
+description: >
+  Implementation of the Target Navigator Server Cluster.
+  The user has to enable the Target Navigator Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_target_navigator
 package: Matter
 label: Target Navigator Server Cluster

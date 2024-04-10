@@ -1,0 +1,55 @@
+id: matter_buttons
+label: WSTK Button Support
+package: Matter
+description: WSTK Button Support for Matter applications
+category: Platform
+quality: production
+provides:
+  - name: matter_buttons
+requires:
+# Every board that uses buttons
+  - name: simple_button_recommended_instance
+    condition:
+      - brd4161a
+  - name: simple_button_recommended_instance
+    condition:
+      - brd4162a
+  - name: simple_button_recommended_instance
+    condition:
+      - brd4163a
+  - name: simple_button_recommended_instance
+    condition:
+      - brd4164a
+  - name: simple_button_recommended_instance
+    condition:
+      - brd4166a
+  - name: simple_button_recommended_instance
+    condition:
+      - brd4170b
+  - name: simple_button_recommended_instance
+    condition:
+      - brd2601b
+  - name: simple_button_recommended_instance
+    condition:
+      - brd2703a
+  - name: simple_button_recommended_instance
+    condition:
+      - brd4186c
+  - name: simple_button_recommended_instance
+    condition:
+      - brd4187c
+  - name: simple_button_recommended_instance
+    condition:
+      - brd4316a
+  - name: simple_button_recommended_instance
+    condition:
+      - brd4317a
+  - name: simple_button_recommended_instance
+    condition:
+      - brd4318a
+  - name: simple_button_recommended_instance
+    condition:
+      - brd4319a
+  - name: simple_button_recommended_instance
+    condition:
+      - brd4337a

@@ -1,6 +1,8 @@
 
 category: Clusters|General
-description: Implementation of the Level Control Cluster
+description: >
+  Implementation of the Level Control Cluster.
+  The user has to enable the Level Control Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_level_control
 package: Matter
 label: Level Control Cluster

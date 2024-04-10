@@ -18,6 +18,7 @@
  */
 
 #include "AppConfig.h"
+#include "BaseApplication.h"
 #include "OTAConfig.h"
 #include <MatterConfig.h>
 
@@ -43,14 +44,7 @@
 
 #ifdef SIWX_917
 #include "wfx_rsi.h"
-#if CHIP_CONFIG_ENABLE_ICD_SERVER
-extern "C" void M4_sleep_wakeup(void);
-#endif /* CHIP_CONFIG_ENABLE_ICD_SERVER */
 #endif /* SIWX_917 */
-
-using namespace ::chip;
-using namespace ::chip::Inet;
-using namespace ::chip::DeviceLayer;
 
 #include <crypto/CHIPCryptoPAL.h>
 // If building with the EFR32-provided crypto backend, we can use the
@@ -79,6 +73,39 @@ static chip::DeviceLayer::Internal::Efr32PsaOperationalKeystore gOperationalKeys
 #endif
 
 #include <lib/support/BytesToHex.h>
+
+using namespace ::chip;
+using namespace ::chip::Inet;
+using namespace ::chip::DeviceLayer;
+using namespace ::chip::Credentials;
+using namespace chip::DeviceLayer::Silabs;
+
+#include <AppTask.h>
+
+#include <DeviceInfoProviderImpl.h>
+#include <app/server/Server.h>
+
+#include <platform/silabs/platformAbstraction/SilabsPlatform.h>
+#include <provision/ProvisionManager.h>
+
+#include "FreeRTOSConfig.h"
+#include "event_groups.h"
+#include "task.h"
+
+/**********************************************************
+ * Defines
+ *********************************************************/
+
+#define MAIN_TASK_STACK_SIZE (1024 * 5)
+#define MAIN_TASK_PRIORITY (configMAX_PRIORITIES - 1)
+
+//SLC-Fix
+namespace
+{
+TaskHandle_t main_Task;
+volatile int apperror_cnt;
+static chip::DeviceLayer::DeviceInfoProviderImpl gExampleDeviceInfoProvider;
+}
 
 #if CHIP_ENABLE_OPENTHREAD
 #include <inet/EndPointStateOpenThread.h>
@@ -130,6 +157,50 @@ CHIP_ERROR SilabsMatterConfig::InitOpenThread(void)
 }
 #endif // CHIP_ENABLE_OPENTHREAD
 
+namespace{
+void application_start(void * unused)
+{
+if (SilabsMatterConfig::InitMatter(BLE_DEV_NAME) != CHIP_NO_ERROR)
+    appError(CHIP_ERROR_INTERNAL);
+
+gExampleDeviceInfoProvider.SetStorageDelegate(&chip::Server::GetInstance().GetPersistentStorage());
+chip::DeviceLayer::SetDeviceInfoProvider(&gExampleDeviceInfoProvider);
+
+chip::DeviceLayer::PlatformMgr().LockChipStack();
+// Initialize device attestation config
+SetDeviceAttestationCredentialsProvider(&Provision::Manager::GetInstance().GetStorage());
+chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+
+SILABS_LOG("Starting App Task");
+if (AppTask::GetAppTask().StartAppTask() != CHIP_NO_ERROR)
+    appError(CHIP_ERROR_INTERNAL);
+
+vTaskDelete(main_Task);
+}
+}
+
+void SilabsMatterConfig::AppInit()
+{
+    GetPlatform().Init();
+
+    if(Provision::Manager::GetInstance().ProvisionRequired())
+    {
+        Provision::Manager::GetInstance().Start();
+    }
+    else
+    {
+        xTaskCreate(application_start, "main_task", MAIN_TASK_STACK_SIZE, NULL, MAIN_TASK_PRIORITY, &main_Task);
+        SILABS_LOG("Starting scheduler");
+    }
+
+    GetPlatform().StartScheduler();
+
+    // Should never get here.
+    chip::Platform::MemoryShutdown();
+    SILABS_LOG("vTaskStartScheduler() failed");
+    appError(CHIP_ERROR_INTERNAL);
+}
+
 #if SILABS_OTA_ENABLED
 void SilabsMatterConfig::InitOTARequestorHandler(System::Layer * systemLayer, void * appState)
 {
@@ -147,9 +218,14 @@ void SilabsMatterConfig::ConnectivityEventCallback(const ChipDeviceEvent * event
     {
 #if SILABS_OTA_ENABLED
         SILABS_LOG("Scheduling OTA Requestor initialization")
+#if CHIP_CONFIG_ENABLE_ICD_SERVER && SI917_M4_SLEEP_ENABLED
+        // TODO: Remove this when RTC timer is added MATTER-2705
+        OTAConfig::Init();
+#else
         chip::DeviceLayer::SystemLayer().StartTimer(chip::System::Clock::Seconds32(OTAConfig::kInitOTARequestorDelaySec),
                                                     InitOTARequestorHandler, nullptr);
-#endif
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER && SI917_M4_SLEEP_ENABLED
+#endif // SILABS_OTA_ENABLED
     }
 }
 
@@ -253,6 +329,9 @@ CHIP_ERROR SilabsMatterConfig::InitMatter(const char * appName)
     initParams.endpointNativeParams    = static_cast<void *>(&nativeParams);
 #endif
 
+#if CHIP_CONFIG_ENABLE_ICD_SERVER && SI917_M4_SLEEP_ENABLED
+    initParams.appDelegate = &BaseApplication::sAppDelegate;
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER && SI917_M4_SLEEP_ENABLED
     // Init Matter Server and Start Event Loop
     err = chip::Server::GetInstance().Init(initParams);
 
@@ -301,10 +380,7 @@ CHIP_ERROR SilabsMatterConfig::InitWiFi(void)
 // ================================================================================
 extern "C" void vApplicationIdleHook(void)
 {
-#if SIWX_917 && CHIP_CONFIG_ENABLE_ICD_SERVER
-    if(ConnectivityMgr().IsWiFiStationConnected()) {
-        // Let the M4 sleep once commissioning is done and device is in idle state
-        M4_sleep_wakeup();
-    }
+#if SI917_M4_SLEEP_ENABLED && CHIP_CONFIG_ENABLE_ICD_SERVER
+    sl_wfx_host_si91x_sleep_wakeup();
 #endif
 }

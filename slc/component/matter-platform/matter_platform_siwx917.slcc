@@ -7,7 +7,7 @@ quality: production
 
 config_file:
   - override:
-      component: "%extension-wiseconnect3_sdk%board_configuration_headers"
+      component: "%extension-wiseconnect3_sdk%freertos_config"
       file_id: freertos_config
     path: examples/platform/silabs/FreeRTOSConfig.h
 
@@ -57,6 +57,7 @@ define:
     value: 1
   - name: RS911X_WIFI
   - name: SL_SI91x_DUAL_INTERRUPTS_ERRATA
+  - name: NVM3_LOCK_OVERRIDE
 # TODO : should be removed after code clean-up.
   - name: BRD4325A
 toolchain_settings:

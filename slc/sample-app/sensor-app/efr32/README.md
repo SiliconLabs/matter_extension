@@ -4,10 +4,9 @@ The EFR32 Sensor example provides a baseline demonstration of a Sensor control
 device, built using Matter and the Silicon Labs Gecko SDK. It can be controlled
 by a Chip controller over an OpenThread network.
 
-When you create the sensor project it defaults to Occupancy Sensor. To switch between
-the sensors, **uninstall** the 'Matter Occupancy Sensor'/current sensor component and **install** the
-respective sensor component to enable it. **One sensor component should be enabled for the app to build. **
-EFR32 device, which will then join the Thread network. 
+This sample app showcases supporting 3 distinct device types on 3 separate endpoints.
+One can toggle between 3 different modes by pressing BTN0. 
+
 1. Temperature sensor   : Matter Temperature Sensor
 2. Contact Sensor       : Matter Contact Sensor  
 3. Occupancy Sensor     : Matter Occupancy Sensor
@@ -27,7 +26,7 @@ Silicon Labs platform.
 
 For more general information on running Matter applications and prerequisites see online 
 documentation for Matter available on docs.silabs.com. Follow Thread demo instructions depending on the example you are running.
-[Demo instructions for Thread](https://docs.silabs.com/matter/2.2.0/matter-thread)
+[Demo instructions for Thread](https://docs.silabs.com/matter/2.2.1/matter-thread)
 
 ## Sensor Example User Interface
 
@@ -71,9 +70,10 @@ Simulates the Sensor state. The following states are possible:
 -   _Off_ ; Sensor no occupant/ no contact/ no temperature
 
     
-**Push Button 0**
+**Push Button 0** 
 
--   _Press and Release_: Start or restart BLE advertisement in fast mode. It will advertise in this mode
+-   _Press and Release_: Switch sensor mode, cycle LED screen and
+start or restart BLE advertisement in fast mode. It will advertise in this mode
 for 30 seconds. The device will then switch to a slower interval advertisement.
 After 15 minutes, the advertisement stops. In addition, this button should also print the QR Code URL to the RTT logs.
 
@@ -98,9 +98,9 @@ If LEDs are supported by the board but not enabled in a project they can be enab
 
 ## Provision and Control
 
-You can provision and control the Matter device using the Python controller, chip-tool standalone, Android or iOS app, or the Matter Hub provided by Silicon Labs. More information on using the Matter Hub can be found in the online [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.2.0/matter-thread/raspi-img)
+You can provision and control the Matter device using the Python controller, chip-tool standalone, Android or iOS app, or the Matter Hub provided by Silicon Labs. More information on using the Matter Hub can be found in the online [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.2.1/matter-thread/raspi-img)
 
-The pre-built chip-tool instance ships with the Matter Hub image which is available from Silicon Labs here: [Silicon Labs Matter Hub](https://www.silabs.com/documents/public/software/SilabsMatterPi_2.2.0-1.2-extension.zip)
+The pre-built chip-tool instance ships with the Matter Hub image which is available from Silicon Labs here: [Silicon Labs Matter Hub](https://www.silabs.com/documents/public/software/SilabsMatterPi_2.2.1-1.2-extension.zip)
     
 More information on using the chip-tool directly can be found here: [CHIPTool](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
 

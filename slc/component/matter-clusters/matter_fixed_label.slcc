@@ -1,6 +1,8 @@
 
 category: Clusters|General
-description: Implementation of the Fixed Label Server Cluster
+description: >
+  Implementation of the Fixed Label Server Cluster.
+  The user has to enable the Fixed Label Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_fixed_label
 package: Matter
 label: Fixed Label Server Cluster

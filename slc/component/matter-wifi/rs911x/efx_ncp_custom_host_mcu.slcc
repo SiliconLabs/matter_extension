@@ -7,5 +7,6 @@ package: Matter
 category: Matter-WiFi|Platform|Drivers
 source:
 - path: examples/platform/silabs/efr32/rs911x/hal/efx32_ncp_host.c
+- path: examples/platform/silabs/efr32/rs911x/hal/sl_si91x_ncp_utility.c
 provides:
 - name: efx_ncp_custom_host_mcu

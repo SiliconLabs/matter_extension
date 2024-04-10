@@ -1,6 +1,6 @@
 label: light-switch-app-thread-bootloader
 quality: production
-description: Matter workspace container both a Matter bootloader and Lighting over Thread Example
+description: Matter workspace container both a Matter bootloader and Light Switch over Thread Example
 project:
   - path: ../../../sample-app/light-switch-app/efr32/light-switch-app-thread.slcp
     id: application

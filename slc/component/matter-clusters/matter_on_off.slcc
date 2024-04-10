@@ -1,6 +1,8 @@
 
 category: Clusters|General
-description: Implementation of the On Off Server Cluster
+description: >
+  Implementation of the On Off Server Cluster.
+  The user has to enable the On Off Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_on_off
 package: Matter
 label: On Off Server Cluster

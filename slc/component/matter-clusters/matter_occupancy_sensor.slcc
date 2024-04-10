@@ -1,6 +1,8 @@
 
 category: Clusters|Measurement
-description: Implementation of the Occupancy Sensor Server Cluster
+description: >
+  Implementation of the Occupancy Sensor Server Cluster.
+  The user has to enable the Occupancy Sensor Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_occupancy_sensor
 package: Matter
 label: Occupancy Sensor Server Cluster

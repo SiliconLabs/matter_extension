@@ -1,6 +1,8 @@
 
 category: Clusters|Media
-description: Implementation of the Content Launch Server Cluster
+description: >
+  Implementation of the Content Launch Server Cluster.
+  The user has to enable the Content Launch Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_content_launch
 package: Matter
 label: Content Launch Server Cluster

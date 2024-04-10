@@ -1,6 +1,6 @@
 label: thermostat-thread-bootloader
 quality: production
-description: Matter workspace container both a Matter bootloader and Lighting over Thread Example
+description: Matter workspace container both a Matter bootloader and Thermostat over Thread Example
 project:
   - path: ../../../sample-app/thermostat/efr32/thermostat-thread.slcp
     id: application

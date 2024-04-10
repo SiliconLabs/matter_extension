@@ -7,18 +7,15 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.0"
+    version: "2.2.1"
 
 provides:
   - name: window_app
 
 component:
   - id: device_init
-  - id: simple_button
-    instance: [btn0, btn1]
-  - id: simple_led
-    instance: [led0, led1]
-
+  - id: matter_buttons
+    from: matter
   - id: matter_wstk_leds
     from: matter
 
@@ -28,9 +25,8 @@ component:
     from: matter
   - id: matter_ble
     from: matter
-  - id: matter_thread_ftd
-    from: matter
-  - id: matter_thread_example
+  - id: ot_stack_ftd
+  - id: matter_thread
     from: matter
   - id: rail_util_pti
   - id: matter_ota_support
@@ -94,9 +90,7 @@ component:
     from: matter
   - id: matter_window_covering
     from: matter
-  - id: matter_lcd
-    from: matter
-  - id: matter_qr_code
+  - id: matter_default_lcd_config
     from: matter
 
   # Override configuration for JTAG use
@@ -123,8 +117,10 @@ requires:
 config_file:
   - path: ../../../../examples/window-app/common/window-app.zap
     directory: common
+    file_id: zap_config
   - path: ../../../../provision.mattpconf
     directory: provision
+    file_id: provision_config
 
 include:
   - path: ../../../../examples/window-app/silabs/include
@@ -175,8 +171,8 @@ configuration:
   - {name: SL_STACK_SIZE, value: '4608'} 
 
 toolchain_settings:
-  - option: gcc_c++_compiler_option
-    value: -std=gnu++17
+  - option: cxx_standard
+    value: gnu++17
 template_contribution:
   - name: memory_flash_start
     value: 0x0

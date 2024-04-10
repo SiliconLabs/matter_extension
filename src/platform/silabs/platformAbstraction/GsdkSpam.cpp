@@ -20,12 +20,9 @@
 #include "sl_system_kernel.h"
 
 #ifdef ENABLE_WSTK_LEDS
-// SLC-FIX 
-#ifndef MATTER_GSDK_NO_LED
 extern "C" {
 #include "sl_simple_led_instances.h"
 }
-#endif
 #endif
 
 #ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
@@ -46,7 +43,6 @@ extern "C" {
 
 #include "sl_component_catalog.h"
 #include "sl_mbedtls.h"
-#include "sl_system_init.h"
 #if SILABS_LOG_OUT_UART || ENABLE_CHIP_SHELL || CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
 #include "uart.h"
 #endif
@@ -78,12 +74,11 @@ extern "C" {
 
 #include "sl_component_catalog.h"
 #include "sl_mbedtls.h"
-#include "sl_system_init.h"
 #if SILABS_LOG_OUT_UART || ENABLE_CHIP_SHELL || CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
 #include "uart.h"
 #endif
 
-#if SL_CATALOG_SYSTEMVIEW_TRACE_PRESENT
+#ifdef SL_CATALOG_SYSTEMVIEW_TRACE_PRESENT
 #include "SEGGER_SYSVIEW.h"
 #endif
 }
@@ -102,13 +97,11 @@ SilabsPlatform::SilabsButtonCb SilabsPlatform::mButtonCallback = nullptr;
 
 CHIP_ERROR SilabsPlatform::Init(void)
 {
-    sl_system_init();
-
 #if CHIP_ENABLE_OPENTHREAD
     sl_ot_sys_init();
 #endif
 
-#if SL_CATALOG_SYSTEMVIEW_TRACE_PRESENT
+#ifdef SL_CATALOG_SYSTEMVIEW_TRACE_PRESENT
     SEGGER_SYSVIEW_Conf();
     SEGGER_SYSVIEW_Start();
 #endif

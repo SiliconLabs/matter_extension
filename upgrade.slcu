@@ -60,4 +60,69 @@ upgrade:
            - matter_basic
         add:
            - matter_basic_information
-
+  - sdk:
+      id: matter
+      version: "2.2.1"
+    component:
+      - trigger: matter_icd
+        description: >
+          Combined ICD components into one 
+        remove:
+           - matter_icd
+        add:
+           - matter_icd_management
+      - trigger: matter_thread_example
+        description: >
+          Using matter_thread component 
+        remove:
+           - matter_thread_example
+        add:
+           - matter_thread
+      - trigger: matter_thread_ftd
+        description: >
+          Using GSDK OT components now 
+        remove:
+           - matter_thread_ftd
+        add:
+           - ot_stack_ftd
+      - trigger: matter_thread_cert_ftd_lib
+        description: >
+          Using GSDK OT components now 
+        remove:
+           - matter_thread_cert_ftd_lib
+        add:
+           - ot_stack_ftd
+           - ot_cert_libs
+      - trigger: matter_thread_coap_cert_ftd_lib
+        description: >
+          Using GSDK OT components now 
+        remove:
+           - matter_thread_coap_cert_ftd_lib
+        add:
+           - ot_stack_ftd
+           - ot_cert_libs
+           - ot_coap_cert_libs
+      - trigger: matter_thread_mtd
+        description: >
+          Using GSDK OT components now 
+        remove:
+           - matter_thread_mtd
+        add:
+           - ot_stack_mtd
+      - trigger: matter_thread_cert_mtd_lib
+        description: >
+          Using GSDK OT components now 
+        remove:
+           - matter_thread_cert_mtd_lib
+        add:
+           - ot_stack_mtd
+           - ot_cert_libs
+      - trigger: matter_thread_coap_cert_mtd_lib
+        description: >
+          Using GSDK OT components now 
+        remove:
+           - matter_thread_coap_cert_mtd_lib
+        add:
+           - ot_stack_mtd
+           - ot_cert_libs
+           - ot_coap_cert_libs

@@ -8,7 +8,7 @@ requires:
   - name: matter
   - name: glib
   - name: cmsis_spi
-  - name: sleeptimer_sysrtc
+  - name: sleeptimer_si91x
   - name: sleeptimer
   - name: memlcd_917
 provides:
@@ -26,12 +26,21 @@ include:
   file_list:
   - path: LcdPainter.h
     condition: [matter_window]
+- path: examples/thermostat/silabs/include
+  file_list:
+  - path: ThermostatIcons.h
+    condition: [matter_thermostat_app]
+  - path: ThermostatUI.h
+    condition: [matter_thermostat_app]
 source:
   - path: examples/platform/silabs/display/demo-ui.c
   - path: examples/platform/silabs/display/lcd.cpp
   - path: examples/window-app/silabs/src/LcdPainter.cpp
     condition:
       - matter_window
+  - path: examples/thermostat/silabs/src/ThermostatUI.cpp
+    condition:
+      - matter_thermostat_app
 define:
   - name: DISPLAY_ENABLED
   - name: SPI_MULTI_SLAVE

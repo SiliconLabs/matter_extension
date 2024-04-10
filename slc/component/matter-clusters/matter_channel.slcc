@@ -1,6 +1,8 @@
 
 category: Clusters|Media
-description: Implementation of the Channel Server Cluster
+description: >
+  Implementation of the Channel Server Cluster.
+  The user has to enable the Channel Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_channel
 package: Matter
 label: Channel Server Cluster

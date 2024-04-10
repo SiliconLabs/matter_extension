@@ -1,6 +1,8 @@
 
 category: Clusters|General
-description: Implementation of the General Commissioning Server Cluster
+description: >
+  Implementation of the General Commissioning Server Cluster.
+  The user has to enable the General Commissioning Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_general_commissioning
 package: Matter
 label: General Commissioning Server Cluster

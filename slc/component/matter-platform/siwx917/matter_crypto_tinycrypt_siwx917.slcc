@@ -1,0 +1,145 @@
+id: matter_crypto_tinycrypt_siwx917
+label: Matter MbedTLS Integration
+description: >
+  mbedlts and Tinycrypt for SiWx917 SoC
+package: "Matter"
+category: "Matter-WiFi|Platform|Tinycrypt"
+quality: production
+provides:
+  - name: matter_crypto_tinycrypt_siwx917
+source:
+  - path: src/platform/silabs/SiWx917/CHIPCryptoPALTinyCrypt.cpp
+  - path: third_party/mbedtls/repo/library/aes.c
+  - path: third_party/mbedtls/repo/library/asn1parse.c
+  - path: third_party/mbedtls/repo/library/asn1write.c
+  - path: third_party/mbedtls/repo/library/base64.c
+  - path: third_party/mbedtls/repo/library/bignum.c
+  - path: third_party/mbedtls/repo/library/ccm.c
+  - path: third_party/mbedtls/repo/library/cipher.c
+  - path: third_party/mbedtls/repo/library/cipher_wrap.c
+  - path: third_party/mbedtls/repo/library/constant_time.c
+  - path: third_party/mbedtls/repo/library/ctr_drbg.c
+  - path: third_party/mbedtls/repo/library/ecdh.c
+  - path: third_party/mbedtls/repo/library/ecdsa.c
+  - path: third_party/mbedtls/repo/library/ecp.c
+  - path: third_party/mbedtls/repo/library/ecp_curves.c
+  - path: third_party/mbedtls/repo/library/entropy.c
+  - path: third_party/mbedtls/repo/library/hkdf.c
+  - path: third_party/mbedtls/repo/library/hmac_drbg.c
+  - path: third_party/mbedtls/repo/library/md.c
+  - path: third_party/mbedtls/repo/library/pem.c
+  - path: third_party/mbedtls/repo/library/pkcs5.c
+  - path: third_party/mbedtls/repo/library/platform.c
+  - path: third_party/mbedtls/repo/library/sha256.c
+  - path: third_party/mbedtls/repo/library/sha512.c
+  - path: third_party/mbedtls/repo/library/x509.c
+  - path: third_party/mbedtls/repo/library/x509_create.c
+  - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/ecc.c
+  - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/ecc_dh.c
+  - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/ecc_dsa.c
+  - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/error.c
+  - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/oid.c
+  - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/pk.c
+  - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/pk_wrap.c
+  - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/pkparse.c
+  - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/pkwrite.c
+  - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/platform_util.c
+  - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/x509_crt.c
+  - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/x509write_csr.c
+  - path: third_party/mbedtls/repo/library/base64.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/debug.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/ecjpake.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/pem.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/rsa.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/rsa_internal.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/sha1.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/ssl_ciphersuites.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/ssl_cli.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/ssl_msg.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/ssl_srv.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/ssl_tls.c
+    condition: [matter_dic]
+  - path: third_party/mbedtls/repo/library/x509.c
+    condition: [matter_dic]
+include:
+  - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/inc
+    file_list:
+      - path: tinycrypt/ecc.h
+      - path: tinycrypt/ecc_dh.h
+      - path: tinycrypt/ecc_dsa.h
+      - path: mbedtls/pk.h
+      - path: mbedtls/platform.h
+      - path: mbedtls/platform_util.h
+      - path: mbedtls/pk_internal.h
+      - path: mbedtls/oid.h
+      - path: mbedtls/check_config.h
+  - path: third_party/mbedtls/repo/library
+    file_list:
+      - path: common.h
+      - path: constant_time_internal.h
+      - path: constant_time_invasive.h
+      - path: ecp_invasive.h
+  - path: third_party/mbedtls/repo/include
+    file_list:
+      - path: mbedtls/x509_csr.h
+      - path: mbedtls/x509_crt.h
+      - path: mbedtls/x509.h
+      - path: mbedtls/asn1.h
+      - path: mbedtls/bignum.h
+      - path: mbedtls/md.h
+      - path: mbedtls/ecp.h
+      - path: mbedtls/ecdsa.h
+      - path: mbedtls/sha256.h
+      - path: mbedtls/x509_crl.h
+      - path: mbedtls/ccm.h
+      - path: mbedtls/cipher.h
+      - path: mbedtls/ctr_drbg.h
+      - path: mbedtls/aes.h
+      - path: mbedtls/ecdh.h
+      - path: mbedtls/entropy.h
+      - path: mbedtls/error.h
+      - path: mbedtls/hkdf.h
+      - path: mbedtls/pkcs5.h
+      - path: mbedtls/sha1.h
+      - path: mbedtls/asn1write.h
+      - path: mbedtls/base64.h
+      - path: mbedtls/bn_mul.h
+      - path: mbedtls/ssl_internal.h
+      - path: mbedtls/ssl.h
+      - path: mbedtls/ssl_ciphersuites.h
+      - path: mbedtls/sha512.h
+      - path: mbedtls/ecjpake.h
+      - path: mbedtls/cipher_internal.h
+      - path: mbedtls/constant_time.h
+      - path: mbedtls/cmac.h
+      - path: mbedtls/threading.h
+      - path: mbedtls/hmac_drbg.h
+      - path: mbedtls/ecp_internal.h
+      - path: mbedtls/entropy_poll.h
+      - path: mbedtls/md_internal.h
+      - path: mbedtls/pem.h
+      - path: mbedtls/md2.h
+      - path: mbedtls/des.h
+      - path: mbedtls/md4.h
+      - path: mbedtls/md5.h
+      - path: mbedtls/ripemd160.h
+      - path: mbedtls/rsa.h
+  - path: src/platform/silabs/SiWx917
+    file_list:
+      - path: siwx917-chip-tinycrypt-config.h
+define:
+  - name: OPTIMIZE_TINYCRYPT_ASM
+  - name: TINYCRYPT_PRIMITIVES
+  - name: MBEDTLS_CONFIG_FILE
+    value: \"siwx917-chip-tinycrypt-config.h\"

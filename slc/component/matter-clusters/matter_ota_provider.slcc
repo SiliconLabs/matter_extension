@@ -1,6 +1,8 @@
 
 category: Clusters|CHIP
-description: Implementation of the OTA Provider Cluster
+description: >
+  Implementation of the OTA Provider Cluster.
+  The user has to enable the OTA Provider Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_ota_provider
 package: Matter
 label: OTA Provider Cluster

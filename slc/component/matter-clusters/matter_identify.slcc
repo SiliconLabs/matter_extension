@@ -1,6 +1,8 @@
 
 category: Clusters|General
-description: Implementation of the Identify Server Cluster
+description: >
+  Implementation of the Identify Server Cluster.
+  The user has to enable the Identify Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_identify
 package: Matter
 label: Identify Server Cluster

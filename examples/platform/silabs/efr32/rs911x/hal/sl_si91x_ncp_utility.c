@@ -23,9 +23,6 @@
 #include <string.h>
 
 #include "FreeRTOS.h"
-#include "event_groups.h"
-#include "semphr.h"
-#include "task.h"
 #include "dmadrv.h"
 #include "em_chip.h"
 #include "em_cmu.h"
@@ -33,9 +30,13 @@
 #include "em_device.h"
 #include "em_gpio.h"
 #include "em_ldma.h"
+#include "event_groups.h"
 #include "gpiointerrupt.h"
+#include "semphr.h"
 #include "spidrv.h"
+#include "task.h"
 
+#include "sl_board_control.h"
 #include "sl_device_init_clocks.h"
 #include "sl_device_init_hfxo.h"
 #include "sl_status.h"
@@ -45,18 +46,23 @@
 #include "wfx_host_events.h"
 #include "wfx_rsi.h"
 
+#if SL_MX25CTRL_MUX
+sl_status_t sl_wfx_host_spiflash_cs_assert(void);
+sl_status_t sl_wfx_host_spiflash_cs_deassert(void);
+#endif
+
 #if SL_BTLCTRL_MUX
 #include "btl_interface.h"
 #endif // SL_BTLCTRL_MUX
 #if SL_LCDCTRL_MUX
 #include "sl_memlcd.h"
+#include "sl_memlcd_display.h"
+#define SL_SPIDRV_LCD_BITRATE SL_MEMLCD_SCLK_FREQ
 #endif // SL_LCDCTRL_MUX
 #if SL_MX25CTRL_MUX
 #include "sl_mx25_flash_shutdown_usart_config.h"
 #endif // SL_MX25CTRL_MUX
 
-#define CONCAT(A, B) (A##B)
-#define SPI_CLOCK(N) CONCAT(cmuClock_USART, N)
 
 #if SL_SPICTRL_MUX
 StaticSemaphore_t spi_sem_peripheral;
@@ -64,8 +70,6 @@ SemaphoreHandle_t spi_sem_sync_hdl;
 #endif // SL_SPICTRL_MUX
 
 #if SL_LCDCTRL_MUX
-
-
 
 /********************************************************
  * @fn   sl_wfx_host_pre_lcd_spi_transfer(void)
@@ -77,22 +81,17 @@ SemaphoreHandle_t spi_sem_sync_hdl;
 sl_status_t sl_wfx_host_pre_lcd_spi_transfer(void)
 {
 #if SL_SPICTRL_MUX
-    if (sl_wfx_host_spi_cs_deassert() != SL_STATUS_OK)
-    {
-        return SL_STATUS_FAIL;
-    }
     xSemaphoreTake(spi_sem_sync_hdl, portMAX_DELAY);
 #endif // SL_SPICTRL_MUX
-    // sl_memlcd_refresh takes care of SPIDRV_Init()
-    if (SL_STATUS_OK != sl_memlcd_refresh(sl_memlcd_get()))
+    sl_status_t status = sl_board_enable_display();
+    if (SL_STATUS_OK == status)
     {
+        SPIDRV_SetBaudrate(SL_SPIDRV_LCD_BITRATE);
+    }
 #if SL_SPICTRL_MUX
         xSemaphoreGive(spi_sem_sync_hdl);
 #endif // SL_SPICTRL_MUX
-        SILABS_LOG("%s error.", __func__);
-        return SL_STATUS_FAIL;
-    }
-    return SL_STATUS_OK;
+    return status;
 }
 
 /********************************************************
@@ -104,30 +103,25 @@ sl_status_t sl_wfx_host_pre_lcd_spi_transfer(void)
  **********************************************************/
 sl_status_t sl_wfx_host_post_lcd_spi_transfer(void)
 {
-    USART_Enable(SL_MEMLCD_SPI_PERIPHERAL, usartDisable);
-    CMU_ClockEnable(SPI_CLOCK(SL_MEMLCD_SPI_PERIPHERAL_NO), false);
-    GPIO->USARTROUTE[SL_MEMLCD_SPI_PERIPHERAL_NO].ROUTEEN = PINOUT_CLEAR;
+    sl_status_t status = sl_board_disable_display();
 #if SL_SPICTRL_MUX
     xSemaphoreGive(spi_sem_sync_hdl);
 #endif // SL_SPICTRL_MUX
-    return SL_STATUS_OK;
+    return status;
 }
 #endif // SL_LCDCTRL_MUX
-
-
 
 #if SL_SPICTRL_MUX
 
 void SPIDRV_SetBaudrate(uint32_t baudrate)
 {
-#if !defined(CHIP_9117)
-    if (EUSART_BaudrateGet(MY_USART) == baudrate)
+    if (USART_BaudrateGet(SPI_USART) != baudrate)
     {
-        // EUSART synced to baudrate already
-        return;
+        USART_InitSync_TypeDef usartInit = USART_INITSYNC_DEFAULT;
+        usartInit.msbf                   = true;
+        usartInit.baudrate               = baudrate;
+        USART_InitSync(SPI_USART, &usartInit);
     }
-    EUSART_BaudrateSet(MY_USART, 0, baudrate);
-#endif
 }
 
 /********************************************************
@@ -137,7 +131,8 @@ void SPIDRV_SetBaudrate(uint32_t baudrate)
  * @return
  *        None
  **********************************************************/
-sl_status_t spi_board_init() {
+sl_status_t spi_board_init()
+{
 #if SL_SPICTRL_MUX
     if (spi_sem_sync_hdl == NULL)
     {
@@ -158,52 +153,29 @@ sl_status_t spi_board_init() {
  **********************************************************/
 sl_status_t sl_wfx_host_spi_cs_assert(void)
 {
+#if SL_SPICTRL_MUX
     xSemaphoreTake(spi_sem_sync_hdl, portMAX_DELAY);
-
-    if (!spi_enabled) // Reduce sl_spidrv_init_instances
-    {
-
-#if defined(EFR32MG24)
-#if defined(CHIP_9117)
-        GPIO_PinOutClear(SPI_CS_PIN.port, SPI_CS_PIN.pin);
-#else
-        sl_spidrv_init_instances();
-        GPIO_PinOutClear(SL_SPIDRV_EUSART_EXP_CS_PORT, SL_SPIDRV_EUSART_EXP_CS_PIN);
-#endif // CHIP_9117
-#endif // EFR32MG24
-        spi_enabled = true;
-    }
+#endif /* SL_SPICTRL_MUX */
+    SPIDRV_SetBaudrate(USART_INITSYNC_BAUDRATE);
+    SPI_USART->TIMING |= USART_TIMING_TXDELAY_ONE | USART_TIMING_CSSETUP_ONE | USART_TIMING_CSHOLD_ONE;
+    DMADRV_Init();
+    DMADRV_AllocateChannel((unsigned int *) &rx_ldma_channel, NULL);
+    DMADRV_AllocateChannel((unsigned int *) &tx_ldma_channel, NULL);
+    GPIO_PinOutClear(SL_SPIDRV_EXP_CS_PORT, SL_SPIDRV_EXP_CS_PIN);
     return SL_STATUS_OK;
 }
 
 sl_status_t sl_wfx_host_spi_cs_deassert(void)
 {
-    if (spi_enabled)
-    {
-#if defined(CHIP_9117)
-        LDMA_DeInit();
-        xSemaphoreGive(spi_sem_sync_hdl);
-        SILABS_LOG("%s error.", __func__);
-#else
-        if (ECODE_EMDRV_SPIDRV_OK != SPIDRV_DeInit(SL_SPIDRV_HANDLE))
-        {
+    DMADRV_DeInit();
+    DMADRV_StopTransfer(rx_ldma_channel);
+    DMADRV_StopTransfer(tx_ldma_channel);
+    DMADRV_FreeChannel(rx_ldma_channel);
+    DMADRV_FreeChannel(tx_ldma_channel);
+    GPIO_PinOutSet(SL_SPIDRV_EXP_CS_PORT, SL_SPIDRV_EXP_CS_PIN);
+#if SL_SPICTRL_MUX
             xSemaphoreGive(spi_sem_sync_hdl);
-            SILABS_LOG("%s error.", __func__);
-            return SL_STATUS_FAIL;
-        }
 #endif
-#if defined(EFR32MG24)
-#if defined(CHIP_9117)
-        GPIO_PinModeSet(SPI_CS_PIN.port, SPI_CS_PIN.pin, gpioModePushPull, 1);
-        GPIO->USARTROUTE[SPI_USART_ROUTE_INDEX].ROUTEEN = PINOUT_CLEAR;
-#else
-        GPIO_PinOutSet(SL_SPIDRV_EUSART_EXP_CS_PORT, SL_SPIDRV_EUSART_EXP_CS_PIN);
-        GPIO->EUSARTROUTE[SL_SPIDRV_EUSART_EXP_PERIPHERAL_NO].ROUTEEN = PINOUT_CLEAR;
-#endif // CHIP_9117
-#endif // EFR32MG24
-        spi_enabled = false;
-    }
-    xSemaphoreGive(spi_sem_sync_hdl);
     return SL_STATUS_OK;
 }
 #endif // SL_SPICTRL_MUX
@@ -218,7 +190,7 @@ sl_status_t sl_wfx_host_pre_bootloader_spi_transfer(void)
     }
     xSemaphoreTake(spi_sem_sync_hdl, portMAX_DELAY);
 #endif // SL_SPICTRL_MUX
-int32_t status = BOOTLOADER_OK;
+    int32_t status = BOOTLOADER_OK;
 #if defined(CHIP_9117)
     LDMA_Init_t ldma_init = LDMA_INIT_DEFAULT;
     LDMA_Init(&ldma_init);
@@ -262,7 +234,6 @@ sl_status_t sl_wfx_host_post_bootloader_spi_transfer(void)
     return SL_STATUS_OK;
 }
 #endif // SL_BTLCTRL_MUX
-
 
 #if SL_MX25CTRL_MUX
 sl_status_t sl_wfx_host_spiflash_cs_assert(void)

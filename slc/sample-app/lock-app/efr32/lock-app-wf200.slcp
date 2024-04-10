@@ -7,19 +7,18 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.0"
+    version: "2.2.1"
 
 component:
   - id: device_init
-  - id: simple_button
-    instance: [btn0, btn1]
-  - id: simple_led
-    instance: [led0, led1]
+  - id: matter_buttons
+    from: matter
+  - id: matter_wstk_leds
+    from: matter
+    
   - id: matter
     from: matter
   - id: matter_platform_efr32
-    from: matter
-  - id: matter_wstk_leds
     from: matter
   - id: matter_ble
     from: matter
@@ -98,16 +97,14 @@ component:
     from: matter
   - id: segger_rtt
 
-  - id: matter_icd
+  - id: matter_icd_management
     from: matter
   - id: matter_subscription_persistence
     from: matter
   - id: matter_subscription_synchronization
     from: matter
 # Disable due to size increase of ICD functionality    
-#  - id: matter_lcd
-#    from: matter
-#  - id: matter_qr_code
+#  - id: matter_default_lcd_config
 #    from: matter
 
 # Require LCD and QR Code components only on the boards that support LCD
@@ -131,8 +128,10 @@ requires:
 config_file:
   - path: ../../../../examples/lock-app/lock-common/lock-app.zap
     directory: common
+    file_id: zap_config
   - path: ../../../../provision.mattpconf
     directory: provision
+    file_id: provision_config
 
 include:
   - path: ../../../../examples/lock-app/silabs/include
@@ -197,8 +196,8 @@ configuration:
     value: 1536
 
 toolchain_settings:
-  - option: gcc_c++_compiler_option
-    value: -std=gnu++17
+  - option: cxx_standard
+    value: gnu++17
 template_contribution:
   - name: memory_flash_start
     value: 0x0

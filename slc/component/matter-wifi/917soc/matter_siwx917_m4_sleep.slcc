@@ -1,0 +1,32 @@
+id: matter_siwx917_m4_sleep
+label: Matter M4 Sleepy SiWx917
+package: Matter
+description: Allow Common flash M4 to go to sleep
+category: Matter-WiFi|Platform|Toolchain
+quality: production
+provides:
+  - name: matter_siwx917_m4_sleep
+requires:
+  - name: matter_icd_management
+include:
+  - path: third_party/silabs/matter_support/matter/si91x/siwx917/BRD4338A/support/inc
+    file_list:
+      - path: sl_si91x_m4_ps.h
+source:
+  - path: third_party/silabs/matter_support/matter/si91x/siwx917/BRD4338A/support/src/sl_si91x_m4_ps.c
+define:
+  - name: SI917_M4_SLEEP_ENABLED
+    value: 1
+  - name: SL_SI91X_MCU_BUTTON_BASED_WAKEUP
+    value: 1
+  - name: SL_SI91X_MCU_WIRELESS_BASED_WAKEUP
+    value: 1
+template_contribution:
+- name: event_handler
+  condition:
+  - sli_si91x_mcu_interface
+  value:
+    event: platform_init
+    include: rsi_wisemcu_hardware_setup.h
+    handler: sl_si91x_hardware_setup
+  priority: -9995
