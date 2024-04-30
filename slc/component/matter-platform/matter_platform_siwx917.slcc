@@ -58,6 +58,7 @@ define:
   - name: RS911X_WIFI
   - name: SL_SI91x_DUAL_INTERRUPTS_ERRATA
   - name: NVM3_LOCK_OVERRIDE
+  - name: IOSTREAM_USART
 # TODO : should be removed after code clean-up.
   - name: BRD4325A
 toolchain_settings:

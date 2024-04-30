@@ -254,14 +254,6 @@ void sl_button_on_change(uint8_t btn, uint8_t btnAction);
 #endif /* SL_ICD_ENABLED */
 
 void wfx_ipv6_notify(int got_ip);
-
-/* RSI for LWIP */
-void wfx_rsi_pkt_add_data(void * p, uint8_t * buf, uint16_t len, uint16_t off);
-int32_t wfx_rsi_send_data(void * p, uint16_t len);
-sl_status_t sl_si91x_driver_send_data_packet(sl_si91x_queue_type_t queue_type, sl_wifi_buffer_t * buffer, uint32_t wait_time);
-sl_status_t sl_si91x_allocate_command_buffer(sl_wifi_buffer_t ** host_buffer, void ** buffer, uint32_t requested_buffer_size,
-                                             uint32_t wait_duration_ms);
-
 void wfx_retry_interval_handler(bool is_wifi_disconnection_event, uint16_t retryJoin);
 
 #ifdef __cplusplus

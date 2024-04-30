@@ -19,7 +19,7 @@ Silicon Labs platform.
 
 For more general information on running Matter applications and prerequisites see online 
 documentation for Matter available on docs.silabs.com. Follow Thread demo instructions depending on the example you are running.
-[Demo instructions for Thread](https://docs.silabs.com/matter/2.2.1/matter-thread)
+[Demo instructions for Thread](https://docs.silabs.com/matter/2.2.2/matter-thread)
 
 ## OnOff Plug Example User Interface
 
@@ -90,9 +90,9 @@ If LEDs are supported by the board but not enabled in a project they can be enab
 
 ## Provision and Control
 
-You can provision and control the Matter device using the Python controller, chip-tool standalone, Android or iOS app, or the Matter Hub provided by Silicon Labs. More information on using the Matter Hub can be found in the online [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.2.1/matter-thread/raspi-img)
+You can provision and control the Matter device using the Python controller, chip-tool standalone, Android or iOS app, or the Matter Hub provided by Silicon Labs. More information on using the Matter Hub can be found in the online [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.2.2/matter-thread/raspi-img)
 
-The pre-built chip-tool instance ships with the Matter Hub image which is available from Silicon Labs here: [Silicon Labs Matter Hub](https://www.silabs.com/documents/public/software/SilabsMatterPi_2.2.0-1.2-extension.zip)
+The pre-built chip-tool instance ships with the Matter Hub image which is available from Silicon Labs here: [Silicon Labs Matter Hub](https://www.silabs.com/documents/public/software/SilabsMatterPi_2.2.1-1.2-extension.zip)
     
 More information on using the chip-tool directly can be found here: [CHIPTool](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
 

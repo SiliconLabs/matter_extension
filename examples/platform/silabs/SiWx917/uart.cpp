@@ -67,7 +67,7 @@ void uartConsoleInit(void)
     usart_config.hwflowcontrol = SL_USART_FLOW_CONTROL_NONE;
     usart_config.databits      = SL_USART_DATA_BITS_8;
     usart_config.misc_control  = SL_USART_MISC_CONTROL_NONE;
-    usart_config.usart_module  = USART_0;
+    usart_config.usart_module  = ULPUART;
     usart_config.config_enable = ENABLE;
     usart_config.synch_mode    = DISABLE;
     sl_si91x_usart_control_config_t get_config;
@@ -87,14 +87,11 @@ void uartConsoleInit(void)
     }
 
     // Register user callback function
-    status = sl_si91x_usart_register_event_callback(callback_event);
+    status = sl_si91x_usart_multiple_instance_register_event_callback((usart_peripheral_t) usart_config.usart_module, callback_event);
     if (status != SL_STATUS_OK)
     {
         SILABS_LOG("sl_si91x_usart_register_event_callback: Error Code : %lu \n", status);
     }
-
-    NVIC_EnableIRQ(USART0_IRQn);
-    NVIC_SetPriority(USART0_IRQn, 7);
 }
 
 /*

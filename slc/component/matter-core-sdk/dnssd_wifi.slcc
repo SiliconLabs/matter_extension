@@ -25,6 +25,8 @@ include:
     -   path: IncrementalResolve.h
     -   path: Resolver.h
     -   path: MinimalMdnsServer.h
+    -   path: platform/Dnssd.h
+    -   path: platform/DnssdBrowseDelegate.h
 label: dnssd_wifi
 package: Matter
 provides:
