@@ -22,7 +22,6 @@
 #include "AppEvent.h"
 #include "operational-state-delegate-impl.h"
 
-#include <app/clusters/on-off-server/on-off-server.h>
 #include <app/server/OnboardingCodesUtil.h>
 #include <app/server/Server.h>
 #include <app/util/attribute-storage.h>
