@@ -7,6 +7,9 @@ id: matter_door_lock
 package: Matter
 label: Door Lock Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_door_lock
 source:
@@ -16,6 +19,7 @@ include:
   - path: src/app/clusters/door-lock-server
     file_list:
       - path: door-lock-server.h
+      - path: door-lock-delegate.h
 template_contribution:
   - name: component_catalog
     value: matter_door_lock

@@ -37,6 +37,7 @@
 #include "task.h"
 
 #include "sl_board_control.h"
+
 #include "sl_device_init_clocks.h"
 #include "sl_device_init_hfxo.h"
 #include "sl_status.h"
@@ -63,7 +64,6 @@ sl_status_t sl_wfx_host_spiflash_cs_deassert(void);
 #include "sl_mx25_flash_shutdown_usart_config.h"
 #endif // SL_MX25CTRL_MUX
 
-
 #if SL_SPICTRL_MUX
 StaticSemaphore_t spi_sem_peripheral;
 SemaphoreHandle_t spi_sem_sync_hdl;
@@ -88,9 +88,6 @@ sl_status_t sl_wfx_host_pre_lcd_spi_transfer(void)
     {
         SPIDRV_SetBaudrate(SL_SPIDRV_LCD_BITRATE);
     }
-#if SL_SPICTRL_MUX
-        xSemaphoreGive(spi_sem_sync_hdl);
-#endif // SL_SPICTRL_MUX
     return status;
 }
 
@@ -112,7 +109,6 @@ sl_status_t sl_wfx_host_post_lcd_spi_transfer(void)
 #endif // SL_LCDCTRL_MUX
 
 #if SL_SPICTRL_MUX
-
 void SPIDRV_SetBaudrate(uint32_t baudrate)
 {
     if (USART_BaudrateGet(SPI_USART) != baudrate)
@@ -123,7 +119,6 @@ void SPIDRV_SetBaudrate(uint32_t baudrate)
         USART_InitSync(SPI_USART, &usartInit);
     }
 }
-
 /********************************************************
  * @fn   spi_board_init(void)
  * @brief
@@ -174,7 +169,7 @@ sl_status_t sl_wfx_host_spi_cs_deassert(void)
     DMADRV_FreeChannel(tx_ldma_channel);
     GPIO_PinOutSet(SL_SPIDRV_EXP_CS_PORT, SL_SPIDRV_EXP_CS_PIN);
 #if SL_SPICTRL_MUX
-            xSemaphoreGive(spi_sem_sync_hdl);
+    xSemaphoreGive(spi_sem_sync_hdl);
 #endif
     return SL_STATUS_OK;
 }

@@ -4,6 +4,9 @@ description: Introduces defines and configuration settings for no logs/debug cap
 package: Matter
 category: Platform|Size Reduction
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 
 provides:
   - name: matter_no_debug

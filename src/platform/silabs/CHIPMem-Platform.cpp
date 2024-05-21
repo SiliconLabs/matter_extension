@@ -44,13 +44,12 @@
 // #include <lib/core/CHIPConfig.h>
 #include <lib/support/CHIPMem.h>
 
-#include "heap_4_silabs.h"
-#include "task.h"
-
 #include <atomic>
 #include <cstdio>
 #include <cstring>
 #include <stdlib.h>
+
+#include "sl_memory_manager.h"
 
 #if CHIP_CONFIG_MEMORY_MGMT_PLATFORM
 
@@ -104,7 +103,7 @@ void * MemoryAlloc(size_t size)
 {
     void * ptr;
     VERIFY_INITIALIZED();
-    ptr = pvPortMalloc(size);
+    ptr = malloc(size);
     trackAlloc(ptr, size);
     return ptr;
 }
@@ -113,7 +112,7 @@ void * MemoryAlloc(size_t size, bool isLongTermAlloc)
 {
     void * ptr;
     VERIFY_INITIALIZED();
-    ptr = pvPortMalloc(size);
+    ptr = malloc(size);
     trackAlloc(ptr, size);
     return ptr;
 }
@@ -122,7 +121,7 @@ void * MemoryCalloc(size_t num, size_t size)
 {
     VERIFY_INITIALIZED();
 
-    void * ptr = pvPortCalloc(num, size);
+    void * ptr = calloc(num, size);
     trackAlloc(ptr, size * num);
     return ptr;
 }
@@ -131,7 +130,7 @@ void * MemoryRealloc(void * p, size_t size)
 {
     VERIFY_INITIALIZED();
 
-    p = pvPortRealloc(p, size);
+    p = realloc(p, size);
     return p;
 }
 
@@ -139,7 +138,7 @@ void MemoryFree(void * p)
 {
     VERIFY_INITIALIZED();
     trackFree(p, 0);
-    vPortFree(p);
+    free(p);
 }
 
 bool MemoryInternalCheckPointer(const void * p, size_t min_size)
@@ -149,6 +148,7 @@ bool MemoryInternalCheckPointer(const void * p, size_t min_size)
 
 } // namespace Platform
 } // namespace chip
+
 
 #ifdef BRD4325A
 extern "C" void memMonitoringTrackAlloc(void * ptr, size_t size) {}

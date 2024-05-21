@@ -26,6 +26,9 @@ package: Matter
 provides:
 -   name: matter_core
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/lib/dnssd/minimal_mdns/core/QName.cpp
 -   path: src/lib/dnssd/minimal_mdns/core/QNameString.cpp

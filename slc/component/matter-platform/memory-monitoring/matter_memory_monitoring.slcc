@@ -4,6 +4,9 @@ category: Platform
 description: Component to enable memory monitoring
 label: Memory Monitoring
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 provides:
   - name: matter_memory_monitoring
 source:

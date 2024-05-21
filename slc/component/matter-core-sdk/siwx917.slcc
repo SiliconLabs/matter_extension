@@ -120,6 +120,9 @@ package: Matter
 provides:
   - name: matter_siwx917
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 requires:
   - name: matter_siwx917_common
   - name: sl_si91x_trng
@@ -137,7 +140,7 @@ source:
   - path: src/platform/silabs/platformAbstraction/WiseMcuSpam.cpp
   - path: src/platform/silabs/rs911x/BLEManagerImpl.cpp
   - path: src/platform/silabs/rs911x/wfx_sl_ble_init.c
-  - path: src/platform/silabs/SiWx917/ConfigurationManagerImpl.cpp
+  - path: src/platform/silabs/ConfigurationManagerImpl.cpp
   - path: src/platform/silabs/SiWx917/PlatformManagerImpl.cpp
 ui_hints:
   visibility: never

@@ -1,6 +1,9 @@
 id: efx_ncp_custom_host_mcu
 label: RS911x NCP custom host mcu
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 description: >
   Adds support for the HAL and WiFi Driver layer for rs911x NCP devices
 package: Matter

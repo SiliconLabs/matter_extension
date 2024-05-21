@@ -15,10 +15,10 @@ include:
 -   path: third_party/nlio/repo/include
 -   path: examples/platform/silabs/SiWx917/SiWx917
     file_list:
-    -   path: wfx_rsi.h
     -   path: sl_wlan_config.h
 -   path: examples/platform/silabs
     file_list:
+    -   path: wfx_rsi.h
     -   path: SilabsDeviceDataProvider.h
     -   path: board_config.h
     -   path: OTAConfig.h
@@ -31,7 +31,6 @@ include:
     -   path: PigweedLogger.h
     -   path: FreeRTOSConfig.h
     -   path: Rpc.h
-    -   path: heap_4_silabs.h
     -   path: TemperatureSensor.h
     -   path: silabs_creds.h
     -   path: SilabsTestEventTriggerDelegate.h
@@ -49,11 +48,13 @@ package: Matter
 provides:
 -   name: matter_siwx917_common
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: examples/platform/silabs/LEDWidget.cpp
--   path: examples/platform/silabs/SiWx917/SiWx917/sl_wifi_if.c
--   path: examples/platform/silabs/SiWx917/SiWx917/wfx_rsi_host.c
--   path: examples/platform/silabs/heap_4_silabs.c
+-   path: examples/platform/silabs/SiWx917/SiWx917/sl_wifi_if.cpp
+-   path: examples/platform/silabs/SiWx917/SiWx917/wfx_rsi_host.cpp
 -   path: examples/platform/silabs/syscalls_stubs.cpp
 -   path: src/platform/silabs/SiWx917/wifi/dhcp_client.cpp
 -   path: src/platform/silabs/SiWx917/wifi/ethernetif.cpp

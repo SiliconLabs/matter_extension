@@ -28,7 +28,7 @@
 
 #include <lib/support/TypeTraits.h>
 
-#if (defined(SL_CATALOG_SIMPLE_LED_LED1_PRESENT) || defined(SIWX_917))
+#ifdef SL_CATALOG_SIMPLE_LED_LED1_PRESENT
 #define DW_STATE_LED 1
 #else
 #define DW_STATE_LED 0
@@ -51,11 +51,12 @@ TimerHandle_t sDishwasherTimer;
 CHIP_ERROR DishwasherManager::Init()
 {
     sDishwasherLED.Init(DW_STATE_LED);
+    AppTask::GetAppTask().LinkAppLed(&sDishwasherLED);
 
     chip::DeviceLayer::PlatformMgr().LockChipStack();
     OperationalStateEnum state = static_cast<OperationalStateEnum>(OperationalState::GetInstance()->GetCurrentOperationalState());
-    UpdateOperationState(state);
     chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+    UpdateOperationState(state);
     return CHIP_NO_ERROR;
 }
 

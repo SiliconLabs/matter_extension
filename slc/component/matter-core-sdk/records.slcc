@@ -23,6 +23,9 @@ package: Matter
 provides:
 -   name: matter_records
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/lib/dnssd/minimal_mdns/records/IP.cpp
 -   path: src/lib/dnssd/minimal_mdns/records/ResourceRecord.cpp

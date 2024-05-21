@@ -7,6 +7,9 @@ id: matter_application_launcher
 package: Matter
 label: Application Launcher Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_application_launcher
 source:

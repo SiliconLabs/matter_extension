@@ -43,14 +43,12 @@ public:
         InvalidScreen,
     } Screen_e;
 
-// SLC-FIX add this back once we rebase to silabs_slc_1.3
-/*    typedef enum icdMode
+    typedef enum icdMode
     {
         NotICD = 0,
         SIT,
         LIT,
-    } ICDMode_e; 
-*/
+    } ICDMode_e;
 
     typedef struct dStatus
     {
@@ -58,8 +56,7 @@ public:
         bool connected       = false;
         char networkName[50] = { "TODO" };
         bool advertising     = false;
-        // SLC-FIX add this back once we rebase to silabs_slc_1.3
-        //ICDMode_e icdMode    = NotICD;
+        ICDMode_e icdMode    = NotICD;
     } DisplayStatus_t;
 
     typedef void (*customUICB)(GLIB_Context_t * context);
@@ -70,10 +67,6 @@ public:
     int Update(void);
     void WriteDemoUI(bool state);
     void SetCustomUI(customUICB cb);
-#ifdef LCD_WITH_SLEEP
-    void TurnOn(void);
-    void TurnOff(void);
-#endif
 
     void SetScreen(Screen_e screen);
     void CycleScreens(void);

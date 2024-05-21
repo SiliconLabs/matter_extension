@@ -1,6 +1,9 @@
 id: wf200_ncp_extension
 label: WF200 NCP Extension
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 package: Matter
 description: >
   Adds support for the HAL and WiFi Driver layer for WF200 NCP devices
@@ -19,43 +22,43 @@ source:
   - path: examples/platform/silabs/efr32/wf200/sl_wfx_securelink_task.c
   - path: examples/platform/silabs/efr32/wf200/sl_wfx_task.c
   - path: examples/platform/silabs/efr32/wf200/wf200_init.c
-  - path: third_party/silabs/gecko_sdk/platform/radio/wifi/wfx_fmac_driver/bus/sl_wfx_bus.c
-  - path: third_party/silabs/gecko_sdk/platform/radio/wifi/wfx_fmac_driver/bus/sl_wfx_bus_spi.c
-  - path: third_party/silabs/gecko_sdk/platform/radio/wifi/wfx_fmac_driver/sl_wfx.c
-  - path: third_party/silabs/gecko_sdk/platform/radio/wifi/wfx_fmac_driver/secure_link/sl_wfx_secure_link.c
+  - path: third_party/silabs/simplicity_sdk/platform/radio/wifi/wfx_fmac_driver/bus/sl_wfx_bus.c
+  - path: third_party/silabs/simplicity_sdk/platform/radio/wifi/wfx_fmac_driver/bus/sl_wfx_bus_spi.c
+  - path: third_party/silabs/simplicity_sdk/platform/radio/wifi/wfx_fmac_driver/sl_wfx.c
+  - path: third_party/silabs/simplicity_sdk/platform/radio/wifi/wfx_fmac_driver/secure_link/sl_wfx_secure_link.c
   - path: src/platform/silabs/efr32/BLEManagerImpl.cpp
 
 include:
-  - path: third_party/silabs/gecko_sdk/platform/radio/wifi/wfx_fmac_driver/bus
+  - path: third_party/silabs/simplicity_sdk/platform/radio/wifi/wfx_fmac_driver/bus
     file_list:
       - path: sl_wfx_bus.h
-  - path: third_party/silabs/gecko_sdk/platform/radio/wifi/wfx_fmac_driver
+  - path: third_party/silabs/simplicity_sdk/platform/radio/wifi/wfx_fmac_driver
     file_list:
       - path: sl_wfx_host_api.h
       - path: sl_wfx_configuration_defaults.h
       - path: sl_wfx_constants.h
       - path: sl_wfx.h
       - path: sl_wfx_version.h
-  - path: third_party/silabs/gecko_sdk/platform/radio/wifi/wfx_fmac_driver/pds/brd4321a
+  - path: third_party/silabs/simplicity_sdk/platform/radio/wifi/wfx_fmac_driver/pds/brd4321a
     condition: [brd4321a]
     file_list:
       - path: sl_wfx_pds.h
-  - path: third_party/silabs/gecko_sdk/platform/radio/wifi/wfx_fmac_driver/pds/brd8022a
+  - path: third_party/silabs/simplicity_sdk/platform/radio/wifi/wfx_fmac_driver/pds/brd8022a
     condition: [brd8022a]
     file_list:
       - path: sl_wfx_pds.h
-  - path: third_party/silabs/gecko_sdk/platform/radio/wifi/wfx_fmac_driver/pds/brd8023a
+  - path: third_party/silabs/simplicity_sdk/platform/radio/wifi/wfx_fmac_driver/pds/brd8023a
     condition: [brd8023a]
     file_list:
       - path: sl_wfx_pds.h
-  - path: third_party/silabs/gecko_sdk/platform/radio/wifi/wfx_fmac_driver/pds/brd8022a
+  - path: third_party/silabs/simplicity_sdk/platform/radio/wifi/wfx_fmac_driver/pds/brd8022a
     unless: [brd8022a, brd8023a, brd4321a]
     file_list:
       - path: sl_wfx_pds.h
-  - path: third_party/silabs/gecko_sdk/platform/radio/wifi/wfx_fmac_driver/secure_link
+  - path: third_party/silabs/simplicity_sdk/platform/radio/wifi/wfx_fmac_driver/secure_link
     file_list:
       - path: sl_wfx_secure_link.h
-  - path: third_party/silabs/gecko_sdk/platform/radio/wifi/wfx_fmac_driver/firmware
+  - path: third_party/silabs/simplicity_sdk/platform/radio/wifi/wfx_fmac_driver/firmware
     file_list:
       - path: sl_wfx_cmd_api.h
       - path: sl_wfx_general_api.h
@@ -63,7 +66,7 @@ include:
       - path: sl_wfx_api.h
       - path: sl_wfx_registers.h
       - path: sl_wfx_wf200_C0.h
-  - path: third_party/silabs/gecko_sdk/platform/radio/wifi/wfx_fmac_driver/config
+  - path: third_party/silabs/simplicity_sdk/platform/radio/wifi/wfx_fmac_driver/config
     file_list:
       - path: sl_wfx_configuration.h
   - path: examples/platform/silabs/efr32/wf200

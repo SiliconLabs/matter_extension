@@ -1,0 +1,15 @@
+category: Matter|Examples
+package: Matter
+description: >
+  Provides example component for a sequential zigbee and matter application.
+id: matter_zigbee_sequential
+quality: production
+provides:
+  - name: matter_zigbee_sequential
+define:
+  - name: SL_MATTER_ZIGBEE_SEQUENTIAL
+    value: "1"
+conflicts:
+  - name: matter_zigbee_concurrent
+ui_hints:
+  visibility: always

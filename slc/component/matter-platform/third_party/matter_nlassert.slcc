@@ -6,6 +6,9 @@ package: Matter
 provides:
   - name: matter_nlassert
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 include:
   - path: third_party/nlassert/repo/include
     file_list:

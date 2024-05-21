@@ -42,6 +42,9 @@ package: Matter
 provides:
 -   name: matter_libchipcontroller
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/controller/AbstractDnssdDiscoveryController.cpp
 -   path: src/controller/AutoCommissioner.cpp

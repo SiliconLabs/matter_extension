@@ -17,6 +17,7 @@
 
 #include <platform/silabs/platformAbstraction/SilabsPlatform.h>
 
+#include "em_rmu.h"
 #include "sl_system_kernel.h"
 
 #ifdef ENABLE_WSTK_LEDS
@@ -44,37 +45,10 @@ extern "C" {
 #include "sl_component_catalog.h"
 #include "sl_mbedtls.h"
 #if SILABS_LOG_OUT_UART || ENABLE_CHIP_SHELL || CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
-#include "uart.h"
-#endif
-
-#if SL_SYSTEM_VIEW
-#include "SEGGER_SYSVIEW.h"
-#endif
-}
-
-#if SILABS_LOG_ENABLED
-#include "silabs_utils.h"
-#endif
-
-#ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
-#include "sl_simple_button_instances.h"
-#endif
-
-extern "C" {
-#include <mbedtls/platform.h>
-
-#if CHIP_ENABLE_OPENTHREAD
-#include "platform-efr32.h"
-
-#if OPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE
-#include "openthread/heap.h"
-#endif // OPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE
-
-#endif // CHIP_ENABLE_OPENTHREAD
-
-#include "sl_component_catalog.h"
-#include "sl_mbedtls.h"
-#if SILABS_LOG_OUT_UART || ENABLE_CHIP_SHELL || CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
+#ifdef SL_CATALOG_CLI_PRESENT
+#include "sl_iostream.h"
+#include "sl_iostream_stdio.h"
+#endif //
 #include "uart.h"
 #endif
 
@@ -97,13 +71,20 @@ SilabsPlatform::SilabsButtonCb SilabsPlatform::mButtonCallback = nullptr;
 
 CHIP_ERROR SilabsPlatform::Init(void)
 {
+    mRebootCause = RMU_ResetCauseGet();
+    // Clear register so it does accumualate the causes of each reset
+    RMU_ResetCauseClear();
+
+#if SILABS_LOG_OUT_UART && defined(SL_CATALOG_CLI_PRESENT)
+    sl_iostream_set_default(sl_iostream_stdio_handle);
+#endif
+
 #if CHIP_ENABLE_OPENTHREAD
     sl_ot_sys_init();
 #endif
 
 #ifdef SL_CATALOG_SYSTEMVIEW_TRACE_PRESENT
     SEGGER_SYSVIEW_Conf();
-    SEGGER_SYSVIEW_Start();
 #endif
 
 #if SILABS_LOG_OUT_UART || ENABLE_CHIP_SHELL || CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
@@ -160,10 +141,6 @@ void SilabsPlatform::StartScheduler()
 }
 
 #ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
-namespace {
-    sl_button_state_t sButtonStates[SL_SIMPLE_BUTTON_COUNT] = { 0 };
-}
-
 extern "C" {
 void sl_button_on_change(const sl_button_t * handle)
 {
@@ -176,9 +153,7 @@ void sl_button_on_change(const sl_button_t * handle)
     {
         if (SL_SIMPLE_BUTTON_INSTANCE(i) == handle)
         {
-            sl_button_state_t state = sl_button_get_state(handle);
-            sButtonStates[i] = state;
-            Silabs::GetPlatform().mButtonCallback(i, state);
+            Silabs::GetPlatform().mButtonCallback(i, sl_button_get_state(handle));
             break;
         }
     }
@@ -187,7 +162,8 @@ void sl_button_on_change(const sl_button_t * handle)
 
 uint8_t SilabsPlatform::GetButtonState(uint8_t button)
 {
-    return (button < SL_SIMPLE_BUTTON_COUNT) ? sButtonStates[button] : 0;
+    const sl_button_t * handle = SL_SIMPLE_BUTTON_INSTANCE(button);
+    return nullptr == handle ? 0 : sl_button_get_state(handle);
 }
 
 #else

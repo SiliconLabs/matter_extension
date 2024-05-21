@@ -4,19 +4,18 @@ description: Adds EFR32 Bluetooth network layer for Matter.
 package: "Matter"
 category: Stack|Bluetooth
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 requires:
   - name: matter_libblelayer
   - name: matter
-  - name: bluetooth_feature_gap
-  - name: bluetooth_feature_gatt
   - name: bluetooth_feature_gatt_server
-  - name: bluetooth_feature_nvm
-  - name: bluetooth_feature_sm
   - name: bluetooth_feature_legacy_advertiser
   - name: bluetooth_stack
   - name: bluetooth_feature_system
   - name: bluetooth_feature_connection
-  - name: bluetooth_crypto
+  - name: matter_gatt
   
 provides:
   - name: matter_ble

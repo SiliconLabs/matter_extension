@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.2"
+    version: "2.3.0"
 
 component:
   - id: device_init
@@ -26,11 +26,10 @@ component:
     from: matter
   - id: matter_crypto
     from: matter
-  - id: silabs_factory_data_provider
-    from: matter
   - id: matter_gatt
     from: matter
-
+  - id: matter_scenes
+    from: matter
   - id: matter_efr32_ncp
     from: matter  
   - id: matter_wifi
@@ -95,6 +94,8 @@ component:
     from: matter
   - id: matter_wifi_network_diagnostics
     from: matter
+  - id: matter_shell
+    from: matter
 
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
@@ -109,24 +110,13 @@ component:
 # Require LCD and QR Code components only on the boards that support LCD
 requires:
   - name: wf200_ncp_extension
-#  - name: matter_default_lcd_config
-#    condition:
-#    - device_series_1
   - name: matter_default_lcd_config
-    condition:
-    - device_series_2
   - name: spidrv_instance
-  - name: uartdrv_instance
-    condition:
-    - device_series_1
   - name: uartdrv_eusart
     condition:
     - device_series_2
 # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
 # Select UART/EUART drivers based on device series
-  - name: matter_drivers_series_1_wifi_wf200
-    condition:
-     - device_series_1
   - name: matter_drivers_series_2_wifi_wf200
     condition:
      - device_series_2
@@ -172,9 +162,6 @@ define:
     value: "4092"
   - name: GSDK_WF200_BUILD
     value: "1"
-  - name: EFR32MG12_BRD4161A
-    value: "1"
-    condition: [brd4161a]
   - name: NDEBUG
     value: "1"
   - name: _REENT_SMALL
@@ -198,12 +185,6 @@ toolchain_settings:
     value: gnu++17
     
 template_contribution:
-  - name: memory_flash_start
-    value: 0x0
-    condition: [device_series_1]
-  - name: memory_flash_size
-    value: 0x000FF800
-    condition: [device_series_1]
   - name: memory_flash_start
     value: 0x08006000
     condition: [device_series_2]

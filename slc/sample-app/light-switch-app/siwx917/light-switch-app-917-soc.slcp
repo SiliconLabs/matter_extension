@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.2"
+    version: "2.3.0"
   - id: wiseconnect3_sdk
-    version: "3.2.0"
+    version: "3.3.0"
 
 component:
 
@@ -23,7 +23,7 @@ component:
     from: matter
   - id: matter_fw_upgrade_917
     from: matter
-  - id: silabs_factory_data_provider
+  - id: matter_icd_core
     from: matter
 
   - id: matter_wifi
@@ -97,6 +97,8 @@ component:
   - id: matter_ota_requestor
     from: matter
   - id: matter_ota_support
+    from: matter
+  - id: matter_shell
     from: matter
 
   - id: sl_si91x_common_flash_nvm3
@@ -196,6 +198,7 @@ define:
     value: "1"
 
 configuration:
+  - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
 # Default ICD configurations for light-switch application
   - {name: SL_ACTIVE_MODE_THRESHOLD, value: '1000'}
   - {name: SL_ACTIVE_MODE_INTERVAL, value: '60000'}

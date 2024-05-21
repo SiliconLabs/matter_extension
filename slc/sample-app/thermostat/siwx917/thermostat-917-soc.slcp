@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.2"
+    version: "2.3.0"
   - id: wiseconnect3_sdk
-    version: "3.2.0"
+    version: "3.3.0"
 
 component:
   - id: matter_wstk_leds
@@ -32,10 +32,6 @@ component:
     from: matter   
   - id: app_common
     from: matter
-
-  - id: silabs_factory_data_provider
-    from: matter
-
   - id: matter_access_control
     from: matter
   - id: matter_administrator_commissioning
@@ -69,6 +65,8 @@ component:
   - id: matter_operational_credentials
     from: matter
   - id: matter_ota_requestor
+    from: matter
+  - id: matter_ota_support
     from: matter
   - id: matter_software_diagnostics
     from: matter
@@ -146,6 +144,9 @@ requires:
     condition: [brd4338a]
   - name: matter_qr_code
     condition: [brd4338a]
+
+configuration:
+  - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
 
 config_file:
   - path: ../../../../examples/thermostat/thermostat-common/thermostat.zap

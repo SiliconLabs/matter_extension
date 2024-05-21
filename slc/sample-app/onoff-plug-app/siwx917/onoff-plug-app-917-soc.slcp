@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.2"
+    version: "2.3.0"
   - id: wiseconnect3_sdk
-    version: "3.2.0"
+    version: "3.3.0"
 
 component:
   - id: matter_wstk_leds
@@ -22,9 +22,8 @@ component:
     from: matter
   - id: matter_fw_upgrade_917
     from: matter
-  - id: silabs_factory_data_provider
+  - id: matter_scenes
     from: matter
-
   - id: matter_wifi
     from: matter
   - id: app_common
@@ -88,7 +87,8 @@ component:
     from: matter
   - id: toolchain_gcc_common
     from: matter
-
+  - id: matter_shell
+    from: matter
     
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
@@ -144,6 +144,9 @@ requires:
     condition: [brd4338a]
   - name: matter_qr_code
     condition: [brd4338a]
+
+configuration:
+  - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
 
 config_file:
   - path: ../../../../silabs_examples/onoff-plug-app/onoff-plug-common/onoff-plug-app.zap

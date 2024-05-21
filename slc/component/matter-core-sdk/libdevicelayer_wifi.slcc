@@ -1,37 +1,96 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
+- name: CHIP_HAVE_CONFIG_H
+  value: '1'
 description: libdevicelayer_wifi
 id: libdevicelayer_wifi
 include:
--   path: .
--   path: src
--   path: src/include
--   path: src/lib
--   path: third_party/nlassert/repo/include
--   path: third_party/nlio/repo/include
--   path: src/platform
-    file_list:
-    -   path: DeviceSafeQueue.h
-    -   path: GLibTypeDeleter.h
+- path: .
+- path: src
+- path: src/app/icd/server
+  file_list:
+  - path: ICDServerConfig.h
+- path: src/include
+  file_list:
+  - path: platform/LockTracker.h
+  - path: platform/CHIPDeviceConfig.h
+  - path: platform/ConfigurationManager.h
+  - path: platform/PersistedStorage.h
+  - path: platform/internal/CHIPDeviceLayerInternal.h
+  - path: platform/CHIPDeviceLayer.h
+  - path: platform/CHIPDeviceError.h
+  - path: platform/ConnectivityManager.h
+  - path: platform/GeneralUtils.h
+  - path: platform/KeyValueStoreManager.h
+  - path: platform/PlatformManager.h
+  - path: platform/ThreadStackManager.h
+  - path: platform/NFCManager.h
+  - path: platform/CHIPDeviceEvent.h
+  - path: platform/AttributeList.h
+  - path: platform/NetworkCommissioning.h
+  - path: platform/internal/DeviceNetworkInfo.h
+  - path: platform/internal/BLEManager.h
+  - path: platform/internal/GenericConnectivityManagerImpl_UDP.ipp
+  - path: platform/internal/GenericConnectivityManagerImpl_TCP.ipp
+  - path: platform/internal/GenericConnectivityManagerImpl_BLE.ipp
+  - path: platform/internal/GenericConnectivityManagerImpl_BLE.h
+  - path: platform/DiagnosticDataProvider.h
+  - path: platform/GeneralFaults.h
+  - path: platform/internal/testing/ConfigUnitTest.h
+  - path: platform/CommissionableDataProvider.h
+  - path: platform/DeviceInstanceInfoProvider.h
+  - path: platform/internal/GenericPlatformManagerImpl_FreeRTOS.ipp
+  - path: platform/internal/GenericPlatformManagerImpl_FreeRTOS.h
+  - path: platform/internal/GenericPlatformManagerImpl.ipp
+  - path: platform/internal/GenericPlatformManagerImpl.h
+  - path: platform/internal/EventLogging.h
+  - path: platform/DeviceControlServer.h
+  - path: platform/DeviceInfoProvider.h
+  - path: platform/RuntimeOptionsProvider.h
+  - path: platform/KvsPersistentStorageDelegate.h
+  - path: platform/internal/GenericDeviceInstanceInfoProvider.h
+  - path: platform/OTAImageProcessor.h
+  - path: platform/internal/GenericConfigurationManagerImpl.ipp
+  - path: platform/BuildTime.h
+  - path: platform/internal/GenericConfigurationManagerImpl.h
+  - path: platform/internal/GenericDeviceInstanceInfoProvider.ipp
+  - path: platform/internal/GenericConnectivityManagerImpl_Thread.ipp
+  - path: platform/internal/GenericConnectivityManagerImpl_Thread.h
+  - path: platform/internal/GenericConnectivityManagerImpl.h
+  - path: platform/internal/GenericConnectivityManagerImpl_UDP.h
+  - path: platform/internal/GenericConnectivityManagerImpl_TCP.h
+  - path: platform/internal/GenericConnectivityManagerImpl_NoBLE.h
+  - path: platform/internal/GenericConnectivityManagerImpl_NoThread.h
+  - path: platform/internal/GenericConnectivityManagerImpl_WiFi.ipp
+  - path: platform/internal/GenericConnectivityManagerImpl_NoWiFi.h
+  - path: platform/internal/GenericConnectivityManagerImpl_WiFi.h
+- path: src/lib
+- path: third_party/nlassert/repo/include
+- path: third_party/nlio/repo/include
+- path: src/platform
+  file_list:
+  - path: DeviceSafeQueue.h
+  - path: GLibTypeDeleter.h
 label: libdevicelayer_wifi
 package: Matter
 provides:
--   name: matter_libdevicelayer_wifi
+- name: matter_libdevicelayer_wifi
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
--   path: src/platform/CommissionableDataProvider.cpp
--   path: src/platform/DeviceControlServer.cpp
--   path: src/platform/DeviceInfoProvider.cpp
--   path: src/platform/DeviceInstanceInfoProvider.cpp
--   path: src/platform/DiagnosticDataProvider.cpp
--   path: src/platform/Entropy.cpp
--   path: src/platform/GeneralUtils.cpp
--   path: src/platform/Globals.cpp
--   path: src/platform/LockTracker.cpp
--   path: src/platform/PersistedStorage.cpp
--   path: src/platform/PlatformEventSupport.cpp
--   path: src/platform/RuntimeOptionsProvider.cpp
+- path: src/platform/CommissionableDataProvider.cpp
+- path: src/platform/DeviceControlServer.cpp
+- path: src/platform/DeviceInfoProvider.cpp
+- path: src/platform/DeviceInstanceInfoProvider.cpp
+- path: src/platform/DiagnosticDataProvider.cpp
+- path: src/platform/Entropy.cpp
+- path: src/platform/GeneralUtils.cpp
+- path: src/platform/Globals.cpp
+- path: src/platform/LockTracker.cpp
+- path: src/platform/PersistedStorage.cpp
+- path: src/platform/PlatformEventSupport.cpp
+- path: src/platform/RuntimeOptionsProvider.cpp
 ui_hints:
-    visibility: never
+  visibility: never

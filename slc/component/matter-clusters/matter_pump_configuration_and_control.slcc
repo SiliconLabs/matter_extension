@@ -7,6 +7,9 @@ id: matter_pump_configuration_and_control
 package: Matter
 label: Pump Configuration And Control Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_pump_configuration_and_control
 source:

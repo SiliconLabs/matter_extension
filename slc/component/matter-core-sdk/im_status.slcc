@@ -24,6 +24,9 @@ package: Matter
 provides:
 -   name: matter_im_status
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/protocols/interaction_model/StatusCode.cpp
 ui_hints:

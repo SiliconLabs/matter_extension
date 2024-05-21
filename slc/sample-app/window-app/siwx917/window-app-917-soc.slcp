@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.2"
+    version: "2.3.0"
   - id: wiseconnect3_sdk
-    version: "3.2.0"
+    version: "3.3.0"
 
 provides:
   - name: window_app
@@ -26,9 +26,8 @@ component:
     from: matter
   - id: matter_fw_upgrade_917
     from: matter
-  - id: silabs_factory_data_provider
+  - id: matter_icd_core
     from: matter
-
   - id: matter_wifi
     from: matter
   - id: app_common
@@ -84,8 +83,6 @@ component:
   - id: matter_configuration_over_swo
     from: matter
   - id: segger_rtt
-  - id: matter_subscription_timeout_resumption
-    from: matter
   - id: matter_subscription_persistence
     from: matter
   - id: toolchain_gcc_common
@@ -93,6 +90,8 @@ component:
   - id: matter_window
     from: matter
   - id: matter_ota_requestor
+    from: matter
+  - id: matter_shell
     from: matter
 
   - id: sl_si91x_common_flash_nvm3
@@ -141,6 +140,9 @@ requires:
     condition: [brd4338a]
   - name: matter_qr_code
     condition: [brd4338a]
+
+configuration:
+  - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
 
 config_file:
   - path: ../../../../examples/window-app/common/window-app.zap

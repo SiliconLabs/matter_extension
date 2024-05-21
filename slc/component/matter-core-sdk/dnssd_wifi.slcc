@@ -1,45 +1,85 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
+- name: CHIP_HAVE_CONFIG_H
+  value: '1'
 description: dnssd_wifi
 id: dnssd_wifi
 include:
--   path: .
--   path: src
--   path: src/include
--   path: src/lib
--   path: third_party/nlassert/repo/include
--   path: third_party/nlio/repo/include
--   path: src/lib/dnssd
-    file_list:
-    -   path: Advertiser.h
-    -   path: Discovery_ImplPlatform.h
-    -   path: Advertiser_ImplMinimalMdnsAllocator.h
-    -   path: ServiceNaming.h
-    -   path: ActiveResolveAttempts.h
-    -   path: IPAddressSorter.h
-    -   path: TxtFields.h
-    -   path: Constants.h
-    -   path: ResolverProxy.h
-    -   path: IncrementalResolve.h
-    -   path: Resolver.h
-    -   path: MinimalMdnsServer.h
-    -   path: platform/Dnssd.h
-    -   path: platform/DnssdBrowseDelegate.h
+- path: .
+- path: src
+- path: src/include
+- path: src/lib
+- path: third_party/nlassert/repo/include
+- path: third_party/nlio/repo/include
+- path: src/lib/dnssd
+  file_list:
+  - path: Advertiser.h
+  - path: Discovery_ImplPlatform.h
+  - path: Advertiser_ImplMinimalMdnsAllocator.h
+  - path: ServiceNaming.h
+  - path: ActiveResolveAttempts.h
+  - path: IPAddressSorter.h
+  - path: TxtFields.h
+  - path: Constants.h
+  - path: ResolverProxy.h
+  - path: IncrementalResolve.h
+  - path: Resolver.h
+  - path: MinimalMdnsServer.h
+  - path: minimal_mdns/AddressPolicy.h
+  - path: minimal_mdns/ListenIterator.h
+  - path: minimal_mdns/ServerIPAddresses.h
+  - path: Types.h
+  - path: minimal_mdns/core/HeapQName.h
+  - path: minimal_mdns/core/QName.h
+  - path: minimal_mdns/core/BytesRange.h
+  - path: minimal_mdns/core/DnsHeader.h
+  - path: minimal_mdns/ResponseSender.h
+  - path: minimal_mdns/Server.h
+  - path: minimal_mdns/core/FlatAllocatedQName.h
+  - path: minimal_mdns/responders/IP.h
+  - path: minimal_mdns/responders/Ptr.h
+  - path: minimal_mdns/responders/QueryResponder.h
+  - path: minimal_mdns/responders/Srv.h
+  - path: minimal_mdns/responders/Txt.h
+  - path: minimal_mdns/responders/RecordResponder.h
+  - path: minimal_mdns/responders/Responder.h
+  - path: minimal_mdns/records/ResourceRecord.h
+  - path: minimal_mdns/core/Constants.h
+  - path: minimal_mdns/core/RecordWriter.h
+  - path: minimal_mdns/Parser.h
+  - path: minimal_mdns/ResponseBuilder.h
+  - path: minimal_mdns/records/Ptr.h
+  - path: minimal_mdns/responders/ReplyFilter.h
+  - path: minimal_mdns/records/Srv.h
+  - path: minimal_mdns/records/Txt.h
+  - path: minimal_mdns/Logging.h
+  - path: minimal_mdns/RecordData.h
+  - path: minimal_mdns/Query.h
+  - path: minimal_mdns/AddressPolicy_DefaultImpl.h
+  - path: minimal_mdns/AddressPolicy_LibNlImpl.h
+  - path: minimal_mdns/QueryBuilder.h
+  - path: platform/Dnssd.h
+  - path: platform/DnssdBrowseDelegate.h
+  - path: minimal_mdns/records/IP.h
+  - path: minimal_mdns/core/QNameString.h
+  - path: minimal_mdns/QueryReplyFilter.h
 label: dnssd_wifi
 package: Matter
 provides:
--   name: matter_dnssd_wifi
+- name: matter_dnssd_wifi
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
--   path: src/lib/dnssd/ActiveResolveAttempts.cpp
--   path: src/lib/dnssd/Advertiser_ImplMinimalMdns.cpp
--   path: src/lib/dnssd/IPAddressSorter.cpp
--   path: src/lib/dnssd/IncrementalResolve.cpp
--   path: src/lib/dnssd/MinimalMdnsServer.cpp
--   path: src/lib/dnssd/Resolver_ImplMinimalMdns.cpp
--   path: src/lib/dnssd/ServiceNaming.cpp
--   path: src/lib/dnssd/TxtFields.cpp
+- path: src/lib/dnssd/ActiveResolveAttempts.cpp
+- path: src/lib/dnssd/Advertiser_ImplMinimalMdns.cpp
+- path: src/lib/dnssd/IPAddressSorter.cpp
+- path: src/lib/dnssd/IncrementalResolve.cpp
+- path: src/lib/dnssd/MinimalMdnsServer.cpp
+- path: src/lib/dnssd/Resolver_ImplMinimalMdns.cpp
+- path: src/lib/dnssd/ServiceNaming.cpp
+- path: src/lib/dnssd/TxtFields.cpp
+- path: src/lib/dnssd/ResolverProxy.cpp
 ui_hints:
-    visibility: never
+  visibility: never

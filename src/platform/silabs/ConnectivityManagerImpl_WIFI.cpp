@@ -368,14 +368,14 @@ void ConnectivityManagerImpl::OnStationConnected()
     (void) PlatformMgr().PostEvent(&event);
     // Setting the rs911x in the power save mode
 #if (CHIP_CONFIG_ENABLE_ICD_SERVER && RS911X_WIFI)
-#if SLI_SI91X_MCU_INTERFACE
+#if SLI_SI917
     sl_status_t err = wfx_power_save(RSI_SLEEP_MODE_2, ASSOCIATED_POWER_SAVE);
 #else
     sl_status_t err = wfx_power_save();
-#endif /* SLI_SI91X_MCU_INTERFACE */
+#endif /* SLI_SI917 */
     if (err != SL_STATUS_OK)
     {
-        ChipLogError(DeviceLayer, "Power save config for Wifi failed, error: %lx", err);
+        ChipLogError(DeviceLayer, "Power save config for Wifi failed");
     }
 #endif /* CHIP_CONFIG_ENABLE_ICD_SERVER && RS911X_WIFI */
     UpdateInternetConnectivityState();

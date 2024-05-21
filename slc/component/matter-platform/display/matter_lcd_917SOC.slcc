@@ -4,6 +4,9 @@ description: Support for liquid crystal display on matter 917 SOC boards
 package: "Matter"
 category: "Matter-WiFi|Platform"
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 requires:
   - name: matter
   - name: glib

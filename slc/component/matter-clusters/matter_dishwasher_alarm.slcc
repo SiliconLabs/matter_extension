@@ -7,6 +7,9 @@ id: matter_dishwasher_alarm
 package: Matter
 label: Dishwasher Alarm Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_dishwasher_alarm
 source:

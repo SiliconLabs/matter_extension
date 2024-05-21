@@ -29,10 +29,10 @@ class UniquePointerReceiver
 {
 public:
     UniquePointerReceiver(std::unique_ptr<T, Deleter> & target) : mTarget(target) {}
-
     ~UniquePointerReceiver() { mTarget.reset(mValue); }
 
     T *& Get() { return mValue; }
+    T ** operator&() { return &mValue; }
 
 private:
     std::unique_ptr<T, Deleter> & mTarget;
@@ -58,6 +58,16 @@ struct GObjectDeleter
 struct GErrorDeleter
 {
     void operator()(GError * object) { g_error_free(object); }
+};
+
+struct GIOChannelDeleter
+{
+    void operator()(GIOChannel * object) { g_io_channel_unref(object); }
+};
+
+struct GSourceDeleter
+{
+    void operator()(GSource * object) { g_source_unref(object); }
 };
 
 struct GVariantDeleter
@@ -99,7 +109,25 @@ struct GAutoPtrDeleter<GBytes>
 };
 
 template <>
+struct GAutoPtrDeleter<GCancellable>
+{
+    using deleter = GObjectDeleter;
+};
+
+template <>
 struct GAutoPtrDeleter<GDBusConnection>
+{
+    using deleter = GObjectDeleter;
+};
+
+template <>
+struct GAutoPtrDeleter<GDBusObjectManager>
+{
+    using deleter = GObjectDeleter;
+};
+
+template <>
+struct GAutoPtrDeleter<GDBusObjectManagerServer>
 {
     using deleter = GObjectDeleter;
 };
@@ -111,9 +139,15 @@ struct GAutoPtrDeleter<GError>
 };
 
 template <>
+struct GAutoPtrDeleter<GIOChannel>
+{
+    using deleter = GIOChannelDeleter;
+};
+
+template <>
 struct GAutoPtrDeleter<GSource>
 {
-    using deleter = GObjectDeleter;
+    using deleter = GSourceDeleter;
 };
 
 template <>
@@ -129,6 +163,14 @@ struct GAutoPtrDeleter<GVariantIter>
 };
 
 template <typename T>
-using GAutoPtr = std::unique_ptr<T, typename GAutoPtrDeleter<T>::deleter>;
+class GAutoPtr : public std::unique_ptr<T, typename GAutoPtrDeleter<T>::deleter>
+{
+public:
+    using deleter = typename GAutoPtrDeleter<T>::deleter;
+    using std::unique_ptr<T, deleter>::unique_ptr;
+
+    // Convenience method to get a UniquePointerReceiver for this object.
+    UniquePointerReceiver<T, deleter> GetReceiver() { return MakeUniquePointerReceiver(*this); }
+};
 
 } // namespace chip

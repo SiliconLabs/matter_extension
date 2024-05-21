@@ -4,6 +4,9 @@ description: OTA Requestor functionality for Matter
 package: "Matter"
 category: Stack
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 requires:
   - name: matter
   - name: bootloader_interface
@@ -21,3 +24,5 @@ config_file:
     file_id: matter_ota_config
 define:
   - name: SILABS_OTA_ENABLED
+conflicts:
+  - name: matter_multi_image_ota

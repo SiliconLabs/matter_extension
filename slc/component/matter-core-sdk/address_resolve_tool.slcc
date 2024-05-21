@@ -17,16 +17,14 @@ include:
 -   path: src/lib
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
--   path: src/lib/address_resolve
-    file_list:
-    -   path: TracingStructs.h
-    -   path: AddressResolve_DefaultImpl.h
-    -   path: AddressResolve.h
 label: address_resolve_tool
 package: Matter
 provides:
 -   name: matter_address_resolve_tool
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/lib/address_resolve/tool.cpp
 ui_hints:

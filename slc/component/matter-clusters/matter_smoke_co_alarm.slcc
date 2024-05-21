@@ -7,6 +7,9 @@ id: matter_smoke_co_alarm
 package: Matter
 label: Smoke Co Alarm Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_smoke_co_alarm
 source:

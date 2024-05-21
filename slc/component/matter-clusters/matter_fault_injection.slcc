@@ -7,6 +7,9 @@ id: matter_fault_injection
 package: Matter
 label: Fault Injection Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_fault_injection
 source:

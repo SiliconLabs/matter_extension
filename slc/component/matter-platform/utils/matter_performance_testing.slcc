@@ -4,6 +4,9 @@ description: Matter performance testing utilities and CLI. The component enables
 package: "Matter"
 category: Platform|Utils
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 requires:
   - name: ot_debug_channel
 provides:

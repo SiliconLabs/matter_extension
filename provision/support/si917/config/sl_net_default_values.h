@@ -97,6 +97,7 @@
 //! Wi-Fi BTR option to store peer information in MAC layer
 #define MAC_PEER_DS_SUPPORT          1
 #define FEAT_BTR_MAC_PEER_DS_SUPPORT BIT(13)
+
 #define DEFAULT_WIFI_CLIENT_PROFILE \
   (sl_net_wifi_client_profile_t)    \
   {                                 \

@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.2"
+    version: "2.3.0"
 
 component:
   - id: device_init
@@ -23,6 +23,7 @@ component:
   - id: matter_ble
     from: matter
   - id: ot_stack_mtd
+  - id: ot_rtos_wrapers_stub
   - id: matter_thread
     from: matter
   - id: rail_util_pti
@@ -34,13 +35,12 @@ component:
     from: matter
   - id: matter_gatt
     from: matter
+  - id: matter_icd_core
+    from: matter
 
   - id: matter_light_switch
     from: matter   
   - id: app_common
-    from: matter
-
-  - id: silabs_factory_data_provider
     from: matter
 
   - id: matter_access_control
@@ -109,9 +109,6 @@ component:
 requires:
 # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
 # Select UART/EUART drivers based on device series
-  - name: matter_drivers_series_1
-    condition:
-     - device_series_1
   - name: matter_drivers_series_2
     condition:
      - device_series_2
@@ -187,17 +184,13 @@ configuration:
   - {name: SL_IDLE_MODE_INTERVAL, value: '3600'}
   - {name: SL_OT_IDLE_INTERVAL, value: '5000'}
   - {name: SL_OT_ACTIVE_INTERVAL, value: '500'}
-
+  - name: CIRCULAR_QUEUE_LEN_MAX
+    value: 16
+    
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17
 template_contribution:
-  - name: memory_flash_start
-    value: 0x0
-    condition: [device_series_1]
-  - name: memory_flash_size
-    value: 0x000FF800
-    condition: [device_series_1]
   - name: memory_flash_start
     value: 0x08006000
     condition: [device_series_2]

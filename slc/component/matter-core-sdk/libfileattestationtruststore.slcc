@@ -1,7 +1,5 @@
 category: Matter|Core
 define:
--   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
-    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
 -   name: CHIP_HAVE_CONFIG_H
     value: '1'
 -   name: RADIO_CONFIG_DMP_SUPPORT
@@ -16,19 +14,14 @@ include:
 -   path: src/lib
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
--   path: src/credentials/attestation_verifier
-    file_list:
-    -   path: DefaultDeviceAttestationVerifier.h
-    -   path: DacOnlyPartialAttestationVerifier.h
-    -   path: DeviceAttestationDelegate.h
-    -   path: FileAttestationTrustStore.h
-    -   path: TestPAAStore.h
-    -   path: DeviceAttestationVerifier.h
 label: libfileattestationtruststore
 package: Matter
 provides:
 -   name: matter_libfileattestationtruststore
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/credentials/attestation_verifier/FileAttestationTrustStore.cpp
 ui_hints:

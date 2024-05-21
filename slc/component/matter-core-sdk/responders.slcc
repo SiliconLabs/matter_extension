@@ -26,6 +26,9 @@ package: Matter
 provides:
 -   name: matter_responders
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/lib/dnssd/minimal_mdns/responders/IP.cpp
 -   path: src/lib/dnssd/minimal_mdns/responders/QueryResponder.cpp

@@ -12,13 +12,14 @@ include:
 -   path: src
 -   path: src/include
 -   path: src/lib
--   path: src/platform/logging/impl/stdio
-    file_list: []
 label: liblogging_stdio
 package: Matter
 provides:
 -   name: matter_liblogging_stdio
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/platform/logging/impl/stdio/Logging.cpp
 ui_hints:

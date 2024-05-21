@@ -6,6 +6,9 @@ category: Matter-Thread
 ui_hints:
   visibility: never
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 requires:
   - name: matter
   - name: ot_stack

@@ -5,6 +5,9 @@ description: >
 package: "Matter"
 category: "Matter-WiFi|Platform|Tinycrypt"
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 provides:
   - name: matter_crypto_tinycrypt_siwx917
 source:
@@ -141,5 +144,6 @@ include:
 define:
   - name: OPTIMIZE_TINYCRYPT_ASM
   - name: TINYCRYPT_PRIMITIVES
+  - name: SL_MBEDTLS_USE_TINYCRYPT
   - name: MBEDTLS_CONFIG_FILE
     value: \"siwx917-chip-tinycrypt-config.h\"

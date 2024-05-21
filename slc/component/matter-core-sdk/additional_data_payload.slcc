@@ -14,25 +14,14 @@ include:
 -   path: src/lib
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
--   path: src/setup_payload
-    file_list:
-    -   path: Base38Encode.h
-    -   path: Base38Decode.h
-    -   path: AdditionalDataPayloadParser.h
-    -   path: QRCodeSetupPayloadGenerator.h
-    -   path: AdditionalDataPayloadGenerator.h
-    -   path: SetupPayload.h
-    -   path: SetupPayloadHelper.h
-    -   path: Base38.h
-    -   path: ManualSetupPayloadParser.h
-    -   path: QRCodeSetupPayloadParser.h
-    -   path: ManualSetupPayloadGenerator.h
-    -   path: AdditionalDataPayload.h
 label: additional_data_payload
 package: Matter
 provides:
 -   name: matter_additional_data_payload
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/setup_payload/AdditionalDataPayloadGenerator.cpp
 -   path: src/setup_payload/AdditionalDataPayloadParser.cpp

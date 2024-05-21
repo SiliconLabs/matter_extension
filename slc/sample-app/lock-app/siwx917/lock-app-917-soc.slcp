@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.2"
+    version: "2.3.0"
   - id: wiseconnect3_sdk
-    version: "3.2.0"
+    version: "3.3.0"
 
 component:
   - id: matter_wstk_leds
@@ -22,9 +22,6 @@ component:
     from: matter
   - id: matter_fw_upgrade_917
     from: matter
-  - id: silabs_factory_data_provider
-    from: matter
-
   - id: matter_wifi
     from: matter
   - id: app_common
@@ -59,8 +56,6 @@ component:
   - id: matter_localization_configuration
     from: matter
   - id: matter_network_commissioning
-    from: matter
-  - id: matter_on_off
     from: matter
   - id: matter_operational_credentials
     from: matter
@@ -98,6 +93,8 @@ component:
   - id: matter_subscription_persistence
     from: matter
   - id: matter_subscription_synchronization
+    from: matter
+  - id: matter_shell
     from: matter
 
   - id: sl_si91x_common_flash_nvm3
@@ -193,6 +190,7 @@ define:
     value: 1
 
 configuration:
+  - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
 # Default ICD configurations for lock-app
   - {name: SL_ACTIVE_MODE_THRESHOLD, value: '1000'}
   - {name: SL_ACTIVE_MODE_INTERVAL, value: '10000'}

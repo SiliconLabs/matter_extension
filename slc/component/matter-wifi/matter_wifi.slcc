@@ -5,6 +5,9 @@ description: >
 label: Matter WiFi
 category: Matter-WiFi
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 define: 
   - name: SL_WIFI
     value: 1

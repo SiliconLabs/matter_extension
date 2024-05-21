@@ -1,0 +1,19 @@
+category: Matter|Core
+define:
+-   name: PW_SPAN_ENABLE_ASSERTS
+    value: 'false'
+description: libpwtestswrapper
+id: libpwtestswrapper
+include: []
+label: libpwtestswrapper
+package: Matter
+provides:
+-   name: matter_libpwtestswrapper
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+source:
+-   path: src/lib/support/UnitTest.cpp
+ui_hints:
+    visibility: never

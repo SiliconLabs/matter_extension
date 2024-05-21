@@ -23,7 +23,6 @@
 
 #include "wfx_host_events.h"
 #include "wifi_config.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -40,7 +39,6 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-
 /* LwIP includes. */
 #include "ethernetif.h"
 #include "lwip/ethip6.h"
@@ -261,8 +259,10 @@ err_t sta_ethernetif_init(struct netif * netif)
 
     /* initialize the hardware */
     low_level_init(netif);
+
     /* Need single output only */
     ethout_sem = xSemaphoreCreateBinaryStatic(&xEthernetIfSemaBuffer);
     xSemaphoreGive(ethout_sem);
+
     return ERR_OK;
 }

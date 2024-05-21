@@ -1,44 +1,49 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+- name: CHIP_HAVE_CONFIG_H
+  value: '1'
+- name: RADIO_CONFIG_DMP_SUPPORT
+  value: '1'
 description: libblelayer
 id: libblelayer
 include:
--   path: examples/lighting-app/silabs/include
--   path: examples/platform/silabs
--   path: src
--   path: src/include
--   path: src/lib
--   path: third_party/nlassert/repo/include
--   path: third_party/nlio/repo/include
--   path: src/ble
-    file_list:
-    -   path: BLEEndPoint.h
-    -   path: Ble.h
-    -   path: BleRole.h
-    -   path: BleConnectionDelegate.h
-    -   path: BleUUID.h
-    -   path: CHIPBleServiceData.h
-    -   path: BleError.h
-    -   path: BtpEngine.h
-    -   path: BlePlatformDelegate.h
-    -   path: BleConfig.h
-    -   path: BleLayerDelegate.h
-    -   path: BleApplicationDelegate.h
-    -   path: BleLayer.h
+- path: examples/lighting-app/silabs/include
+- path: examples/platform/silabs
+- path: src
+  file_list:
+  - path: ble/BleConfig.h
+  - path: ble/BleLayer.h
+  - path: ble/BleApplicationDelegate.h
+  - path: ble/BleConnectionDelegate.h
+  - path: ble/BleError.h
+  - path: ble/BleLayerDelegate.h
+  - path: ble/BlePlatformDelegate.h
+  - path: ble/BleRole.h
+  - path: ble/BleUUID.h
+  - path: ble/BLEEndPoint.h
+  - path: ble/BtpEngine.h
+  - path: ble/Ble.h
+  - path: ble/CHIPBleServiceData.h
+- path: src/include
+- path: src/lib
+- path: third_party/nlassert/repo/include
+- path: third_party/nlio/repo/include
+- path: slc/inc
+  file_list:
+  - path: ble/BleBuildConfig.h
 label: libblelayer
 package: Matter
 provides:
--   name: matter_libblelayer
+- name: matter_libblelayer
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
--   path: src/ble/BLEEndPoint.cpp
--   path: src/ble/BleError.cpp
--   path: src/ble/BleLayer.cpp
--   path: src/ble/BleUUID.cpp
--   path: src/ble/BtpEngine.cpp
+- path: src/ble/BLEEndPoint.cpp
+- path: src/ble/BleError.cpp
+- path: src/ble/BleLayer.cpp
+- path: src/ble/BleUUID.cpp
+- path: src/ble/BtpEngine.cpp
 ui_hints:
-    visibility: never
+  visibility: never

@@ -122,65 +122,6 @@ CHIP_ERROR K32WConfig::WriteConfigValue(Key key, TValue val)
     return key.Write((uint8_t *) &val, sizeof(TValue));
 }
 
-template <typename TValue>
-CHIP_ERROR K32WConfig::ReadConfigValue(Key key, TValue & val)
-{
-    CHIP_ERROR err;
-    uint16_t valLen = sizeof(val);
-
-    VerifyOrExit(ValidConfigKey(key), err = CHIP_DEVICE_ERROR_CONFIG_NOT_FOUND);
-    err = RamStorage::Read(key, 0, (uint8_t *) &val, &valLen);
-    SuccessOrExit(err);
-
-exit:
-    return err;
-}
-
-template <typename TValue>
-CHIP_ERROR K32WConfig::WriteConfigValue(Key key, TValue val)
-{
-    CHIP_ERROR err;
-    PDM_teStatus status;
-    RamStorage::Buffer buffer;
-
-    MutexLock(pdmMutexHandle, osaWaitForever_c);
-    VerifyOrExit(ValidConfigKey(key), err = CHIP_DEVICE_ERROR_CONFIG_NOT_FOUND);
-    err = RamStorage::Write(key, (uint8_t *) &val, sizeof(TValue));
-    SuccessOrExit(err);
-
-    buffer = RamStorage::GetBuffer();
-    status = PDM_eSaveRecordDataInIdleTask(kNvmIdChipConfigData, buffer, buffer->ramBufferLen + kRamDescHeaderSize);
-    SuccessOrExit(err = MapPdmStatusToChipError(status));
-
-exit:
-    MutexUnlock(pdmMutexHandle);
-    return err;
-}
-
-template <typename TValue>
-CHIP_ERROR K32WConfig::WriteConfigValueSync(Key key, TValue val)
-{
-    CHIP_ERROR err;
-    PDM_teStatus status;
-    RamStorage::Buffer buffer;
-
-    MutexLock(pdmMutexHandle, osaWaitForever_c);
-    VerifyOrExit(ValidConfigKey(key), err = CHIP_DEVICE_ERROR_CONFIG_NOT_FOUND);
-    err = RamStorage::Write(key, (uint8_t *) &val, sizeof(TValue));
-    SuccessOrExit(err);
-    // Interrupts are disabled to ensure there is no context switch during the actual
-    // writing, thus avoiding race conditions.
-    OSA_InterruptDisable();
-    buffer = RamStorage::GetBuffer();
-    status = PDM_eSaveRecordData(kNvmIdChipConfigData, buffer, buffer->ramBufferLen + kRamDescHeaderSize);
-    OSA_InterruptEnable();
-    SuccessOrExit(err = MapPdmStatusToChipError(status));
-
-exit:
-    MutexUnlock(pdmMutexHandle);
-    return err;
-}
-
 } // namespace Internal
 } // namespace DeviceLayer
 } // namespace chip

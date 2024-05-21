@@ -5,6 +5,9 @@ description: >
 label: Src Platform EFR32 Components
 category: Matter-WiFi|Platform
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 define:
   - name: CORTEXM3_EFM32_MICRO
   - name: EFR32_SERIES2_CONFIG4_MICRO
@@ -26,31 +29,6 @@ define:
     condition: [brd4186c]
   - name: EFR32_SERIES2_CONFIG4_MICRO
     condition: [brd4187c]
-  - name: EFR32MG12
-    condition: [brd4161a]
-  - name: EFR32MG12
-    condition: [brd4162a]
-  - name: EFR32MG12
-    condition: [brd4163a]
-  - name: EFR32MG12
-    condition: [brd4164a]
-  - name: EFR32MG12
-    condition: [brd4170a]
-  - name: EFR32MG12_BRD4161A
-    value: "1"
-    condition: [brd4161a]
-  - name: EFR32MG12_BRD4162A
-    value: "1"
-    condition: [brd4162a]
-  - name: EFR32MG12_BRD4163A
-    value: "1"
-    condition: [brd4163a]
-  - name: EFR32MG12_BRD4164A
-    value: "1"
-    condition: [brd4164a]
-  - name: EFR32MG12_BRD4170A
-    value: "1"
-    condition: [brd4170a]
   - name: EFR32MG24
     condition: [brd4186c]
   - name: EFR32MG24
@@ -63,21 +41,6 @@ define:
     condition: [brd4187c]
   - name: USE_NVM3
     value: 1
-  - name: BOARD_ID
-    value: BRD4161A
-    condition: [brd4161a]
-  - name: BOARD_ID
-    value: BRD4162A
-    condition: [brd4162a]
-  - name: BOARD_ID
-    value: BRD4163A
-    condition: [brd4163a]
-  - name: BOARD_ID
-    value: BRD4164A
-    condition: [brd4164a]
-  - name: BOARD_ID
-    value: BRD4170A
-    condition: [brd4170a]
   - name: BOARD_ID
     value: BRD4186C
     condition: [brd4186c]

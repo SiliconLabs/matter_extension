@@ -30,7 +30,6 @@ include:
     -   path: PigweedLogger.h
     -   path: FreeRTOSConfig.h
     -   path: Rpc.h
-    -   path: heap_4_silabs.h
     -   path: TemperatureSensor.h
     -   path: silabs_creds.h
     -   path: SilabsTestEventTriggerDelegate.h
@@ -41,6 +40,9 @@ package: Matter
 provides:
 -   name: matter_efr32_icd_subscription_callback
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: examples/platform/silabs/ICDSubscriptionCallback.cpp
 ui_hints:

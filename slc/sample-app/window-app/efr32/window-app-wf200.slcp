@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.2"
+    version: "2.3.0"
 
 provides:
   - name: window_app
@@ -18,7 +18,8 @@ component:
     from: matter
   - id: matter_wstk_leds
     from : matter
-
+  - id: matter_icd_core
+    from: matter
   - id: matter
     from: matter
   - id: matter_platform_efr32
@@ -28,8 +29,6 @@ component:
   - id: matter_ota_support
     from: matter
   - id: matter_crypto
-    from: matter
-  - id: silabs_factory_data_provider
     from: matter
   - id: matter_gatt
     from: matter
@@ -96,27 +95,21 @@ component:
     from: matter
   - id: segger_rtt
 
-  - id: matter_subscription_timeout_resumption
-    from: matter
   - id: matter_subscription_persistence
     from: matter
   - id: matter_default_lcd_config
+    from: matter
+  - id: matter_shell
     from: matter
 
 # Require LCD and QR Code components only on the boards that support LCD
 requires:
   - name: wf200_ncp_extension
   - name: spidrv_instance
-  - name: uartdrv_instance
-    condition:
-    - device_series_1
   - name: uartdrv_eusart
     condition:
     - device_series_2
 # Select UART/EUART drivers based on device series
-  - name: matter_drivers_series_1_wifi_wf200
-    condition:
-     - device_series_1
   - name: matter_drivers_series_2_wifi_wf200
     condition:
      - device_series_2
@@ -160,9 +153,6 @@ define:
     value: "4092"
   - name: GSDK_WF200_BUILD
     value: "1"
-  - name: EFR32MG12_BRD4161A
-    value: "1"
-    condition: [brd4161a]
   - name: NDEBUG
     value: "1"
   - name: _REENT_SMALL
@@ -186,12 +176,6 @@ toolchain_settings:
   - option: cxx_standard
     value: gnu++17
 template_contribution:
-  - name: memory_flash_start
-    value: 0x0
-    condition: [device_series_1]
-  - name: memory_flash_size
-    value: 0x000FF800
-    condition: [device_series_1]
   - name: memory_flash_start
     value: 0x08006000
     condition: [device_series_2]

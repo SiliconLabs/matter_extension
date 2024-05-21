@@ -4,10 +4,16 @@ description: Bundles all necessary core Matter components
 package: "Matter"
 category: Stack
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 config_file:
   - path: slc/config/sl_matter_config.h
     file_id: matter_config
-
+# ICD configuration is needed by the core SDK (ICD end device or not)
+  - path: slc/config/app/icd/server/ICDServerBuildConfig.h
+    file_id: matter_icd_config
+    directory: app/icd/server
 toolchain_settings:
   - option: gcc_compiler_option
     value: -Wno-deprecated-declarations
@@ -15,8 +21,6 @@ toolchain_settings:
     value: -Wno-maybe-uninitialized
   - option: gcc_compiler_option
     value: -Wno-missing-field-initializers
-  - option: gcc_compiler_option
-    value: -Wno-unused-parameter
   - option: gcc_compiler_option
     value: -Wno-cast-function-type
   - option: gcc_compiler_option
@@ -34,7 +38,9 @@ toolchain_settings:
 provides:
   - name: matter
   - name: matter_integration
-
+define:
+  - name: MATTER_INTEGRATION
+    value: 1
 requires:
   - name: cpp_support
 
@@ -46,6 +52,8 @@ requires:
     condition: [matter_wifi]
 
   - name: matter_libinetlayer
+    condition: [matter_thread]
+  - name: matter_thread_network_diagnostics  
     condition: [matter_thread]
   - name: matter_libinetlayer_wifi
     condition: [matter_wifi]
@@ -60,7 +68,6 @@ requires:
   - name: matter_libasn1
   - name: matter_libbdx
   - name: matter_libchipappserver
-  - name: matter_libchipcontroller
   - name: matter_libchipcore
   - name: matter_libchipcrypto
   - name: matter_libchipdatamodel
@@ -84,7 +91,11 @@ requires:
   - name: matter_tracing
   - name: matter_im_status
   - name: matter_includes
-  - name: matter_icd_core
+  - name: matter_messagedef
+  - name: matter_interaction_model
+  - name: matter_provision
+  - name: matter_syscalls_stub
+  #- name: matter_icd_core
 
 recommends:
   - id: matter_configuration_over_swo

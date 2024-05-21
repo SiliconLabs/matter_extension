@@ -7,8 +7,15 @@ id: matter_descriptor
 package: Matter
 label: Descriptor Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_descriptor
+include:
+- path: src/app/clusters/descriptor
+  file_list:
+  - path: descriptor.h
 source:
   - path: src/app/clusters/descriptor/descriptor.cpp
 template_contribution:

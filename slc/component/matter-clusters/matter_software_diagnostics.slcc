@@ -7,6 +7,9 @@ id: matter_software_diagnostics
 package: Matter
 label: Software Diagnostics Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_software_diagnostics
 source:

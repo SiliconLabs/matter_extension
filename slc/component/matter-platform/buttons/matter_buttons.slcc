@@ -4,28 +4,22 @@ package: Matter
 description: WSTK Button Support for Matter applications
 category: Platform
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 provides:
   - name: matter_buttons
 requires:
 # Every board that uses buttons
   - name: simple_button_recommended_instance
     condition:
-      - brd4161a
+      - brd4116a
   - name: simple_button_recommended_instance
     condition:
-      - brd4162a
+      - brd4117a  
   - name: simple_button_recommended_instance
     condition:
-      - brd4163a
-  - name: simple_button_recommended_instance
-    condition:
-      - brd4164a
-  - name: simple_button_recommended_instance
-    condition:
-      - brd4166a
-  - name: simple_button_recommended_instance
-    condition:
-      - brd4170b
+      - brd4121a
   - name: simple_button_recommended_instance
     condition:
       - brd2601b

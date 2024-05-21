@@ -4,6 +4,9 @@ description: Definition of the TestEventTriggerDelegate class. An application im
 package: "Matter"
 category: Stack
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 provides:
   - name: matter_test_event_trigger
 source:
@@ -17,4 +20,3 @@ config_file:
     file_id: test_event_trigger_config
 define:
   - name: SILABS_TEST_EVENT_TRIGGER_ENABLED
-

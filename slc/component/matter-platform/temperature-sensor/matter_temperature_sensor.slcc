@@ -4,6 +4,9 @@ description: Temperature Sensor support for Matter applications
 package: "Matter"
 category: Platform|Sensors
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 
 provides:
   - name: matter_temperature_sensor

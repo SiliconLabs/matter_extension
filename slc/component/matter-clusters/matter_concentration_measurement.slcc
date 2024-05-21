@@ -7,6 +7,9 @@ id: matter_concentration_measurement
 package: Matter
 label: Concentration Measurement Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_concentration_measurement
 include:

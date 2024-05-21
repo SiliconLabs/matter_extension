@@ -4,6 +4,9 @@ description: Replaces ot_mbedtls component (not needed)
 package: "Matter"
 category: Matter-Thread
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 provides:
   - name: ot_mbedtls
   - name: matter_ot_mbedtls_override

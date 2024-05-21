@@ -1,0 +1,11 @@
+#include <app-common/zap-generated/callback.h>
+
+using namespace chip;
+
+{{#all_user_clusters_names}}
+void __attribute__((weak)) emberAf{{asUpperCamelCase name}}ClusterInitCallback(EndpointId endpoint)
+{
+    // To prevent warning
+    (void) endpoint;
+}
+{{/all_user_clusters_names}}

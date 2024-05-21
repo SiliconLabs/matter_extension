@@ -1,0 +1,45 @@
+id: matter_multi_image_ota
+label: OTA Multi Image Requestor
+description: OTA Multi Image Requestor functionality for Matter
+package: "Matter"
+category: Stack
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+    
+requires:
+  - name: matter
+  - name: bootloader_interface
+    condition: [matter_platform_efr32]
+
+provides:
+  - name: matter_multi_image_ota
+
+source:
+  - path: examples/platform/silabs/OTAConfig.cpp
+  - path: src/platform/silabs/multi-ota/OTAMultiImageProcessorImpl.cpp
+  - path: src/platform/silabs/multi-ota/OTAFactoryDataProcessor.cpp
+  - path: src/platform/silabs/multi-ota/OTATlvProcessor.cpp
+  - path: src/platform/silabs/multi-ota/OTAFirmwareProcessor.cpp
+  - path: src/platform/silabs/multi-ota/OTAHooks.cpp
+
+include: 
+  - path: src/platform/silabs/multi-ota
+    file_list:
+    - path: OTAMultiImageProcessorImpl.h
+    - path: OTAFactoryDataProcessor.h
+    - path: OTATlvProcessor.h
+    - path: OTAFirmwareProcessor.h
+
+
+config_file:
+  - path: slc/config/sl_matter_ota_config.h
+    file_id: matter_ota_config
+
+define:
+  - name: SILABS_OTA_ENABLED
+  - name: CHIP_DEVICE_CONFIG_ENABLE_MULTI_OTA_REQUESTOR
+
+conflicts:
+  - name: matter_ota_support

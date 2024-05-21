@@ -7,6 +7,9 @@ id: matter_color_control
 package: Matter
 label: Color Control Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_color_control
 source:

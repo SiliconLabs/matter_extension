@@ -4,6 +4,9 @@ package: Matter
 description: Allow Common flash M4 to go to sleep
 category: Matter-WiFi|Platform|Toolchain
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 provides:
   - name: matter_siwx917_m4_sleep
 requires:

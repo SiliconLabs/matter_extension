@@ -4,6 +4,9 @@ description: Enables OpenThread CLI for Matter projects
 package: "Matter"
 category: Matter-Thread
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 requires:
   - name: matter_uart
   - name: matter_thread

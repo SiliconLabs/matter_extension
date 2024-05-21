@@ -7,16 +7,17 @@ id: matter_general_diagnostics
 package: Matter
 label: General Diagnostics Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_general_diagnostics
 source:
-  - path: src/app/clusters/general-diagnostics-server/GenericFaultTestEventTriggerDelegate.cpp
   - path: src/app/clusters/general-diagnostics-server/general-diagnostics-server.cpp
 include:
   - path: src/app/clusters/general-diagnostics-server
     file_list:
       - path: general-diagnostics-server.h
-      - path: GenericFaultTestEventTriggerDelegate.h
 template_contribution:
   - name: component_catalog
     value: matter_general_diagnostics

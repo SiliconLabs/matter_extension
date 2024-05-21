@@ -7,6 +7,9 @@ id: matter_time_format_localization
 package: Matter
 label: Time Format Localization Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_time_format_localization
 source:

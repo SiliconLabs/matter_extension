@@ -32,6 +32,9 @@ package: Matter
 provides:
 -   name: matter_default_policy
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/lib/dnssd/minimal_mdns/AddressPolicy_DefaultImpl.cpp
 ui_hints:

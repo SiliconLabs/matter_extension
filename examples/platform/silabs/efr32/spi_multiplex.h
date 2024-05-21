@@ -22,7 +22,6 @@
  * That can be extended to other families as well.
  */
 
-#include "sl_status.h"
 #pragma once
 
 #ifndef SL_LCDCTRL_MUX
@@ -81,7 +80,7 @@ sl_status_t sl_wfx_host_spi_cs_deassert(void);
 #endif /* RS911X_WIFI */
 #endif // SL_SPICTRL_MUX
 
-#if SL_MX25CTRL_MUX
+#if SL_MUX25CTRL_MUX
 /****************************************************************************
  * @fn  sl_status_t sl_wfx_host_spiflash_cs_assert()
  * @brief
@@ -99,7 +98,7 @@ sl_status_t sl_wfx_host_spiflash_cs_assert(void);
  * @return returns SL_STATUS_OK
  *****************************************************************************/
 sl_status_t sl_wfx_host_spiflash_cs_deassert(void);
-#endif // SL_MX25CTRL_MUX
+#endif // SL_MUX25CTRL_MUX
 
 #if SL_BTLCTRL_MUX
 /****************************************************************************

@@ -5,19 +5,7 @@
 
 /*
  *  Copyright The Mbed TLS Contributors
- *  SPDX-License-Identifier: Apache-2.0
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ *  SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-or-later
  */
 
 #ifndef SSL_HELPERS_H
@@ -467,6 +455,27 @@ int mbedtls_test_ssl_build_transforms(mbedtls_ssl_transform *t_in,
                                       int etm, int tag_mode, int ver,
                                       size_t cid0_len,
                                       size_t cid1_len);
+
+#if defined(MBEDTLS_SSL_SOME_MODES_USE_MAC)
+/**
+ * \param[in,out] record        The record to prepare.
+ *                              It must contain the data to MAC at offset
+ *                              `record->data_offset`, of length
+ *                              `record->data_length`.
+ *                              On success, write the MAC immediately
+ *                              after the data and increment
+ *                              `record->data_length` accordingly.
+ * \param[in,out] transform_out The out transform, typically prepared by
+ *                              mbedtls_test_ssl_build_transforms().
+ *                              Its HMAC context may be used. Other than that
+ *                              it is treated as an input parameter.
+ *
+ * \return                      0 on success, an `MBEDTLS_ERR_xxx` error code
+ *                              or -1 on error.
+ */
+int mbedtls_test_ssl_prepare_record_mac(mbedtls_record *record,
+                                        mbedtls_ssl_transform *transform_out);
+#endif /* MBEDTLS_SSL_SOME_MODES_USE_MAC */
 
 /*
  * Populate a session structure for serialization tests.

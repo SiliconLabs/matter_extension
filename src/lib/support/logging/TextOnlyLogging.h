@@ -79,16 +79,8 @@ namespace chip {
 
 namespace Logging {
 
-// Get the module name associated with a LogModule, or "-" on invalid value.
-const char * GetModuleName(LogModule module);
-
 // Log redirection
 using LogRedirectCallback_t = void (*)(const char * module, uint8_t category, const char * msg, va_list args);
-DLL_EXPORT void SetLogRedirectCallback(LogRedirectCallback_t callback);
-
-// Log filtering (no-op unless CHIP_LOG_FILTERING is enabled)
-DLL_EXPORT uint8_t GetLogFilter();
-DLL_EXPORT void SetLogFilter(uint8_t category);
 
 #if CHIP_ERROR_LOGGING
 /**
@@ -276,16 +268,24 @@ DLL_EXPORT void SetLogFilter(uint8_t category);
 #define ChipLogValueMEI(aValue) static_cast<uint16_t>(aValue >> 16), static_cast<uint16_t>(aValue)
 
 /**
- * Logging helpers for exchanges.  For now just log the exchange id and whether
- * it's an initiator or responder, but eventually we may want to log the peer
- * node id as well (especially for the responder case).  Some callsites only
+ * Logging helpers for exchanges.  Log the exchange id, whether
+ * it's an initiator or responder and the scoped node.  Some callsites only
  * have the exchange id and initiator/responder boolean, not an actual exchange,
  * so we want to have a helper for that case too.
  */
 #define ChipLogFormatExchangeId "%u%c"
 #define ChipLogValueExchangeId(id, isInitiator) id, ((isInitiator) ? 'i' : 'r')
+
+#if CHIP_EXCHANGE_NODE_ID_LOGGING
+#define ChipLogFormatExchange ChipLogFormatExchangeId " with Node: " ChipLogFormatScopedNodeId
+#define ChipLogValueExchange(ec)                                                                                                   \
+    ChipLogValueExchangeId((ec)->GetExchangeId(), (ec)->IsInitiator()),                                                            \
+        ChipLogValueScopedNodeId((ec)->HasSessionHandle() ? (ec)->GetSessionHandle()->GetPeer() : ScopedNodeId())
+#else // CHIP_EXCHANGE_NODE_ID_LOGGING
 #define ChipLogFormatExchange ChipLogFormatExchangeId
 #define ChipLogValueExchange(ec) ChipLogValueExchangeId((ec)->GetExchangeId(), (ec)->IsInitiator())
+#endif // CHIP_EXCHANGE_NODE_ID_LOGGING
+
 #define ChipLogValueExchangeIdFromSentHeader(payloadHeader)                                                                        \
     ChipLogValueExchangeId((payloadHeader).GetExchangeID(), (payloadHeader).IsInitiator())
 // A received header's initiator boolean is the inverse of the exchange's.
@@ -323,18 +323,34 @@ DLL_EXPORT void SetLogFilter(uint8_t category);
 #define _CHIP_USE_LOGGING 0
 #endif // CHIP_ERROR_LOGGING || CHIP_PROGRESS_LOGGING || CHIP_DETAIL_LOGGING || CHIP_AUTOMATION_LOGGING
 
-#if _CHIP_USE_LOGGING
-
-static constexpr uint16_t kMaxModuleNameLen = 3;
-
-#if CHIP_LOG_FILTERING
+// Log filtering (no-op unless CHIP_LOG_FILTERING is enabled)
+#if _CHIP_USE_LOGGING && CHIP_LOG_FILTERING
+DLL_EXPORT uint8_t GetLogFilter();
+DLL_EXPORT void SetLogFilter(uint8_t category);
 bool IsCategoryEnabled(uint8_t category);
-#else  // CHIP_LOG_FILTERING
+#else  // _CHIP_USE_LOGGING && CHIP_LOG_FILTERING
+inline uint8_t GetLogFilter()
+{
+    return kLogCategory_Max;
+}
+
+inline void SetLogFilter(uint8_t category) {}
+
 inline bool IsCategoryEnabled(uint8_t category)
 {
     return true;
 }
-#endif // CHIP_LOG_FILTERING
+#endif // _CHIP_USE_LOGGING && CHIP_LOG_FILTERING
+
+#if _CHIP_USE_LOGGING
+
+// Get the module name associated with a LogModule, or "-" on invalid value.
+const char * GetModuleName(LogModule module);
+
+// Log redirection
+DLL_EXPORT void SetLogRedirectCallback(LogRedirectCallback_t callback);
+
+static constexpr uint16_t kMaxModuleNameLen = 3;
 
 /* Internal macros mapping upper case definitions to camel case category constants*/
 #define CHIP_LOG_CATEGORY_DETAIL chip::Logging::kLogCategory_Detail
@@ -426,6 +442,10 @@ void HandleTokenizedLog(uint32_t levels, pw_tokenizer_Token token, pw_tokenizer_
         }                                                                                                                          \
     } while (0)
 #endif // CHIP_PW_TOKENIZER_LOGGING
+
+#else // _CHIP_USE_LOGGING
+
+inline void SetLogRedirectCallback(LogRedirectCallback_t callback) {}
 
 #endif // _CHIP_USE_LOGGING
 

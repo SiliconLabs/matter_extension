@@ -24,9 +24,9 @@
 #include "SensorsCallbacks.h"
 #include "AppTask.h"
 #include "AppConfig.h"
-#ifdef DISPLAY_ENABLED
+#if DISPLAY_ENABLED
 #include "SensorsUI.h"
-#endif DISPLAY_ENABLED
+#endif
 #include <platform/silabs/platformAbstraction/SilabsPlatform.h>
 
 SilabsSensors SilabsSensors::sSensorManager;
@@ -277,13 +277,7 @@ void SilabsSensors::TemperatureUI(GLIB_Context_t * glibContext)
     }
     sprintf(str, "Min: %c%d.%d", isNegative, (uint8_t)(temp / 100), (uint8_t)(temp % 100));
     GLIB_drawStringOnLine(glibContext, str, 4, GLIB_ALIGN_LEFT, 0, 0, true);
-#if SL_LCDCTRL_MUX
-    sl_wfx_host_pre_lcd_spi_transfer();
-#endif // SL_LCDCTRL_MUX
     DMD_updateDisplay();
-#if SL_LCDCTRL_MUX
-    sl_wfx_host_post_lcd_spi_transfer();
-#endif // SL_LCDCTRL_MUX
 }
 
 #endif

@@ -6,6 +6,9 @@ description: >
 package: "Matter"
 category: Platform|Low-power
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 provides:
   - name: matter_platform_low_power
 conflicts:

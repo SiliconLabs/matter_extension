@@ -1,162 +1,100 @@
 category: Matter|Core
 define:
--   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
-    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+- name: CHIP_HAVE_CONFIG_H
+  value: '1'
+- name: RADIO_CONFIG_DMP_SUPPORT
+  value: '1'
 description: efr32
 id: efr32
 include:
--   path: examples/lighting-app/silabs/include
--   path: examples/platform/silabs
--   path: examples/platform/silabs/efr32
--   path: src
--   path: src/include
--   path: src/lib
--   path: src/platform/silabs/efr32
--   path: third_party/nlassert/repo/include
--   path: third_party/nlio/repo/include
--   path: src/include/platform
-    file_list:
-    -   path: RuntimeOptionsProvider.h
-    -   path: DeviceInfoProvider.h
-    -   path: ConnectivityManager.h
-    -   path: GeneralUtils.h
-    -   path: AttributeList.h
-    -   path: DiagnosticDataProvider.h
-    -   path: PlatformManager.h
-    -   path: KeyValueStoreManager.h
-    -   path: OTAImageProcessor.h
-    -   path: PersistedStorage.h
-    -   path: KvsPersistentStorageDelegate.h
-    -   path: LockTracker.h
-    -   path: CommissionableDataProvider.h
-    -   path: NetworkCommissioning.h
-    -   path: CHIPDeviceConfig.h
-    -   path: DeviceControlServer.h
-    -   path: DeviceInstanceInfoProvider.h
-    -   path: CHIPDeviceLayer.h
-    -   path: ConfigurationManager.h
-    -   path: GeneralFaults.h
-    -   path: CHIPDeviceEvent.h
-    -   path: BuildTime.h
-    -   path: NFCManager.h
-    -   path: ThreadStackManager.h
-    -   path: TestOnlyCommissionableDataProvider.h
-    -   path: CHIPDeviceError.h
--   path: src/include/platform/internal
-    file_list:
-    -   path: GenericPlatformManagerImpl.ipp
-    -   path: GenericConnectivityManagerImpl_UDP.h
-    -   path: GenericPlatformManagerImpl_POSIX.h
-    -   path: GenericConnectivityManagerImpl_NoThread.h
-    -   path: GenericConnectivityManagerImpl_WiFi.ipp
-    -   path: GenericPlatformManagerImpl_POSIX.ipp
-    -   path: GenericPlatformManagerImpl_Zephyr.ipp
-    -   path: GenericConfigurationManagerImpl.h
-    -   path: GenericPlatformManagerImpl.h
-    -   path: GenericConnectivityManagerImpl_Thread.h
-    -   path: GenericPlatformManagerImpl_FreeRTOS.h
-    -   path: BLEManager.h
-    -   path: CHIPDeviceLayerInternal.h
-    -   path: GenericConnectivityManagerImpl.h
-    -   path: GenericConnectivityManagerImpl_Thread.ipp
-    -   path: EventLogging.h
-    -   path: GenericConnectivityManagerImpl_NoBLE.h
-    -   path: GenericDeviceInstanceInfoProvider.h
-    -   path: DeviceNetworkInfo.h
-    -   path: GenericPlatformManagerImpl_Zephyr.h
-    -   path: GenericConnectivityManagerImpl_BLE.ipp
-    -   path: GenericConnectivityManagerImpl_UDP.ipp
-    -   path: GenericDeviceInstanceInfoProvider.ipp
-    -   path: GenericConfigurationManagerImpl.ipp
-    -   path: GenericConnectivityManagerImpl_NoWiFi.h
-    -   path: GenericPlatformManagerImpl_FreeRTOS.ipp
-    -   path: GenericConnectivityManagerImpl_BLE.h
-    -   path: GenericConnectivityManagerImpl_TCP.h
-    -   path: GenericConnectivityManagerImpl_WiFi.h
-    -   path: GenericConnectivityManagerImpl_TCP.ipp
--   path: src/platform/logging
-    file_list:
-    -   path: LogV.h
--   path: src/include/platform/internal/testing
-    file_list:
-    -   path: ConfigUnitTest.h
--   path: src/platform/silabs
-    file_list:
-    -   path: OTAImageProcessorImpl.h
-    -   path: InetPlatformConfig.h
-    -   path: DiagnosticDataProviderImpl.h
-    -   path: ConfigurationManagerImpl.h
-    -   path: MigrationManager.h
-    -   path: PlatformManagerImpl.h
-    -   path: WarmPlatformConfig.h
-    -   path: NetworkCommissioningWiFiDriver.h
-    -   path: CHIPDevicePlatformEvent.h
-    -   path: ThreadStackManagerImpl.h
-    -   path: CHIPDevicePlatformConfig.h
-    -   path: SilabsConfig.h
-    -   path: BLEManagerImpl.h
-    -   path: CHIPPlatformConfig.h
-    -   path: ConnectivityManagerImpl.h
-    -   path: BlePlatformConfig.h
-    -   path: KeyValueStoreManagerImpl.h
-    -   path: SystemPlatformConfig.h
--   path: src/platform/silabs/efr32
-    file_list:
-    -   path: Efr32PsaOperationalKeystore.h
-    -   path: Efr32OpaqueKeypair.h
-    -   path: efr32-psa-crypto-config.h
-    -   path: efr32-chip-mbedtls-config.h
--   path: src/platform/OpenThread
-    file_list:
-    -   path: OpenThreadUtils.h
-    -   path: GenericThreadStackManagerImpl_OpenThread_LwIP.h
-    -   path: GenericNetworkCommissioningThreadDriver.h
-    -   path: GenericThreadStackManagerImpl_OpenThread.hpp
-    -   path: GenericThreadStackManagerImpl_OpenThread.h
-    -   path: OpenThreadDnssdImpl.h
--   path: src/platform/silabs/platformAbstraction
-    file_list:
-    -   path: SilabsPlatformBase.h
-    -   path: SilabsPlatform.h
--   path: src/platform
-    file_list:
-    -   path: DeviceSafeQueue.h
-    -   path: GLibTypeDeleter.h
--   path: src/platform/FreeRTOS
-    file_list:
-    -   path: SystemTimeSupport.h
-    -   path: GenericThreadStackManagerImpl_FreeRTOS.h
-    -   path: GenericThreadStackManagerImpl_FreeRTOS.hpp
+- path: examples/lighting-app/silabs/include
+- path: examples/platform/silabs
+- path: examples/platform/silabs/efr32
+- path: src
+  file_list:
+  - path: platform/silabs/NetworkCommissioningWiFiDriver.h
+  - path: platform/silabs/CHIPDevicePlatformConfig.h
+  - path: platform/silabs/DiagnosticDataProviderImpl.h
+  - path: platform/OpenThread/GenericThreadStackManagerImpl_OpenThread.h
+  - path: platform/silabs/MigrationManager.h
+  - path: platform/silabs/SilabsConfig.h
+  - path: platform/logging/LogV.h
+  - path: platform/silabs/platformAbstraction/SilabsPlatform.h
+  - path: platform/silabs/platformAbstraction/SilabsPlatformBase.h
+  - path: platform/FreeRTOS/SystemTimeSupport.h
+  - path: platform/OpenThread/GenericNetworkCommissioningThreadDriver.h
+  - path: platform/OpenThread/OpenThreadUtils.h
+  - path: platform/silabs/ThreadStackManagerImpl.h
+  - path: platform/FreeRTOS/GenericThreadStackManagerImpl_FreeRTOS.h
+  - path: platform/silabs/multi-ota/OTAMultiImageProcessorImpl.h
+  - path: platform/silabs/OTAImageProcessorImpl.h
+  - path: platform/silabs/multi-ota/OTATlvProcessor.h
+  - path: platform/OpenThread/OpenThreadDnssdImpl.h
+  - path: platform/FreeRTOS/GenericThreadStackManagerImpl_FreeRTOS.hpp
+  - path: platform/OpenThread/GenericThreadStackManagerImpl_OpenThread.hpp
+  - path: platform/silabs/CHIPPlatformConfig.h
+  - path: platform/silabs/ConfigurationManagerImpl.h
+  - path: platform/silabs/SystemPlatformConfig.h
+  - path: platform/silabs/InetPlatformConfig.h
+  - path: platform/silabs/BlePlatformConfig.h
+  - path: platform/silabs/ConnectivityManagerImpl.h
+  - path: platform/silabs/CHIPDevicePlatformEvent.h
+  - path: platform/silabs/KeyValueStoreManagerImpl.h
+  - path: platform/silabs/PlatformManagerImpl.h
+  - path: platform/silabs/BLEManagerImpl.h
+- path: src/include
+- path: src/lib
+- path: src/platform/silabs/efr32
+  file_list:
+  - path: Efr32PsaOperationalKeystore.h
+  - path: Efr32OpaqueKeypair.h
+- path: third_party/nlassert/repo/include
+- path: third_party/nlio/repo/include
+  file_list:
+  - path: nlbyteorder.hpp
+  - path: nlio-byteorder.hpp
+  - path: nlio.hpp
+  - path: nlbyteorder.h
+  - path: nlio-private.h
+  - path: nlbyteorder-little.h
+  - path: nlbyteorder-big.h
+  - path: nlio-base.hpp
+  - path: nlio-byteorder-big.hpp
+  - path: nlio-byteorder-little.hpp
+  - path: nlio-base.h
+- path: slc/inc
+  file_list:
+  - path: platform/CHIPDeviceBuildConfig.h
+  - path: openthread/platform/openthread-system.h
 label: efr32
 package: Matter
 provides:
--   name: matter_efr32
+- name: matter_efr32
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
--   path: src/platform/FreeRTOS/SystemTimeSupport.cpp
--   path: src/platform/OpenThread/DnssdImpl.cpp
--   path: src/platform/OpenThread/OpenThreadDnssdImpl.cpp
--   path: src/platform/OpenThread/OpenThreadUtils.cpp
--   path: src/platform/SingletonConfigurationManager.cpp
--   path: src/platform/silabs/CHIPMem-Platform.cpp
--   path: src/platform/silabs/DiagnosticDataProviderImpl.cpp
--   path: src/platform/silabs/KeyValueStoreManagerImpl.cpp
--   path: src/platform/silabs/Logging.cpp
--   path: src/platform/silabs/MigrationManager.cpp
--   path: src/platform/silabs/SilabsConfig.cpp
--   path: src/platform/silabs/efr32/BLEManagerImpl.cpp
--   path: src/platform/silabs/efr32/CHIPCryptoPALPsaEfr32.cpp
--   path: src/platform/silabs/efr32/ConfigurationManagerImpl.cpp
--   path: src/platform/silabs/efr32/ConnectivityManagerImpl.cpp
--   path: src/platform/silabs/efr32/Efr32PsaOpaqueKeypair.cpp
--   path: src/platform/silabs/efr32/Efr32PsaOperationalKeystore.cpp
--   path: src/platform/silabs/efr32/OTAImageProcessorImpl.cpp
--   path: src/platform/silabs/efr32/PlatformManagerImpl.cpp
--   path: src/platform/silabs/efr32/ThreadStackManagerImpl.cpp
--   path: src/platform/silabs/platformAbstraction/GsdkSpam.cpp
+- path: src/platform/FreeRTOS/SystemTimeSupport.cpp
+- path: src/platform/OpenThread/DnssdImpl.cpp
+- path: src/platform/OpenThread/OpenThreadDnssdImpl.cpp
+- path: src/platform/OpenThread/OpenThreadUtils.cpp
+- path: src/platform/SingletonConfigurationManager.cpp
+- path: src/platform/silabs/CHIPMem-Platform.cpp
+- path: src/platform/silabs/ConfigurationManagerImpl.cpp
+- path: src/platform/silabs/DiagnosticDataProviderImpl.cpp
+- path: src/platform/silabs/KeyValueStoreManagerImpl.cpp
+- path: src/platform/silabs/Logging.cpp
+- path: src/platform/silabs/MigrationManager.cpp
+- path: src/platform/silabs/SilabsConfig.cpp
+- path: src/platform/silabs/efr32/BLEManagerImpl.cpp
+- path: src/platform/silabs/efr32/CHIPCryptoPALPsaEfr32.cpp
+- path: src/platform/silabs/efr32/ConnectivityManagerImpl.cpp
+- path: src/platform/silabs/efr32/Efr32PsaOpaqueKeypair.cpp
+- path: src/platform/silabs/efr32/Efr32PsaOperationalKeystore.cpp
+- path: src/platform/silabs/efr32/OTAImageProcessorImpl.cpp
+- path: src/platform/silabs/efr32/PlatformManagerImpl.cpp
+- path: src/platform/silabs/efr32/ThreadStackManagerImpl.cpp
+- path: src/platform/silabs/platformAbstraction/GsdkSpam.cpp
 ui_hints:
-    visibility: never
+  visibility: never

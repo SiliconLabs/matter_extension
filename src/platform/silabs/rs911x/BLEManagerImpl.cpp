@@ -28,7 +28,7 @@
 
 #include "cmsis_os2.h"
 #include <platform/internal/BLEManager.h>
-#ifndef SIWX_917
+#ifndef SLI_SI91X_MCU_INTERFACE
 #include "rail.h"
 #endif
 #include <crypto/RandUtils.h>
@@ -42,7 +42,7 @@ extern "C" {
 #include "wfx_host_events.h"
 #include "wfx_rsi.h"
 #include "wfx_sl_ble_init.h"
-#if !(SIWX_917 | EXP_BOARD)
+#if !(SLI_SI91X_MCU_INTERFACE | EXP_BOARD)
 #include <rsi_driver.h>
 #endif
 #include <rsi_utils.h>
@@ -58,18 +58,19 @@ extern "C" {
 #include <platform/DeviceInstanceInfoProvider.h>
 #include <string.h>
 
-#ifdef SIWX_917
+#ifdef SLI_SI91X_MCU_INTERFACE
 extern "C" {
 #include "sl_si91x_trng.h"
 }
-#endif
+#endif // SLI_SI91X_MCU_INTERFACE
 
 #if CHIP_ENABLE_ADDITIONAL_DATA_ADVERTISING
 #include <setup_payload/AdditionalDataPayloadGenerator.h>
 #endif
 
-#define BLE_MIN_CONNECTION_INTERVAL_MS 45
-#define BLE_MAX_CONNECTION_INTERVAL_MS 45
+// Default Connection  parameters
+#define BLE_MIN_CONNECTION_INTERVAL_MS (24) // Time = Value x 1.25 ms = 30ms
+#define BLE_MAX_CONNECTION_INTERVAL_MS (40) // Time = Value x 1.25 ms = 50ms
 #define BLE_SLAVE_LATENCY_MS 0
 #define BLE_TIMEOUT_MS 400
 #define BLE_DEFAULT_TIMER_PERIOD_MS (1)
@@ -92,18 +93,22 @@ using namespace ::chip::DeviceLayer::Internal;
 void sl_ble_init()
 {
     uint8_t randomAddrBLE[RSI_BLE_ADDR_LENGTH] = { 0 };
-#if SIWX_917
+#if SLI_SI91X_MCU_INTERFACE
     sl_status_t sl_status;
     //! Get Random number of desired length
-    sl_status = sl_si91x_trng_get_random_num((uint32_t *)randomAddrBLE, RSI_BLE_ADDR_LENGTH);
-    if (sl_status != SL_STATUS_OK) {
-        ChipLogError(DeviceLayer," TRNG Random number generation Failed ");
-        return ;
+    sl_status = sl_si91x_trng_get_random_num((uint32_t *) randomAddrBLE, RSI_BLE_ADDR_LENGTH);
+    if (sl_status != SL_STATUS_OK)
+    {
+        ChipLogError(DeviceLayer, " TRNG Random number generation Failed ");
+        return;
     }
+    // Set the two least significant bits as the first 2 bits of the address has to be '11' to ensure the address is a random
+    // non-resolvable private address
+    randomAddrBLE[5] |= 0xC0;
 #else
-    uint64_t randomAddr      = chip::Crypto::GetRandU64();
+    uint64_t randomAddr = chip::Crypto::GetRandU64();
     memcpy(randomAddrBLE, &randomAddr, RSI_BLE_ADDR_LENGTH);
-#endif
+#endif // SLI_SI91X_MCU_INTERFACE
 
     // registering the GAP callback functions
     rsi_ble_gap_register_callbacks(NULL, NULL, rsi_ble_on_disconnect_event, NULL, NULL, NULL, rsi_ble_on_enhance_conn_status_event,
@@ -117,11 +122,8 @@ void sl_ble_init()
     //  Exchange of GATT info with BLE stack
 
     rsi_ble_add_matter_service();
-
     //  initializing the application events map
     rsi_ble_app_init_events();
-    // Set the two least significant bits as the first 2 bits of the address has to be '11' to ensure the address is a random non-resolvable private address
-    randomAddrBLE[5] |= 0xC0;
     rsi_ble_set_random_address_with_value(randomAddrBLE);
     chip::DeviceLayer::Internal::BLEMgrImpl().HandleBootEvent();
 }
@@ -199,7 +201,8 @@ void sl_ble_event_handling_task(void)
             break;
         }
 
-        if (chip::DeviceLayer::ConnectivityMgr().IsWiFiStationConnected()) {
+        if (chip::DeviceLayer::ConnectivityMgr().IsWiFiStationConnected())
+        {
             // Once DUT is connected adding a 500ms delay
             // TODO: Fix this with a better event handling
             vTaskDelay(pdMS_TO_TICKS(500));
@@ -243,18 +246,10 @@ namespace {
 #define BLE_CONFIG_RF_PATH_GAIN_TX (0)
 #define BLE_CONFIG_RF_PATH_GAIN_RX (0)
 
-// Default Connection  parameters
-#define BLE_CONFIG_MIN_INTERVAL (16) // Time = Value x 1.25 ms = 30ms
-#define BLE_CONFIG_MAX_INTERVAL (80) // Time = Value x 1.25 ms = 100ms
-#define BLE_CONFIG_LATENCY (0)
-#define BLE_CONFIG_TIMEOUT (100) // Time = Value x 10 ms = 1s
-#define BLE_CONFIG_MIN_CE_LENGTH (0) // Leave to min value
-#define BLE_CONFIG_MAX_CE_LENGTH (0xFFFF) // Leave to max value
-
 TimerHandle_t sbleAdvTimeoutTimer; // FreeRTOS sw timer.
 
 const uint8_t UUID_CHIPoBLEService[]       = { 0xFB, 0x34, 0x9B, 0x5F, 0x80, 0x00, 0x00, 0x80,
-                                         0x00, 0x10, 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x00 };
+                                               0x00, 0x10, 0x00, 0x00, 0xF6, 0xFF, 0x00, 0x00 };
 const uint8_t ShortUUID_CHIPoBLEService[]  = { 0xF6, 0xFF };
 const ChipBleUUID ChipUUID_CHIPoBLEChar_RX = { { 0x18, 0xEE, 0x2E, 0xF5, 0x26, 0x3D, 0x45, 0x59, 0x95, 0x9F, 0x4F, 0x9C, 0x42, 0x9F,
                                                  0x9D, 0x11 } };
@@ -620,6 +615,7 @@ CHIP_ERROR BLEManagerImpl::ConfigureAdvertisingData(void)
 
     mDeviceNameLength = strlen(mDeviceName); // Device Name length + length field
     VerifyOrExit(mDeviceNameLength < kMaxDeviceNameLength, err = CHIP_ERROR_INVALID_ARGUMENT);
+    static_assert((kFlagTlvSize + kUUIDTlvSize + kDeviceNameTlvSize) <= MAX_RESPONSE_DATA_LEN, "Scan Response buffer is too small");
 
     mDeviceIdInfoLength = sizeof(mDeviceIdInfo); // Servicedatalen + length+ UUID (Short)
     static_assert(sizeof(mDeviceIdInfo) + CHIP_ADV_SHORT_UUID_LEN + 1 <= UINT8_MAX, "Our length won't fit in a uint8_t");
@@ -675,8 +671,9 @@ exit:
 
 CHIP_ERROR BLEManagerImpl::StartAdvertising(void)
 {
-    CHIP_ERROR err = CHIP_NO_ERROR;
-    int32_t status = 0;
+    CHIP_ERROR err          = CHIP_NO_ERROR;
+    int32_t status          = 0;
+    bool postAdvChangeEvent = false;
 
     ChipLogProgress(DeviceLayer, "StartAdvertising start");
 
@@ -691,7 +688,8 @@ CHIP_ERROR BLEManagerImpl::StartAdvertising(void)
     }
     else
     {
-        ChipLogDetail(DeviceLayer, "Start BLE advertissement");
+        ChipLogDetail(DeviceLayer, "Start BLE advertisement");
+        postAdvChangeEvent = true;
     }
 
     if (!(mFlags.Has(Flags::kAdvertising)))
@@ -716,6 +714,16 @@ CHIP_ERROR BLEManagerImpl::StartAdvertising(void)
             StartBleAdvTimeoutTimer(CHIP_DEVICE_CONFIG_BLE_ADVERTISING_INTERVAL_CHANGE_TIME);
         }
         mFlags.Set(Flags::kAdvertising);
+
+        if (postAdvChangeEvent)
+        {
+            // Post CHIPoBLEAdvertisingChange event.
+            ChipDeviceEvent advChange;
+            advChange.Type                             = DeviceEventType::kCHIPoBLEAdvertisingChange;
+            advChange.CHIPoBLEAdvertisingChange.Result = kActivity_Started;
+
+            ReturnErrorOnFailure(PlatformMgr().PostEvent(&advChange));
+        }
     }
     else
     {
@@ -723,8 +731,9 @@ CHIP_ERROR BLEManagerImpl::StartAdvertising(void)
     }
 
 exit:
+    // TODO: Add MapBLEError to return the correct error code
     ChipLogError(DeviceLayer, "StartAdvertising() End error: %s", ErrorStr(err));
-    return CHIP_NO_ERROR; // err;
+    return err;
 }
 
 int32_t BLEManagerImpl::SendBLEAdvertisementCommand(void)
@@ -753,7 +762,6 @@ int32_t BLEManagerImpl::SendBLEAdvertisementCommand(void)
     return rsi_ble_start_advertising_with_values(&ble_adv);
 }
 
-// TODO:: Implementation need to be done.
 CHIP_ERROR BLEManagerImpl::StopAdvertising(void)
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
@@ -769,12 +777,16 @@ CHIP_ERROR BLEManagerImpl::StopAdvertising(void)
             mFlags.Set(Flags::kFastAdvertisingEnabled, true);
             advertising_set_handle = 0xff;
             CancelBleAdvTimeoutTimer();
-        }
-        else
-        {
-            ChipLogProgress(DeviceLayer, "advertising failed to stop, with status = 0x%lx", status);
+
+            // Post CHIPoBLEAdvertisingChange event.
+            ChipDeviceEvent advChange;
+            advChange.Type                             = DeviceEventType::kCHIPoBLEAdvertisingChange;
+            advChange.CHIPoBLEAdvertisingChange.Result = kActivity_Stopped;
+            err                                        = PlatformMgr().PostEvent(&advChange);
         }
     }
+
+    // TODO: Add MapBLEError to return the correct error code
     return err;
 }
 
@@ -1085,7 +1097,7 @@ void BLEManagerImpl::BleAdvTimeoutHandler(TimerHandle_t xTimer)
 {
     if (BLEMgrImpl().mFlags.Has(Flags::kFastAdvertisingEnabled))
     {
-        ChipLogDetail(DeviceLayer, "bleAdv Timeout : Start slow advertissment");
+        ChipLogDetail(DeviceLayer, "bleAdv Timeout : Start slow advertisement");
         BLEMgr().SetAdvertisingMode(BLEAdvertisingMode::kSlowAdvertising);
     }
 }

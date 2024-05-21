@@ -27,17 +27,23 @@
 #include "task.h"
 #include "wfx_host_events.h"
 
-// SLC-FIX
-#include "sl_matter_wifi_config.h"
-
 #ifdef RS911X_WIFI
 #include "wfx_rsi.h"
 #endif
 
+#if SL_ICD_ENABLED
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include "sl_si91x_m4_ps.h"
+extern "C" uint8_t m4_alarm_initialization_done;
+extern "C" void set_alarm_interrupt_timer(uint16_t interval);
+#ifdef __cplusplus
+}
+#endif
+#endif // SL_ICD_ENABLED
+
 #include <platform/CHIPDeviceLayer.h>
-// #include <app/server/Mdns.h>
-#include <app/server/Dnssd.h>
-#include <app/server/Server.h>
 
 using namespace ::chip;
 using namespace ::chip::DeviceLayer;
@@ -144,16 +150,6 @@ void wfx_ipv6_notify(int got_ip)
     eventData.header.id     = got_ip ? IP_EVENT_GOT_IP6 : IP_EVENT_STA_LOST_IP;
     eventData.header.length = sizeof(eventData.header);
     PlatformMgrImpl().HandleWFXSystemEvent(IP_EVENT, &eventData);
-
-    /* So the other threads can run and have the connectivity OK */
-    if (got_ip)
-    {
-        /* Should remember this */
-        vTaskDelay(1);
-        chip::DeviceLayer::PlatformMgr().LockChipStack();
-        chip::app::DnssdServer::Instance().StartServer(/*Dnssd::CommissioningMode::kEnabledBasic*/);
-        chip::DeviceLayer::PlatformMgr().UnlockChipStack();
-    }
 }
 
 /**************************************************************************************
@@ -173,16 +169,6 @@ void wfx_ip_changed_notify(int got_ip)
     eventData.header.id     = got_ip ? IP_EVENT_STA_GOT_IP : IP_EVENT_STA_LOST_IP;
     eventData.header.length = sizeof(eventData.header);
     PlatformMgrImpl().HandleWFXSystemEvent(IP_EVENT, &eventData);
-
-    /* So the other threads can run and have the connectivity OK */
-    if (got_ip)
-    {
-        /* Should remember this */
-        vTaskDelay(1);
-        chip::DeviceLayer::PlatformMgr().LockChipStack();
-        chip::app::DnssdServer::Instance().StartServer(/*Dnssd::CommissioningMode::kEnabledBasic*/);
-        chip::DeviceLayer::PlatformMgr().UnlockChipStack();
-    }
 }
 
 /**************************************************************************************
@@ -194,6 +180,12 @@ void wfx_ip_changed_notify(int got_ip)
  ********************************************************************************************/
 void wfx_retry_interval_handler(bool is_wifi_disconnection_event, uint16_t retryJoin)
 {
+#if SI917_M4_SLEEP_ENABLED
+    if (m4_alarm_initialization_done == false)
+    {
+        initialize_m4_alarm();
+    }
+#endif // SI917_M4_SLEEP_ENABLED
     if (!is_wifi_disconnection_event)
     {
         /* After the reboot or a commissioning time device failed to connect with AP.
@@ -202,7 +194,22 @@ void wfx_retry_interval_handler(bool is_wifi_disconnection_event, uint16_t retry
         if (retryJoin < MAX_JOIN_RETRIES_COUNT)
         {
             SILABS_LOG("wfx_retry_interval_handler : Next attempt after %d Seconds", CONVERT_MS_TO_SEC(WLAN_RETRY_TIMER_MS));
+#if SI917_M4_SLEEP_ENABLED
+            // TODO: cleanup the retry logic MATTER-1921
+            if (!chip::Server::GetInstance().GetCommissioningWindowManager().IsCommissioningWindowOpen())
+            {
+                set_alarm_interrupt_timer(WLAN_RETRY_TIMER_MS / 1000);
+                wfx_rsi_power_save(RSI_SLEEP_MODE_8, STANDBY_POWER_SAVE_WITH_RAM_RETENTION);
+                // TODO: remove this once TICKLESS_IDLE is applied. MATTER-3134
+                sl_wfx_host_si91x_sleep_wakeup();
+            }
+            else
+            {
+                vTaskDelay(pdMS_TO_TICKS(WLAN_RETRY_TIMER_MS));
+            }
+#else
             vTaskDelay(pdMS_TO_TICKS(WLAN_RETRY_TIMER_MS));
+#endif // SI917_M4_SLEEP_ENABLED
         }
         else
         {
@@ -221,7 +228,14 @@ void wfx_retry_interval_handler(bool is_wifi_disconnection_event, uint16_t retry
             retryInterval = WLAN_MAX_RETRY_TIMER_MS;
         }
         SILABS_LOG("wfx_retry_interval_handler : Next attempt after %d Seconds", CONVERT_MS_TO_SEC(retryInterval));
+#if SI917_M4_SLEEP_ENABLED
+        set_alarm_interrupt_timer(retryInterval / 1000);
+        wfx_rsi_power_save(RSI_SLEEP_MODE_8, STANDBY_POWER_SAVE_WITH_RAM_RETENTION);
+        // TODO: remove this once TICKLESS_IDLE is applied. MATTER-3134
+        sl_wfx_host_si91x_sleep_wakeup();
+#else
         vTaskDelay(pdMS_TO_TICKS(retryInterval));
+#endif // SI917_M4_SLEEP_ENABLED
         retryInterval += retryInterval;
     }
 }

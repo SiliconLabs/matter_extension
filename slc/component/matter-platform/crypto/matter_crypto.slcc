@@ -4,6 +4,9 @@ description: Adds MbedTLS Crypto configurations required for Matter functionalit
 package: "Matter"
 category: Platform|Security
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 provides:
   - name: matter_crypto
 

@@ -7,6 +7,9 @@ id: matter_laundry_washer_controls
 package: Matter
 label: Laundry Washer Controls Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_laundry_washer_controls
 source:

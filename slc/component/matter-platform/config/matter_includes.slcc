@@ -6,6 +6,9 @@ package: Matter
 provides:
   - name: matter_includes
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 include:
   - path: slc/inc
     file_list:

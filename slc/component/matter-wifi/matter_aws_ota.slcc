@@ -67,6 +67,9 @@ template_contribution:
     value: 1560
 
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 source:
 -   path: third_party/silabs/aws_ota_sdk/demos/ota/ota_demo_core_mqtt/ota_demo_core_mqtt.c
 -   path: third_party/silabs/aws_ota_sdk/demos/ota/common/src/mqtt_subscription_manager.c

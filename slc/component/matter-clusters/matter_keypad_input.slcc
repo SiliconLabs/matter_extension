@@ -7,6 +7,9 @@ id: matter_keypad_input
 package: Matter
 label: Keypad Input Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_keypad_input
 source:

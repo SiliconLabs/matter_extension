@@ -17,18 +17,14 @@ include:
 -   path: src/lib
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
--   path: examples/common/tracing
-    file_list:
-    -   path: TracingCommandLineArgument.h
-    -   path: TraceDecoderOptions.h
-    -   path: TraceDecoderArgumentParser.h
-    -   path: TraceHandlers.h
-    -   path: TraceDecoder.h
 label: trace_handlers
 package: Matter
 provides:
 -   name: matter_trace_handlers
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: examples/common/tracing/TraceHandlers.cpp
 ui_hints:

@@ -7,6 +7,9 @@ id: matter_diagnostic_logs
 package: Matter
 label: Diagnostic Logs Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_diagnostic_logs
 source:
@@ -15,6 +18,8 @@ include:
   - path: src/app/clusters/diagnostic-logs-server
     file_list:
       - path: diagnostic-logs-server.h
+      - path: DiagnosticLogsProviderDelegate.h
+      - path: BDXDiagnosticLogsProvider.h
 template_contribution:
   - name: component_catalog
     value: matter_diagnostic_logs

@@ -106,9 +106,9 @@ extern "C" {
 #include <CHIPProjectConfig.h>
 
 #include <stdint.h>
-#include <stdio.h>                  // MATTER_GSDK_INTEGRATION
+#include <stdio.h>                  // SLC-FIX
 
-#ifdef SIWX_917
+#ifdef SLI_SI91X_MCU_INTERFACE
 #include "si91x_device.h"
 extern uint32_t SystemCoreClock;
 #else // For EFR32
@@ -166,27 +166,31 @@ extern uint32_t SystemCoreClock;
 
 /* Software timer related definitions. */
 #define configUSE_TIMERS (1)
+#ifdef SLI_SI917
+#define configTIMER_TASK_PRIORITY (55) /* Highest priority */
+#else
 #define configTIMER_TASK_PRIORITY (40) /* Highest priority */
+#endif // SLI_SI917
 #define configTIMER_QUEUE_LENGTH (10)
 #define configTIMER_TASK_STACK_DEPTH (1024)
 
-#ifdef SIWX_917
+#ifdef SLI_SI91X_MCU_INTERFACE
 #ifdef __NVIC_PRIO_BITS
 #undef __NVIC_PRIO_BITS
 #endif
 #define configPRIO_BITS 6 /* 6 priority levels. */
-#endif                    // SIWX_917
+#endif                    // SLI_SI91X_MCU_INTERFACE
 
 /* Interrupt priorities used by the kernel port layer itself.  These are generic
 to all Cortex-M ports, and do not rely on any particular library functions. */
 #define configKERNEL_INTERRUPT_PRIORITY (255)
 /* !!!! configMAX_SYSCALL_INTERRUPT_PRIORITY must not be set to zero !!!!
 See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
-#ifdef SIWX_917
+#ifdef SLI_SI91X_MCU_INTERFACE
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 20
 #else
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 48
-#endif // SIWX_917
+#endif // SLI_SI91X_MCU_INTERFACE
 
 #define configENABLE_FPU 0
 #define configENABLE_MPU 0
@@ -233,19 +237,19 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #ifndef configTOTAL_HEAP_SIZE
 #ifdef SL_WIFI
 #ifdef DIC_ENABLE
-#ifdef SIWX_917
-#define configTOTAL_HEAP_SIZE ((size_t)((75 +  + EXTRA_HEAP_k) * 1024))
-#else 
-#define configTOTAL_HEAP_SIZE ((size_t) ((68 + EXTRA_HEAP_k) * 1024))
-#endif // SIWX_917
+#ifdef SLI_SI91X_MCU_INTERFACE
+#define configTOTAL_HEAP_SIZE ((size_t) ((75 + EXTRA_HEAP_k) * 1024))
 #else
-#define configTOTAL_HEAP_SIZE ((size_t)((42 + EXTRA_HEAP_k) * 1024))
+#define configTOTAL_HEAP_SIZE ((size_t) ((68 + EXTRA_HEAP_k) * 1024))
+#endif // SLI_SI91X_MCU_INTERFACE
+#else
+#define configTOTAL_HEAP_SIZE ((size_t) ((42 + EXTRA_HEAP_k) * 1024))
 #endif // DIC
 #else  // SL_WIFI
 #if SL_CONFIG_OPENTHREAD_LIB == 1
-#define configTOTAL_HEAP_SIZE ((size_t)((40 + EXTRA_HEAP_k) * 1024))
+#define configTOTAL_HEAP_SIZE ((size_t) ((40 + EXTRA_HEAP_k) * 1024))
 #else
-#define configTOTAL_HEAP_SIZE ((size_t)((38 + EXTRA_HEAP_k) * 1024))
+#define configTOTAL_HEAP_SIZE ((size_t) ((38 + EXTRA_HEAP_k) * 1024))
 #endif // SL_CONFIG_OPENTHREAD_LIB
 #endif // configTOTAL_HEAP_SIZE
 #endif // configTOTAL_HEAP_SIZE
@@ -296,6 +300,7 @@ standard names. */
 #define SysTick_Handler xPortSysTickHandler
 
 /* Thread local storage pointers used by the SDK */
+
 #ifndef configNUM_USER_THREAD_LOCAL_STORAGE_POINTERS
 #define configNUM_USER_THREAD_LOCAL_STORAGE_POINTERS 2
 #endif
@@ -307,15 +312,6 @@ standard names. */
 #ifndef configNUM_THREAD_LOCAL_STORAGE_POINTERS
 #define configNUM_THREAD_LOCAL_STORAGE_POINTERS                                                                                    \
     (configNUM_USER_THREAD_LOCAL_STORAGE_POINTERS + configNUM_SDK_THREAD_LOCAL_STORAGE_POINTERS + 1)
-#endif
-
-#if defined(__GNUC__)
-/* For the linker. */
-#define fabs __builtin_fabs
-#endif
-
-#ifndef configNUM_USER_THREAD_LOCAL_STORAGE_POINTERS
-#error RC-FRTOS
 #endif
 
 #if defined(__GNUC__)

@@ -2,16 +2,15 @@ category: Matter|Core
 define: []
 description: syscalls_stub
 id: syscalls_stub
-include:
--   path: src/platform
-    file_list:
-    -   path: DeviceSafeQueue.h
-    -   path: GLibTypeDeleter.h
+include: []
 label: syscalls_stub
 package: Matter
 provides:
 -   name: matter_syscalls_stub
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/platform/SyscallStubs.cpp
 ui_hints:
