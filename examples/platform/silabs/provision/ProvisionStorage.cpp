@@ -7,6 +7,7 @@
 #include <platform/CHIPDeviceConfig.h>
 #include <platform/CHIPDeviceError.h>
 #include <setup_payload/Base38Encode.h>
+#include <setup_payload/QRCodeSetupPayloadGenerator.h>
 #include <setup_payload/SetupPayload.h>
 
 #include <nvm3.h>
@@ -609,16 +610,31 @@ CHIP_ERROR Storage::GetSetupPayload(chip::MutableCharSpan &value)
     VerifyOrReturnError(value.size() > prefix_len, CHIP_ERROR_BUFFER_TOO_SMALL);
 
     CHIP_ERROR err = this->GetSetupPayload(payload, sizeof(payload), size);
+
 #if defined(CHIP_DEVICE_CONFIG_USE_TEST_SETUP_PIN_CODE) && CHIP_DEVICE_CONFIG_USE_TEST_SETUP_PIN_CODE
     if (CHIP_DEVICE_ERROR_CONFIG_NOT_FOUND == err)
     {
-        static constexpr uint8_t kTestSetupPayloadBitset[] = { 0x88, 0xFF, 0x2F, 0x00, 0x44, 0x00, 0xE0, 0x4B, 0x84, 0x68, 0x02 };
-        size = sizeof(kTestSetupPayloadBitset);
-        ReturnErrorCodeIf(size > kTotalPayloadDataSizeInBytes, CHIP_ERROR_BUFFER_TOO_SMALL);
-        memcpy(payload, kTestSetupPayloadBitset, size);
-        err = CHIP_NO_ERROR;
+        PayloadContents payloadContents;
+
+        // Configure PayloadContents
+        payloadContents.version = 0;
+        payloadContents.rendezvousInformation.SetValue(chip::RendezvousInformationFlag::kBLE);
+        payloadContents.setUpPINCode = CHIP_DEVICE_CONFIG_USE_TEST_SETUP_PIN_CODE;
+
+        uint16_t discriminator = 0;
+        ReturnErrorOnFailure(GetSetupDiscriminator(discriminator));
+        payloadContents.discriminator.SetLongValue(discriminator);
+
+        ReturnErrorOnFailure(GetVendorId(payloadContents.vendorID));
+        ReturnErrorOnFailure(GetProductId(payloadContents.productID));
+
+        // Generate Setup payload byte array
+        ReturnErrorOnFailure(QRCodeBasicSetupPayloadGenerator(payloadContents).payloadBase38Representation(value));
+
+        return CHIP_NO_ERROR;
     }
 #endif
+
     ReturnErrorOnFailure(err);
     VerifyOrReturnError(size > 0, CHIP_ERROR_NOT_FOUND);
     char *data = value.data();

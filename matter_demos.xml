@@ -10,36 +10,6 @@
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4170A to be used with Wi-Fi RS9116</description>
 	</demo>
-	<demo name="brd4170a.demo.sensor_app_rs911x" label="Matter - NCP Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4170a"/>
-		<property key="demos.imageFile" value="demos/BRD4170A/WiFi/sensor-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Sensor Application for BRD4170A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4170a.demo.window_app_rs911x" label="Matter - NCP Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4170a"/>
-		<property key="demos.imageFile" value="demos/BRD4170A/WiFi/window-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Window Covering Application for BRD4170A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4170a.demo.lighting_app_rs911x" label="Matter - NCP Lighting over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Lighting app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4170a"/>
-		<property key="demos.imageFile" value="demos/BRD4170A/WiFi/lighting-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lighting Application for BRD4170A to be used with Wi-Fi RS9116</description>
-	</demo>
 	<demo name="brd4170a.demo.lock_app_rs911x" label="Matter - NCP Lock over Wi-Fi">
 		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
@@ -49,26 +19,6 @@
 		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4170A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4170a.demo.onoff_plug_app_rs911x" label="Matter - NCP Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4170a"/>
-		<property key="demos.imageFile" value="demos/BRD4170A/WiFi/onoff-plug-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Onoff Plug Application for BRD4170A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4170a.demo.dishwasher_app_rs911x" label="Matter - NCP Dishwasher over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Dishwasher app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4170a"/>
-		<property key="demos.imageFile" value="demos/BRD4170A/WiFi/dishwasher-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/dishwasher-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Dishwasher Application for BRD4170A to be used with Wi-Fi RS9116</description>
 	</demo>
 	<demo name="brd4162a.demo.window_app_thread" label="Matter - SoC Window Covering over Thread">
 		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
@@ -160,36 +110,6 @@
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4162A to be used with Wi-Fi RS9116</description>
 	</demo>
-	<demo name="brd4162a.demo.sensor_app_rs911x" label="Matter - NCP Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4162a"/>
-		<property key="demos.imageFile" value="demos/BRD4162A/WiFi/sensor-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Sensor Application for BRD4162A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4162a.demo.window_app_rs911x" label="Matter - NCP Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4162a"/>
-		<property key="demos.imageFile" value="demos/BRD4162A/WiFi/window-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Window Covering Application for BRD4162A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4162a.demo.lighting_app_rs911x" label="Matter - NCP Lighting over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Lighting app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4162a"/>
-		<property key="demos.imageFile" value="demos/BRD4162A/WiFi/lighting-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lighting Application for BRD4162A to be used with Wi-Fi RS9116</description>
-	</demo>
 	<demo name="brd4162a.demo.lock_app_rs911x" label="Matter - NCP Lock over Wi-Fi">
 		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
@@ -199,26 +119,6 @@
 		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4162A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4162a.demo.onoff_plug_app_rs911x" label="Matter - NCP Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4162a"/>
-		<property key="demos.imageFile" value="demos/BRD4162A/WiFi/onoff-plug-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Onoff Plug Application for BRD4162A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4162a.demo.dishwasher_app_rs911x" label="Matter - NCP Dishwasher over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Dishwasher app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4162a"/>
-		<property key="demos.imageFile" value="demos/BRD4162A/WiFi/dishwasher-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/dishwasher-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Dishwasher Application for BRD4162A to be used with Wi-Fi RS9116</description>
 	</demo>
 	<demo name="brd4317a.demo.window_app_thread" label="Matter - SoC Window Covering over Thread">
 		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
@@ -390,16 +290,6 @@
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4187C to be used with Wi-Fi 917-NCP</description>
 	</demo>
-	<demo name="brd4187c.demo.onoff_plug_app_917_ncp" label="Matter - NCP Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4187c"/>
-		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/onoff-plug-app-917-ncp.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Onoff Plug Application for BRD4187C to be used with Wi-Fi 917-NCP</description>
-	</demo>
 	<demo name="brd4187c.demo.lock_app_917_ncp" label="Matter - NCP Lock over Wi-Fi">
 		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
@@ -409,36 +299,6 @@
 		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4187C to be used with Wi-Fi 917-NCP</description>
-	</demo>
-	<demo name="brd4187c.demo.dishwasher_app_917_ncp" label="Matter - NCP Dishwasher over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Dishwasher app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4187c"/>
-		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/dishwasher-app-917-ncp.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/dishwasher-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Dishwasher Application for BRD4187C to be used with Wi-Fi 917-NCP</description>
-	</demo>
-	<demo name="brd4187c.demo.lighting_app_917_ncp" label="Matter - NCP Lighting over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Lighting app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4187c"/>
-		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/lighting-app-917-ncp.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lighting Application for BRD4187C to be used with Wi-Fi 917-NCP</description>
-	</demo>
-	<demo name="brd4187c.demo.sensor_app_917_ncp" label="Matter - NCP Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4187c"/>
-		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/sensor-app-917-ncp.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Sensor Application for BRD4187C to be used with Wi-Fi 917-NCP</description>
 	</demo>
 	<demo name="brd4187c.demo.window_app_917_ncp" label="Matter - NCP Window Covering over Wi-Fi">
 		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
@@ -450,46 +310,6 @@
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application for BRD4187C to be used with Wi-Fi 917-NCP</description>
 	</demo>
-	<demo name="brd4187c.demo.onoff_plug_app_wf200" label="Matter - NCP Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4187c"/>
-		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/onoff-plug-app-wf200.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Onoff Plug Application for BRD4187C to be used with Wi-Fi WF200</description>
-	</demo>
-	<demo name="brd4187c.demo.window_app_wf200" label="Matter - NCP Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4187c"/>
-		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/window-app-wf200.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Window Covering Application for BRD4187C to be used with Wi-Fi WF200</description>
-	</demo>
-	<demo name="brd4187c.demo.sensor_app_wf200" label="Matter - NCP Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4187c"/>
-		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/sensor-app-wf200.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Sensor Application for BRD4187C to be used with Wi-Fi WF200</description>
-	</demo>
-	<demo name="brd4187c.demo.dishwasher_app_wf200" label="Matter - NCP Dishwasher over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Dishwasher app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4187c"/>
-		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/dishwasher-app-wf200.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/dishwasher-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Dishwasher Application for BRD4187C to be used with Wi-Fi WF200</description>
-	</demo>
 	<demo name="brd4187c.demo.lock_app_wf200" label="Matter - NCP Lock over Wi-Fi">
 		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
@@ -499,16 +319,6 @@
 		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4187C to be used with Wi-Fi WF200</description>
-	</demo>
-	<demo name="brd4187c.demo.lighting_app_wf200" label="Matter - NCP Lighting over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Lighting app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4187c"/>
-		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/lighting-app-wf200.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lighting Application for BRD4187C to be used with Wi-Fi WF200</description>
 	</demo>
 	<demo name="brd4187c.demo.thermostat_app_wf200" label="Matter - NCP Thermostat over Wi-Fi">
 		<property key="demos.blurb" value="Matter - NCP Thermostat app"/>
@@ -530,36 +340,6 @@
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4187C to be used with Wi-Fi RS9116</description>
 	</demo>
-	<demo name="brd4187c.demo.sensor_app_rs911x" label="Matter - NCP Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4187c"/>
-		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/sensor-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Sensor Application for BRD4187C to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4187c.demo.window_app_rs911x" label="Matter - NCP Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4187c"/>
-		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/window-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Window Covering Application for BRD4187C to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4187c.demo.lighting_app_rs911x" label="Matter - NCP Lighting over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Lighting app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4187c"/>
-		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/lighting-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lighting Application for BRD4187C to be used with Wi-Fi RS9116</description>
-	</demo>
 	<demo name="brd4187c.demo.lock_app_rs911x" label="Matter - NCP Lock over Wi-Fi">
 		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
@@ -569,26 +349,6 @@
 		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4187C to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4187c.demo.onoff_plug_app_rs911x" label="Matter - NCP Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4187c"/>
-		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/onoff-plug-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Onoff Plug Application for BRD4187C to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4187c.demo.dishwasher_app_rs911x" label="Matter - NCP Dishwasher over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Dishwasher app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4187c"/>
-		<property key="demos.imageFile" value="demos/BRD4187C/WiFi/dishwasher-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/dishwasher-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Dishwasher Application for BRD4187C to be used with Wi-Fi RS9116</description>
 	</demo>
 	<demo name="brd4338a.demo.SiWx917_onoff_plug_example_app_siwx917" label="Matter - SoC Siwx917 Onoff Plug Example over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Siwx917 Onoff Plug Example app"/>
@@ -750,36 +510,6 @@
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4161A to be used with Wi-Fi RS9116</description>
 	</demo>
-	<demo name="brd4161a.demo.sensor_app_rs911x" label="Matter - NCP Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4161a"/>
-		<property key="demos.imageFile" value="demos/BRD4161A/WiFi/sensor-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Sensor Application for BRD4161A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4161a.demo.window_app_rs911x" label="Matter - NCP Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4161a"/>
-		<property key="demos.imageFile" value="demos/BRD4161A/WiFi/window-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Window Covering Application for BRD4161A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4161a.demo.lighting_app_rs911x" label="Matter - NCP Lighting over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Lighting app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4161a"/>
-		<property key="demos.imageFile" value="demos/BRD4161A/WiFi/lighting-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lighting Application for BRD4161A to be used with Wi-Fi RS9116</description>
-	</demo>
 	<demo name="brd4161a.demo.lock_app_rs911x" label="Matter - NCP Lock over Wi-Fi">
 		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
@@ -789,26 +519,6 @@
 		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4161A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4161a.demo.onoff_plug_app_rs911x" label="Matter - NCP Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4161a"/>
-		<property key="demos.imageFile" value="demos/BRD4161A/WiFi/onoff-plug-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Onoff Plug Application for BRD4161A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4161a.demo.dishwasher_app_rs911x" label="Matter - NCP Dishwasher over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Dishwasher app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4161a"/>
-		<property key="demos.imageFile" value="demos/BRD4161A/WiFi/dishwasher-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/dishwasher-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Dishwasher Application for BRD4161A to be used with Wi-Fi RS9116</description>
 	</demo>
 	<demo name="brd4166a.demo.window_app_thread" label="Matter - SoC Window Covering over Thread">
 		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
@@ -1270,36 +980,6 @@
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4164A to be used with Wi-Fi RS9116</description>
 	</demo>
-	<demo name="brd4164a.demo.sensor_app_rs911x" label="Matter - NCP Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4164a"/>
-		<property key="demos.imageFile" value="demos/BRD4164A/WiFi/sensor-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Sensor Application for BRD4164A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4164a.demo.window_app_rs911x" label="Matter - NCP Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4164a"/>
-		<property key="demos.imageFile" value="demos/BRD4164A/WiFi/window-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Window Covering Application for BRD4164A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4164a.demo.lighting_app_rs911x" label="Matter - NCP Lighting over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Lighting app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4164a"/>
-		<property key="demos.imageFile" value="demos/BRD4164A/WiFi/lighting-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lighting Application for BRD4164A to be used with Wi-Fi RS9116</description>
-	</demo>
 	<demo name="brd4164a.demo.lock_app_rs911x" label="Matter - NCP Lock over Wi-Fi">
 		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
@@ -1309,26 +989,6 @@
 		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4164A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4164a.demo.onoff_plug_app_rs911x" label="Matter - NCP Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4164a"/>
-		<property key="demos.imageFile" value="demos/BRD4164A/WiFi/onoff-plug-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Onoff Plug Application for BRD4164A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4164a.demo.dishwasher_app_rs911x" label="Matter - NCP Dishwasher over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Dishwasher app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4164a"/>
-		<property key="demos.imageFile" value="demos/BRD4164A/WiFi/dishwasher-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/dishwasher-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Dishwasher Application for BRD4164A to be used with Wi-Fi RS9116</description>
 	</demo>
 	<demo name="brd2704a.demo.lighting_app_thread" label="Matter - SoC Lighting over Thread">
 		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
@@ -1430,36 +1090,6 @@
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4163A to be used with Wi-Fi RS9116</description>
 	</demo>
-	<demo name="brd4163a.demo.sensor_app_rs911x" label="Matter - NCP Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4163a"/>
-		<property key="demos.imageFile" value="demos/BRD4163A/WiFi/sensor-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Sensor Application for BRD4163A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4163a.demo.window_app_rs911x" label="Matter - NCP Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4163a"/>
-		<property key="demos.imageFile" value="demos/BRD4163A/WiFi/window-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Window Covering Application for BRD4163A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4163a.demo.lighting_app_rs911x" label="Matter - NCP Lighting over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Lighting app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4163a"/>
-		<property key="demos.imageFile" value="demos/BRD4163A/WiFi/lighting-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lighting Application for BRD4163A to be used with Wi-Fi RS9116</description>
-	</demo>
 	<demo name="brd4163a.demo.lock_app_rs911x" label="Matter - NCP Lock over Wi-Fi">
 		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
@@ -1469,26 +1099,6 @@
 		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4163A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4163a.demo.onoff_plug_app_rs911x" label="Matter - NCP Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4163a"/>
-		<property key="demos.imageFile" value="demos/BRD4163A/WiFi/onoff-plug-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Onoff Plug Application for BRD4163A to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4163a.demo.dishwasher_app_rs911x" label="Matter - NCP Dishwasher over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Dishwasher app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4163a"/>
-		<property key="demos.imageFile" value="demos/BRD4163A/WiFi/dishwasher-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/dishwasher-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Dishwasher Application for BRD4163A to be used with Wi-Fi RS9116</description>
 	</demo>
 	<demo name="brd4186c.demo.window_app_thread" label="Matter - SoC Window Covering over Thread">
 		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>
@@ -1580,16 +1190,6 @@
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4186C to be used with Wi-Fi 917-NCP</description>
 	</demo>
-	<demo name="brd4186c.demo.onoff_plug_app_917_ncp" label="Matter - NCP Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4186c"/>
-		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/onoff-plug-app-917-ncp.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Onoff Plug Application for BRD4186C to be used with Wi-Fi 917-NCP</description>
-	</demo>
 	<demo name="brd4186c.demo.lock_app_917_ncp" label="Matter - NCP Lock over Wi-Fi">
 		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
@@ -1599,36 +1199,6 @@
 		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4186C to be used with Wi-Fi 917-NCP</description>
-	</demo>
-	<demo name="brd4186c.demo.dishwasher_app_917_ncp" label="Matter - NCP Dishwasher over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Dishwasher app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4186c"/>
-		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/dishwasher-app-917-ncp.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/dishwasher-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Dishwasher Application for BRD4186C to be used with Wi-Fi 917-NCP</description>
-	</demo>
-	<demo name="brd4186c.demo.lighting_app_917_ncp" label="Matter - NCP Lighting over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Lighting app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4186c"/>
-		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/lighting-app-917-ncp.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lighting Application for BRD4186C to be used with Wi-Fi 917-NCP</description>
-	</demo>
-	<demo name="brd4186c.demo.sensor_app_917_ncp" label="Matter - NCP Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4186c"/>
-		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/sensor-app-917-ncp.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Sensor Application for BRD4186C to be used with Wi-Fi 917-NCP</description>
 	</demo>
 	<demo name="brd4186c.demo.window_app_917_ncp" label="Matter - NCP Window Covering over Wi-Fi">
 		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
@@ -1640,46 +1210,6 @@
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Window Covering Application for BRD4186C to be used with Wi-Fi 917-NCP</description>
 	</demo>
-	<demo name="brd4186c.demo.onoff_plug_app_wf200" label="Matter - NCP Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4186c"/>
-		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/onoff-plug-app-wf200.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Onoff Plug Application for BRD4186C to be used with Wi-Fi WF200</description>
-	</demo>
-	<demo name="brd4186c.demo.window_app_wf200" label="Matter - NCP Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4186c"/>
-		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/window-app-wf200.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Window Covering Application for BRD4186C to be used with Wi-Fi WF200</description>
-	</demo>
-	<demo name="brd4186c.demo.sensor_app_wf200" label="Matter - NCP Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4186c"/>
-		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/sensor-app-wf200.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Sensor Application for BRD4186C to be used with Wi-Fi WF200</description>
-	</demo>
-	<demo name="brd4186c.demo.dishwasher_app_wf200" label="Matter - NCP Dishwasher over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Dishwasher app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4186c"/>
-		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/dishwasher-app-wf200.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/dishwasher-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Dishwasher Application for BRD4186C to be used with Wi-Fi WF200</description>
-	</demo>
 	<demo name="brd4186c.demo.lock_app_wf200" label="Matter - NCP Lock over Wi-Fi">
 		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
@@ -1689,16 +1219,6 @@
 		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4186C to be used with Wi-Fi WF200</description>
-	</demo>
-	<demo name="brd4186c.demo.lighting_app_wf200" label="Matter - NCP Lighting over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Lighting app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4186c"/>
-		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/lighting-app-wf200.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lighting Application for BRD4186C to be used with Wi-Fi WF200</description>
 	</demo>
 	<demo name="brd4186c.demo.thermostat_app_wf200" label="Matter - NCP Thermostat over Wi-Fi">
 		<property key="demos.blurb" value="Matter - NCP Thermostat app"/>
@@ -1720,36 +1240,6 @@
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Thermostat Application for BRD4186C to be used with Wi-Fi RS9116</description>
 	</demo>
-	<demo name="brd4186c.demo.sensor_app_rs911x" label="Matter - NCP Sensor over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Sensor app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4186c"/>
-		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/sensor-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Sensor Application for BRD4186C to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4186c.demo.window_app_rs911x" label="Matter - NCP Window Covering over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Window Covering app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4186c"/>
-		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/window-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/window-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Window Covering Application for BRD4186C to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4186c.demo.lighting_app_rs911x" label="Matter - NCP Lighting over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Lighting app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4186c"/>
-		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/lighting-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/lighting-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lighting Application for BRD4186C to be used with Wi-Fi RS9116</description>
-	</demo>
 	<demo name="brd4186c.demo.lock_app_rs911x" label="Matter - NCP Lock over Wi-Fi">
 		<property key="demos.blurb" value="Matter - NCP Lock app"/>
 		<property key="core.partCompatibility" value=".*"/>
@@ -1759,26 +1249,6 @@
 		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Lock Application for BRD4186C to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4186c.demo.onoff_plug_app_rs911x" label="Matter - NCP Onoff Plug over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Onoff Plug app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4186c"/>
-		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/onoff-plug-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/onoff-plug-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Onoff Plug Application for BRD4186C to be used with Wi-Fi RS9116</description>
-	</demo>
-	<demo name="brd4186c.demo.dishwasher_app_rs911x" label="Matter - NCP Dishwasher over Wi-Fi">
-		<property key="demos.blurb" value="Matter - NCP Dishwasher app"/>
-		<property key="core.partCompatibility" value=".*"/>
-		<property key="core.boardCompatibility" value="brd4186c"/>
-		<property key="demos.imageFile" value="demos/BRD4186C/WiFi/dishwasher-app-rs911x.s37"/>
-		<property key="core.readmeFiles" value="slc/sample-app/dishwasher-app/efr32/README_WiFi.md"/>
-		<property key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Dishwasher Application for BRD4186C to be used with Wi-Fi RS9116</description>
 	</demo>
 	<demo name="brd4316a.demo.window_app_thread" label="Matter - SoC Window Covering over Thread">
 		<property key="demos.blurb" value="Matter - SoC Window Covering app"/>

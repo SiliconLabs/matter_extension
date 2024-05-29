@@ -22,8 +22,18 @@ begin            out             in               end
 
 struct Buffer
 {
-    Buffer(uint8_t *ptr, size_t size, bool at_end = false) :
-        begin(ptr), end(ptr + size), in(at_end ? end : begin), out(ptr) {}
+    Buffer(uint8_t *ptr, size_t size, bool at_end = false)
+    {
+        Init(ptr, size, at_end);
+    }
+
+    void Init(uint8_t *ptr, size_t size, bool at_end = false)
+    {
+        this->begin = ptr;
+        this->end = ptr + size;
+        this->in = at_end ? end : begin;
+        this->out = ptr;
+    }
 
     void Clear() { this->in = this->out = this->begin; }
     size_t Limit() { return (this->end > this->begin) ? (this->end - this->begin) : 0; }

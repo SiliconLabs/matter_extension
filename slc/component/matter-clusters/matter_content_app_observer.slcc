@@ -1,0 +1,24 @@
+
+category: Clusters|Media
+description: >
+  Implementation of the Content App Observer Server Cluster.
+  The user has to enable the Content App Observer Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+id: matter_content_app_observer
+package: Matter
+label: Content App Observer Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_content_app_observer
+source:
+  - path: src/app/clusters/content-app-observer/content-app-observer.cpp
+include:
+  - path: src/app/clusters/content-app-observer
+    file_list:
+      - path: content-app-observer.h
+      - path: content-app-observer-delegate.h
+template_contribution:
+  - name: component_catalog
+    value: matter_content_app_observer

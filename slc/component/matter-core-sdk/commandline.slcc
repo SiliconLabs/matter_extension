@@ -10,7 +10,6 @@ description: commandline
 id: commandline
 include:
 -   path: examples/common/tracing
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
@@ -18,6 +17,13 @@ include:
 -   path: third_party/jsoncpp/repo/include
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
+-   path: examples/common/tracing
+    file_list:
+    -   path: TracingCommandLineArgument.h
+    -   path: TraceDecoderOptions.h
+    -   path: TraceDecoderArgumentParser.h
+    -   path: TraceHandlers.h
+    -   path: TraceDecoder.h
 label: commandline
 package: Matter
 provides:

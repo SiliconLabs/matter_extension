@@ -32,13 +32,14 @@
  MEMORY
  {
    rom   (rx)  : ORIGIN = 0x8202000, LENGTH = 0x1fe000
-   ram   (rwx) : ORIGIN = 0xc, LENGTH = 0x2fc00
+   ram     (rwx) : ORIGIN = 0xc, LENGTH = 0x2fc00
  }
  MEMORY
  {
    udma0   (rwx)  : ORIGIN = 0x2fc00, LENGTH = 0x400
    udma1   (rwx)  : ORIGIN = 0x24061c00, LENGTH = 0x400
  }
+
 
 ENTRY(Reset_Handler)
  
@@ -67,6 +68,7 @@ SECTIONS
 		*(SORT(.dtors.*))
 		*(.dtors)
 		
+                *(.rodata*)
 		KEEP(*(.eh_fram e*))			
 	} > rom 
 		
@@ -82,7 +84,37 @@ SECTIONS
 	{
 		*(.ARM.exidx* .gnu.linkonce.armexidx.*)			
 	} > rom 
-	 
+  __exidx_end = .;
+
+    .copy.table :
+  {
+    . = ALIGN(4);
+    __copy_table_start__ = .;
+
+    LONG (__etext)
+    LONG (__data_start__)
+    LONG ((__data_end__ - __data_start__) / 4)
+
+    /* Add each additional data section here */
+/*
+    LONG (__etext2)
+    LONG (__data2_start__)
+    LONG ((__data2_end__ - __data2_start__) / 4)
+*/
+    __copy_table_end__ = .;
+  } > rom
+
+    .zero.table :
+  {
+    . = ALIGN(4);
+    __zero_table_start__ = .;
+    /* Add each additional bss section here */
+/*
+    LONG (__bss2_start__)
+    LONG ((__bss2_end__ - __bss2_start__) / 4)
+*/
+    __zero_table_end__ = .;
+  } > rom
 	__exidx_end = .;
 	__etext = .;
 	
@@ -162,15 +194,30 @@ SECTIONS
 		. = ALIGN(4);
 		__bss_start__ = .;
 		*(.bss*)
+    _sbss = __bss_start__;
+    *(SORT_BY_ALIGNMENT(.bss*))
 		*(COMMON)
 		. = ALIGN(4);
 		__bss_end__ = .; 
+    _ebss = __bss_end__;
 	} > ram 
 	
 
-	/* Modify the below value to change the stack size */
-	StackSize = 0x3000;
-	.stack (NOLOAD):
+	/* .stack_dummy section doesn't contains any symbols. It is only
+	* used for linker to calculate size of stack sections, and assign
+	* values to stack symbols later */
+	Co_Stack_Size = 0x3000;	
+	.co_stack ALIGN(8) (NOLOAD):
+	{
+		__co_stackLimit = .;
+		KEEP(*(.co_stack*))
+		. = ALIGN(4);
+		. += Co_Stack_Size;
+		__co_stackTop = .;
+	} > ram
+
+	StackSize = 0x1400;
+	.stack ALIGN(8) (NOLOAD):
 	{
 		__StackLimit = .;
 		KEEP(*(.stack*))
@@ -203,7 +250,7 @@ SECTIONS
 	{
 		*(.udma_addr1*)		
 	} > udma1 AT> rom
-  __ram_end__ = 0xc + 0x2fc00;
+  __ram_end__ = 0x400 + 0x4fc00;
   __main_flash_end__ = 0x8202000 + 0x1fe000;
   
 	   /* This is where we handle flash storage blocks. We use dummy sections for finding the configured
@@ -216,7 +263,8 @@ SECTIONS
     KEEP(*(.simee*))
   } > rom
 
-  linker_nvm_end = __main_flash_end__;
+  /* Last page of flash is reserved for the manufacturing token space */
+  linker_nvm_end = __main_flash_end__ - 4096;
   linker_nvm_begin = linker_nvm_end - SIZEOF(.nvm);
   linker_nvm_size = SIZEOF(.nvm);
   linker_storage_end = linker_nvm_begin;
@@ -224,5 +272,8 @@ SECTIONS
 	
   linker_storage_begin = linker_storage_end - SIZEOF(.internal_storage);
   linker_storage_size = SIZEOF(.internal_storage);
-  ASSERT((linker_storage_begin >= (__etext + SIZEOF(.data))), "FLASH memory overflowed !")   
+  ASSERT((linker_storage_begin >= (__etext + SIZEOF(.data))), "FLASH memory overflowed !")
+
+  app_flash_end = 0x8202000 + 0x1fe000;
+  ASSERT( (linker_nvm_begin + SIZEOF(.nvm)) <= app_flash_end, "NVM3 is excessing the flash size !")
 }

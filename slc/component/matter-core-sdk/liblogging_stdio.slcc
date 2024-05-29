@@ -7,7 +7,6 @@ define:
 description: liblogging_stdio
 id: liblogging_stdio
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include

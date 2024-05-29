@@ -27,7 +27,7 @@
 #include <stdint.h>
 
 #ifdef SL_ICD_ENABLED
-#include "ICDServerBuildConfig.h" // SLC-FIX
+#include "sl_matter_icd_config.h" // SLC-FIX
 #endif // SL_ICD_ENABLED
 
 // ==================== General Platform Adaptations ====================
@@ -49,7 +49,7 @@
 #if CHIP_HAVE_CONFIG_H
 #include <crypto/CryptoBuildConfig.h>
 #endif
-#if (CHIP_CRYPTO_PLATFORM == 1)
+#if ((CHIP_CRYPTO_PLATFORM == 1) && !(SLI_SI91X_MCU_INTERFACE)) //SLC-FIX
 #include "psa/crypto.h"
 
 #if !defined(CHIP_CONFIG_SHA256_CONTEXT_SIZE)

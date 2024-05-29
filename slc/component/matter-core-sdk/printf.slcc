@@ -2,7 +2,11 @@ category: Matter|Core
 define: []
 description: printf
 id: printf
-include: []
+include:
+-   path: third_party/jlink/segger_rtt/RTT
+    file_list:
+    -   path: SEGGER_RTT_Conf.h
+    -   path: SEGGER_RTT.h
 label: printf
 package: Matter
 provides:

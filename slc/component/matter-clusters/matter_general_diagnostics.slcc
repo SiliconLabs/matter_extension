@@ -14,9 +14,11 @@ provides:
   - name: matter_general_diagnostics
 source:
   - path: src/app/clusters/general-diagnostics-server/general-diagnostics-server.cpp
+  - path: src/app/clusters/general-diagnostics-server/GenericFaultTestEventTriggerHandler.cpp
 include:
   - path: src/app/clusters/general-diagnostics-server
     file_list:
+      - path: GenericFaultTestEventTriggerHandler.h
       - path: general-diagnostics-server.h
 template_contribution:
   - name: component_catalog

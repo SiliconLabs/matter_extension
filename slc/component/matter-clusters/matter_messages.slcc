@@ -1,0 +1,24 @@
+
+category: Clusters|General
+description: >
+  Implementation of the Messages Server Cluster.
+  The user has to enable the Messages Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+id: matter_messages
+package: Matter
+label: Messages Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_messages
+source:
+  - path: src/app/clusters/messages-server/messages-server.cpp
+include:
+  - path: src/app/clusters/messages-server
+    file_list:
+      - path: messages-server.h
+      - path: messages-delegate.h
+template_contribution:
+  - name: component_catalog
+    value: matter_messages

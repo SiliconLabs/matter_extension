@@ -13,7 +13,6 @@ include:
   - path: slc/inc
     file_list:
     - path: core/CHIPBuildConfig.h
-    - path: app/AppBuildConfig.h
     - path: asn1/ASN1OID.h
     - path: ble/BleBuildConfig.h
     - path: crypto/CryptoBuildConfig.h
@@ -26,5 +25,14 @@ include:
     - path: system/SystemBuildConfig.h
     - path: CHIPVersion.h
     - path: FirmwareBuildTime.h
+  - path: src
+    file_list:
+    - path: app/icd/server/ICDServerConfig.h
+    - path: app/icd/server/ICDStateObserver.h
+
+config_file:
+  - path: slc/inc/app/AppBuildConfig.h
+    file_id: matter_app_build_config
+    directory: app
 ui_hints:
     visibility: never

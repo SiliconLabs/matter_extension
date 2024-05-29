@@ -201,7 +201,7 @@ void vConfigureTimerForRunTimeStats(void);
 /* Currently the TCP/IP stack is using dynamic allocation, and the MQTT task is
  * using static allocation. */
 #define configSUPPORT_DYNAMIC_ALLOCATION 1
-#define configSUPPORT_STATIC_ALLOCATION  0
+#define configSUPPORT_STATIC_ALLOCATION  1
 
 /* Set the following definitions to 1 to include the API function, or zero
  * to exclude the API function. */
@@ -253,6 +253,13 @@ void vAssertCalled(const char *pcFile, uint32_t ulLine);
 
 #define configASSERT(x)       \
   if ((x) == 0) {             \
+    taskDISABLE_INTERRUPTS(); \
+    for (;;)                  \
+      ;                       \
+  }
+
+#define configASSERTNULL(x)   \
+  if ((x) == NULL) {          \
     taskDISABLE_INTERRUPTS(); \
     for (;;)                  \
       ;                       \

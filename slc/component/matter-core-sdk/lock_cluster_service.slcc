@@ -1,0 +1,32 @@
+category: Matter|Core
+define:
+-   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
+description: lock_cluster_service
+id: lock_cluster_service
+include:
+-   path: examples/lock-app/lock-common/include
+-   path: examples/platform/silabs
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+label: lock_cluster_service
+package: Matter
+provides:
+-   name: matter_lock_cluster_service
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+source:
+-   path: examples/lock-app/lock-common/src/LockEndpoint.cpp
+-   path: examples/lock-app/lock-common/src/LockManager.cpp
+-   path: examples/lock-app/lock-common/src/ZCLDoorLockCallbacks.cpp
+ui_hints:
+    visibility: never

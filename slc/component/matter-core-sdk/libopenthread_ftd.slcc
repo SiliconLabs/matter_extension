@@ -21,7 +21,6 @@ define:
 description: libopenthread_ftd
 id: libopenthread_ftd
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/efr32
 -   path: examples/platform/silabs
 -   path: src

@@ -12,13 +12,13 @@ metadata:
     license: "Apache 2.0"
 provides:
   - name: matter_thread_network_diagnostics
-include:
-- path: src/app/clusters/thread-network-diagnostics-server
-  file_list:
-  - path: thread-network-diagnostics-provider.h
 source:
-  - path: src/app/clusters/thread-network-diagnostics-server/thread-network-diagnostics-server.cpp
   - path: src/app/clusters/thread-network-diagnostics-server/thread-network-diagnostics-provider.cpp
+  - path: src/app/clusters/thread-network-diagnostics-server/thread-network-diagnostics-server.cpp
+include:
+  - path: src/app/clusters/thread-network-diagnostics-server
+    file_list:
+      - path: thread-network-diagnostics-provider.h
 template_contribution:
   - name: component_catalog
     value: matter_thread_network_diagnostics

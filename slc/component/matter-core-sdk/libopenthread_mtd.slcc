@@ -21,7 +21,6 @@ define:
 description: libopenthread_mtd
 id: libopenthread_mtd
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/efr32
 -   path: examples/platform/silabs
 -   path: src

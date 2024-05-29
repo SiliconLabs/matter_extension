@@ -18,13 +18,6 @@ include:
   - path: src/app/clusters/level-control
     file_list:
       - path: level-control.h
-  - path: src/app/clusters/scenes-server/
-    file_list:
-      - path: SceneTable.h
-      - path: SceneTableImpl.h
-      - path: ExtensionFieldSets.h
-      - path: ExtensionFieldSetsImpl.h
-      - path: scenes-server.h
 template_contribution:
   - name: component_catalog
     value: matter_level_control

@@ -7,12 +7,17 @@ define:
 description: text_only_logging
 id: text_only_logging
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
 -   path: src/lib
 -   path: third_party/nlassert/repo/include
+-   path: src/lib/support/logging
+    file_list:
+    -   path: BinaryLogging.h
+    -   path: CHIPLogging.h
+    -   path: Constants.h
+    -   path: TextOnlyLogging.h
 label: text_only_logging
 package: Matter
 provides:

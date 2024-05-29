@@ -1,38 +1,40 @@
 category: Matter|Core
 define:
-- name: CHIP_HAVE_CONFIG_H
-  value: '1'
-- name: RADIO_CONFIG_DMP_SUPPORT
-  value: '1'
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
 description: libaccess
 id: libaccess
 include:
-- path: examples/lighting-app/silabs/include
-- path: examples/platform/silabs
-- path: src
-  file_list:
-  - path: access/SubjectDescriptor.h
-  - path: access/AuthMode.h
-  - path: access/AccessControl.h
-  - path: access/Privilege.h
-  - path: access/RequestPath.h
-  - path: access/examples/ExampleAccessControlDelegate.h
-  - path: access/examples/PermissiveAccessControlDelegate.h
-- path: src/include
-- path: src/lib
-- path: third_party/nlassert/repo/include
-- path: third_party/nlio/repo/include
+-   path: examples/platform/silabs
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+-   path: src/access
+    file_list:
+    -   path: SubjectDescriptor.h
+    -   path: AccessControl.h
+    -   path: AuthMode.h
+    -   path: Privilege.h
+    -   path: RequestPath.h
+-   path: src/access/examples
+    file_list:
+    -   path: ExampleAccessControlDelegate.h
+    -   path: PermissiveAccessControlDelegate.h
 label: libaccess
 package: Matter
 provides:
-- name: matter_libaccess
+-   name: matter_libaccess
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
-- path: src/access/AccessControl.cpp
-- path: src/access/examples/ExampleAccessControlDelegate.cpp
-- path: src/access/examples/PermissiveAccessControlDelegate.cpp
+-   path: src/access/AccessControl.cpp
+-   path: src/access/examples/ExampleAccessControlDelegate.cpp
+-   path: src/access/examples/PermissiveAccessControlDelegate.cpp
 ui_hints:
-  visibility: never
+    visibility: never

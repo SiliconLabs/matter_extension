@@ -1,9 +1,15 @@
 #CRC Codes for initially generated config files -- do not modify!
-FreeRTOSConfig.h=-1189263304
-RTE_Device_917.h=219978337
+FreeRTOSConfig.h=1099793321
+RTE_Device_917.h=-1624732598
 SEGGER_RTT_Conf.h=784924437
 emlib_core_debug_config.h=1524820012
 pin_config.h=-1462875027
 sl_board_configuration.h=-447436877
 sl_board_control.h=-188041674
-sl_net_default_values.h=-965876280
+sl_net_default_values.h=-755439079
+sl_si91x_button_btn0_config.h=154562527
+sl_si91x_button_btn1_config.h=108533465
+sl_si91x_button_pin_config.h=1062273737
+sl_si91x_led_config.h=209150473
+sl_si91x_stack_size_config.h=-1818575477
+sl_sleeptimer_config.h=847044378

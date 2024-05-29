@@ -92,12 +92,9 @@ component:
 # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  - id: segger_rtt
+  - id: matter_segger_rtt
+    from: matter
 
-  - id: matter_subscription_timeout_resumption
-    from: matter
-  - id: matter_subscription_persistence
-    from: matter
   - id: matter_temperature_sensor
     from: matter
   - id: sensor_rht
@@ -180,13 +177,28 @@ configuration:
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17
+# For the linker file set the flash size as the actual size minus the following:
+# Space reserved for the bootloader (0x6000 bytes at the beginning)
+# A single page at the end reserved for the provisioning data
 template_contribution:
   - name: memory_flash_start
     value: 0x08006000
-    condition: [device_series_2]
+    condition: [device_family_efr32mg24]
   - name: memory_flash_size
     value: 0x00178000
-    condition: [device_series_2]
+    condition: [device_family_efr32mg24]
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_family_mgm24]
+  - name: memory_flash_size
+    value: 0x00178000
+    condition: [device_family_mgm24]
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_family_efr32mg26]
+  - name: memory_flash_size
+    value: 0x00318000
+    condition: [device_family_efr32mg26]
 
 readme:
   - path: ./README_WiFi.md

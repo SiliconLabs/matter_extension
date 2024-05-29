@@ -22,8 +22,6 @@ component:
     from: matter
   - id: matter_fw_upgrade_917
     from: matter
-  - id: matter_scenes
-    from: matter
 
   - id: matter_wifi
     from: matter
@@ -77,10 +75,7 @@ component:
     from: matter
   - id: segger_rtt
 
-  - id: matter_subscription_timeout_resumption
-    from: matter
-  - id: matter_subscription_persistence
-    from: matter  
+  
   - id: matter_ota_requestor
     from: matter
   - id: matter_ota_support
@@ -91,6 +86,11 @@ component:
     from: matter
   - id: matter_shell
     from: matter
+  - id: matter_lcd_917SOC
+    from: matter
+  - id: matter_qr_code
+    from: matter
+
 
   - id: matter_lighting
     from: matter
@@ -134,13 +134,6 @@ component:
   - instance: [timer0]
     from: wiseconnect3_sdk
     id: ulp_timers_instance
-
-requires:
-  # SiWx917 LCD configurations
-  - name: matter_lcd_917SOC
-    condition: [brd4338a]
-  - name: matter_qr_code
-    condition: [brd4338a]
 
 configuration:
   - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}

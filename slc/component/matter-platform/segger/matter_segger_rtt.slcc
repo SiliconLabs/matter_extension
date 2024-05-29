@@ -6,7 +6,7 @@ category: Platform|Utils
 quality: production
 metadata:
   sbom:
-    license: "Apache 2.0"
+    license: Zlib
 config_file:
   - path: "third_party/silabs/simplicity_sdk/util/third_party/segger/systemview/Config/SEGGER_RTT_Conf.h"
 source:

@@ -3,6 +3,7 @@
 #include <platform/silabs/SilabsConfig.h>
 #include <mbedtls/x509_csr.h>
 #include <mbedtls/asn1.h>
+#include <mbedtls/sha256.h>
 #include <em_msc.h>
 #include <stdio.h>
 #include <string.h>

@@ -88,13 +88,11 @@ component:
     from: matter
   - id: toolchain_gcc_common
     from: matter
-  - id: matter_icd_management
-    from: matter
-  - id: matter_subscription_persistence
-    from: matter
-  - id: matter_subscription_synchronization
-    from: matter
   - id: matter_shell
+    from: matter
+  - id: matter_lcd_917SOC
+    from: matter
+  - id: matter_qr_code
     from: matter
 
   - id: sl_si91x_common_flash_nvm3
@@ -137,15 +135,8 @@ component:
     from: wiseconnect3_sdk
     id: ulp_timers_instance
 
-requires:
-  # SiWx917 LCD configurations
-  - name: matter_lcd_917SOC
-    condition: [brd4338a]
-  - name: matter_qr_code
-    condition: [brd4338a]
-
 config_file:
-  - path: ../../../../examples/lock-app/lock-common/lock-app.zap
+  - path: ../../../../examples/lock-app/lock-common/lock-app-wifi.zap
     directory: common
     file_id: zap_config
   - path: ../../../../provision.mattpconf
@@ -191,11 +182,7 @@ define:
 
 configuration:
   - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
-# Default ICD configurations for lock-app
-  - {name: SL_ACTIVE_MODE_THRESHOLD, value: '1000'}
-  - {name: SL_ACTIVE_MODE_INTERVAL, value: '10000'}
-  - {name: SL_IDLE_MODE_INTERVAL, value: '600'}
-
+  
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17

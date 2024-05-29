@@ -1,5 +1,5 @@
 
-category: Clusters|General
+category: Clusters|Appliances
 description: >
   Implementation of the Laundry Washer Controls Server Cluster.
   The user has to enable the Laundry Washer Controls Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.

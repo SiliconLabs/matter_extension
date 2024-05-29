@@ -20,11 +20,15 @@
 #include <app-common/zap-generated/cluster-objects.h>
 #include <app/CommandHandler.h>
 #include <app/ConcreteCommandPath.h>
-#include <app/clusters/scenes-server/SceneTable.h>
 #include <app/util/af-types.h>
 #include <app/util/basic-types.h>
+#include <app/util/config.h> // SLC-FIX
 #include <platform/CHIPDeviceConfig.h>
 #include <protocols/interaction_model/StatusCode.h>
+
+#ifdef MATTER_DM_PLUGIN_SCENES_MANAGEMENT // SLC-FIX
+#include <app/clusters/scenes-server/SceneTable.h>
+#endif
 
 /**********************************************************
  * Defines and Macros
@@ -50,7 +54,9 @@ public:
 
     static OnOffServer & Instance();
 
+#ifdef MATTER_DM_PLUGIN_SCENES_MANAGEMENT // SLC-FIX
     chip::scenes::SceneHandler * GetSceneHandler();
+#endif
 
     bool offCommand(chip::app::CommandHandler * commandObj, const chip::app::ConcreteCommandPath & commandPath);
     bool onCommand(chip::app::CommandHandler * commandObj, const chip::app::ConcreteCommandPath & commandPath);
@@ -97,7 +103,9 @@ private:
     static OnOffServer instance;
     chip::System::Clock::Timestamp nextDesiredOnWithTimedOffTimestamp;
 
+#ifdef MATTER_DM_PLUGIN_SCENES_MANAGEMENT // SLC-FIX
     friend class DefaultOnOffSceneHandler;
+#endif
 };
 
 struct OnOffEffect

@@ -12,6 +12,15 @@ import modules.bluetooth as _bt
 import modules.credentials as _creds
 from modules.parameters import Types, Formats, ID
 from abc import ABC, abstractmethod
+from enum import Enum
+
+
+class Actions:
+    kHelp   = 'help'
+    kAuto   = 'auto'
+    kRead   = 'read'
+    kWrite  = 'write'
+    kBinary = 'binary'
 
 
 class ProvisionManager:
@@ -28,7 +37,7 @@ class ProvisionManager:
 
         # Help
         action = args.str(ID.kAction)
-        if 'help' == action:
+        if Actions.kHelp == action:
             args.help()
             exit(0)
         args.print()
@@ -42,7 +51,9 @@ class ProvisionManager:
         paths.setTemp(args.str(ID.kTemporaryDir))
 
         # Compute defaults
-        if ('auto' == action) or ('binary' == action):
+        creds = _creds.Credentials(paths, args)
+        if (Actions.kAuto == action) or (Actions.kBinary == action):
+            creds.collect()
             self.computeDefaults(paths, args)
 
         # Stop
@@ -59,7 +70,7 @@ class ProvisionManager:
         chan = self.createChannel(paths, args, conn)
 
         # Generator Firmware
-        if ('binary' != action) and (_chan.Channel.BLE != chan.type):
+        if (Actions.kBinary != action) and (_chan.Channel.BLE != chan.type):
             self.writeGeneratorFirmware(args, conn)
 
         # Exchange data
@@ -67,6 +78,10 @@ class ProvisionManager:
 
         # Export arguments (including returned values)
         args.export()
+
+        # Generate legacy header (silabs_cred.h) with credentials offsets and sizes
+        if Actions.kAuto == action:
+            creds.generateLegacyHeader()
 
         # Production Firmware
         if _chan.Channel.BLE != chan.type:
@@ -119,10 +134,6 @@ class ProvisionManager:
         mdate = args.get(ID.kManufacturingDate)
         if mdate.value is None:
             mdate.set("{:%Y-%m-%d}".format(datetime.date.today()))
-
-        # Credentials
-        creds = _creds.Credentials(paths, args)
-        creds.collect()
 
         #
         # SPAKE2+

@@ -4,6 +4,7 @@
 #include "rsi_nvic_priorities_config.h"
 #include "sli_siwx917_soc.h"
 #include "rsi_board.h"
+#include "rsi_debug.h"
 #include "sl_iostream_rtt.h"
 #include "cmsis_os2.h"
 #include "sl_iostream_init_instances.h"
@@ -14,6 +15,7 @@ void sl_platform_init(void)
   sl_si91x_device_init_nvic();
   sli_si91x_platform_init();
   RSI_Board_Init();
+  DEBUGINIT();
   osKernelInitialize();
 }
 

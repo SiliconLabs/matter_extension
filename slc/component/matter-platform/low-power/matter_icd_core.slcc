@@ -1,11 +1,8 @@
 id: matter_icd_core
-label: ICD Core Configuration
+label: ICD Server Configuration
 description: >
-  Support for basic configuration for power management on all Silabs Matter devices.
-  This component is enabled on all Silicon Labs Matter devices. This component
-  requires either 1) matter_subscription_timeout_resumption or 2) matter_icd.
-  Subscription timeout resumption causes significant energy consumption and
-  cannot be combined with the full ICD functionality that matter_icd_management provides.
+  Support for configuration of ICD power management on all Silabs Matter devices.
+  This component enables the core ICD functionality.
 package: "Matter"
 category: Platform|Low-power
 quality: production
@@ -18,58 +15,33 @@ define:
     value: 1
   - name: SL_ICD_ENABLED
     value: 1
-  - name: LCD_WITH_SLEEP
-    value: 1
-    condition: [matter_lcd]
 
-include:
--   path: examples/platform/silabs
--   path: src
--   path: src/include
--   path: src/lib
--   path: third_party/nlassert/repo/include
--   path: third_party/nlio/repo/include
--   path: src/app/icd/server
-    file_list:
-    -   path: ICDMonitoringTable.h
-    -   path: ICDManager.h
-    -   path: ICDStateObserver.h
-    -   path: ICDNotifier.h
-    -   path: ICDServerConfig.h
-    -   path: ICDCheckInSender.h
-    -   path: ICDConfigurationData.h
-
-
-source:
-  - path: src/app/icd/server/ICDNotifier.cpp
-  - path: src/app/icd/server/ICDMonitoringTable.cpp
-  - path: src/app/icd/server/ICDConfigurationData.cpp
-  - path: src/app/icd/server/ICDManager.cpp
-
+config_file:
+  - path: slc/config/sl_matter_icd_config.h
+    file_id: matter_icd_config
 
 requires:
   - name: matter_icd_management
   - name: ot_stack_mtd
     condition: [matter_thread]
-  - name: power_manager
-    condition: [matter_platform_efr32]
-  - name: sleeptimer
-    condition: [matter_platform_efr32]
 
 recommends:
-  # won't that cause problem with wifi ?
   - id: ot_stack_mtd
-  - id: matter_subscription_timeout_resumption
+    condition:
+      - matter_thread
+
 conflicts:
   - name: ot_stack_ftd
-  - name: matter_subscription_timeout_resumption
 
 provides:
   - name: matter_icd_core
+
+validation_helper:
+  - path: slc/config/scripts/icd_server_validation.lua
 
 documentation:
   docset: matter
   document: matter-overview-guides/matter-icd
 
 ui_hints:
-    visibility: always
+  visibility: always

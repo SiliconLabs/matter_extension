@@ -7,13 +7,61 @@ define:
 description: messagedef
 id: messagedef
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
 -   path: src/lib
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
+-   path: src/app/MessageDef
+    file_list:
+    -   path: AttributePathIBs.h
+    -   path: MessageDefHelper.h
+    -   path: DataVersionFilterIBs.h
+    -   path: ListParser.h
+    -   path: InvokeResponseIB.h
+    -   path: EventFilterIB.h
+    -   path: EventPathIB.h
+    -   path: ArrayParser.h
+    -   path: ListBuilder.h
+    -   path: AttributeStatusIB.h
+    -   path: EventStatusIB.h
+    -   path: CommandPathIB.h
+    -   path: SubscribeResponseMessage.h
+    -   path: InvokeRequests.h
+    -   path: StatusIB.h
+    -   path: TimedRequestMessage.h
+    -   path: AttributeDataIB.h
+    -   path: EventFilterIBs.h
+    -   path: Parser.h
+    -   path: MessageBuilder.h
+    -   path: StatusResponseMessage.h
+    -   path: AttributeReportIB.h
+    -   path: ClusterPathIB.h
+    -   path: EventReportIB.h
+    -   path: ReportDataMessage.h
+    -   path: EventReportIBs.h
+    -   path: AttributeStatusIBs.h
+    -   path: ArrayBuilder.h
+    -   path: MessageParser.h
+    -   path: InvokeResponseIBs.h
+    -   path: AttributeDataIBs.h
+    -   path: DataVersionFilterIB.h
+    -   path: SubscribeRequestMessage.h
+    -   path: AttributeReportIBs.h
+    -   path: Builder.h
+    -   path: CommandStatusIB.h
+    -   path: EventPathIBs.h
+    -   path: InvokeResponseMessage.h
+    -   path: StructBuilder.h
+    -   path: EventDataIB.h
+    -   path: WriteRequestMessage.h
+    -   path: ReadRequestMessage.h
+    -   path: StructParser.h
+    -   path: CommandDataIB.h
+    -   path: WriteResponseMessage.h
+    -   path: AttributePathIB.h
+    -   path: InvokeRequestMessage.h
 label: messagedef
 package: Matter
 provides:

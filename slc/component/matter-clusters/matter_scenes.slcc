@@ -6,22 +6,22 @@ description: >
 id: matter_scenes
 package: Matter
 label: Scenes Server Cluster
-quality: production
+quality: experimental
+provides:
+  - name: matter_scenes
 metadata:
   sbom:
     license: "Apache 2.0"
-provides:
-  - name: matter_scenes
 source:
+  - path: src/app/clusters/scenes-server/SceneHandlerImpl.cpp
   - path: src/app/clusters/scenes-server/ExtensionFieldSetsImpl.cpp
   - path: src/app/clusters/scenes-server/scenes-server.cpp
   - path: src/app/clusters/scenes-server/SceneTableImpl.cpp
-  - path: src/app/clusters/scenes-server/SceneHandlerImpl.cpp
 include:
   - path: src/app/clusters/scenes-server
     file_list:
-      - path: SceneTableImpl.h
       - path: SceneHandlerImpl.h
+      - path: SceneTableImpl.h
       - path: scenes-server.h
       - path: ExtensionFieldSets.h
       - path: ExtensionFieldSetsImpl.h

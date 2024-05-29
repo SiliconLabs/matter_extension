@@ -14,11 +14,10 @@ provides:
   - name: matter_smoke_co_alarm
 source:
   - path: src/app/clusters/smoke-co-alarm-server/smoke-co-alarm-server.cpp
-  - path: src/app/clusters/smoke-co-alarm-server/SmokeCOTestEventTriggerDelegate.cpp
 include:
   - path: src/app/clusters/smoke-co-alarm-server
     file_list:
-      - path: SmokeCOTestEventTriggerDelegate.h
+      - path: SmokeCOTestEventTriggerHandler.h
       - path: smoke-co-alarm-server.h
 template_contribution:
   - name: component_catalog

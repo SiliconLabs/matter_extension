@@ -7,12 +7,19 @@ define:
 description: test_paa_store
 id: test_paa_store
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
 -   path: src/lib
 -   path: third_party/nlassert/repo/include
+-   path: src/credentials/attestation_verifier
+    file_list:
+    -   path: DefaultDeviceAttestationVerifier.h
+    -   path: DacOnlyPartialAttestationVerifier.h
+    -   path: DeviceAttestationDelegate.h
+    -   path: FileAttestationTrustStore.h
+    -   path: TestPAAStore.h
+    -   path: DeviceAttestationVerifier.h
 label: test_paa_store
 package: Matter
 provides:

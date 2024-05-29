@@ -15,7 +15,6 @@ define:
 description: libopenthread_platform_utils
 id: libopenthread_platform_utils
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/efr32
 -   path: examples/platform/silabs
 -   path: src

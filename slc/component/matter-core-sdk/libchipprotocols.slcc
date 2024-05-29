@@ -1,42 +1,62 @@
 category: Matter|Core
 define:
-- name: CHIP_HAVE_CONFIG_H
-  value: '1'
-- name: RADIO_CONFIG_DMP_SUPPORT
-  value: '1'
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
 description: libchipprotocols
 id: libchipprotocols
 include:
-- path: examples/lighting-app/silabs/include
-- path: examples/platform/silabs
-- path: src
-  file_list:
-  - path: protocols/Protocols.h
-  - path: protocols/interaction_model/Constants.h
-  - path: protocols/interaction_model/StatusCode.h
-  - path: protocols/interaction_model/StatusCodeList.h
-  - path: protocols/echo/Echo.h
-  - path: protocols/user_directed_commissioning/UserDirectedCommissioning.h
-  - path: protocols/user_directed_commissioning/UDCClients.h
-  - path: protocols/user_directed_commissioning/UDCClientState.h
-- path: src/include
-- path: src/lib
-- path: third_party/nlassert/repo/include
-- path: third_party/nlio/repo/include
+-   path: examples/platform/silabs
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+-   path: src/protocols/user_directed_commissioning
+    file_list:
+    -   path: UDCClients.h
+    -   path: UDCClientState.h
+    -   path: UserDirectedCommissioning.h
+-   path: src/protocols
+    file_list:
+    -   path: Protocols.h
+-   path: src/protocols/secure_channel
+    file_list:
+    -   path: UnsolicitedStatusHandler.h
+    -   path: StatusReport.h
+    -   path: CASEDestinationId.h
+    -   path: MessageCounterManager.h
+    -   path: Constants.h
+    -   path: PASESession.h
+    -   path: SessionEstablishmentExchangeDispatch.h
+    -   path: SessionEstablishmentDelegate.h
+    -   path: CASESession.h
+    -   path: CheckinMessage.h
+    -   path: DefaultSessionResumptionStorage.h
+    -   path: CASEServer.h
+    -   path: PairingSession.h
+    -   path: CheckInCounter.h
+    -   path: SessionResumptionStorage.h
+    -   path: SimpleSessionResumptionStorage.h
+    -   path: RendezvousParameters.h
+-   path: src/protocols/echo
+    file_list:
+    -   path: Echo.h
 label: libchipprotocols
 package: Matter
 provides:
-- name: matter_libchipprotocols
+-   name: matter_libchipprotocols
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
-- path: src/protocols/Protocols.cpp
-- path: src/protocols/echo/EchoClient.cpp
-- path: src/protocols/echo/EchoServer.cpp
-- path: src/protocols/secure_channel/MessageCounterManager.cpp
-- path: src/protocols/user_directed_commissioning/UserDirectedCommissioningClient.cpp
-- path: src/protocols/user_directed_commissioning/UserDirectedCommissioningServer.cpp
+-   path: src/protocols/Protocols.cpp
+-   path: src/protocols/echo/EchoClient.cpp
+-   path: src/protocols/echo/EchoServer.cpp
+-   path: src/protocols/secure_channel/MessageCounterManager.cpp
+-   path: src/protocols/user_directed_commissioning/UserDirectedCommissioningClient.cpp
+-   path: src/protocols/user_directed_commissioning/UserDirectedCommissioningServer.cpp
 ui_hints:
-  visibility: never
+    visibility: never

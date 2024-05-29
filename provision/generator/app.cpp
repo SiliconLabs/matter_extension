@@ -15,17 +15,16 @@
  *
  ******************************************************************************/
 
-#include <provision/ProvisionManager.h>
-#include <lib/support/CHIPPlatformMemory.h>
-#include <lib/support/CHIPMem.h>
-#include <mbedtls/platform.h>
+#include "app.h"
 #include <FreeRTOS.h>
 #include <task.h>
-
-using namespace chip::DeviceLayer::Silabs;
+#include <sl_system_init.h>
+#include <provision/ProvisionManager.h>
 
 #define MAIN_TASK_STACK_SIZE    (1024)
 #define MAIN_TASK_PRIORITY      (configMAX_PRIORITIES - 1)
+
+using namespace chip::DeviceLayer::Silabs;
 
 namespace {
 
@@ -33,9 +32,12 @@ TaskHandle_t main_Task;
 
 void taskMain(void * pvParameter)
 {
-    // Run manager
     Provision::Manager &man = Provision::Manager::GetInstance();
-    while (man.Step());
+    // Initialize
+    app_platform_init();
+    man.Init();
+    // Run manager
+    while (true) man.Step();
     // Reset
     vTaskDelay(pdMS_TO_TICKS(500));
     NVIC_SystemReset();
@@ -49,10 +51,6 @@ void taskMain(void * pvParameter)
 
 void app_init(void)
 {
-#if !defined(MBEDTLS_PLATFORM_CALLOC_MACRO) ||  !defined(MBEDTLS_PLATFORM_FREE_MACRO)
-    mbedtls_platform_set_calloc_free(CHIPPlatformMemoryCalloc, CHIPPlatformMemoryFree);
-    ReturnOnFailure(chip::Platform::MemoryInit());
-#endif
     xTaskCreate(taskMain, "Provision Task", MAIN_TASK_STACK_SIZE, nullptr, MAIN_TASK_PRIORITY, &main_Task);
 }
 

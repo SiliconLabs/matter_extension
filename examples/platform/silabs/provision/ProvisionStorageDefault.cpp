@@ -18,15 +18,19 @@
 #include <sl_si91x_common_flash_intf.h>
 #endif
 
-extern uint8_t linker_nvm_end[];
-
-//SLC-FIX
+#ifdef SL_PROVISION_GENERATOR
+extern void setNvm3End(uint32_t addr);
+#else
 #include <sl_matter_provision_config.h>
+#endif
+
+extern uint8_t linker_nvm_end[];
 
 using namespace chip::Credentials;
 using namespace chip::DeviceLayer::Internal;
 
 using SilabsConfig = chip::DeviceLayer::Internal::SilabsConfig;
+
 
 namespace chip {
 namespace DeviceLayer {
@@ -38,8 +42,6 @@ namespace {
 // useful to verify proper alignment. Eight bytes is enough for this purpose.
 constexpr size_t kDebugLength = 8;
 size_t sCredentialsOffset = 0;
-
-extern "C" __WEAK void setNvm3End(uint32_t addr) { (void)addr; }
 
 CHIP_ERROR ErasePage(uint32_t addr)
 {
@@ -141,7 +143,9 @@ CHIP_ERROR Storage::Initialize(uint32_t flash_addr, uint32_t flash_size)
         base_addr = (flash_addr + flash_size - FLASH_PAGE_SIZE);
         MSC_Init();
 #endif // SLI_SI91X_MCU_INTERFACE
+#ifdef SL_PROVISION_GENERATOR
         setNvm3End(base_addr);
+#endif
     }
     return SilabsConfig::WriteConfigValue(SilabsConfig::kConfigKey_Creds_Base_Addr, base_addr);
 }
@@ -573,7 +577,7 @@ CHIP_ERROR Storage::SignWithDeviceAttestationKey(const ByteSpan & message, Mutab
 {
     CHIP_ERROR err = CHIP_ERROR_NOT_FOUND;
     uint32_t kid = 0;
-  
+
     if (SilabsConfig::ConfigValueExists(SilabsConfig::kConfigKey_Creds_KeyId))
     {
         ReturnErrorOnFailure(SilabsConfig::ReadConfigValue(SilabsConfig::kConfigKey_Creds_KeyId, kid));
@@ -633,7 +637,7 @@ CHIP_ERROR Storage::SetOtaTlvEncryptionKey(const ByteSpan & value)
     chip::DeviceLayer::Silabs::OtaTlvEncryptionKey::OtaTlvEncryptionKey key;
     ReturnErrorOnFailure(key.Import(value.data(), value.size()));
     return SilabsConfig::WriteConfigValue(SilabsConfig::kOtaTlvEncryption_KeyId, key.GetId());
-    
+
 }
 #endif
 

@@ -7,13 +7,36 @@ define:
 description: types
 id: types
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
 -   path: src/lib
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
+-   path: src/app
+    file_list:
+    -   path: util/attribute-table.h
+    -   path: util/endpoint-config-api.h
+    -   path: util/DataModelHandler.h
+    -   path: util/config.h
+    -   path: util/binding-table.h
+    -   path: util/af-types.h
+    -   path: util/att-storage.h
+    -   path: util/im-client-callbacks.h
+    -   path: util/attribute-storage.h
+    -   path: util/af.h
+    -   path: util/ember-strings.h
+    -   path: util/types_stub.h
+    -   path: util/util.h
+    -   path: util/attribute-metadata.h
+    -   path: util/endpoint-config-defines.h
+    -   path: util/privilege-storage.h
+    -   path: util/MatterCallbacks.h
+    -   path: util/basic-types.h
+    -   path: util/ember-compatibility-functions.h
+    -   path: util/attribute-storage-null-handling.h
+    -   path: util/odd-sized-integers.h
+    -   path: util/generic-callbacks.h
 label: types
 package: Matter
 provides:

@@ -2,7 +2,6 @@
 
 #include <lib/support/Span.h>
 #include <lib/core/CHIPError.h>
-#include <psa/crypto.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -11,7 +10,7 @@ namespace DeviceLayer {
 namespace Silabs {
 namespace Provision {
 
-static constexpr uint32_t kCreds_KeyId_Default = (PSA_KEY_ID_USER_MIN + 1);
+static constexpr uint32_t kCreds_KeyId_Default = 2; //(PSA_KEY_ID_USER_MIN + 1);
 
 class AttestationKey
 {

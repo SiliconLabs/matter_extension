@@ -7,13 +7,27 @@ define:
 description: data_model
 id: data_model
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
 -   path: src/lib
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
+-   path: src/app
+    file_list:
+    -   path: data-model/FabricScoped.h
+    -   path: data-model/Nullable.h
+    -   path: data-model/ListLargeSystemExtensions.h
+    -   path: data-model/PreEncodedValue.h
+    -   path: data-model/List.h
+    -   path: data-model/BasicTypes.h
+    -   path: data-model/FabricScopedPreEncodedValue.h
+    -   path: data-model/WrappedStructEncoder.h
+    -   path: data-model/TagBoundEncoder.h
+    -   path: data-model/DecodableList.h
+    -   path: data-model/Encode.h
+    -   path: data-model/Decode.h
+    -   path: data-model/NullObject.h
 label: data_model
 package: Matter
 provides:

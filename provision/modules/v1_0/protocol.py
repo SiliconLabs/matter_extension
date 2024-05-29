@@ -16,11 +16,11 @@ class Protocol(_base.ProvisionProtocol):
     def execute(self, paths, args, chan):
         chan.open()
         action = args.str(ID.kAction)
-        if 'binary' == action:
+        if _base.Actions.kBinary == action:
             e = Exporter(paths, args)
             return e.export()
         # Init
-        if 'auto' == action:
+        if _base.Actions.kAuto == action:
             # Auto
             self.executeAuto(paths, args, chan)
         else:
@@ -92,7 +92,7 @@ class Command(_enc.Encoder):
         pass
 
     def execute(self, chan):
-        print("{}:".format(self.name))
+        print("\n{}:".format(self.name))
         # Encode
         self.addInt8u(self.id)
         self.encode()
@@ -188,7 +188,7 @@ class CsrCommand(Command):
     def decode(self):
         kid = self.getInt32u()
         csr = self.getString()
-        print("{}+ vendor_id:{:04x}, product_id:{:04x}, key:{}, req({}):\n{}".format(_util.MARGIN, self.vendor_id, self.product_id, kid, len(csr), csr))
+        print("{}+ vendor_id:{:04x}, product_id:{:04x}, key:{}, csr({})\n".format(_util.MARGIN, self.vendor_id, self.product_id, kid, len(csr)))
         # Write CSR to file
         _util.File(self.csr_path).write(csr)
 

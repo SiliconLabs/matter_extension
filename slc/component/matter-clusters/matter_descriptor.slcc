@@ -12,12 +12,12 @@ metadata:
     license: "Apache 2.0"
 provides:
   - name: matter_descriptor
-include:
-- path: src/app/clusters/descriptor
-  file_list:
-  - path: descriptor.h
 source:
   - path: src/app/clusters/descriptor/descriptor.cpp
+include:
+  - path: src/app/clusters/descriptor
+    file_list:
+      - path: descriptor.h
 template_contribution:
   - name: component_catalog
     value: matter_descriptor

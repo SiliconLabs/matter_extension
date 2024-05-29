@@ -7,13 +7,21 @@ define:
 description: librawtransport
 id: librawtransport
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
 -   path: src/lib
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
+-   path: src/transport/raw
+    file_list:
+    -   path: TCP.h
+    -   path: BLE.h
+    -   path: PeerAddress.h
+    -   path: Tuple.h
+    -   path: MessageHeader.h
+    -   path: UDP.h
+    -   path: Base.h
 label: librawtransport
 package: Matter
 provides:

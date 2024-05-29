@@ -7,13 +7,31 @@ define:
 description: libsecurechanneltypes
 id: libsecurechanneltypes
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
 -   path: src/lib
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
+-   path: src/protocols/secure_channel
+    file_list:
+    -   path: UnsolicitedStatusHandler.h
+    -   path: StatusReport.h
+    -   path: CASEDestinationId.h
+    -   path: MessageCounterManager.h
+    -   path: Constants.h
+    -   path: PASESession.h
+    -   path: SessionEstablishmentExchangeDispatch.h
+    -   path: SessionEstablishmentDelegate.h
+    -   path: CASESession.h
+    -   path: CheckinMessage.h
+    -   path: DefaultSessionResumptionStorage.h
+    -   path: CASEServer.h
+    -   path: PairingSession.h
+    -   path: CheckInCounter.h
+    -   path: SessionResumptionStorage.h
+    -   path: SimpleSessionResumptionStorage.h
+    -   path: RendezvousParameters.h
 label: libsecurechanneltypes
 package: Matter
 provides:

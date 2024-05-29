@@ -70,11 +70,7 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  - id: segger_rtt
-  - id: matter_subscription_timeout_resumption
-    from: matter
-  - id: matter_subscription_persistence
-    from: matter 
+  - id: segger_rtt 
   - id: matter_ota_requestor
     from: matter
   - id: toolchain_gcc_common
@@ -84,6 +80,10 @@ component:
   - id: matter_ota_support
     from: matter
   - id: matter_fw_upgrade_917
+    from: matter
+  - id: matter_lcd_917SOC
+    from: matter
+  - id: matter_qr_code
     from: matter
 
   - id: sl_si91x_common_flash_nvm3
@@ -125,13 +125,6 @@ component:
   - instance: [timer0]
     from: wiseconnect3_sdk
     id: ulp_timers_instance
-
-requires:
-  # SiWx917 LCD configurations
-  - name: matter_lcd_917SOC
-    condition: [brd4338a]
-  - name: matter_qr_code
-    condition: [brd4338a]
 
 configuration:
   - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}

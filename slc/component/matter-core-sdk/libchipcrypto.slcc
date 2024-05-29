@@ -1,44 +1,43 @@
 category: Matter|Core
 define:
-- name: CHIP_HAVE_CONFIG_H
-  value: '1'
-- name: RADIO_CONFIG_DMP_SUPPORT
-  value: '1'
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
 description: libchipcrypto
 id: libchipcrypto
 include:
-- path: examples/lighting-app/silabs/include
-- path: examples/platform/silabs
-- path: src
-  file_list:
-  - path: crypto/CHIPCryptoPAL.h
-  - path: crypto/OperationalKeystore.h
-  - path: crypto/SessionKeystore.h
-  - path: crypto/RandUtils.h
-  - path: crypto/DefaultSessionKeystore.h
-  - path: crypto/PersistentStorageOperationalKeystore.h
-  - path: crypto/PSASessionKeystore.h
-  - path: crypto/RawKeySessionKeystore.h
-  - path: crypto/CHIPCryptoPALPSA.h
-- path: src/include
-- path: src/lib
-- path: third_party/nlassert/repo/include
-- path: third_party/nlio/repo/include
-- path: slc/inc
-  file_list:
-  - path: crypto/CryptoBuildConfig.h
+-   path: examples/platform/silabs
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+-   path: src/crypto
+    file_list:
+    -   path: OperationalKeystore.h
+    -   path: RawKeySessionKeystore.h
+    -   path: CHIPCryptoPAL.h
+    -   path: RandUtils.h
+    -   path: CHIPCryptoPALmbedTLS.h
+    -   path: SessionKeystore.h
+    -   path: PSAOperationalKeystore.h
+    -   path: DefaultSessionKeystore.h
+    -   path: CHIPCryptoPALPSA.h
+    -   path: PersistentStorageOperationalKeystore.h
+    -   path: PSASessionKeystore.h
 label: libchipcrypto
 package: Matter
 provides:
-- name: matter_libchipcrypto
+-   name: matter_libchipcrypto
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
-- path: src/crypto/CHIPCryptoPAL.cpp
-- path: src/crypto/PersistentStorageOperationalKeystore.cpp
-- path: src/crypto/RandUtils.cpp
-- path: src/crypto/RawKeySessionKeystore.cpp
+-   path: src/crypto/CHIPCryptoPAL.cpp
+-   path: src/crypto/PersistentStorageOperationalKeystore.cpp
+-   path: src/crypto/RandUtils.cpp
+-   path: src/crypto/RawKeySessionKeystore.cpp
 ui_hints:
-  visibility: never
+    visibility: never

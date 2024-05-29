@@ -2,8 +2,9 @@
 import os
 import sys
 import argparse
+import shutil
 import modules.util as _util
-from shutil import copyfile
+
 
 class PatchingFile:
 
@@ -34,7 +35,7 @@ class PatchingFile:
         pass
 
 
-class MakefilePatcher(PatchingFile):
+class MakefilePatcherEFR32(PatchingFile):
 
     def write(self, file, line):
         if line.startswith('BASE_SDK_PATH'):
@@ -44,20 +45,38 @@ class MakefilePatcher(PatchingFile):
         else:
             file.write(line)
 
+class MakefilePatcherSi917(PatchingFile):
+
+    def write(self, file, line):
+        if line.startswith('BASE_SDK_PATH'):
+            file.write("BASE_SDK_PATH ?= /git/gsdk\n")
+        elif line.find('-DFLASH_PAGE_SIZE=1') >= 0:
+            file.write(" '-DFLASH_PAGE_SIZE=4096' \\\n")
+        elif line.find('-DSL_BOARD_NAME="BRD4002A"') >= 0:
+            file.write(" '-DSL_BOARD_NAME=\"BRD4338A\"' \\\n")
+        elif line.find('-DSL_BOARD_REV="A06"') >= 0:
+            file.write(" '-DSL_BOARD_REV=\"A02\"' \\\n")
+        elif line.find('startup_si91x') >= 0:
+            self.skip = 6
+        else:
+            file.write(line)
+
 
 class PartConfig:
-    def __init__(self, family, suffix, reference, base_addr):
+    def __init__(self, family, suffix, reference, flash_size):
         self.family = family
         self.suffix = suffix
         self.reference = reference
-        self.base_addr = base_addr
+        self.flash_size = flash_size
 
 
 class Updater:
 
     SUPPORTED_PARTS = [
-        PartConfig('efr32mg12', 'efr32', 'EFR32MG12P232F512GM68', 0x7f800),
-        PartConfig('efr32mg24', 'efr32', 'EFR32MG24A010F1024IM48', 0xfe000),
+        PartConfig('efr32mg12', 'efr32', 'EFR32MG12P232F512GM68',     0x7f800),
+        PartConfig('efr32mg24', 'efr32', 'EFR32MG24A010F1024IM48',    0xfe000),
+		PartConfig('efr32mg26', 'efr32', 'EFR32MG26B410F3200IM48',    0x31c000),
+        PartConfig('si917',     'si917', 'brd4338a;wiseconnect3_sdk', 0x1fe000),
     ]
 
     def __init__(self, paths, args, part) -> None:
@@ -84,41 +103,61 @@ class Updater:
         # Restore previous patches
         self.restore()
         # Make
-        if (self.do_patch is None) or ('psa3' == self.do_patch):
-            # PSAv3 + NVM3k2 (already generated)
-            self.make('psa3_nvm3k2')
+        if ('si917' == self.part.family):
+            # Non-PSA (Si917)
+            self.make('nvm3k2')
+        else:
+            # PSA-based (EFR32)
+            if (self.do_patch is None) or ('psa3' == self.do_patch):
+                # PSAv3 + NVM3k2 (already generated)
+                self.make('psa3_nvm3k2')
 
-        if (self.do_patch is None) or ('psa123' == self.do_patch):
-            # PSAv123 + NVM3k2 (add v1 and v2)
-            self.patch("{}-psa123".format(self.part.family))
-            self.make('psa123_nvm3k2')
+            if (self.do_patch is None) or ('psa123' == self.do_patch):
+                # PSAv123 + NVM3k2 (add v1 and v2)
+                self.patch("{}-psa123".format(self.part.family))
+                self.make('psa123_nvm3k2')
 
-        if (self.do_patch is None) or ('psa12' == self.do_patch):
-            # PSAv12 + NVM3k2 (-v3 +v1 +v2)
-            psa12_patch = "{}-psa12".format(self.part.family)
-            self.patch(psa12_patch)
-            self.make('psa12_nvm3k2')
-            # PSAv12 + NVM3k1 (-v3 +v1 +v2 +nvm3k1)
-            nvm3k1_patch = 'nvm3k1'
-            self.patch(psa12_patch)
-            self.patch(nvm3k1_patch)
-            self.make('psa12_nvm3k1')
+            if (self.do_patch is None) or ('psa12' == self.do_patch):
+                # PSAv12 + NVM3k2 (-v3 +v1 +v2)
+                psa12_patch = "{}-psa12".format(self.part.family)
+                self.patch(psa12_patch)
+                self.make('psa12_nvm3k2')
+                # PSAv12 + NVM3k1 (-v3 +v1 +v2 +nvm3k1)
+                nvm3k1_patch = 'nvm3k1'
+                self.patch(psa12_patch)
+                self.patch(nvm3k1_patch)
+                self.make('psa12_nvm3k1')
 
     def generate(self):
         # Generate
         print("{}+ Generate".format(_util.MARGIN))
-        slcp_path = self.paths.base("generator/generator_{}.slcp".format(self.part.suffix))
+        slcp_path = self.paths.base("generator/{}.slcp".format(self.part.suffix))
         _util.execute([ 'slc', 'signature', 'trust', '--sdk', self.gsdk_dir ])
-        _util.execute([ 'slc', 'generate', '-p', slcp_path, '-d', self.part_dir, '--with', self.part.reference, '--sdk', self.gsdk_dir ])
+        _util.execute([ 'slc', 'generate', '-p', slcp_path, '-d', self.part_dir, '--with', "\"{}\"".format(self.part.reference), '--sdk', self.gsdk_dir ])
         # Patch
-        patcher = MakefilePatcher("{}/generator.project.mak".format(self.part_dir))
-        patcher.patch(self.paths)
+        if 'si917' == self.part.family:
+            # Makefile
+            patcher = MakefilePatcherSi917("{}/generator.project.mak".format(self.part_dir))
+            patcher.patch(self.paths)
+            # Linkerfile
+            _util.execute([ 'git', 'restore', "{}/RS9117_SF_4MB_42bsp.elf".format(self.part_dir) ])
+            _util.execute([ 'git', 'restore', "{}/autogen/linkerfile_SoC.ld".format(self.part_dir) ])
+        else:
+            # Makefile
+            patcher = MakefilePatcherEFR32("{}/generator.project.mak".format(self.part_dir))
+            patcher.patch(self.paths)
+            # Linker file
+            linkerfile_from = self.paths.support("patch/{}.ld".format(self.part.family))
+            if os.path.exists(linkerfile_from):
+                linkerfile_into = "{}/autogen/linkerfile.ld".format(self.part_dir)
+                shutil.copyfile(linkerfile_from, linkerfile_into)
         # Stage the newly generated code
         _util.execute([ 'git', 'add', self.part_dir ])
 
     def make(self, suffix = None):
+        image_ext = ('si917' == self.part.family) and 'rps' or 's37'
         image_src = "{}/build/debug/generator.s37".format(self.part_dir)
-        image_dest = self.paths.base("images/{}{}.s37".format(self.part.family, (suffix is not None) and "_{}".format(suffix) or ''))
+        image_dest = self.paths.base("images/{}{}.{}".format(self.part.family, (suffix is not None) and "_{}".format(suffix) or '', image_ext))
         print("{}+ Make {}".format(_util.MARGIN, image_dest))
         # Environment
         envm = os.environ.copy()
@@ -126,7 +165,10 @@ class Updater:
         # Make
         _util.execute([ 'make', '-C', self.part_dir, '-f', 'generator.Makefile' ], env=envm)
         # Copy
-        _util.execute([ 'cp', image_src, image_dest ])
+        if 'si917' == self.part.family:
+            _util.execute([ 'commander', 'rps', 'create', '--app', image_src, image_dest ])
+        else:
+            _util.execute([ 'cp', image_src, image_dest ])
         # Restore patches
         self.restore()
 
@@ -150,7 +192,7 @@ def main(argv):
     # Parse arguments
     parser = argparse.ArgumentParser(description='Provisioner Support')
     parser.add_argument('parts', nargs='?', default='efr32mg12, efr32mg24')
-    parser.add_argument('-s', '--sdk', type=str, help='Gecko SDK path', default=paths.root('third_party/silabs/simplicity_sdk'))
+    parser.add_argument('-s', '--sdk', type=str, help='Gecko SDK path', default=paths.root('third_party/silabs/gecko_sdk'))
     parser.add_argument('-g', '--generate', action='store_true', help='Generate')
     parser.add_argument('-p', '--patch', type=str, help='Patch', default=None)
     args = parser.parse_args()

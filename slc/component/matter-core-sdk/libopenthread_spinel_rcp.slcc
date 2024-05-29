@@ -19,7 +19,6 @@ define:
 description: libopenthread_spinel_rcp
 id: libopenthread_spinel_rcp
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/efr32
 -   path: examples/platform/silabs
 -   path: src

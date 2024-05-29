@@ -24,6 +24,12 @@ include:
   - path: ProvisionProtocol.h
   - path: ProvisionStorage.h
   - path: ProvisionStorageGeneric.h
+- path: examples/platform/silabs
+  file_list:
+  - path: SilabsTestEventTriggerDelegate.h
+- path: src
+  file_list:
+  - path: platform/silabs/multi-ota/OtaTlvEncryptionKey.h
 
 requires:
   - name: iostream

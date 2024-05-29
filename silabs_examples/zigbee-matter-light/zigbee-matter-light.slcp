@@ -82,7 +82,6 @@ component:
 - {from: matter, id: matter_on_off}
 - {from: matter, id: matter_scenes}
 - {from: matter, id: matter}
-- {from: matter, id: matter_subscription_persistence}
 - {from: matter, id: matter_ota_requestor}
 - {from: matter, id: matter_software_diagnostics}
 - {from: matter, id: matter_access_control}
@@ -97,7 +96,6 @@ component:
 - {from: matter, id: matter_shell}
 - {from: matter, id: matter_power_source}
 - {from: matter, id: app_common}
-- {from: matter, id: matter_subscription_timeout_resumption}
 #Matter components wrapper from simplicity_sdk
 - {from: matter, id: matter_default_lcd_config}
 - {from: matter, id: matter_buttons}
@@ -238,10 +236,15 @@ include:
       - path: CHIPProjectConfig.h
       - path: LightingManager.h
       - path: ZigbeeCallbacks.h
-
+post_build:
+  profile: application
 
 readme:
   - path: ./README.md
+ui_hints:
+  highlight:
+    - path: readme.md
+      focus: false
 
 sdk_extension:
   - {id: matter, version: 2.3.0}

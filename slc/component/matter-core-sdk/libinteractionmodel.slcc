@@ -7,13 +7,17 @@ define:
 description: libinteractionmodel
 id: libinteractionmodel
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
 -   path: src/lib
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
+-   path: src/protocols/interaction_model
+    file_list:
+    -   path: Constants.h
+    -   path: StatusCode.h
+    -   path: StatusCodeList.h
 label: libinteractionmodel
 package: Matter
 provides:

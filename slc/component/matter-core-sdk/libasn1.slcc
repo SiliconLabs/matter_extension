@@ -1,40 +1,37 @@
 category: Matter|Core
 define:
-- name: CHIP_HAVE_CONFIG_H
-  value: '1'
-- name: RADIO_CONFIG_DMP_SUPPORT
-  value: '1'
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
 description: libasn1
 id: libasn1
 include:
-- path: examples/lighting-app/silabs/include
-- path: examples/platform/silabs
-- path: src
-- path: src/include
-- path: src/lib
-  file_list:
-  - path: asn1/ASN1.h
-  - path: asn1/ASN1Macros.h
-  - path: asn1/ASN1Error.h
-  - path: asn1/ASN1Config.h
-- path: third_party/nlassert/repo/include
-- path: third_party/nlio/repo/include
-- path: slc/inc
-  file_list:
-  - path: asn1/ASN1OID.h
+-   path: examples/platform/silabs
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+-   path: src/lib/asn1
+    file_list:
+    -   path: ASN1.h
+    -   path: ASN1Config.h
+    -   path: ASN1Error.h
+    -   path: ASN1Macros.h
 label: libasn1
 package: Matter
 provides:
-- name: matter_libasn1
+-   name: matter_libasn1
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
-- path: src/lib/asn1/ASN1Error.cpp
-- path: src/lib/asn1/ASN1OID.cpp
-- path: src/lib/asn1/ASN1Reader.cpp
-- path: src/lib/asn1/ASN1Time.cpp
-- path: src/lib/asn1/ASN1Writer.cpp
+-   path: src/lib/asn1/ASN1Error.cpp
+-   path: src/lib/asn1/ASN1OID.cpp
+-   path: src/lib/asn1/ASN1Reader.cpp
+-   path: src/lib/asn1/ASN1Time.cpp
+-   path: src/lib/asn1/ASN1Writer.cpp
 ui_hints:
-  visibility: never
+    visibility: never

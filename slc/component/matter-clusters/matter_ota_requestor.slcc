@@ -16,6 +16,7 @@ define:
   - name: NON_SPEC_COMPLIANT_OTA_ACTION_DELAY_FLOOR
     value: '-1'
 source:
+  - path: src/app/clusters/ota-requestor/OTATestEventTriggerHandler.cpp
   - path: src/app/clusters/ota-requestor/ota-requestor-server.cpp
   - path: src/app/clusters/ota-requestor/BDXDownloader.cpp
   - path: src/app/clusters/ota-requestor/DefaultOTARequestor.cpp
@@ -46,6 +47,7 @@ include:
       - path: OTARequestorUserConsentDelegate.h
       - path: DefaultOTARequestorStorage.h
       - path: BDXDownloader.h
+      - path: OTATestEventTriggerHandler.h
 template_contribution:
   - name: component_catalog
     value: matter_ota_requestor

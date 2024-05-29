@@ -37,6 +37,7 @@
 #define OPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE 1
 
 #ifdef SL_ICD_ENABLED
+#include <sl_matter_icd_config.h>
 #define OPENTHREAD_CONFIG_PARENT_SEARCH_ENABLE 0
 
 // In seconds

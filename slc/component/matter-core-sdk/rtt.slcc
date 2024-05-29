@@ -2,7 +2,11 @@ category: Matter|Core
 define: []
 description: rtt
 id: rtt
-include: []
+include:
+-   path: third_party/jlink/segger_rtt/RTT
+    file_list:
+    -   path: SEGGER_RTT_Conf.h
+    -   path: SEGGER_RTT.h
 label: rtt
 package: Matter
 provides:

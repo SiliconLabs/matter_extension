@@ -39,7 +39,6 @@ CHIP_ERROR Manager::Init()
     }
     if(mProvisionRequested)
     {
-        ChipLogProgress(DeviceLayer, "Bluetooth Provision Enabled!");
         // Disable provision mode for next boot
         mStore.SetProvisionRequest(false);
     }

@@ -15,7 +15,6 @@ define:
 description: libopenthread_efr32
 id: libopenthread_efr32
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/efr32
 -   path: examples/platform/silabs
 -   path: examples/platform/silabs/efr32

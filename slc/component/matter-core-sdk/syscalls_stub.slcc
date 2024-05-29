@@ -2,7 +2,11 @@ category: Matter|Core
 define: []
 description: syscalls_stub
 id: syscalls_stub
-include: []
+include:
+-   path: src/platform
+    file_list:
+    -   path: DeviceSafeQueue.h
+    -   path: GLibTypeDeleter.h
 label: syscalls_stub
 package: Matter
 provides:

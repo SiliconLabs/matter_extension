@@ -11,8 +11,8 @@ config_file:
   - path: slc/config/sl_matter_config.h
     file_id: matter_config
 # ICD configuration is needed by the core SDK (ICD end device or not)
-  - path: slc/config/app/icd/server/ICDServerBuildConfig.h
-    file_id: matter_icd_config
+  - path: slc/inc/app/icd/server/ICDServerBuildConfig.h
+    file_id: matter_icd_server_build_config
     directory: app/icd/server
 toolchain_settings:
   - option: gcc_compiler_option
@@ -89,14 +89,20 @@ requires:
   - name: matter_nlassert
   - name: matter_nlio
   - name: matter_tracing
-  - name: matter_im_status
   - name: matter_includes
   - name: matter_messagedef
   - name: matter_interaction_model
   - name: matter_provision
   - name: matter_syscalls_stub
-  #- name: matter_icd_core
-
+  - name: matter_callbacks
+  - name: matter_check_in_message
+  - name: matter_data_model
+  - name: matter_error
+  - name: matter_libinteractionmodel
+  - name: matter_memory
+  - name: matter_types
+  - name: matter_naming
+  - name: matter_text_only_logging
 recommends:
   - id: matter_configuration_over_swo
   - id: matter_ot_mbedtls_override
