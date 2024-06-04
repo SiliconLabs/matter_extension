@@ -18,6 +18,9 @@ source:
   - path: src/app/icd/server/ICDManager.cpp
   - path: src/app/icd/server/ICDNotifier.cpp
 include:
+  - path: src/app/clusters/icd-management-server
+    file_list:
+      - path: icd-management-server.h
   - path: src/app/icd/server
     file_list:
       - path: ICDMonitoringTable.h

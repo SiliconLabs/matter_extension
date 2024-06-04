@@ -1,6 +1,5 @@
 #include "ProvisionStorage.h"
 #include "AttestationKey.h"
-#include <platform/silabs/multi-ota/OtaTlvEncryptionKey.h>
 #include <platform/CHIPDeviceConfig.h>
 #include <platform/silabs/SilabsConfig.h>
 #include <platform/silabs/MigrationManager.h>
@@ -8,8 +7,11 @@
 #include <lib/support/CHIPMemString.h>
 #include <lib/support/logging/CHIPLogging.h>
 #include <credentials/examples/DeviceAttestationCredsExample.h>
+#if !SLI_SI91X_MCU_INTERFACE //SLC-FIX
+#include <platform/silabs/multi-ota/OtaTlvEncryptionKey.h>
 #include <psa/crypto.h>
 #include <em_msc.h>
+#endif
 #include <nvm3.h>
 #include <nvm3_default.h>
 #include <nvm3_hal_flash.h>

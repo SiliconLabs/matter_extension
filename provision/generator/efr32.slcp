@@ -45,8 +45,8 @@ include:
   - { path: ../../zzz_generated/app-common }
   - { path: ../../third_party/nlassert/repo/include }
   - { path: ../../third_party/nlio/repo/include }
-  - { path: ../../third_party/silabs/gecko_sdk/platform/bootloader }
-  - { path: ../../third_party/silabs/gecko_sdk/protocol/bluetooth/config }
+  - { path: ../../third_party/silabs/simplicity_sdk/platform/bootloader }
+  - { path: ../../third_party/silabs/simplicity_sdk/protocol/bluetooth/config }
 
 source:
   - { path: app.h }
@@ -88,10 +88,12 @@ define:
 - { name: SL_PROVISION_GENERATOR, value: '1' }
 - { name: SL_PROVISION_CHANNEL_ENABLED, value: '1' }
 - { name: SILABS_PROVISION_PROTOCOL_V1, value: '0' }
+- { name: OTA_ENCRYPTION_ENABLE, value: '1'}
 - { name: CHIP_SYSTEM_CONFIG_USE_SOCKETS, value: '1' }
 - { name: CHIP_CONFIG_SHA256_CONTEXT_SIZE, value: '256' }
-# This is needed to enable the OtaTlvEncryptionKey class
-- { name: OTA_ENCRYPTION_ENABLE, value: '1'}
+- { name: CHIP_CRYPTO_PLATFORM, value: '1'}
+- { name: CHIP_LOG_FILTERING, value: '1'}
+- { name: CHIP_PLATFORM_CONFIG_INCLUDE, value: '<platform/silabs/CHIPPlatformConfig.h>' }
 
 toolchain_settings:
 - { option: optimize, value: size }

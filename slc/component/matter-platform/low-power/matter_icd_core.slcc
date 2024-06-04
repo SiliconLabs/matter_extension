@@ -15,6 +15,9 @@ define:
     value: 1
   - name: SL_ICD_ENABLED
     value: 1
+  - name: NPSS_GPIO_BTN_HANDLER
+    value: 1
+    condition: [matter_platform_siwx917]
 
 config_file:
   - path: slc/config/sl_matter_icd_config.h
@@ -24,6 +27,10 @@ requires:
   - name: matter_icd_management
   - name: ot_stack_mtd
     condition: [matter_thread]
+  - name: sl_power_manager
+    condition: [matter_platform_siwx917]
+  - name: sllib_m4_power_save
+    condition: [matter_platform_siwx917]
 
 recommends:
   - id: ot_stack_mtd

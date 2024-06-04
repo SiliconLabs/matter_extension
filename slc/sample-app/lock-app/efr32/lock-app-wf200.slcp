@@ -93,6 +93,8 @@ component:
     from: matter
   - id: matter_segger_rtt
     from: matter
+  - id: matter_shell
+    from: matter
 
 # Disable due to size increase of ICD functionality    
 #  - id: matter_default_lcd_config

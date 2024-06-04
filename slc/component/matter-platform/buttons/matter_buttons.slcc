@@ -19,7 +19,10 @@ requires:
       - brd4117a
   - name: simple_button_recommended_instance
     condition:
-      - brd4118a      
+      - brd4118a
+  - name: simple_button_recommended_instance
+    condition:
+      - brd2608a
   - name: simple_button_recommended_instance
     condition:
       - brd4121a

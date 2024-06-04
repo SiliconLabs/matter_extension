@@ -93,6 +93,7 @@ include:
       - path: constant_time_internal.h
       - path: constant_time_invasive.h
       - path: ecp_invasive.h
+      - path: bignum_internal.h
   - path: third_party/mbedtls/repo/include
     file_list:
       - path: mbedtls/x509_csr.h

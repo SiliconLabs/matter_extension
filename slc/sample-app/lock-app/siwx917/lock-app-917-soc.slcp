@@ -94,6 +94,10 @@ component:
     from: matter
   - id: matter_qr_code
     from: matter
+  - id: matter_icd_core
+    from: matter
+  - id: matter_icd_management
+    from: matter
 
   - id: sl_si91x_common_flash_nvm3
     from: wiseconnect3_sdk
@@ -136,7 +140,7 @@ component:
     id: ulp_timers_instance
 
 config_file:
-  - path: ../../../../examples/lock-app/lock-common/lock-app-wifi.zap
+  - path: ../../../../examples/lock-app/lock-common/lock-app.zap
     directory: common
     file_id: zap_config
   - path: ../../../../provision.mattpconf
@@ -182,6 +186,13 @@ define:
 
 configuration:
   - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
+# Default ICD configurations
+  - {name: SL_IDLE_MODE_DURATION_S, value: '600'}
+  - {name: SL_ACTIVE_MODE_DURATION_MS, value: '0'}
+  - {name: SL_ACTIVE_MODE_THRESHOLD, value: '0'}
+
+  - {name: CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED, value: '1'}
+  - {name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION, value: '0'}
   
 toolchain_settings:
   - option: cxx_standard

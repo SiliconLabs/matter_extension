@@ -7,7 +7,9 @@
 #include <app/data-model/Nullable.h>
 #include <crypto/CHIPCryptoPAL.h>
 #include <string.h>
+#if !SLI_SI91X_MCU_INTERFACE //SLC-FIX
 #include <em_msc.h>
+#endif
 
 namespace chip {
 namespace DeviceLayer {

@@ -1,4 +1,4 @@
-#include "ProvisionStorageFlash.h"
+#include "ProvisionStorage.h"
 #include "ProvisionEncoder.h"
 #include "AttestationKey.h"
 #include <lib/support/CodeUtils.h>
@@ -14,10 +14,11 @@
 #include <nvm3_hal_flash.h>
 #include "silabs_creds.h"
 
-namespace {
 extern uint8_t linker_nvm_end[];
+
+namespace {
 constexpr size_t kMaxBinaryValue = 1024;
-constexpr size_t kArgumentBufferSize = 2 * sizeof(uint16_t) + kMaxBinaryValue; // ID(2) + Size(2) + Value(n)
+constexpr size_t kArgumentBufferSize = 4 * sizeof(uint16_t) + kMaxBinaryValue; // ID(2) + Size(2) + Value(n)
 } // namespace
 
 namespace chip {
@@ -58,7 +59,8 @@ CHIP_ERROR Set(uint16_t id, Encoding::Buffer &in)
     uint8_t *page = sActivePage;
     uint16_t total = 0;
     Encoding::Buffer reader(page, FLASH_PAGE_SIZE, true);
-    Encoding::Version2::Argument found;
+    uint8_t temp[kArgumentBufferSize] = { 0 };
+    Encoding::Version2::Argument found(temp, sizeof(temp));
 
     // Decode total
     ReturnErrorOnFailure(DecodeTotal(reader, total));
@@ -122,14 +124,16 @@ CHIP_ERROR Get(uint16_t id, Encoding::Version2::Argument &arg)
 
 CHIP_ERROR Set(uint16_t id, uint8_t value)
 {
-    Encoding::Version2::Argument arg;
+    uint8_t temp[kArgumentBufferSize] = { 0 };
+    Encoding::Version2::Argument arg(temp, sizeof(temp));
     ReturnErrorOnFailure(Encoding::Version2::Encode(id, &value, arg));
     return Set(id, arg);
 }
 
 CHIP_ERROR Get(uint16_t id, uint8_t &value)
 {
-    Encoding::Version2::Argument arg;
+    uint8_t temp[kArgumentBufferSize] = { 0 };
+    Encoding::Version2::Argument arg(temp, sizeof(temp));
     ReturnErrorOnFailure(Get(id, arg));
     VerifyOrReturnError(Encoding::Version2::Type_Int8u == arg.type, CHIP_ERROR_INVALID_ARGUMENT);
     value = arg.value.u8;
@@ -138,14 +142,16 @@ CHIP_ERROR Get(uint16_t id, uint8_t &value)
 
 CHIP_ERROR Set(uint16_t id, uint16_t value)
 {
-    Encoding::Version2::Argument arg;
+    uint8_t temp[kArgumentBufferSize] = { 0 };
+    Encoding::Version2::Argument arg(temp, sizeof(temp));
     ReturnErrorOnFailure(Encoding::Version2::Encode(id, &value, arg));
     return Set(id, arg);
 }
 
 CHIP_ERROR Get(uint16_t id, uint16_t &value)
 {
-    Encoding::Version2::Argument arg;
+    uint8_t temp[kArgumentBufferSize] = { 0 };
+    Encoding::Version2::Argument arg(temp, sizeof(temp));
     ReturnErrorOnFailure(Get(id, arg));
     VerifyOrReturnError(Encoding::Version2::Type_Int16u == arg.type, CHIP_ERROR_INVALID_ARGUMENT);
     value = arg.value.u16;
@@ -154,14 +160,16 @@ CHIP_ERROR Get(uint16_t id, uint16_t &value)
 
 CHIP_ERROR Set(uint16_t id, uint32_t value)
 {
-    Encoding::Version2::Argument arg;
+    uint8_t temp[kArgumentBufferSize] = { 0 };
+    Encoding::Version2::Argument arg(temp, sizeof(temp));
     ReturnErrorOnFailure(Encoding::Version2::Encode(id, &value, arg));
     return Set(id, arg);
 }
 
 CHIP_ERROR Get(uint16_t id, uint32_t &value)
 {
-    Encoding::Version2::Argument arg;
+    uint8_t temp[kArgumentBufferSize] = { 0 };
+    Encoding::Version2::Argument arg(temp, sizeof(temp));
     ReturnErrorOnFailure(Get(id, arg));
     VerifyOrReturnError(Encoding::Version2::Type_Int32u == arg.type, CHIP_ERROR_INVALID_ARGUMENT);
     value = arg.value.u32;
@@ -170,7 +178,8 @@ CHIP_ERROR Get(uint16_t id, uint32_t &value)
 
 CHIP_ERROR Set(uint16_t id, const uint8_t *value, size_t size)
 {
-    Encoding::Version2::Argument arg;
+    uint8_t temp[kArgumentBufferSize] = { 0 };
+    Encoding::Version2::Argument arg(temp, sizeof(temp));
     ReturnErrorOnFailure(Encoding::Version2::Encode(id, value, size, arg));
     return Set(id, arg);
 }
@@ -178,7 +187,8 @@ CHIP_ERROR Set(uint16_t id, const uint8_t *value, size_t size)
 CHIP_ERROR Get(uint16_t id, uint8_t *value, size_t max_size, size_t & size)
 {
 
-    Encoding::Version2::Argument arg;
+    uint8_t temp[kArgumentBufferSize] = { 0 };
+    Encoding::Version2::Argument arg(temp, sizeof(temp));
     ReturnErrorOnFailure(Get(id, arg));
     VerifyOrReturnError(Encoding::Version2::Type_Binary == arg.type, CHIP_ERROR_INVALID_ARGUMENT);
     VerifyOrReturnError(arg.size <= max_size, CHIP_ERROR_INTERNAL);

@@ -25,6 +25,10 @@
 #include "silabs_utils.h"
 #endif
 
+#if SILABS_LOG_OUT_UART
+#include "uart.h"
+#endif
+
 // TODO add includes ?
 extern "C" {
 #include "em_core.h"
@@ -70,6 +74,10 @@ CHIP_ERROR SilabsPlatform::Init(void)
 #ifndef SL_ICD_ENABLED
     // Configuration the clock rate
     soc_pll_config();
+#endif
+
+#if SILABS_LOG_OUT_UART
+    uartConsoleInit();
 #endif
 
 #if SILABS_LOG_ENABLED

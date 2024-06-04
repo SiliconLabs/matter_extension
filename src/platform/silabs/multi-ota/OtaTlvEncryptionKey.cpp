@@ -1,4 +1,5 @@
 #include "OtaTlvEncryptionKey.h"
+#include <lib/support/logging/CHIPLogging.h>
 #include <lib/support/CodeUtils.h>
 #include <platform/silabs/SilabsConfig.h>
 #include <sl_psa_crypto.h>
@@ -45,7 +46,7 @@ CHIP_ERROR OtaTlvEncryptionKey::Import(const uint8_t * key, size_t key_len)
     
     status = psa_import_key(&attributes, key, key_len, &key_id);
     if (status != PSA_SUCCESS) {
-        printf("Failed to import a key error:%ld\n", status);
+        ChipLogError(SoftwareUpdate, "Failed to import a key error:%ld\n", status);
         return CHIP_ERROR_INTERNAL;
     }
 
@@ -80,20 +81,20 @@ CHIP_ERROR OtaTlvEncryptionKey::Decrypt(MutableByteSpan & block, uint32_t &mIVOf
     {
         status = psa_cipher_decrypt_setup(&operation, static_cast<psa_key_id_t>(mId), PSA_ALG_CTR);
         if (status != PSA_SUCCESS) {
-            printf("Failed to begin cipher operation error:%ld\n", status);
+            ChipLogError(SoftwareUpdate, "Failed to begin cipher operation error:%ld\n", status);
             return CHIP_ERROR_INTERNAL;
         }
 
         status = psa_cipher_set_iv(&operation, iv, sizeof(iv));
         if (status != PSA_SUCCESS) {
-            printf("Failed to set IV error:%ld\n", status);
+            ChipLogError(SoftwareUpdate, "Failed to set IV error:%ld\n", status);
             return CHIP_ERROR_INTERNAL;
         } 
     
         status = psa_cipher_update(&operation, static_cast<uint8_t *>(&block[Offset]), 16,
                                    output, sizeof(output), &output_len);
         if (status != PSA_SUCCESS) {
-            printf("Failed to update cipher operation error:%ld\n", status);
+            ChipLogError(SoftwareUpdate, "Failed to update cipher operation error:%ld\n", status);
             return CHIP_ERROR_INTERNAL;
         }
 
@@ -112,13 +113,13 @@ CHIP_ERROR OtaTlvEncryptionKey::Decrypt(MutableByteSpan & block, uint32_t &mIVOf
         status = psa_cipher_finish(&operation, output + total_output,
                                sizeof(output) - total_output, &total_output);
         if (status != PSA_SUCCESS) {
-        printf("Failed to finish cipher operation\n");
+        ChipLogError(SoftwareUpdate, "Failed to finish cipher operation\n");
         return CHIP_ERROR_INTERNAL;
         }
     
     }
     
-    printf("Decrypted ciphertext\n");
+    ChipLogProgress(SoftwareUpdate, "Decrypted ciphertext\n");
 
     psa_cipher_abort(&operation);
 

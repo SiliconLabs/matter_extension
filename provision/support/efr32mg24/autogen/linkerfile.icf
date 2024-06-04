@@ -21,11 +21,9 @@ define block CSTACK with alignment = 8
 {
   section .stack
 };
-
-/* Note that "expanding size" is not used yet due to failures in 8.30.1 */
-define block HEAP with alignment = 8
+define block MEMORY_MANAGER_HEAP with expanding size, alignment = 8
 {
-  section .heap
+  section .memory_manager_heap
 };
 
 
@@ -58,23 +56,27 @@ define block text_application_ram_init with alignment = 8
 
 initialize by copy
 {
-  readonly section text_application_ram,
+  section text_application_ram,
 };
 
 define block application_ram with fixed order
 {
   block CSTACK,
   readwrite,
-  block HEAP
 };
 
 initialize by copy { readwrite };
+
+define block application_heap with fixed order
+{
+  block MEMORY_MANAGER_HEAP
+};
 
 do not initialize
 {
  section .noinit,
  section .stack,
- section .heap
+  section .memory_manager_heap
 };
 
 keep { section .intvec };
@@ -88,16 +90,20 @@ place at start of ROM_region
 "storage_regions":
 place at end of MAIN_FLASH_region {
   block storage,
-
   block nvm,
 };
-"ram_code":
+
+"application_ram":
 place at start of RAM_region {
+  block application_ram,
+};
+"ram_code":
+place in RAM_region {
   block text_application_ram,
 };
 
-
-"application_ram":
+"application_heap":
 place in RAM_region {
-  block application_ram,
+  block application_heap,
 };
+
