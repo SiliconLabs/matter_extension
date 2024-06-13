@@ -160,7 +160,7 @@ public:
     // Initialization
     //
 
-    CHIP_ERROR Initialize(uint32_t flash_addr, uint32_t flash_size);
+    CHIP_ERROR Initialize(uint32_t flash_addr = 0, uint32_t flash_size = 0);
     CHIP_ERROR Commit();
     CHIP_ERROR GetBaseAddress(uint32_t & value);
 

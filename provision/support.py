@@ -192,7 +192,7 @@ def main(argv):
     # Parse arguments
     parser = argparse.ArgumentParser(description='Provisioner Support')
     parser.add_argument('parts', nargs='?', default='efr32mg12, efr32mg24')
-    parser.add_argument('-s', '--sdk', type=str, help='Gecko SDK path', default=paths.root('third_party/silabs/gecko_sdk'))
+    parser.add_argument('-s', '--sdk', type=str, help='Simplicity SDK path', default=paths.root('third_party/silabs/simplicity_sdk'))
     parser.add_argument('-g', '--generate', action='store_true', help='Generate')
     parser.add_argument('-p', '--patch', type=str, help='Patch', default=None)
     args = parser.parse_args()

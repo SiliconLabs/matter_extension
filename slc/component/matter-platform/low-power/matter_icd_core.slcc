@@ -15,7 +15,7 @@ define:
     value: 1
   - name: SL_ICD_ENABLED
     value: 1
-  - name: NPSS_GPIO_BTN_HANDLER
+  - name: SL_SI91X_NPSS_GPIO_BTN_HANDLER
     value: 1
     condition: [matter_platform_siwx917]
 

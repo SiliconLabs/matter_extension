@@ -199,10 +199,12 @@ public:
 private:
     struct UnlatchContext
     {
+        static constexpr uint8_t kMaxPinLenght = UINT8_MAX;
+        uint8_t mPinBuffer[kMaxPinLenght];
+        size_t mPinLength;
         chip::EndpointId mEndpointId;
         Nullable<chip::FabricIndex> mFabricIdx;
         Nullable<chip::NodeId> mNodeId;
-        Optional<chip::ByteSpan> mPin;
         OperationErrorEnum mErr;
 
         void Update(chip::EndpointId endpointId, const Nullable<chip::FabricIndex> & fabricIdx,
@@ -211,8 +213,18 @@ private:
             mEndpointId = endpointId;
             mFabricIdx  = fabricIdx;
             mNodeId     = nodeId;
-            mPin        = pin;
             mErr        = err;
+
+            if (pin.HasValue())
+            {
+                memcpy(mPinBuffer, pin.Value().data(), pin.Value().size());
+                mPinLength = pin.Value().size();
+            }
+            else
+            {
+                memset(mPinBuffer, 0, kMaxPinLenght);
+                mPinLength = 0;
+            }
         }
     };
     UnlatchContext mUnlatchContext;
@@ -242,11 +254,7 @@ private:
     uint8_t mCredentialData[kNumCredentialTypes][kMaxCredentials][kMaxCredentialSize];
     CredentialStruct mCredentials[kMaxUsers][kMaxCredentials];
 
-    static LockManager sLock;
     EFR32DoorLock::LockInitParams::LockParam LockParams;
 };
 
-inline LockManager & LockMgr()
-{
-    return LockManager::sLock;
-}
+LockManager & LockMgr();

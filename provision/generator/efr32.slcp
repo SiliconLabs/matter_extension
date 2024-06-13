@@ -15,7 +15,7 @@ ui_hints:
 readme:
   - { path: README.md }
 
-sdk: { id: gecko_sdk, version: 4.4.3 }
+sdk: { id: simplicity_sdk, version: 2024.6.0}
 
 component:
   - { id: freertos }

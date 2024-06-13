@@ -69,6 +69,31 @@ More information on using the chip-tool directly can be found here: [CHIPTool](h
 
 Here is an example for provisioning the thermostat application with the chip-tool:
 
+Pairing with chip-tool:
 ```shell
-chip-tool pairing ble-wifi 1122 $SSID $PSK 20202021 3840
+./chip-tool pairing ble-wifi <node-id> $SSID $PSK <PinCode> <Discriminator>
+
+./chip-tool pairing ble-wifi 1 $SSID $PSK 20202021 3840
+```
+
+Setting the occupied cooling setpoint:
+```shell
+./chip-tool thermostat write occupied-cooling-setpoint <temperature> <node-id> <endpoint-id>
+
+./chip-tool thermostat write occupied-cooling-setpoint 2500 1 1
+
+Note: On chip-tool verify that DUT sends a success response
+[1676031143.386639][19597:19599] CHIP:DMG:                         StatusIB =
+[1676031143.386683][19597:19599] CHIP:DMG:                         {
+[1676031143.386729][19597:19599] CHIP:DMG:                                 status = 0x00 (SUCCESS),
+[1676031143.386773][19597:19599] CHIP:DMG:                         },
+```
+Read thermostat attributes:
+```shell
+./chip-tool thermostat read occupied-cooling-setpoint <node-id> <endpoint-id>
+
+./chip-tool thermostat read occupied-cooling-setpoint 1 1
+
+Note: On chip-tool verify that the occupied cooling setpoint attribute value which is provided in previous step
+[1676028659.980049][19359:19361] CHIP:TOO:   OccupiedCoolingSetpoint: 2500
 ```

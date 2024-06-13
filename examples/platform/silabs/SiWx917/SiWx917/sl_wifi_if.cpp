@@ -247,8 +247,8 @@ sl_status_t join_callback_handler(sl_wifi_event_t event, char * result, uint32_t
     wfx_rsi.dev_state &= ~(WFX_RSI_ST_STA_CONNECTING);
     if (SL_WIFI_CHECK_IF_EVENT_FAILED(event))
     {
-        SILABS_LOG("F: Join Event received with %u bytes payload\n", result_length);
         callback_status = *(sl_status_t *) result;
+        SILABS_LOG("join_callback_handler: failed: 0x%X", callback_status);
         wfx_rsi.dev_state &= ~(WFX_RSI_ST_STA_CONNECTED);
         wfx_retry_interval_handler(is_wifi_disconnection_event, wfx_rsi.join_retries++);
         if (is_wifi_disconnection_event || wfx_rsi.join_retries <= WFX_RSI_CONFIG_MAX_JOIN)
@@ -262,8 +262,7 @@ sl_status_t join_callback_handler(sl_wifi_event_t event, char * result, uint32_t
      * Join was complete - Do the DHCP
      */
     memset(&temp_reset, 0, sizeof(wfx_wifi_scan_ext_t));
-    SILABS_LOG("join_callback_handler: join completed.");
-    SILABS_LOG("%c: Join Event received with %u bytes payload\n", *result, result_length);
+    SILABS_LOG("join_callback_handler: success");
 
     WfxEvent.eventType = WFX_EVT_STA_CONN;
     WfxPostEvent(&WfxEvent);
@@ -271,7 +270,7 @@ sl_status_t join_callback_handler(sl_wifi_event_t event, char * result, uint32_t
     retryInterval        = WLAN_MIN_RETRY_TIMER_MS;
     // Once the join passes setting the disconnection event to true to differentiate between the first connection and reconnection
     is_wifi_disconnection_event = true;
-    callback_status = SL_STATUS_OK;
+    callback_status             = SL_STATUS_OK;
     return SL_STATUS_OK;
 }
 
@@ -301,8 +300,10 @@ void sl_si91x_invoke_btn_press_event()
  * @return
  *        None
  *********************************************************************/
-uint32_t sl_app_sleep_ready() {
-    if(wfx_rsi.dev_state & WFX_RSI_ST_SLEEP_READY) {
+uint32_t sl_app_sleep_ready()
+{
+    if (wfx_rsi.dev_state & WFX_RSI_ST_SLEEP_READY)
+    {
 #if DISPLAY_ENABLED
         // Powering down the LCD
         sl_memlcd_power_on(NULL, false);
@@ -501,11 +502,12 @@ sl_status_t scan_callback_handler(sl_wifi_event_t event, sl_wifi_scan_result_t *
     if (SL_WIFI_CHECK_IF_EVENT_FAILED(event))
     {
         callback_status       = *(sl_status_t *) scan_result;
+        SILABS_LOG("scan_callback_handler: failed: 0x%X", callback_status);
         scan_results_complete = true;
 #if WIFI_ENABLE_SECURITY_WPA3_TRANSITION
         wfx_rsi.sec.security = WFX_SEC_WPA3;
 #else
-        wfx_rsi.sec.security = WFX_SEC_WPA2;
+        wfx_rsi.sec.security  = WFX_SEC_WPA2;
 #endif /* WIFI_ENABLE_SECURITY_WPA3_TRANSITION */
 
         osSemaphoreRelease(sScanSemaphore);
@@ -521,9 +523,9 @@ sl_status_t scan_callback_handler(sl_wifi_event_t event, sl_wifi_scan_result_t *
         break;
     case SL_WIFI_WPA:
     case SL_WIFI_WPA_ENTERPRISE:
-    case SL_WIFI_WPA_WPA2_MIXED:
         wfx_rsi.sec.security = WFX_SEC_WPA;
         break;
+    case SL_WIFI_WPA_WPA2_MIXED:
     case SL_WIFI_WPA2:
     case SL_WIFI_WPA2_ENTERPRISE:
         wfx_rsi.sec.security = WFX_SEC_WPA2;
@@ -536,7 +538,7 @@ sl_status_t scan_callback_handler(sl_wifi_event_t event, sl_wifi_scan_result_t *
     case SL_WIFI_WPA3:
         wfx_rsi.sec.security = WFX_SEC_WPA3;
 #else
-        wfx_rsi.sec.security = WFX_SEC_WPA2;
+        wfx_rsi.sec.security  = WFX_SEC_WPA2;
 #endif /* WIFI_ENABLE_SECURITY_WPA3_TRANSITION */
         break;
     default:
@@ -641,14 +643,18 @@ static sl_status_t wfx_rsi_do_join(void)
         connect_security_mode = SL_WIFI_WEP;
         break;
     case WFX_SEC_WPA:
-    case WFX_SEC_WPA2:
         connect_security_mode = SL_WIFI_WPA_WPA2_MIXED;
         break;
+    case WFX_SEC_WPA2:
 #if WIFI_ENABLE_SECURITY_WPA3_TRANSITION
-    case WFX_SEC_WPA3:
         connect_security_mode = SL_WIFI_WPA3_TRANSITION;
         break;
-#endif /*WIFI_ENABLE_SECURITY_WPA3_TRANSITION*/
+    case WFX_SEC_WPA3:
+        connect_security_mode = SL_WIFI_WPA3_TRANSITION;
+#else
+        connect_security_mode = SL_WIFI_WPA_WPA2_MIXED;
+#endif // WIFI_ENABLE_SECURITY_WPA3_TRANSITION
+        break;
     case WFX_SEC_NONE:
         connect_security_mode = SL_WIFI_OPEN;
         break;

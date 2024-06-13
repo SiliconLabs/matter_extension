@@ -91,7 +91,8 @@ class YamlFile(File):
             yaml.dump(data, f)
 
 
-def execute(args, output = False, check = True, env = None):
+def execute(args, output = False, check = True, env = None, retry = 1):
+    sys.stdout.reconfigure(encoding='utf-8')
     args = [ str(x) for x in args ]
     cmd = ' '.join(args)
     print("{}> {}\n".format(MARGIN, cmd))
@@ -106,13 +107,19 @@ def execute(args, output = False, check = True, env = None):
                 fail(err)
             return None
     else:
-        complete = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT, shell=True, env=env)
-        if check and (0 != complete.returncode):
-            fail("Command failed with code {}".format(complete.returncode))
+        while retry > 0:
+            retry = retry - 1
+            complete = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT, shell=True, env=env)
+            if (0 == complete.returncode): return 0
+            if check and (0 == retry):
+                fail("Command failed with code {}".format(complete.returncode))
+            else:
+                warn("Command failed with code {}. Retrying...".format(complete.returncode))
         return complete.returncode
 
 
 def fail(message, paths = None):
+    sys.stdout.reconfigure(encoding='utf-8')
     if paths is not None:
         print()
         prefix = paths.base() + '/'

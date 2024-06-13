@@ -14,6 +14,7 @@ class Commander:
 
     def __init__(self, args, conn):
         self.device = args.str(ID.kDevice)
+        self.auto = ('auto' == args.str(ID.kAction))
         self.conn = conn
 
     def execute(self, args, output = True, check = True):
@@ -30,7 +31,7 @@ class Commander:
             else:
                 args.extend(['--ip', self.conn.ip_addr])
         cmd = ' '.join(args)
-        return _util.execute(args, output, check)
+        return _util.execute(args, output, check, retry = 2)
 
     def info(self):
         res = self.execute(['device', 'info'], True, False)
@@ -39,6 +40,8 @@ class Commander:
 
     def flash(self, image_path):
         _, ext = os.path.splitext(image_path)
+        if self.auto and ('si917' == self.device):
+            self.execute(['manufacturing', 'erase', 'userdata'], False, True)
         if '.rps' == ext:
             self.execute(['rps', 'load', image_path], False, True)
             # Si917 needs time to start

@@ -126,3 +126,14 @@ upgrade:
            - ot_stack_mtd
            - ot_cert_libs
            - ot_coap_cert_libs
+  - sdk:
+      id: matter
+      version: "2.3.0"
+    component:
+    
+    configuration:
+      - name: SL_ACTIVE_MODE_INTERVAL
+        replacement: SL_ACTIVE_MODE_DURATION_MS
+      - name: SL_IDLE_MODE_INTERVAL
+        replacement: SL_ACTIVE_MODE_THRESHOLD
+      - script: slc/config/scripts/upgrade_validation.lua

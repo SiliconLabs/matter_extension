@@ -59,12 +59,13 @@ define:
     value: 1
   - name: CHIP_9117
     value: 1
+  - name: DEBUG_UART
+    value: "1"
   - name: RS911X_WIFI
   - name: SL_SI91x_DUAL_INTERRUPTS_ERRATA
   - name: NVM3_LOCK_OVERRIDE
 # TODO : should be removed after code clean-up.
   - name: BRD4325A
-  - name: IOSTREAM_USART
 toolchain_settings:
   - option: gcc_linker_option
     value: "-Wl,--wrap=MemoryAlloc"

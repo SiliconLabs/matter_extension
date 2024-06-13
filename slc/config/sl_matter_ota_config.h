@@ -4,6 +4,7 @@
 // <<< Use Configuration Wizard in Context Menu >>>
 
 // <o OTA_PERIODIC_TIMEOUT> OTA Requestor periodic timeout
+// <d> Default: 86400
 #define OTA_PERIODIC_TIMEOUT 86400
 
 // <<< end of configuration section >>>

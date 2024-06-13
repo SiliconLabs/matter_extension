@@ -38,6 +38,9 @@ extern "C" {
 
 // uart transmit
 #if SILABS_LOG_OUT_UART
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
+#include "syscalls.h"
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 #define UART_MAX_QUEUE_SIZE 125
 #else
 #define UART_MAX_QUEUE_SIZE 25
@@ -115,6 +118,8 @@ void uartConsoleInit(void)
     assert(sUartTaskHandle);
     assert(sUartTxQueue);
 
+#if !(SILABS_LOG_OUT_UART && CHIP_CONFIG_ENABLE_ICD_SERVER)
+    // if UART is used for logging, UART is already initialized as a part of sl_event_handler.c
     int32_t status = 0;
     sl_si91x_usart_control_config_t usart_config;
     usart_config.baudrate      = USART_BAUDRATE;
@@ -149,6 +154,7 @@ void uartConsoleInit(void)
     {
         SILABS_LOG("sl_si91x_usart_register_event_callback: Error Code : %lu \n", status);
     }
+#endif // !SILABS_LOG_OUT_UART
 }
 
 /*
@@ -247,8 +253,12 @@ void uartMainLoop(void * args)
  */
 void uartSendBytes(uint8_t * buffer, uint16_t nbOfBytes)
 {
+#if SILABS_LOG_OUT_UART && CHIP_CONFIG_ENABLE_ICD_SERVER
+    _write(0, (char *) buffer, nbOfBytes);
+#else
     sl_si91x_usart_send_data(usart_handle, buffer, nbOfBytes);
     osThreadFlagsWait(kUartTxCompleteFlag, osFlagsWaitAny, osWaitForever);
+#endif // SILABS_LOG_OUT_UART
 }
 
 #ifdef __cplusplus

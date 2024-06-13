@@ -5,7 +5,7 @@ ifeq ($(OS),Windows_NT)
 	POSIX_TOOL_PATH := None/
 endif
 TOOLCHAIN_DIR := 
-SDK_PATH := /Volumes/Resources/stash/matter/blue/third_party/silabs/simplicity_sdk
+SDK_PATH := /Volumes/Resources/stash/matter/green/third_party/silabs/simplicity_sdk
 
 ARM_GCC_DIR_WIN = 
 ARM_GCC_DIR_OSX = 

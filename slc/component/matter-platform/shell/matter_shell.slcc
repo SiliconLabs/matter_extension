@@ -78,6 +78,8 @@ define:
   condition: [matter_thread]
 - name: SL_MATTER_CLI_ARG_PARSER
   value: 1
+- name: IOSTREAM_USART
+  condition: [matter_platform_siwx917]
 conflicts:
   - name: matter_low_power
   - name: matter_no_lcd_shell

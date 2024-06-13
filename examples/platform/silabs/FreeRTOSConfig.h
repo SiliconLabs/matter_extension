@@ -111,6 +111,9 @@ extern "C" {
 #ifdef SLI_SI91X_MCU_INTERFACE
 #include "si91x_device.h"
 extern uint32_t SystemCoreClock;
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
+#include "sl_si91x_m4_ps.h"
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 #else // For EFR32
 #include "RTE_Components.h"
 #include CMSIS_device_header
@@ -152,11 +155,8 @@ extern uint32_t SystemCoreClock;
 #define configUSE_TICKLESS_IDLE 0
 #endif // SL_CATALOG_POWER_MANAGER_PRESENT
 
-#if SLI_SI91X_MCU_INTERFACE
-#define configTICK_RATE_HZ (1000)
-#else // For EFR32
 #define configTICK_RATE_HZ (1024)
-#endif
+
 /* Definition used by Keil to replace default system clock source. */
 #define configOVERRIDE_DEFAULT_TICK_CONFIGURATION 1
 

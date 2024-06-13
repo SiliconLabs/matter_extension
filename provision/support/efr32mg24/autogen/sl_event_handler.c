@@ -6,6 +6,7 @@
 #include "sl_device_init_clocks.h"
 #include "sl_device_init_emu.h"
 #include "SEGGER_RTT.h"
+#include "sl_memory_manager.h"
 #include "sl_iostream_rtt.h"
 #include "sl_mbedtls.h"
 #include "nvm3_default.h"
@@ -21,6 +22,7 @@ void sl_platform_init(void)
   sl_device_init_clocks();
   sl_device_init_emu();
   SEGGER_RTT_Init();
+  sl_memory_init();
   nvm3_initDefault();
   osKernelInitialize();
 }

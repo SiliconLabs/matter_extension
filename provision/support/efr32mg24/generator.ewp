@@ -366,14 +366,6 @@
                 <option>
                     <name>CCIncludePath2</name>
                     <state>$FILE_DIR$</state>
-                    <state>$PROJ_DIR$\..\..\generator</state>
-                    <state>$PROJ_DIR$\..\..\..\examples</state>
-                    <state>$PROJ_DIR$\..\..\..\examples\platform\silabs</state>
-                    <state>$PROJ_DIR$\..\..\..\src</state>
-                    <state>$PROJ_DIR$\..\..\..\src\include</state>
-                    <state>$PROJ_DIR$\..\..\..\zzz_generated\app-common</state>
-                    <state>$PROJ_DIR$\..\..\..\third_party\nlassert\repo\include</state>
-                    <state>$PROJ_DIR$\..\..\..\third_party\nlio\repo\include</state>
                     <state>$PROJ_DIR$\..\..\..\third_party\silabs\gecko_sdk\platform\bootloader</state>
                     <state>$PROJ_DIR$\..\..\..\third_party\silabs\gecko_sdk\protocol\bluetooth\config</state>
                     <state>$PROJ_DIR$\..\..\..\third_party\silabs\gecko_sdk\platform\Device\SiliconLabs\EFR32MG24\Include</state>
@@ -404,6 +396,14 @@
                     <state>$PROJ_DIR$\..\..\..\third_party\silabs\gecko_sdk\platform\service\sleeptimer\inc</state>
                     <state>$PROJ_DIR$\config</state>
                     <state>$PROJ_DIR$\autogen</state>
+                    <state>$PROJ_DIR$\..\..\generator</state>
+                    <state>$PROJ_DIR$\..\..\..\examples</state>
+                    <state>$PROJ_DIR$\..\..\..\examples\platform\silabs</state>
+                    <state>$PROJ_DIR$\..\..\..\src</state>
+                    <state>$PROJ_DIR$\..\..\..\src\include</state>
+                    <state>$PROJ_DIR$\..\..\..\zzz_generated\app-common</state>
+                    <state>$PROJ_DIR$\..\..\..\third_party\nlassert\repo\include</state>
+                    <state>$PROJ_DIR$\..\..\..\third_party\nlio\repo\include</state>
                     <state>$PROJ_DIR$\..\..\..\third_party\silabs\simplicity_sdk\platform\bootloader</state>
                     <state>$PROJ_DIR$\..\..\..\third_party\silabs\simplicity_sdk\protocol\bluetooth\config</state>
                     <state>$PROJ_DIR$\..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include</state>
@@ -718,14 +718,6 @@
                 <option>
                     <name>AUserIncludes</name>
                     <state>$FILE_DIR$</state>
-                    <state>$PROJ_DIR$\..\..\generator</state>
-                    <state>$PROJ_DIR$\..\..\..\examples</state>
-                    <state>$PROJ_DIR$\..\..\..\examples\platform\silabs</state>
-                    <state>$PROJ_DIR$\..\..\..\src</state>
-                    <state>$PROJ_DIR$\..\..\..\src\include</state>
-                    <state>$PROJ_DIR$\..\..\..\zzz_generated\app-common</state>
-                    <state>$PROJ_DIR$\..\..\..\third_party\nlassert\repo\include</state>
-                    <state>$PROJ_DIR$\..\..\..\third_party\nlio\repo\include</state>
                     <state>$PROJ_DIR$\..\..\..\third_party\silabs\gecko_sdk\platform\bootloader</state>
                     <state>$PROJ_DIR$\..\..\..\third_party\silabs\gecko_sdk\protocol\bluetooth\config</state>
                     <state>$PROJ_DIR$\..\..\..\third_party\silabs\gecko_sdk\platform\Device\SiliconLabs\EFR32MG24\Include</state>
@@ -756,6 +748,14 @@
                     <state>$PROJ_DIR$\..\..\..\third_party\silabs\gecko_sdk\platform\service\sleeptimer\inc</state>
                     <state>$PROJ_DIR$\config</state>
                     <state>$PROJ_DIR$\autogen</state>
+                    <state>$PROJ_DIR$\..\..\generator</state>
+                    <state>$PROJ_DIR$\..\..\..\examples</state>
+                    <state>$PROJ_DIR$\..\..\..\examples\platform\silabs</state>
+                    <state>$PROJ_DIR$\..\..\..\src</state>
+                    <state>$PROJ_DIR$\..\..\..\src\include</state>
+                    <state>$PROJ_DIR$\..\..\..\zzz_generated\app-common</state>
+                    <state>$PROJ_DIR$\..\..\..\third_party\nlassert\repo\include</state>
+                    <state>$PROJ_DIR$\..\..\..\third_party\nlio\repo\include</state>
                     <state>$PROJ_DIR$\..\..\..\third_party\silabs\simplicity_sdk\platform\bootloader</state>
                     <state>$PROJ_DIR$\..\..\..\third_party\silabs\simplicity_sdk\protocol\bluetooth\config</state>
                     <state>$PROJ_DIR$\..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include</state>

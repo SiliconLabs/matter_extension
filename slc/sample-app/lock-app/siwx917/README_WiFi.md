@@ -119,12 +119,12 @@ Unlock door:
 ```shell
 ./out/chip-tool doorlock unlock-door node-id/group-id
 
-./out/chip-tool doorlock unlock-door 1 1
+./out/chip-tool doorlock unlock-door 1 1 --timedInteractionTimeoutMs 2000
 ```
 
 Lock door:
 ```shell
 ./out/chip-tool doorlock lock-door node-id/group-id
 
-./out/chip-tool doorlock lock-door 1 1
+./out/chip-tool doorlock lock-door 1 1 --timedInteractionTimeoutMs 2000
 ```

@@ -29,6 +29,10 @@ uint8_t tx_buffer[Protocol2::kPackageSizeMax];
 
 CHIP_ERROR Manager::Init()
 {
+#if SLI_SI91X_MCU_INTERFACE
+    mStore.Initialize();
+#endif
+
     if(CHIP_NO_ERROR != mStore.GetProvisionRequest(mProvisionRequested))
     {
 #ifdef SL_PROVISION_CHANNEL_ENABLED

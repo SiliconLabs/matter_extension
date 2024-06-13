@@ -54,5 +54,5 @@ source:
     condition: [matter_platform_siwx917]
   - path: examples/platform/silabs/provision/ProvisionChannelSi917BLE.cpp
     condition: [matter_wifi_ble]
-  - path: examples/platform/silabs/provision/ProvisionStorageDefault.cpp
+  - path: examples/platform/silabs/provision/ProvisionStorageFlash.cpp
     condition: [matter_platform_siwx917]

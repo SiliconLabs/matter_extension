@@ -15,6 +15,9 @@ requires:
   - name: matter_libqrcode_common
   - name: matter_uart
     condition: [matter_platform_efr32]
+toolchain_settings:
+  - option: gcc_compiler_option
+    value: -Wno-type-limits
 provides:
   - name: matter_qr_code
 conflicts:
