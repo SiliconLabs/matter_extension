@@ -1,0 +1,118 @@
+category: Matter|Core
+define:
+-   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
+description: interaction_model
+id: interaction_model
+include:
+-   path: examples/platform/silabs
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+-   path: src/app
+    file_list:
+    -   path: AttributeAccessToken.h
+    -   path: InteractionModelDelegatePointers.h
+    -   path: InteractionModelTimeout.h
+    -   path: SubscriptionsInfoProvider.h
+    -   path: SubscriptionResumptionStorage.h
+    -   path: AttributePersistenceProvider.h
+    -   path: EventLoggingDelegate.h
+    -   path: TimedRequest.h
+    -   path: WriteHandler.h
+    -   path: AttributePathParams.h
+    -   path: CASEClient.h
+    -   path: CommandPathParams.h
+    -   path: FailSafeContext.h
+    -   path: CASESessionManager.h
+    -   path: OperationalSessionSetup.h
+    -   path: ConcreteEventPath.h
+    -   path: AttributePathExpandIterator.h
+    -   path: TimerDelegates.h
+    -   path: ConcreteClusterPath.h
+    -   path: PendingResponseTrackerImpl.h
+    -   path: SubscriptionResumptionSessionEstablisher.h
+    -   path: CommandHandler.h
+    -   path: DefaultAttributePersistenceProvider.h
+    -   path: SimpleSubscriptionResumptionStorage.h
+    -   path: DeviceProxy.h
+    -   path: ChunkedWriteCallback.h
+    -   path: TimedHandler.h
+    -   path: DeferredAttributePersistenceProvider.h
+    -   path: TestEventTriggerDelegate.h
+    -   path: CommandSenderLegacyCallback.h
+    -   path: EventLogging.h
+    -   path: GlobalAttributes.h
+    -   path: CommandSender.h
+    -   path: AppConfig.h
+    -   path: CommandPathRegistry.h
+    -   path: ConcreteAttributePath.h
+    -   path: EventManagement.h
+    -   path: InteractionModelHelper.h
+    -   path: InteractionModelEngine.h
+    -   path: EventLoggingTypes.h
+    -   path: ReadClient.h
+    -   path: CommandResponseSender.h
+    -   path: StatusResponse.h
+    -   path: ReadPrepareParams.h
+    -   path: WriteClient.h
+    -   path: BufferedReadCallback.h
+    -   path: EventPathParams.h
+    -   path: CommandResponseHelper.h
+    -   path: CommandHandlerInterface.h
+    -   path: DataVersionFilter.h
+    -   path: AttributeAccessInterfaceCache.h
+    -   path: RequiredPrivilege.h
+    -   path: PendingResponseTracker.h
+    -   path: ConcreteCommandPath.h
+    -   path: AttributeAccessInterface.h
+    -   path: SafeAttributePersistenceProvider.h
+    -   path: EventHeader.h
+    -   path: ClusterStateCache.h
+    -   path: CASEClientPool.h
+    -   path: SpecificationDefinedRevisions.h
+    -   path: OperationalSessionSetupPool.h
+    -   path: ReadHandler.h
+    -   path: OTAUserConsentCommon.h
+-   path: src/app/reporting
+    file_list:
+    -   path: ReportSchedulerImpl.h
+    -   path: Engine.h
+    -   path: SynchronizedReportSchedulerImpl.h
+    -   path: reporting.h
+    -   path: ReportScheduler.h
+label: interaction_model
+package: Matter
+provides:
+-   name: matter_interaction_model
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+source:
+-   path: src/app/CASEClient.cpp
+-   path: src/app/CASESessionManager.cpp
+-   path: src/app/CommandSender.cpp
+-   path: src/app/DeviceProxy.cpp
+-   path: src/app/InteractionModelDelegatePointers.cpp
+-   path: src/app/InteractionModelEngine.cpp
+-   path: src/app/OperationalSessionSetup.cpp
+-   path: src/app/PendingResponseTrackerImpl.cpp
+-   path: src/app/ReadClient.cpp
+-   path: src/app/SimpleSubscriptionResumptionStorage.cpp
+-   path: src/app/StatusResponse.cpp
+-   path: src/app/SubscriptionResumptionSessionEstablisher.cpp
+-   path: src/app/TimedHandler.cpp
+-   path: src/app/TimedRequest.cpp
+-   path: src/app/WriteClient.cpp
+-   path: src/app/reporting/Engine.cpp
+-   path: src/app/reporting/ReportSchedulerImpl.cpp
+-   path: src/app/reporting/SynchronizedReportSchedulerImpl.cpp
+ui_hints:
+    visibility: never

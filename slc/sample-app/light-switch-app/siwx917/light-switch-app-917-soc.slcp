@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.2"
+    version: "2.3.0"
   - id: wiseconnect3_sdk
-    version: "3.2.0"
+    version: "3.3.0"
 
 component:
 
@@ -22,8 +22,6 @@ component:
   - id: matter_crypto_tinycrypt_siwx917
     from: matter
   - id: matter_fw_upgrade_917
-    from: matter
-  - id: silabs_factory_data_provider
     from: matter
 
   - id: matter_wifi
@@ -86,17 +84,19 @@ component:
   - id: matter_configuration_over_swo
     from: matter
   - id: segger_rtt
-  - id: matter_icd_management
-    from: matter
-  - id: matter_subscription_persistence
-    from: matter
-  - id: matter_subscription_synchronization
-    from: matter
+
+
   - id: toolchain_gcc_common
     from: matter
   - id: matter_ota_requestor
     from: matter
   - id: matter_ota_support
+    from: matter
+  - id: matter_shell
+    from: matter
+  - id: matter_lcd_917SOC
+    from: matter
+  - id: matter_qr_code
     from: matter
 
   - id: sl_si91x_common_flash_nvm3
@@ -139,15 +139,8 @@ component:
     from: wiseconnect3_sdk
     id: ulp_timers_instance
 
-requires:
-  # SiWx917 LCD configurations
-  - name: matter_lcd_917SOC
-    condition: [brd4338a]
-  - name: matter_qr_code
-    condition: [brd4338a]
-
 config_file:
-  - path: ../../../../examples/light-switch-app/light-switch-common/light-switch-app.zap
+  - path: ../../../../examples/light-switch-app/light-switch-common/light-switch-app-wifi.zap
     directory: common
     file_id: zap_config
   - path: ../../../../provision.mattpconf
@@ -194,13 +187,10 @@ define:
     value: "4092"
   - name: SI917_SOC
     value: "1"
-
-configuration:
-# Default ICD configurations for light-switch application
-  - {name: SL_ACTIVE_MODE_THRESHOLD, value: '1000'}
-  - {name: SL_ACTIVE_MODE_INTERVAL, value: '60000'}
-  - {name: SL_IDLE_MODE_INTERVAL, value: '3600'}
   
+configuration:
+  - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
+
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17

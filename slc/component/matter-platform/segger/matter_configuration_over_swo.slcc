@@ -4,5 +4,8 @@ label: "Configuration Over SWO"
 description: Allows Matter application to use SWD/JTAG debugging. Overrides GSDK's configuration_over_swo component
 category: Platform
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 provides:
   - name: configuration_over_swo

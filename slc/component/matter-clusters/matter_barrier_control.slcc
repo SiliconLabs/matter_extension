@@ -7,6 +7,9 @@ id: matter_barrier_control
 package: Matter
 label: Barrier Control Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_barrier_control
 source:

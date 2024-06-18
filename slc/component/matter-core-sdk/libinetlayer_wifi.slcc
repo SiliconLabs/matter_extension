@@ -2,10 +2,12 @@ category: Matter|Core
 define:
 -   name: CHIP_HAVE_CONFIG_H
     value: '1'
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
 description: libinetlayer_wifi
 id: libinetlayer_wifi
 include:
--   path: .
+-   path: examples/platform/silabs
 -   path: src
 -   path: src/include
 -   path: src/lib
@@ -50,6 +52,9 @@ package: Matter
 provides:
 -   name: matter_libinetlayer_wifi
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/inet/EndPointStateLwIP.cpp
 -   path: src/inet/IPAddress-StringFuncts.cpp
@@ -60,8 +65,6 @@ source:
 -   path: src/inet/InetError.cpp
 -   path: src/inet/InetInterface.cpp
 -   path: src/inet/InetInterfaceImplDefault.cpp
--   path: src/inet/TCPEndPoint.cpp
--   path: src/inet/TCPEndPointImplLwIP.cpp
 -   path: src/inet/UDPEndPoint.cpp
 -   path: src/inet/UDPEndPointImplLwIP.cpp
 ui_hints:

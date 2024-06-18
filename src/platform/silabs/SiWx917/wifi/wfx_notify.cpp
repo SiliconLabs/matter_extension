@@ -26,21 +26,14 @@
 #include "silabs_utils.h"
 #include "task.h"
 #include "wfx_host_events.h"
-
-// SLC-FIX
-#include "sl_matter_wifi_config.h"
-
-#ifdef RS911X_WIFI
 #include "wfx_rsi.h"
-#endif
 
 #include <platform/CHIPDeviceLayer.h>
-// #include <app/server/Mdns.h>
-#include <app/server/Dnssd.h>
-#include <app/server/Server.h>
+#include <platform/silabs/SilabsConfig.h>
 
 using namespace ::chip;
 using namespace ::chip::DeviceLayer;
+using SilabsConfig = chip::DeviceLayer::Internal::SilabsConfig;
 
 extern uint32_t retryInterval;
 /*
@@ -144,16 +137,6 @@ void wfx_ipv6_notify(int got_ip)
     eventData.header.id     = got_ip ? IP_EVENT_GOT_IP6 : IP_EVENT_STA_LOST_IP;
     eventData.header.length = sizeof(eventData.header);
     PlatformMgrImpl().HandleWFXSystemEvent(IP_EVENT, &eventData);
-
-    /* So the other threads can run and have the connectivity OK */
-    if (got_ip)
-    {
-        /* Should remember this */
-        vTaskDelay(1);
-        chip::DeviceLayer::PlatformMgr().LockChipStack();
-        chip::app::DnssdServer::Instance().StartServer(/*Dnssd::CommissioningMode::kEnabledBasic*/);
-        chip::DeviceLayer::PlatformMgr().UnlockChipStack();
-    }
 }
 
 /**************************************************************************************
@@ -173,16 +156,6 @@ void wfx_ip_changed_notify(int got_ip)
     eventData.header.id     = got_ip ? IP_EVENT_STA_GOT_IP : IP_EVENT_STA_LOST_IP;
     eventData.header.length = sizeof(eventData.header);
     PlatformMgrImpl().HandleWFXSystemEvent(IP_EVENT, &eventData);
-
-    /* So the other threads can run and have the connectivity OK */
-    if (got_ip)
-    {
-        /* Should remember this */
-        vTaskDelay(1);
-        chip::DeviceLayer::PlatformMgr().LockChipStack();
-        chip::app::DnssdServer::Instance().StartServer(/*Dnssd::CommissioningMode::kEnabledBasic*/);
-        chip::DeviceLayer::PlatformMgr().UnlockChipStack();
-    }
 }
 
 /**************************************************************************************
@@ -202,6 +175,13 @@ void wfx_retry_interval_handler(bool is_wifi_disconnection_event, uint16_t retry
         if (retryJoin < MAX_JOIN_RETRIES_COUNT)
         {
             SILABS_LOG("wfx_retry_interval_handler : Next attempt after %d Seconds", CONVERT_MS_TO_SEC(WLAN_RETRY_TIMER_MS));
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
+            // TODO: cleanup the retry logic MATTER-1921
+            if (SilabsConfig::ConfigValueExists(SilabsConfig::kConfigKey_WiFiSSID)) {
+                // If the device is power cycled go to sleep in between retry
+                wfx_rsi_power_save(RSI_SLEEP_MODE_8, STANDBY_POWER_SAVE_WITH_RAM_RETENTION);
+            }
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
             vTaskDelay(pdMS_TO_TICKS(WLAN_RETRY_TIMER_MS));
         }
         else
@@ -221,7 +201,14 @@ void wfx_retry_interval_handler(bool is_wifi_disconnection_event, uint16_t retry
             retryInterval = WLAN_MAX_RETRY_TIMER_MS;
         }
         SILABS_LOG("wfx_retry_interval_handler : Next attempt after %d Seconds", CONVERT_MS_TO_SEC(retryInterval));
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
+        wfx_rsi_power_save(RSI_SLEEP_MODE_8, STANDBY_POWER_SAVE_WITH_RAM_RETENTION);
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
         vTaskDelay(pdMS_TO_TICKS(retryInterval));
         retryInterval += retryInterval;
     }
+    // TODO: remove this code once this is fixed on the TA handling
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
+    wfx_rsi_power_save(RSI_ACTIVE, HIGH_PERFORMANCE);
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 }

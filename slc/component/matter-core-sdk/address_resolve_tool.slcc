@@ -10,7 +10,6 @@ description: address_resolve_tool
 id: address_resolve_tool
 include:
 -   path: examples/common/tracing
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
@@ -27,6 +26,9 @@ package: Matter
 provides:
 -   name: matter_address_resolve_tool
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/lib/address_resolve/tool.cpp
 ui_hints:

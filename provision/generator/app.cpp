@@ -15,22 +15,35 @@
  *
  ******************************************************************************/
 
-#include <stdint.h>
-#include <stddef.h>
-#include <string.h>
-#include <stdio.h>
-
-#include <em_msc.h>
-#include <psa/crypto.h>
-
+#include "app.h"
+#include <FreeRTOS.h>
+#include <task.h>
+#include <sl_system_init.h>
 #include <provision/ProvisionManager.h>
-#include <provision/ProvisionStorageDefault.h>
-#include <provision/RttStreamChannel.h>
+
+#define MAIN_TASK_STACK_SIZE    (1024)
+#define MAIN_TASK_PRIORITY      (configMAX_PRIORITIES - 1)
 
 using namespace chip::DeviceLayer::Silabs;
-Provision::RttStreamChannel sProvisionChannel;
-Provision::DefaultStorage sProvisionStore;
-Provision::Manager sProvisionManager(sProvisionStore, sProvisionChannel);
+
+namespace {
+
+TaskHandle_t main_Task;
+
+void taskMain(void * pvParameter)
+{
+    Provision::Manager &man = Provision::Manager::GetInstance();
+    // Initialize
+    app_platform_init();
+    man.Init();
+    // Run manager
+    while (true) man.Step();
+    // Reset
+    vTaskDelay(pdMS_TO_TICKS(500));
+    NVIC_SystemReset();
+}
+
+} // namespace
 
 /*******************************************************************************
  * Initialize application.
@@ -38,11 +51,7 @@ Provision::Manager sProvisionManager(sProvisionStore, sProvisionChannel);
 
 void app_init(void)
 {
-#ifndef SIWX_917
-    MSC_Init();
-    psa_crypto_init();
-#endif
-    sProvisionManager.Start();
+    xTaskCreate(taskMain, "Provision Task", MAIN_TASK_STACK_SIZE, nullptr, MAIN_TASK_PRIORITY, &main_Task);
 }
 
 /*******************************************************************************

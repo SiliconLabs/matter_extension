@@ -4,6 +4,9 @@ description: This component adds a customized startup file for SiWx917 SoC
 package: "Matter"
 category: "Matter-WiFi|Platform"
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 
 include:
 - path: third_party/silabs/matter_support/matter/si91x/siwx917/BRD4338A/support/inc

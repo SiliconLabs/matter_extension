@@ -15,7 +15,6 @@ define:
 description: libopenthread_platform_utils
 id: libopenthread_platform_utils
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/efr32
 -   path: examples/platform/silabs
 -   path: src
@@ -26,6 +25,9 @@ package: Matter
 provides:
 -   name: matter_libopenthread_platform_utils
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source: []
 ui_hints:
     visibility: never

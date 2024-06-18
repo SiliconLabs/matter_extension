@@ -7,6 +7,9 @@ id: matter_administrator_commissioning
 package: Matter
 label: Administrator Commissioning Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_administrator_commissioning
 source:

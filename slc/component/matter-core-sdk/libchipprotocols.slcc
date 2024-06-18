@@ -1,7 +1,5 @@
 category: Matter|Core
 define:
--   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
-    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
 -   name: CHIP_HAVE_CONFIG_H
     value: '1'
 -   name: RADIO_CONFIG_DMP_SUPPORT
@@ -9,16 +7,12 @@ define:
 description: libchipprotocols
 id: libchipprotocols
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
 -   path: src/lib
 -   path: third_party/nlassert/repo/include
 -   path: third_party/nlio/repo/include
--   path: src/protocols/echo
-    file_list:
-    -   path: Echo.h
 -   path: src/protocols/user_directed_commissioning
     file_list:
     -   path: UDCClients.h
@@ -42,14 +36,21 @@ include:
     -   path: DefaultSessionResumptionStorage.h
     -   path: CASEServer.h
     -   path: PairingSession.h
+    -   path: CheckInCounter.h
     -   path: SessionResumptionStorage.h
     -   path: SimpleSessionResumptionStorage.h
     -   path: RendezvousParameters.h
+-   path: src/protocols/echo
+    file_list:
+    -   path: Echo.h
 label: libchipprotocols
 package: Matter
 provides:
 -   name: matter_libchipprotocols
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/protocols/Protocols.cpp
 -   path: src/protocols/echo/EchoClient.cpp

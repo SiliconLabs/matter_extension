@@ -9,7 +9,6 @@ define:
 description: json
 id: json
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
@@ -25,6 +24,9 @@ package: Matter
 provides:
 -   name: matter_json
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/tracing/json/json_tracing.cpp
 ui_hints:

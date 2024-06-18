@@ -17,6 +17,9 @@ package: Matter
 provides:
 -   name: matter_jsoncpp
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: third_party/jsoncpp/repo/src/lib_json/json_reader.cpp
 -   path: third_party/jsoncpp/repo/src/lib_json/json_value.cpp

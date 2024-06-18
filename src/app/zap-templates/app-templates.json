@@ -1,7 +1,7 @@
 {
     "name": "CHIP Application templates",
-    "category":"matter",
     "version": "chip-v1",
+    "category": "matter",
     "options": {
         "generator": {
             "appendDirectory": "zap-generated",
@@ -35,21 +35,29 @@
             "path": "partials/cluster-objects-field-init.zapt"
         },
         {
+            "name": "cluster_enums_enum",
+            "path": "partials/cluster-enums-enum.zapt"
+        },
+        {
             "name": "cluster_objects_attribute_typeinfo",
             "path": "partials/cluster-objects-attribute-typeinfo.zapt"
         }
     ],
-    "requiredFeatureLevel": 89,
     "templates": [
         {
-            "path": "templates/app/callbacks/PluginApplicationCallbacks.zapt",
+            "path": "templates/app/slc_compatibility/PluginApplicationCallbacks.zapt",
             "name": "Matter Application Callbacks header",
             "output": "app/PluginApplicationCallbacks.h"
         },
         {
-            "path": "templates/app/callback-stub-src.zapt",
-            "name": "ZCL callback-stub source",
-            "output": "callback-stub.cpp"
+            "path": "templates/app/slc_compatibility/callback-stub-src.zapt",
+            "name": "callback-stub",
+            "output": "app/callback-stub.cpp"
+        },
+        {
+            "path": "templates/app/cluster-init-callback-src.zapt",
+            "name": "cluster-init-callback",
+            "output": "app/cluster-init-callback.cpp"
         },
         {
             "path": "templates/app/endpoint_config.zapt",
@@ -67,19 +75,9 @@
             "output": "IMClusterCommandHandler.cpp"
         },
         {
-            "path": "templates/app/CHIPClusters.zapt",
-            "name": "C++ ZCL API Header",
-            "output": "CHIPClusters.h"
-        },
-        {
             "path": "templates/app/access.zapt",
             "name": "Matter access definitions",
             "output": "access.h"
-        },
-        {
-            "path": "templates/app/attribute-size.zapt",
-            "name": "ZCL attribute-size header",
-            "output": "app-common/zap-generated/attribute-size.h"
         },
         {
             "path": "templates/app/attribute-type.zapt",
@@ -90,16 +88,6 @@
             "path": "templates/app/callback.zapt",
             "name": "ZCL callback header",
             "output": "app-common/zap-generated/callback.h"
-        },
-        {
-            "path": "templates/app/enums.zapt",
-            "name": "ZCL enums header",
-            "output": "app-common/zap-generated/enums.h"
-        },
-        {
-            "path": "templates/app/print-cluster.zapt",
-            "name": "ZCL print-cluster header",
-            "output": "app-common/zap-generated/print-cluster.h"
         },
         {
             "path": "templates/app/attributes/Accessors.zapt",
@@ -153,15 +141,15 @@
         }
     ],
     "zcl": {
-    "cluster": {
-      "component": {
-        "type": "text",
-        "configurability": "hidden",
-        "globalDefault": null,
-        "label": "Cluster to Component dependency mapping",
-        "defaults": "cluster-to-component-dependencies.json",
-        "autoEnableComponents": true
-      }
+        "cluster": {
+          "component": {
+            "type": "text",
+            "configurability": "hidden",
+            "globalDefault": null,
+            "label": "Cluster to Component dependency mapping",
+            "defaults": "cluster-to-component-dependencies.json",
+            "autoEnableComponents": true
+          }
+        }
     }
-  }
 }

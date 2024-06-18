@@ -7,6 +7,9 @@ id: matter_thermostat_client
 package: Matter
 label: Thermostat Client Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_thermostat_client
 source:

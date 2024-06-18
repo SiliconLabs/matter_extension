@@ -9,7 +9,6 @@ define:
 description: libchipappserver
 id: libchipappserver
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
@@ -32,6 +31,9 @@ package: Matter
 provides:
 -   name: matter_libchipappserver
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/app/server/AclStorage.cpp
 -   path: src/app/server/CommissioningWindowManager.cpp

@@ -19,7 +19,6 @@ define:
 description: libopenthread_spinel_rcp
 id: libopenthread_spinel_rcp
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/efr32
 -   path: examples/platform/silabs
 -   path: src
@@ -30,6 +29,9 @@ package: Matter
 provides:
 -   name: matter_libopenthread_spinel_rcp
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source: []
 ui_hints:
     visibility: never

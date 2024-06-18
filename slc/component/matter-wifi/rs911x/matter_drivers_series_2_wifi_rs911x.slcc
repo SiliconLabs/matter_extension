@@ -5,6 +5,9 @@ description: >
 package: "Matter"
 category: "Matter-WiFi|Platform|Drivers"
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 provides:
   - name: matter_drivers_series_2_wifi_rs911x
 recommends:

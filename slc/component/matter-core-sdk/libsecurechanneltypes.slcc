@@ -7,7 +7,6 @@ define:
 description: libsecurechanneltypes
 id: libsecurechanneltypes
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
@@ -29,6 +28,7 @@ include:
     -   path: DefaultSessionResumptionStorage.h
     -   path: CASEServer.h
     -   path: PairingSession.h
+    -   path: CheckInCounter.h
     -   path: SessionResumptionStorage.h
     -   path: SimpleSessionResumptionStorage.h
     -   path: RendezvousParameters.h
@@ -37,6 +37,9 @@ package: Matter
 provides:
 -   name: matter_libsecurechanneltypes
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/protocols/secure_channel/StatusReport.cpp
 ui_hints:

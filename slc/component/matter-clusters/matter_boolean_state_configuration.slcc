@@ -1,0 +1,26 @@
+
+category: Clusters|General
+description: >
+  Implementation of the Boolean State Configuration Server Cluster.
+  The user has to enable the Boolean State Configuration Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+id: matter_boolean_state_configuration
+package: Matter
+label: Boolean State Configuration Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_boolean_state_configuration
+source:
+  - path: src/app/clusters/boolean-state-configuration-server/boolean-state-configuration-server.cpp
+  - path: src/app/clusters/boolean-state-configuration-server/BooleanStateConfigurationTestEventTriggerHandler.cpp
+include:
+  - path: src/app/clusters/boolean-state-configuration-server
+    file_list:
+      - path: BooleanStateConfigurationTestEventTriggerHandler.h
+      - path: boolean-state-configuration-delegate.h
+      - path: boolean-state-configuration-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_boolean_state_configuration

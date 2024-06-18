@@ -7,6 +7,9 @@ id: matter_audio_output
 package: Matter
 label: Audio Output Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_audio_output
 source:

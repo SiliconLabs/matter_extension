@@ -7,6 +7,9 @@ id: matter_basic_information
 package: Matter
 label: Basic Information Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_basic_information
 source:

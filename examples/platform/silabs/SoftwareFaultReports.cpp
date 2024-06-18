@@ -25,6 +25,7 @@
 #include <lib/support/CodeUtils.h>
 #include <platform/CHIPDeviceLayer.h>
 #include <platform/DiagnosticDataProvider.h>
+#include "sl_component_catalog.h"
 
 #ifndef BRD4325A
 #include "rail_types.h"
@@ -54,7 +55,7 @@ namespace Silabs {
 
 void OnSoftwareFaultEventHandler(const char * faultRecordString)
 {
-#ifdef EMBER_AF_PLUGIN_SOFTWARE_DIAGNOSTICS_SERVER
+#ifdef MATTER_DM_PLUGIN_SOFTWARE_DIAGNOSTICS_SERVER
     EnabledEndpointsWithServerCluster enabledEndpoints(SoftwareDiagnostics::Id);
     VerifyOrReturn(enabledEndpoints.begin() != enabledEndpoints.end());
 
@@ -70,8 +71,12 @@ void OnSoftwareFaultEventHandler(const char * faultRecordString)
     softwareFault.id = taskDetails.xTaskNumber;
     softwareFault.faultRecording.SetValue(ByteSpan(Uint8::from_const_char(faultRecordString), strlen(faultRecordString)));
 
-    SoftwareDiagnosticsServer::Instance().OnSoftwareFaultDetect(softwareFault);
-#endif // EMBER_AF_PLUGIN_SOFTWARE_DIAGNOSTICS_SERVER
+    SystemLayer().ScheduleLambda([&softwareFault] { SoftwareDiagnosticsServer::Instance().OnSoftwareFaultDetect(softwareFault); });
+    // Allow some time for the Fault event to be sent as the next action after exiting this function
+    // is typically an assert or reboot.
+    // Depending on the task at fault, it is possible the event can't be transmitted.
+    vTaskDelay(pdMS_TO_TICKS(1000));
+#endif // MATTER_DM_PLUGIN_SOFTWARE_DIAGNOSTICS_SERVER
 }
 
 } // namespace Silabs
@@ -82,21 +87,21 @@ void OnSoftwareFaultEventHandler(const char * faultRecordString)
 /**
  * Log register contents to UART when a hard fault occurs.
  */
-extern "C" void debugHardfault(uint32_t * sp)
+extern "C" __attribute__((used)) void debugHardfault(uint32_t * sp)
 {
 #if SILABS_LOG_ENABLED
-    uint32_t cfsr  = SCB->CFSR;
-    uint32_t hfsr  = SCB->HFSR;
-    uint32_t mmfar = SCB->MMFAR;
-    uint32_t bfar  = SCB->BFAR;
-    uint32_t r0    = sp[0];
-    uint32_t r1    = sp[1];
-    uint32_t r2    = sp[2];
-    uint32_t r3    = sp[3];
-    uint32_t r12   = sp[4];
-    uint32_t lr    = sp[5];
-    uint32_t pc    = sp[6];
-    uint32_t psr   = sp[7];
+    [[maybe_unused]] uint32_t cfsr  = SCB->CFSR;
+    [[maybe_unused]] uint32_t hfsr  = SCB->HFSR;
+    [[maybe_unused]] uint32_t mmfar = SCB->MMFAR;
+    [[maybe_unused]] uint32_t bfar  = SCB->BFAR;
+    [[maybe_unused]] uint32_t r0    = sp[0];
+    [[maybe_unused]] uint32_t r1    = sp[1];
+    [[maybe_unused]] uint32_t r2    = sp[2];
+    [[maybe_unused]] uint32_t r3    = sp[3];
+    [[maybe_unused]] uint32_t r12   = sp[4];
+    [[maybe_unused]] uint32_t lr    = sp[5];
+    [[maybe_unused]] uint32_t pc    = sp[6];
+    [[maybe_unused]] uint32_t psr   = sp[7];
 
     ChipLogError(NotSpecified, "HardFault:");
     ChipLogError(NotSpecified, "SCB->CFSR   0x%08lx", cfsr);
@@ -121,6 +126,7 @@ extern "C" void debugHardfault(uint32_t * sp)
 /**
  * Override default hard-fault handler
  */
+#ifndef SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT // SLC-FIX 
 extern "C" __attribute__((naked)) void HardFault_Handler(void)
 {
     __asm volatile("tst lr, #4                                    \n"
@@ -131,7 +137,7 @@ extern "C" __attribute__((naked)) void HardFault_Handler(void)
                    "bx r1                                         \n"
                    "debugHardfault_address: .word debugHardfault  \n");
 }
-
+#endif // SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
 extern "C" void vApplicationMallocFailedHook(void)
 {
     /* Called if a call to pvPortMalloc() fails because there is insufficient
@@ -145,9 +151,6 @@ extern "C" void vApplicationMallocFailedHook(void)
 #endif
     Silabs::OnSoftwareFaultEventHandler(faultMessage);
 
-    // Allow some time for the Fault event to be sent before the chipAbort action
-    // Depending of the task at fault, it is possible the event can't be transmitted.
-    vTaskDelay(pdMS_TO_TICKS(1000));
     /* Force an assert. */
     configASSERT((volatile void *) NULL);
 }
@@ -167,9 +170,6 @@ extern "C" void vApplicationStackOverflowHook(TaskHandle_t pxTask, char * pcTask
 #endif
     Silabs::OnSoftwareFaultEventHandler(faultMessage);
 
-    // Allow some time for the Fault event to be sent before the chipAbort action
-    // Depending of the task at fault, it is possible the event can't be transmitted.
-    vTaskDelay(pdMS_TO_TICKS(1000));
     /* Force an assert. */
     configASSERT((volatile void *) NULL);
 }
@@ -229,7 +229,8 @@ extern "C" void vApplicationGetTimerTaskMemory(StaticTask_t ** ppxTimerTaskTCBBu
     *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 
-#ifndef BRD4325A
+#ifndef BRD4325A 
+#ifndef SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT // SLC-FIX
 extern "C" void RAILCb_AssertFailed(RAIL_Handle_t railHandle, uint32_t errorCode)
 {
     char faultMessage[kMaxFaultStringLen] = { 0 };
@@ -251,11 +252,9 @@ extern "C" void RAILCb_AssertFailed(RAIL_Handle_t railHandle, uint32_t errorCode
 #endif // SILABS_LOG_ENABLED
     Silabs::OnSoftwareFaultEventHandler(faultMessage);
 
-    // Allow some time for the Fault event to be sent before the chipAbort action
-    // Depending of the task at fault, it is possible the event can't be transmitted.
-    vTaskDelay(pdMS_TO_TICKS(1000));
     chipAbort();
 }
+#endif // SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
 #endif // BRD4325A
 
 #endif // HARD_FAULT_LOG_ENABLE

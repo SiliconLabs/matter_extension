@@ -1,0 +1,26 @@
+id: matter_multi_image_ota_encryption
+label: OTA Multi Image Requestor Encryption
+description: Encryption for OTA Multi Image Requestor for Matter
+package: "Matter"
+category: Stack
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+
+provides:
+  - name: matter_multi_image_ota_encryption
+    
+requires:
+  - name: matter_multi_image_ota
+
+source:
+  - path: src/platform/silabs/multi-ota/OtaTlvEncryptionKey.cpp
+
+include: 
+  - path: src/platform/silabs/multi-ota
+    file_list:
+    - path: OtaTlvEncryptionKey.h
+
+define:
+  - name: OTA_ENCRYPTION_ENABLE

@@ -25,6 +25,7 @@
 
 #define APP_TASK_NAME "Sens"
 #define BLE_DEV_NAME "SiLabs-Sensor"
+
 #ifdef DISPLAY_ENABLED
 #define SENSOR_NAME "Sensor-App"
 #define ON_DEMO_OCCUPANCY_SENSOR_BITMAP                                                                                                             \

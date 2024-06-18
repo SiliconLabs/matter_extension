@@ -2,10 +2,12 @@ category: Matter|Core
 define:
 -   name: CHIP_HAVE_CONFIG_H
     value: '1'
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
 description: libdevicelayer_wifi
 id: libdevicelayer_wifi
 include:
--   path: .
+-   path: examples/platform/silabs
 -   path: src
 -   path: src/include
 -   path: src/lib
@@ -20,6 +22,9 @@ package: Matter
 provides:
 -   name: matter_libdevicelayer_wifi
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/platform/CommissionableDataProvider.cpp
 -   path: src/platform/DeviceControlServer.cpp

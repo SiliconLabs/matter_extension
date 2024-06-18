@@ -20,14 +20,22 @@
 #import <Matter/MTRDevice.h>
 
 #import "MTRAsyncWorkQueue.h"
-
-#include <app/DeviceProxy.h>
+#import "MTRDefines_Internal.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class MTRAsyncWorkQueue;
 
 typedef void (^MTRDevicePerformAsyncBlock)(MTRBaseDevice * baseDevice);
+
+/**
+ * Information about a cluster, currently is just data version
+ */
+MTR_TESTABLE
+@interface MTRDeviceClusterData : NSObject <NSSecureCoding>
+@property (nonatomic) NSNumber * dataVersion;
+// TODO: add cluster attributes in this object, and remove direct attribute storage
+@end
 
 @interface MTRDevice ()
 - (instancetype)initWithNodeID:(NSNumber *)nodeID controller:(MTRDeviceController *)controller;
@@ -64,11 +72,18 @@ typedef void (^MTRDevicePerformAsyncBlock)(MTRBaseDevice * baseDevice);
                                     queue:(dispatch_queue_t)queue
                                completion:(void (^)(id _Nullable response, NSError * _Nullable error))completion;
 
-@property (nonatomic, readonly) MTRDeviceController * deviceController;
-@property (nonatomic, readonly, copy) NSNumber * nodeID;
 // Queue used for various internal bookkeeping work.
 @property (nonatomic) dispatch_queue_t queue;
 @property (nonatomic, readonly) MTRAsyncWorkQueue<MTRDevice *> * asyncWorkQueue;
+
+// Method to insert attribute values
+//   attributeValues : array of response-value dictionaries with non-null MTRAttributePathKey value
+//   reportChanges : if set to YES, attribute reports will also sent to the delegate if new values are different
+- (void)setAttributeValues:(NSArray<NSDictionary *> *)attributeValues reportChanges:(BOOL)reportChanges;
+
+// Method to insert cluster data
+//   Currently contains data version information
+- (void)setClusterData:(NSDictionary<MTRClusterPath *, MTRDeviceClusterData *> *)clusterData;
 
 @end
 

@@ -7,6 +7,9 @@ id: matter_on_off
 package: Matter
 label: On Off Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_on_off
 source:
@@ -15,13 +18,6 @@ include:
   - path: src/app/clusters/on-off-server
     file_list:
       - path: on-off-server.h
-  - path: src/app/clusters/scenes-server/
-    file_list:
-      - path: SceneTable.h
-      - path: SceneTableImpl.h
-      - path: ExtensionFieldSets.h
-      - path: ExtensionFieldSetsImpl.h
-      - path: scenes-server.h
 template_contribution:
   - name: component_catalog
     value: matter_on_off

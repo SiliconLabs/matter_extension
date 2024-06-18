@@ -50,9 +50,8 @@ environment(provisionenv:win32.x86_64) {
 # Function to execute Matter provision script 
 function(matter_provision) {
   env=$(provisionenv)
-  cmd=$(python) provision.py  -c ${configFile} ( -j ${serialnum} | -j ${ipaddress} )
+  cmd=$(python) provision.py --inputs ${configFile} --channel ${ipaddress}
 }
-
 # Generation function that generates zero resources
 function(uc_generate) {
   cmd=$(python) apackGenerateNothing.py ${contentFolder} -o ${generationOutput}

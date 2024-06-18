@@ -1,7 +1,5 @@
 category: Matter|Core
 define:
--   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
-    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
 -   name: CHIP_HAVE_CONFIG_H
     value: '1'
 -   name: RADIO_CONFIG_DMP_SUPPORT
@@ -9,7 +7,6 @@ define:
 description: librawtransport
 id: librawtransport
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
@@ -30,6 +27,9 @@ package: Matter
 provides:
 -   name: matter_librawtransport
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/transport/raw/BLE.cpp
 -   path: src/transport/raw/MessageHeader.cpp

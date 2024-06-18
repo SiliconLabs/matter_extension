@@ -40,7 +40,7 @@ if platform == "win32":
     arm_toolchain_url = "https://developer.arm.com/-/media/Files/downloads/gnu/12.2.rel1/binrel/arm-gnu-toolchain-12.2.rel1-mingw-w64-i686-arm-none-eabi.zip?rev=709f3f15b2ee4763b186c10153ee6ca9&hash=8C0761A17A1E4861B96DDB604C177F5B"
     java_url = "https://corretto.aws/downloads/resources/17.0.8.8.1/amazon-corretto-17.0.8.8.1-windows-x64-jdk.zip"
     slc_cli_url = "https://www.silabs.com/documents/login/software/slc_cli_windows.zip"
-    zap_url = "https://github.com/project-chip/zap/releases/download/v2024.02.06-nightly/zap-win-x64.zip"
+    zap_url = "https://github.com/project-chip/zap/releases/download/v2024.06.04-nightly/zap-win-x64.zip"
     commander_url = "https://www.silabs.com/documents/public/software/SimplicityCommander-Windows.zip"
     ninja_url = "https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-win.zip"
 
@@ -55,7 +55,7 @@ elif platform == "darwin":
     arm_toolchain_url = "https://developer.arm.com/-/media/Files/downloads/gnu/12.2.rel1/binrel/arm-gnu-toolchain-12.2.rel1-darwin-arm64-arm-none-eabi.tar.xz?rev=41f9ad86e18d43cf9999c4bada07f7df&hash=C458A8BF74CBA545BDCA38B7FB40AAF5"
     java_url = "https://corretto.aws/downloads/resources/17.0.8.8.1/amazon-corretto-17.0.8.8.1-macosx-x64.tar.gz"
     slc_cli_url = "https://www.silabs.com/documents/login/software/slc_cli_mac.zip"
-    zap_url = "https://github.com/project-chip/zap/releases/download/v2024.02.06-nightly/zap-mac-x64.zip"
+    zap_url = "https://github.com/project-chip/zap/releases/download/v2024.06.04/zap-mac-x64.zip"
     commander_url = "https://www.silabs.com/documents/public/software/SimplicityCommander-Mac.zip"
     ninja_url = "https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-mac.zip"
     
@@ -71,7 +71,7 @@ elif platform =="linux":
     arm_toolchain_url = "https://developer.arm.com/-/media/Files/downloads/gnu/12.2.rel1/binrel/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz?rev=7bd049b7a3034e64885fa1a71c12f91d&hash=732D909FA8F68C0E1D0D17D08E057619"
     java_url = "https://corretto.aws/downloads/resources/17.0.8.8.1/amazon-corretto-17.0.8.8.1-linux-x64.tar.gz"
     slc_cli_url = "https://www.silabs.com/documents/login/software/slc_cli_linux.zip"
-    zap_url = "https://github.com/project-chip/zap/releases/download/v2024.02.06-nightly/zap-linux-x64.zip"
+    zap_url = "https://github.com/project-chip/zap/releases/download/v2024.06.04-nightly/zap-linux-x64.zip"
     commander_url = "https://www.silabs.com/documents/public/software/SimplicityCommander-Linux.zip"
     ninja_url = "https://github.com/ninja-build/ninja/releases/download/v1.11.1/ninja-linux.zip"
     

@@ -7,6 +7,9 @@ id: matter_ota_provider
 package: Matter
 label: OTA Provider Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_ota_provider
 source:

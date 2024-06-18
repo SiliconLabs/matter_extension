@@ -124,7 +124,6 @@ void LogOpenThreadStateChange(otInstance * otInst, uint32_t flags)
             meshPrefix.ToString(strBuf);
             ChipLogDetail(DeviceLayer, "   Mesh Prefix: %s/64", strBuf);
         }
-//SLC-FIX
 #if CHIP_CONFIG_SECURITY_TEST_MODE
         {
             otNetworkKey otKey;

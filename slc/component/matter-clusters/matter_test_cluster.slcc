@@ -7,6 +7,9 @@ id: matter_test_cluster
 package: Matter
 label: Test Cluster Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_test_cluster
 source:

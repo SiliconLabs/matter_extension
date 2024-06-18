@@ -7,7 +7,6 @@ define:
 description: libsupporttesting
 id: libsupporttesting
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
@@ -41,11 +40,13 @@ include:
     -   path: StateMachine.h
     -   path: PrivateHeap.h
     -   path: BitMask.h
-    -   path: OwnerOf.h
+    -   path: Scoped.h
+    -   path: UnitTest.h
+    -   path: LinkedList.h
     -   path: SafeInt.h
     -   path: TimeUtils.h
     -   path: CHIPMem.h
-    -   path: SerializableIntegerSet.h
+    -   path: static_support_smart_ptr.h
     -   path: BufferWriter.h
     -   path: CommonPersistentData.h
     -   path: CodeUtils.h
@@ -64,7 +65,6 @@ include:
     -   path: StringBuilder.h
     -   path: ObjectLifeCycle.h
     -   path: CHIPArgParser.hpp
-    -   path: CHIPListUtils.h
     -   path: SortUtils.h
     -   path: ZclString.h
     -   path: PersistentStorageMacros.h
@@ -76,6 +76,7 @@ include:
     -   path: FixedBufferAllocator.h
     -   path: DLLUtil.h
     -   path: BytesCircularBuffer.h
+    -   path: utf8.h
     -   path: BitFlags.h
     -   path: UnitTestContext.h
     -   path: FibonacciUtils.h
@@ -88,8 +89,10 @@ package: Matter
 provides:
 -   name: matter_libsupporttesting
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/lib/support/UnitTestRegistration.cpp
--   path: src/lib/support/UnitTestUtils.cpp
 ui_hints:
     visibility: never

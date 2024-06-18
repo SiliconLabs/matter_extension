@@ -7,6 +7,9 @@ id: matter_mode_base
 package: Matter
 label: Mode Base Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_mode_base
 source:

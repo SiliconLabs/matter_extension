@@ -7,6 +7,9 @@ id: matter_ethernet_network_diagnostics
 package: Matter
 label: Ethernet Network Diagnostics Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_ethernet_network_diagnostics
 source:

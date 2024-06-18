@@ -7,6 +7,9 @@ id: matter_general_commissioning
 package: Matter
 label: General Commissioning Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_general_commissioning
 source:

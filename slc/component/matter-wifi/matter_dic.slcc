@@ -67,6 +67,9 @@ template_contribution:
     value: 1560
 
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 source:
 -   path: examples/platform/silabs/DIC/matter_abs_interface/src/dic.cpp
 -   path: examples/platform/silabs/DIC/matter_abs_interface/src/dic_control.cpp

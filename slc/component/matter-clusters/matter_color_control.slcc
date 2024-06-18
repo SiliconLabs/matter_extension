@@ -7,6 +7,9 @@ id: matter_color_control
 package: Matter
 label: Color Control Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_color_control
 source:
@@ -15,13 +18,6 @@ include:
   - path: src/app/clusters/color-control-server
     file_list:
       - path: color-control-server.h
-  - path: src/app/clusters/scenes-server/
-    file_list:
-      - path: SceneTable.h
-      - path: SceneTableImpl.h
-      - path: ExtensionFieldSets.h
-      - path: ExtensionFieldSetsImpl.h
-      - path: scenes-server.h
 template_contribution:
   - name: component_catalog
     value: matter_color_control

@@ -7,6 +7,9 @@ id: matter_localization_configuration
 package: Matter
 label: Localization Configuration Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_localization_configuration
 source:

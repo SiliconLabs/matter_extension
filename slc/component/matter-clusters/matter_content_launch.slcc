@@ -7,6 +7,9 @@ id: matter_content_launch
 package: Matter
 label: Content Launch Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_content_launch
 source:

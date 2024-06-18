@@ -4,16 +4,19 @@ package: Matter
 description: WSTK LED Support for Matter applications
 category: Platform
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 provides:
   - name: matter_wstk_leds
 requires:
 # This should cover all supported boards that use LEDs
   - name: simple_led_recommended_instance
     condition:
-      - device_family_efr32mg12
+      - device_family_efr32mg24
   - name: simple_led_recommended_instance
     condition:
-      - device_family_efr32mg24
+      - device_family_efr32mg26
   - name: simple_led_recommended_instance
     condition:
       - brd2704a
@@ -23,11 +26,11 @@ define:
   - name: ENABLE_WSTK_LEDS
     value: "1"
     condition:
-      - device_family_efr32mg24
+      - device_family_efr32mg26 
   - name: ENABLE_WSTK_LEDS
     value: "1"
     condition:
-      - device_family_efr32mg12
+      - device_family_efr32mg24
   - name: ENABLE_WSTK_LEDS
     value: "1"
     condition:

@@ -7,7 +7,6 @@ define:
 description: libchipcore
 id: libchipcore
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
@@ -28,12 +27,14 @@ include:
     -   path: TLVWriter.h
     -   path: Global.h
     -   path: TLVTags.h
+    -   path: Unchecked.h
     -   path: PasscodeId.h
     -   path: DataModelTypes.h
     -   path: CHIPConfig.h
     -   path: ClusterEnums.h
     -   path: TLVBackingStore.h
     -   path: Optional.h
+    -   path: TLVVectorWriter.h
     -   path: InPlace.h
     -   path: TLVReader.h
     -   path: CHIPError.h
@@ -56,8 +57,10 @@ package: Matter
 provides:
 -   name: matter_libchipcore
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
--   path: src/lib/core/CHIPError.cpp
 -   path: src/lib/core/CHIPKeyIds.cpp
 -   path: src/lib/core/OTAImageHeader.cpp
 -   path: src/lib/core/TLVCircularBuffer.cpp

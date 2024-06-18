@@ -4,6 +4,9 @@ description: Configuration of the Attestation Certificate provisioning. Set ENAB
 package: "Matter"
 category: Platform|Security
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 provides:
   - name: matter_provision
 
@@ -14,30 +17,42 @@ config_file:
 include:
 - path: examples/platform/silabs/provision
   file_list:
-  - path: RttStreamChannel.h
-  - path: ProvisionCommands.h
-  - path: ProvisionEncoder.h
-  - path: ProvisionManager.h
-  - path: ProvisionStorage.h
   - path: AttestationKey.h
   - path: ProvisionChannel.h
-  - path: AttestationKeyPSA.h
-  - path: AttestationKeyMbed.h
-  - path: ProvisionStorageDefault.h
+  - path: ProvisionEncoder.h
+  - path: ProvisionManager.h
+  - path: ProvisionProtocol.h
+  - path: ProvisionStorage.h
+  - path: ProvisionStorageGeneric.h
+- path: examples/platform/silabs
+  file_list:
+  - path: SilabsTestEventTriggerDelegate.h
+- path: src
+  file_list:
+  - path: platform/silabs/multi-ota/OtaTlvEncryptionKey.h
 
 requires:
   - name: iostream
   - name: iostream_rtt
 
 source:
-  - path: examples/platform/silabs/provision/RttStreamChannel.cpp
-  - path: examples/platform/silabs/provision/ProvisionCommands.cpp
   - path: examples/platform/silabs/provision/ProvisionEncoder.cpp
   - path: examples/platform/silabs/provision/ProvisionManager.cpp
+  - path: examples/platform/silabs/provision/ProvisionProtocolV1.cpp
+  - path: examples/platform/silabs/provision/ProvisionProtocolV2.cpp
   - path: examples/platform/silabs/provision/ProvisionStorage.cpp
+  - path: examples/platform/silabs/provision/ProvisionStorageCustom.cpp
+  
   - path: examples/platform/silabs/provision/AttestationKeyPSA.cpp
     condition: [matter_platform_efr32]
+  - path: examples/platform/silabs/provision/ProvisionChannelEFR32BLE.cpp
+    condition: [matter_ble]
+  - path: examples/platform/silabs/provision/ProvisionStorageDefault.cpp
+    condition: [matter_platform_efr32]
+
   - path: examples/platform/silabs/provision/AttestationKeyMbed.cpp
     condition: [matter_platform_siwx917]
-  - path: examples/platform/silabs/provision/ProvisionStorageDefault.cpp
-  - path: examples/platform/silabs/provision/ProvisionManagerDefault.cpp
+  - path: examples/platform/silabs/provision/ProvisionChannelSi917BLE.cpp
+    condition: [matter_wifi_ble]
+  - path: examples/platform/silabs/provision/ProvisionStorageFlash.cpp
+    condition: [matter_platform_siwx917]

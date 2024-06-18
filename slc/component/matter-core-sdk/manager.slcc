@@ -1,0 +1,36 @@
+category: Matter|Core
+define:
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
+description: manager
+id: manager
+include:
+-   path: examples/platform/silabs
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: third_party/nlassert/repo/include
+-   path: third_party/nlio/repo/include
+-   path: src/app/icd/server
+    file_list:
+    -   path: ICDMonitoringTable.h
+    -   path: ICDCheckInSender.h
+    -   path: ICDManager.h
+    -   path: ICDConfigurationData.h
+    -   path: ICDServerConfig.h
+    -   path: ICDStateObserver.h
+    -   path: ICDNotifier.h
+label: manager
+package: Matter
+provides:
+-   name: matter_manager
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+source:
+-   path: src/app/icd/server/ICDManager.cpp
+ui_hints:
+    visibility: never

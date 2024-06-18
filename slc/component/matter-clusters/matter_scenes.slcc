@@ -9,13 +9,18 @@ label: Scenes Server Cluster
 quality: experimental
 provides:
   - name: matter_scenes
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
+  - path: src/app/clusters/scenes-server/SceneHandlerImpl.cpp
   - path: src/app/clusters/scenes-server/ExtensionFieldSetsImpl.cpp
   - path: src/app/clusters/scenes-server/scenes-server.cpp
   - path: src/app/clusters/scenes-server/SceneTableImpl.cpp
 include:
   - path: src/app/clusters/scenes-server
     file_list:
+      - path: SceneHandlerImpl.h
       - path: SceneTableImpl.h
       - path: scenes-server.h
       - path: ExtensionFieldSets.h

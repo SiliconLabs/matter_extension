@@ -4,6 +4,9 @@ package: Matter
 description: Common Flash Toolchain support for GCC
 category: Matter-WiFi|Platform|Toolchain
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 root_path: slc/component
 provides:
   - name: toolchain_gcc_common

@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.2"
+    version: "2.3.0"
   - id: wiseconnect3_sdk
-    version: "3.2.0"
+    version: "3.3.0"
 
 component:
   - id: matter_wstk_leds
@@ -22,9 +22,6 @@ component:
     from: matter
   - id: matter_fw_upgrade_917
     from: matter
-  - id: silabs_factory_data_provider
-    from: matter
-
   - id: matter_wifi
     from: matter
   - id: app_common
@@ -88,16 +85,17 @@ component:
     from: matter
   - id: toolchain_gcc_common
     from: matter
-
+  - id: matter_shell
+    from: matter
+  - id: matter_lcd_917SOC
+    from: matter
+  - id: matter_qr_code
+    from: matter
     
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
   - id: segger_rtt
-  - id: matter_subscription_timeout_resumption
-    from: matter
-  - id: matter_subscription_persistence
-    from: matter
   - id: sl_si91x_common_flash_nvm3
     from: wiseconnect3_sdk
   - id: sl_si91x_wireless
@@ -138,12 +136,8 @@ component:
     from: wiseconnect3_sdk
     id: ulp_timers_instance
 
-requires:
-  # SiWx917 LCD configurations
-  - name: matter_lcd_917SOC
-    condition: [brd4338a]
-  - name: matter_qr_code
-    condition: [brd4338a]
+configuration:
+  - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
 
 config_file:
   - path: ../../../../silabs_examples/onoff-plug-app/onoff-plug-common/onoff-plug-app.zap

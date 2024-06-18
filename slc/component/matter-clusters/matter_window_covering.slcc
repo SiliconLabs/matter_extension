@@ -7,6 +7,9 @@ id: matter_window_covering
 package: Matter
 label: Window Covering Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_window_covering
 source:

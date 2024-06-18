@@ -2,14 +2,15 @@ category: Matter|Core
 define: []
 description: syscalls
 id: syscalls
-include:
--   path: third_party/jlink/segger_rtt/Syscalls
-    file_list: []
+include: []
 label: syscalls
 package: Matter
 provides:
 -   name: matter_syscalls
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: third_party/jlink/segger_rtt/Syscalls/SEGGER_RTT_Syscalls_GCC.c
 ui_hints:

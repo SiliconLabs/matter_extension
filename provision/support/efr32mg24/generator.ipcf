@@ -7,8 +7,11 @@
       <path>config\nvm3_default_config.h</path>
       <path>config\psa_crypto_config.h</path>
       <path>config\sl_device_init_dcdc_config.h</path>
+      <path>config\sl_memory_manager_config.h</path>
       <path>config\FreeRTOSConfig.h</path>
-      <path>config\sl_sleeptimer_config.h</path>
+      <path>config\sl_interrupt_manager_s2_config.h</path>
+      <path>config\sl_core_config.h</path>
+      <path>config\sl_memory_manager_region_config.h</path>
       <path>config\app_properties_config.h</path>
       <path>config\sl_device_init_emu_config.h</path>
       <path>config\emlib_core_debug_config.h</path>
@@ -32,348 +35,350 @@
       <path>autogen\linkerfile.icf</path>
       <path>autogen\.crc_config.crc</path>
     </group>
-    <group name="gecko_sdk_4.3.1">
+    <group name="simplicity_sdk_2024.6.0">
       <group name="platform">
         <group name="Device">
           <group name="SiliconLabs">
             <group name="EFR32MG24">
               <group name="Source">
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Source\system_efr32mg24.c</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Source\startup_efr32mg24.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Source\system_efr32mg24.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Source\startup_efr32mg24.c</path>
               </group>
               <group name="Include">
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24a010f1024im48.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_acmp.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_aes.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_buram.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_burtc.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_cmu.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_dcdc.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_devinfo.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_dma_descriptor.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_dpll.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_emu.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_eusart.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_fsrco.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_gpcrc.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_gpio.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_gpio_port.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_hfrco.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_hfxo.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_i2c.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_iadc.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_icache.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_keyscan.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_ldma.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_ldmaxbar.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_ldmaxbar_defines.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_letimer.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_lfrco.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_lfxo.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_mailbox.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_mpahbram.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_msc.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_mvp.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_pcnt.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_prs.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_prs_signals.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_scratchpad.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_semailbox.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_smu.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_syscfg.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_sysrtc.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_timer.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_ulfrco.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_usart.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_vdac.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_wdog.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\em_device.h</path>
-                <path>..\..\..\..\..\gsdk\platform\Device\SiliconLabs\EFR32MG24\Include\system_efr32mg24.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24a010f1024im48.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_acmp.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_aes.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_buram.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_burtc.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_cmu.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_dcdc.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_devinfo.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_dma_descriptor.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_dpll.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_emu.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_eusart.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_fsrco.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_gpcrc.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_gpio.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_gpio_port.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_hfrco.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_hfxo.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_i2c.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_iadc.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_icache.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_keyscan.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_ldma.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_ldmaxbar.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_ldmaxbar_defines.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_letimer.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_lfrco.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_lfxo.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_mailbox.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_mpahbram.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_msc.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_mvp.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_pcnt.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_prs.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_prs_signals.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_scratchpad.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_semailbox.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_smu.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_syscfg.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_sysrtc.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_timer.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_ulfrco.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_usart.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_vdac.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\efr32mg24_wdog.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\em_device.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\Device\SiliconLabs\EFR32MG24\Include\system_efr32mg24.h</path>
               </group>
             </group>
           </group>
         </group>
         <group name="common">
           <group name="inc">
-            <path>..\..\..\..\..\gsdk\platform\common\inc\sl_atomic.h</path>
-            <path>..\..\..\..\..\gsdk\platform\common\inc\sl_cmsis_os2_common.h</path>
-            <path>..\..\..\..\..\gsdk\platform\common\inc\sli_cmsis_os2_ext_task_register.h</path>
-            <path>..\..\..\..\..\gsdk\platform\common\inc\sl_enum.h</path>
-            <path>..\..\..\..\..\gsdk\platform\common\inc\sl_assert.h</path>
-            <path>..\..\..\..\..\gsdk\platform\common\inc\sl_common.h</path>
-            <path>..\..\..\..\..\gsdk\platform\common\inc\sl_status.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\common\inc\sl_bit.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\common\inc\sl_cmsis_os2_common.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\common\inc\sli_cmsis_os2_ext_task_register.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\common\inc\sl_code_classification.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\common\inc\sli_code_classification.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\common\inc\sl_enum.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\common\inc\sl_assert.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\common\inc\sl_common.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\common\inc\sl_core.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\common\inc\sl_status.h</path>
           </group>
           <group name="src">
-            <path>..\..\..\..\..\gsdk\platform\common\src\sli_cmsis_os2_ext_task_register.c</path>
-            <path>..\..\..\..\..\gsdk\platform\common\src\sl_assert.c</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\common\src\sli_cmsis_os2_ext_task_register.c</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\common\src\sl_assert.c</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\common\src\sl_core_cortexm.c</path>
           </group>
           <group name="toolchain">
-            <group name="src">
-              <path>..\..\..\..\..\gsdk\platform\common\toolchain\src\sl_memory.c</path>
-            </group>
             <group name="inc">
-              <path>..\..\..\..\..\gsdk\platform\common\toolchain\inc\sl_memory_region.h</path>
-              <path>..\..\..\..\..\gsdk\platform\common\toolchain\inc\sl_memory.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\common\toolchain\inc\sl_memory_region.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\common\toolchain\inc\sl_memory.h</path>
             </group>
           </group>
         </group>
         <group name="bootloader">
           <group name="app_properties">
-            <path>..\..\..\..\..\gsdk\platform\bootloader\app_properties\app_properties.c</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\bootloader\app_properties\app_properties.c</path>
           </group>
         </group>
         <group name="CMSIS">
           <group name="Core">
             <group name="Include">
-              <path>..\..\..\..\..\gsdk\platform\CMSIS\Core\Include\cmsis_compiler.h</path>
-              <path>..\..\..\..\..\gsdk\platform\CMSIS\Core\Include\cmsis_version.h</path>
-              <path>..\..\..\..\..\gsdk\platform\CMSIS\Core\Include\tz_context.h</path>
-              <path>..\..\..\..\..\gsdk\platform\CMSIS\Core\Include\cmsis_iccarm.h</path>
-              <path>..\..\..\..\..\gsdk\platform\CMSIS\Core\Include\core_cm33.h</path>
-              <path>..\..\..\..\..\gsdk\platform\CMSIS\Core\Include\mpu_armv8.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\CMSIS\Core\Include\cmsis_compiler.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\CMSIS\Core\Include\cmsis_version.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\CMSIS\Core\Include\tz_context.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\CMSIS\Core\Include\cmsis_iccarm.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\CMSIS\Core\Include\core_cm33.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\CMSIS\Core\Include\mpu_armv8.h</path>
             </group>
           </group>
           <group name="RTOS2">
             <group name="Include">
-              <path>..\..\..\..\..\gsdk\platform\CMSIS\RTOS2\Include\cmsis_os2.h</path>
-              <path>..\..\..\..\..\gsdk\platform\CMSIS\RTOS2\Include\os_tick.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\CMSIS\RTOS2\Include\cmsis_os2.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\CMSIS\RTOS2\Include\os_tick.h</path>
             </group>
             <group name="Source">
-              <path>..\..\..\..\..\gsdk\platform\CMSIS\RTOS2\Source\os_systick.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\CMSIS\RTOS2\Source\os_systick.c</path>
             </group>
           </group>
         </group>
         <group name="service">
           <group name="device_init">
             <group name="inc">
-              <path>..\..\..\..\..\gsdk\platform\service\device_init\inc\sl_device_init_clocks.h</path>
-              <path>..\..\..\..\..\gsdk\platform\service\device_init\inc\sl_device_init_dcdc.h</path>
-              <path>..\..\..\..\..\gsdk\platform\service\device_init\inc\sl_device_init_emu.h</path>
-              <path>..\..\..\..\..\gsdk\platform\service\device_init\inc\sl_device_init_nvic.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\device_init\inc\sl_device_init_clocks.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\device_init\inc\sl_device_init_dcdc.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\device_init\inc\sl_device_init_emu.h</path>
             </group>
             <group name="src">
-              <path>..\..\..\..\..\gsdk\platform\service\device_init\src\sl_device_init_dcdc_s2.c</path>
-              <path>..\..\..\..\..\gsdk\platform\service\device_init\src\sl_device_init_emu_s2.c</path>
-              <path>..\..\..\..\..\gsdk\platform\service\device_init\src\sl_device_init_nvic.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\device_init\src\sl_device_init_dcdc_s2.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\device_init\src\sl_device_init_emu_s2.c</path>
+            </group>
+          </group>
+          <group name="interrupt_manager">
+            <group name="src">
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\interrupt_manager\src\sli_interrupt_manager.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\interrupt_manager\src\sl_interrupt_manager_cortexm.c</path>
+            </group>
+            <group name="inc">
+              <group name="arm">
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\interrupt_manager\inc\arm\cmsis_nvic_virtual.h</path>
+              </group>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\interrupt_manager\inc\sl_interrupt_manager.h</path>
             </group>
           </group>
           <group name="iostream">
             <group name="src">
-              <path>..\..\..\..\..\gsdk\platform\service\iostream\src\sl_iostream.c</path>
-              <path>..\..\..\..\..\gsdk\platform\service\iostream\src\sl_iostream_rtt.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\iostream\src\sl_iostream.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\iostream\src\sl_iostream_rtt.c</path>
             </group>
             <group name="inc">
-              <path>..\..\..\..\..\gsdk\platform\service\iostream\inc\sl_iostream.h</path>
-              <path>..\..\..\..\..\gsdk\platform\service\iostream\inc\sl_iostream_rtt.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\iostream\inc\sl_iostream.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\iostream\inc\sl_iostream_rtt.h</path>
+            </group>
+          </group>
+          <group name="memory_manager">
+            <group name="src">
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\memory_manager\src\sl_memory_manager.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\memory_manager\src\sl_memory_manager_dynamic_reservation.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\memory_manager\src\sli_memory_manager_common.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\memory_manager\src\sl_memory_manager_retarget.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\memory_manager\src\sli_memory_manager.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\memory_manager\src\sl_memory_manager_cpp.cpp</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\memory_manager\src\sl_memory_manager_pool.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\memory_manager\src\sl_memory_manager_region.c</path>
+            </group>
+            <group name="inc">
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\memory_manager\inc\sl_memory_manager.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\memory_manager\inc\sl_memory_manager_region.h</path>
             </group>
           </group>
           <group name="system">
             <group name="src">
-              <path>..\..\..\..\..\gsdk\platform\service\system\src\sl_system_init.c</path>
-              <path>..\..\..\..\..\gsdk\platform\service\system\src\sl_system_kernel.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\system\src\sl_system_init.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\system\src\sl_system_kernel.c</path>
             </group>
             <group name="inc">
-              <path>..\..\..\..\..\gsdk\platform\service\system\inc\sl_system_init.h</path>
-              <path>..\..\..\..\..\gsdk\platform\service\system\inc\sl_system_kernel.h</path>
-            </group>
-          </group>
-          <group name="sleeptimer">
-            <group name="src">
-              <path>..\..\..\..\..\gsdk\platform\service\sleeptimer\src\sl_sleeptimer.c</path>
-              <path>..\..\..\..\..\gsdk\platform\service\sleeptimer\src\sl_sleeptimer_hal_sysrtc.c</path>
-              <path>..\..\..\..\..\gsdk\platform\service\sleeptimer\src\sl_sleeptimer_hal_burtc.c</path>
-              <path>..\..\..\..\..\gsdk\platform\service\sleeptimer\src\sl_sleeptimer_hal_timer.c</path>
-              <path>..\..\..\..\..\gsdk\platform\service\sleeptimer\src\sli_sleeptimer_hal.h</path>
-            </group>
-            <group name="inc">
-              <path>..\..\..\..\..\gsdk\platform\service\sleeptimer\inc\sl_sleeptimer.h</path>
-              <path>..\..\..\..\..\gsdk\platform\service\sleeptimer\inc\sli_sleeptimer.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\system\inc\sl_system_init.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\service\system\inc\sl_system_kernel.h</path>
             </group>
           </group>
         </group>
         <group name="emdrv">
           <group name="common">
             <group name="inc">
-              <path>..\..\..\..\..\gsdk\platform\emdrv\common\inc\ecode.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emdrv\common\inc\ecode.h</path>
             </group>
           </group>
           <group name="nvm3">
-            <group name="src">
-              <path>..\..\..\..\..\gsdk\platform\emdrv\nvm3\src\nvm3_default_common_linker.c</path>
-              <path>..\..\..\..\..\gsdk\platform\emdrv\nvm3\src\nvm3_hal_flash.c</path>
-              <path>..\..\..\..\..\gsdk\platform\emdrv\nvm3\src\nvm3_lock.c</path>
-            </group>
             <group name="inc">
-              <path>..\..\..\..\..\gsdk\platform\emdrv\nvm3\inc\nvm3_default.h</path>
-              <path>..\..\..\..\..\gsdk\platform\emdrv\nvm3\inc\nvm3.h</path>
-              <path>..\..\..\..\..\gsdk\platform\emdrv\nvm3\inc\nvm3_generic.h</path>
-              <path>..\..\..\..\..\gsdk\platform\emdrv\nvm3\inc\nvm3_hal.h</path>
-              <path>..\..\..\..\..\gsdk\platform\emdrv\nvm3\inc\nvm3_hal_flash.h</path>
-              <path>..\..\..\..\..\gsdk\platform\emdrv\nvm3\inc\nvm3_lock.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emdrv\nvm3\inc\nvm3_default.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emdrv\nvm3\inc\nvm3.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emdrv\nvm3\inc\nvm3_generic.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emdrv\nvm3\inc\nvm3_hal.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emdrv\nvm3\inc\nvm3_hal_flash.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emdrv\nvm3\inc\nvm3_lock.h</path>
+            </group>
+            <group name="src">
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emdrv\nvm3\src\nvm3_default_common_linker.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emdrv\nvm3\src\nvm3_hal_flash.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emdrv\nvm3\src\nvm3_lock.c</path>
             </group>
             <group name="lib">
-              <path>..\..\..\..\..\gsdk\platform\emdrv\nvm3\lib\libnvm3_CM33_iar.a</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emdrv\nvm3\lib\libnvm3_CM33_iar.a</path>
             </group>
           </group>
         </group>
         <group name="emlib">
-          <group name="src">
-            <path>..\..\..\..\..\gsdk\platform\emlib\src\em_burtc.c</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\src\em_cmu.c</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\src\em_core.c</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\src\em_emu.c</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\src\em_gpio.c</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\src\em_msc.c</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\src\em_prs.c</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\src\em_se.c</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\src\em_system.c</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\src\em_timer.c</path>
-          </group>
           <group name="inc">
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_burtc.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_chip.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_cmu.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_cmu_compat.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\sli_em_cmu.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_assert.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_bus.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_common.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_ramfunc.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_version.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_core.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_core_generic.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_emu.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_gpio.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_msc.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_msc_compat.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_prs.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_se.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_syscfg.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_system.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_system_generic.h</path>
-            <path>..\..\..\..\..\gsdk\platform\emlib\inc\em_timer.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\inc\em_chip.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\inc\em_cmu.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\inc\em_cmu_compat.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\inc\sli_em_cmu.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\inc\em_assert.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\inc\em_bus.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\inc\em_common.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\inc\em_ramfunc.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\inc\em_version.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\inc\em_core.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\inc\em_core_generic.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\inc\em_emu.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\inc\em_gpio.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\inc\em_msc.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\inc\em_msc_compat.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\inc\em_se.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\inc\em_syscfg.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\inc\em_system.h</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\inc\em_system_generic.h</path>
+          </group>
+          <group name="src">
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\src\em_cmu.c</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\src\em_core.c</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\src\em_emu.c</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\src\em_gpio.c</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\src\em_msc.c</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\src\em_se.c</path>
+            <path>..\..\..\third_party\silabs\simplicity_sdk\platform\emlib\src\em_system.c</path>
           </group>
         </group>
         <group name="security">
           <group name="sl_component">
             <group name="sl_mbedtls_support">
               <group name="config">
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\config\sli_mbedtls_acceleration.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\config\sli_mbedtls_omnipresent.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\config\sli_psa_acceleration.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\config\sli_mbedtls_acceleration.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\config\sli_mbedtls_omnipresent.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\config\sli_psa_acceleration.h</path>
               </group>
               <group name="src">
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\src\sl_entropy_hardware.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\src\error.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\src\sl_mbedtls.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\src\se_aes.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\src\mbedtls_ecdsa_ecdh.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\src\mbedtls_sha.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\src\sl_psa_crypto.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\src\sli_psa_crypto.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\src\sl_entropy_hardware.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\src\error.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\src\sl_mbedtls.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\src\se_aes.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\src\mbedtls_ecdsa_ecdh.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\src\mbedtls_sha.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\src\sl_psa_crypto.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\src\sli_psa_crypto.c</path>
               </group>
               <group name="inc">
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\inc\sl_mbedtls.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\inc\aes_alt.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\inc\ccm_alt.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\inc\cmac_alt.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\inc\se_management.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\inc\sha1_alt.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\inc\sha256_alt.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\inc\sha512_alt.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\inc\gcm_alt.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\inc\ecjpake_alt.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\inc\threading_alt.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\inc\sl_psa_crypto.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\inc\sli_psa_crypto.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_mbedtls_support\inc\sl_psa_values.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\inc\sl_mbedtls.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\inc\aes_alt.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\inc\ccm_alt.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\inc\cmac_alt.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\inc\se_management.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\inc\sha1_alt.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\inc\sha256_alt.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\inc\sha512_alt.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\inc\gcm_alt.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\inc\ecjpake_alt.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\inc\threading_alt.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\inc\sl_psa_crypto.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\inc\sli_psa_crypto.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_mbedtls_support\inc\sl_psa_values.h</path>
               </group>
             </group>
             <group name="sl_psa_driver">
               <group name="src">
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_psa_trng.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_psa_driver_init.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_psa_driver_common.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_se_version_dependencies.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_se_driver_builtin_keys.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_se_driver_key_management.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_se_driver_key_derivation.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_se_driver_aead.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_se_driver_mac.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_se_driver_signature.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_se_driver_cipher.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_se_transparent_driver_cipher.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_se_transparent_driver_hash.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_se_transparent_driver_aead.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_se_transparent_driver_mac.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_se_transparent_key_derivation.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_se_opaque_driver_mac.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_se_opaque_key_derivation.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_se_opaque_driver_cipher.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sli_se_opaque_driver_aead.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\src\sl_psa_its_nvm3.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_psa_trng.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_psa_driver_init.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_psa_driver_common.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_se_version_dependencies.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_se_driver_builtin_keys.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_se_driver_key_management.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_se_driver_key_derivation.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_se_driver_aead.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_se_driver_mac.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_se_driver_signature.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_se_driver_cipher.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_se_transparent_driver_cipher.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_se_transparent_driver_hash.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_se_transparent_driver_aead.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_se_transparent_driver_mac.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_se_transparent_key_derivation.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_se_opaque_driver_mac.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_se_opaque_key_derivation.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_se_opaque_driver_cipher.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sli_se_opaque_driver_aead.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\src\sl_psa_its_nvm3.c</path>
               </group>
               <group name="inc">
                 <group name="psa">
-                  <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\inc\psa\internal_trusted_storage.h</path>
-                  <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\inc\psa\sli_internal_trusted_storage.h</path>
-                  <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\inc\psa\error.h</path>
+                  <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\inc\psa\internal_trusted_storage.h</path>
+                  <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\inc\psa\sli_internal_trusted_storage.h</path>
+                  <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\inc\psa\error.h</path>
                 </group>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\inc\sli_psa_driver_common.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\inc\sli_psa_driver_features.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_version_dependencies.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_driver_aead.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_driver_cipher.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_driver_key_derivation.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_driver_key_management.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_driver_mac.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_opaque_functions.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_opaque_types.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_transparent_functions.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_transparent_types.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\inc\sli_psa_driver_common.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\inc\sli_psa_driver_features.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_version_dependencies.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_driver_aead.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_driver_cipher.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_driver_key_derivation.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_driver_key_management.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_driver_mac.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_opaque_functions.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_opaque_types.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_transparent_functions.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\sl_psa_driver\inc\sli_se_transparent_types.h</path>
               </group>
             </group>
             <group name="se_manager">
               <group name="src">
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\src\sl_se_manager.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\src\sl_se_manager_util.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\src\sl_se_manager_cipher.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\src\sl_se_manager_entropy.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\src\sl_se_manager_hash.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\src\sl_se_manager_key_derivation.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\src\sl_se_manager_key_handling.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\src\sl_se_manager_signature.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\src\sl_se_manager_attestation.c</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\src\sli_se_manager_osal.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\src\sli_se_manager_osal_cmsis_rtos2.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\src\sl_se_manager.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\src\sl_se_manager_util.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\src\sl_se_manager_cipher.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\src\sl_se_manager_entropy.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\src\sl_se_manager_hash.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\src\sl_se_manager_key_derivation.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\src\sl_se_manager_key_handling.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\src\sl_se_manager_signature.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\src\sl_se_manager_attestation.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\src\sli_se_manager_mailbox.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\src\sli_se_manager_osal.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\src\sli_se_manager_osal_cmsis_rtos2.h</path>
               </group>
               <group name="inc">
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\inc\sl_se_manager.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\inc\sl_se_manager_defines.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\inc\sl_se_manager_types.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\inc\sl_se_manager_util.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\inc\sli_se_manager_features.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\inc\sl_se_manager_internal_keys.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\inc\sli_se_manager_internal.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\inc\sl_se_manager_check_config.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\inc\sl_se_manager_config.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\inc\sl_se_manager_cipher.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\inc\sl_se_manager_entropy.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\inc\sl_se_manager_hash.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\inc\sl_se_manager_key_derivation.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\inc\sl_se_manager_key_handling.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\inc\sl_se_manager_signature.h</path>
-                <path>..\..\..\..\..\gsdk\platform\security\sl_component\se_manager\inc\sl_se_manager_attestation.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\inc\sl_se_manager.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\inc\sl_se_manager_defines.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\inc\sl_se_manager_types.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\inc\sl_se_manager_util.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\inc\sli_se_manager_features.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\inc\sl_se_manager_internal_keys.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\inc\sli_se_manager_internal.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\inc\sl_se_manager_check_config.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\inc\sl_se_manager_config.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\inc\sl_se_manager_cipher.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\inc\sl_se_manager_entropy.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\inc\sl_se_manager_hash.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\inc\sl_se_manager_key_derivation.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\inc\sl_se_manager_key_handling.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\inc\sl_se_manager_signature.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\inc\sl_se_manager_attestation.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\platform\security\sl_component\se_manager\inc\sli_se_manager_mailbox.h</path>
               </group>
             </group>
-          </group>
-        </group>
-        <group name="peripheral">
-          <group name="src">
-            <path>..\..\..\..\..\gsdk\platform\peripheral\src\peripheral_sysrtc.c</path>
-          </group>
-          <group name="inc">
-            <path>..\..\..\..\..\gsdk\platform\peripheral\inc\peripheral_sysrtc.h</path>
           </group>
         </group>
       </group>
@@ -382,11 +387,11 @@
           <group name="freertos">
             <group name="cmsis">
               <group name="Source">
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\cmsis\Source\cmsis_os2.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\cmsis\Source\cmsis_os2.c</path>
               </group>
               <group name="Include">
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\cmsis\Include\freertos_os2.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\cmsis\Include\freertos_mpool.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\cmsis\Include\freertos_os2.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\cmsis\Include\freertos_mpool.h</path>
               </group>
             </group>
             <group name="kernel">
@@ -394,261 +399,295 @@
                 <group name="IAR">
                   <group name="ARM_CM33_NTZ">
                     <group name="non_secure">
-                      <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\portable\IAR\ARM_CM33_NTZ\non_secure\port.c</path>
-                      <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\portable\IAR\ARM_CM33_NTZ\non_secure\portasm.s</path>
-                      <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\portable\IAR\ARM_CM33_NTZ\non_secure\portmacro.h</path>
-                      <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\portable\IAR\ARM_CM33_NTZ\non_secure\portasm.h</path>
+                      <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\portable\IAR\ARM_CM33_NTZ\non_secure\port.c</path>
+                      <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\portable\IAR\ARM_CM33_NTZ\non_secure\portasm.s</path>
+                      <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\portable\IAR\ARM_CM33_NTZ\non_secure\portmacro.h</path>
+                      <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\portable\IAR\ARM_CM33_NTZ\non_secure\portasm.h</path>
                     </group>
                   </group>
                 </group>
                 <group name="MemMang">
-                  <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\portable\MemMang\heap_4.c</path>
+                  <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\portable\MemMang\heap_3.c</path>
                 </group>
               </group>
               <group name="include">
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\include\atomic.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\include\croutine.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\include\deprecated_definitions.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\include\event_groups.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\include\FreeRTOS.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\include\list.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\include\message_buffer.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\include\mpu_prototypes.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\include\mpu_wrappers.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\include\portable.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\include\projdefs.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\include\queue.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\include\semphr.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\include\stack_macros.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\include\StackMacros.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\include\stream_buffer.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\include\task.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\include\timers.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\include\atomic.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\include\croutine.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\include\deprecated_definitions.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\include\event_groups.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\include\FreeRTOS.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\include\list.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\include\message_buffer.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\include\mpu_prototypes.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\include\mpu_wrappers.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\include\portable.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\include\projdefs.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\include\queue.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\include\semphr.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\include\stack_macros.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\include\StackMacros.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\include\stream_buffer.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\include\task.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\include\timers.h</path>
               </group>
-              <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\croutine.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\event_groups.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\list.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\queue.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\stream_buffer.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\tasks.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\freertos\kernel\timers.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\croutine.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\event_groups.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\list.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\queue.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\stream_buffer.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\tasks.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\freertos\kernel\timers.c</path>
             </group>
           </group>
           <group name="mbedtls">
             <group name="library">
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\aes.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\asn1parse.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\asn1write.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\base64.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\cipher.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\cipher_wrap.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\ecp.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\ecp_curves.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\md.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\bignum.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\oid.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\pem.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\pkcs5.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\ecdsa.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\pk.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\pkparse.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\pkwrite.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\pk_wrap.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\entropy.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\entropy_poll.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\ctr_drbg.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\hmac_drbg.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\sha256.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\constant_time.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\threading.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\platform.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\platform_util.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\bn_mul.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\bignum_internal.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\cipher_wrap.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\common.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\constant_time_internal.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\constant_time_invasive.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\ecp_internal_alt.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\ecp_invasive.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\entropy_poll.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\md_wrap.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\mps_common.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\mps_error.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\mps_reader.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\mps_trace.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\padlock.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\pk_wrap.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\pkwrite.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\rsa_alt_helpers.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\ssl_debug_helpers.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\ssl_client.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\ssl_misc.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\ssl_tls13_invasive.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\ssl_tls13_keys.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\x509.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\x509_create.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\x509_crl.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\x509_crt.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\x509_csr.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\x509write_crt.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\x509write_csr.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_client.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_aead.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_cipher.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_driver_wrappers.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_slot_management.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_storage.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_ecp.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_hash.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_mac.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_rsa.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_se.c</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\check_crypto_config.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_aead.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_cipher.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_core.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_driver_wrappers.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_ecp.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_hash.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_invasive.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_its.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_mac.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_random_impl.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_rsa.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_se.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_slot_management.h</path>
-              <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\library\psa_crypto_storage.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\aes.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\asn1parse.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\asn1write.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\base64.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\cipher.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\cipher_wrap.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\ecp.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\ecp_curves.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\ecp_curves_new.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\md.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\bignum.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\bignum_core.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\bignum_mod.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\bignum_mod_raw.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\oid.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\pem.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\pkcs5.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\ecdsa.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\pk.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\pkparse.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\pkwrite.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\pk_wrap.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\entropy.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\entropy_poll.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\ctr_drbg.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\hmac_drbg.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\sha1.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\sha256.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\sha512.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\constant_time.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\threading.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\platform.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\platform_util.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_util.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\alignment.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\bn_mul.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\base64_internal.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\bignum_core.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\bignum_mod.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\bignum_mod_raw.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\bignum_mod_raw_invasive.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\cipher_wrap.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\common.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\constant_time_impl.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\constant_time_internal.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\ecp_internal_alt.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\ecp_invasive.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\entropy_poll.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\lmots.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\md_psa.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\md_wrap.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\mps_common.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\mps_error.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\mps_reader.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\mps_trace.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\padlock.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\pk_internal.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\pk_wrap.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\pkwrite.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_util_internal.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\rsa_alt_helpers.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\ssl_debug_helpers.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\ssl_client.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\ssl_misc.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\ssl_tls13_invasive.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\ssl_tls13_keys.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\x509.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\x509_create.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\x509_crl.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\x509_crt.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\x509_csr.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\x509write.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\x509write_crt.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\x509write_csr.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_client.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_aead.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_cipher.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_driver_wrappers_no_static.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_slot_management.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_storage.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_ecp.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_ffdh.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_hash.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_mac.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_pake.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_rsa.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_se.c</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\check_crypto_config.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_aead.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_cipher.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_core.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_core_common.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_driver_wrappers.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_driver_wrappers_no_static.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_ecp.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_ffdh.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_hash.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_invasive.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_its.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_mac.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_pake.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_random_impl.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_rsa.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_se.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_slot_management.h</path>
+              <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\library\psa_crypto_storage.h</path>
             </group>
             <group name="include">
               <group name="mbedtls">
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\aes.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\aria.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\asn1.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\asn1write.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\base64.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\bignum.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\build_info.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\camellia.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\ccm.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\chacha20.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\chachapoly.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\check_config.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\cipher.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\cmac.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\compat-2.x.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\config_psa.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\constant_time.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\ctr_drbg.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\debug.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\des.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\dhm.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\ecdh.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\ecdsa.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\ecjpake.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\ecp.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\entropy.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\error.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\gcm.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\hkdf.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\hmac_drbg.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\mbedtls_config.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\md.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\md5.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\memory_buffer_alloc.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\net_sockets.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\nist_kw.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\oid.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\pem.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\pk.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\pkcs12.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\pkcs5.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\platform.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\platform_time.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\platform_util.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\poly1305.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\private_access.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\psa_util.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\ripemd160.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\rsa.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\sha1.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\sha256.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\sha512.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\ssl.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\ssl_cache.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\ssl_ciphersuites.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\ssl_cookie.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\ssl_ticket.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\threading.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\timing.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\version.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\x509.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\x509_crl.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\x509_crt.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\mbedtls\x509_csr.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\aes.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\aria.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\asn1.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\asn1write.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\base64.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\bignum.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\build_info.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\camellia.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\ccm.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\chacha20.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\chachapoly.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\check_config.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\cipher.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\cmac.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\compat-2.x.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\config_adjust_legacy_crypto.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\config_adjust_legacy_from_psa.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\config_adjust_psa_from_legacy.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\config_adjust_psa_superset_legacy.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\config_adjust_ssl.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\config_adjust_x509.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\config_psa.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\constant_time.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\ctr_drbg.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\debug.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\des.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\dhm.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\ecdh.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\ecdsa.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\ecjpake.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\ecp.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\entropy.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\error.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\gcm.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\hkdf.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\hmac_drbg.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\lms.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\mbedtls_config.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\md.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\md5.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\memory_buffer_alloc.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\net_sockets.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\nist_kw.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\oid.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\pem.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\pk.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\pkcs12.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\pkcs5.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\pkcs7.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\platform.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\platform_time.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\platform_util.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\poly1305.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\private_access.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\psa_util.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\ripemd160.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\rsa.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\sha1.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\sha256.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\sha3.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\sha512.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\ssl.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\ssl_cache.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\ssl_ciphersuites.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\ssl_cookie.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\ssl_ticket.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\threading.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\timing.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\version.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\x509.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\x509_crl.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\x509_crt.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\mbedtls\x509_csr.h</path>
               </group>
               <group name="psa">
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\psa\crypto.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\psa\crypto_builtin_composites.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\psa\crypto_builtin_primitives.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\psa\crypto_compat.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\psa\crypto_config.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\psa\crypto_driver_common.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\psa\crypto_driver_contexts_composites.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\psa\crypto_driver_contexts_primitives.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\psa\crypto_extra.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\psa\crypto_platform.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\psa\crypto_se_driver.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\psa\crypto_sizes.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\psa\crypto_struct.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\psa\crypto_types.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\mbedtls\include\psa\crypto_values.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_adjust_auto_enabled.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_adjust_config_key_pair_types.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_adjust_config_synonyms.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\build_info.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_builtin_composites.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_builtin_primitives.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_builtin_key_derivation.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_compat.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_config.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_driver_common.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_driver_contexts_composites.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_driver_contexts_key_derivation.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_driver_contexts_primitives.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_extra.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_legacy.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_platform.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_se_driver.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_sizes.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_struct.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_types.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\mbedtls\include\psa\crypto_values.h</path>
               </group>
             </group>
           </group>
           <group name="segger">
             <group name="systemview">
               <group name="SEGGER">
-                <path>..\..\..\..\..\gsdk\util\third_party\segger\systemview\SEGGER\SEGGER_RTT.c</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\segger\systemview\SEGGER\SEGGER.h</path>
-                <path>..\..\..\..\..\gsdk\util\third_party\segger\systemview\SEGGER\SEGGER_RTT.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\segger\systemview\SEGGER\SEGGER_RTT.c</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\segger\systemview\SEGGER\SEGGER.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\segger\systemview\SEGGER\SEGGER_RTT.h</path>
+                <path>..\..\..\third_party\silabs\simplicity_sdk\util\third_party\segger\systemview\SEGGER\sl_rtt_buffer_index.h</path>
               </group>
-            </group>
-          </group>
-        </group>
-        <group name="silicon_labs">
-          <group name="silabs_core">
-            <group name="memory_manager">
-              <path>..\..\..\..\..\gsdk\util\silicon_labs\silabs_core\memory_manager\sl_malloc.c</path>
-              <path>..\..\..\..\..\gsdk\util\silicon_labs\silabs_core\memory_manager\sl_malloc.h</path>
             </group>
           </group>
         </group>
       </group>
     </group>
+    <path>..\..\generator\app.h</path>
     <path>..\..\generator\app.cpp</path>
     <path>..\..\generator\main.cpp</path>
-    <path>..\..\generator\nvm3.c</path>
-    <path>..\..\generator\app.h</path>
-    <path>..\..\..\examples\platform\silabs\provision\ProvisionManager.cpp</path>
-    <path>..\..\..\examples\platform\silabs\provision\ProvisionManager.h</path>
-    <path>..\..\..\examples\platform\silabs\provision\ProvisionChannel.h</path>
-    <path>..\..\..\examples\platform\silabs\provision\RttStreamChannel.cpp</path>
-    <path>..\..\..\examples\platform\silabs\provision\RttStreamChannel.h</path>
-    <path>..\..\..\examples\platform\silabs\provision\ProvisionCommands.cpp</path>
-    <path>..\..\..\examples\platform\silabs\provision\ProvisionCommands.h</path>
-    <path>..\..\..\examples\platform\silabs\provision\ProvisionEncoder.cpp</path>
-    <path>..\..\..\examples\platform\silabs\provision\ProvisionEncoder.h</path>
-    <path>..\..\..\examples\platform\silabs\provision\ProvisionStorage.cpp</path>
-    <path>..\..\..\examples\platform\silabs\provision\ProvisionStorage.h</path>
-    <path>..\..\..\examples\platform\silabs\provision\ProvisionStorageDefault.cpp</path>
-    <path>..\..\..\examples\platform\silabs\provision\ProvisionStorageDefault.h</path>
+    <path>..\..\generator\efr32.cpp</path>
     <path>..\..\..\examples\platform\silabs\provision\AttestationKey.h</path>
     <path>..\..\..\examples\platform\silabs\provision\AttestationKeyPSA.cpp</path>
-    <path>..\..\..\examples\platform\silabs\provision\AttestationKeyPSA.h</path>
+    <path>..\..\..\examples\platform\silabs\provision\ProvisionChannel.h</path>
+    <path>..\..\..\examples\platform\silabs\provision\ProvisionChannelRTT.cpp</path>
+    <path>..\..\..\examples\platform\silabs\provision\ProvisionEncoder.h</path>
+    <path>..\..\..\examples\platform\silabs\provision\ProvisionEncoder.cpp</path>
+    <path>..\..\..\examples\platform\silabs\provision\ProvisionManager.h</path>
+    <path>..\..\..\examples\platform\silabs\provision\ProvisionManager.cpp</path>
+    <path>..\..\..\examples\platform\silabs\provision\ProvisionProtocol.h</path>
+    <path>..\..\..\examples\platform\silabs\provision\ProvisionProtocolV1.cpp</path>
+    <path>..\..\..\examples\platform\silabs\provision\ProvisionProtocolV2.cpp</path>
+    <path>..\..\..\examples\platform\silabs\provision\ProvisionStorage.h</path>
+    <path>..\..\..\examples\platform\silabs\provision\ProvisionStorageGeneric.h</path>
+    <path>..\..\..\examples\platform\silabs\provision\ProvisionStorage.cpp</path>
+    <path>..\..\..\examples\platform\silabs\provision\ProvisionStorageCustom.cpp</path>
+    <path>..\..\..\examples\platform\silabs\provision\ProvisionStorageDefault.cpp</path>
     <path>..\..\..\src\lib\support\Base64.h</path>
     <path>..\..\..\src\lib\support\Base64.cpp</path>
+    <path>..\..\..\src\lib\support\BytesToHex.h</path>
+    <path>..\..\..\src\lib\support\BytesToHex.cpp</path>
     <path>..\..\..\src\lib\support\logging\CHIPLogging.h</path>
     <path>..\..\..\src\lib\support\logging\TextOnlyLogging.cpp</path>
     <path>..\..\..\src\platform\silabs\SilabsConfig.h</path>
@@ -657,8 +696,11 @@
     <path>..\..\..\src\crypto\CHIPCryptoPALPSA.cpp</path>
     <path>..\..\..\src\setup_payload\Base38Encode.h</path>
     <path>..\..\..\src\setup_payload\Base38Encode.cpp</path>
+    <path>..\..\..\src\platform\silabs\multi-ota\OtaTlvEncryptionKey.h</path>
+    <path>..\..\..\src\platform\silabs\multi-ota\OtaTlvEncryptionKey.cpp</path>
+    <path>..\..\generator\README.md</path>
   </files>
   <SimplicityStudioMetadata>
-    <metadata>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</metadata>
+    <metadata>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</metadata>
   </SimplicityStudioMetadata>
 </iarProjectConnection>

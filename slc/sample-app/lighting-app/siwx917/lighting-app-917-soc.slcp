@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.2"
+    version: "2.3.0"
   - id: wiseconnect3_sdk
-    version: "3.2.0"
+    version: "3.3.0"
 
 component:
   - id: matter_wstk_leds
@@ -21,8 +21,6 @@ component:
   - id: matter_crypto_tinycrypt_siwx917
     from: matter
   - id: matter_fw_upgrade_917
-    from: matter
-  - id: silabs_factory_data_provider
     from: matter
 
   - id: matter_wifi
@@ -77,10 +75,7 @@ component:
     from: matter
   - id: segger_rtt
 
-  - id: matter_subscription_timeout_resumption
-    from: matter
-  - id: matter_subscription_persistence
-    from: matter  
+  
   - id: matter_ota_requestor
     from: matter
   - id: matter_ota_support
@@ -89,6 +84,13 @@ component:
     from: matter
   - id: matter_power_source
     from: matter
+  - id: matter_shell
+    from: matter
+  - id: matter_lcd_917SOC
+    from: matter
+  - id: matter_qr_code
+    from: matter
+
 
   - id: matter_lighting
     from: matter
@@ -133,12 +135,8 @@ component:
     from: wiseconnect3_sdk
     id: ulp_timers_instance
 
-requires:
-  # SiWx917 LCD configurations
-  - name: matter_lcd_917SOC
-    condition: [brd4338a]
-  - name: matter_qr_code
-    condition: [brd4338a]
+configuration:
+  - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
 
 config_file:
   - path: ../../../../examples/lighting-app/silabs/data_model/lighting-wifi-app.zap

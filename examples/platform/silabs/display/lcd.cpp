@@ -25,8 +25,7 @@
 #include "dmd.h"
 #include "glib.h"
 
-#if (SIWX_917)
-#include "rsi_chip.h"
+#if (SLI_SI91X_MCU_INTERFACE)
 #include "sl_memlcd.h"
 #endif
 
@@ -67,11 +66,8 @@ CHIP_ERROR SilabsLCD::Init(uint8_t * name, bool initialState)
     }
 
     /* Enable the memory lcd */
-#if (SIWX_917)
-    RSI_NPSSGPIO_InputBufferEn(SL_BOARD_ENABLE_DISPLAY_PIN, 1U);
-    RSI_NPSSGPIO_SetPinMux(SL_BOARD_ENABLE_DISPLAY_PIN, 0);
-    RSI_NPSSGPIO_SetDir(SL_BOARD_ENABLE_DISPLAY_PIN, 0);
-    RSI_NPSSGPIO_SetPin(SL_BOARD_ENABLE_DISPLAY_PIN, 1U);
+#if (SLI_SI91X_MCU_INTERFACE)
+    sl_memlcd_display_enable();
 #else
     status = sl_board_enable_display();
     if (status != SL_STATUS_OK)
@@ -132,22 +128,9 @@ int SilabsLCD::Update(void)
 {
     return updateDisplay();
 }
-#ifdef LCD_WITH_SLEEP
-void SilabsLCD::TurnOn()
-{
-    sl_board_enable_display();
-}
-void SilabsLCD::TurnOff()
-{
-    Clear();
-    sl_board_disable_display();
-}
-#endif // LCD_WITH_SLEEP
+
 void SilabsLCD::WriteDemoUI(bool state)
 {
-#if SIWX_917 && SL_ICD_ENABLED && DISPLAY_ENABLED
-    sl_memlcd_post_wakeup_init();
-#endif // SIWX_917 && SL_ICD_ENABLED && DISPLAY_ENABLED
     if (mCurrentScreen != DemoScreen)
     {
         mCurrentScreen = DemoScreen;
@@ -206,12 +189,11 @@ void SilabsLCD::WriteStatus()
     GLIB_drawStringOnLine(&glibContext, str, lineNb++, GLIB_ALIGN_LEFT, 0, 0, true);
     sprintf(str, "Advertising : %c", mStatus.advertising ? 'Y' : 'N');
     GLIB_drawStringOnLine(&glibContext, str, lineNb++, GLIB_ALIGN_LEFT, 0, 0, true);
-// SLC-FIX add this back once we rebase to silabs_slc_1.3
-    /*if (mStatus.icdMode != NotICD)
+    if (mStatus.icdMode != NotICD)
     {
         sprintf(str, "ICD : %s", mStatus.icdMode == SIT ? "SIT" : "LIT");
         GLIB_drawStringOnLine(&glibContext, str, lineNb++, GLIB_ALIGN_LEFT, 0, 0, true);
-    }*/
+    }
 
     updateDisplay();
 }
@@ -248,9 +230,6 @@ void SilabsLCD::SetScreen(Screen_e screen)
 
 void SilabsLCD::CycleScreens(void)
 {
-#if SIWX_917 && SL_ICD_ENABLED && DISPLAY_ENABLED
-    sl_memlcd_post_wakeup_init();
-#endif // SIWX_917 && SL_ICD_ENABLED && DISPLAY_ENABLED
 #ifdef QR_CODE_ENABLED
     if (mCurrentScreen < QRCodeScreen)
 #else

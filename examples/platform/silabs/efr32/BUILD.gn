@@ -32,7 +32,7 @@ declare_args() {
   sl_wfx_config_scan = true
 
   # Argument to force enable WPA3 security on rs91x
-  rs91x_wpa3_transition = false
+  rs91x_wpa3_transition = true
 
   #default WiFi SSID
   chip_default_wifi_ssid = ""
@@ -63,11 +63,8 @@ if (chip_enable_wifi) {
   import("${chip_root}/src/platform/silabs/wifi_args.gni")
 
   if (use_rs9116) {
-    wiseconnect_sdk_root =
-        "${chip_root}/third_party/silabs/wiseconnect-wifi-bt-sdk"
     import("rs911x/rs911x.gni")
   } else if (use_SiWx917) {
-    wifi_sdk_root = "${chip_root}/third_party/silabs/wifi_sdk"
     import("rs911x/rs9117.gni")
   }
   if (use_wf200) {
@@ -131,19 +128,6 @@ source_set("efr-matter-shell") {
   }
 }
 
-source_set("silabs-factory-data-provider") {
-  sources = [
-    "${silabs_common_plat_dir}/SilabsDeviceDataProvider.cpp",
-    "${silabs_common_plat_dir}/SilabsDeviceDataProvider.h",
-  ]
-
-  public_deps = [
-    "${chip_root}/src/credentials",
-    "${chip_root}/src/platform:platform_base",
-    "${chip_root}/src/setup_payload",
-  ]
-}
-
 config("efr32-common-config") {
   defines = [ "OTA_PERIODIC_TIMEOUT=${ota_periodic_query_timeout_sec}" ]
 
@@ -163,6 +147,10 @@ config("efr32-common-config") {
 
   if (enable_heap_monitoring) {
     defines += [ "HEAP_MONITORING" ]
+  }
+
+  if (chip_enable_multi_ota_requestor) {
+    defines += [ "CHIP_DEVICE_CONFIG_ENABLE_MULTI_OTA_REQUESTOR=1" ]
   }
 
   ldflags = [ "-Wl,--no-warn-rwx-segment" ]
@@ -230,7 +218,6 @@ source_set("efr32-common") {
     "${silabs_common_plat_dir}/LEDWidget.cpp",
     "${silabs_common_plat_dir}/MatterConfig.cpp",
     "${silabs_common_plat_dir}/SoftwareFaultReports.cpp",
-    "${silabs_common_plat_dir}/heap_4_silabs.c",
     "${silabs_common_plat_dir}/silabs_utils.cpp",
     "${silabs_common_plat_dir}/syscalls_stubs.cpp",
   ]
@@ -297,11 +284,6 @@ source_set("efr32-common") {
 
   # Provisionned data and credentials
   public_deps += [ "${silabs_common_plat_dir}/provision:provision-efr32" ]
-
-  # Factory Data Provider
-  if (use_efr32_factory_data_provider && !use_provision_channel) {
-    public_deps += [ ":silabs-factory-data-provider" ]
-  }
 
   if (silabs_test_event_trigger_enabled) {
     sources +=

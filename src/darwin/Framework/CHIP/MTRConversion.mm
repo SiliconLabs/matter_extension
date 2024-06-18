@@ -18,6 +18,7 @@
 #import "MTRLogging_Internal.h"
 
 #include <lib/support/SafeInt.h>
+#include <lib/support/TimeUtils.h>
 
 CHIP_ERROR SetToCATValues(NSSet<NSNumber *> * catSet, chip::CATValues & values)
 {
@@ -58,4 +59,45 @@ NSSet<NSNumber *> * CATValuesToSet(const chip::CATValues & values)
         }
     }
     return [NSSet setWithSet:catSet];
+}
+
+bool DateToMatterEpochSeconds(NSDate * date, uint32_t & matterEpochSeconds)
+{
+    uint64_t matterEpochMicroseconds = 0;
+    if (!DateToMatterEpochMicroseconds(date, matterEpochMicroseconds)) {
+        // Could not convert time
+        return false;
+    }
+
+    uint64_t timeSinceMatterEpoch = matterEpochMicroseconds / chip::kMicrosecondsPerSecond;
+    if (timeSinceMatterEpoch > UINT32_MAX) {
+        // Too far into the future.
+        return false;
+    }
+    matterEpochSeconds = static_cast<uint32_t>(timeSinceMatterEpoch);
+    return true;
+}
+
+bool DateToMatterEpochMilliseconds(NSDate * date, uint64_t & matterEpochMilliseconds)
+{
+    uint64_t matterEpochMicroseconds = 0;
+    if (!DateToMatterEpochMicroseconds(date, matterEpochMicroseconds)) {
+        // Could not convert time
+        return false;
+    }
+
+    matterEpochMilliseconds = matterEpochMicroseconds / chip::kMicrosecondsPerMillisecond;
+    return true;
+}
+
+bool DateToMatterEpochMicroseconds(NSDate * date, uint64_t & matterEpochMicroseconds)
+{
+    uint64_t timeSinceUnixEpoch = static_cast<uint64_t>(date.timeIntervalSince1970 * chip::kMicrosecondsPerSecond);
+    if (timeSinceUnixEpoch < chip::kChipEpochUsSinceUnixEpoch) {
+        // This is a pre-Matter-epoch time, and cannot be represented as an epoch time value.
+        return false;
+    }
+
+    matterEpochMicroseconds = timeSinceUnixEpoch - chip::kChipEpochUsSinceUnixEpoch;
+    return true;
 }

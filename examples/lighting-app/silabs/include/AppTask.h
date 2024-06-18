@@ -28,15 +28,11 @@
 
 #include "AppEvent.h"
 #include "BaseApplication.h"
-#include "FreeRTOS.h"
 #include "LightingManager.h"
-#include "timers.h" // provides FreeRTOS timer support
 #include <ble/BLEEndPoint.h>
+#include <cmsis_os2.h>
 #include <lib/core/CHIPError.h>
 #include <platform/CHIPDeviceLayer.h>
-#ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
-#include "sl_simple_button_instances.h"
-#endif //SL_CATALOG_SIMPLE_BUTTON_PRESENT
 
 /**********************************************************
  * Defines

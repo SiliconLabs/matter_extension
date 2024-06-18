@@ -2,6 +2,8 @@ category: Matter|Core
 define:
 -   name: CHIP_HAVE_CONFIG_H
     value: '1'
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
 description: default_policy
 id: default_policy
 include:
@@ -32,6 +34,9 @@ package: Matter
 provides:
 -   name: matter_default_policy
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/lib/dnssd/minimal_mdns/AddressPolicy_DefaultImpl.cpp
 ui_hints:

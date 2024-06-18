@@ -107,7 +107,7 @@ Do you want to trust above SDKs/Extensions (yes / no) ? : "
             sys.exit(1)
 
     def slc_trust(self , wifi917):
-        #Get user permission to trust gecko_sdk and extensions with use arm gcc
+        #Get user permission to trust simplicity_sdk and extensions with use arm gcc
         #use arm-gcc toolchain with slc
         subprocess.run([self.slc_path, "configuration","-gcc", self.arm_toolchain_path])
 

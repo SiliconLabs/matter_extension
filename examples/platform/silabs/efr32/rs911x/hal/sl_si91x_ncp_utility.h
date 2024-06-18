@@ -43,6 +43,7 @@
 #if SL_SPICTRL_MUX
 sl_status_t spi_board_init(void);
 #endif // SL_SPICTRL_MUX
+
 extern uint32_t rx_ldma_channel;
 extern uint32_t tx_ldma_channel;
 #endif // SL_SI91X_NCP_UTILITY_H

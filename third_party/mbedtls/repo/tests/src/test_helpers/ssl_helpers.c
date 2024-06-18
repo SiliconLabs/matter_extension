@@ -5,19 +5,7 @@
 
 /*
  *  Copyright The Mbed TLS Contributors
- *  SPDX-License-Identifier: Apache-2.0
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ *  SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-or-later
  */
 
 #include <test/ssl_helpers.h>
@@ -1194,6 +1182,39 @@ cleanup:
 
     return ret;
 }
+
+#if defined(MBEDTLS_SSL_SOME_MODES_USE_MAC)
+int mbedtls_test_ssl_prepare_record_mac(mbedtls_record *record,
+                                        mbedtls_ssl_transform *transform_out)
+{
+    /* Serialized version of record header for MAC purposes */
+    unsigned char add_data[13];
+    memcpy(add_data, record->ctr, 8);
+    add_data[8] = record->type;
+    add_data[9] = record->ver[0];
+    add_data[10] = record->ver[1];
+    add_data[11] = (record->data_len >> 8) & 0xff;
+    add_data[12] = (record->data_len >> 0) & 0xff;
+
+    /* MAC with additional data */
+    TEST_EQUAL(0, mbedtls_md_hmac_update(&transform_out->md_ctx_enc, add_data, 13));
+    TEST_EQUAL(0, mbedtls_md_hmac_update(&transform_out->md_ctx_enc,
+                                         record->buf + record->data_offset,
+                                         record->data_len));
+    /* Use a temporary buffer for the MAC, because with the truncated HMAC
+     * extension, there might not be enough room in the record for the
+     * full-length MAC. */
+    unsigned char mac[MBEDTLS_MD_MAX_SIZE];
+    TEST_EQUAL(0, mbedtls_md_hmac_finish(&transform_out->md_ctx_enc, mac));
+    memcpy(record->buf + record->data_offset + record->data_len, mac, transform_out->maclen);
+    record->data_len += transform_out->maclen;
+
+    return 0;
+
+exit:
+    return -1;
+}
+#endif /* MBEDTLS_SSL_SOME_MODES_USE_MAC */
 
 int mbedtls_test_ssl_populate_session(mbedtls_ssl_session *session,
                                       int ticket_len,

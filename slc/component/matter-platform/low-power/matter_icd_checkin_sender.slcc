@@ -1,0 +1,37 @@
+id: matter_icd_checkin_sender
+label:  ICD Check In Protocol
+description: >
+  Support for Check-in Protocol. Used to maintain a known relationship in case subscriptions with clients are lost.
+  This is a mandatory feature on LIT ICD devices.
+package: "Matter"
+category: Platform|Low-power
+quality: experimental
+metadata:
+  sbom:
+    license: Zlib
+
+define:
+  - name: CHIP_CONFIG_ENABLE_ICD_CIP
+    value: 1
+
+provides:
+  - name: matter_icd_checkin_sender
+
+include:
+  - path: src/app/icd/server
+    file_list:
+      - path: ICDCheckInSender.h
+
+source:
+  - path: src/app/icd/server/ICDCheckInSender.cpp
+
+requires:
+ - name: matter_icd_core
+ - name: check_in_message
+
+documentation:
+  docset: matter
+  document: matter-overview-guides/matter-icd
+
+ui_hints:
+    visibility: always

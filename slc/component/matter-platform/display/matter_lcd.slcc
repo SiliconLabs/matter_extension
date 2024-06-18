@@ -4,6 +4,9 @@ description: Support for liquid crystal display on matter devboards
 package: "Matter"
 category: Platform|Display
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 requires:
   - name: matter
   - name: matter_platform_efr32

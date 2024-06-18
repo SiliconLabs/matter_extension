@@ -1273,6 +1273,8 @@ CHIP_ERROR BLEManagerImpl::HandleGAPDisconnect(struct ble_gap_event * gapEvent)
     peer_delete(gapEvent->disconnect.conn.conn_handle);
 #endif
 
+    // There can be a case where the BLE central disconnects without unsubscribing from the BLE characteristic.
+    // In such situations, it is necessary to clear the subscription and post a connection error event.
     if (UnsetSubscribed(gapEvent->disconnect.conn.conn_handle))
     {
         CHIP_ERROR disconReason;
@@ -1288,7 +1290,12 @@ CHIP_ERROR BLEManagerImpl::HandleGAPDisconnect(struct ble_gap_event * gapEvent)
             disconReason = BLE_ERROR_CHIPOBLE_PROTOCOL_ABORT;
             break;
         }
-        HandleConnectionError(gapEvent->disconnect.conn.conn_handle, disconReason);
+
+        ChipDeviceEvent connectionErrorEvent;
+        connectionErrorEvent.Type                           = DeviceEventType::kCHIPoBLEConnectionError;
+        connectionErrorEvent.CHIPoBLEConnectionError.ConId  = gapEvent->disconnect.conn.conn_handle;
+        connectionErrorEvent.CHIPoBLEConnectionError.Reason = disconReason;
+        ReturnErrorOnFailure(PlatformMgr().PostEvent(&connectionErrorEvent));
     }
 
     ChipDeviceEvent disconnectEvent;
@@ -1455,7 +1462,7 @@ void BLEManagerImpl::HandleC3CharRead(struct ble_gatt_char_context * param)
 exit:
     if (err != CHIP_NO_ERROR)
     {
-        ChipLogError(DeviceLayer, "Failed to generate TLV encoded Additional Data (%s)", __func__);
+        ChipLogError(DeviceLayer, "Failed to generate TLV encoded Additional Data, err:%" CHIP_ERROR_FORMAT, err.Format());
     }
     return;
 }

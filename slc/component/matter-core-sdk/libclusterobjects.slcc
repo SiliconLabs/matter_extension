@@ -7,7 +7,6 @@ define:
 description: libclusterobjects
 id: libclusterobjects
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
@@ -19,5 +18,9 @@ package: Matter
 provides:
 -   name: matter_libclusterobjects
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+source: []
 ui_hints:
     visibility: never

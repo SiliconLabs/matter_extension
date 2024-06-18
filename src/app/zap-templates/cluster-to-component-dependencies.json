@@ -36,9 +36,21 @@
     ]
   },
   {
+    "clusterCode": "electrical power measurement-server",
+    "value": [
+      "%extension-matter%matter_electrical_power_measurement"
+    ]
+  },
+  {
     "clusterCode": "content launcher-server",
     "value": [
       "%extension-matter%matter_content_launch"
+    ]
+  },
+  {
+    "clusterCode": "energy preference-server",
+    "value": [
+      "%extension-matter%matter_energy_preference"
     ]
   },
   {
@@ -54,6 +66,12 @@
     ]
   },
   {
+    "clusterCode": "energy evse-server",
+    "value": [
+      "%extension-matter%matter_energy_evse"
+    ]
+  },
+  {
     "clusterCode": "power source configuration-server",
     "value": [
       "%extension-matter%matter_power_source_configuration"
@@ -63,6 +81,18 @@
     "clusterCode": "software diagnostics-server",
     "value": [
       "%extension-matter%matter_software_diagnostics"
+    ]
+  },
+  {
+    "clusterCode": "device energy management-server",
+    "value": [
+      "%extension-matter%matter_device_energy_management"
+    ]
+  },
+  {
+    "clusterCode": "microwave oven control-server",
+    "value": [
+      "%extension-matter%matter_microwave_oven_control"
     ]
   },
   {
@@ -78,7 +108,7 @@
     ]
   },
   {
-    "clusterCode": "scenes-server",
+    "clusterCode": "scenes management-server",
     "value": [
       "%extension-matter%matter_scenes"
     ]
@@ -93,6 +123,12 @@
     "clusterCode": "door lock-server",
     "value": [
       "%extension-matter%matter_door_lock"
+    ]
+  },
+  {
+    "clusterCode": "messages-server",
+    "value": [
+      "%extension-matter%matter_messages"
     ]
   },
   {
@@ -120,6 +156,12 @@
     ]
   },
   {
+    "clusterCode": "electrical energy measurement-server",
+    "value": [
+      "%extension-matter%matter_electrical_energy_measurement"
+    ]
+  },
+  {
     "clusterCode": "groups-server",
     "value": [
       "%extension-matter%matter_groups"
@@ -129,6 +171,18 @@
     "clusterCode": "media playback-server",
     "value": [
       "%extension-matter%matter_media_playback"
+    ]
+  },
+  {
+    "clusterCode": "power topology-server",
+    "value": [
+      "%extension-matter%matter_power_topology"
+    ]
+  },
+  {
+    "clusterCode": "content app observer-server",
+    "value": [
+      "%extension-matter%matter_content_app_observer"
     ]
   },
   {
@@ -204,6 +258,12 @@
     ]
   },
   {
+    "clusterCode": "boolean state configuration-server",
+    "value": [
+      "%extension-matter%matter_boolean_state_configuration"
+    ]
+  },
+  {
     "clusterCode": "switch-server",
     "value": [
       "%extension-matter%matter_switch"
@@ -246,6 +306,12 @@
     ]
   },
   {
+    "clusterCode": "laundry dryer controls-server",
+    "value": [
+      "%extension-matter%matter_laundry_dryer_controls"
+    ]
+  },
+  {
     "clusterCode": "media input-server",
     "value": [
       "%extension-matter%matter_media_input"
@@ -270,9 +336,15 @@
     ]
   },
   {
-    "clusterCode": "laundry washer mode-server",
+    "clusterCode": "laundry dryer controls-server",
     "value": [
       "%extension-matter%matter_laundry_washer_controls"
+    ]
+  },
+  {
+    "clusterCode": "valve configuration and control-server",
+    "value": [
+      "%extension-matter%matter_valve_configuration_and_control"
     ]
   },
   {
@@ -333,6 +405,12 @@
     "clusterCode": "binding-server",
     "value": [
       "%extension-matter%matter_bindings"
+    ]
+  },
+  {
+    "clusterCode": "content control-server",
+    "value": [
+      "%extension-matter%matter_content_control"
     ]
   },
   {

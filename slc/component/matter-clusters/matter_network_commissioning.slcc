@@ -7,6 +7,9 @@ id: matter_network_commissioning
 package: Matter
 label: Network Commissioning Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_network_commissioning
 source:

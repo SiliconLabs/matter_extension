@@ -10,7 +10,6 @@ description: trace_handlers
 id: trace_handlers
 include:
 -   path: examples/common/tracing
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
@@ -29,6 +28,9 @@ package: Matter
 provides:
 -   name: matter_trace_handlers
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: examples/common/tracing/TraceHandlers.cpp
 ui_hints:

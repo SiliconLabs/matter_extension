@@ -4,16 +4,14 @@ description: Enables sources and defines for UART as used by Matter components
 package: "Matter"
 category: Platform|UART
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 requires:
-   - name: uartdrv_usart
-     condition:
-     - device_series_1
-     - matter_platform_efr32
    - name: uartdrv_eusart
      condition:
-     - device_series_2
      - matter_platform_efr32
-   - name: sl_usart
+   - name: sl_ulp_uart
      condition: [matter_platform_siwx917]
 provides:
   - name: matter_uart
@@ -27,18 +25,10 @@ include:
   file_list:
   - path: uart.h
 define:
-  - name: CONFIG_ENABLE_UART
-    condition:
-     - device_series_1
-     - matter_platform_efr32
   - name: CONFIG_ENABLE_EUART
     condition:
      - device_series_2
      - matter_platform_efr32
-  - name: EFR32MG12
-    condition:
-    - device_family_efr32mg12
-    - matter_platform_efr32
   - name: EFR32MG24
     condition:
     - device_family_efr32mg24

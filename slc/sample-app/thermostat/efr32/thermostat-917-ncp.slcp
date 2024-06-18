@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.2"
+    version: "2.3.0"
   - id: wiseconnect3_sdk
-    version: "3.2.0"
+    version: "3.3.0"
 
 component:
   - id: device_init
@@ -27,8 +27,6 @@ component:
   - id: matter_ota_support
     from: matter
   - id: matter_crypto
-    from: matter
-  - id: silabs_factory_data_provider
     from: matter
   - id: matter_gatt_additional_advertising
     from: matter
@@ -96,11 +94,10 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  - id: segger_rtt
-
-  - id: matter_subscription_timeout_resumption
+  - id: matter_segger_rtt
     from: matter
-  - id: matter_subscription_persistence
+
+  - id: matter_shell
     from: matter
 
   - id: efx_ncp_custom_host_mcu
@@ -130,15 +127,7 @@ component:
 requires:
   - name: matter_default_lcd_config
     condition:
-    - device_series_1
-  - name: matter_default_lcd_config
-    condition:
     - device_series_2
-
-# Select UART/EUART drivers based on device series
-  - name: matter_drivers_series_1_wifi_rs911x
-    condition:
-     - device_series_1
 
 config_file:
   - path: ../../../../examples/thermostat/thermostat-common/thermostat.zap
@@ -198,19 +187,28 @@ configuration:
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17
+# For the linker file set the flash size as the actual size minus the following:
+# Space reserved for the bootloader (0x6000 bytes at the beginning)
+# A single page at the end reserved for the provisioning data
 template_contribution:
   - name: memory_flash_start
-    value: 0x0
-    condition: [device_series_1]
-  - name: memory_flash_size
-    value: 0x000FF800
-    condition: [device_series_1]
-  - name: memory_flash_start
     value: 0x08006000
-    condition: [device_series_2]
+    condition: [device_family_efr32mg24]
   - name: memory_flash_size
     value: 0x00178000
-    condition: [device_series_2]
+    condition: [device_family_efr32mg24]
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_family_mgm24]
+  - name: memory_flash_size
+    value: 0x00178000
+    condition: [device_family_mgm24]
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_family_efr32mg26]
+  - name: memory_flash_size
+    value: 0x00318000
+    condition: [device_family_efr32mg26]
   - name: memory_ram_start
     value: 0x20000000
   - name: memory_ram_size

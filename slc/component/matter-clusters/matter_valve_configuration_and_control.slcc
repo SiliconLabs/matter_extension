@@ -1,0 +1,24 @@
+
+category: Clusters|HVAC
+description: >
+  Implementation of the Valve Configuration And Control Server Cluster.
+  The user has to enable the Valve Configuration And Control Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+id: matter_valve_configuration_and_control
+package: Matter
+label: Valve Configuration And Control Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_valve_configuration_and_control
+source:
+  - path: src/app/clusters/valve-configuration-and-control-server/valve-configuration-and-control-server.cpp
+include:
+  - path: src/app/clusters/valve-configuration-and-control-server
+    file_list:
+      - path: valve-configuration-and-control-delegate.h
+      - path: valve-configuration-and-control-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_valve_configuration_and_control

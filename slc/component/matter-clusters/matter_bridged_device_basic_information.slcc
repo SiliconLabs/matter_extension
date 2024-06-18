@@ -7,6 +7,9 @@ id: matter_bridged_device_basic_information
 package: Matter
 label: Bridged Device Basic Information Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_bridged_device_basic_information
 source:

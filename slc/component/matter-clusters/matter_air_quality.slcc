@@ -7,6 +7,9 @@ id: matter_air_quality
 package: Matter
 label: Air Quality Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_air_quality
 source:

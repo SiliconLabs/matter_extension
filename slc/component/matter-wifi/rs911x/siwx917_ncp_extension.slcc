@@ -1,6 +1,9 @@
 id: siwx917_ncp_extension
 label: SiWx917 NCP Extension
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 description: >
   Adds support for the HAL and WiFi Driver layer for SiWx917 NCP devices
 package: Matter
@@ -10,8 +13,6 @@ provides:
 recommends:
   - id: uartdrv_eusart
     instance: [vcom]
-  - id: spidrv
-    instance: [exp]
 requires:
 - name: rs911x_ncp_common
 - name: wiseconnect3_common
@@ -19,7 +20,7 @@ requires:
 - name: device_init_dpll
 - name: spidrv_instance 
 source:
-- path: examples/platform/silabs/efr32/rs911x/sl_wifi_if.c
+- path: examples/platform/silabs/efr32/rs911x/sl_wifi_if.cpp
 - path: examples/platform/silabs/efr32/rs911x/hal/sl_si91x_ncp_utility.c
 include:
 - path: examples/platform/silabs/efr32/rs911x/hal
@@ -52,3 +53,6 @@ define:
 - name: SL_WIFI_COMPONENT_INCLUDED
 - name: __WEAK
   value: "__attribute__((weak))"
+toolchain_settings:
+- option: gcc_compiler_option
+  value: -Wno-unused-parameter

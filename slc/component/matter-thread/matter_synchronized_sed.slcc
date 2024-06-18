@@ -1,0 +1,23 @@
+id: enable_synchronized_sed
+label: Matter Synchronized SED
+description: SSED Specific configurations
+package: "Matter"
+category: Matter-Thread
+quality: experimental
+metadata:
+  sbom:
+    license: Zlib
+provides:
+  - name: matter_synchronized_sed
+define:
+  - name: CHIP_DEVICE_CONFIG_THREAD_SSED
+    value: 1
+  - name: SL_CSL_ENABLE
+    value: 1
+
+requires:
+  - id: matter_icd_core
+  - id: matter_thread
+
+conflicts:
+  - name: ot_stack_ftd

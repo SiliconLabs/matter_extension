@@ -4,6 +4,9 @@ description: Enables showing the QR Code on the LCD
 package: "Matter"
 category: Platform|Display
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 requires:
   - name: matter_lcd
     condition: [matter_platform_efr32]
@@ -12,6 +15,9 @@ requires:
   - name: matter_libqrcode_common
   - name: matter_uart
     condition: [matter_platform_efr32]
+toolchain_settings:
+  - option: gcc_compiler_option
+    value: -Wno-type-limits
 provides:
   - name: matter_qr_code
 conflicts:

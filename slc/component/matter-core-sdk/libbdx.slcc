@@ -1,7 +1,5 @@
 category: Matter|Core
 define:
--   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
-    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
 -   name: CHIP_HAVE_CONFIG_H
     value: '1'
 -   name: RADIO_CONFIG_DMP_SUPPORT
@@ -9,7 +7,6 @@ define:
 description: libbdx
 id: libbdx
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
@@ -18,19 +15,34 @@ include:
 -   path: third_party/nlio/repo/include
 -   path: src/protocols/bdx
     file_list:
+    -   path: BdxTransferProxy.h
     -   path: BdxUri.h
+    -   path: BdxTransferDiagnosticLogPool.h
     -   path: TransferFacilitator.h
+    -   path: BdxTransferProxyDiagnosticLog.h
+    -   path: BdxTransferDiagnosticLog.h
+    -   path: DiagnosticLogs.h
+    -   path: BdxTransferServer.h
+    -   path: BdxTransferServerDelegate.h
     -   path: BdxTransferSession.h
     -   path: BdxMessages.h
+    -   path: StatusCode.h
 label: libbdx
 package: Matter
 provides:
 -   name: matter_libbdx
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/protocols/bdx/BdxMessages.cpp
+-   path: src/protocols/bdx/BdxTransferDiagnosticLog.cpp
+-   path: src/protocols/bdx/BdxTransferProxyDiagnosticLog.cpp
+-   path: src/protocols/bdx/BdxTransferServer.cpp
 -   path: src/protocols/bdx/BdxTransferSession.cpp
 -   path: src/protocols/bdx/BdxUri.cpp
+-   path: src/protocols/bdx/StatusCode.cpp
 -   path: src/protocols/bdx/TransferFacilitator.cpp
 ui_hints:
     visibility: never

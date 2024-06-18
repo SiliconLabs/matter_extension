@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.2.2"
+    version: "2.3.0"
 
 component:
   - id: device_init
@@ -23,6 +23,7 @@ component:
   - id: matter_ble
     from: matter
   - id: ot_stack_mtd
+  - id: ot_rtos_wrapers_stub  
   - id: matter_thread
     from: matter
   - id: rail_util_pti
@@ -34,10 +35,6 @@ component:
     from: matter
   - id: matter_gatt
     from: matter
-
-  - id: silabs_factory_data_provider
-    from: matter
-
   - id: matter_lock
     from: matter   
   - id: app_common
@@ -73,8 +70,6 @@ component:
     from: matter
   - id: matter_network_commissioning
     from: matter
-  - id: matter_on_off
-    from: matter
   - id: matter_operational_credentials
     from: matter
   - id: matter_ota_requestor
@@ -98,21 +93,17 @@ component:
 # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  - id: segger_rtt
+  - id: matter_segger_rtt
+    from: matter
 
+  - id: matter_icd_core
+    from: matter
   - id: matter_icd_management
-    from: matter
-  - id: matter_subscription_persistence
-    from: matter
-  - id: matter_subscription_synchronization
     from: matter
 
 requires:
 # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
 # Select UART/EUART drivers based on device series
-  - name: matter_drivers_series_1
-    condition:
-     - device_series_1
   - name: matter_drivers_series_2
     condition:
      - device_series_2
@@ -174,29 +165,46 @@ configuration:
     value: 1
     condition: [matter_thread_coap_cert_libs]
   - {name: SL_STACK_SIZE, value: '4608'} 
-# Default ICD configurations for lock-app
-  - {name: SL_ACTIVE_MODE_THRESHOLD, value: '1000'}
-  - {name: SL_ACTIVE_MODE_INTERVAL, value: '10000'}
-  - {name: SL_IDLE_MODE_INTERVAL, value: '600'}
+
+# Default ICD configurations
+  - {name: SL_IDLE_MODE_DURATION_S, value: '600'}
+  - {name: SL_ACTIVE_MODE_DURATION_MS, value: '0'}
+  - {name: SL_ACTIVE_MODE_THRESHOLD, value: '0'}
+
   - {name: SL_OT_IDLE_INTERVAL, value: '5000'}
   - {name: SL_OT_ACTIVE_INTERVAL, value: '500'}
+  - name: CIRCULAR_QUEUE_LEN_MAX
+    value: 16
+    
+
+  - {name: CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED, value: '1'}
+  - {name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION, value: '0'}
 
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17
+# For the linker file set the flash size as the actual size minus the following:
+# Space reserved for the bootloader (0x6000 bytes at the beginning)
+# A single page at the end reserved for the provisioning data
 template_contribution:
   - name: memory_flash_start
-    value: 0x0
-    condition: [device_series_1]
-  - name: memory_flash_size
-    value: 0x000FF800
-    condition: [device_series_1]
-  - name: memory_flash_start
     value: 0x08006000
-    condition: [device_series_2]
+    condition: [device_family_efr32mg24]
   - name: memory_flash_size
     value: 0x00178000
-    condition: [device_series_2]
+    condition: [device_family_efr32mg24]
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_family_mgm24]
+  - name: memory_flash_size
+    value: 0x00178000
+    condition: [device_family_mgm24]
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_family_efr32mg26]
+  - name: memory_flash_size
+    value: 0x00318000
+    condition: [device_family_efr32mg26]
 
 readme:
   - path: ./README.md

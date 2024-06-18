@@ -1,7 +1,5 @@
 category: Matter|Core
 define:
--   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
-    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
 -   name: CHIP_HAVE_CONFIG_H
     value: '1'
 -   name: RADIO_CONFIG_DMP_SUPPORT
@@ -9,7 +7,6 @@ define:
 description: libmessaginglayer
 id: libmessaginglayer
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
@@ -18,6 +15,7 @@ include:
 -   path: third_party/nlio/repo/include
 -   path: src/messaging
     file_list:
+    -   path: SessionParameters.h
     -   path: ExchangeDelegate.h
     -   path: ReliableMessageMgr.h
     -   path: ExchangeMessageDispatch.h
@@ -35,6 +33,9 @@ package: Matter
 provides:
 -   name: matter_libmessaginglayer
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/messaging/ApplicationExchangeDispatch.cpp
 -   path: src/messaging/ErrorCategory.cpp

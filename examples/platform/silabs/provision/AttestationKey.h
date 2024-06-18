@@ -10,13 +10,22 @@ namespace DeviceLayer {
 namespace Silabs {
 namespace Provision {
 
+static constexpr uint32_t kCreds_KeyId_Default = 2; //(PSA_KEY_ID_USER_MIN + 1);
+
 class AttestationKey
 {
 public:
-    virtual ~AttestationKey() = default;
-    virtual CHIP_ERROR Import(const uint8_t * asn1, size_t size) = 0;
-    virtual CHIP_ERROR GenerateCSR(uint16_t vid, uint16_t pid, const CharSpan &cn, MutableCharSpan & csr) = 0;
-    virtual CHIP_ERROR SignMessage(const ByteSpan & message, MutableByteSpan & out_span) = 0;
+    AttestationKey(uint32_t id = 0) { mId = (id > 0)? id : kCreds_KeyId_Default; }
+    ~AttestationKey() = default;
+
+    uint32_t GetId() { return mId; }
+    CHIP_ERROR Import(const uint8_t * asn1, size_t size);
+    CHIP_ERROR Export(uint8_t * asn1, size_t max, size_t &size);
+    CHIP_ERROR GenerateCSR(uint16_t vid, uint16_t pid, const CharSpan &cn, MutableCharSpan & csr);
+    CHIP_ERROR SignMessage(const ByteSpan & message, MutableByteSpan & out_span);
+
+protected:
+    uint32_t mId = 0;
 };
 
 } // namespace Provision

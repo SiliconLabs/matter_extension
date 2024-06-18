@@ -7,6 +7,9 @@ id: matter_access_control
 package: Matter
 label: Access Control Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_access_control
 source:

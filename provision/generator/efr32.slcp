@@ -1,0 +1,101 @@
+project_name: generator
+package: platform
+quality: production
+label: Matter Provisioner Generator
+description: >
+  Generates the key-pair, and CSR for the DAC
+category: Example|Platform
+filter:
+  - { name: Device Type,  value: [SoC] }
+  - { name: MCU,  value: [32-bit MCU] }
+  - { name: Project Difficulty,  value: [Beginner] }
+ui_hints:
+  highlight:
+  - { path: README.md, focus: true }
+readme:
+  - { path: README.md }
+
+sdk: { id: simplicity_sdk, version: 2024.6.0}
+
+component:
+  - { id: freertos }
+  - { id: sl_system }
+  - { id: device_init }
+  - { id: cpp_support }
+  - { id: iostream_rtt }
+  - { id: psa_its }
+  - { id: psa_driver }
+  - { id: psa_crypto }
+  - { id: psa_crypto_ecc_secp256r1 }
+  - { id: psa_crypto_sha256 }
+  - { id: psa_crypto_ecdsa }
+  - { id: psa_crypto_cipher_ctr }
+  - { id: mbedtls_pkcs5 }
+  - { id: mbedtls_ecc }
+  - { id: mbedtls_sha }
+  - { id: mbedtls_x509 }
+  - { id: bootloader_app_properties }
+
+include:
+  - { path: '.' }
+  - { path: ../../examples }
+  - { path: ../../examples/platform/silabs }
+  - { path: ../../src }
+  - { path: ../../src/include }
+  - { path: ../../zzz_generated/app-common }
+  - { path: ../../third_party/nlassert/repo/include }
+  - { path: ../../third_party/nlio/repo/include }
+  - { path: ../../third_party/silabs/simplicity_sdk/platform/bootloader }
+  - { path: ../../third_party/silabs/simplicity_sdk/protocol/bluetooth/config }
+
+source:
+  - { path: app.h }
+  - { path: app.cpp }
+  - { path: main.cpp }
+  - { path: efr32.cpp }
+  - { path: ../../examples/platform/silabs/provision/AttestationKey.h }
+  - { path: ../../examples/platform/silabs/provision/AttestationKeyPSA.cpp }
+  - { path: ../../examples/platform/silabs/provision/ProvisionChannel.h }
+  - { path: ../../examples/platform/silabs/provision/ProvisionChannelRTT.cpp }
+  - { path: ../../examples/platform/silabs/provision/ProvisionEncoder.h }
+  - { path: ../../examples/platform/silabs/provision/ProvisionEncoder.cpp }
+  - { path: ../../examples/platform/silabs/provision/ProvisionManager.h }
+  - { path: ../../examples/platform/silabs/provision/ProvisionManager.cpp }
+  - { path: ../../examples/platform/silabs/provision/ProvisionProtocol.h }
+  - { path: ../../examples/platform/silabs/provision/ProvisionProtocolV1.cpp }
+  - { path: ../../examples/platform/silabs/provision/ProvisionProtocolV2.cpp }
+  - { path: ../../examples/platform/silabs/provision/ProvisionStorage.h }
+  - { path: ../../examples/platform/silabs/provision/ProvisionStorageGeneric.h }
+  - { path: ../../examples/platform/silabs/provision/ProvisionStorage.cpp }
+  - { path: ../../examples/platform/silabs/provision/ProvisionStorageCustom.cpp }
+  - { path: ../../examples/platform/silabs/provision/ProvisionStorageDefault.cpp }
+  - { path: ../../src/lib/support/Base64.h }
+  - { path: ../../src/lib/support/Base64.cpp }
+  - { path: ../../src/lib/support/BytesToHex.h }
+  - { path: ../../src/lib/support/BytesToHex.cpp }
+  - { path: ../../src/lib/support/logging/CHIPLogging.h }
+  - { path: ../../src/lib/support/logging/TextOnlyLogging.cpp }
+  - { path: ../../src/platform/silabs/SilabsConfig.h }
+  - { path: ../../src/platform/silabs/SilabsConfig.cpp }
+  - { path: ../../src/platform/silabs/Logging.cpp }
+  - { path: ../../src/crypto/CHIPCryptoPALPSA.cpp }
+  - { path: ../../src/setup_payload/Base38Encode.h }
+  - { path: ../../src/setup_payload/Base38Encode.cpp }
+  - { path: ../../src/platform/silabs/multi-ota/OtaTlvEncryptionKey.h }
+  - { path: ../../src/platform/silabs/multi-ota/OtaTlvEncryptionKey.cpp }
+
+define:
+- { name: SL_PROVISION_GENERATOR, value: '1' }
+- { name: SL_PROVISION_CHANNEL_ENABLED, value: '1' }
+- { name: SILABS_PROVISION_PROTOCOL_V1, value: '0' }
+- { name: OTA_ENCRYPTION_ENABLE, value: '1'}
+- { name: CHIP_SYSTEM_CONFIG_USE_SOCKETS, value: '1' }
+- { name: CHIP_CONFIG_SHA256_CONTEXT_SIZE, value: '256' }
+- { name: CHIP_CRYPTO_PLATFORM, value: '1'}
+- { name: CHIP_LOG_FILTERING, value: '1'}
+- { name: CHIP_PLATFORM_CONFIG_INCLUDE, value: '<platform/silabs/CHIPPlatformConfig.h>' }
+
+toolchain_settings:
+- { option: optimize, value: size }
+- { option: cxx_standard, value: c++17 }
+- { option: gcc_compiler_option, value: -Wno-unused-parameter }

@@ -7,7 +7,6 @@ define:
 description: libblelayer
 id: libblelayer
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
@@ -34,6 +33,9 @@ package: Matter
 provides:
 -   name: matter_libblelayer
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/ble/BLEEndPoint.cpp
 -   path: src/ble/BleError.cpp

@@ -31,7 +31,7 @@
 #include "FreeRTOS.h"
 #include "event_groups.h"
 #include "task.h"
-#if (SIWX_917 | EXP_BOARD)
+#if (SLI_SI91X_MCU_INTERFACE | EXP_BOARD)
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -47,7 +47,7 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-#endif // (SIWX_917 | EXP_BOARD)
+#endif // (SLI_SI91X_MCU_INTERFACE | EXP_BOARD)
 #endif // WF200_WIFI
 
 #include "wfx_host_events.h"
@@ -184,7 +184,8 @@ static void low_level_input(struct netif * netif, uint8_t * b, uint16_t len)
 
                    b[12], b[13]);
 #endif
-        if (netif->input(p,netif) != ERR_OK)
+
+        if (netif->input(p, netif) != ERR_OK)
         {
             gOverrunCount++;
             SILABS_LOG("overrun count entering when fail to alloc value %d", gOverrunCount);
@@ -349,7 +350,7 @@ static SemaphoreHandle_t ethout_sem;
  ******************************************************************************/
 static err_t low_level_output(struct netif * netif, struct pbuf * p)
 {
-#if (SIWX_917 | EXP_BOARD)
+#if (SLI_SI91X_MCU_INTERFACE | EXP_BOARD)
     UNUSED_PARAMETER(netif);
     sl_status_t status;
     status = sl_wifi_send_raw_data_frame(SL_WIFI_CLIENT_INTERFACE, (uint8_t *)p->payload, p->len);
@@ -414,7 +415,8 @@ static err_t low_level_output(struct netif * netif, struct pbuf * p)
 #ifdef WIFI_DEBUG_ENABLED
     SILABS_LOG("EN-RSI: Sending %d", framelength);
 #endif
-     /* forward the generated packet to RSI to
+
+    /* forward the generated packet to RSI to
      * send the data over wifi network
      */
     if (wfx_rsi_send_data(packet, datalength))
@@ -433,7 +435,7 @@ static err_t low_level_output(struct netif * netif, struct pbuf * p)
 #endif // RS9116
 }
 
-#if (SIWX_917 | EXP_BOARD)
+#if (SLI_SI91X_MCU_INTERFACE | EXP_BOARD)
 /*****************************************************************************
  *  @fn  void sl_si91x_host_process_data_frame(uint8_t *buf, int len)
  *  @brief
@@ -469,7 +471,7 @@ sl_status_t sl_si91x_host_process_data_frame(sl_wifi_interface_t interface, sl_w
  *  @brief
  *    host received frame cb
  *
-	@@ -409,17 +430,21 @@ static err_t low_level_output(struct netif * netif, struct pbuf * p)
+        @@ -409,17 +430,21 @@ static err_t low_level_output(struct netif * netif, struct pbuf * p)
  * @return
  *    None
  ******************************************************************************/

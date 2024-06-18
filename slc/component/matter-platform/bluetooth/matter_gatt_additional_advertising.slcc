@@ -5,6 +5,9 @@ description: >
 package: "Matter"
 category: Stack|Bluetooth
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 define: 
   - name: CHIP_ENABLE_ROTATING_DEVICE_ID
   - name: CHIP_ENABLE_ADDITIONAL_DATA_ADVERTISING

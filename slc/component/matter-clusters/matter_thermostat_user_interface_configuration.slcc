@@ -7,6 +7,9 @@ id: matter_thermostat_user_interface_configuration
 package: Matter
 label: Thermostat User Interface Configuration Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_thermostat_user_interface_configuration
 source:

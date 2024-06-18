@@ -23,6 +23,11 @@
 #import "MTRTestKeys.h"
 #import "MTRTestStorage.h"
 
+// Fixture 1: chip-all-clusters-app --KVS "$(mktemp -t chip-test-kvs)" --interface-id -1
+// Fixture 2: chip-all-clusters-app --KVS "$(mktemp -t chip-test-kvs)" --interface-id -1 \
+    --dac_provider credentials/development/commissioner_dut/struct_cd_origin_pid_vid_correct/test_case_vector.json \
+    --product-id 32768 --discriminator 3839
+
 static const uint16_t kLocalPort = 5541;
 static const uint16_t kTestVendorId = 0xFFF1u;
 static const uint16_t kTestProductId1 = 0x8000u;
@@ -36,7 +41,7 @@ static const uint16_t kExpectedDiscoveredDevicesCount = 2;
 static MTRDeviceController * sController = nil;
 
 @interface DeviceScannerDelegate : NSObject <MTRCommissionableBrowserDelegate>
-@property (nonatomic) XCTestExpectation * expectation;
+@property (nonatomic, nullable) XCTestExpectation * expectation;
 @property (nonatomic) NSNumber * resultsCount;
 
 - (instancetype)initWithExpectation:(XCTestExpectation *)expectation;
@@ -56,8 +61,26 @@ static MTRDeviceController * sController = nil;
     return self;
 }
 
+- (instancetype)init
+{
+    if (!(self = [super init])) {
+        return nil;
+    }
+
+    _resultsCount = 0;
+    _expectation = nil;
+    return self;
+}
+
 - (void)controller:(MTRDeviceController *)controller didFindCommissionableDevice:(MTRCommissionableBrowserResult *)device
 {
+    if (self.expectation == nil) {
+        // We are not actually supposed to be looking at results; don't do it,
+        // because we may be starting/stopping browse multiple times and seeing
+        // odd numbers of results.
+        return;
+    }
+
     _resultsCount = @(_resultsCount.unsignedLongValue + 1);
     if ([_resultsCount isEqual:@(kExpectedDiscoveredDevicesCount)]) {
         [self.expectation fulfill];
@@ -95,39 +118,11 @@ static MTRDeviceController * sController = nil;
 @interface MTRCommissionableBrowserTests : XCTestCase
 @end
 
-static BOOL sStackInitRan = NO;
-static BOOL sNeedsStackShutdown = YES;
-
 @implementation MTRCommissionableBrowserTests
 
-+ (void)tearDown
++ (void)setUp
 {
-    // Global teardown, runs once
-    if (sNeedsStackShutdown) {
-        [self shutdownStack];
-    }
-}
-
-- (void)setUp
-{
-    // Per-test setup, runs before each test.
     [super setUp];
-    [self setContinueAfterFailure:NO];
-
-    if (sStackInitRan == NO) {
-        [self initStack];
-    }
-}
-
-- (void)tearDown
-{
-    // Per-test teardown, runs after each test.
-    [super tearDown];
-}
-
-- (void)initStack
-{
-    sStackInitRan = YES;
 
     __auto_type * factory = [MTRDeviceControllerFactory sharedInstance];
     XCTAssertNotNil(factory);
@@ -151,17 +146,22 @@ static BOOL sNeedsStackShutdown = YES;
     sController = controller;
 }
 
-+ (void)shutdownStack
++ (void)tearDown
 {
-    sNeedsStackShutdown = NO;
-
     MTRDeviceController * controller = sController;
     XCTAssertNotNil(controller);
-
     [controller shutdown];
     XCTAssertFalse([controller isRunning]);
 
     [[MTRDeviceControllerFactory sharedInstance] stopControllerFactory];
+
+    [super tearDown];
+}
+
+- (void)setUp
+{
+    [super setUp];
+    [self setContinueAfterFailure:NO];
 }
 
 - (void)test001_StartBrowseAndStopBrowse
@@ -228,11 +228,6 @@ static BOOL sNeedsStackShutdown = YES;
 
     // Properly stop browsing
     XCTAssertTrue([sController stopBrowseForCommissionables]);
-}
-
-- (void)test999_TearDown
-{
-    [[self class] shutdownStack];
 }
 
 @end

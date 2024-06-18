@@ -1,7 +1,5 @@
 category: Matter|Core
 define:
--   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
-    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
 -   name: CHIP_HAVE_CONFIG_H
     value: '1'
 -   name: RADIO_CONFIG_DMP_SUPPORT
@@ -9,7 +7,6 @@ define:
 description: efr32
 id: efr32
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: examples/platform/silabs/efr32
 -   path: src
@@ -84,6 +81,51 @@ include:
 -   path: src/include/platform/internal/testing
     file_list:
     -   path: ConfigUnitTest.h
+-   path: src/lib/dnssd/platform
+    file_list:
+    -   path: DnssdBrowseDelegate.h
+    -   path: Dnssd.h
+-   path: src/lib/dnssd/platform
+    file_list:
+    -   path: DnssdBrowseDelegate.h
+    -   path: Dnssd.h
+-   path: src/app/common
+    file_list:
+    -   path: CompatEnumNames.h
+-   path: src/platform/silabs/multi-ota
+    file_list:
+    -   path: OtaTlvEncryptionKey.h
+    -   path: OTATlvProcessor.h
+    -   path: OTACustomProcessor.h
+    -   path: OTAFirmwareProcessor.h
+    -   path: OTAMultiImageProcessorImpl.h
+    -   path: OTAFactoryDataProcessor.h
+-   path: src/lwip/silabs
+    file_list:
+    -   path: lwipopts-wf200.h
+    -   path: lwipopts-rs911x.h
+    -   path: lwippools.h
+    -   path: lwipopts.h
+-   path: examples/platform/silabs
+    file_list:
+    -   path: board_config.h
+    -   path: wfx_rsi.h
+    -   path: OTAConfig.h
+    -   path: SoftwareFaultReports.h
+    -   path: silabs_utils.h
+    -   path: matter_shell.h
+    -   path: uart.h
+    -   path: MatterConfig.h
+    -   path: LEDWidget.h
+    -   path: sl_systemview_config.h
+    -   path: PigweedLogger.h
+    -   path: FreeRTOSConfig.h
+    -   path: Rpc.h
+    -   path: TemperatureSensor.h
+    -   path: silabs_creds.h
+    -   path: SilabsTestEventTriggerDelegate.h
+    -   path: MemMonitoring.h
+    -   path: BaseApplication.h
 -   path: src/platform/silabs
     file_list:
     -   path: OTAImageProcessorImpl.h
@@ -104,6 +146,14 @@ include:
     -   path: BlePlatformConfig.h
     -   path: KeyValueStoreManagerImpl.h
     -   path: SystemPlatformConfig.h
+-   path: src/platform/silabs/platformAbstraction
+    file_list:
+    -   path: SilabsPlatformBase.h
+    -   path: SilabsPlatform.h
+-   path: src/platform
+    file_list:
+    -   path: DeviceSafeQueue.h
+    -   path: GLibTypeDeleter.h
 -   path: src/platform/silabs/efr32
     file_list:
     -   path: Efr32PsaOperationalKeystore.h
@@ -118,14 +168,6 @@ include:
     -   path: GenericThreadStackManagerImpl_OpenThread.hpp
     -   path: GenericThreadStackManagerImpl_OpenThread.h
     -   path: OpenThreadDnssdImpl.h
--   path: src/platform/silabs/platformAbstraction
-    file_list:
-    -   path: SilabsPlatformBase.h
-    -   path: SilabsPlatform.h
--   path: src/platform
-    file_list:
-    -   path: DeviceSafeQueue.h
-    -   path: GLibTypeDeleter.h
 -   path: src/platform/FreeRTOS
     file_list:
     -   path: SystemTimeSupport.h
@@ -136,6 +178,9 @@ package: Matter
 provides:
 -   name: matter_efr32
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/platform/FreeRTOS/SystemTimeSupport.cpp
 -   path: src/platform/OpenThread/DnssdImpl.cpp
@@ -143,6 +188,7 @@ source:
 -   path: src/platform/OpenThread/OpenThreadUtils.cpp
 -   path: src/platform/SingletonConfigurationManager.cpp
 -   path: src/platform/silabs/CHIPMem-Platform.cpp
+-   path: src/platform/silabs/ConfigurationManagerImpl.cpp
 -   path: src/platform/silabs/DiagnosticDataProviderImpl.cpp
 -   path: src/platform/silabs/KeyValueStoreManagerImpl.cpp
 -   path: src/platform/silabs/Logging.cpp
@@ -150,7 +196,6 @@ source:
 -   path: src/platform/silabs/SilabsConfig.cpp
 -   path: src/platform/silabs/efr32/BLEManagerImpl.cpp
 -   path: src/platform/silabs/efr32/CHIPCryptoPALPsaEfr32.cpp
--   path: src/platform/silabs/efr32/ConfigurationManagerImpl.cpp
 -   path: src/platform/silabs/efr32/ConnectivityManagerImpl.cpp
 -   path: src/platform/silabs/efr32/Efr32PsaOpaqueKeypair.cpp
 -   path: src/platform/silabs/efr32/Efr32PsaOperationalKeystore.cpp

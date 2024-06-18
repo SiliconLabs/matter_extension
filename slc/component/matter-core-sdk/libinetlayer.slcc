@@ -7,7 +7,6 @@ define:
 description: libinetlayer
 id: libinetlayer
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
@@ -53,6 +52,9 @@ package: Matter
 provides:
 -   name: matter_libinetlayer
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/inet/IPAddress-StringFuncts.cpp
 -   path: src/inet/IPAddress.cpp
@@ -61,6 +63,7 @@ source:
 -   path: src/inet/InetArgParser.cpp
 -   path: src/inet/InetError.cpp
 -   path: src/inet/InetInterface.cpp
+-   path: src/inet/InetInterfaceImplDefault.cpp
 -   path: src/inet/UDPEndPoint.cpp
 -   path: src/inet/UDPEndPointImplOpenThread.cpp
 ui_hints:

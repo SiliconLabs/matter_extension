@@ -7,7 +7,7 @@ description: >
 
 sdk_extension:
   - id: matter
-    version: "2.2.2"
+    version: "2.3.0"
 
 component:
   - id: bootloader_core
@@ -30,13 +30,6 @@ configuration:
     value: 1
   - name: SLOT0_SIZE
     value: 196608
-  ## device_series_1 ##
-  - name: BTL_STORAGE_BASE_ADDRESS
-    value: 278528
-    condition: [device_series_1]
-  - name: SLOT0_START
-    value: 278528
-    condition: [device_series_1]
   ## device_sdid_200 ##
   - name: BTL_STORAGE_BASE_ADDRESS
     value: 278528

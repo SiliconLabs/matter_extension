@@ -7,7 +7,6 @@ define:
 description: tracing
 id: tracing
 include:
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include
@@ -18,6 +17,9 @@ include:
     file_list:
     -   path: backend.h
     -   path: log_declares.h
+    -   path: metric_macros.h
+    -   path: metric_keys.h
+    -   path: metric_event.h
     -   path: registry.h
     -   path: macros.h
 label: tracing
@@ -25,6 +27,9 @@ package: Matter
 provides:
 -   name: matter_tracing
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: src/tracing/registry.cpp
 ui_hints:

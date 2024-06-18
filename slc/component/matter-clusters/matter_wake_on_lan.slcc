@@ -7,6 +7,9 @@ id: matter_wake_on_lan
 package: Matter
 label: Wake On Lan Server Cluster
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_wake_on_lan
 source:

@@ -20,8 +20,8 @@
 #include <app/clusters/ota-requestor/OTARequestorInterface.h>
 #include <platform/silabs/OTAImageProcessorImpl.h>
 
-#include <platform/silabs/SilabsConfig.h>
 #include "wfx_host_events.h"
+#include <platform/silabs/SilabsConfig.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -38,6 +38,7 @@ extern "C" {
 
 #define SL_STATUS_FW_UPDATE_DONE SL_STATUS_SI91X_NO_AP_FOUND
 uint8_t flag = RPS_HEADER;
+static chip::OTAImageProcessorImpl gImageProcessor;
 
 namespace chip {
 
@@ -47,6 +48,15 @@ uint8_t OTAImageProcessorImpl::mSlotId                                          
 uint32_t OTAImageProcessorImpl::mWriteOffset                                            = 0;
 uint16_t OTAImageProcessorImpl::writeBufOffset                                          = 0;
 uint8_t OTAImageProcessorImpl::writeBuffer[kAlignmentBytes] __attribute__((aligned(4))) = { 0 };
+
+CHIP_ERROR OTAImageProcessorImpl::Init(OTADownloader * downloader)
+{
+    ReturnErrorCodeIf(downloader == nullptr, CHIP_ERROR_INVALID_ARGUMENT);
+
+    gImageProcessor.SetOTADownloader(downloader);
+
+    return CHIP_NO_ERROR;
+}
 
 CHIP_ERROR OTAImageProcessorImpl::PrepareDownload()
 {
@@ -147,11 +157,12 @@ void OTAImageProcessorImpl::HandlePrepareDownload(intptr_t context)
 
     imageProcessor->mHeaderParser.Init();
 
-   //Setting the device is in high performace - no-sleepy mode while OTA tranfer
+    // Setting the device is in high performace - no-sleepy mode while OTA tranfer
 #if (CHIP_CONFIG_ENABLE_ICD_SERVER)
-    status = wfx_power_save(RSI_ACTIVE ,HIGH_PERFORMANCE);
-    if (status != SL_STATUS_OK) {
-        ChipLogError(DeviceLayer,"Failed to enable the TA Deep Sleep, status: %lx", status);
+    status = wfx_power_save(RSI_ACTIVE, HIGH_PERFORMANCE);
+    if (status != SL_STATUS_OK)
+    {
+        ChipLogError(DeviceLayer, "Failed to enable the TA Deep Sleep");
     }
 #endif /* CHIP_CONFIG_ENABLE_ICD_SERVER*/
 
@@ -189,12 +200,12 @@ void OTAImageProcessorImpl::HandleFinalize(intptr_t context)
     }
     imageProcessor->ReleaseBlock();
 
-    //Setting the device back to power save mode when transfer is completed successfully
+    // Setting the device back to power save mode when transfer is completed successfully
 #if (CHIP_CONFIG_ENABLE_ICD_SERVER)
     sl_status_t err = wfx_power_save(RSI_SLEEP_MODE_2, ASSOCIATED_POWER_SAVE);
     if (err != SL_STATUS_OK)
     {
-        ChipLogError(DeviceLayer, "Power save config for Wifi failed, status: %lx", err);
+        ChipLogError(DeviceLayer, "Power save config for Wifi failed");
     }
 #endif /* CHIP_CONFIG_ENABLE_ICD_SERVER*/
 
@@ -203,7 +214,7 @@ void OTAImageProcessorImpl::HandleFinalize(intptr_t context)
 
 void OTAImageProcessorImpl::HandleApply(intptr_t context)
 {
-    int32_t status = 0;
+    int32_t status = SL_STATUS_OK;
 
     ChipLogProgress(SoftwareUpdate, "OTAImageProcessorImpl::HandleApply()");
 
@@ -212,15 +223,16 @@ void OTAImageProcessorImpl::HandleApply(intptr_t context)
 
     ChipLogProgress(SoftwareUpdate, "OTA image downloaded successfully in HandleApply");
 
-    //Setting the device is in high performace - no-sleepy mode before soft reset as soft reset is not happening in sleep mode
+    // Setting the device is in high performace - no-sleepy mode before soft reset as soft reset is not happening in sleep mode
 #if (CHIP_CONFIG_ENABLE_ICD_SERVER)
-    status = wfx_power_save(RSI_ACTIVE ,HIGH_PERFORMANCE);
-    if (status != SL_STATUS_OK) {
-        ChipLogError(DeviceLayer,"Failed to enable the TA Deep Sleep, status: %lx", status);
+    status = wfx_power_save(RSI_ACTIVE, HIGH_PERFORMANCE);
+    if (status != SL_STATUS_OK)
+    {
+        ChipLogError(DeviceLayer, "Failed to enable the TA Deep Sleep");
     }
-#endif  /* CHIP_CONFIG_ENABLE_ICD_SERVER*/
+#endif /* CHIP_CONFIG_ENABLE_ICD_SERVER*/
 
-    if(mReset)
+    if (mReset)
     {
         ChipLogProgress(SoftwareUpdate, "M4 Firmware update complete");
         // send system reset request to reset the MCU and upgrade the m4 image
@@ -238,12 +250,12 @@ void OTAImageProcessorImpl::HandleAbort(intptr_t context)
         return;
     }
 
-    //Setting the device back to power save mode when transfer is aborted in the middle
+    // Setting the device back to power save mode when transfer is aborted in the middle
 #if (CHIP_CONFIG_ENABLE_ICD_SERVER)
     sl_status_t err = wfx_power_save(RSI_SLEEP_MODE_2, ASSOCIATED_POWER_SAVE);
     if (err != SL_STATUS_OK)
     {
-        ChipLogError(DeviceLayer, "Power save config for Wifi failed, status: %lx", err);
+        ChipLogError(DeviceLayer, "Power save config for Wifi failed");
     }
 #endif /* CHIP_CONFIG_ENABLE_ICD_SERVER*/
 
@@ -315,7 +327,7 @@ void OTAImageProcessorImpl::HandleProcessBlock(intptr_t context)
                     }
                 }
             }
-       //     ChipLogProgress(SoftwareUpdate, "HandleProcessBlock status: 0x%lX", status);
+            //     ChipLogProgress(SoftwareUpdate, "HandleProcessBlock status: 0x%lX", status);
             imageProcessor->mParams.downloadedBytes += kAlignmentBytes;
         }
     }
@@ -382,6 +394,11 @@ CHIP_ERROR OTAImageProcessorImpl::ReleaseBlock()
 
     mBlock = MutableByteSpan();
     return CHIP_NO_ERROR;
+}
+
+OTAImageProcessorImpl & OTAImageProcessorImpl::GetDefaultInstance()
+{
+    return gImageProcessor;
 }
 
 } // namespace chip

@@ -4,6 +4,9 @@ description: Enables the Matter Shell (CHIP Shell) functionality
 package: Matter
 category: Stack|Shell
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 requires:
 - name: matter_uart
 - name: matter_thread_cli
@@ -39,6 +42,8 @@ source:
 - path: src/lib/shell/commands/Ota.cpp
   condition: [matter_ota_support]
 - path: src/lib/shell/commands/Ota.cpp
+  condition: [matter_multi_image_ota]
+- path: src/lib/shell/commands/Ota.cpp
   condition: [matter_platform_siwx917]
 - path: examples/lock-app/silabs/src/EventHandlerLibShell.cpp
   condition:
@@ -73,6 +78,8 @@ define:
   condition: [matter_thread]
 - name: SL_MATTER_CLI_ARG_PARSER
   value: 1
+- name: IOSTREAM_USART
+  condition: [matter_platform_siwx917]
 conflicts:
   - name: matter_low_power
   - name: matter_no_lcd_shell

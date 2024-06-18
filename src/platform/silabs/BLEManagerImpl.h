@@ -29,18 +29,18 @@
 #if (SLI_SI91X_ENABLE_BLE || RSI_BLE_ENABLE)
 #ifdef __cplusplus
 extern "C" {
-#endif
+#endif // __cplusplus
 #include <rsi_ble.h>
 #include <rsi_ble_apis.h>
 #include <rsi_bt_common.h>
 #ifdef __cplusplus
 }
-#endif
+#endif // __cplusplus
 #else
 #include "gatt_db.h"
 #include "sl_bgapi.h"
 #include "sl_bt_api.h"
-#endif // SLI_SI91X_ENABLE_BLE
+#endif // (SLI_SI91X_ENABLE_BLE || RSI_BLE_ENABLE)
 
 namespace chip {
 namespace DeviceLayer {
@@ -79,12 +79,12 @@ public:
     CHIP_ERROR StopAdvertising(void);
 
 #if CHIP_ENABLE_ADDITIONAL_DATA_ADVERTISING
-#ifdef SLI_SI91X_ENABLE_BLE
-    // This defination is used by Wi-Fi devices
+#if (SLI_SI91X_ENABLE_BLE || RSI_BLE_ENABLE)
     static void HandleC3ReadRequest(rsi_ble_read_req_t * rsi_ble_read_req);
 #else
-    // This defination is used by thread devices
+#if CHIP_ENABLE_ADDITIONAL_DATA_ADVERTISING
     static void HandleC3ReadRequest(volatile sl_bt_msg_t * evt);
+#endif
 #endif
 #endif
 
@@ -136,7 +136,6 @@ private:
     static BLEManagerImpl sInstance;
 
     // ===== Private members reserved for use by this class only.
-
     enum class Flags : uint16_t
     {
         kAdvertisingEnabled     = 0x0001,
@@ -145,14 +144,19 @@ private:
         kRestartAdvertising     = 0x0008,
         kEFRBLEStackInitialized = 0x0010,
         kDeviceNameSet          = 0x0020,
+        kExtAdvertisingEnabled  = 0x0040,
     };
 
     enum
     {
         kMaxConnections      = BLE_LAYER_NUM_BLE_ENDPOINTS,
-        kMaxDeviceNameLength = 27,
+        kMaxDeviceNameLength = 21,
         kUnusedIndex         = 0xFF,
     };
+
+    static constexpr uint8_t kFlagTlvSize       = 3; // 1 byte for length, 1b for type and 1b for the Flag value
+    static constexpr uint8_t kUUIDTlvSize       = 4; // 1 byte for length, 1b for type and 2b for the UUID value
+    static constexpr uint8_t kDeviceNameTlvSize = (2 + kMaxDeviceNameLength); // 1 byte for length, 1b for type and + device name
 
     struct CHIPoBLEConState
     {

@@ -12,6 +12,9 @@ package: Matter
 provides:
 -   name: matter_rtt
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: third_party/jlink/segger_rtt/RTT/SEGGER_RTT.c
 ui_hints:

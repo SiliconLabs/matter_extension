@@ -38,7 +38,7 @@
 
 #include <platform/silabs/platformAbstraction/SilabsPlatform.h>
 
-#if (defined(SL_CATALOG_SIMPLE_LED_LED1_PRESENT) || defined(SIWX_917))
+#ifdef SL_CATALOG_SIMPLE_LED_LED1_PRESENT
 #define ONOFF_LED 1
 #else
 #define ONOFF_LED 0
@@ -228,10 +228,10 @@ void AppTask::UpdateClusterState(intptr_t context)
     uint8_t newValue = PlugMgr().IsPlugOn();
 
     // write the new on/off value
-    EmberAfStatus status = OnOffServer::Instance().setOnOffValue(1, newValue, false);
+    Protocols::InteractionModel::Status status = OnOffServer::Instance().setOnOffValue(1, newValue, false);
 
-    if (status != EMBER_ZCL_STATUS_SUCCESS)
+    if (status != Protocols::InteractionModel::Status::Success)
     {
-        SILABS_LOG("ERR: updating on/off %x", status);
+        SILABS_LOG("ERR: updating on/off %x", to_underlying(status));
     }
 }

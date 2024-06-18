@@ -2,9 +2,10 @@ category: Matter|Core
 define:
 -   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
     value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
+-   name: CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS
+    value: '1'
 -   name: CHIP_HAVE_CONFIG_H
     value: '1'
--   name: DISPLAY_ENABLED
 -   name: OPENTHREAD_CORE_CONFIG_PLATFORM_CHECK_FILE
     value: \openthread-core-efr32-config-check.h\""
 -   name: OPENTHREAD_PROJECT_CORE_CONFIG_FILE
@@ -13,17 +14,15 @@ define:
     value: \OPENTHREAD\""
 -   name: PACKAGE_VERSION
     value: \1.0.0\""
--   name: QR_CODE_ENABLED
 -   name: RADIO_CONFIG_DMP_SUPPORT
     value: '1'
 description: efr32_common
 id: efr32_common
 include:
+-   path: .
 -   path: examples/common/QRCode/repo/c
--   path: examples/lighting-app/silabs/include
 -   path: examples/platform/efr32
 -   path: examples/platform/silabs
--   path: examples/platform/silabs/display
 -   path: examples/platform/silabs/efr32
 -   path: examples/platform/silabs/efr32/project_include
 -   path: examples/providers
@@ -35,8 +34,8 @@ include:
 -   path: third_party/nlio/repo/include
 -   path: examples/platform/silabs
     file_list:
-    -   path: SilabsDeviceDataProvider.h
     -   path: board_config.h
+    -   path: wfx_rsi.h
     -   path: OTAConfig.h
     -   path: SoftwareFaultReports.h
     -   path: silabs_utils.h
@@ -44,20 +43,15 @@ include:
     -   path: uart.h
     -   path: MatterConfig.h
     -   path: LEDWidget.h
+    -   path: sl_systemview_config.h
     -   path: PigweedLogger.h
     -   path: FreeRTOSConfig.h
     -   path: Rpc.h
-    -   path: heap_4_silabs.h
     -   path: TemperatureSensor.h
     -   path: silabs_creds.h
     -   path: SilabsTestEventTriggerDelegate.h
     -   path: MemMonitoring.h
     -   path: BaseApplication.h
--   path: examples/platform/silabs/display
-    file_list:
-    -   path: lcd.h
-    -   path: demo-ui-bitmaps.h
-    -   path: demo-ui.h
 -   path: examples/platform/silabs/efr32
     file_list:
     -   path: spi_multiplex.h
@@ -66,14 +60,15 @@ package: Matter
 provides:
 -   name: matter_efr32_common
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 source:
 -   path: examples/platform/silabs/BaseApplication.cpp
 -   path: examples/platform/silabs/LEDWidget.cpp
 -   path: examples/platform/silabs/MatterConfig.cpp
 -   path: examples/platform/silabs/OTAConfig.cpp
 -   path: examples/platform/silabs/SoftwareFaultReports.cpp
--   path: examples/platform/silabs/display/demo-ui.c
--   path: examples/platform/silabs/display/lcd.cpp
 -   path: examples/platform/silabs/efr32/uart.cpp
 -   path: examples/platform/silabs/heap_4_silabs.c
 -   path: examples/platform/silabs/silabs_utils.cpp

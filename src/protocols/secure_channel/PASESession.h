@@ -41,8 +41,8 @@
 
 namespace chip {
 
-extern const char * kSpake2pI2RSessionInfo;
-extern const char * kSpake2pR2ISessionInfo;
+extern const char kSpake2pI2RSessionInfo[];
+extern const char kSpake2pR2ISessionInfo[];
 
 inline constexpr uint16_t kPBKDFParamRandomNumberSize = 32;
 
@@ -203,7 +203,8 @@ private:
     CHIP_ERROR HandleMsg3(System::PacketBufferHandle && msg);
 
     void OnSuccessStatusReport() override;
-    CHIP_ERROR OnFailureStatusReport(Protocols::SecureChannel::GeneralStatusCode generalCode, uint16_t protocolCode) override;
+    CHIP_ERROR OnFailureStatusReport(Protocols::SecureChannel::GeneralStatusCode generalCode, uint16_t protocolCode,
+                                     Optional<uintptr_t> protocolData) override;
 
     void Finish();
 

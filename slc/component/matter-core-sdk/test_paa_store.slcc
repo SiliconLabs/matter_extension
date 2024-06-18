@@ -1,0 +1,34 @@
+category: Matter|Core
+define:
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
+description: test_paa_store
+id: test_paa_store
+include:
+-   path: examples/platform/silabs
+-   path: src
+-   path: src/include
+-   path: src/lib
+-   path: third_party/nlassert/repo/include
+-   path: src/credentials/attestation_verifier
+    file_list:
+    -   path: DefaultDeviceAttestationVerifier.h
+    -   path: DacOnlyPartialAttestationVerifier.h
+    -   path: DeviceAttestationDelegate.h
+    -   path: FileAttestationTrustStore.h
+    -   path: TestPAAStore.h
+    -   path: DeviceAttestationVerifier.h
+label: test_paa_store
+package: Matter
+provides:
+-   name: matter_test_paa_store
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+source:
+-   path: src/credentials/attestation_verifier/TestPAAStore.cpp
+ui_hints:
+    visibility: never

@@ -98,10 +98,13 @@ typedef struct __attribute__((__packed__)) sl_wfx_mib_req_s
 
 #include "wfx_msgs.h"
 
-#if (SIWX_917 | EXP_BOARD)
+#if (SLI_SI91X_MCU_INTERFACE | EXP_BOARD)
 #include "sl_si91x_types.h"
 #include "sl_status.h"
 #include "sl_wifi_constants.h"
+
+#include "rsi_common_apis.h"
+#include "sl_wifi_device.h"
 
 #define SL_WIFI_ALLOCATE_COMMAND_BUFFER_WAIT_TIME_MS 1000
 #endif
@@ -122,8 +125,6 @@ typedef struct __attribute__((__packed__)) sl_wfx_mib_req_s
 #include "lwip/netifapi.h"
 #include "lwip/tcpip.h"
 
-// SLC-FIX
-#include "sl_matter_wifi_config.h"
 /* Wi-Fi bitmask events - for the task */
 #define SL_WFX_CONNECT (1 << 1)
 #define SL_WFX_DISCONNECT (1 << 2)
@@ -360,14 +361,18 @@ void wfx_ip_changed_notify(int got_ip);
 #endif /* CHIP_DEVICE_CONFIG_ENABLE_IPV4 */
 void wfx_ipv6_notify(int got_ip);
 
-#if !(SIWX_917 | EXP_BOARD)
+#if !(SLI_SI91X_MCU_INTERFACE | EXP_BOARD)
 void * wfx_rsi_alloc_pkt(void);
 #endif
 
 #ifdef RS911X_WIFI
 /* RSI Power Save */
 #if SL_ICD_ENABLED
+#if SLI_SI917
+sl_status_t wfx_power_save(rsi_power_save_profile_mode_t sl_si91x_ble_state, sl_si91x_performance_profile_t sl_si91x_wifi_state);
+#else
 sl_status_t wfx_power_save();
+#endif /* SLI_SI917 */
 #endif /* SL_ICD_ENABLED */
 /* RSI for LWIP */
 void wfx_rsi_pkt_add_data(void * p, uint8_t * buf, uint16_t len, uint16_t off);

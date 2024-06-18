@@ -356,8 +356,6 @@ void rsi_ble_add_char_val_att(void * serv_handler, uint16_t handle, uuid_t att_t
     return;
 }
 
-
-
 /*==============================================*/
 /**
  * @fn         rsi_ble_add_matter_service
