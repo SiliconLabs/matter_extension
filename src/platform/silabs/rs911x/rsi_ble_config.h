@@ -25,7 +25,9 @@
 #endif
 
 // SLC-FIX
+#ifndef SL_MATTER_GN_BUILD
 #include "sl_matter_wifi_config.h"
+#endif //SL_MATTER_GN_BUILD
 
 /******************************************************
  * *                      Macros

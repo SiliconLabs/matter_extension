@@ -46,6 +46,10 @@
  * @param[in]  password            - Password of the MQTT client which is also credential for MQTT server as an authentication
  * @return     0                   - Success  \n
  * @return     Negative Value      - Failure (**Possible Error Codes** - 0xfffffffe, 0xfffffffd, 0xfffffffc, 0xfffffffb, 0xffffffe0) \n
+ * @note       RSI_EMB_MQTT_KEEPALIVE_RETRIES  - Configures the MQTT Keep-alive retries in case the MQTT Ping response is not received from the MQTT broker within the command acknowledgement time (35 seconds) during the MQTT Keep-alive process.
+ * @note       which can be configured in rsi_wlan_config.h.
+ * @note       In this case the device notifies AT+RSI_MQTT_KA_TIMEOUT to the host.The MQTT Keep Alive retries happen every 35 seconds until MQTT Ping response is received for MQTT Ping request or until all the MQTT Keep Alive retries elapse.
+ * @note       This is an optional parameter. If not configured, the default value is 0. In this case, device will not perform MQTT Keep Alive retries, however the MQTT Keep Alive process keeps happening (until MQTT connection is terminated) every Keep Alive Time period configured by the host.                               
  * @note       **Precondition**    - \ref rsi_config_ipaddress() API needs to be called before this API. 
  * @note       Refer to \ref error-codes for the description of above error codes.
  *
@@ -126,7 +130,7 @@ int32_t rsi_emb_mqtt_client_init(int8_t *server_ip,
     // Copy MQTT Keep Alive period
     rsi_uint16_to_2bytes(mqtt_ops->keep_alive_interval, keep_alive_interval);
 
-#ifndef CHIP_9117
+#ifndef CHIP_917
     // Copy MQTT Keep Alive retries
     rsi_uint16_to_2bytes(mqtt_ops->keep_alive_retries, RSI_EMB_MQTT_KEEPALIVE_RETRIES);
 #endif
@@ -170,11 +174,11 @@ int32_t rsi_emb_mqtt_client_init(int8_t *server_ip,
 
       mqtt_ops->encrypt = 1;
     }
-#ifdef CHIP_9117
+#ifdef CHIP_917
     if (flags & RSI_EMB_MQTT_TCP_MAX_RETRANSMISSION_CAP) {
       mqtt_ops->tcp_max_retransmission_cap_for_emb_mqtt = RSI_EMB_MQTT_TCP_MAX_RETRANSMISSION_CAP >> 4;
     }
-#endif /* CHIP_9117 */
+#endif /* CHIP_917 */
 
 #ifndef RSI_NWK_SEM_BITMAP
     rsi_driver_cb_non_rom->nwk_wait_bitmap |= BIT(0);
@@ -229,6 +233,7 @@ int32_t rsi_emb_mqtt_client_init(int8_t *server_ip,
  *                                                  #define RSI_TCP_IP_FEATURE_BIT_MAP (TCP_IP_FEAT_DHCPV4_CLIENT | TCP_IP_FEAT_SSL | TCP_IP_FEAT_DNS_CLIENT). \n
  *                                                  Load the related SSL Certificates in the module using rsi_wlan_set_certificate() API.
  * @note        Refer to \ref error-codes for the description of above error codes. \n
+ * @note        Length of the topic Length should not exceed 200 bytes excluding NULL termination character.
  *
  */
 
@@ -331,6 +336,7 @@ int32_t rsi_emb_mqtt_connect(uint8_t mqtt_flags, int8_t *will_topic, uint16_t wi
  * @return     Negative Value - Failure (**Possible Error Codes** - 0xfffffffe, 0xfffffffd, 0xfffffffc, 0xfffffffb, 0xffffffe0) \n
  * @note       **Precondition** - \ref rsi_emb_mqtt_connect() API needs to be called before this API.
  * @note       Refer to \ref error-codes for the description of above error codes.
+ * @note       Length of the topic Length should not exceed 200 bytes excluding NULL termination character.
  */
 int32_t rsi_emb_mqtt_publish(int8_t *topic, rsi_mqtt_pubmsg_t *publish_msg)
 {
@@ -461,6 +467,7 @@ int32_t rsi_emb_mqtt_publish(int8_t *topic, rsi_mqtt_pubmsg_t *publish_msg)
  * @return     Negative Value - Failure (**Possible Error Codes** - 0xfffffffe, 0xfffffffd, 0xfffffffc, 0xfffffffb, 0xffffffe0) \n
  * @note       **Precondition** - \ref rsi_emb_mqtt_connect() API needs to be called before this API.
  * @note       Refer to \ref error-codes for the description of above error codes.
+ * @note       Length of the topic Length should not exceed 200 bytes excluding NULL termination character.
  */
 int32_t rsi_emb_mqtt_subscribe(uint8_t qos, int8_t *topic)
 {
@@ -563,6 +570,7 @@ int32_t rsi_emb_mqtt_subscribe(uint8_t qos, int8_t *topic)
  * @return     Negative Value - Failure (**Possible Error Codes** - 0xfffffffe, 0xfffffffd, 0xfffffffc, 0xfffffffb, 0xffffffe0) \n
  * @note       **Precondition** - \ref rsi_emb_mqtt_connect() API needs to be called before this API.
  * @note       Refer to \ref error-codes for the description of above error codes.
+ * @note       Length of the topic Length should not exceed 200 bytes excluding NULL termination character.
  */
 
 int32_t rsi_emb_mqtt_unsubscribe(int8_t *topic)
@@ -828,6 +836,21 @@ int32_t rsi_emb_mqtt_destroy()
  *                                     Failure - Possible error codes are : 0x0030, 0x0036, 0x0065, 0xBBF1, 0xBBF2, 0xBBF3, 0xFFF6
  * @param[out] buffer                - Pointer to buffer which holds data \n
  * @param[out] length                - Length of the buffer \n
+ * *              ### Prototypes of the callback functions with given callback id ###
+ * 	           Callback id                                 |   Function Description
+ * 	           :-------------------------------------------|:-----------------------------------------------------------
+ *             RSI_WLAN_NWK_EMB_MQTT_REMOTE_TERMINATE_CB   |    Called to notify the remote termination of embedded MQTT socket \n
+ *             ^                                           |    @pre  Need to call rsi_emb_mqtt_connect() API
+ *             ^                                           |    @param buffer   NULL \n 
+ *             ^                                           |    @param status   Possible Error response codes - 0xFFF6.
+ *             RSI_WLAN_NWK_EMB_MQTT_PUB_MSG_CB            |    Called when MQTT client receives the data which was published by other clients on the subscribed topic
+ *             ^                                           |    @pre  Need to call rsi_emb_mqtt_subscribe() API
+ *             ^                                           |    @param buffer   rsi_mqtt_rcv_pub_async_pkt_t ( \ref rsi_mqtt_rcv_pub_async_pkt_s) response structure is provided in callback \n 
+ *             ^                                           |    @param status   Success - RSI_SUCCESS
+ *             RSI_WLAN_NWK_EMB_MQTT_KEEPALIVE_TIMEOUT_CB  |    Called when keep alive timeout has occurred
+ *             ^                                           |    @pre   Need to call rsi_emb_mqtt_connect() API
+ *             ^                                           |    @param buffer NULL \n
+ *             ^                                           |    @param status  If it's a Success - RSI_SUCCESS, else the possible error response codes are 0x0021, 0xFF74, 0xFF40, 0xFF87.
  * @return     Status of the call_back_handler_ptr 
  * @note       **callback_id**\n
  *  ID                                         |    Description

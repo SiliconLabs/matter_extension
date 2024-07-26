@@ -1,16 +1,16 @@
-#include "ProvisionStorage.h"
 #include "AttestationKey.h"
-#include <platform/CHIPDeviceConfig.h>
-#include <platform/silabs/SilabsConfig.h>
-#include <platform/silabs/MigrationManager.h>
-#include <lib/support/CodeUtils.h>
-#include <lib/support/CHIPMemString.h>
-#include <lib/support/logging/CHIPLogging.h>
+#include "ProvisionStorage.h"
 #include <credentials/examples/DeviceAttestationCredsExample.h>
-#if !SLI_SI91X_MCU_INTERFACE //SLC-FIX
+#include <lib/support/CHIPMemString.h>
+#include <lib/support/CodeUtils.h>
+#include <lib/support/logging/CHIPLogging.h>
+#include <platform/CHIPDeviceConfig.h>
+#include <platform/silabs/MigrationManager.h>
+#include <platform/silabs/SilabsConfig.h>
+#if !SLI_SI91X_MCU_INTERFACE // SLC-FIX
+#include <em_msc.h>
 #include <platform/silabs/multi-ota/OtaTlvEncryptionKey.h>
 #include <psa/crypto.h>
-#include <em_msc.h>
 #endif
 #include <nvm3.h>
 #include <nvm3_default.h>
@@ -33,7 +33,6 @@ using namespace chip::DeviceLayer::Internal;
 
 using SilabsConfig = chip::DeviceLayer::Internal::SilabsConfig;
 
-
 namespace chip {
 namespace DeviceLayer {
 namespace Silabs {
@@ -43,24 +42,24 @@ namespace {
 // Miss-aligned certificates is a common error, and printing the first few bytes is
 // useful to verify proper alignment. Eight bytes is enough for this purpose.
 constexpr size_t kDebugLength = 8;
-size_t sCredentialsOffset = 0;
+size_t sCredentialsOffset     = 0;
 
 CHIP_ERROR ErasePage(uint32_t addr)
 {
 #ifdef SLI_SI91X_MCU_INTERFACE
-    rsi_flash_erase_sector((uint32_t *)addr);
+    rsi_flash_erase_sector((uint32_t *) addr);
 #else
-    MSC_ErasePage((uint32_t *)addr);
+    MSC_ErasePage((uint32_t *) addr);
 #endif
     return CHIP_NO_ERROR;
 }
 
-CHIP_ERROR WritePage(uint32_t addr, const uint8_t *data, size_t size)
+CHIP_ERROR WritePage(uint32_t addr, const uint8_t * data, size_t size)
 {
 #ifdef SLI_SI91X_MCU_INTERFACE
-    rsi_flash_write((uint32_t *)addr, (unsigned char *)data, size);
+    rsi_flash_write((uint32_t *) addr, (unsigned char *) data, size);
 #else
-    MSC_WriteWord((uint32_t *)addr, data, size);
+    MSC_WriteWord((uint32_t *) addr, data, size);
 #endif
     return CHIP_NO_ERROR;
 }
@@ -70,51 +69,53 @@ size_t RoundNearest(size_t n, size_t multiple)
     return (n % multiple) > 0 ? n + (multiple - n % multiple) : n;
 }
 
-CHIP_ERROR WriteFile(Storage &store, SilabsConfig::Key offset_key, SilabsConfig::Key size_key, const ByteSpan & value)
+CHIP_ERROR WriteFile(Storage & store, SilabsConfig::Key offset_key, SilabsConfig::Key size_key, const ByteSpan & value)
 {
     uint32_t base_addr = 0;
-    ReturnErrorOnFailure(store.GetBaseAddress(base_addr));
-    if(0 == sCredentialsOffset)
+    ReturnErrorOnFailure(store.GetCredentialsBaseAddress(base_addr));
+    if (0 == sCredentialsOffset)
     {
         ReturnErrorOnFailure(ErasePage(base_addr));
     }
 
     memcpy(Storage::aux_buffer, value.data(), value.size());
-    if(value.size() < Storage::kArgumentSizeMax)
+    if (value.size() < Storage::kArgumentSizeMax)
     {
         memset(Storage::aux_buffer + value.size(), 0xff, Storage::kArgumentSizeMax - value.size());
     }
 
-    ChipLogProgress(DeviceLayer, "WriteFile, addr:0x%06x+%03u, size:%u", (unsigned)base_addr, (unsigned)sCredentialsOffset, (unsigned)value.size());
+    ChipLogProgress(DeviceLayer, "WriteFile, addr:0x%06x+%03u, size:%u", (unsigned) base_addr, (unsigned) sCredentialsOffset,
+                    (unsigned) value.size());
     // ChipLogByteSpan(DeviceLayer, ByteSpan(value.data(), value.size() < kDebugLength ? value.size() : kDebugLength));
 
     ReturnErrorOnFailure(WritePage(base_addr + sCredentialsOffset, Storage::aux_buffer, Storage::kArgumentSizeMax));
 
     // Store file offset
-    ReturnErrorOnFailure(SilabsConfig::WriteConfigValue(offset_key, (uint32_t)sCredentialsOffset));
+    ReturnErrorOnFailure(SilabsConfig::WriteConfigValue(offset_key, (uint32_t) sCredentialsOffset));
     // Store file size
-    ReturnErrorOnFailure(SilabsConfig::WriteConfigValue(size_key, (uint32_t)value.size()));
+    ReturnErrorOnFailure(SilabsConfig::WriteConfigValue(size_key, (uint32_t) value.size()));
     // Calculate offset for the next file
     sCredentialsOffset = RoundNearest(sCredentialsOffset + value.size(), 64);
     return CHIP_NO_ERROR;
 }
 
-CHIP_ERROR ReadFileByOffset(Storage &store, const char * description, uint32_t offset, uint32_t size, MutableByteSpan & value)
+CHIP_ERROR ReadFileByOffset(Storage & store, const char * description, uint32_t offset, uint32_t size, MutableByteSpan & value)
 {
     uint32_t base_addr = 0;
-    ReturnErrorOnFailure(store.GetBaseAddress(base_addr));
+    ReturnErrorOnFailure(store.GetCredentialsBaseAddress(base_addr));
 
-    uint8_t * address  = (uint8_t *) (base_addr + offset);
+    uint8_t * address = (uint8_t *) (base_addr + offset);
     ByteSpan span(address, size);
-    ChipLogProgress(DeviceLayer, "%s, addr:0x%06x+%03u, size:%u", description, (unsigned)base_addr, (unsigned)offset, (unsigned)size);
-    //ChipLogByteSpan(DeviceLayer, ByteSpan(span.data(), span.size() < kDebugLength ? span.size() : kDebugLength));
+    ChipLogProgress(DeviceLayer, "%s, addr:0x%06x+%03u, size:%u", description, (unsigned) base_addr, (unsigned) offset,
+                    (unsigned) size);
+    // ChipLogByteSpan(DeviceLayer, ByteSpan(span.data(), span.size() < kDebugLength ? span.size() : kDebugLength));
     return CopySpanToMutableSpan(span, value);
 }
 
-CHIP_ERROR ReadFileByKey(Storage &store, const char * description, uint32_t offset_key, uint32_t size_key, MutableByteSpan & value)
+CHIP_ERROR ReadFileByKey(Storage & store, const char * description, uint32_t offset_key, uint32_t size_key, MutableByteSpan & value)
 {
     uint32_t offset = 0;
-    uint32_t size = 0;
+    uint32_t size   = 0;
 
     // Offset
     VerifyOrReturnError(SilabsConfig::ConfigValueExists(offset_key), CHIP_ERROR_NOT_FOUND);
@@ -129,7 +130,6 @@ CHIP_ERROR ReadFileByKey(Storage &store, const char * description, uint32_t offs
 
 } // namespace
 
-
 //
 // Initialization
 //
@@ -138,8 +138,8 @@ CHIP_ERROR Storage::Initialize(uint32_t flash_addr, uint32_t flash_size)
 {
     sCredentialsOffset = 0;
 
-    uint32_t base_addr = (uint32_t)linker_nvm_end;
-    if(flash_size > 0)
+    uint32_t base_addr = (uint32_t) linker_nvm_end;
+    if (flash_size > 0)
     {
 #ifndef SLI_SI91X_MCU_INTERFACE
         base_addr = (flash_addr + flash_size - FLASH_PAGE_SIZE);
@@ -149,12 +149,7 @@ CHIP_ERROR Storage::Initialize(uint32_t flash_addr, uint32_t flash_size)
         setNvm3End(base_addr);
 #endif
     }
-    return SilabsConfig::WriteConfigValue(SilabsConfig::kConfigKey_Creds_Base_Addr, base_addr);
-}
-
-CHIP_ERROR Storage::GetBaseAddress(uint32_t & value)
-{
-    return SilabsConfig::ReadConfigValue(SilabsConfig::kConfigKey_Creds_Base_Addr, value);
+    return SetCredentialsBaseAddress(base_addr);
 }
 
 CHIP_ERROR Storage::Commit()
@@ -302,7 +297,7 @@ CHIP_ERROR Storage::GetHardwareVersion(uint16_t & value)
     if (CHIP_DEVICE_ERROR_CONFIG_NOT_FOUND == err)
     {
         value = CHIP_DEVICE_CONFIG_DEFAULT_DEVICE_HARDWARE_VERSION;
-        err = CHIP_NO_ERROR;
+        err   = CHIP_NO_ERROR;
     }
 #endif
     return err;
@@ -335,9 +330,9 @@ CHIP_ERROR Storage::SetManufacturingDate(const char * value, size_t len)
     return SilabsConfig::WriteConfigValueStr(SilabsConfig::kConfigKey_ManufacturingDate, value, len);
 }
 
-CHIP_ERROR Storage::GetManufacturingDate(uint8_t * value, size_t max, size_t &size)
+CHIP_ERROR Storage::GetManufacturingDate(uint8_t * value, size_t max, size_t & size)
 {
-    return SilabsConfig::ReadConfigValueStr(SilabsConfig::kConfigKey_ManufacturingDate, (char *)value, max, size);
+    return SilabsConfig::ReadConfigValueStr(SilabsConfig::kConfigKey_ManufacturingDate, (char *) value, max, size);
 }
 
 CHIP_ERROR Storage::SetUniqueId(const uint8_t * value, size_t size)
@@ -345,11 +340,10 @@ CHIP_ERROR Storage::SetUniqueId(const uint8_t * value, size_t size)
     return SilabsConfig::WriteConfigValueBin(SilabsConfig::kConfigKey_UniqueId, value, size);
 }
 
-CHIP_ERROR Storage::GetUniqueId(uint8_t * value, size_t max, size_t &size)
+CHIP_ERROR Storage::GetUniqueId(uint8_t * value, size_t max, size_t & size)
 {
     return SilabsConfig::ReadConfigValueBin(SilabsConfig::kConfigKey_UniqueId, value, max, size);
 }
-
 
 //
 // CommissionableDataProvider
@@ -395,13 +389,13 @@ CHIP_ERROR Storage::GetSpake2pIterationCount(uint32_t & value)
 
 CHIP_ERROR Storage::SetSetupPasscode(uint32_t value)
 {
-    (void)value;
+    (void) value;
     return CHIP_ERROR_NOT_IMPLEMENTED;
 }
 
 CHIP_ERROR Storage::GetSetupPasscode(uint32_t & value)
 {
-    (void)value;
+    (void) value;
     return CHIP_ERROR_NOT_IMPLEMENTED;
 }
 
@@ -410,7 +404,7 @@ CHIP_ERROR Storage::SetSpake2pSalt(const char * value, size_t size)
     return SilabsConfig::WriteConfigValueStr(SilabsConfig::kConfigKey_Spake2pSalt, value, size);
 }
 
-CHIP_ERROR Storage::GetSpake2pSalt(char * value, size_t max, size_t &size)
+CHIP_ERROR Storage::GetSpake2pSalt(char * value, size_t max, size_t & size)
 {
     return SilabsConfig::ReadConfigValueStr(SilabsConfig::kConfigKey_Spake2pSalt, value, max, size);
 }
@@ -420,7 +414,7 @@ CHIP_ERROR Storage::SetSpake2pVerifier(const char * value, size_t size)
     return SilabsConfig::WriteConfigValueStr(SilabsConfig::kConfigKey_Spake2pVerifier, value, size);
 }
 
-CHIP_ERROR Storage::GetSpake2pVerifier(char * value, size_t max, size_t &size)
+CHIP_ERROR Storage::GetSpake2pVerifier(char * value, size_t max, size_t & size)
 {
     return SilabsConfig::ReadConfigValueStr(SilabsConfig::kConfigKey_Spake2pVerifier, value, max, size);
 }
@@ -431,7 +425,7 @@ CHIP_ERROR Storage::GetSpake2pVerifier(char * value, size_t max, size_t &size)
 
 CHIP_ERROR Storage::SetFirmwareInformation(const ByteSpan & value)
 {
-    (void)value;
+    (void) value;
     return CHIP_NO_ERROR;
 }
 
@@ -450,16 +444,17 @@ CHIP_ERROR Storage::SetCertificationDeclaration(const ByteSpan & value)
 
 CHIP_ERROR Storage::GetCertificationDeclaration(MutableByteSpan & value)
 {
-    CHIP_ERROR err = ReadFileByKey(*this, "GetCertificationDeclaration", SilabsConfig::kConfigKey_Creds_CD_Offset, SilabsConfig::kConfigKey_Creds_CD_Size, value);
+    CHIP_ERROR err = ReadFileByKey(*this, "GetCertificationDeclaration", SilabsConfig::kConfigKey_Creds_CD_Offset,
+                                   SilabsConfig::kConfigKey_Creds_CD_Size, value);
 #if defined(SL_PROVISION_VERSION_1_0) && SL_PROVISION_VERSION_1_0
-    if(CHIP_ERROR_NOT_FOUND == err)
+    if (CHIP_ERROR_NOT_FOUND == err)
     {
         // Reading from the old script's location.
         err = ReadFileByOffset(*this, "GetDeviceAttestationCert", SL_CREDENTIALS_CD_OFFSET, SL_CREDENTIALS_CD_SIZE, value);
     }
 #endif
 #ifdef CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS
-    if(CHIP_ERROR_NOT_FOUND == err)
+    if (CHIP_ERROR_NOT_FOUND == err)
     {
         // Example CD
         err = Examples::GetExampleDACProvider()->GetCertificationDeclaration(value);
@@ -470,25 +465,27 @@ CHIP_ERROR Storage::GetCertificationDeclaration(MutableByteSpan & value)
 
 CHIP_ERROR Storage::SetProductAttestationIntermediateCert(const ByteSpan & value)
 {
-    ReturnErrorOnFailure(WriteFile(*this, SilabsConfig::kConfigKey_Creds_PAI_Offset, SilabsConfig::kConfigKey_Creds_PAI_Size, value));
+    ReturnErrorOnFailure(
+        WriteFile(*this, SilabsConfig::kConfigKey_Creds_PAI_Offset, SilabsConfig::kConfigKey_Creds_PAI_Size, value));
     return CHIP_NO_ERROR;
 }
 
 CHIP_ERROR Storage::GetProductAttestationIntermediateCert(MutableByteSpan & value)
 {
-    CHIP_ERROR err = ReadFileByKey(*this, "GetProductAttestationIntermediateCert", SilabsConfig::kConfigKey_Creds_PAI_Offset, SilabsConfig::kConfigKey_Creds_PAI_Size, value);
+    CHIP_ERROR err = ReadFileByKey(*this, "GetProductAttestationIntermediateCert", SilabsConfig::kConfigKey_Creds_PAI_Offset,
+                                   SilabsConfig::kConfigKey_Creds_PAI_Size, value);
 #if defined(SL_PROVISION_VERSION_1_0) && SL_PROVISION_VERSION_1_0
-    if(CHIP_ERROR_NOT_FOUND == err)
+    if (CHIP_ERROR_NOT_FOUND == err)
     {
         // Reading from the old script's location.
         err = ReadFileByOffset(*this, "GetDeviceAttestationCert", SL_CREDENTIALS_PAI_OFFSET, SL_CREDENTIALS_PAI_SIZE, value);
     }
 #endif
 #ifdef CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS
-    if(CHIP_ERROR_NOT_FOUND == err)
+    if (CHIP_ERROR_NOT_FOUND == err)
     {
         // Example PAI
-        err =  Examples::GetExampleDACProvider()->GetProductAttestationIntermediateCert(value);
+        err = Examples::GetExampleDACProvider()->GetProductAttestationIntermediateCert(value);
     }
 #endif
     return err;
@@ -496,22 +493,24 @@ CHIP_ERROR Storage::GetProductAttestationIntermediateCert(MutableByteSpan & valu
 
 CHIP_ERROR Storage::SetDeviceAttestationCert(const ByteSpan & value)
 {
-    ReturnErrorOnFailure(WriteFile(*this, SilabsConfig::kConfigKey_Creds_DAC_Offset, SilabsConfig::kConfigKey_Creds_DAC_Size, value));
+    ReturnErrorOnFailure(
+        WriteFile(*this, SilabsConfig::kConfigKey_Creds_DAC_Offset, SilabsConfig::kConfigKey_Creds_DAC_Size, value));
     return CHIP_NO_ERROR;
 }
 
 CHIP_ERROR Storage::GetDeviceAttestationCert(MutableByteSpan & value)
 {
-    CHIP_ERROR err = ReadFileByKey(*this, "GetDeviceAttestationCert", SilabsConfig::kConfigKey_Creds_DAC_Offset, SilabsConfig::kConfigKey_Creds_DAC_Size, value);
+    CHIP_ERROR err = ReadFileByKey(*this, "GetDeviceAttestationCert", SilabsConfig::kConfigKey_Creds_DAC_Offset,
+                                   SilabsConfig::kConfigKey_Creds_DAC_Size, value);
 #if defined(SL_PROVISION_VERSION_1_0) && SL_PROVISION_VERSION_1_0
-    if(CHIP_ERROR_NOT_FOUND == err)
+    if (CHIP_ERROR_NOT_FOUND == err)
     {
         // Reading from the old script's location.
         err = ReadFileByOffset(*this, "GetDeviceAttestationCert", SL_CREDENTIALS_DAC_OFFSET, SL_CREDENTIALS_DAC_SIZE, value);
     }
 #endif
 #ifdef CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS
-    if(CHIP_ERROR_NOT_FOUND == err)
+    if (CHIP_ERROR_NOT_FOUND == err)
     {
         // Example DAC
         return Examples::GetExampleDACProvider()->GetDeviceAttestationCert(value);
@@ -527,11 +526,11 @@ CHIP_ERROR Storage::SetDeviceAttestationKey(const ByteSpan & value)
     return SilabsConfig::WriteConfigValueBin(SilabsConfig::kConfigKey_Creds_KeyId, value.data(), value.size());
 }
 
-CHIP_ERROR Storage::GetDeviceAttestationCSR(uint16_t vid, uint16_t pid, const CharSpan &cn, MutableCharSpan & csr)
+CHIP_ERROR Storage::GetDeviceAttestationCSR(uint16_t vid, uint16_t pid, const CharSpan & cn, MutableCharSpan & csr)
 {
     AttestationKey key;
     uint8_t temp[kDeviceAttestationKeySizeMax] = { 0 };
-    size_t size = 0;
+    size_t size                                = 0;
     ReturnErrorOnFailure(key.GenerateCSR(vid, pid, cn, csr));
     ReturnErrorOnFailure(key.Export(temp, sizeof(temp), size));
     return SilabsConfig::WriteConfigValueBin(SilabsConfig::kConfigKey_Creds_KeyId, temp, size);
@@ -543,7 +542,7 @@ CHIP_ERROR Storage::SignWithDeviceAttestationKey(const ByteSpan & message, Mutab
     {
         AttestationKey key;
         uint8_t temp[kDeviceAttestationKeySizeMax] = { 0 };
-        size_t size = 0;
+        size_t size                                = 0;
         ReturnErrorOnFailure(SilabsConfig::ReadConfigValueBin(SilabsConfig::kConfigKey_Creds_KeyId, temp, sizeof(temp), size));
         key.Import(temp, size);
         return key.SignMessage(message, signature);
@@ -568,7 +567,7 @@ CHIP_ERROR Storage::SetDeviceAttestationKey(const ByteSpan & value)
     return SilabsConfig::WriteConfigValue(SilabsConfig::kConfigKey_Creds_KeyId, key.GetId());
 }
 
-CHIP_ERROR Storage::GetDeviceAttestationCSR(uint16_t vid, uint16_t pid, const CharSpan &cn, MutableCharSpan & csr)
+CHIP_ERROR Storage::GetDeviceAttestationCSR(uint16_t vid, uint16_t pid, const CharSpan & cn, MutableCharSpan & csr)
 {
     AttestationKey key;
     ReturnErrorOnFailure(key.GenerateCSR(vid, pid, cn, csr));
@@ -578,7 +577,7 @@ CHIP_ERROR Storage::GetDeviceAttestationCSR(uint16_t vid, uint16_t pid, const Ch
 CHIP_ERROR Storage::SignWithDeviceAttestationKey(const ByteSpan & message, MutableByteSpan & signature)
 {
     CHIP_ERROR err = CHIP_ERROR_NOT_FOUND;
-    uint32_t kid = 0;
+    uint32_t kid   = 0;
 
     if (SilabsConfig::ConfigValueExists(SilabsConfig::kConfigKey_Creds_KeyId))
     {
@@ -593,8 +592,9 @@ CHIP_ERROR Storage::SignWithDeviceAttestationKey(const ByteSpan & message, Mutab
         err = Examples::GetExampleDACProvider()->SignWithDeviceAttestationKey(message, signature);
     }
 #endif
-    ChipLogProgress(DeviceLayer, "SignWithDeviceAttestationKey, kid:%u, msg_size:%u, sig_size:%u, err:0x%02x", (unsigned)kid, (unsigned)message.size(), (unsigned)signature.size(), (unsigned)err.AsInteger());
-    //ChipLogByteSpan(DeviceLayer, ByteSpan(signature.data(), signature.size() < kDebugLength ? signature.size() : kDebugLength));
+    ChipLogProgress(DeviceLayer, "SignWithDeviceAttestationKey, kid:%u, msg_size:%u, sig_size:%u, err:0x%02x", (unsigned) kid,
+                    (unsigned) message.size(), (unsigned) signature.size(), (unsigned) err.AsInteger());
+    // ChipLogByteSpan(DeviceLayer, ByteSpan(signature.data(), signature.size() < kDebugLength ? signature.size() : kDebugLength));
     return err;
 }
 #endif // SLI_SI91X_MCU_INTERFACE
@@ -603,12 +603,22 @@ CHIP_ERROR Storage::SignWithDeviceAttestationKey(const ByteSpan & message, Mutab
 // Other
 //
 
+CHIP_ERROR Storage::SetCredentialsBaseAddress(uint32_t addr)
+{
+    return SilabsConfig::WriteConfigValue(SilabsConfig::kConfigKey_Creds_Base_Addr, addr);
+}
+
+CHIP_ERROR Storage::GetCredentialsBaseAddress(uint32_t & addr)
+{
+    return SilabsConfig::ReadConfigValue(SilabsConfig::kConfigKey_Creds_Base_Addr, addr);
+}
+
 CHIP_ERROR Storage::SetProvisionVersion(const char * value, size_t size)
 {
     return SilabsConfig::WriteConfigValueStr(SilabsConfig::kConfigKey_Provision_Version, value, size);
 }
 
-CHIP_ERROR Storage::GetProvisionVersion(char * value, size_t max, size_t &size)
+CHIP_ERROR Storage::GetProvisionVersion(char * value, size_t max, size_t & size)
 {
     return SilabsConfig::ReadConfigValueStr(SilabsConfig::kConfigKey_Provision_Version, value, max, size);
 }
@@ -618,7 +628,7 @@ CHIP_ERROR Storage::SetSetupPayload(const uint8_t * value, size_t size)
     return SilabsConfig::WriteConfigValueBin(SilabsConfig::kConfigKey_SetupPayloadBitSet, value, size);
 }
 
-CHIP_ERROR Storage::GetSetupPayload(uint8_t * value, size_t max, size_t &size)
+CHIP_ERROR Storage::GetSetupPayload(uint8_t * value, size_t max, size_t & size)
 {
     return SilabsConfig::ReadConfigValueBin(SilabsConfig::kConfigKey_SetupPayloadBitSet, value, max, size);
 }
@@ -628,7 +638,7 @@ CHIP_ERROR Storage::SetProvisionRequest(bool value)
     return SilabsConfig::WriteConfigValue(SilabsConfig::kConfigKey_Provision_Request, value);
 }
 
-CHIP_ERROR Storage::GetProvisionRequest(bool &value)
+CHIP_ERROR Storage::GetProvisionRequest(bool & value)
 {
     return SilabsConfig::ReadConfigValue(SilabsConfig::kConfigKey_Provision_Request, value);
 }
@@ -639,11 +649,15 @@ CHIP_ERROR Storage::SetOtaTlvEncryptionKey(const ByteSpan & value)
     chip::DeviceLayer::Silabs::OtaTlvEncryptionKey::OtaTlvEncryptionKey key;
     ReturnErrorOnFailure(key.Import(value.data(), value.size()));
     return SilabsConfig::WriteConfigValue(SilabsConfig::kOtaTlvEncryption_KeyId, key.GetId());
-
 }
 #endif
 
 } // namespace Provision
+
+void MigrateDacKeyToPSA(void)
+{
+    return;
+}
 
 void MigrateDacProvider(void)
 {

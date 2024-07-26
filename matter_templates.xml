@@ -611,6 +611,23 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="core.hidden" value="true"/>
+  </descriptors>
+   <descriptors name="MatterSensorOverWiFi" label="Matter - SoC Sensor over  Wi-Fi"
+               description="This project builds a Matter Sensor app for Wi-Fi SiWx917 that can be developed inside Simplicity Studio">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.sample-app.sensor-app.siwx917.sensor-app-917-soc.slcp"/>
+    <properties key="projectFilePaths" value="slc/sample-app/sensor-app/siwx917/sensor-app-917-soc.slcp"/>
+    <properties key="readmeFiles" value="slc/sample-app/sensor-app/siwx917/README_WiFi.md"/>
+    <properties key="boardCompatibility" value="brd4338a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*si917.* .*si917.* "/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
+    <properties key="core.hidden" value="true"/>
   </descriptors> 
    <descriptors name="MatterDishwasherOverThreadSolution" label="Matter - SoC Dishwasher over Thread with external Bootloader"
                description="This project builds a Matter Dishwasher and Matter External Bootloader that can be developed inside Simplicity Studio">
@@ -933,6 +950,23 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.sample-app.dishwasher-app.siwx917.dishwasher-app-917-soc.slcp"/>
+  </descriptors>
+  <descriptors name="MatterSensorOverWiFiSolution" label="Matter - SoC Sensor over Wi-Fi"
+               description="This project builds a Matter Sensor App that can be developed inside Simplicity Studio">
+    <properties key="namespace" value="template.solution.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.workspaces.sensor-app.siwx917.sensor-app-917-soc.slcw"/>
+    <properties key="projectFilePaths" value="slc/workspaces/sensor-app/siwx917/sensor-app-917-soc.slcw"/>
+    <properties key="readmeFiles" value="slc/sample-app/sensor-app/siwx917/README_WiFi.md"/>
+    <properties key="boardCompatibility" value="brd4338a  com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*siwg917m111mgtba.* .*siwg917m111mgtba.* .*siwg917m111mgtba.* "/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
+    <properties key="solutionProjects" value="slc.sample-app.sensor-app.siwx917.sensor-app-917-soc.slcp"/>
   </descriptors>
   <descriptors name="ZigbeeMatterLight" label="Matter and Zigbee - SoC Light"
                description="This project builds a Matter Lighting app combined with a Zigbee Light that can be developed inside Simplicity Studio">

@@ -30,6 +30,7 @@
 #ifndef RSI_M4_INTERFACE
 #ifndef RSI_UART_INTERFACE
 #ifndef RSI_USB_INTERFACE
+#ifndef LINUX_PLATFORM
 
 #if RSI_FAST_FW_UP
 int16_t rsi_secure_ping_pong_wr(uint32_t ping_pong, uint8_t *src_addr, uint16_t size_param);
@@ -87,21 +88,6 @@ int16_t rsi_secure_ping_pong_wr(uint32_t ping_pong, uint8_t *src_addr, uint16_t 
 #endif
 /** @} */
 /** @addtogroup DRIVER6
-* @{
-*/
-/*===========================================================*/
-/**
- * @fn          int16_t rsi_bl_module_power_cycle(void)
- * @brief       Power cycles the module. This API is valid only if there is a power gate, external to the module, 
- *              which is controlling the power to the module using a GPIO signal of the MCU.
- * @pre         \ref rsi_driver_init() must be called before this API. 
- * @param[in]   void 
- * @return      0              - Success \n 
- * @return      Non-Zero Value - Failure
- * @note        **Precondition** - \ref rsi_driver_init() must be called before this API.
- */
-/** @} */
-/** @addtogroup DRIVER5
 * @{
 */
 /*==============================================*/
@@ -167,6 +153,7 @@ int16_t rsi_bl_select_option(uint8_t cmd)
   int16_t retval      = 0;
   uint16_t read_value = 0;
   rsi_timer_instance_t timer_instance;
+  uint16_t default_nwp_fw_selected = 0;
 
   retval = rsi_mem_wr(RSI_HOST_INTF_REG_OUT, 2, (uint8_t *)&boot_cmd);
   if (retval < 0) {
@@ -203,39 +190,51 @@ int16_t rsi_bl_select_option(uint8_t cmd)
       return RSI_ERROR_FW_LOAD_OR_UPGRADE_TIMEOUT;
     }
   }
-  if ((cmd == LOAD_NWP_FW) || (cmd == LOAD_DEFAULT_NWP_FW_ACTIVE_LOW)) {
+  while ((cmd == LOAD_NWP_FW) || (cmd == LOAD_DEFAULT_NWP_FW_ACTIVE_LOW)) {
     rsi_init_timer(&timer_instance, 3000);
-    do {
-      retval = rsi_bootloader_instructions(RSI_REG_READ, &read_value);
-      if (retval < 0) {
-        return retval;
-      }
-      if ((read_value & 0xF000) == (RSI_HOST_INTERACT_REG_VALID_FW & 0xF000)) {
-        if ((read_value & 0xFF) == VALID_FIRMWARE_NOT_PRESENT) {
+    retval = rsi_bootloader_instructions(RSI_REG_READ, &read_value);
+    if (retval < 0) {
+      return retval;
+    }
+    if ((read_value & 0xF000) == (RSI_HOST_INTERACT_REG_VALID_FW & 0xF000)) {
+      if ((read_value & 0xFF) == VALID_FIRMWARE_NOT_PRESENT) {
+        if (default_nwp_fw_selected == 0) {
+          boot_cmd = RSI_HOST_INTERACT_REG_VALID_FW | SELECT_DEFAULT_NWP_FW;
+          retval   = rsi_bootloader_instructions(RSI_REG_WRITE, &boot_cmd);
+          if (retval < 0) {
+            return retval;
+          }
+          boot_cmd = RSI_HOST_INTERACT_REG_VALID_FW | cmd;
+          retval   = rsi_bootloader_instructions(RSI_REG_WRITE, &boot_cmd);
+          if (retval < 0) {
+            return retval;
+          }
+          default_nwp_fw_selected = 1;
+          continue;
+        } else {
 #ifdef RSI_DEBUG_PRINT
           RSI_DPRINT(RSI_PL4, "VALID_FIRMWARE_NOT_PRESENT\n");
 #endif
           return RSI_ERROR_VALID_FIRMWARE_NOT_PRESENT;
         }
-        if ((read_value & 0xFF) == RSI_INVALID_OPTION) {
+      }
+      if ((read_value & 0xFF) == RSI_INVALID_OPTION) {
 #ifdef RSI_DEBUG_PRINT
-          RSI_DPRINT(RSI_PL4, "INVALID CMD\n");
+        RSI_DPRINT(RSI_PL4, "INVALID CMD\n");
 #endif
 
-          return RSI_ERROR_INVALID_OPTION;
-        }
-        if ((read_value & 0xFF) == RSI_CHECKSUM_SUCCESS) {
+        return RSI_ERROR_INVALID_OPTION;
+      }
+      if ((read_value & 0xFF) == RSI_CHECKSUM_SUCCESS) {
 #ifdef RSI_DEBUG_PRINT
-          RSI_DPRINT(RSI_PL4, "LOAD SUCCESS\n");
+        RSI_DPRINT(RSI_PL4, "LOAD SUCCESS\n");
 #endif
-          break;
-        }
+        break;
       }
-      if (rsi_timer_expired(&timer_instance)) {
-        return RSI_ERROR_FW_LOAD_OR_UPGRADE_TIMEOUT;
-      }
-
-    } while (1);
+    }
+    if (rsi_timer_expired(&timer_instance)) {
+      return RSI_ERROR_FW_LOAD_OR_UPGRADE_TIMEOUT;
+    }
   }
   return retval;
 }
@@ -277,8 +276,14 @@ int16_t rsi_bl_upgrade_firmware(uint8_t *firmware_image, uint32_t fw_image_size,
   uint32_t boot_insn = 0, poll_resp = 0;
   rsi_timer_instance_t timer_instance;
 
+  //Buffer is a type casted pointer of the first 4096 byte fw file chunk
+  fwreq_t *fw = (fwreq_t *)firmware_image;
+
   // If it is a start of file set the boot cmd to pong valid
   if (flags & RSI_FW_START_OF_FILE) {
+    if (fw->image_size == 0 || fw->magic_no != FW_MAGIC_NO || fw->image_loc != FW_IMAGE_LOC) {
+      return RSI_ERROR_CORRUPTED_FIRMWARE;
+    }
     boot_cmd = RSI_HOST_INTERACT_REG_VALID | RSI_PONG_VALID;
   }
 
@@ -612,14 +617,14 @@ int32_t rsi_get_ram_dump(uint32_t addr, uint16_t length, uint8_t *buf)
 /*===========================================================*/
 /**
  * @fn          int16_t rsi_bl_module_power_cycle(void)
- * @brief       Power cycle the module.This API is valid only if there is a power gate, external to the module,which is controlling the power 
- *              to the module using a GPIO signal of the MCU.
- * @pre         \ref rsi_driver_init() must be called before this API. 
+ * @brief       Power cycles the module. This API is valid only if there is a power gate, external to the module, 
+ *              which is controlling the power to the module using a GPIO signal of the MCU.
  * @param[in]   void 
  * @return      0              - Success \n 
- *              Non-Zero Value - Failure
+ * @return      Non-Zero Value - Failure
+ * @note        **Precondition** - \ref rsi_driver_init() must be called before this API.
  */
-
+#endif
 int16_t rsi_bl_module_power_cycle(void)
 {
   SL_PRINTF(SL_BL_MODULE_POWER_CYCLE_ENTRY, DRIVER, LOG_INFO);

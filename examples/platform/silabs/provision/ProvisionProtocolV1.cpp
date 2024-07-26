@@ -99,7 +99,7 @@ CHIP_ERROR Protocol1::Init(Encoding::Buffer &in, Encoding::Buffer &out)
     // Execute
     ReturnErrorOnFailure(mStore.Initialize(flash_addr, flash_size));
     ReturnErrorOnFailure(mStore.Commit());
-    ReturnErrorOnFailure(mStore.GetBaseAddress(creds_base_addr));
+    ReturnErrorOnFailure(mStore.GetCredentialsBaseAddress(creds_base_addr));
 
     // Encode response
     Encoding::Version1::Encode(out, (uint32_t)creds_base_addr);

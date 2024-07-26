@@ -53,6 +53,7 @@
 #define BSD_MAX_SOCKETS           10
 #define RSI_CLEAR_ALL_SOCKETS     0xEF
 #define RSI_LTCP_PORT_BASED_CLOSE 0xEE
+#define RSI_CLEAR_ALL_AP_SOCKETS  0xED
 #ifdef FD_SETSIZE
 #undef FD_SETSIZE                  /* May be different in other header files e.g 64 in GNU types.h file    */
 #define FD_SETSIZE BSD_MAX_SOCKETS /* Number of sockets to select on - same is max sockets!                */
@@ -307,10 +308,11 @@
 #define SO_TCP_ACK_INDICATION       45             /* To enable tcp ack indication feature*/
 #define SO_CERT_INDEX               46             /* To enable set certificate index*/
 #define SO_TLS_SNI                  47             /* To Configure the TLS SNI extension */
-#ifdef CHIP_9117
-#define SO_MAX_RETRANSMISSION_TIMEOUT_VAL 48 /* to configure max retransmission timeout value*/
+#ifdef CHIP_917
+/* 48 is for IP_TOS */
 #define SO_SSL_V_1_3_ENABLE               49 /* To enable ssl 1.3*/
 #define SO_SSL_RECV_BUFF_SIZE             50 /* To configure SSL Data path enhancement*/
+#define SO_MAX_RETRANSMISSION_TIMEOUT_VAL 51 /* To configure TCP max retransmission timeout value*/
 #endif
 #define MAX_RETRANSMISSION_TIME_VALUE 32
 
@@ -390,6 +392,9 @@ typedef enum rsi_socket_state_e {
   RSI_SOCKET_STATE_LISTEN,
   RSI_SOCKET_STATE_CONNECTED
 } rsi_socket_state_t;
+
+typedef enum { RSI_HTTP } nw_app_protocol;
+typedef enum { RSI_CIPHER_SELECTION } nw_app_config;
 
 /******************************************************
  * *                 Type Definitions
@@ -642,6 +647,7 @@ int32_t rsi_select(int32_t nfds,
                    rsi_fd_set *exceptfds,
                    struct rsi_timeval *timeout,
                    void (*callback)(rsi_fd_set *fd_read, rsi_fd_set *fd_write, rsi_fd_set *fd_except, int32_t status));
+int32_t rsi_vap_shutdown(uint8_t vapID);
 int32_t rsi_shutdown(int32_t sockID, int32_t how);
 int32_t rsi_socket_async(int32_t protocolFamily,
                          int32_t type,
@@ -673,6 +679,10 @@ int32_t rsi_sendto_async(int32_t sockID,
                          struct rsi_sockaddr *destAddr,
                          int32_t destAddrLen,
                          void (*data_transfer_complete_handler)(int32_t sockID, const uint16_t length));
+uint32_t rsi_network_app_protocol_config(nw_app_protocol protocol,
+                                         nw_app_config config_type,
+                                         void *config,
+                                         uint16_t config_length);
 int rsi_setsockopt(int32_t sockID, int level, int option_name, const void *option_value, rsi_socklen_t option_len);
 int32_t rsi_get_app_socket_descriptor(uint8_t *src_port);
 int32_t rsi_get_primary_socket_id(uint8_t *port_number);

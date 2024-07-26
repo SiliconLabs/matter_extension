@@ -1,6 +1,6 @@
 /*
  *
- *    Copyright (c) 2023 Project CHIP Authors
+ *    Copyright (c) 2024 Project CHIP Authors
  *    All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,38 +15,42 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-#include <operational-state-delegate-impl.h>
+
+#include <app-common/zap-generated/ids/Attributes.h>
+#include <app-common/zap-generated/ids/Clusters.h>
 #include <app-common/zap-generated/attribute-type.h>
 #include <app/ConcreteAttributePath.h>
+#include <app/util/attribute-storage.h>
 #include <app/util/generic-callbacks.h>
+
+#include "OperationalStateDelegate.h"
 
 using namespace chip;
 using namespace chip::app;
 using namespace chip::app::Clusters;
 using namespace chip::app::Clusters::OperationalState;
 
+static std::unique_ptr<OperationalStateDelegate> gOperationalStateDelegate;
+static std::unique_ptr<OperationalState::Instance> gOperationalStateInstance;
+
 CHIP_ERROR OperationalStateDelegate::GetOperationalStateAtIndex(size_t index, GenericOperationalState & operationalState)
 {
-    if (index > mOperationalStateList.size() - 1)
-    {
-        return CHIP_ERROR_NOT_FOUND;
-    }
+    VerifyOrReturnError(index < mOperationalStateList.size(), CHIP_ERROR_NOT_FOUND);
+    
     operationalState = mOperationalStateList[index];
+    
     return CHIP_NO_ERROR;
 }
 
 CHIP_ERROR OperationalStateDelegate::GetOperationalPhaseAtIndex(size_t index, MutableCharSpan & operationalPhase)
 {
-    if (index >= mOperationalPhaseList.size())
-    {
-        return CHIP_ERROR_NOT_FOUND;
-    }
+    VerifyOrReturnError(index < mOperationalPhaseList.size(), CHIP_ERROR_NOT_FOUND);
+
     return CopyCharSpanToMutableCharSpan(mOperationalPhaseList[index], operationalPhase);
 }
 
 void OperationalStateDelegate::HandlePauseStateCallback(GenericOperationalError & err)
 {
-    // placeholder implementation
     auto error = GetInstance()->SetOperationalState(to_underlying(OperationalState::OperationalStateEnum::kPaused));
     if (error == CHIP_NO_ERROR)
     {
@@ -62,7 +66,6 @@ void OperationalStateDelegate::HandlePauseStateCallback(GenericOperationalError 
 
 void OperationalStateDelegate::HandleResumeStateCallback(GenericOperationalError & err)
 {
-    // placeholder implementation
     auto error = GetInstance()->SetOperationalState(to_underlying(OperationalStateEnum::kRunning));
     if (error == CHIP_NO_ERROR)
     {
@@ -78,7 +81,6 @@ void OperationalStateDelegate::HandleResumeStateCallback(GenericOperationalError
 
 void OperationalStateDelegate::HandleStartStateCallback(GenericOperationalError & err)
 {
-    // placeholder implementation
     auto error = GetInstance()->SetOperationalState(to_underlying(OperationalStateEnum::kRunning));
     if (error == CHIP_NO_ERROR)
     {
@@ -94,7 +96,6 @@ void OperationalStateDelegate::HandleStartStateCallback(GenericOperationalError 
 
 void OperationalStateDelegate::HandleStopStateCallback(GenericOperationalError & err)
 {
-    // placeholder implementation
     auto error = GetInstance()->SetOperationalState(to_underlying(OperationalStateEnum::kStopped));
     if (error == CHIP_NO_ERROR)
     {
@@ -106,7 +107,6 @@ void OperationalStateDelegate::HandleStopStateCallback(GenericOperationalError &
     {
         err.Set(to_underlying(ErrorStateEnum::kUnableToCompleteOperation));
     }
-
 }
 
 void OperationalStateDelegate::PostAttributeChangeCallback(AttributeId attributeId, uint8_t type, uint16_t size, uint8_t * value)
@@ -114,36 +114,55 @@ void OperationalStateDelegate::PostAttributeChangeCallback(AttributeId attribute
     chip::app::ConcreteAttributePath  info;
     info.mClusterId   = Clusters::OperationalState::Id;
     info.mAttributeId = attributeId;
-    info.mEndpointId  = this->mEndpointId;
-    MatterPostAttributeChangeCallback(info,type, size, value);
+    info.mEndpointId  = mEndpointId;
+    MatterPostAttributeChangeCallback(info, type, size, value);
 }
 
-static OperationalState::Instance * gOperationalStateInstance = nullptr;
-static OperationalStateDelegate * gOperationalStateDelegate   = nullptr;
-
-void OperationalState::Shutdown()
+OperationalState::Instance* OperationalState::GetInstance()
 {
-    if (gOperationalStateInstance != nullptr)
+    return gOperationalStateInstance.get();
+}
+
+OperationalState::OperationalStateDelegate* OperationalState::GetDelegate()
+{
+    return gOperationalStateDelegate.get();
+}
+
+EndpointId OperationalState::GetOperationalStateEndpointId()
+{
+    EndpointId OperationalStateEndpointId = kInvalidEndpointId;
+
+    for (uint16_t index = 0; index < emberAfEndpointCount(); index++)
     {
-        delete gOperationalStateInstance;
-        gOperationalStateInstance = nullptr;
+        if (!emberAfEndpointIndexIsEnabled(index))
+        {
+            continue;
+        }
+        
+        EndpointId endpointId = emberAfEndpointFromIndex(index);
+        
+        if (emberAfContainsServer(endpointId, OperationalState::Id))   
+        {
+            OperationalStateEndpointId = endpointId;
+            break;
+        }      
     }
-    if (gOperationalStateDelegate != nullptr)
-    {
-        delete gOperationalStateDelegate;
-        gOperationalStateDelegate = nullptr;
-    }
+
+    return OperationalStateEndpointId;
 }
 
 void emberAfOperationalStateClusterInitCallback(chip::EndpointId endpointId)
 {
     VerifyOrDie(gOperationalStateInstance == nullptr && gOperationalStateDelegate == nullptr);
 
-    gOperationalStateDelegate           = new OperationalStateDelegate;
-    EndpointId operationalStateEndpoint = 0x01;
-    gOperationalStateInstance           = new Instance(gOperationalStateDelegate, operationalStateEndpoint);
+    EndpointId OperationalStateEndpointId = GetOperationalStateEndpointId();
 
-    gOperationalStateInstance->SetOperationalState(to_underlying(OperationalState::OperationalStateEnum::kStopped));
+    VerifyOrDie(OperationalStateEndpointId !=  kInvalidEndpointId);
+
+    gOperationalStateDelegate = std::make_unique<OperationalStateDelegate>();
+    gOperationalStateInstance = std::make_unique<OperationalState::Instance>(gOperationalStateDelegate.get(), OperationalStateEndpointId);
+
+    gOperationalStateInstance->SetOperationalState(to_underlying(OperationalStateEnum::kStopped));
     gOperationalStateInstance->Init();
     
     gOperationalStateDelegate->mEndpointId = endpointId;
@@ -151,12 +170,15 @@ void emberAfOperationalStateClusterInitCallback(chip::EndpointId endpointId)
     gOperationalStateDelegate->PostAttributeChangeCallback(Attributes::OperationalState::Id, ZCL_INT8U_ATTRIBUTE_TYPE, sizeof(uint8_t), &value);
 }
 
-OperationalState::Instance* OperationalState::GetInstance()
+void OperationalState::Shutdown()
 {
-    return gOperationalStateInstance;
-}
+    if (gOperationalStateDelegate)
+    {
+        gOperationalStateDelegate.reset();
+    }
 
-OperationalState::OperationalStateDelegate* OperationalState::GetDelegate()
-{
-    return gOperationalStateDelegate;
+    if (gOperationalStateInstance)
+    {
+        gOperationalStateInstance.reset();
+    }
 }

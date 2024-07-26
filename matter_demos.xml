@@ -1060,6 +1060,16 @@
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Matter Siwx917 Lighting Example Application for BRD4338A to be used with Wi-Fi SiWx917</description>
 	</demo>
+	<demo name="brd4338a.demo.SiWx917_sensor_example_app_siwx917" label="Matter - SoC Siwx917 Sensor Example over Wi-Fi">
+		<property key="demos.blurb" value="Matter - SoC Siwx917 Sensor Example app"/>
+		<property key="core.partCompatibility" value=".*"/>
+		<property key="core.boardCompatibility" value="brd4338a"/>
+		<property key="demos.imageFile" value="demos/BRD4338A/WiFi/SiWx917-sensor-example.rps"/>
+		<property key="core.readmeFiles" value="slc/sample-app/sensor-app/siwx917/README_WiFi.md"/>
+		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
+		<property key="core.quality" value="PRODUCTION"/>
+		<description>This is a Matter Siwx917 Sensor Example Application for BRD4338A to be used with Wi-Fi SiWx917</description>
+	</demo>
 	<demo name="brd4338a.demo.SiWx917_light_switch_example_app_siwx917" label="Matter - SoC Siwx917 Light Switch Example over Wi-Fi">
 		<property key="demos.blurb" value="Matter - SoC Siwx917 Light Switch Example app"/>
 		<property key="core.partCompatibility" value=".*"/>

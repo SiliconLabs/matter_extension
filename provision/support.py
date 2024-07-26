@@ -73,10 +73,10 @@ class PartConfig:
 class Updater:
 
     SUPPORTED_PARTS = [
-        PartConfig('efr32mg12', 'efr32', 'EFR32MG12P232F512GM68',     0x7f800),
-        PartConfig('efr32mg24', 'efr32', 'EFR32MG24A010F1024IM48',    0xfe000),
-		PartConfig('efr32mg26', 'efr32', 'EFR32MG26B410F3200IM48',    0x31c000),
-        PartConfig('si917',     'si917', 'brd4338a;wiseconnect3_sdk', 0x1fe000),
+        PartConfig('efr32mg12', 'efr32', 'EFR32MG12P232F512GM68',     0x80000),
+        PartConfig('efr32mg24', 'efr32', 'EFR32MG24A010F1024IM48',    0x100000),
+		PartConfig('efr32mg26', 'efr32', 'EFR32MG26B410F3200IM48',    0x320000),
+        PartConfig('si917',     'si917', 'brd4338a;wiseconnect3_sdk', 0x200000),
     ]
 
     def __init__(self, paths, args, part) -> None:

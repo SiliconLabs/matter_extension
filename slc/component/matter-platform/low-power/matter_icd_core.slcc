@@ -29,8 +29,6 @@ requires:
     condition: [matter_thread]
   - name: sl_power_manager
     condition: [matter_platform_siwx917]
-  - name: sllib_m4_power_save
-    condition: [matter_platform_siwx917]
 
 recommends:
   - id: ot_stack_mtd

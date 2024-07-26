@@ -170,7 +170,7 @@ void rsi_tx_event_handler(void)
     // request wakeup if module is in GPIO_BASED handshake power save
 #if (RSI_WMM_PS_ENABLE && RSI_WMM_PS_TYPE)
     status = rsi_wait4wakeup();
-    if (status != 0) {
+    if (status != RSI_SUCCESS) {
 #ifndef RSI_TX_EVENT_HANDLE_TIMER_DISABLE
       rsi_error_timeout_and_clear_events(status, TX_EVENT_CMD);
 #endif
@@ -178,7 +178,7 @@ void rsi_tx_event_handler(void)
     }
 #else
     status = rsi_req_wakeup();
-    if (status != 0) {
+    if (status != RSI_SUCCESS) {
 #ifndef RSI_TX_EVENT_HANDLE_TIMER_DISABLE
       rsi_error_timeout_and_clear_events(status, TX_EVENT_CMD);
 #endif
@@ -187,7 +187,10 @@ void rsi_tx_event_handler(void)
 #endif
 #else
 #if (RSI_ULP_MODE == 1)
-    rsi_ulp_wakeup_init();
+    status = rsi_ulp_wakeup_init();
+    if (status != RSI_SUCCESS) {
+      return;
+    }
 #endif
 #endif
   }
@@ -560,32 +563,36 @@ void rsi_tx_event_handler(void)
     rsi_driver_cb_non_rom->driver_timer_start = 0;
 #endif
 
-    if (rsi_common_cb->power_save.power_save_enable) {
-#if (RSI_HAND_SHAKE_TYPE == GPIO_BASED)
-
-      // Keep Sleep confirm GPIO low
-      rsi_allow_sleep();
-
-#elif defined(RSI_M4_INTERFACE) && (RSI_HAND_SHAKE_TYPE == M4_BASED)
-      rsi_allow_sleep();
-#elif (RSI_HAND_SHAKE_TYPE == MSG_BASED)
-
-      if (rsi_common_cb->power_save.module_state == RSI_SLP_RECEIVED) {
-        // Send ACK if POWERMODE 3 and 9,incase of powermode 2 and 8 make GPIO low
-        if (rsi_frame_write((rsi_frame_desc_t *)rsi_sleep_ack, NULL, 0)) {
-          // Handle failure
-        }
-        rsi_mask_event(RSI_TX_EVENT);
-        rsi_common_cb->power_save.module_state = RSI_SLP_ACK_SENT;
-      }
-#endif
-    }
-
 #ifndef RSI_M4_INTERFACE
     // signal semaphore incase of packet having async response
     rsi_common_packet_transfer_done(pkt);
 #endif
+    // Clear Tx event as there are no pending packets in the queues
     rsi_clear_event(RSI_TX_EVENT);
+
+    if (rsi_common_cb->power_save.power_save_enable) {
+#if ((RSI_HAND_SHAKE_TYPE == GPIO_BASED) || (defined(RSI_M4_INTERFACE) && (RSI_HAND_SHAKE_TYPE == M4_BASED)))
+
+      // Keep Sleep confirm GPIO low
+      rsi_allow_sleep();
+
+#elif (RSI_HAND_SHAKE_TYPE == MSG_BASED)
+
+      if (rsi_common_cb->power_save.module_state == RSI_SLP_RECEIVED) {
+        rsi_mask_event(RSI_TX_EVENT);
+
+        // exit critical section as rsi_frame_write requires interrupts to be enabled for packet transfer
+        rsi_critical_section_exit(xflags);
+
+        // Send ACK if POWERMODE 3 and 9,incase of powermode 2 and 8 make GPIO low
+        if (rsi_frame_write((rsi_frame_desc_t *)rsi_sleep_ack, NULL, 0)) {
+          // Handle failure
+        }
+        rsi_common_cb->power_save.module_state = RSI_SLP_ACK_SENT;
+        return;
+      }
+#endif
+    }
     rsi_critical_section_exit(xflags);
   }
 }
@@ -608,11 +615,12 @@ void rsi_rx_event_handler(void)
 {
   uint8_t queue_no;
   uint8_t frame_type;
-  uint16_t status    = 0;
-  uint8_t *buf_ptr   = NULL;
-  rsi_pkt_t *rx_pkt  = NULL;
+  uint16_t status   = 0;
+  uint8_t *buf_ptr  = NULL;
+  rsi_pkt_t *rx_pkt = NULL;
+#ifndef RSI_UART_INTERFACE
   uint8_t int_status = 0;
-
+#endif
 #if RSI_ASSERT_ENABLE
 #if ((defined RSI_SPI_INTERFACE) || ((defined RSI_SDIO_INTERFACE) && (!defined LINUX_PLATFORM)))
   uint32_t assert_val        = 0;
@@ -678,7 +686,7 @@ void rsi_rx_event_handler(void)
     // request wakeup if module is in GPIO_BASED handshake power save
 #if (RSI_WMM_PS_ENABLE && RSI_WMM_PS_TYPE)
     status = rsi_wait4wakeup();
-    if (status != 0) {
+    if (status != RSI_SUCCESS) {
 #ifndef RSI_RX_EVENT_HANDLE_TIMER_DISABLE
       rsi_error_timeout_and_clear_events(status, RX_EVENT_CMD);
 #endif
@@ -686,7 +694,7 @@ void rsi_rx_event_handler(void)
     }
 #else
     status = rsi_req_wakeup();
-    if (status != 0) {
+    if (status != RSI_SUCCESS) {
 #ifndef RSI_RX_EVENT_HANDLE_TIMER_DISABLE
       rsi_error_timeout_and_clear_events(status, RX_EVENT_CMD);
 #endif
@@ -697,7 +705,10 @@ void rsi_rx_event_handler(void)
 #elif (RSI_HAND_SHAKE_TYPE == MSG_BASED)
 #if (RSI_SELECT_LP_OR_ULP_MODE != RSI_LP_MODE)
 #ifdef RSI_SPI_INTERFACE
-    rsi_ulp_wakeup_init();
+    status = rsi_ulp_wakeup_init();
+    if (status != RSI_SUCCESS) {
+      return;
+    }
 #endif
 #endif
 #endif
@@ -931,6 +942,9 @@ void rsi_rx_event_handler(void)
 #ifdef RSI_CRYPTO_ENABLE
              || (frame_type == RSI_RSP_ENCRYPT_CRYPTO)
 #endif
+#ifdef CHIP_917
+             || (frame_type == RSI_COMMON_RSP_ECDSA_256_VERIFY_HASH)
+#endif
                )
 #ifdef CONFIGURE_GPIO_FROM_HOST
        || (frame_type == RSI_COMMON_RSP_GPIO_CONFIG)
@@ -1059,4 +1073,88 @@ void rsi_rx_event_handler(void)
 
   return;
 }
+
+#ifdef SIDE_BAND_CRYPTO
+#define SIDE_BAND_CRYPTO_PKT_LENGTH 16
+extern rsi_m4ta_desc_t crypto_desc[2];
+void rsi_crypto_event_tx_handler(void)
+{
+
+  rsi_pkt_t *pkt                 = NULL;
+  rsi_crypto_cb_t *rsi_crypto_cb = rsi_driver_cb->crypto_cb;
+  rsi_reg_flags_t flags;
+
+  // if packet pending dequeue the packet from common queue
+  pkt = (rsi_pkt_t *)rsi_dequeue_pkt(&rsi_driver_cb->crypto_tx_q);
+
+  rsi_crypto_cb->crypto_buffer = pkt;
+
+  // fill crypto desc
+  crypto_desc[0].addr   = pkt->desc;
+  crypto_desc[0].length = 16;
+  crypto_desc[1].addr   = pkt->data;
+  crypto_desc[1].length = SIDE_BAND_CRYPTO_PKT_LENGTH;
+  // enter critical section
+#ifdef RSI_M4_INTERFACE
+  // mask P2P interrupt
+  RSI_MASK_TA_INTERRUPT();
+#endif
+
+  // Disable all the interrupts
+  flags = RSI_CRITICAL_SECTION_ENTRY();
+
+  // raise interrupt
+  // Write the packet pending interrupt to TA register
+  M4SS_P2P_INTR_SET_REG = SIDE_BAND_CRYPTO_INTR;
+
+  // poll for interrupt clear
+  while (M4SS_P2P_INTR_SET_REG & SIDE_BAND_CRYPTO_INTR)
+    ;
+
+  // exit critical section
+  // Enable all the interrupts
+  RSI_CRITICAL_SECTION_EXIT(flags);
+
+#ifdef RSI_M4_INTERFACE
+  // unmask P2P interrupt
+  RSI_UNMASK_TA_INTERRUPT();
+#endif
+
+  // set crypto hold sleep
+  rsi_crypto_cb->crypto_hold_power_save = 1;
+
+  // Clear Crypto event
+  rsi_clear_event(RSI_CRYPTO_TX_EVENT);
+  return;
+}
+
+void rsi_crypto_event_rx_handler(void)
+{
+
+  // Get crypto cb pointer
+  rsi_crypto_cb_t *rsi_crypto_cb = rsi_driver_cb->crypto_cb;
+  rsi_pkt_t *pkt                 = rsi_crypto_cb->crypto_buffer;
+  uint32_t status                = rsi_bytes2R_to_uint16(pkt->desc + RSI_STATUS_OFFSET);
+
+  // Set Status
+  rsi_crypto_set_status(status);
+
+  // set crypto hold sleep
+  rsi_crypto_cb->crypto_hold_power_save = 0;
+
+  // free the dequeued packet
+  rsi_pkt_free(&rsi_driver_cb->crypto_cb->crypto_tx_pool, rsi_crypto_cb->crypto_buffer);
+
+  // Post Waiting crypto semaphore
+#ifndef RSI_CRYPTO_SEM_BITMAP
+  rsi_driver_cb_non_rom->crypto_wait_bitmap &= ~BIT(1);
+#endif
+  rsi_semaphore_post(&rsi_driver_cb_non_rom->crypto_cmd_sem);
+
+  // Clear Crypto event
+  rsi_clear_event(RSI_CRYPTO_RX_EVENT);
+  return;
+}
+#endif
+
 /** @} */

@@ -19,24 +19,24 @@
  * @file
  *   This file implements the handler for data model messages.
  */
-
-#include "AppConfig.h"
-#include "DishwasherManager.h"
-
 #include <app-common/zap-generated/ids/Attributes.h>
 #include <app-common/zap-generated/ids/Clusters.h>
 #include <app/ConcreteAttributePath.h>
 #include <lib/support/logging/CHIPLogging.h>
 
+#include "AppConfig.h"
+#include "DishwasherManager.h"
+#include "ElectricalSensorManager.h"
+
 #ifdef DIC_ENABLE
 #include "dic.h"
 #endif // DIC_ENABLE
 
-using namespace ::chip;
-using namespace ::chip::app::Clusters;
+using namespace chip;
+using namespace chip::app::Clusters;
 
-void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
-                                       uint8_t * value)
+void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, 
+                                       uint8_t type, uint16_t size, uint8_t * value)
 {
     ClusterId clusterId     = attributePath.mClusterId;
     AttributeId attributeId = attributePath.mAttributeId;
@@ -45,6 +45,7 @@ void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & 
     if (clusterId == OperationalState::Id && attributeId == OperationalState::Attributes::OperationalState::Id)
     {
         DishwasherMgr().UpdateOperationState(static_cast<OperationalState::OperationalStateEnum>(*value));
+        ElectricalSensorMgr().UpdateEPMAllAttributes(static_cast<OperationalState::OperationalStateEnum>(*value));
     }
     else if (clusterId == Identify::Id)
     {

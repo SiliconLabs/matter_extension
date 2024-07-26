@@ -99,6 +99,52 @@ int8_t rsi_common_cb_init(rsi_common_cb_t *common_cb)
 #endif
   return retval;
 }
+
+#ifdef SIDE_BAND_CRYPTO
+/*==============================================*/
+/**
+ * @fn         int8_t rsi_crypto_cb_init(rsi_crypto_cb_t *crypto_cb)
+ * @brief      Initialize crypto control block structure
+ * @param[in]  crypto_cb - pointer to crypto cb structure
+ * @return     0              - Success \n
+ * @return     Non-Zero Value - Failure
+ */
+/// @private
+int8_t rsi_crypto_cb_init(rsi_crypto_cb_t *crypto_cb)
+{
+  int8_t retval = RSI_ERR_NONE;
+
+  // validate input parameter
+  if (crypto_cb == NULL) {
+    return RSI_ERROR_INVALID_PARAM;
+  }
+
+  // Initializes crypto status
+  crypto_cb->status = RSI_SUCCESS;
+
+  // Creates crypto mutex
+  rsi_mutex_create(&crypto_cb->crypto_mutex);
+
+  // Creates tx mutex
+  rsi_mutex_create(&rsi_driver_cb_non_rom->tx_mutex);
+
+#if defined(RSI_DEBUG_PRINTS) || defined(FW_LOGGING_ENABLE)
+  // Creates debug prints mutex
+  rsi_mutex_create(&rsi_driver_cb_non_rom->debug_prints_mutex);
+#endif
+
+  // Creates crypto cmd mutex
+  retval = rsi_semaphore_create(&rsi_driver_cb_non_rom->crypto_cmd_sem, 0);
+  if (retval != RSI_ERROR_NONE) {
+    return RSI_ERROR_SEMAPHORE_CREATE_FAILED;
+  }
+  rsi_semaphore_post(&rsi_driver_cb_non_rom->crypto_cmd_sem);
+
+  return retval;
+}
+
+#endif
+
 /*==============================================*/
 /**
  * @fn          int32_t rsi_driver_common_send_cmd(rsi_common_cmd_request_t cmd, rsi_pkt_t *pkt)
@@ -157,7 +203,7 @@ int32_t rsi_driver_common_send_cmd(rsi_common_cmd_request_t cmd, rsi_pkt_t *pkt)
       rsi_uint32_to_4bytes(rsi_opermode->custom_feature_bit_map,
                            (FEAT_CUSTOM_FEAT_EXTENTION_VALID | RSI_CUSTOM_FEATURE_BIT_MAP));
 
-#ifdef CHIP_9117
+#ifdef CHIP_917
       rsi_uint32_to_4bytes(rsi_opermode->ext_custom_feature_bit_map, (RSI_EXT_CUSTOM_FEATURE_BIT_MAP));
 #else //defaults
 #ifdef RSI_M4_INTERFACE
@@ -199,7 +245,7 @@ int32_t rsi_driver_common_send_cmd(rsi_common_cmd_request_t cmd, rsi_pkt_t *pkt)
         //!ENABLE_BLE_PROTOCOL in bt_feature_bit_map
         rsi_opermode->bt_feature_bit_map[3] |= 0x80;
         rsi_uint32_to_4bytes(rsi_opermode->ble_feature_bit_map,
-                             ((RSI_BLE_MAX_NBR_SLAVES << 12) | (RSI_BLE_MAX_NBR_MASTERS << 27)
+                             ((RSI_BLE_MAX_NBR_PERIPHERALS << 12) | (RSI_BLE_MAX_NBR_CENTRALS << 27)
                               | (RSI_BLE_MAX_NBR_ATT_SERV << 8) | RSI_BLE_MAX_NBR_ATT_REC));
 
         /*Enable BLE custom feature bitmap*/
@@ -359,12 +405,18 @@ int32_t rsi_driver_common_send_cmd(rsi_common_cmd_request_t cmd, rsi_pkt_t *pkt)
       payload_size = rsi_bytes2R_to_uint16(host_desc);
     } break;
 #endif
+#ifdef CHIP_917
+    case RSI_COMMON_REQ_ECDSA_256_VERIFY_HASH: {
+      // check status
+      payload_size = sizeof(rsi_req_ecdsa_256_verify_t);
+    } break;
+#endif
     case RSI_COMMON_REQ_TA_M4_COMMANDS: {
 #ifdef RSI_M4_INTERFACE
-#ifdef CHIP_9117
+#ifdef CHIP_917
       rsi_req_ta2m4_t *ta2m4 = (rsi_req_ta2m4_t *)pkt->data;
       if (ta2m4->sub_cmd == RSI_WRITE_TO_COMMON_FLASH) {
-        payload_size = ta2m4->chunk_len + (sizeof(rsi_req_ta2m4_t) - RSI_MAX_CHUNK_SIZE);
+        payload_size = ta2m4->in_buf_len + (sizeof(rsi_req_ta2m4_t) - RSI_MAX_CHUNK_SIZE);
       } else
 #endif
       {
@@ -611,6 +663,12 @@ int32_t rsi_driver_process_common_recv_cmd(rsi_pkt_t *pkt)
         }
       }
 
+    } break;
+#endif
+#ifdef CHIP_917
+    case RSI_COMMON_RSP_ECDSA_256_VERIFY_HASH: {
+      // check status
+      status = rsi_bytes2R_to_uint16(host_desc + RSI_STATUS_OFFSET);
     } break;
 #endif
 #ifdef RSI_WAC_MFI_ENABLE
@@ -964,15 +1022,16 @@ void rsi_handle_slp_wkp(uint8_t frame_type)
 
 /*====================================================*/
 /**
- * @fn        int8_t rsi_req_wakeup(void)
+ * @fn        int16_t rsi_req_wakeup(void)
  * @brief     Set wakeup GPIO high
  * @param[in] void 
  * @return    0              - Success \n 
  * @return    Non-Zero Value - Failure
  */
 
-int8_t rsi_req_wakeup(void)
+int16_t rsi_req_wakeup(void)
 {
+  int16_t status = 0;
 
 #ifndef RSI_M4_INTERFACE
   rsi_timer_instance_t timer_instance;
@@ -984,7 +1043,10 @@ int8_t rsi_req_wakeup(void)
 #ifdef WAKEUP_GPIO_INTERRUPT_METHOD
   if (rsi_hal_get_gpio(RSI_HAL_WAKEUP_INDICATION_PIN)) {
 #ifdef RSI_SPI_INTERFACE
-    rsi_ulp_wakeup_init();
+    status = rsi_ulp_wakeup_init();
+    if (status != RSI_SUCCESS) {
+      return status;
+    }
 #endif
   } else {
     rsi_hal_gpio_unmask();
@@ -995,7 +1057,10 @@ int8_t rsi_req_wakeup(void)
       return RSI_ERROR_GPIO_WAKEUP_TIMEOUT;
     }
 #ifdef RSI_SPI_INTERFACE
-    rsi_ulp_wakeup_init();
+    status = rsi_ulp_wakeup_init();
+    if (status != RSI_SUCCESS) {
+      return status;
+    }
 #endif
   }
 #else
@@ -1004,7 +1069,10 @@ int8_t rsi_req_wakeup(void)
     if (rsi_hal_get_gpio(RSI_HAL_WAKEUP_INDICATION_PIN)) {
 #if (RSI_SELECT_LP_OR_ULP_MODE != RSI_LP_MODE)
 #ifdef RSI_SPI_INTERFACE
-      rsi_ulp_wakeup_init();
+      status = rsi_ulp_wakeup_init();
+      if (status != RSI_SUCCESS) {
+        return status;
+      }
 #endif
 #endif
       break;
@@ -1020,21 +1088,25 @@ int8_t rsi_req_wakeup(void)
 
 /*====================================================*/
 /**
- * @fn         int8_t rsi_wait4wakeup(void)
+ * @fn         int16_t rsi_wait4wakeup(void)
  * @brief      Waits for wakeup confirmation pin to be set
  * @param[in]  void
  * @return     0              - Success \n
  * @return     Non-Zero Value - Failure
  */
 /// @private
-int8_t rsi_wait4wakeup(void)
+int16_t rsi_wait4wakeup(void)
 {
+  int16_t status;
 #ifndef RSI_M4_INTERFACE
   rsi_timer_instance_t timer_instance;
 #ifdef WAKEUP_GPIO_INTERRUPT_METHOD
   if (rsi_hal_get_gpio(RSI_HAL_WAKEUP_INDICATION_PIN)) {
 #ifdef RSI_SPI_INTERFACE
-    rsi_ulp_wakeup_init();
+    status = rsi_ulp_wakeup_init();
+    if (status != RSI_SUCCESS) {
+      return status;
+    }
 #endif
   } else {
     rsi_hal_gpio_unmask();
@@ -1045,7 +1117,10 @@ int8_t rsi_wait4wakeup(void)
       return RSI_ERROR_GPIO_WAKEUP_TIMEOUT;
     }
 #ifdef RSI_SPI_INTERFACE
-    rsi_ulp_wakeup_init();
+    status = rsi_ulp_wakeup_init();
+    if (status != RSI_SUCCESS) {
+      return status;
+    }
 #endif
   }
 #else
@@ -1060,7 +1135,10 @@ int8_t rsi_wait4wakeup(void)
         rsi_hal_set_gpio(RSI_HAL_SLEEP_CONFIRM_PIN);
       }
 #ifdef RSI_SPI_INTERFACE
-      rsi_ulp_wakeup_init();
+      status = rsi_ulp_wakeup_init();
+      if (status != RSI_SUCCESS) {
+        return status;
+      }
 #endif
 #else
       rsi_hal_set_gpio(RSI_HAL_LP_SLEEP_CONFIRM_PIN);
@@ -1463,6 +1541,28 @@ int32_t rsi_check_and_update_cmd_state(uint8_t cmd_type, uint8_t cmd_state)
         rsi_semaphore_post(&rsi_driver_cb_non_rom->nwk_cmd_send_sem);
       }
     } break;
+#endif
+#ifdef SIDE_BAND_CRYPTO
+    case CRYPTO_CMD: {
+      if (cmd_state == IN_USE) {
+#ifndef RSI_CRYPTO_SEM_BITMAP
+        rsi_driver_cb_non_rom->crypto_wait_bitmap |= BIT(1);
+#endif
+        // common semaphore
+        status =
+          rsi_wait_on_crypto_semaphore(&rsi_driver_cb_non_rom->crypto_cmd_sem, RSI_CRYPTO_SEND_CMD_RESPONSE_WAIT_TIME);
+        if (status != RSI_ERROR_NONE) {
+          return RSI_ERROR_COMMON_CMD_IN_PROGRESS;
+        }
+      } else if (cmd_state == ALLOW) {
+#ifndef RSI_COMMON_SEM_BITMAP
+        rsi_driver_cb_non_rom->crypto_wait_bitmap &= ~BIT(1);
+#endif
+        // common semaphore post
+        rsi_semaphore_post(&rsi_driver_cb_non_rom->crypto_cmd_sem);
+      }
+    } break;
+
 #endif
     default:
       status = RSI_ERROR_INVALID_PARAM;

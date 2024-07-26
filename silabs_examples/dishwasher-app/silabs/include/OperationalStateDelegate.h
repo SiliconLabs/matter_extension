@@ -18,10 +18,8 @@
 
 #pragma once
 
-#include <app-common/zap-generated/cluster-objects.h>
-#include <app-common/zap-generated/ids/Attributes.h>
 #include <app/clusters/operational-state-server/operational-state-server.h>
-#include <protocols/interaction_model/StatusCode.h>
+#include <app-common/zap-generated/ids/Clusters.h>
 
 namespace chip {
 namespace app {
@@ -97,6 +95,7 @@ public:
     void PostAttributeChangeCallback(AttributeId attributeId, uint8_t type, uint16_t size, uint8_t * value);
 
     EndpointId mEndpointId;
+    
 private:
     const GenericOperationalState rvcOpStateList[4] = {
         GenericOperationalState(to_underlying(OperationalStateEnum::kStopped)),
@@ -111,6 +110,7 @@ private:
 
 OperationalState::Instance* GetInstance();
 OperationalState::OperationalStateDelegate* GetDelegate();
+EndpointId GetOperationalStateEndpointId();
 void Shutdown();
 
 } // namespace OperationalState

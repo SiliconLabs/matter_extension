@@ -28,7 +28,7 @@
  ******************************************************************************/
  MEMORY
  {
-   FLASH      (rx)  : ORIGIN = 0x0, LENGTH = 0x80000
+   FLASH      (rx)  : ORIGIN = 0x00000000, LENGTH = 0x80000
    RAM        (rwx) : ORIGIN = 0x20000000, LENGTH = 0x10000
  }
 
@@ -223,7 +223,7 @@ SECTIONS
 
   __heap_size = __HeapLimit - __HeapBase;
   __ram_end__ = 0x20000000 + 0x10000;
-  __main_flash_end__ = 0x0 + 0x80000;
+  __main_flash_end__ = ORIGIN(FLASH) + LENGTH(FLASH);
 
    /* This is where we handle flash storage blocks. We use dummy sections for finding the configured
    * block sizes and then "place" them at the end of flash when the size is known. */
@@ -236,7 +236,7 @@ SECTIONS
     KEEP(*(.simee*))
   } > FLASH
 
-  linker_nvm_end = __main_flash_end__;
+  linker_nvm_end = __main_flash_end__ - 0x800;
   linker_nvm_begin = linker_nvm_end - SIZEOF(.nvm);
   linker_nvm_size = SIZEOF(.nvm);
   linker_storage_end = linker_nvm_begin;

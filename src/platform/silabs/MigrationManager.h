@@ -45,6 +45,7 @@ private:
 void MigrateKvsMap(void);
 void MigrateDacProvider(void);
 void MigrateCounterConfigs(void);
+void MigrateDacKeyToPSA(void);
 
 } // namespace Silabs
 } // namespace DeviceLayer

@@ -45,26 +45,43 @@
 // Max number events used in the driver
 #define RSI_MAX_NUM_EVENTS 3
 
+#ifdef LINUX_PLATFORM
 // RX event number used in the driver
-#define RSI_RX_EVENT       0
+#define RSI_RX_EVENT 1
 
 // TX event number used in the driver
-#define RSI_TX_EVENT       1
+#define RSI_TX_EVENT 0
 
+#else
+
+// RX event number used in the driver
+#define RSI_RX_EVENT 0
+
+// TX event number used in the driver
+#define RSI_TX_EVENT 1
+
+#endif
 // Socket event number used in the driver
-#define RSI_SOCKET_EVENT   2
-
+#define RSI_SOCKET_EVENT 2
 #endif
 #else
 
+#ifdef SIDE_BAND_CRYPTO
+// TX event number used in the driver
+#define RSI_CRYPTO_TX_EVENT 0
+#define RSI_CRYPTO_RX_EVENT 1
+#define SIDE_BAND_EVENT     2
+#else
+#define SIDE_BAND_EVENT 0
+#endif
 // Max number events used in the driver
-#define RSI_MAX_NUM_EVENTS 2
+#define RSI_MAX_NUM_EVENTS (2 + SIDE_BAND_EVENT)
 
 // RX event number used in the driver
-#define RSI_RX_EVENT       1
+#define RSI_RX_EVENT       (1 + SIDE_BAND_EVENT)
 
 // TX event number used in the driver
-#define RSI_TX_EVENT       0
+#define RSI_TX_EVENT       (0 + SIDE_BAND_EVENT)
 
 #endif
 
@@ -102,6 +119,10 @@ void rsi_mask_event(uint32_t event_num);
 void rsi_unmask_event(uint32_t event_num);
 void rsi_tx_event_handler(void);
 void rsi_rx_event_handler(void);
+#ifdef SIDE_BAND_CRYPTO
+void rsi_crypto_event_tx_handler(void);
+void rsi_crypto_event_rx_handler(void);
+#endif
 void rsi_set_event_from_isr(uint32_t event_num);
 void rsi_unmask_event_from_isr(uint32_t event_num);
 rsi_error_t rsi_semaphore_post_from_isr(rsi_semaphore_handle_t *semaphore);

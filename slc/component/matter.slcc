@@ -37,10 +37,6 @@ toolchain_settings:
 
 provides:
   - name: matter
-  - name: matter_integration
-define:
-  - name: MATTER_INTEGRATION
-    value: 1
 requires:
   - name: cpp_support
 

@@ -72,6 +72,8 @@ include:
         - matter_lock
 
 define:
+- name: OPENTHREAD_CONFIG_CLI_PROMPT_ENABLE
+  value: 0
 - name: ENABLE_CHIP_SHELL
 - name: OPENTHREAD_CONFIG_CLI_TRANSPORT
   value: OT_CLI_TRANSPORT_CONSOLE

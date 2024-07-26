@@ -1,0 +1,89 @@
+id: matter_crypto_psa_siwx917
+label: Matter MbedTLS and PSA Integration
+description: >
+  mbedTLS and PSA for SiWx917 SoC
+package: "Matter"
+category: "Matter-WiFi|Platform|PSA"
+quality: production
+provides:
+  - name: matter_crypto_psa_siwx917
+
+source:
+  - path: src/crypto/CHIPCryptoPAL.h
+  - path: src/crypto/CHIPCryptoPAL.cpp
+  - path: src/crypto/CHIPCryptoPALPSA.h
+  - path: src/crypto/PersistentStorageOperationalKeystore.h
+  - path: src/crypto/PersistentStorageOperationalKeystore.cpp
+  - path: src/crypto/RandUtils.h
+  - path: src/crypto/RandUtils.cpp
+  - path: src/crypto/RawKeySessionKeystore.h
+  - path: src/crypto/RawKeySessionKeystore.cpp
+  - path: src/crypto/PSAOperationalKeystore.h
+  - path: src/crypto/PSAOperationalKeystore.cpp
+  - path: src/crypto/PSASessionKeystore.h
+  - path: src/crypto/PSASessionKeystore.cpp
+  - path: src/platform/silabs/efr32/CHIPCryptoPALPsaEfr32.cpp
+
+include:
+  - path: src/crypto
+    file_list:
+      - path: CHIPCryptoPAL.h
+      - path: OperationalKeystore.h
+      - path: SessionKeystore.h
+  - path: src/platform/silabs/SiWx917
+    file_list:
+      - path: siwx917-chip-mbedtls-config.h
+      - path: siwx917-chip-psa-config.h
+
+requires:
+  # PSA crypto components
+  - name: psa_its
+  - name: psa_crypto_ccm
+  - name: psa_crypto_ecc
+  - name: psa_crypto_ecdh
+  - name: psa_crypto_ecdsa
+  - name: psa_crypto_hkdf
+  - name: psa_crypto_sha256
+
+  # Mbedtls components
+  - name: mbedtls_platform_dynamic_memory_allocation_config_init_runtime
+  - name: mbedtls_base64
+  - name: mbedtls_cmac
+  - name: mbedtls_ccm
+  - name: mbedtls_ecc
+  - name: mbedtls_x509
+  - name: mbedtls_version
+  - name: mbedtls_pkcs5
+
+  # Wiseconnect SDK 3.xx.xx components
+  - name: psa_driver
+  - name: psa_crypto
+  - name: psa_crypto_ecc_secp192r1
+  - name: psa_crypto_ecc_secp224r1
+  - name: psa_crypto_ecc_secp256r1
+  - name: psa_crypto_ecc_secp384r1
+  - name: psa_crypto_ecc_secp521r1
+  - name: psa_crypto_common
+  - name: psa_crypto_source
+  - name: psa_crypto_trng
+  - name: sl_si91x_psa_crypto
+  - name: sl_si91x_psa_trng
+  - name: sl_si91x_trng
+  - name: sl_si91x_psa_aead
+  - name: sl_si91x_psa_ecdh
+  - name: sl_si91x_ecdh
+  - name: sl_si91x_psa_hmac
+  - name: sl_si91x_psa_mac
+  - name: sl_si91x_psa_aes
+  - name: sl_si91x_psa_wrap
+  - name: sl_si91x_psa_ecdsa
+  - name: sl_si91x_psa_sha
+  - name: sl_si91x_crypto_multithread
+
+define:
+  - name: MBEDTLS_CONFIG_FILE
+    value: \"siwx917-chip-mbedtls-config.h\"
+  - name: MBEDTLS_PSA_CRYPTO_CONFIG_FILE
+    value: \"siwx917-psa-crypto-config.h\"
+  - name: SLI_SI91X_TRNG_DUPLICATE_CHECK
+    value: 0

@@ -174,6 +174,10 @@ CHIP_ERROR Storage::Set(uint16_t id, const uint32_t *value)
         mPasscode = (nullptr == value) ? 0 : *value;
         return CHIP_NO_ERROR;
 
+    case Parameters::ID::kCredsAddress:
+        VerifyOrReturnError(nullptr != value, CHIP_ERROR_INVALID_ARGUMENT);
+        return SetCredentialsBaseAddress(*value);
+
     case Parameters::ID::kKeyId:
         mKeyId = (nullptr == value) ? 0 : *value;
         return CHIP_NO_ERROR;
@@ -192,6 +196,10 @@ CHIP_ERROR Storage::Get(uint16_t id, uint32_t &value)
     case Parameters::ID::kSpake2pPasscode:
         value = mPasscode;
         break;
+
+    case Parameters::ID::kCredsAddress:
+        return GetCredentialsBaseAddress(value);
+
     default:
         return CHIP_ERROR_UNKNOWN_RESOURCE_ID;
     }

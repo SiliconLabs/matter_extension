@@ -74,9 +74,9 @@ source:
 -   path: examples/platform/silabs/SoftwareFaultReports.cpp
 -   path: examples/platform/silabs/silabs_utils.cpp
 -   path: examples/platform/silabs/syscalls_stubs.cpp
+-   path: examples/platform/silabs/wifi/wfx_notify.cpp
 -   path: src/platform/silabs/SiWx917/wifi/dhcp_client.cpp
 -   path: src/platform/silabs/SiWx917/wifi/ethernetif.cpp
 -   path: src/platform/silabs/SiWx917/wifi/lwip_netif.cpp
--   path: src/platform/silabs/SiWx917/wifi/wfx_notify.cpp
 ui_hints:
     visibility: never

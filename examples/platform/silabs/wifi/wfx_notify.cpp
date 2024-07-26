@@ -20,27 +20,40 @@
 #include <string.h>
 
 #include "AppConfig.h"
+#include "BaseApplication.h"
 
 #include "FreeRTOS.h"
 #include "event_groups.h"
 #include "silabs_utils.h"
 #include "task.h"
 #include "wfx_host_events.h"
+
+#ifdef RS911X_WIFI
 #include "wfx_rsi.h"
+#endif
 
 #include <platform/CHIPDeviceLayer.h>
-#include <platform/silabs/SilabsConfig.h>
 
 using namespace ::chip;
 using namespace ::chip::DeviceLayer;
-using SilabsConfig = chip::DeviceLayer::Internal::SilabsConfig;
 
-extern uint32_t retryInterval;
+static uint16_t retryInterval = WLAN_MIN_RETRY_TIMER_MS;
+static osTimerId_t sRetryTimer;
 /*
  * Notifications to the upper-layer
  * All done in the context of the RSI/WiFi task (rsi_if.c)
  */
 
+static void RetryConnectionTimerHandler(void * arg)
+{
+#if CHIP_CONFIG_ENABLE_ICD_SERVER && SLI_SI91X_MCU_INTERFACE
+    // TODO: remove this once it is fixed in the wifi sdk SI91X-15845
+    wfx_rsi_power_save(RSI_ACTIVE, HIGH_PERFORMANCE);
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER && SLI_SI91X_MCU_INTERFACE
+    if (wfx_connect_to_ap() != SL_STATUS_OK) {
+        ChipLogError(DeviceLayer, "wfx_connect_to_ap() failed.");
+    }
+}
 /***********************************************************************************
  * @fn  wfx_started_notify()
  * @brief
@@ -53,7 +66,14 @@ void wfx_started_notify()
     sl_wfx_startup_ind_t evt;
     sl_wfx_mac_address_t mac;
 
-    SILABS_LOG("%s: started.", __func__);
+    // Creating a timer which will be used to retry connection with AP
+    sRetryTimer = osTimerNew(RetryConnectionTimerHandler, osTimerOnce, NULL, NULL);
+    if (sRetryTimer == NULL)
+    {
+        return;
+    }
+
+    ChipLogProgress(DeviceLayer,"wfx_started_notify: started.");
 
     memset(&evt, 0, sizeof(evt));
     evt.header.id     = SL_WFX_STARTUP_IND_ID;
@@ -78,15 +98,15 @@ void wfx_connected_notify(int32_t status, sl_wfx_mac_address_t * ap)
 {
     sl_wfx_connect_ind_t evt;
 
-    SILABS_LOG("%s: started.", __func__);
+    ChipLogProgress(DeviceLayer,"wfx_connected_notify : started.");
 
     if (status != SUCCESS_STATUS)
     {
-        SILABS_LOG("%s: error: failed status: %d.", __func__, status);
+        ChipLogProgress(DeviceLayer,"wfx_connected_notify : error: failed status: %ld.", status);
         return;
     }
 
-    SILABS_LOG("%s: connected.", __func__);
+    ChipLogProgress(DeviceLayer,"wfx_connected_notify : connected.");
 
     memset(&evt, 0, sizeof(evt));
     evt.header.id     = SL_WFX_CONNECT_IND_ID;
@@ -111,7 +131,7 @@ void wfx_disconnected_notify(int32_t status)
 {
     sl_wfx_disconnect_ind_t evt;
 
-    SILABS_LOG("%s: started.", __func__);
+    ChipLogProgress(DeviceLayer,"wfx_disconnected_notify: started.");
 
     memset(&evt, 0, sizeof(evt));
     evt.header.id     = SL_WFX_DISCONNECT_IND_ID;
@@ -131,7 +151,7 @@ void wfx_ipv6_notify(int got_ip)
 {
     sl_wfx_generic_message_t eventData;
 
-    SILABS_LOG("%s: started.", __func__);
+    ChipLogProgress(DeviceLayer,"wfx_ipv6_notify: started.");
 
     memset(&eventData, 0, sizeof(eventData));
     eventData.header.id     = got_ip ? IP_EVENT_GOT_IP6 : IP_EVENT_STA_LOST_IP;
@@ -150,7 +170,7 @@ void wfx_ip_changed_notify(int got_ip)
 {
     sl_wfx_generic_message_t eventData;
 
-    SILABS_LOG("%s: started.", __func__);
+    ChipLogProgress(DeviceLayer,"wfx_ip_changed_notify: started.");
 
     memset(&eventData, 0, sizeof(eventData));
     eventData.header.id     = got_ip ? IP_EVENT_STA_GOT_IP : IP_EVENT_STA_LOST_IP;
@@ -159,39 +179,29 @@ void wfx_ip_changed_notify(int got_ip)
 }
 
 /**************************************************************************************
- * @fn  void wfx_retry_interval_handler(bool is_wifi_disconnection_event, uint16_t retryJoin)
+ * @fn  void wfx_retry_connection(uint16_t retryAttempt)
  * @brief
- *      Based on condition will delay for a certain period of time.
- * @param[in]  is_wifi_disconnection_event, retryJoin
+ *      During commissioning, we retry to join the network MAX_JOIN_RETRIES_COUNT times.
+ *      If DUT is disconnected from the AP or device is power cycled, then retry connection
+ *      with AP continously after a certain time interval.
+ * @param[in]  retryAttempt
  * @return None
  ********************************************************************************************/
-void wfx_retry_interval_handler(bool is_wifi_disconnection_event, uint16_t retryJoin)
+void wfx_retry_connection(uint16_t retryAttempt)
 {
-    if (!is_wifi_disconnection_event)
-    {
-        /* After the reboot or a commissioning time device failed to connect with AP.
-         * Device will retry to connect with AP upto WFX_RSI_CONFIG_MAX_JOIN retries.
-         */
-        if (retryJoin < MAX_JOIN_RETRIES_COUNT)
-        {
-            SILABS_LOG("wfx_retry_interval_handler : Next attempt after %d Seconds", CONVERT_MS_TO_SEC(WLAN_RETRY_TIMER_MS));
-#if CHIP_CONFIG_ENABLE_ICD_SERVER
-            // TODO: cleanup the retry logic MATTER-1921
-            if (SilabsConfig::ConfigValueExists(SilabsConfig::kConfigKey_WiFiSSID)) {
-                // If the device is power cycled go to sleep in between retry
-                wfx_rsi_power_save(RSI_SLEEP_MODE_8, STANDBY_POWER_SAVE_WITH_RAM_RETENTION);
+    // During commissioning, we retry to join the network MAX_JOIN_RETRIES_COUNT
+    if(BaseApplication::sAppDelegate.isCommissioningInProgress()) {
+        if(retryAttempt < MAX_JOIN_RETRIES_COUNT) {
+            ChipLogProgress(DeviceLayer,"wfx_retry_connection : Next attempt after %d Seconds", CONVERT_MS_TO_SEC(WLAN_RETRY_TIMER_MS));
+            if (osTimerStart(sRetryTimer, pdMS_TO_TICKS(WLAN_RETRY_TIMER_MS)) != osOK) {
+                ChipLogProgress(DeviceLayer,"Failed to start retry timer");
+                return;
             }
-#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
-            vTaskDelay(pdMS_TO_TICKS(WLAN_RETRY_TIMER_MS));
+        } else {
+            ChipLogProgress(DeviceLayer,"Connect failed after max %d tries", retryAttempt);
         }
-        else
-        {
-            SILABS_LOG("Connect failed after max %d tries", retryJoin);
-        }
-    }
-    else
-    {
-        /* After disconnection
+    } else {
+        /* After disconnection or power cycle the DUT
          * At the telescopic time interval device try to reconnect with AP, upto WLAN_MAX_RETRY_TIMER_MS intervals
          * are telescopic. If interval exceed WLAN_MAX_RETRY_TIMER_MS then it will try to reconnect at
          * WLAN_MAX_RETRY_TIMER_MS intervals.
@@ -200,15 +210,15 @@ void wfx_retry_interval_handler(bool is_wifi_disconnection_event, uint16_t retry
         {
             retryInterval = WLAN_MAX_RETRY_TIMER_MS;
         }
-        SILABS_LOG("wfx_retry_interval_handler : Next attempt after %d Seconds", CONVERT_MS_TO_SEC(retryInterval));
-#if CHIP_CONFIG_ENABLE_ICD_SERVER
+        if (osTimerStart(sRetryTimer, pdMS_TO_TICKS(retryInterval)) != osOK) {
+            ChipLogProgress(DeviceLayer,"Failed to start retry timer");
+            return;
+        }
+#if CHIP_CONFIG_ENABLE_ICD_SERVER && SLI_SI91X_MCU_INTERFACE
         wfx_rsi_power_save(RSI_SLEEP_MODE_8, STANDBY_POWER_SAVE_WITH_RAM_RETENTION);
-#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
-        vTaskDelay(pdMS_TO_TICKS(retryInterval));
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER && SLI_SI91X_MCU_INTERFACE
+        ChipLogProgress(DeviceLayer,"wfx_retry_connection : Next attempt after %d Seconds", CONVERT_MS_TO_SEC(retryInterval));
         retryInterval += retryInterval;
+        return ;
     }
-    // TODO: remove this code once this is fixed on the TA handling
-#if CHIP_CONFIG_ENABLE_ICD_SERVER
-    wfx_rsi_power_save(RSI_ACTIVE, HIGH_PERFORMANCE);
-#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 }

@@ -171,7 +171,6 @@ include:
     file_list:
     -   path: siwx917-chip-psa-config.h
     -   path: siwx917-chip-mbedtls-config.h
-    -   path: siwx917-chip-tinycrypt-config.h
 label: siwx917
 package: Matter
 provides:
@@ -191,7 +190,6 @@ source:
 -   path: src/platform/silabs/Logging.cpp
 -   path: src/platform/silabs/MigrationManager.cpp
 -   path: src/platform/silabs/NetworkCommissioningWiFiDriver.cpp
--   path: src/platform/silabs/SiWx917/CHIPCryptoPALTinyCrypt.cpp
 -   path: src/platform/silabs/SiWx917/OTAImageProcessorImpl.cpp
 -   path: src/platform/silabs/SiWx917/PlatformManagerImpl.cpp
 -   path: src/platform/silabs/SilabsConfig.cpp

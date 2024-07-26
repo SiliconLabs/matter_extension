@@ -19,7 +19,6 @@
 
 #include "AppConfig.h"
 #include "BaseApplication.h"
-#include "OTAConfig.h"
 #include <MatterConfig.h>
 #include <cmsis_os2.h>
 
@@ -196,34 +195,6 @@ void SilabsMatterConfig::AppInit()
     appError(CHIP_ERROR_INTERNAL);
 }
 
-#if SILABS_OTA_ENABLED
-void SilabsMatterConfig::InitOTARequestorHandler(System::Layer * systemLayer, void * appState)
-{
-    OTAConfig::Init();
-}
-#endif
-
-void SilabsMatterConfig::ConnectivityEventCallback(const ChipDeviceEvent * event, intptr_t arg)
-{
-    if (((event->Type == DeviceEventType::kThreadConnectivityChange) &&
-         (event->ThreadConnectivityChange.Result == kConnectivity_Established)) ||
-        ((event->Type == DeviceEventType::kInternetConnectivityChange) &&
-         (event->InternetConnectivityChange.IPv6 == kConnectivity_Established)))
-    {
-#if SL_WIFI
-        // Starting the MDNS server on the IP assignment
-        // TODO: Improve the connectivity event callback
-        chip::app::DnssdServer::Instance().StartServer(/*Dnssd::CommissioningMode::kEnabledBasic*/);
-#endif /* SL_WIFI */
-
-#if SILABS_OTA_ENABLED
-        SILABS_LOG("Scheduling OTA Requestor initialization")
-        chip::DeviceLayer::SystemLayer().StartTimer(chip::System::Clock::Seconds32(OTAConfig::kInitOTARequestorDelaySec),
-                                                    InitOTARequestorHandler, nullptr);
-#endif
-    }
-}
-
 #if SILABS_TEST_EVENT_TRIGGER_ENABLED
 static uint8_t sTestEventTriggerEnableKey[TestEventTriggerDelegate::kEnableKeyLength] = { 0x00, 0x11, 0x22, 0x33, 0x44, 0x55,
                                                                                           0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb,
@@ -311,13 +282,6 @@ CHIP_ERROR SilabsMatterConfig::InitMatter(const char * appName)
     initParams.operationalKeystore = &gOperationalKeystore;
 #endif
 
-#ifdef PERFORMANCE_TEST_ENABLED
-    // Set up Test Event Trigger command of the General Diagnostics cluster. Used only in performance testing
-    // TODO(#31723): Show to customers that they can do `Server::GetInstance().GetTestEventTriggerDelegate().AddHandler()`
-    static SilabsTestEventTriggerDelegate sTestEventTriggerDelegate{ ByteSpan(kTestEventTriggerEnableKey) };
-    initParams.testEventTriggerDelegate = &sTestEventTriggerDelegate;
-#endif
-
     // Initialize the remaining (not overridden) providers to the SDK example defaults
     (void) initParams.InitializeStaticResourcesBeforeServerInit();
 
@@ -330,18 +294,13 @@ CHIP_ERROR SilabsMatterConfig::InitMatter(const char * appName)
     initParams.endpointNativeParams    = static_cast<void *>(&nativeParams);
 #endif
 
-#if CHIP_CONFIG_ENABLE_ICD_SERVER && SLI_SI917
     initParams.appDelegate = &BaseApplication::sAppDelegate;
-#endif // CHIP_CONFIG_ENABLE_ICD_SERVER && SLI_SI917
     // Init Matter Server and Start Event Loop
     err = chip::Server::GetInstance().Init(initParams);
 
     chip::DeviceLayer::PlatformMgr().UnlockChipStack();
 
     ReturnErrorOnFailure(err);
-
-    // OTA Requestor initialization will be triggered by the connectivity events
-    PlatformMgr().AddEventHandler(ConnectivityEventCallback, reinterpret_cast<intptr_t>(nullptr));
 
     SILABS_LOG("Starting Platform Manager Event Loop");
     ReturnErrorOnFailure(PlatformMgr().StartEventLoopTask());

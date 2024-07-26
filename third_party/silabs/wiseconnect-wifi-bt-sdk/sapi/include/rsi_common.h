@@ -36,7 +36,11 @@
 #define RSI_RSP_WKP 0xDD
 
 // Max packet length of WLAN tx packet
+#if SPI_EXTENDED_TX_LEN_2K
+#define RSI_WLAN_CMD_LEN (2500 + SIZE_OF_HEADROOM)
+#else
 #define RSI_WLAN_CMD_LEN (1600 + SIZE_OF_HEADROOM)
+#endif
 
 // Max packet length of ZigBee tx packet
 #define RSI_ZIGB_CMD_LEN (256 + SIZE_OF_HEADROOM)
@@ -64,12 +68,24 @@
   ((((((uint32_t)(sizeof(rsi_pkt_pool_t))) + 3) & ~3)) \
    + ((RSI_COMMON_CMD_LEN + sizeof(void *)) * RSI_COMMON_TX_POOL_PKT_COUNT))
 
+#ifdef SIDE_BAND_CRYPTO
+#define RSI_CRYPTO_CMD_LEN 1600
+// pool size of crypto command packets
+#define RSI_CRYPTO_POOL_SIZE                           \
+  ((((((uint32_t)(sizeof(rsi_pkt_pool_t))) + 3) & ~3)) \
+   + ((RSI_CRYPTO_CMD_LEN + sizeof(void *)) * RSI_CRYPTO_TX_POOL_PKT_COUNT))
+#endif
+
 // Max packet length of ssl rx packet
 #define RSI_SSL_RECV_BUFFER_LENGTH 0
 
 // Max packet length of rx packet
 #if !((defined RSI_SDIO_INTERFACE) && (!defined LINUX_PLATFORM))
+#if SPI_EXTENDED_TX_LEN_2K
+#define RSI_DRIVER_RX_PKT_LEN (2500 + RSI_SSL_RECV_BUFFER_LENGTH)
+#else
 #define RSI_DRIVER_RX_PKT_LEN (1600 + RSI_SSL_RECV_BUFFER_LENGTH)
+#endif
 #else
 #define RSI_DRIVER_RX_PKT_LEN 0
 #endif
@@ -271,11 +287,14 @@
 #define RSI_WLAN_REQ_EXT_STATS_WAIT_TIME        ((500 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_AUTO_JOIN_RESPONSE_WAIT_TIME \
   ((60000 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT)) //! Here timeout should wait for init,scan and join commands
-#define RSI_DELETE_PROFILE_RESPONSE_WAIT_TIME   ((1000 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
-#define RSI_IAP_RESPONSE_WAIT_TIME              ((5000 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
-#define RSI_IAP_GET_CERT_RESPONSE_WAIT_TIME     ((5000 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
-#define RSI_IAP_GEN_SIG_RESPONSE_WAIT_TIME      ((5000 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
-#define RSI_TA_M4_COMMAND_RESPONSE_WAIT_TIME    ((500 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
+#define RSI_DELETE_PROFILE_RESPONSE_WAIT_TIME ((1000 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
+#define RSI_IAP_RESPONSE_WAIT_TIME            ((5000 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
+#define RSI_IAP_GET_CERT_RESPONSE_WAIT_TIME   ((5000 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
+#define RSI_IAP_GEN_SIG_RESPONSE_WAIT_TIME    ((5000 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
+#define RSI_TA_M4_COMMAND_RESPONSE_WAIT_TIME  ((500 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
+#ifdef CHIP_917
+#define ECDSA_256_VERIFY_RESPONSE_WAIT_TIME ((500 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
+#endif
 #define RSI_ADD_MFI_IE_RESPONSE_WAIT_TIME       ((500 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_FILTER_BROADCAST_RESPONSE_WAIT_TIME ((100 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_SET_RTC_TIMER_RESPONSE_WAIT_TIME    ((100 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
@@ -286,6 +305,7 @@
 #define RSI_GET_RTC_TIMER_RESPONSE_WAIT_TIME   ((100 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_WLAN_TCP_WINDOW_RESPONSE_WAIT_TIME ((5000 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_TIMEOUT_RESPONSE_WAIT_TIME         ((100 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
+#define RSI_SET_SNI_RESPONSE_WAIT_TIME         ((100 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_SET_CONFIG_RESPONSE_WAIT_TIME      ((100 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #ifdef FW_LOGGING_ENABLE
 #define RSI_DEVICE_LOG_RESPONSE_WAIT_TIME ((100 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
@@ -304,8 +324,10 @@
 #define RSI_HTTP_RESPONSE_WAIT_TIME \
   ((110000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT)) //!Firmware max timeout value is 100 seconds
 #define RSI_AP_CONFIG_RESPONSE_WAIT_TIME        ((5000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
+#define RSI_BEACON_STOP_RESPONSE_WAIT_TIME      ((1000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_FWUP_RESPONSE_WAIT_TIME             ((5000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_WMM_PARAMS_RESPONSE_WAIT_TIME       ((5000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
+#define RSI_GET_DEVICE_ID_WAIT_TIME             ((5000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_MTYPE_RESPONSE_WAIT_TIME            ((5000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_WP_LOAD_RESPONSE_WAIT_TIME          ((5000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_JSON_LOAD_RESPONSE_WAIT_TIME        ((5000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
@@ -315,7 +337,10 @@
 #define RSI_CONNECT_RESPONSE_WAIT_TIME          ((10000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_WPS_RESPONSE_WAIT_TIME              ((180000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_FREQ_OFFSET_WAIT_TIME               ((5000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
+#define RSI_EVM_WRITE_WAIT_TIME                 ((5000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
+#define RSI_EVM_OFFSET_WAIT_TIME                ((5000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_CALIB_WRITE_WAIT_TIME               ((5000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
+#define RSI_DPD_WRITE_WAIT_TIME                 ((5000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_CALIB_READ_WAIT_TIME                ((5000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_SMTP_RESPONSE_WAIT_TIME             ((60000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_DNS_SERVER_ADD_RESPONSE_WAIT_TIME   ((150000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
@@ -339,6 +364,8 @@
 #define RSI_SOCKET_CLOSE_RESPONSE_WAIT_TIME ((5000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_WLAN_11AX_WAIT_TIME             ((5000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_WLAN_TWT_RESPONSE_WAIT_TIME     ((5000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
+#define RSI_WLAN_NON_PREF_CHAN_WAIT_TIME    ((5000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
+#define RSI_WLAN_NWK_APP_CONFIG_WAIT_TIME   ((5000 * WIFI_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 
 // WIFI BLOCKED timeout defines
 #define RSI_ACCEPT_RESPONSE_WAIT_TIME          (RSI_WAIT_FOREVER * WIFI_BLOCKED_TIMEOUT_SF)
@@ -347,6 +374,7 @@
 #define RSI_GPIO_WAIT_TIME                     10000
 #define RSI_RX_EVENT_WAIT_TIME                 DEFAULT_TIMEOUT
 #define RSI_COMMON_SEND_CMD_RESPONSE_WAIT_TIME ((250000 * WIFI_BLOCKED_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
+#define RSI_CRYPTO_SEND_CMD_RESPONSE_WAIT_TIME ((250000 * WIFI_BLOCKED_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_WLAN_SEND_CMD_RESPONSE_WAIT_TIME   ((250000 * WIFI_BLOCKED_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_NWK_SEND_CMD_RESPONSE_WAIT_TIME    ((250000 * WIFI_BLOCKED_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 #define RSI_GPIO_CONFIG_RESP_WAIT_TIME         ((100 * WIFI_INTERNAL_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
@@ -369,9 +397,21 @@
 
 #define RSI_BT_BLE_CMD_MAX_RESP_WAIT_TIME ((2000 * BT_COMMON_WAIT_TIMEOUT_SF) + (DEFAULT_TIMEOUT))
 
+#ifdef CHIP_917
+// The max supported length for a ECDSA key
+#define ECDSA_VERIFY_KEY_LENGTH 248
+// The digest length that is supported
+#define ECDSA_VERIFY_DIGEST_LENGTH 64
+// The signature length that needs to be given
+#define ECDSA_VERIFY_SIGN_LENGTH 72
+#endif
+
 //Antenna Output power in dBm
 #define RSI_MIN_OUTPUT_POWER_IN_DBM -8
 #define RSI_MAX_OUTPUT_POWER_IN_DBM 15
+
+// To select UART_1 for ram_log output
+#define UART_1_FOR_RAM_LOG BIT(0)
 
 /********TA GPIO defines ******************************/
 //! GPIO address
@@ -415,7 +455,10 @@ typedef enum rsi_common_cmd_response_e {
   RSI_RSP_ENCRYPT_CRYPTO               = 0x76,
   RSI_COMMON_RSP_UART_FLOW_CTRL_ENABLE = 0xA4,
   RSI_COMMON_RSP_TA_M4_COMMANDS        = 0xB0,
-  RSI_COMMON_RSP_DEBUG_LOG             = 0x26
+#ifdef CHIP_917
+  RSI_COMMON_RSP_ECDSA_256_VERIFY_HASH = 0x3E,
+#endif
+  RSI_COMMON_RSP_DEBUG_LOG = 0x26
 
 #ifdef RSI_PUF_ENABLE
   ,
@@ -475,7 +518,10 @@ typedef enum rsi_common_cmd_request_e {
   RSI_COMMON_REQ_ENCRYPT_CRYPTO        = 0x76,
   RSI_COMMON_REQ_UART_FLOW_CTRL_ENABLE = 0xA4,
   RSI_COMMON_REQ_TA_M4_COMMANDS        = 0xB0,
-  RSI_COMMON_REQ_DEBUG_LOG             = 0x26
+#ifdef CHIP_917
+  RSI_COMMON_REQ_ECDSA_256_VERIFY_HASH = 0x3E,
+#endif
+  RSI_COMMON_REQ_DEBUG_LOG = 0x26
 
 #ifdef RSI_WAC_MFI_ENABLE
   ,
@@ -544,8 +590,11 @@ typedef enum ta_m4_commands_e {
   RSI_WRITE_TA_REGISTER           = 4,
   // This enum varibale added for M4 has to give indication to TA, for Configure the Clock switching between 1.3V to 3.3 .For more details check Jira Ticket RSC-3802.
   RSI_ENABLE_XTAL = 5,
-#ifdef CHIP_9117
+#ifdef CHIP_917
   RSI_WRITE_TO_COMMON_FLASH = 6,
+#ifdef SIDE_BAND_CRYPTO
+  RSI_ENABLE_SIDE_BAND = 7,
+#endif
 #endif
 } ta_m4_commands_t;
 //  M4 and TA secure handshake request structure.
@@ -558,7 +607,7 @@ typedef struct ta_m4_handshake_param {
   uint8_t *input_data;
 } ta_m4_handshake_param_t;
 
-#ifdef CHIP_9117
+#ifdef CHIP_917
 #define RSI_MAX_CHUNK_SIZE 1400
 
 // TA2M4 handshake request structure.
@@ -572,11 +621,8 @@ typedef struct rsi_req_ta2m4_s {
   // total length of input data
   uint16_t in_buf_len;
 
-  // total length of chunk
-  uint16_t chunk_len;
-
-  // more chunks or last chunk
-  uint8_t more_chunks;
+  // erases multiples of 4kbytes
+  uint8_t flash_sector_erase_enable;
 
   //data
   uint8_t input_data[RSI_MAX_CHUNK_SIZE];
@@ -621,17 +667,26 @@ typedef struct rsi_opermode_s {
 
   // BYTE(0) - BLE nbr of attributes,
   // BYTE(1): (0 - 3): BLE Nbr of GATT services
-  // BYTE(1): (4 - 7): BLE Nbr of slaves
-  // BYTE(2): (0 - 7) BLE powersave index,
-  // BYTE(3): (0 - 2)BLE powersave options,
-  // BYTE(3): (3: 5) Reserved,
+  // BYTE(1): (4 - 7): BLE Nbr of Peripherals
+  // BYTE(2): (0 - 7): BLE powersave index
+  // BYTE(3): (0 - 2): BLE powersave options
+  // BYTE(3): (3 - 4): BLE Nbr of Centrals
+  // BYTE(3): bit 5: BT_GATT_ASYNC_ENABLE
   // BYTE(3): bit 6: BLE new features enable
-  // BYTE(3): bit 7: Reserved,
-  // BYTE(4): bits (4 - 5):BLE Nbr of masters
+  // BYTE(3): bit 7: Reserved or To enable next bitmap
   uint8_t ble_feature_bit_map[4];
 
-  // BYTE(0): (0 - 3): BLE number of connection events
-  // BYTE(1): (4 - 5): BLE number of connection events
+  // BYTE(0): (0 - 4): BLE number of connection events
+  // BYTE(0): (5 - 7): BLE number of record bytes
+  // BYTE(1): (0 - 4): BLE number of record bytes
+  // BYTE(1): bit 5: GAP/GATT should be created from App/Host
+  // BYTE(1): bit 6: Send Indication Response from App/Host
+  // BYTE(1): bit 7: MTU request from App/Host
+  // BYTE(2): bit 0: Scan response data should set from App/Host
+  // BYTE(2): bit 1: Disable LE CODED feature
+  // BYTE(2): bit 2: BLE common pool buffer size of 512 each buffer
+  // BYTE(2): bit 3: Ext Adv Feature Enable
+  // BYTE(2): (4 - 7): Max no of Ext Adv Sets
   uint8_t ble_ext_feature_bit_map[4];
   uint8_t config_feature_bit_map[4];
 } rsi_opermode_t;
@@ -766,6 +821,33 @@ typedef struct rsi_common_cb_s {
 #endif
 } rsi_common_cb_t;
 
+#ifdef SIDE_BAND_CRYPTO
+// driver common block structure
+typedef struct rsi_crypto_cb_s {
+
+  // driver common block status
+  volatile int32_t status;
+
+  // driver common block mutex
+  rsi_mutex_handle_t crypto_mutex;
+
+  // driver common block semaphore
+  rsi_semaphore_handle_t crypto_sem;
+
+  // driver common block tx pool
+  rsi_pkt_pool_t crypto_tx_pool;
+
+  // power save backups
+  uint8_t crypto_hold_power_save;
+
+  // buffer pointer given by application to driver
+  uint8_t *crypto_buffer;
+
+  // buffer length given by application to driver
+  uint32_t crypto_buffer_length;
+} rsi_crypto_cb_t;
+#endif
+
 typedef enum {
   ALLOW  = 0,
   IN_USE = 1,
@@ -779,7 +861,10 @@ typedef enum {
   RX_EVENT_CMD = 5,
   BT_CMD       = 6,
 #ifdef RSI_PROP_PROTOCOL_ENABLE
-  PROP_PROTOCOL_CMD = 7
+  PROP_PROTOCOL_CMD = 7,
+#endif
+#ifdef SIDE_BAND_CRYPTO
+  CRYPTO_CMD = 8,
 #endif
 } command_type;
 
@@ -811,6 +896,24 @@ typedef enum {
   RSI_MODULE_TYPE_WMS  = 10
 } module_type;
 
+//! Firmware up request structure
+typedef struct fwupeq_s {
+  uint16_t control_flags;
+  uint16_t sha_type;
+  uint32_t magic_no;
+  uint32_t image_size;
+  uint32_t fw_version;
+  uint32_t image_loc;
+  uint32_t crc;
+} fwreq_t;
+
+#define FW_MAGIC_NO  0x900d900d
+#define FW_IMAGE_LOC 0x11000
+
+#define RSI_MAX_POSSIBLE_SINGLE_BAND_CHANNEL 14
+
+#define RSI_SINGLE_NON_PREF_CHAN_PARAMS_LEN 15
+
 #if ((defined RSI_SDIO_INTERFACE) && (!defined LINUX_PLATFORM))
 #define SDIO_BUFFER_LENGTH (2048 + RSI_SSL_RECV_BUFFER_LENGTH)
 #endif
@@ -828,6 +931,9 @@ typedef struct rsi_driver_cb_non_rom {
   rsi_semaphore_handle_t wlan_cmd_sem;
   rsi_semaphore_handle_t common_cmd_sem;
   rsi_semaphore_handle_t common_cmd_send_sem;
+#ifdef SIDE_BAND_CRYPTO
+  rsi_semaphore_handle_t crypto_cmd_sem;
+#endif
   rsi_semaphore_handle_t wlan_cmd_send_sem;
   rsi_semaphore_handle_t nwk_cmd_send_sem;
   rsi_semaphore_handle_t send_data_sem;
@@ -835,6 +941,9 @@ typedef struct rsi_driver_cb_non_rom {
   uint8_t wlan_wait_bitmap;
   uint8_t send_wait_bitmap;
   uint8_t common_wait_bitmap;
+#ifdef SIDE_BAND_CRYPTO
+  uint8_t crypto_wait_bitmap;
+#endif
   uint8_t zigb_wait_bitmap;
   uint8_t bt_wait_bitmap;
   uint8_t bt_cmd_wait_bitmap;
@@ -865,6 +974,9 @@ typedef struct rsi_driver_cb_non_rom {
 #endif
 #if ((defined RSI_SDIO_INTERFACE) && (!defined LINUX_PLATFORM))
   uint8_t sdio_read_buff[SDIO_BUFFER_LENGTH];
+#endif
+#ifdef CHIP_917
+  char non_pref_chan_read_buff[RSI_SINGLE_NON_PREF_CHAN_PARAMS_LEN * RSI_MAX_POSSIBLE_SINGLE_BAND_CHANNEL];
 #endif
   //! timer flag
   uint32_t rx_driver_flag;
@@ -923,8 +1035,8 @@ int32_t rsi_driver_common_send_cmd(rsi_common_cmd_request_t cmd, rsi_pkt_t *pkt)
 int8_t rsi_common_cb_init(rsi_common_cb_t *common_cb);
 void rsi_common_set_status(int32_t status);
 void rsi_handle_slp_wkp(uint8_t frame_type);
-int8_t rsi_req_wakeup(void);
-int8_t rsi_wait4wakeup(void);
+int16_t rsi_req_wakeup(void);
+int16_t rsi_wait4wakeup(void);
 void rsi_allow_sleep(void);
 void rsi_powersave_gpio_init(void);
 void rsi_common_packet_transfer_done(rsi_pkt_t *pkt);

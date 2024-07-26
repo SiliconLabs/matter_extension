@@ -17,34 +17,34 @@ adapter_types=JLink
 environment(provisionenv:linux.aarch64) {
   PATH=$(PATH):$(exe.commander)
   LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$(lib.libjlinkarm)
-  STUDIO_PYTHONPATH=$(STUDIO_PYTHONPATH):$(this)/modules:$(studio.install)/developer/adapter_packs/cpms/site-packages
+  STUDIO_PYTHONPATH=$(STUDIO_PYTHONPATH):$(this)/modules:$(studio.install)/developer/adapter_packs/python/ext-site-packages
 }
 
 # Set up environments to execute provision script on Linux OS x86_64
 environment(provisionenv:linux.x86_64) {
   PATH=$(PATH):$(exe.commander)
   LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$(lib.libjlinkarm)
-  STUDIO_PYTHONPATH=$(STUDIO_PYTHONPATH):$(this)/modules:$(studio.install)/developer/adapter_packs/cpms/site-packages
+  STUDIO_PYTHONPATH=$(STUDIO_PYTHONPATH):$(this)/modules:$(studio.install)/developer/adapter_packs/python/ext-site-packages
 }
 
 # Set up environments to execute provision script on MacOS ARM
 environment(provisionenv:macosx.aarch64) {
   PATH=$(PATH):$(exe.commander)
   DYLD_LIBRARY_PATH=$(DYLD_LIBRARY_PATH):$(lib.libjlinkarm)
-  STUDIO_PYTHONPATH=$(STUDIO_PYTHONPATH):$(this)/modules:$(studio.install)/developer/adapter_packs/cpms/site-packages
+  STUDIO_PYTHONPATH=$(STUDIO_PYTHONPATH):$(this)/modules:$(studio.install)/developer/adapter_packs/python/ext-site-packages
 }
 
 # Set up environments to execute provision script on MacOS x86_64
 environment(provisionenv:macosx.x86_64) {
   PATH=$(PATH):$(exe.commander)
   DYLD_LIBRARY_PATH=$(DYLD_LIBRARY_PATH):$(lib.libjlinkarm)
-  STUDIO_PYTHONPATH=$(STUDIO_PYTHONPATH):$(this)/modules:$(studio.install)/developer/adapter_packs/cpms/site-packages
+  STUDIO_PYTHONPATH=$(STUDIO_PYTHONPATH):$(this)/modules:$(studio.install)/developer/adapter_packs/python/ext-site-packages
 }
 
 # Set up environments to execute provision script on Win OS
 environment(provisionenv:win32.x86_64) {
   PATH=$(PATH);$(exe.commander);$(lib.libjlinkarm);$(studio.install)/developer/adapter_packs/cpms/applications
-  STUDIO_PYTHONPATH=$(STUDIO_PYTHONPATH);$(this)/modules;$(studio.install)/developer/adapter_packs/cpms/site-packages
+  STUDIO_PYTHONPATH=$(STUDIO_PYTHONPATH);$(this)/modules;$(studio.install)/developer/adapter_packs/python/ext-site-packages
 }
 
 # Function to execute Matter provision script 

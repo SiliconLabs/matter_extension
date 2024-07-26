@@ -273,7 +273,7 @@ class InitCommand(Command):
         self.put(ID.kFlashAddress)
         self.put(ID.kFlashSize)
         self.put(ID.kFlashPageSize, True, True)
-        self.put(ID.kBaseAddress, True, True)
+        self.put(ID.kCredsAddress, True, True)
 
 
 class CsrCommand(Command):

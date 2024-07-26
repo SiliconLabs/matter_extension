@@ -111,7 +111,7 @@ upgrade:
            - ot_stack_mtd
       - trigger: matter_thread_cert_mtd_lib
         description: >
-          Using GSDK OT components now 
+          Using GSDK OT components now
         remove:
            - matter_thread_cert_mtd_lib
         add:
@@ -119,7 +119,7 @@ upgrade:
            - ot_cert_libs
       - trigger: matter_thread_coap_cert_mtd_lib
         description: >
-          Using GSDK OT components now 
+          Using GSDK OT components now
         remove:
            - matter_thread_coap_cert_mtd_lib
         add:
@@ -130,7 +130,22 @@ upgrade:
       id: matter
       version: "2.3.0"
     component:
-    
+      - trigger: matter_subscription_persistence
+        description: >
+          Removing matter_subscription_persistence
+        remove:
+           - matter_subscription_persistence
+      - trigger: matter_subscription_timeout_resumption
+        description: >
+          Removing matter_subscription_timeout_resumption
+        remove:
+           - matter_subscription_timeout_resumption
+      - trigger: silabs_factory_data_provider
+        description: >
+          Removing silabs_factory_data_provider
+        remove:
+           - silabs_factory_data_provider
+
     configuration:
       - name: SL_ACTIVE_MODE_INTERVAL
         replacement: SL_ACTIVE_MODE_DURATION_MS

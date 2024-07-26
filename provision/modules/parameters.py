@@ -64,7 +64,7 @@ class ID:
     kFlashAddress       = 0x0101
     kFlashSize          = 0x0102
     kFlashPageSize      = 0x0103
-    kBaseAddress        = 0x0104
+    kCredsAddress       = 0x0104
     kCsrFile            = 0x0105
     # Options
     kVersion            = 0x0111

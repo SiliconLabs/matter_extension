@@ -22,20 +22,12 @@
 /**********************************************************
  * Includes
  *********************************************************/
-
-#include <stdbool.h>
-#include <stdint.h>
-
-#include "AppEvent.h"
-#include "BaseApplication.h"
-#include "DishwasherManager.h"
-#include "FreeRTOS.h"
-#include "timers.h" // provides FreeRTOS timer support
 #include <ble/BLEEndPoint.h>
-#include <app/clusters/operational-state-server/operational-state-server.h>
-#include <lib/core/ClusterEnums.h>
 #include <lib/core/CHIPError.h>
+#include <lib/core/ClusterEnums.h>
 #include <platform/CHIPDeviceLayer.h>
+
+#include "BaseApplication.h"
 
 /**********************************************************
  * Defines
@@ -52,8 +44,6 @@
 /**********************************************************
  * AppTask Declaration
  *********************************************************/
-using namespace chip::app::Clusters::OperationalState;
-
 class AppTask : public BaseApplication
 {
 
@@ -107,6 +97,6 @@ private:
     */
     static void DishwasherActionEventHandler(AppEvent * aEvent);
 
-    static void ActionInitiated(OperationalStateEnum action);
+    static void ActionInitiated(chip::app::Clusters::OperationalState::OperationalStateEnum action);
     static void ActionCompleted();
 };

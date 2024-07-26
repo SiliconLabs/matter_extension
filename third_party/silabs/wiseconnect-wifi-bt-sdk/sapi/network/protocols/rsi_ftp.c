@@ -256,7 +256,6 @@ int32_t rsi_ftp_disconnect(void)
       rsi_check_and_update_cmd_state(NWK_CMD, ALLOW);
       // Return status if error in sending command occurs
       SL_PRINTF(SL_FTP_DISCONNECT_ERROR_IN_SENDING_COMMAND_1, NETWORK, LOG_ERROR, "status: %4x", status);
-      return status;
     }
     // Allocate command buffer from WLAN pool
     pkt = rsi_pkt_alloc(&wlan_cb->wlan_tx_pool);
@@ -1318,7 +1317,7 @@ int32_t rsi_ftp_mode_set(uint8_t mode)
  * @note       This API should called before every \ref rsi_ftp_file_write_content() when the Block transfer mode is in use
  * @note       Refer to \ref error-codes for the description of above error codes.
  */
-#ifdef CHIP_9117
+#ifdef CHIP_917
 int32_t rsi_ftp_file_size_set(uint32_t file_size)
 {
   int32_t status = RSI_SUCCESS;

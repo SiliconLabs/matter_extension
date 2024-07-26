@@ -83,6 +83,9 @@ int32_t rsi_device_init(uint8_t select_option)
 #ifdef RSI_WITH_OS
   // Set P2P Intr priority
   NVIC_SetPriority(SysTick_IRQn, SYSTICK_INTR_PRI);
+
+  //Configure NVIC interrupt priorities
+  nvic_priorities_config();
 #endif
   if (!(P2P_STATUS_REG & TA_is_active)) {
 #ifdef DEBUG_UART
@@ -156,6 +159,9 @@ int32_t rsi_device_init(uint8_t select_option)
 #elif defined(RSI_SPI_INTERFACE)
   // SPI interface initialization
   status = rsi_spi_iface_init();
+#elif defined(RSI_UART_INTERFACE)
+  // UART interface initialization
+  status = rsi_uart_iface_int();
 #endif
   if (status != RSI_SUCCESS) {
     SL_PRINTF(SL_DEVICE_INIT_SPI_INIT_FAILURE, COMMON, LOG_ERROR, "status: %4x", status);
@@ -259,7 +265,7 @@ int32_t rsi_device_init(uint8_t select_option)
 
 int32_t rsi_device_deinit(void)
 {
-#ifdef RSI_WITH_OS
+#if (RSI_WITH_OS && (defined RSI_WLAN_ENABLE))
   int32_t status = RSI_SUCCESS;
 #endif
   SL_PRINTF(SL_DEVICE_DEINIT_ENTRY, COMMON, LOG_INFO);

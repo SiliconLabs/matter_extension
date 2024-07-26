@@ -21,6 +21,8 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
+#include <app/icd/server/ICDServerConfig.h>
+
 #if SILABS_LOG_ENABLED
 #include "silabs_utils.h"
 #endif
@@ -38,7 +40,10 @@ extern "C" {
 #include "sl_si91x_button_pin_config.h"
 #include "sl_si91x_led.h"
 #include "sl_si91x_led_config.h"
+
+#if CHIP_CONFIG_ENABLE_ICD_SERVER == 0
 void soc_pll_config(void);
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 }
 
 #if SILABS_LOG_ENABLED
@@ -55,9 +60,9 @@ namespace Silabs {
 
 
 namespace {
-#if SL_ICD_ENABLED
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
     bool btn0_pressed = false;
-#endif /* SL_ICD_ENABLED */
+#endif  //CHIP_CONFIG_ENABLE_ICD_SERVER
     uint8_t sButtonStates[SL_SI91x_BUTTON_COUNT] = { 0 };
 }
 
@@ -71,10 +76,10 @@ CHIP_ERROR SilabsPlatform::Init(void)
     // TODO: Setting the highest priority for SVCall_IRQn to avoid the HardFault issue
     NVIC_SetPriority(SVCall_IRQn, CORE_INTERRUPT_HIGHEST_PRIORITY);
 
-#ifndef SL_ICD_ENABLED
+#if CHIP_CONFIG_ENABLE_ICD_SERVER == 0
     // Configuration the clock rate
     soc_pll_config();
-#endif
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 
 #if SILABS_LOG_OUT_UART
     uartConsoleInit();
@@ -129,7 +134,7 @@ void SilabsPlatform::StartScheduler()
 extern "C" {
 void sl_button_on_change(uint8_t btn, uint8_t btnAction)
 {
-#if SL_ICD_ENABLED
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
     // This is to make sure we get a one-press and one-release event for the button
     // Hardware modification will be required for this to work permanently
     // Currently the btn0 is pull-up resistor due to which is sends a release event on every wakeup
@@ -149,7 +154,7 @@ void sl_button_on_change(uint8_t btn, uint8_t btnAction)
             btn0_pressed = false;
         }
     }
-#endif /* SL_ICD_ENABLED */
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
     if (Silabs::GetPlatform().mButtonCallback == nullptr)
     {
         return;
