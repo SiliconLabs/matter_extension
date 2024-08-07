@@ -20,7 +20,7 @@ requires:
 provides:
   - name: matter_uart_wifi
 source:
-  - path: examples/platform/silabs/efr32/uart.cpp
+  - path: examples/platform/silabs/uart.cpp
 include:
 - path: examples/platform/silabs
   file_list:
@@ -29,7 +29,7 @@ define:
   - name: CONFIG_ENABLE_EUART
     condition:
      - device_series_2
-# For examples/platform/silabs/efr32/uart.cpp EFR32MG24 and MGM24 follow the same logic
+# For examples/platform/silabs/uart.cpp EFR32MG24 and MGM24 follow the same logic
   - name: EFR32MG24
     condition:
      - device_series_2

@@ -204,9 +204,12 @@ static uint8_t sTestEventTriggerEnableKey[TestEventTriggerDelegate::kEnableKeyLe
 CHIP_ERROR SilabsMatterConfig::InitMatter(const char * appName)
 {
     CHIP_ERROR err;
-
+#ifdef SL_WIFI
+    // Because OpenThread needs to use memory allocation during its Key operations, we initialize the memory management for thread
+    // and set the allocation functions inside sl_ot_create_instance, which is called by sl_system_init in the OpenThread stack
+    // initialization.
     mbedtls_platform_set_calloc_free(CHIPPlatformMemoryCalloc, CHIPPlatformMemoryFree);
-
+#endif
     SILABS_LOG("==================================================");
     SILABS_LOG("%s starting", appName);
     SILABS_LOG("==================================================");
@@ -223,11 +226,11 @@ CHIP_ERROR SilabsMatterConfig::InitMatter(const char * appName)
     // Init Matter Stack
     //==============================================
     SILABS_LOG("Init CHIP Stack");
-    // Init Chip memory management before the stack
-    ReturnErrorOnFailure(chip::Platform::MemoryInit());
 
-// WiFi needs to be initialized after Memory Init for some reason
 #ifdef SL_WIFI
+    // Init Chip memory management before the stack
+    // See comment above about OpenThread memory allocation as to why this is WIFI only here.
+    ReturnErrorOnFailure(chip::Platform::MemoryInit());
     ReturnErrorOnFailure(InitWiFi());
 #endif
 

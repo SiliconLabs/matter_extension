@@ -358,28 +358,27 @@ exit:
 
 void ConnectivityManagerImpl::OnStationConnected()
 {
-    ChipDeviceEvent event;
     wfx_setup_ip6_link_local(SL_WFX_STA_INTERFACE);
 
     NetworkCommissioning::SlWiFiDriver::GetInstance().OnConnectWiFiNetwork();
+    UpdateInternetConnectivityState();
     // Alert other components of the new state.
+    ChipDeviceEvent event;
     event.Type                          = DeviceEventType::kWiFiConnectivityChange;
     event.WiFiConnectivityChange.Result = kConnectivity_Established;
     (void) PlatformMgr().PostEvent(&event);
-    UpdateInternetConnectivityState();
 }
 
 void ConnectivityManagerImpl::OnStationDisconnected()
 {
     // TODO: Invoke WARM to perform actions that occur when the WiFi station interface goes down.
 
+    UpdateInternetConnectivityState();
     // Alert other components of the new state.
     ChipDeviceEvent event;
     event.Type                          = DeviceEventType::kWiFiConnectivityChange;
     event.WiFiConnectivityChange.Result = kConnectivity_Lost;
     (void) PlatformMgr().PostEvent(&event);
-
-    UpdateInternetConnectivityState();
 }
 
 void ConnectivityManagerImpl::DriveStationState(::chip::System::Layer * aLayer, void * aAppState)

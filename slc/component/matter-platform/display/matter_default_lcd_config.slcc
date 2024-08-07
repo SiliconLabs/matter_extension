@@ -38,6 +38,12 @@ requires:
       - brd4116a
   - name: matter_qr_code
     condition: 
+      - brd4117a
+  - name: matter_qr_code
+    condition: 
+      - brd4118a 
+  - name: matter_qr_code
+    condition: 
       - brd4121a
   - name: matter_qr_code
     condition: 

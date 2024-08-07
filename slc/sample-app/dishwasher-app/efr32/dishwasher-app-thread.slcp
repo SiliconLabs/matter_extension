@@ -11,6 +11,8 @@ sdk_extension:
 
 component:
   - id: device_init
+  - id: sl_system
+  - id: clock_manager
   - id: matter_buttons
     from: matter
 

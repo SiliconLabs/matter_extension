@@ -6,6 +6,9 @@ quality: production
 description: This is the project file for a Matter (OT)+Zigbee+BLE app
 
 component:
+- id: device_init
+- id: sl_system
+- id: clock_manager
 - id: rail_mux
 # Needed to use Network Analyser
 #- id: rail_util_pti

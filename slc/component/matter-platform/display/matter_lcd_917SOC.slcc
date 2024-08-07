@@ -35,6 +35,14 @@ include:
     condition: [matter_thermostat_app]
   - path: ThermostatUI.h
     condition: [matter_thermostat_app]
+- path: examples/air-quality-sensor-app/silabs/include
+  file_list:
+  - path: AirQualitySensorUI.h
+    condition: [matter_air_quality_app]
+- path: examples/platform/silabs
+  file_list:
+  - path: CommonIcons.h
+    condition: [matter_air_quality_app]
 source:
   - path: examples/platform/silabs/display/demo-ui.c
   - path: examples/platform/silabs/display/lcd.cpp
@@ -44,6 +52,9 @@ source:
   - path: examples/thermostat/silabs/src/ThermostatUI.cpp
     condition:
       - matter_thermostat_app
+  - path: examples/air-quality-sensor-app/silabs/src/AirQualitySensorUI.cpp
+    condition:
+      - matter_air_quality_app
 define:
   - name: DISPLAY_ENABLED
   - name: SPI_MULTI_SLAVE

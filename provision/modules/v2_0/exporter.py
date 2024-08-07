@@ -7,15 +7,15 @@ class Exporter(_base.Exporter):
     def __init__(self, paths, args):
         super().__init__(paths, args)
 
+
     def encodeInt8u(self, a):
-        self.data.extend(Coder.encode(a, a.int().to_bytes(1, 'big')))
+        self.data.extend(Coder.encode(a, a.value))
 
     def encodeInt16u(self, a):
-        b = Coder.encode(a, a.int().to_bytes(2, 'big'))
-        self.data.extend(b)
+        self.data.extend(Coder.encode(a, a.value))
 
     def encodeInt32u(self, a):
-        self.data.extend(Coder.encode(a, a.int().to_bytes(4, 'big')))
+        self.data.extend(Coder.encode(a, a.value))
 
     def encodeBinary(self, a, v, max_size):
         self.data.extend(Coder.encode(a, v))

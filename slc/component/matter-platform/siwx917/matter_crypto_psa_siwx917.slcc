@@ -5,6 +5,9 @@ description: >
 package: "Matter"
 category: "Matter-WiFi|Platform|PSA"
 quality: production
+metadata:
+  sbom:
+    license: Zlib
 provides:
   - name: matter_crypto_psa_siwx917
 

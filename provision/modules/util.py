@@ -56,17 +56,17 @@ class File:
 class BinaryFile(File):
 
     def read(self):
-        if self.path is None: return bytearray()
+        if self.path is None: return bytes()
         with open(self.path, 'rb') as f:
-            return bytearray(f.read())
+            return bytes(f.read())
 
     def write(self, x):
         if x is None:
-            data = bytearray()
-        elif isinstance(x, bytearray):
-            data = x
-        else:
+            data = bytes()
+        elif isinstance(x, str):
             data = str(x).encode('utf-8')
+        else: # isinstance(x, bytes) or isinstance(x, bytearray):
+            data = x
         with open(self.path, 'wb') as f:
             f.write(data)
 

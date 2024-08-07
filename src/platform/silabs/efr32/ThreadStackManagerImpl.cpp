@@ -26,6 +26,8 @@
 /* this file behaves like a config.h, comes first */
 #include <platform/internal/CHIPDeviceLayerInternal.h>
 
+#include <app/clusters/network-commissioning/network-commissioning.h>
+#include <platform/NetworkCommissioning.h>
 #include <platform/OpenThread/GenericThreadStackManagerImpl_OpenThread.hpp>
 #include <platform/OpenThread/OpenThreadUtils.h>
 #include <platform/ThreadStackManager.h>
@@ -37,13 +39,15 @@
 #include <lib/support/CHIPPlatformMemory.h>
 
 #include <lib/support/CodeUtils.h>
+#include <mbedtls/platform.h>
 
 extern "C" {
 #include "platform-efr32.h"
+otInstance * otGetInstance(void);
+#if CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
+void otAppCliInit(otInstance * aInstance);
+#endif // CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
 }
-
-// Forward declaration
-extern "C" otInstance * otGetInstance(void);
 
 #if CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
 extern "C" void otAppCliInit(otInstance * aInstance);
@@ -52,7 +56,7 @@ extern "C" void otAppCliInit(otInstance * aInstance);
 namespace chip {
 namespace DeviceLayer {
 namespace {
-    otInstance * sOTInstance = NULL;
+otInstance * sOTInstance = NULL;
 
 // Network commissioning
 #ifndef _NO_NETWORK_COMMISSIONING_DRIVER_
@@ -134,7 +138,7 @@ void ThreadStackManagerImpl::_NotifySrpClearAllComplete()
 CHIP_ERROR ThreadStackManagerImpl::InitThreadStack(otInstance * otInst)
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
-    err = GenericThreadStackManagerImpl_OpenThread<ThreadStackManagerImpl>::ConfigureThreadStack(otInst);
+    err            = GenericThreadStackManagerImpl_OpenThread<ThreadStackManagerImpl>::ConfigureThreadStack(otInst);
     initStaticNetworkCommissioningThreadDriver();
     return err;
 }
@@ -196,6 +200,8 @@ extern "C" otInstance * otGetInstance(void)
 
 extern "C" void sl_ot_create_instance(void)
 {
+    VerifyOrDie(chip::Platform::MemoryInit() == CHIP_NO_ERROR);
+    mbedtls_platform_set_calloc_free(CHIPPlatformMemoryCalloc, CHIPPlatformMemoryFree);
     sOTInstance = otInstanceInitSingle();
 }
 

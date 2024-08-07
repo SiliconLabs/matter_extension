@@ -32,10 +32,10 @@
 #include <app/util/config.h>
 #include <ble/BLEEndPoint.h>
 #include <cmsis_os2.h>
+#include <credentials/FabricTable.h>
 #include <lib/core/CHIPError.h>
 #include <platform/CHIPDeviceEvent.h>
 #include <platform/CHIPDeviceLayer.h>
-#include <credentials/FabricTable.h>
 
 #include "LEDWidget.h"
 
@@ -63,11 +63,11 @@
 #define APP_ERROR_START_TIMER_FAILED CHIP_APPLICATION_ERROR(0x05)
 #define APP_ERROR_STOP_TIMER_FAILED CHIP_APPLICATION_ERROR(0x06)
 
-class BaseApplicationDelegate : public AppDelegate, 
-                                public chip::FabricTable::Delegate
+class BaseApplicationDelegate : public AppDelegate, public chip::FabricTable::Delegate
 {
 public:
     bool isCommissioningInProgress() { return isComissioningStarted; }
+
 private:
     // AppDelegate
     bool isComissioningStarted = false;
@@ -135,7 +135,7 @@ public:
      */
     static SilabsLCD & GetLCD(void);
 
-    static void UpdateLCDStatusScreen(void);
+    static void UpdateLCDStatusScreen(bool withChipStackLock = true);
 #endif
 
     /**
@@ -168,8 +168,8 @@ public:
     static void UpdateCommissioningStatus(bool newState);
 
     /**
-     * @brief Called when the last Fabric is removed, clears all Fabric related data and Thread  Wifi provision.
-     * @note This function preserves some NVM3 data that is not Fabric scoped like Attribute Value or Boot Count.
+     * @brief Called when the last Fabric is removed, clears all Fabric related data, including Thread and Wifi provision.
+     * @note This function preserves some NVM3 data that is not Fabric scoped, like Attribute Value or Boot Count.
      */
     static void DoProvisioningReset();
 

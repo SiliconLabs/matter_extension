@@ -10,9 +10,11 @@ sdk_extension:
     version: "2.3.1"
 
 component:
+  - id: device_init
+  - id: sl_system
+  - id: clock_manager
   - id: matter_performance_testing
     from: matter
-  - id: device_init
   - id: ot_stack_ftd
   - id: ot_rtos_wrappers_real
   - id: matter_buttons

@@ -216,7 +216,7 @@
     ]
   },
   {
-    "clusterCode": "hepa filter monitoring-server",
+    "clusterCode": "activated carbon filter monitoring-server",
     "value": [
       "%extension-matter%matter_resource_monitoring"
     ]
@@ -336,7 +336,7 @@
     ]
   },
   {
-    "clusterCode": "laundry dryer controls-server",
+    "clusterCode": "laundry washer mode-server",
     "value": [
       "%extension-matter%matter_laundry_washer_controls"
     ]
@@ -372,7 +372,7 @@
     ]
   },
   {
-    "clusterCode": "carbon monoxide concentration measurement-server",
+    "clusterCode": "radon concentration measurement-server",
     "value": [
       "%extension-matter%matter_concentration_measurement"
     ]

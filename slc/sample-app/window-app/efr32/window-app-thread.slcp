@@ -14,12 +14,12 @@ provides:
 
 component:
   - id: device_init
+  - id: sl_system
+  - id: clock_manager
   - id: matter_buttons
     from: matter
   - id: matter_wstk_leds
     from: matter
-
-
   - id: matter
     from: matter
   - id: matter_platform_efr32

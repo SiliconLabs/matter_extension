@@ -16,10 +16,7 @@ requires:
 provides:
   - name: matter_uart
 source:
-  - path: examples/platform/silabs/efr32/uart.cpp
-    condition: [matter_platform_efr32]
-  - path: examples/platform/silabs/SiWx917/uart.cpp
-    condition: [matter_platform_siwx917]
+  - path: examples/platform/silabs/uart.cpp
 include:
 - path: examples/platform/silabs
   file_list:
@@ -37,3 +34,6 @@ define:
     condition:
     - device_family_mgm24
     - matter_platform_efr32
+  - name: SLI_SI91X_MCU_INTR_BASED_RX_ON_UART
+    value: 1
+    condition: [matter_platform_siwx917]

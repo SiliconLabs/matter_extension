@@ -67,24 +67,27 @@ class ProvisionManager:
         conn = ConnectionArguments(args)
 
         # Channel
-        chan = self.createChannel(paths, args, conn)
-
-        # Generator Firmware
-        if (Actions.kBinary != action) and (_chan.Channel.BLE != chan.type):
-            self.writeGeneratorFirmware(args, conn)
+        if Actions.kBinary == action:
+            chan = None
+        else:
+            chan = self.createChannel(paths, args, conn)
+            # Generator Firmware
+            if _chan.Channel.BLE != chan.type:
+                self.writeGeneratorFirmware(args, conn)
 
         # Exchange data
         self.protocol.execute(paths, args, chan)
 
         # Export arguments (including returned values)
-        args.export()
+        if Actions.kBinary != action:
+            args.export()
 
         # Generate legacy header (silabs_cred.h) with credentials offsets and sizes
         if Actions.kAuto == action:
             creds.generateLegacyHeader()
 
         # Production Firmware
-        if _chan.Channel.BLE != chan.type:
+        if chan and (_chan.Channel.BLE != chan.type):
             self.writeProductionFirmware(args, conn)
 
 
