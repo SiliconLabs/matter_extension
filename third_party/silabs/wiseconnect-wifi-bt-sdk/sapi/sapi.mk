@@ -1,4 +1,4 @@
-#  Makefile
+#Makefile
 ifndef PROGNAME
 $(error Must define PROGNAME)
 endif
@@ -7,7 +7,7 @@ ifndef RSI_SDK_PATH
 $(error Must define RSI_SDK_PATH that is location of SDK)
 endif
 
-# Try identify the platform from the MAKECMDGOALS
+#Try identify the platform from the MAKECMDGOALS
 MATCHED_PLATFORMS:=$(wildcard $(addprefix $(RSI_SDK_PATH)/platforms/,$(MAKECMDGOALS)))
 ifeq ($(MATCHED_PLATFORMS),)
 $(info Available platforms:)
@@ -58,6 +58,7 @@ CFLAGS+= -D RSI_SAMPLE_HAL
 CFLAGS+= -D RSI_IPV6_ENABLE 
 CFLAGS+= -D APIS_ROM
 CFLAGS+= -D APIS_NON_ROM
+#CFLAGS+= -D CHIP_917
 
 wlan_CFLAGS       += -D RSI_WLAN_API_ENABLE
 mqtt_CFLAGS       += -D ASYNC_MQTT \
@@ -237,7 +238,9 @@ bt_SOURCES = $(RSI_SDK_PATH)/sapi/bluetooth/rsi_bt_gap_apis.c \
              $(RSI_SDK_PATH)/sapi/bluetooth/rsi_bt_avrcp_apis.c \
              $(BT_COMMON_SOURCES)
 
-crypto_SOURCES = $(RSI_SDK_PATH)/sapi/crypto/rsi_crypto.c
+crypto_SOURCES = $(RSI_SDK_PATH)/sapi/crypto/rsi_crypto.c \
+                 $(RSI_SDK_PATH)/sapi/crypto/rsi_side_band_crypto.c
+
 
 azure_SOURCES = $(RSI_SDK_PATH)/third_party/azure_sdk/src/iothub_client/src/iothub_client_core_ll.c \
                 $(RSI_SDK_PATH)/third_party/azure_sdk/src/iothub_client/src/iothub_device_client_ll.c \

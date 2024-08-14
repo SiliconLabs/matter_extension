@@ -1,0 +1,7 @@
+label: dishwasher-app-917-devkit-soc
+quality: production
+description: Matter workspace container for Dishwasher App over WiFi
+project:
+  - path: ../../../sample-app/dishwasher-app/siwx917/dishwasher-app-917-devkit-soc.slcp
+    id: application
+    output: dishwasher-app-917-devkit-soc

@@ -50,7 +50,7 @@
 //#define RSI_NUMBER_OF_LTCP_SOCKETS 2
 #define RSI_NUMBER_OF_LTCP_SOCKETS 0
 
-//! Default number of sockets supported,max 10 sockets are supported
+//! Default 6 sockets are supported,max 10 sockets are supported. Defined to maintain socket info on application side
 //#define RSI_NUMBER_OF_SOCKETS (2 + RSI_NUMBER_OF_LTCP_SOCKETS)
 #define RSI_NUMBER_OF_SOCKETS (6 + RSI_NUMBER_OF_LTCP_SOCKETS)
 
@@ -83,6 +83,11 @@
 
 // Max packets in common control tx pool
 #define RSI_COMMON_TX_POOL_PKT_COUNT 1
+
+#ifdef SIDE_BAND_CRYPTO
+// Max packets in crypto control tx pool
+#define RSI_CRYPTO_TX_POOL_PKT_COUNT 1
+#endif
 
 // Max packets
 

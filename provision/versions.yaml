@@ -78,3 +78,11 @@
   summary: |-
     - Setup parameter added:
       - ota_key: Binary
+
+- version: '2.2'
+  date: '2024-07-12'
+  supports:
+    - RC_2.3.0-1.3
+  module: 'v2_0'
+  summary: |-
+    - Credentials Base Address can now be set as -ca --creds_address.

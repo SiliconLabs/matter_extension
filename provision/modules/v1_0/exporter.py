@@ -23,4 +23,4 @@ class Exporter(_base.Exporter):
         self.data.extend(v)
         # Padding
         if size < max_size:
-            self.data.extend(bytearray(max_size - size))
+            self.data.extend(bytes(max_size - size))

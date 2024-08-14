@@ -46,7 +46,7 @@ class Buffer(object):
 
     @staticmethod
     def encodeBinary(x):
-        return (x is not None) and bytearray(x)  or None
+        return (x is not None) and bytes(x)  or None
 
     @staticmethod
     def encodeString(x):
@@ -104,7 +104,7 @@ class Buffer(object):
             return x
 
     def getBinary(self, size):
-        x = self.data[self.out:(self.out + size)]
+        x = bytes(self.data[self.out:(self.out + size)])
         self.out += size
         return x
 
@@ -236,7 +236,7 @@ class Coder:
     @staticmethod
     def encodeValue(a, x):
         # print("[{}]: {}".format(a.name, x))
-        if x is None: return bytearray()
+        if x is None: return bytes()
         if Types.INT8U == a.type:
            return Buffer.encodeInt8u(x)
         elif Types.INT16U == a.type:
@@ -246,9 +246,9 @@ class Coder:
         elif Types.BINARY == a.type:
             if isinstance(x, str):
                 return Buffer.encodeString(x)
-            elif isinstance(x, bytearray):
+            elif isinstance(x, bytes):
                 return x
-        _util.fail("Endoding: Unsupported type: \"{}\": {} {}".format(a.name, a.type, a.format))
+        _util.fail("Endoding: Unsupported type: \"{}\": {} {} ({})".format(a.name, a.type, a.format, type(x)))
 
     @staticmethod
     def defragment(ctx, input, size):

@@ -87,6 +87,7 @@ static void mld6_delayed_report(struct mld_group *group, u16_t maxresp);
 static void mld6_send(struct netif *netif, struct mld_group *group, u8_t type);
 
 #if SL_LWIP_MLD6_TIMERS_ONDEMAND
+#include "lwip/timeouts.h"
 #include "stdbool.h"
 static bool is_tmr_start = false;
 #endif /* SL_LWIP_MLD6_TIMERS_ONDEMAND */

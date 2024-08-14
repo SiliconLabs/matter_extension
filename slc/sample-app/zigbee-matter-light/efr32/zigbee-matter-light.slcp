@@ -6,7 +6,12 @@ quality: production
 description: This is the project file for a Matter (OT)+Zigbee+BLE app
 
 component:
+- id: device_init
+- id: sl_system
+- id: clock_manager
 - id: rail_mux
+# Needed to use Network Analyser
+#- id: rail_util_pti
 - instance: [example]
   id: cli
 - id: iostream_stdio
@@ -65,7 +70,7 @@ component:
 - id: bluetooth_stack
 #OpenThread Components
 - id: ot_stack_ftd
-- id: ot_rtos_wrapers_stub
+- id: ot_rtos_wrappers_real
 #Matter Components
 - {from: matter, id: matter_groups}
 - {from: matter, id: matter_group_key_mgmt}
@@ -190,8 +195,6 @@ configuration:
 
 define:
 - name: OS_CFG_COMPAT_INIT
-- name: SL_OPENTHREAD_RADIO_RX_BUFFER_COUNT
-  value: 1
 - name: CHIP_CRYPTO_PLATFORM
   value: 1
 - name: _WANT_REENT_SMALL
@@ -248,4 +251,5 @@ ui_hints:
       focus: false
 
 sdk_extension:
-  - {id: matter, version: 2.3.0}
+  - id: matter
+    version: "2.3.1"

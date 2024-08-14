@@ -8,7 +8,7 @@ def parseInt(i):
     return int(i, 0)
 
 def parseHex(x):
-    return bytearray.fromhex(x.removeprefix('0x'))
+    return bytes.fromhex(x.removeprefix('0x'))
 
 class Types(Enum):
     BINARY  = 0x00
@@ -64,7 +64,7 @@ class ID:
     kFlashAddress       = 0x0101
     kFlashSize          = 0x0102
     kFlashPageSize      = 0x0103
-    kBaseAddress        = 0x0104
+    kCredsAddress       = 0x0104
     kCsrFile            = 0x0105
     # Options
     kVersion            = 0x0111
@@ -288,7 +288,7 @@ class Parameter:
         s = None
         if isinstance(x, str):
             s = x
-        elif isinstance(x, bytearray):
+        elif isinstance(x, bytes):
             try:
                 s = x.decode()
             except:
@@ -312,8 +312,8 @@ class Parameter:
     @staticmethod
     def validateBinary(p, x):
         if isinstance(x, str):
-            x = bytearray.fromhex(x.removeprefix('0x'))
-        if not isinstance(x, bytearray):
+            x = bytes.fromhex(x.removeprefix('0x'))
+        if not isinstance(x, bytes):
             raise ValueError("Invalid \"{}\" binary value: {}".format(p.name, x))
         r = p.range()
         if r is not None:

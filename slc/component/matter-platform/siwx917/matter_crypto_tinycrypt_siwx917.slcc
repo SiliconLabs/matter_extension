@@ -10,6 +10,7 @@ metadata:
     license: Zlib
 provides:
   - name: matter_crypto_tinycrypt_siwx917
+
 source:
   - path: src/platform/silabs/SiWx917/CHIPCryptoPALTinyCrypt.cpp
   - path: third_party/mbedtls/repo/library/aes.c
@@ -75,76 +76,95 @@ source:
     condition: [matter_dic]
   - path: third_party/mbedtls/repo/library/x509.c
     condition: [matter_dic]
+
 include:
   - path: third_party/silabs/matter_support/matter/mbedtls/tinycrypt/inc
     file_list:
       - path: tinycrypt/ecc.h
       - path: tinycrypt/ecc_dh.h
       - path: tinycrypt/ecc_dsa.h
-      - path: mbedtls/pk.h
+      - path: mbedtls/check_config.h
+      - path: mbedtls/oid.h
       - path: mbedtls/platform.h
       - path: mbedtls/platform_util.h
+      - path: mbedtls/pk.h
       - path: mbedtls/pk_internal.h
-      - path: mbedtls/oid.h
-      - path: mbedtls/check_config.h
   - path: third_party/mbedtls/repo/library
     file_list:
+      - path: bignum_internal.h
       - path: common.h
       - path: constant_time_internal.h
       - path: constant_time_invasive.h
       - path: ecp_invasive.h
-      - path: bignum_internal.h
   - path: third_party/mbedtls/repo/include
     file_list:
-      - path: mbedtls/x509_csr.h
-      - path: mbedtls/x509_crt.h
-      - path: mbedtls/x509.h
-      - path: mbedtls/asn1.h
-      - path: mbedtls/bignum.h
-      - path: mbedtls/md.h
-      - path: mbedtls/ecp.h
-      - path: mbedtls/ecdsa.h
-      - path: mbedtls/sha256.h
-      - path: mbedtls/x509_crl.h
-      - path: mbedtls/ccm.h
-      - path: mbedtls/cipher.h
-      - path: mbedtls/ctr_drbg.h
       - path: mbedtls/aes.h
-      - path: mbedtls/ecdh.h
-      - path: mbedtls/entropy.h
-      - path: mbedtls/error.h
-      - path: mbedtls/hkdf.h
-      - path: mbedtls/pkcs5.h
-      - path: mbedtls/sha1.h
+      - path: mbedtls/asn1.h
       - path: mbedtls/asn1write.h
       - path: mbedtls/base64.h
+      - path: mbedtls/bignum.h
       - path: mbedtls/bn_mul.h
-      - path: mbedtls/ssl_internal.h
-      - path: mbedtls/ssl.h
-      - path: mbedtls/ssl_ciphersuites.h
-      - path: mbedtls/sha512.h
-      - path: mbedtls/ecjpake.h
+      - path: mbedtls/ccm.h
+      - path: mbedtls/cipher.h
       - path: mbedtls/cipher_internal.h
-      - path: mbedtls/constant_time.h
       - path: mbedtls/cmac.h
-      - path: mbedtls/threading.h
-      - path: mbedtls/hmac_drbg.h
-      - path: mbedtls/ecp_internal.h
-      - path: mbedtls/entropy_poll.h
-      - path: mbedtls/md_internal.h
-      - path: mbedtls/pem.h
-      - path: mbedtls/md2.h
+      - path: mbedtls/constant_time.h
+      - path: mbedtls/ctr_drbg.h
       - path: mbedtls/des.h
+      - path: mbedtls/ecdh.h
+      - path: mbedtls/ecdsa.h
+      - path: mbedtls/ecjpake.h
+      - path: mbedtls/ecp.h
+      - path: mbedtls/ecp_internal.h
+      - path: mbedtls/entropy.h
+      - path: mbedtls/entropy_poll.h
+      - path: mbedtls/error.h
+      - path: mbedtls/hkdf.h
+      - path: mbedtls/hmac_drbg.h
+      - path: mbedtls/md.h
+      - path: mbedtls/md2.h
       - path: mbedtls/md4.h
       - path: mbedtls/md5.h
+      - path: mbedtls/md_internal.h
+      - path: mbedtls/pem.h
+      - path: mbedtls/pkcs5.h
       - path: mbedtls/ripemd160.h
       - path: mbedtls/rsa.h
+      - path: mbedtls/sha1.h
+      - path: mbedtls/sha256.h
+      - path: mbedtls/sha512.h
+      - path: mbedtls/ssl.h
+      - path: mbedtls/ssl_ciphersuites.h
+      - path: mbedtls/ssl_internal.h
+      - path: mbedtls/threading.h
+      - path: mbedtls/x509.h
+      - path: mbedtls/x509_crl.h
+      - path: mbedtls/x509_crt.h
+      - path: mbedtls/x509_csr.h
+      - path: mbedtls/version.h
+  - path: third_party/silabs/matter_support/matter/si91x/siwx917/BRD4338A/config/
+    file_list:
+      - path: sl_mbedtls_config.h
+  - path: third_party/silabs/matter_support/matter/si91x/siwx917/BRD4338A/autogen/
+    file_list:
+      - path: sli_mbedtls_config_autogen.h
+      - path: sli_mbedtls_config_transform_autogen.h
+  - path: third_party/silabs/simplicity_sdk/platform/security/sl_component/sl_mbedtls_support/config/
+    file_list:
+      - path: sli_mbedtls_omnipresent.h
+      - path: sli_mbedtls_acceleration.h
+  - path: third_party/silabs/simplicity_sdk/platform/security/sl_component/sl_mbedtls_support/config/template/
+    file_list:
+      - path: sl_mbedtls_device_config.h
   - path: src/platform/silabs/SiWx917
     file_list:
-      - path: siwx917-chip-tinycrypt-config.h
+      - path: siwx917-chip-mbedtls-config.h
+
+requires:
+  - name: sl_si91x_trng
+  - name: sl_si91x_crypto_multithread
+
 define:
-  - name: OPTIMIZE_TINYCRYPT_ASM
-  - name: TINYCRYPT_PRIMITIVES
   - name: SL_MBEDTLS_USE_TINYCRYPT
   - name: MBEDTLS_CONFIG_FILE
-    value: \"siwx917-chip-tinycrypt-config.h\"
+    value: \"siwx917-chip-mbedtls-config.h\"

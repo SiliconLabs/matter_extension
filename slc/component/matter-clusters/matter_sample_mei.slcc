@@ -1,11 +1,11 @@
 
 category: Clusters|General
 description: >
-  Implementation of the Sample Mei Server Cluster.
-  The user has to enable the Sample Mei Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  Implementation of the Sample MEI Server Cluster.
+  The user has to enable the Sample MEI Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_sample_mei
 package: Matter
-label: Sample Mei Server Cluster
+label: Sample MEI Server Cluster
 quality: production
 metadata:
   sbom:

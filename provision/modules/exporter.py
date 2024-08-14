@@ -104,7 +104,7 @@ class Exporter(object):
             _util.fail("Invalid value for \"{}\": {} [{}, {}]".format(a.name, i, r[0], r[-1]))
 
     def addBinary(self, a, b):
-        if b is None: b = bytearray()
+        if b is None: b = bytes()
         r = a.range()
         if r is None:
             _util.fail("Missing bounds for \"{}\"".format(a.name))
@@ -135,4 +135,4 @@ class Exporter(object):
         out = subprocess.check_output(('grep', TAG), stdin=ps.stdout)
         line = out.decode(sys.stdout.encoding).strip()
         off = line.find(TAG) + len(TAG) + 2 # [HEX DUMP]:xxxx...
-        return bytearray.fromhex(line[off:])
+        return bytes.fromhex(line[off:])

@@ -18,6 +18,9 @@ include:
   - path: src/app/clusters/air-quality-server
     file_list:
       - path: air-quality-server.h
+config_file:
+  - path: examples/air-quality-sensor-app/silabs/include/AirQualityConfig.h
+    file_id: matter_air_quality_config
 template_contribution:
   - name: component_catalog
     value: matter_air_quality

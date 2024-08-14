@@ -56,7 +56,6 @@ if slc.is_selected('matter_thread') then
       ['action'] = 'add'
     })
 end
-end
 if slc.is_selected('silabs_factory_data_provider') then
     table.insert(changeset, {
       ['component'] = 'silabs_factory_data_provider',

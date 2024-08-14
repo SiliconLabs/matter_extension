@@ -42,16 +42,16 @@ source:
   - path: examples/platform/silabs/provision/ProvisionProtocolV2.cpp
   - path: examples/platform/silabs/provision/ProvisionStorage.cpp
   - path: examples/platform/silabs/provision/ProvisionStorageCustom.cpp
-  
-  - path: examples/platform/silabs/provision/AttestationKeyPSA.cpp
-    condition: [matter_platform_efr32]
   - path: examples/platform/silabs/provision/ProvisionChannelEFR32BLE.cpp
     condition: [matter_ble]
   - path: examples/platform/silabs/provision/ProvisionStorageDefault.cpp
     condition: [matter_platform_efr32]
-
+  - path: examples/platform/silabs/provision/AttestationKeyPSA.cpp
+    condition: [matter_platform_efr32]
+  - path: examples/platform/silabs/provision/AttestationKeyPSA.cpp
+    condition: [matter_crypto_psa_siwx917]
   - path: examples/platform/silabs/provision/AttestationKeyMbed.cpp
-    condition: [matter_platform_siwx917]
+    condition: [matter_crypto_tinycrypt_siwx917]
   - path: examples/platform/silabs/provision/ProvisionChannelSi917BLE.cpp
     condition: [matter_wifi_ble]
   - path: examples/platform/silabs/provision/ProvisionStorageFlash.cpp

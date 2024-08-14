@@ -123,6 +123,12 @@
 
 //To enable certificate pathlength feature
 #define TLS_PATH_LENGTH_SUPPORT BIT(11)
+
+//To enable support for long sized ICMP packets. Max 1472 Bytes for IPv4 and Max 1452 Bytes for IPv6.
+#define FEAT_LONG_ICMP_PACKET BIT(12)
+
+// Secure Attestation
+#define FEAT_SECURE_ATTESTATION BIT(30)
 /*=========================================================================*/
 
 // BT feature bit map
@@ -332,8 +338,8 @@
 // Wake on wireless indication in UART mode
 #define CUSTOM_FEAT_WAKE_ON_WIRELESS BIT(11)
 
-// Enables AP blacklisting in STA mode
-#define CUSTOM_FEAT_ENABLE_AP_BLACKLIST BIT(12)
+// Enables AP rejectlisting in STA mode
+#define CUSTOM_FEAT_ENABLE_AP_REJECTLIST BIT(12)
 
 // Number of clients to support in AP/WFD mode
 #define MAX_NUM_OF_CLIENTS             1
@@ -427,7 +433,7 @@
 // To enable http otaf support
 #define EXT_FEAT_HTTP_OTAF_SUPPORT BIT(18)
 
-#ifdef CHIP_9117B0
+#ifdef CHIP_917B0
 
 #define EXT_FEAT_352K_M4SS_320K     0
 #define RAM_LEVEL_NWP_BASIC_MCU_ADV EXT_FEAT_352K_M4SS_320K
@@ -446,7 +452,7 @@
 #define RAM_LEVEL_NWP_ALL_MCU_ZERO EXT_FEAT_672K_M4SS_0K
 #endif
 
-#elif (defined CHIP_9117)
+#elif (defined CHIP_917)
 
 #define EXT_FEAT_256K_MODE              0
 #define RAM_LEVEL_NWP_BASIC_MCU_ADV     EXT_FEAT_256K_MODE
@@ -467,6 +473,9 @@
 
 #else //defaults
 
+#define EXT_FEAT_192K_MODE              0
+#define RAM_LEVEL_NWP_BASIC_MCU_ADV     EXT_FEAT_192K_MODE
+
 // To enable 256K memory for TA
 #define EXT_FEAT_256K_MODE              BIT(21)
 #define RAM_LEVEL_NWP_MEDIUM_MCU_MEDIUM EXT_FEAT_256K_MODE
@@ -483,8 +492,8 @@
 
 // To enable CRYSTAL for TA
 // For 9117 EVK set EXT_FEAT_XTAL_CLK_ENABLE to BIT(22)
-#ifdef CHIP_9117
-#if ((defined BRD4325A) || (defined EXP_BOARD))
+#ifdef CHIP_917
+#if ((defined SI917_RADIO_BOARD) && (!defined SI917_RADIO_BOARD_V2))
 #define EXT_FEAT_XTAL_CLK_ENABLE BIT(23)
 #else
 #define EXT_FEAT_XTAL_CLK_ENABLE BIT(22)
@@ -510,6 +519,18 @@
 
 // If this bit is enabled,NWP disables Debug prints support
 #define EXT_FEAT_DISABLE_DEBUG_PRINTS BIT(28)
+
+// To Configure Frontend switch selection BIT[30:29]
+#ifdef CHIP_917
+#define FRONT_END_SWITCH_PINS_GPIO_46_47_48 0
+#ifdef CHIP_917B0
+#define FRONT_END_SWITCH_PINS_ULP_GPIO_4_5_0 BIT(29)
+#define FRONT_END_VIRTUAL_SWITCH             BIT(30)
+#else
+#define FRONT_END_SWITCH_PINS_ULP_GPIO_4_5_0 BIT(30)
+#define FRONT_END_SWITCH_PINS_ULP_GPIO_4_5_7 (BIT(30) | BIT(29))
+#endif
+#endif
 
 // config feature bitmap
 /*=========================================================================*/
@@ -746,14 +767,14 @@
    | BIT_TLS_RSA_WITH_AES_256_CBC_SHA | BIT_TLS_RSA_WITH_AES_128_CBC_SHA | BIT_TLS_RSA_WITH_AES_128_CCM_8 \
    | BIT_TLS_RSA_WITH_AES_256_CCM_8)
 
-#ifdef CHIP_9117
+#ifdef CHIP_917
 #define RSI_SSL_EXT_CIPHERS SSL_TLSV1_3_ALL_CIPHERS
 #endif
 
 #define SSL_ALL_CIPHERS SSL_RELEASE_2_0_ALL_CIPHERS
 
 //TLSv1.3 configurable ciphers
-#ifdef CHIP_9117
+#ifdef CHIP_917
 #define SSL_TLSV1_3_ALL_CIPHERS                                                                     \
   (BIT_TLS13_AES_128_GCM_SHA256 | BIT_TLS13_AES_256_GCM_SHA384 | BIT_TLS13_CHACHA20_POLY1305_SHA256 \
    | BIT_TLS13_AES_128_CCM_SHA256 | BIT_TLS13_AES_128_CCM_8_SHA256)
@@ -797,7 +818,7 @@
 #define SSL_NEW_CIPHERS                             BIT(31)
 
 // TLSv1.3 supported ciphers
-#ifdef CHIP_9117
+#ifdef CHIP_917
 #define BIT_TLS13_AES_128_GCM_SHA256       BIT(0)
 #define BIT_TLS13_AES_256_GCM_SHA384       BIT(1)
 #define BIT_TLS13_CHACHA20_POLY1305_SHA256 BIT(2)
@@ -811,7 +832,7 @@
 #define RSI_SSL_V_1_0 BIT(2)
 #define RSI_SSL_V_1_2 BIT(3)
 #define RSI_SSL_V_1_1 BIT(4)
-#ifdef CHIP_9117
+#ifdef CHIP_917
 #define RSI_SSL_V_1_3 BIT(8)
 #endif
 
@@ -922,9 +943,9 @@ typedef enum rsi_security_mode_e {
   // WPA/WPA2 security with PMK
   RSI_WPA_WPA2_MIXED_PMK,
   // WPA3 security with PSK
-  RSI_WPA3,
+  RSI_WPA3_PERSONAL,
   // WPA3 TRANSITION
-  RSI_WPA3_TRANSITION,
+  RSI_WPA3_PERSONAL_TRANSITION,
 
 } rsi_security_mode_t;
 
@@ -968,6 +989,7 @@ typedef enum rsi_wlan_query_cmd_e {
   RSI_GET_WLAN_STATS    = 9,
   RSI_WLAN_EXT_STATS    = 10,
   RSI_WMM_PARAMS        = 11,
+  RSI_GET_DEVICE_ID     = 12,
 } rsi_wlan_query_cmd_t;
 
 /******************************************************
@@ -1059,8 +1081,8 @@ typedef struct rsi_rsp_wireless_info_s {
   // security type
   uint8_t sec_type;
 
-  // PSK
-  uint8_t psk[64];
+  // PMK
+  uint8_t pmk[64];
 
   // uint8[4], Module IP Address
   uint8_t ipv4_address[4];
@@ -1491,14 +1513,14 @@ typedef struct rsi_wlan_ext_stats_s {
 #define IE_LEN                   1
 #define IE_POS                   2
 
-#define SME_OPEN            0
-#define SME_WPA             1
-#define SME_WPA2            2
-#define SME_WEP             3
-#define SME_WPA_ENTERPRISE  4
-#define SME_WPA2_ENTERPRISE 5
-#define SME_WPA3            7
-#define SME_WPA3_TRANSITION 8
+#define SME_OPEN                     0
+#define SME_WPA                      1
+#define SME_WPA2                     2
+#define SME_WEP                      3
+#define SME_WPA_ENTERPRISE           4
+#define SME_WPA2_ENTERPRISE          5
+#define SME_WPA3_PERSONAL            7
+#define SME_WPA3_PERSONAL_TRANSITION 8
 
 #define BSSID_OFFSET         16
 #define SSID_OFFSET          38
@@ -1595,7 +1617,7 @@ typedef struct rsi_per_stats_rsp_s {
   uint16_t pkt_rcvd_with_mcs6;
   //!No.of pkts rcvd with mcs7
   uint16_t pkt_rcvd_with_mcs7;
-#ifdef CHIP_9117
+#ifdef CHIP_917
   //!No.of pkts rcvd with 11ax SU PPDU Type
   uint16_t pkt_count_HE_SU_PPDU;
   uint16_t pkt_count_HE_ER_SU_PPDU;
@@ -1700,6 +1722,20 @@ typedef struct rsi_twt_rsp_s {
   uint8_t twt_flow_id;
 } rsi_twt_rsp_t;
 
+// Use case based twt selection
+typedef struct twt_selection_s {
+  uint8_t twt_enable;
+  uint16_t avg_tx_throughput;
+  uint32_t tx_latency;
+  uint32_t rx_latency;
+  uint16_t device_avg_throughput;
+  uint8_t estimated_extra_wake_duration_percent;
+  uint8_t twt_tolerable_deviation;
+  uint32_t default_wake_interval_ms;
+  uint32_t default_minimum_wake_duration_ms;
+  uint8_t beacon_wake_up_count_after_sp;
+} twt_selection_t;
+
 // Structure for incoming CSI record
 typedef struct rsi_rsp_csi_record_s {
   /** Channel estimation information i value*/
@@ -1724,8 +1760,12 @@ typedef struct rsi_calib_read_s {
 #define READ_FROM_EFUSE 0
 #define READ_FROM_FLASH 1
   uint8_t target;
-  int8_t gain_offset[6];
-  int8_t xo_ctune;
+  uint8_t reserved0[3];
+  int8_t gain_offset[3];
+  uint8_t xo_ctune;
+  struct rsi_evm_data_s {
+    int8_t evm_offset[5];
+  } rsi_evm_data_t;
 } rsi_calib_read_t;
 
 /******************************************************
@@ -1758,6 +1798,8 @@ extern int32_t rsi_wlan_ap_start(int8_t *ssid,
                                  uint16_t beacon_interval,
                                  uint8_t dtim_period);
 extern int32_t rsi_wlan_execute_post_connect_cmds(void);
+extern int32_t rsi_wlan_ap_stop(void);
+extern int32_t rsi_wlan_beacon_stop(uint8_t beacon_stop);
 extern int32_t rsi_wlan_disconnect(void);
 extern int32_t rsi_wlan_disconnect_stations(uint8_t *mac_address);
 extern int32_t rsi_wlan_set_certificate_index(uint8_t certificate_type,
@@ -1800,7 +1842,10 @@ extern int32_t rsi_wlan_get_profile(uint32_t type, rsi_config_profile_t *profile
 extern int32_t rsi_wlan_delete_profile(uint32_t type);
 extern int32_t rsi_wlan_enable_auto_config(uint8_t enable, uint32_t type);
 extern int32_t rsi_wlan_bgscan_profile(uint8_t cmd, rsi_rsp_scan_t *result, uint32_t length);
-
+extern int32_t rsi_wlan_twt_auto_selection(uint8_t twt_enable,
+                                           uint32_t rx_latency,
+                                           uint32_t tx_latency,
+                                           uint16_t avg_tx_throughput);
 extern int32_t rsi_wlan_twt_config(uint8_t twt_enable, uint8_t twt_flow_id, twt_user_params_t *twt_req_params);
 
 extern int32_t rsi_wlan_update_gain_table(uint8_t band, uint8_t bandwidth, uint8_t *payload, uint16_t payload_len);
@@ -1832,9 +1877,17 @@ int32_t rsi_calib_write(uint8_t target,
                         int8_t gain_offset_low,
                         int8_t gain_offset_mid,
                         int8_t gain_offset_high,
-                        int8_t xo_ctune);
+                        uint8_t xo_ctune);
+int32_t rsi_send_evm_offset(uint8_t index, int8_t evm_offset_val);
+int32_t rsi_evm_write(uint8_t target,
+                      uint32_t flags,
+                      int8_t evm_offset_11B,
+                      int8_t evm_offset_11G_6M_24M_11N_MCS0_MCS2,
+                      int8_t evm_offset_11G_36M_54M_11N_MCS3_MCS7,
+                      int8_t evm_offset_11N_MCS0,
+                      int8_t evm_offset_11N_MCS7);
 int16_t rsi_parse(void *address, uint16_t length, uint8_t *value);
-int32_t rsi_wlan_11ax_config(uint8_t gi_ltf);
+int32_t rsi_wlan_11ax_config(uint8_t gi_ltf, uint8_t config_er_su);
 int32_t rsi_wlan_csi_config_async(uint8_t enable,
                                   uint32_t periodicity,
                                   uint8_t num_of_mac_addr,

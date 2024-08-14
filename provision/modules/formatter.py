@@ -109,7 +109,7 @@ class Formatter:
         if data is None: return
         arg = self.args.find(tag)
         if (arg.value is not None) and (not arg.hidden):
-            if isinstance(arg.value, bytearray):
+            if isinstance(arg.value, bytes):
                 value = arg.str()
             else:
                 value = arg.value

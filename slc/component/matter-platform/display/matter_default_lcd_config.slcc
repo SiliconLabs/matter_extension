@@ -33,9 +33,18 @@ requires:
   - name: matter_lcd
     condition: 
       - brd4317a
+  - name: matter_lcd_917SOC
+    condition:
+      - brd4338a
   - name: matter_qr_code
     condition: 
       - brd4116a
+  - name: matter_qr_code
+    condition: 
+      - brd4117a
+  - name: matter_qr_code
+    condition: 
+      - brd4118a 
   - name: matter_qr_code
     condition: 
       - brd4121a
@@ -51,6 +60,9 @@ requires:
   - name: matter_qr_code
     condition: 
       - brd4317a
+  - name: matter_qr_code
+    condition: 
+      - brd4338a
 provides:
   - name: matter_default_lcd_config
 conflicts:

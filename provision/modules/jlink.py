@@ -66,7 +66,7 @@ class JLinkChannel(_base.Channel):
             chunk = self.link.rtt_read(0, 1024)
             data.extend(chunk)
         # print("RECEIVED({}): {}".format(len(data), data))
-        return bytearray(data)
+        return bytes(data)
 
 
     def reset(self, do_halt = False):

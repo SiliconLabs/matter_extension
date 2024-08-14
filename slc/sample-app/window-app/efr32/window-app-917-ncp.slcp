@@ -7,15 +7,17 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.3.0"
+    version: "2.3.1"
   - id: wiseconnect3_sdk
-    version: "3.3.0"
+    version: "3.3.1"
 
 provides:
   - name: window_app
 
 component:
   - id: device_init
+  - id: sl_system
+  - id: clock_manager
   - id: matter_buttons
     from: matter
   - id: matter_wstk_leds

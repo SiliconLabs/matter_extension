@@ -1,11 +1,11 @@
 
 category: Clusters|Measurement
 description: >
-  Implementation of the Resource Monitoring Server Cluster.
-  The user has to enable the Resource Monitoring Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  Implementation of the Activated Carbon Filter Monitoring Server Cluster.
+  The user has to enable the Activated Carbon Filter Monitoring Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_resource_monitoring
 package: Matter
-label: Resource Monitoring Server Cluster
+label: Activated Carbon Filter Monitoring Server Cluster
 quality: production
 metadata:
   sbom:

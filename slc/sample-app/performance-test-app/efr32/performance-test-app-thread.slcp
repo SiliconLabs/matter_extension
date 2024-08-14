@@ -7,14 +7,16 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.3.0"
+    version: "2.3.1"
 
 component:
+  - id: device_init
+  - id: sl_system
+  - id: clock_manager
   - id: matter_performance_testing
     from: matter
-  - id: device_init
   - id: ot_stack_ftd
-  - id: ot_rtos_wrapers_stub
+  - id: ot_rtos_wrappers_real
   - id: matter_buttons
     from: matter
   - id: matter_wstk_leds
@@ -142,6 +144,10 @@ define:
   - name: IS_DEMO_LIGHT
     value: "1"
 configuration:
+  - name: SL_OPENTHREAD_ENABLE_APP_TASK
+    value: 0
+  - name: SL_OPENTHREAD_ENABLE_CLI_TASK
+    value: 0
   - name: OPENTHREAD_CONFIG_LOG_OUTPUT
     value: OPENTHREAD_CONFIG_LOG_OUTPUT_APP
   - name: SL_MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED

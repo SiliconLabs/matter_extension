@@ -17,16 +17,12 @@
  *    limitations under the License.
  */
 
-#include "DishwasherManager.h"
+#include "LEDWidget.h"
 
 #include "AppConfig.h"
 #include "AppTask.h"
-#include <FreeRTOS.h>
-#include "LEDWidget.h"
-
-#include "operational-state-delegate-impl.h"
-
-#include <lib/support/TypeTraits.h>
+#include "DishwasherManager.h"
+#include "OperationalStateDelegate.h"
 
 #ifdef SL_CATALOG_SIMPLE_LED_LED1_PRESENT
 #define DW_STATE_LED 1
@@ -45,8 +41,6 @@ using namespace chip::app::Clusters::OperationalState;
 using namespace chip::DeviceLayer;
 
 DishwasherManager DishwasherManager::sDishwasher;
-
-TimerHandle_t sDishwasherTimer;
 
 CHIP_ERROR DishwasherManager::Init()
 {

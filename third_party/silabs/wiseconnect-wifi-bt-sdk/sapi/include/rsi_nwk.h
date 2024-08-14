@@ -45,6 +45,12 @@
 #define HTTPS_CERT_INDEX_1 BIT(9)
 #define HTTPS_CERT_INDEX_2 BIT(10)
 
+// To indicate HTTPS socket about SNI hostname to be used during SSL handshake
+#define RSI_HTTPS_USE_SNI BIT(11)
+
+// To indicate HTTPS tls ciphers are enabled
+#define RSI_HTTPS_CIPHERS_BITMAP BIT(12)
+
 /******************************************************
  * *                    Constants
  * ******************************************************/
@@ -1088,6 +1094,8 @@ typedef struct rsi_pop3_mail_data_resp_s {
 #define HTTP_CLIENT_POST_DATA_MAX_BUFFER_LENGTH 900
 #define MAX_HTTP_CLIENT_POST_DATA_BUFFER_LENGTH 900
 
+#define RSI_CONFIG_LENGTH 4
+
 // HTTP client PUT create command
 #define HTTP_CLIENT_PUT_CREATE 1
 
@@ -1191,14 +1199,25 @@ typedef struct rsi_http_client_post_data_req_s {
 
 } rsi_http_client_post_data_req_t;
 
+// Network App Protocol Config stucture
+typedef struct rsi_network_app_protocol_config_req_s {
+  // valid protocol
+  uint16_t protocol;
+  // config type of the protocol
+  uint16_t config_type;
+  // length of the config[]
+  uint16_t config_length;
+  // config parameter
+  uint8_t config[RSI_CONFIG_LENGTH];
+
+} rsi_network_app_protocol_config_req_t;
 /******************************************************
  * *                      Macros
  * ******************************************************/
-
-#define RSI_EMB_MQTT_TOPIC_MAX_LEN    62
+#define RSI_EMB_MQTT_TOPIC_MAX_LEN    202
+#define RSI_EMB_MQTT_USERNAME_MAX_LEN 122
 #define RSI_EMB_MQTT_WILL_MSG_MAX_LEN 100
 #define RSI_EMB_MQTT_CLIENTID_MAX_LEN 62
-#define RSI_EMB_MQTT_USERNAME_MAX_LEN 62
 #define RSI_EMB_MQTT_PASSWORD_MAX_LEN 62
 #define RSI_TCP_MAX_SEND_SIZE         1460
 #define RSI_EMB_MQTT_PUB_MAX_LEN      RSI_TCP_MAX_SEND_SIZE
@@ -1210,7 +1229,7 @@ typedef struct rsi_http_client_post_data_req_s {
 #define RSI_EMB_MQTT_CLEAN_SESSION BIT(0)
 #define RSI_EMB_MQTT_SSL_ENABLE    BIT(1)
 #define RSI_EMB_MQTT_IPV6_ENABLE   BIT(2)
-#ifdef CHIP_9117
+#ifdef CHIP_917
 //! Here BIT(4,5,6,7) all four bit related to RSI_EMB_MQTT_TCP_MAX_RETRANSMISSION_CAP
 //! for example if BIT(4) set will treat it as 1 sec
 //! if BIT(5) set will treat as 2 sec
@@ -1363,15 +1382,44 @@ typedef struct rsi_emb_mqtt_client_init_s {
   uint8_t encrypt;
   // MQTT  Client port
   uint8_t client_port[4];
-#ifdef CHIP_9117
+#ifdef CHIP_917
   //! Capping tcp retransmission timeout
   uint8_t tcp_max_retransmission_cap_for_emb_mqtt;
 #endif
-#ifndef CHIP_9117
+#ifndef CHIP_917
   //keep alive retries
   uint8_t keep_alive_retries[2];
 #endif
 } rsi_emb_mqtt_client_init_t;
+
+typedef struct rsi_mqtt_rcv_pub_async_pkt_s {
+  /*==============================================*/
+  /**
+ * @param[in]   mqtt_flags       - Network flags. Each bit in the flag has its own significance \n
+ *
+ *  Flags                           |    Description
+ *  :-------------------------------|:--------------------------------------
+ *  BIT(0)                          |     Retain flag
+ *  ^                               |     If set, it indicates that the current message is a retained message
+ *  BIT(1) & BIT(2)                 |     QOS level
+ *  ^                               |     If BIT(1) is set, it indicates the current message is received with QoS1.
+ *  ^                               |     If BIT(2) is set, it indicates the current message is received with QoS2.
+ *  ^                               |     If none of the BIT(1) and BIT(2) is set, it indicates the current message is received with QoS0.
+ *  BIT(3)                          |     DUP flag
+ *  ^                               |     If set, indicates a duplicate message has been received
+ *  BIT(4)                          |     More data
+ *  ^                               |     This bit shall be set whenever there are more chunks of one MQTT message to be received
+ *  BIT(5) to BIT(15)               |     Reserved for future use
+*/
+  uint16_t mqtt_flags;
+  // Length of current MQTT message chunk or whole MQTT message
+  uint16_t current_chunk_length;
+  // Length of the MQTT Topic on which the message is received
+  uint16_t topic_length;
+  // Name of the MQTT Topic
+  uint8_t topic[RSI_EMB_MQTT_TOPIC_MAX_LEN];
+
+} rsi_mqtt_rcv_pub_async_pkt_t;
 
 typedef struct rsi_req_emb_mqtt_command_s {
   // MQTT command type

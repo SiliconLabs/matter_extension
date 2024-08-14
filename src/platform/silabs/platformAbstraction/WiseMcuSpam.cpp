@@ -21,6 +21,9 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
+#include <app/icd/server/ICDServerConfig.h>
+
+#include <lib/support/CodeUtils.h>
 #if SILABS_LOG_ENABLED
 #include "silabs_utils.h"
 #endif
@@ -38,7 +41,10 @@ extern "C" {
 #include "sl_si91x_button_pin_config.h"
 #include "sl_si91x_led.h"
 #include "sl_si91x_led_config.h"
+
+#if CHIP_CONFIG_ENABLE_ICD_SERVER == 0
 void soc_pll_config(void);
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 }
 
 #if SILABS_LOG_ENABLED
@@ -49,15 +55,24 @@ void soc_pll_config(void);
 #include "SEGGER_SYSVIEW.h"
 #endif
 
+// TODO Remove this when SI91X-16606 is addressed
+#ifdef SI917_DEVKIT
+#define SL_LED_COUNT 1
+uint8_t ledPinArray[SL_LED_COUNT] = {SL_LED_LEDB_PIN};
+#else
+#define SL_LED_COUNT SL_SI91x_LED_COUNT
+uint8_t ledPinArray[SL_LED_COUNT] = {SL_LED_LED0_PIN , SL_LED_LED1_PIN};
+#endif
+
 namespace chip {
 namespace DeviceLayer {
 namespace Silabs {
 
 
 namespace {
-#if SL_ICD_ENABLED
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
     bool btn0_pressed = false;
-#endif /* SL_ICD_ENABLED */
+#endif  //CHIP_CONFIG_ENABLE_ICD_SERVER
     uint8_t sButtonStates[SL_SI91x_BUTTON_COUNT] = { 0 };
 }
 
@@ -71,10 +86,10 @@ CHIP_ERROR SilabsPlatform::Init(void)
     // TODO: Setting the highest priority for SVCall_IRQn to avoid the HardFault issue
     NVIC_SetPriority(SVCall_IRQn, CORE_INTERRUPT_HIGHEST_PRIORITY);
 
-#ifndef SL_ICD_ENABLED
+#if CHIP_CONFIG_ENABLE_ICD_SERVER == 0
     // Configuration the clock rate
     soc_pll_config();
-#endif
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 
 #if SILABS_LOG_OUT_UART
     uartConsoleInit();
@@ -98,25 +113,21 @@ void SilabsPlatform::InitLed(void)
     RSI_Board_Init();
     SilabsPlatformAbstractionBase::InitLed();
 }
-
 CHIP_ERROR SilabsPlatform::SetLed(bool state, uint8_t led)
 {
-    // TODO add range check
-    (state) ? sl_si91x_led_set(led ? SL_LED_LED1_PIN : SL_LED_LED0_PIN)
-            : sl_si91x_led_clear(led ? SL_LED_LED1_PIN : SL_LED_LED0_PIN);
+    VerifyOrReturnError(led < SL_LED_COUNT, CHIP_ERROR_INVALID_ARGUMENT);
+    (state) ? sl_si91x_led_set(ledPinArray[led]) : sl_si91x_led_clear(ledPinArray[led]);
     return CHIP_NO_ERROR;
 }
-
 bool SilabsPlatform::GetLedState(uint8_t led)
 {
     // TODO
     return SilabsPlatformAbstractionBase::GetLedState(led);
 }
-
 CHIP_ERROR SilabsPlatform::ToggleLed(uint8_t led)
 {
-    // TODO add range check
-    sl_si91x_led_toggle(led ? SL_LED_LED1_PIN : SL_LED_LED0_PIN);
+    VerifyOrReturnError(led < SL_LED_COUNT, CHIP_ERROR_INVALID_ARGUMENT);
+    sl_si91x_led_toggle(ledPinArray[led]);
     return CHIP_NO_ERROR;
 }
 #endif // ENABLE_WSTK_LEDS
@@ -129,7 +140,7 @@ void SilabsPlatform::StartScheduler()
 extern "C" {
 void sl_button_on_change(uint8_t btn, uint8_t btnAction)
 {
-#if SL_ICD_ENABLED
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
     // This is to make sure we get a one-press and one-release event for the button
     // Hardware modification will be required for this to work permanently
     // Currently the btn0 is pull-up resistor due to which is sends a release event on every wakeup
@@ -149,7 +160,7 @@ void sl_button_on_change(uint8_t btn, uint8_t btnAction)
             btn0_pressed = false;
         }
     }
-#endif /* SL_ICD_ENABLED */
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
     if (Silabs::GetPlatform().mButtonCallback == nullptr)
     {
         return;

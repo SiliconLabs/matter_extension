@@ -37,6 +37,7 @@ class Formatter(_format.Formatter):
         self.extract(data, 'rendezvous_flags')
         # Attestation Credentials
         creds = matter and ('attestation_credentials' in matter) and matter['attestation_credentials'] or None
+        self.extract(creds, 'creds_address')
         self.extract(creds, 'pkcs12')
         self.extract(creds, 'key_id')
         self.extract(creds, 'key_pass')
@@ -80,6 +81,7 @@ class Formatter(_format.Formatter):
         if len(data) > 0: matter['commissionable_data'] = data
         # Attestation Credentials
         creds = {}
+        self.insert(creds, 'creds_address')
         self.insert(creds, 'pkcs12')
         self.insert(creds, 'key_id')
         self.insert(creds, 'key_pass')

@@ -35,7 +35,7 @@ extern rsi_socket_select_info_t *rsi_socket_select_info;
  *              Zero,-1        - Failure
  *              
  */
-int8_t is_power_of_two(int8_t x)
+int8_t rsi_is_power_of_two(int8_t x)
 {
   if (x < 0)
     return -1;
@@ -162,7 +162,10 @@ int32_t rsi_socket_async(int32_t protocolFamily,
  * @return      SOCK_ID              - Socket ID of the created socket \n
  * @return      Negative value - Failure (**Possible Error Codes** - 0xfffffffd) \n
  * @note        **Precondition** - \ref rsi_config_ipaddress() API needs to be called before this API.
- *
+ * @note A maximum of 10 sockets can be opened. Range of socket handles are between 1 to 10.
+ * @note If 3 TLS sockets are opened then the remaining 7 could be any combinations of UDP and TCP sockets.
+ * @note Module supports a maximum of 3 TLS sockets. These can be a combination of client and server sockets. If the HTTPS server is enabled then the user can open only 2 more TLS socket.
+ * 
  */
 
 int32_t rsi_socket(int32_t protocolFamily, int32_t type, int32_t protocol)
@@ -262,8 +265,8 @@ int32_t rsi_listen(int32_t sockID, int32_t backlog)
  * @param[in]  sockID         - Socket descriptor ID
  * @param[in]  ClientAddress  - Remote peer address
  * @param[in]  addressLength  - Length of the address measured in bytes
- * @return 	   0              - Success \n
- * @return 	   Non-Zero Value - Failure
+ * @return 	   > 0            - Client socket ID \n
+ * @return 	   <= 0           - Failure
  * @note       **Precondition** - \ref rsi_socket()/ \ref rsi_socket_async() API needs to be called before this API.
  *
  */
@@ -505,8 +508,8 @@ int32_t rsi_accept_non_rom(int32_t sockID, struct rsi_sockaddr *ClientAddress, i
  * @param[in]  sockID          - Socket descriptor
  * @param[in]  ClientAddress   - Remote peer address
  * @param[in]  addressLength   - Length of the address measured in bytes
- * @return 	   0               - Success \n
- * @return 	   Non-Zero Value  - Failure
+ * @return 	   > 0             - Client socket ID \n
+ * @return 	   <= 0            - Failure
  * @note       **Precondition** - \ref rsi_listen() API needs to be called before this API.
  *
  *
@@ -567,7 +570,7 @@ int32_t rsi_recv_large_data_sync(int32_t sockID,
     rem_len = requested_length;
   }
   if ((requested_length > MAX_RX_DATA_LENGTH)
-#ifdef CHIP_9117B0
+#ifdef CHIP_917B0
       && (!(rsi_socket_pool_non_rom[sockID].ssl_bitmap))
 #endif
   ) {
@@ -855,8 +858,9 @@ void rsi_reset_per_socket_info(int32_t sockID)
  * @param[in]  msg            - Pointer to data that needs to be sent to remote peer
  * @param[in]  msgLength      - Length of data to send
  * @param[in]  flags          - Reserved
- * @return     0              - Success \n
- * @return     Non-Zero Value - Failure
+ * @return     Positive Value - Success, returns the number of bytes sent successfully \n
+ * @return     Negative Value - Failure
+ * @return     Zero           - Socket Close Error
  *
  */
 
@@ -1191,7 +1195,28 @@ int32_t rsi_send_async(int32_t sockID,
 */
 /*==============================================*/
 /**
- * @brief       Closes the socket specified in the socket descriptor. This is a blocking API.
+ * @brief       Closes all the sockets associate with a vap_Id. This is a blocking API.
+ * @pre  \ref rsi_socket()/ \ref rsi_socket_async() API needs to be called before this API.
+ * @param[in]   vapID - Virtual access point ID
+ * @return    0              - Success \n
+ *              Negative Value - Failure
+ *
+ */
+int32_t rsi_vap_shutdown(uint8_t vapID)
+{
+  SL_PRINTF(SL_SEND_ASYNC_ENTRY, NETWORK, LOG_INFO);
+  return rsi_vap_sockets_shutdown(vapID);
+}
+
+/** @} */
+
+/** @addtogroup NETWORK5
+* @{
+*/
+/*==============================================*/
+/**
+ * @brief       Closes the socket specified in a socket descriptor. This is a blocking API.
+ * @pre  \ref rsi_socket()/ \ref rsi_socket_async() API needs to be called before this API.
  * @param[in]   sockID - Socket descriptor ID
  * @param[in]   how    - 0: Close the specified socket \n
  *                       1: Close all the sockets open on a specified socket's source port number
@@ -1439,7 +1464,7 @@ int rsi_setsockopt(int32_t sockID, int level, int option_name, const void *optio
   }
 
   // Configure ssl socket bit map with 1.3 version
-#ifdef CHIP_9117
+#ifdef CHIP_917
   if ((option_name == SO_SSL_V_1_3_ENABLE)) {
     rsi_socket_pool_non_rom[sockID].ssl_bitmap = (RSI_SOCKET_FEAT_SSL | RSI_SSL_V_1_3);
     SL_PRINTF(SL_SETSOCKOPT_EXIT_7, NETWORK, LOG_INFO);
@@ -1505,10 +1530,10 @@ int rsi_setsockopt(int32_t sockID, int level, int option_name, const void *optio
     SL_PRINTF(SL_SETSOCKOPT_EXIT_13, NETWORK, LOG_INFO);
     return RSI_SUCCESS;
   }
-#ifdef CHIP_9117
+#ifdef CHIP_917
   //! Configure max_retransmission_timeout_value
   if (option_name == SO_MAX_RETRANSMISSION_TIMEOUT_VAL) {
-    status = is_power_of_two(*(int8_t *)option_value);
+    status = rsi_is_power_of_two(*(int8_t *)option_value);
     if ((status == 1) && !((*(int8_t *)option_value) > MAX_RETRANSMISSION_TIME_VALUE)) {
       rsi_socket_pool_non_rom[sockID].max_retransmission_timeout_value = *(int8_t *)option_value;
       SL_PRINTF(SL_SETSOCKOPT_EXIT_14, NETWORK, LOG_INFO);
@@ -1547,7 +1572,7 @@ int rsi_setsockopt(int32_t sockID, int level, int option_name, const void *optio
 
   // For TOS
   if (option_name == IP_TOS) {
-#ifdef CHIP_9117
+#ifdef CHIP_917
     rsi_socket_pool_non_rom[sockID].tos = *(uint16_t *)option_value;
 #else
     rsi_socket_pool_non_rom[sockID].tos = *(uint32_t *)option_value;
@@ -1555,7 +1580,7 @@ int rsi_setsockopt(int32_t sockID, int level, int option_name, const void *optio
     SL_PRINTF(SL_SETSOCKOPT_EXIT_19, NETWORK, LOG_INFO);
     return RSI_SUCCESS;
   }
-#ifdef CHIP_9117B0
+#ifdef CHIP_917B0
   if (option_name == SO_SSL_RECV_BUFF_SIZE) {
     if ((*(uint16_t *)option_value) > RSI_SSL_RECV_BUFFER_LENGTH) {
       SL_PRINTF(SL_SETSOCKOPT_SOCK_ERROR_6, NETWORK, LOG_ERROR);
@@ -1979,8 +2004,8 @@ uint8_t calculate_buffers_required(uint8_t type, uint16_t length)
  * @param[out]  dest_port      - Port number of remote peer
  * @param[out]  ip_addr        - Remote peer address
  * @param[out]  ip_version     - 4 - IPV4.  \n  6 - IPV6 
- * @return      0              - Success \n
- * @return      Non-Zero Value - Failure
+ * @return      > 0            - Client socket ID \n
+ * @return      <= 0           - Failure
  * @note        When attempting to connect multiple clients to the server socket opened on module, i.e., when the backlog parameter is used in rsi_listen() API. rsi_accept_async() has to be called again for each of the client connections. \n
  *              The API calling has to be repeated for the next client connection, only after the connection process of the previous client is complete.
  * @note        When using multiple client/server sockets, the following macros have to be updated in the wlan_config.h file, in TCP_IP_FEATURE_BIT_MAP - If TCP_IP_TOTAL_SOCKETS_x flag is used, then firmware allocates memory for x sockets. If TCP_IP_TOTAL_SOCKETS_x flag is not passed, then a default value of 10 sockets is used.
@@ -2432,13 +2457,13 @@ int32_t rsi_socket_create_async(int32_t sockID, int32_t type, int32_t backlog)
 
   socket_create->vap_id = rsi_socket_pool_non_rom[sockID].vap_id;
   if (rsi_socket_pool_non_rom[sockID].tos) {
-#ifdef CHIP_9117
+#ifdef CHIP_917
     rsi_uint16_to_2bytes(socket_create->tos, rsi_socket_pool_non_rom[sockID].tos);
 #else
     rsi_uint32_to_4bytes(socket_create->tos, rsi_socket_pool_non_rom[sockID].tos);
 #endif
   } else {
-#ifdef CHIP_9117
+#ifdef CHIP_917
     rsi_uint16_to_2bytes(socket_create->tos, RSI_TOS);
 #else
     rsi_uint32_to_4bytes(socket_create->tos, RSI_TOS);
@@ -2468,13 +2493,13 @@ int32_t rsi_socket_create_async(int32_t sockID, int32_t type, int32_t backlog)
   }
 
   // Configure SSL extended ciphers bitmap
-#ifdef CHIP_9117
+#ifdef CHIP_917
   socket_create->ssl_ext_ciphers_bitmap = RSI_SSL_EXT_CIPHERS;
 #endif
 
   // Configure SSL ciphers bitmap
   socket_create->ssl_ciphers_bitmap = RSI_SSL_CIPHERS;
-#ifdef CHIP_9117
+#ifdef CHIP_917
   if (rsi_socket_pool_non_rom[sockID].ssl_bitmap) {
     socket_create->recv_buff_len = rsi_socket_pool_non_rom[sockID].ssl_buff_len;
   }
@@ -2487,7 +2512,7 @@ int32_t rsi_socket_create_async(int32_t sockID, int32_t type, int32_t backlog)
     socket_create->tcp_retry_transmit_timer = rsi_socket_pool_non_rom[sockID].tcp_retry_transmit_timer;
   }
 
-#ifdef CHIP_9117
+#ifdef CHIP_917
   //! Copy max_retransmission_timeout_value
   if (rsi_socket_pool_non_rom[sockID].max_retransmission_timeout_value) {
     socket_create->max_retransmission_timeout_value = rsi_socket_pool_non_rom[sockID].max_retransmission_timeout_value;
@@ -2775,7 +2800,8 @@ int32_t rsi_socket_async_non_rom(int32_t protocolFamily,
 
   rsi_wlan_cb_t *wlan_cb = rsi_driver_cb->wlan_cb;
 
-  if ((wlan_cb->opermode != RSI_WLAN_CONCURRENT_MODE) && (wlan_cb->state < RSI_WLAN_STATE_IP_CONFIG_DONE)) {
+  if ((wlan_cb->opermode != RSI_WLAN_CONCURRENT_MODE) && (wlan_cb->state < RSI_WLAN_STATE_IP_CONFIG_DONE)
+      && (wlan_cb->ap_state < RSI_WLAN_STATE_IP_CONFIG_DONE)) {
     // Command given in wrong state
     return RSI_ERROR_COMMAND_GIVEN_IN_WRONG_STATE;
   }
@@ -3203,7 +3229,7 @@ int32_t rsi_socket_recvfrom(int32_t sockID,
     }
 #else
     if (rsi_socket_pool[sockID].sock_type & SOCK_STREAM) {
-#ifdef CHIP_9117B0
+#ifdef CHIP_917B0
       if (buffersize > RX_DATA_LENGTH) {
         buffersize = RX_DATA_LENGTH;
       }
@@ -3448,7 +3474,36 @@ int32_t rsi_socket_listen(int32_t sockID, int32_t backlog)
 
 /*==============================================*/
 /**
- * @brief       Close the socket specified in a socket descriptor. This is a blocking API.
+* @brief       Close all the sockets associated with a VAP Id. This is a blocking API.
+ * @pre  \ref rsi_socket()/ \ref rsi_socket_async() API needs to be called before this API.
+ * @param[in]   vapID : Virtual Access Point ID
+ * @note If EXT_TCP_IP_WAIT_FOR_SOCKET_CLOSE (BIT(16)) in RSI_EXT_TCPIP_FEATURE_BITMAP is enabled, though remote socket has terminated connection, socket is disconnected and deleted only if host issues rsi_shutdown().
+ * @return    0              - Success \n
+ *              Negative Value - Failure
+ *
+ */
+/// @private
+int32_t rsi_vap_sockets_shutdown(uint8_t vapID)
+{
+  int32_t status = RSI_SUCCESS;
+  int i          = 0;
+
+  SL_PRINTF(SL_VAP_SOCKET_SHUTDOWN_ENTRY, NETWORK, LOG_INFO);
+
+  rsi_socket_info_t *rsi_socket_pool = global_cb_p->rsi_socket_pool;
+
+  for (i = 0; i < NUMBER_OF_SOCKETS; i++) {
+    if (rsi_socket_pool_non_rom[i].vap_id == vapID && rsi_socket_pool[i].sock_state != RSI_SOCKET_STATE_INIT) {
+      status = rsi_socket_shutdown(i, 0);
+    }
+  }
+  return status;
+}
+
+/*==============================================*/
+/**
+* @brief       Close the socket specified in a socket descriptor. This is a blocking API.
+ * @pre  \ref rsi_socket()/ \ref rsi_socket_async() API needs to be called before this API.
  * @param[in]   sockID : Socket descriptor ID
  * @param[in]   how      0: Close the specified socket, \n
  *                       1: Close all the sockets open on a specified socket's source port number. \n
@@ -4218,13 +4273,22 @@ void rsi_clear_sockets_non_rom(int32_t sockID)
   uint16_t port_number;
   int32_t status = RSI_SUCCESS;
 
-  //  rsi_driver_cb_t   *rsi_driver_cb   = global_cb_p->rsi_driver_cb;
+  rsi_driver_cb_t *rsi_driver_cb     = global_cb_p->rsi_driver_cb;
   rsi_socket_info_t *rsi_socket_pool = global_cb_p->rsi_socket_pool;
+  rsi_wlan_cb_t *wlan_cb             = rsi_driver_cb->wlan_cb;
 
   if (sockID == RSI_CLEAR_ALL_SOCKETS) {
     for (i = 0; i < NUMBER_OF_SOCKETS; i++) {
       // Memset socket info
       memset(&rsi_socket_pool[i], 0, sizeof(rsi_socket_info_t));
+    }
+  } else if ((wlan_cb->opermode == RSI_WLAN_CONCURRENT_MODE) && (sockID == RSI_CLEAR_ALL_AP_SOCKETS)) {
+    /* Clearing during AP Turn-off */
+    for (i = 0; i < NUMBER_OF_SOCKETS; i++) {
+      if (rsi_socket_pool_non_rom[i].vap_id != RSI_VAP_ID) {
+        // Memset socket info
+        memset(&rsi_socket_pool[i], 0, sizeof(rsi_socket_info_t));
+      }
     }
   } else if (rsi_socket_pool[sockID].sock_state == RSI_SOCKET_STATE_LISTEN) {
     port_number = rsi_socket_pool[sockID].source_port;
@@ -4302,3 +4366,160 @@ void rsi_post_waiting_socket_semaphore(int32_t sockID)
 
 #endif
 /** @} */
+
+/*==============================================*/
+/**
+ * @brief       Sets the SNI Hostname for internal socket
+ * @param[in]   app_protocol                - 1 - HTTP 
+ * @param[in]   hostname                    - Pointer to SNI string that needs to be used during SSL handshake
+ * @param[in]   length                      - Length of SNI hostname
+ * 
+ * @return	    Zero                        - Success
+ *              Negative Value              - Failure \n
+ *                                            Possible error codes : 0xBB51, 0xFF74
+ *
+ *  @note       Call this API before HTTP GET/POST.
+ */
+int32_t rsi_set_sni_emb_socket(uint8_t app_protocol, uint8_t *hostname, uint16_t length)
+{
+  rsi_tls_tlv_t *tls_extension       = NULL;
+  rsi_req_set_sni_t *tls_sni_request = NULL;
+  rsi_wlan_cb_t *wlan_cb             = rsi_driver_cb->wlan_cb;
+  int32_t status                     = RSI_SUCCESS;
+  SL_PRINTF(SL_SET_SNI_FOR_APP_ENTRY, NETWORK, LOG_INFO);
+
+  if (sizeof(rsi_tls_tlv_t) + length > MAX_SIZE_OF_EXTENSION_DATA) {
+    SL_PRINTF(SL_FILL_TLS_EXTENSION_INSUFFICIENT_BUFFER, NETWORK, LOG_ERROR);
+    return RSI_ERROR_INSUFFICIENT_BUFFER;
+  }
+
+  status = rsi_check_and_update_cmd_state(WLAN_CMD, IN_USE);
+
+  // Allocate command buffer from WLAN pool
+  rsi_pkt_t *pkt = rsi_pkt_alloc(&wlan_cb->wlan_tx_pool);
+  // If allocation of packet fails
+  if (pkt == NULL) {
+    // Change the WLAN CMD state to allow
+    rsi_check_and_update_cmd_state(WLAN_CMD, ALLOW);
+    // Return packet allocation failure error
+    SL_PRINTF(SL_WLAN_SET_PKT_ALLOCATION_FAILURE_1, WLAN, LOG_ERROR, "status: %4x", status);
+    return RSI_ERROR_PKT_ALLOCATION_FAILURE;
+  }
+
+  memset(pkt->data, 0, sizeof(rsi_req_set_sni_t));
+
+  // Point request to data of packet
+  tls_sni_request = (rsi_req_set_sni_t *)pkt->data;
+  // Fill protocol, type, length and payload at beginning of tls extension
+  tls_sni_request->protocol = app_protocol;
+  tls_extension             = (rsi_tls_tlv_t *)tls_sni_request->tls_extension_data;
+  tls_extension->type       = RSI_TLS_SNI;
+  tls_extension->length     = length;
+  tls_sni_request->offset += sizeof(rsi_tls_tlv_t);
+
+  memcpy(&tls_sni_request->tls_extension_data[tls_sni_request->offset], hostname, length);
+
+  tls_sni_request->offset += length;
+
+#ifndef RSI_WLAN_SEM_BITMAP
+  rsi_driver_cb_non_rom->wlan_wait_bitmap |= BIT(0);
+#endif
+
+  // Send the Set SNI command
+  status = rsi_driver_wlan_send_cmd(RSI_WLAN_REQ_SET_SNI, pkt);
+  // wait on wlan semaphore
+  rsi_wait_on_wlan_semaphore(&rsi_driver_cb_non_rom->wlan_cmd_sem, RSI_SET_SNI_RESPONSE_WAIT_TIME);
+  // get wlan/network command response status
+  status = rsi_wlan_get_status();
+
+  rsi_check_and_update_cmd_state(WLAN_CMD, ALLOW);
+  SL_PRINTF(SL_SET_SNI_FOR_APP_EXIT, NETWORK, LOG_INFO, "status: %4x", status);
+
+  return status;
+}
+
+/*==============================================*/
+/**
+ * @brief        Set the network application protocols configuration. This is a non-blocking API.
+ * @pre \ref rsi_network_app_protocol_config() API needs to be called after \ref only.
+ * @param[in]    protocol       - Protocol 
+ * @param[in]    config_type    - Configuration type of the protocol
+ * @param[in]    config         - Pointer to the configuration params
+ * @param[in]    config_length  - Length of the config parameter
+ * @return       0              - Success  \n
+ * @return       Non-Zero Value - Failure (**Possible Error Codes** - 0xffffff82) \n
+ * @note         **Precondition** - \ref rsi_config_ipaddress() API needs to be called before this API.
+ *
+ */
+
+uint32_t rsi_network_app_protocol_config(nw_app_protocol protocol,
+                                         nw_app_config config_type,
+                                         void *config,
+                                         uint16_t config_length)
+{
+
+  rsi_pkt_t *pkt;
+  int32_t status     = RSI_SUCCESS;
+  uint16_t send_size = 0;
+  uint8_t *host_desc = NULL;
+  SL_PRINTF(SL_NWK_APP_PROTO_CONFIG_PKT_ENTRY, NETWORK, LOG_INFO);
+  // Get WLAN CB structure pointer
+  rsi_wlan_cb_t *wlan_cb = rsi_driver_cb->wlan_cb;
+  rsi_network_app_protocol_config_req_t *nwk_app_config;
+
+  status = rsi_check_and_update_cmd_state(NWK_CMD, IN_USE);
+  if (status == RSI_SUCCESS) {
+    // Allocate command buffer from WLAN pool
+    pkt = rsi_pkt_alloc(&wlan_cb->wlan_tx_pool);
+    // If allocation of packet fails
+    if (pkt == NULL) {
+      // Change common state to allow state
+      rsi_check_and_update_cmd_state(NWK_CMD, ALLOW);
+      // Return packet allocation failure error
+      SL_PRINTF(SL_NWK_APP_PROTO_CONFIG_PKT_ALLOCATION_FAILURE, NETWORK, LOG_ERROR, "status: %4x", status);
+      return RSI_ERROR_PKT_ALLOCATION_FAILURE;
+    }
+
+    // Memset the packet data to insert NULL between fields
+    memset(&pkt->data, 0, sizeof(rsi_network_app_protocol_config_req_t));
+
+    nwk_app_config = (rsi_network_app_protocol_config_req_t *)pkt->data;
+
+    nwk_app_config->protocol      = protocol;
+    nwk_app_config->config_type   = config_type;
+    nwk_app_config->config_length = config_length;
+    memcpy(nwk_app_config->config, config, config_length);
+
+    // Use host descriptor to set payload length
+    send_size = sizeof(rsi_network_app_protocol_config_req_t) - RSI_CONFIG_LENGTH + config_length;
+
+    // Get the host descriptor
+    host_desc = (pkt->desc);
+
+    // Fill data length in the packet host descriptor
+    rsi_uint16_to_2bytes(host_desc, (send_size & 0xFFF));
+
+    // Send nwk app portocol config command
+    status = rsi_driver_wlan_send_cmd(RSI_WLAN_REQ_NWK_APP_PROTOCOL_CONFIG, pkt);
+
+#ifndef RSI_NWK_SEM_BITMAP
+    rsi_driver_cb_non_rom->nwk_wait_bitmap |= BIT(0);
+#endif
+    // Wait on NWK semaphore
+    rsi_wait_on_nwk_semaphore(&rsi_driver_cb_non_rom->nwk_sem, RSI_WLAN_NWK_APP_CONFIG_WAIT_TIME);
+    // Get WLAN/network command response status
+    status = rsi_wlan_get_nwk_status();
+
+    // Change NWK state to allow
+    rsi_check_and_update_cmd_state(NWK_CMD, ALLOW);
+
+  } else {
+    // Return NWK command error
+    SL_PRINTF(SL_NWK_APP_PROTO_CONFIG_COMMAND_ERROR, NETWORK, LOG_ERROR, "status: %4x", status);
+    return status;
+  }
+
+  // Return status
+  SL_PRINTF(SL_NWK_APP_PROTO_CONFIG_EXIT, NETWORK, LOG_INFO, "status: %4x", status);
+  return status;
+}

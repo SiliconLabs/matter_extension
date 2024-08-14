@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.3.0"
+    version: "2.3.1"
   - id: wiseconnect3_sdk
-    version: "3.3.0"
+    version: "3.3.1"
 
 component:
   - id: matter_wstk_leds
@@ -41,6 +41,10 @@ component:
     from: matter
   - id: matter_diagnostic_logs
     from: matter
+  - id: matter_electrical_energy_measurement
+    from: matter
+  - id: matter_electrical_power_measurement
+    from: matter
   - id: matter_fixed_label
     from: matter
   - id: matter_general_commissioning
@@ -58,6 +62,8 @@ component:
   - id: matter_operational_credentials
     from: matter
   - id: matter_operational_state
+    from: matter
+  - id: matter_power_topology
     from: matter
   - id: matter_software_diagnostics
     from: matter
@@ -81,9 +87,7 @@ component:
     from: matter
   - id: matter_fw_upgrade_917
     from: matter
-  - id: matter_lcd_917SOC
-    from: matter
-  - id: matter_qr_code
+  - id: matter_default_lcd_config
     from: matter
 
   - id: sl_si91x_common_flash_nvm3
@@ -145,17 +149,29 @@ include:
       - path: AppTask.h
       - path: CHIPProjectConfig.h
       - path: DishwasherManager.h
-      - path: operational-state-delegate-impl.h
+      - path: ElectricalSensorManager.h
+      - path: OperationalStateDelegate.h
+      - path: ElectricalPowerMeasurementDelegate.h
+      - path: ElectricalEnergyMeasurementInstance.h
+      - path: PowerTopologyDelegate.h
     directory: include
 
 source:
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/AppTask.cpp
-    directory: src
   - path: ../../../../examples/platform/silabs/main.cpp
+    directory: src
+  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/AppTask.cpp
     directory: src
   - path: ../../../../silabs_examples/dishwasher-app/silabs/src/DishwasherManager.cpp
     directory: src
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/operational-state-delegate-impl.cpp
+  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/ElectricalSensorManager.cpp
+    directory: src
+  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/OperationalStateDelegate.cpp
+    directory: src
+  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/ElectricalPowerMeasurementDelegate.cpp
+    directory: src
+  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/ElectricalEnergyMeasurementInstance.cpp
+    directory: src
+  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/PowerTopologyDelegate.cpp
     directory: src
   - path: ../../../../silabs_examples/dishwasher-app/silabs/src/ZclCallbacks.cpp
     directory: src

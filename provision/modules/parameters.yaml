@@ -21,14 +21,6 @@ internal:
     type: 'int32u'
     hidden: true
 
-  - id: 0x0104
-    desc: 'Base Address'
-    name: 'base_address'
-    short: '_i4'
-    type: 'int32u'
-    format: 'hex'
-    hidden: true
-
   - id: 0x0105
     desc: 'Certificate Signing Request'
     name: 'csr'
@@ -288,6 +280,13 @@ commissionable_data:
     type: 'int8u'
 
 attestation_credentials:
+  - id: 0x0104
+    desc: 'Credentials Base Address'
+    name: 'creds_address'
+    short: 'ca'
+    type: 'int32u'
+    format: 'hex'
+
   - id: 0x0181
     desc: 'Firmware Information'
     name: 'firmware_info'

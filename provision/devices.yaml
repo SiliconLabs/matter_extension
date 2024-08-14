@@ -33,6 +33,8 @@ efr32mg24:
       file: "efr32mg24_psa123_nvm3k2.s37"
     - version: "2.1"
       file: "efr32mg24_psa123_nvm3k2.s37"
+    - version: "2.2"
+      file: "efr32mg24_psa3_nvm3k2.s37"
 
 efr32mg26:
   ram_addr: 0x20000000
@@ -44,6 +46,8 @@ efr32mg26:
     - version: "2.0"
       file: "efr32mg26_psa3_nvm3k2.s37"
     - version: "2.1"
+      file: "efr32mg26_psa3_nvm3k2.s37"
+    - version: "2.2"
       file: "efr32mg26_psa3_nvm3k2.s37"
 
 mgm24:
@@ -63,6 +67,8 @@ mgm24:
       file: "efr32mg24_psa123_nvm3k2.s37"
     - version: "2.1"
       file: "efr32mg24_psa123_nvm3k2.s37"
+    - version: "2.2"
+      file: "efr32mg24_psa3_nvm3k2.s37"
 
 si917:
   alias: [ siwg917 ]
@@ -75,4 +81,6 @@ si917:
     - version: "2.0"
       file: "si917_nvm3k2.rps"
     - version: "2.1"
+      file: "si917_nvm3k2.rps"
+    - version: "2.2"
       file: "si917_nvm3k2.rps"

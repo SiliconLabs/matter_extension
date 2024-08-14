@@ -1,0 +1,12 @@
+label: air-quality-sensor-app-thread-internal-bootloader
+quality: production
+description: Matter workspace container both a Matter bootloader and Air Quality over Thread Example.
+project:
+  - path: ../../../sample-app/air-quality-sensor-app/efr32/air-quality-sensor-app-thread.slcp
+    id: application
+    output: air-quality-sensor-app-thread
+  - path: ../../../sample-app/bootloaders/bootloader-storage-internal-single-series-2/bootloader-storage-internal-single-series-2.slcp
+    id: bootloader
+    output: matter-bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

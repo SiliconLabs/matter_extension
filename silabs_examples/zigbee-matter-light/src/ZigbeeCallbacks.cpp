@@ -349,3 +349,8 @@ extern "C" void sl_zigbee_af_radio_needs_calibrating_cb(void)
 }
 
 #endif //#if (LARGE_NETWORK_TESTING == 0)
+
+extern "C" void zb_ble_dmp_print_ble_connections(void)
+{
+  (void)index;
+}

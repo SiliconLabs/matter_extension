@@ -247,6 +247,11 @@ struct InitCommand: public Command
 
     CHIP_ERROR ProcessIncoming(Argument &arg) override
     {
+        if(arg.feedback)
+        {
+            ReturnErrorOnFailure(_feedback_list.Add(arg.id, arg.type));
+        }
+
         switch(arg.id)
         {
         case Parameters::kFlashAddress:
@@ -256,8 +261,10 @@ struct InitCommand: public Command
             mFlashSize = arg.value.u32;
             break;
         case Parameters::kFlashPageSize:
-        case Parameters::kBaseAddress:
-            ReturnErrorOnFailure(_feedback_list.Add(arg.id, arg.type));
+            break;
+        case Parameters::kCredsAddress:
+            mHasBaseAddress = !arg.is_null;
+            mBaseAddress = mHasBaseAddress ? arg.value.u32 : 0;
             break;
         default:
             return CHIP_ERROR_UNKNOWN_RESOURCE_ID;
@@ -275,10 +282,10 @@ struct InitCommand: public Command
             ReturnErrorOnFailure(Encode(arg.id, &page_size, out));
             break;
         }
-        case Parameters::kBaseAddress:
+        case Parameters::kCredsAddress:
         {
             uint32_t creds_base_addr = 0;
-            ReturnErrorOnFailure(mStore.GetBaseAddress(creds_base_addr));
+            ReturnErrorOnFailure(mStore.GetCredentialsBaseAddress(creds_base_addr));
             ReturnErrorOnFailure(Encode(arg.id, &creds_base_addr, out));
             break;
         }
@@ -290,12 +297,19 @@ struct InitCommand: public Command
 
     CHIP_ERROR OnPayloadDecoded() override
     {
-        return mStore.Initialize(mFlashAddress, mFlashSize);
+        ReturnErrorOnFailure(mStore.Initialize(mFlashAddress, mFlashSize));
+        if(mHasBaseAddress)
+        {
+            ReturnErrorOnFailure(mStore.SetCredentialsBaseAddress(mBaseAddress));
+        }
+        return CHIP_NO_ERROR;
     }
 
 private:
     uint32_t mFlashAddress = 0;
     uint32_t mFlashSize = 0;
+    uint32_t mBaseAddress = 0;
+    bool mHasBaseAddress = false;
 };
 
 struct CsrCommand: public Command

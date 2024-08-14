@@ -1,16 +1,17 @@
-#include "ProvisionStorage.h"
-#include "ProvisionEncoder.h"
 #include "AttestationKey.h"
+#include "ProvisionEncoder.h"
+#include "ProvisionStorage.h"
+#include <algorithm>
+#include <credentials/examples/DeviceAttestationCredsExample.h>
 #include <lib/core/CHIPEncoding.h>
-#include <lib/support/CodeUtils.h>
 #include <lib/support/CHIPMemString.h>
+#include <lib/support/CodeUtils.h>
 #include <platform/CHIPDeviceConfig.h>
 #include <platform/silabs/SilabsConfig.h>
-#include <credentials/examples/DeviceAttestationCredsExample.h>
 #include <string.h>
-#include <algorithm>
 
 using namespace chip::Credentials;
+using namespace chip::DeviceLayer::Silabs::Provision;
 
 #if SLI_SI91X_MCU_INTERFACE
 // TODO: Remove this once the flash header integrates these definitions
@@ -34,8 +35,8 @@ extern uint8_t linker_nvm_end[];
 #endif // SLI_SI91X_MCU_INTERFACE
 
 namespace {
-constexpr size_t kPageSize       = FLASH_PAGE_SIZE;
-constexpr size_t kMaxBinaryValue = 1024;
+constexpr size_t kPageSize           = FLASH_PAGE_SIZE;
+constexpr size_t kMaxBinaryValue     = 1024;
 constexpr size_t kArgumentBufferSize = 2 * sizeof(uint16_t) + kMaxBinaryValue; // ID(2) + Size(2) + Value(n)
 } // namespace
 
@@ -46,28 +47,27 @@ namespace Provision {
 namespace Flash {
 
 #if SLI_SI91X_MCU_INTERFACE
-static uint8_t *sReadOnlyPage = reinterpret_cast<uint8_t *>(NWP_FLASH_ADDRESS);
+static uint8_t * sReadOnlyPage = reinterpret_cast<uint8_t *>(NWP_FLASH_ADDRESS);
 #else
 static uint8_t * sReadOnlyPage = reinterpret_cast<uint8_t *>(linker_nvm_end);
 #endif // SLI_SI91X_MCU_INTERFACE
 uint8_t sTemporaryPage[kPageSize] = { 0 };
-uint8_t *sActivePage = sReadOnlyPage;
+uint8_t * sActivePage             = sReadOnlyPage;
 
-
-CHIP_ERROR DecodeTotal(Encoding::Buffer &reader, uint16_t &total)
+CHIP_ERROR DecodeTotal(Encoding::Buffer & reader, uint16_t & total)
 {
     uint16_t sz = 0;
     ReturnErrorOnFailure(reader.Get(sz));
-    total = (0xffff == sz) ? sizeof(uint16_t) : sz;
+    total     = (0xffff == sz) ? sizeof(uint16_t) : sz;
     reader.in = reader.begin + total;
     ReturnErrorCodeIf(reader.in > reader.end, CHIP_ERROR_INTERNAL);
     return CHIP_NO_ERROR;
 }
 
-CHIP_ERROR ActivateWrite(uint8_t *&active)
+CHIP_ERROR ActivateWrite(uint8_t *& active)
 {
 #if !(SLI_SI91X_MCU_INTERFACE)
-    if(sActivePage == sReadOnlyPage)
+    if (sActivePage == sReadOnlyPage)
     {
         memcpy(sTemporaryPage, sReadOnlyPage, sizeof(sTemporaryPage));
     }
@@ -76,9 +76,9 @@ CHIP_ERROR ActivateWrite(uint8_t *&active)
     return CHIP_NO_ERROR;
 }
 
-CHIP_ERROR Set(uint16_t id, Encoding::Buffer &in)
+CHIP_ERROR Set(uint16_t id, Encoding::Buffer & in)
 {
-    uint8_t *page = sActivePage;
+    uint8_t * page = sActivePage;
     uint16_t total = 0;
     Encoding::Buffer reader(page, kPageSize, true);
     uint8_t temp[kArgumentBufferSize] = { 0 };
@@ -88,7 +88,7 @@ CHIP_ERROR Set(uint16_t id, Encoding::Buffer &in)
     ReturnErrorOnFailure(DecodeTotal(reader, total));
     // Search entry
     CHIP_ERROR err = Encoding::Version2::Find(reader, id, found);
-    if((CHIP_ERROR_NOT_FOUND != err) && (CHIP_NO_ERROR != err))
+    if ((CHIP_ERROR_NOT_FOUND != err) && (CHIP_NO_ERROR != err))
     {
         // Memory corruption, write at the last correct address
         return err;
@@ -96,7 +96,7 @@ CHIP_ERROR Set(uint16_t id, Encoding::Buffer &in)
     ReturnErrorOnFailure(ActivateWrite(page));
 
     Encoding::Buffer writer(page, kPageSize);
-    if(CHIP_ERROR_NOT_FOUND == err)
+    if (CHIP_ERROR_NOT_FOUND == err)
     {
         // New entry
         size_t temp_total = found.offset;
@@ -110,7 +110,7 @@ CHIP_ERROR Set(uint16_t id, Encoding::Buffer &in)
     else
     {
         // Existing entry
-        if(in.Size() == found.encoded_size)
+        if (in.Size() == found.encoded_size)
         {
             // Same size, keep in place
             memset(page + found.offset, 0xff, found.encoded_size);
@@ -133,7 +133,7 @@ CHIP_ERROR Set(uint16_t id, Encoding::Buffer &in)
     return CHIP_NO_ERROR;
 }
 
-CHIP_ERROR Get(uint16_t id, Encoding::Version2::Argument &arg)
+CHIP_ERROR Get(uint16_t id, Encoding::Version2::Argument & arg)
 {
     uint16_t total = 0;
 
@@ -145,7 +145,6 @@ CHIP_ERROR Get(uint16_t id, Encoding::Version2::Argument &arg)
     return err;
 }
 
-
 CHIP_ERROR Set(uint16_t id, uint8_t value)
 {
     uint8_t temp[kArgumentBufferSize] = { 0 };
@@ -154,7 +153,7 @@ CHIP_ERROR Set(uint16_t id, uint8_t value)
     return Set(id, arg);
 }
 
-CHIP_ERROR Get(uint16_t id, uint8_t &value)
+CHIP_ERROR Get(uint16_t id, uint8_t & value)
 {
     uint8_t temp[kArgumentBufferSize] = { 0 };
     Encoding::Version2::Argument arg(temp, sizeof(temp));
@@ -172,7 +171,7 @@ CHIP_ERROR Set(uint16_t id, uint16_t value)
     return Set(id, arg);
 }
 
-CHIP_ERROR Get(uint16_t id, uint16_t &value)
+CHIP_ERROR Get(uint16_t id, uint16_t & value)
 {
     uint8_t temp[kArgumentBufferSize] = { 0 };
     Encoding::Version2::Argument arg(temp, sizeof(temp));
@@ -190,7 +189,7 @@ CHIP_ERROR Set(uint16_t id, uint32_t value)
     return Set(id, arg);
 }
 
-CHIP_ERROR Get(uint16_t id, uint32_t &value)
+CHIP_ERROR Get(uint16_t id, uint32_t & value)
 {
     uint8_t temp[kArgumentBufferSize] = { 0 };
     Encoding::Version2::Argument arg(temp, sizeof(temp));
@@ -200,7 +199,7 @@ CHIP_ERROR Get(uint16_t id, uint32_t &value)
     return CHIP_NO_ERROR;
 }
 
-CHIP_ERROR Set(uint16_t id, const uint8_t *value, size_t size)
+CHIP_ERROR Set(uint16_t id, const uint8_t * value, size_t size)
 {
     uint8_t temp[kArgumentBufferSize] = { 0 };
     Encoding::Version2::Argument arg(temp, sizeof(temp));
@@ -208,7 +207,7 @@ CHIP_ERROR Set(uint16_t id, const uint8_t *value, size_t size)
     return Set(id, arg);
 }
 
-CHIP_ERROR Get(uint16_t id, uint8_t *value, size_t max_size, size_t & size)
+CHIP_ERROR Get(uint16_t id, uint8_t * value, size_t max_size, size_t & size)
 {
 
     uint8_t temp[kArgumentBufferSize] = { 0 };
@@ -221,18 +220,17 @@ CHIP_ERROR Get(uint16_t id, uint8_t *value, size_t max_size, size_t & size)
     return CHIP_NO_ERROR;
 }
 
-CHIP_ERROR Set(uint16_t id, const char *value, size_t size)
+CHIP_ERROR Set(uint16_t id, const char * value, size_t size)
 {
-    return Set(id, (const uint8_t*)value, size);
+    return Set(id, (const uint8_t *) value, size);
 }
 
-CHIP_ERROR Get(uint16_t id, char *value, size_t max_size, size_t & size)
+CHIP_ERROR Get(uint16_t id, char * value, size_t max_size, size_t & size)
 {
-    return Get(id, (uint8_t*)value, max_size - 1, size);
+    return Get(id, (uint8_t *) value, max_size - 1, size);
 }
 
 } // namespace Flash
-
 
 //
 // Initialization
@@ -241,14 +239,15 @@ CHIP_ERROR Get(uint16_t id, char *value, size_t max_size, size_t & size)
 CHIP_ERROR Storage::Initialize(uint32_t flash_addr, uint32_t flash_size)
 {
 #if SLI_SI91X_MCU_INTERFACE
-    sl_status_t status = sl_si91x_command_to_read_common_flash((uint32_t) (Flash::sReadOnlyPage), sizeof(Flash::sTemporaryPage), Flash::sTemporaryPage);
+    sl_status_t status = sl_si91x_command_to_read_common_flash((uint32_t) (Flash::sReadOnlyPage), sizeof(Flash::sTemporaryPage),
+                                                               Flash::sTemporaryPage);
     VerifyOrReturnError(status == SL_STATUS_OK, CHIP_ERROR_INVALID_ARGUMENT);
     Flash::sActivePage = Flash::sTemporaryPage;
 
 #else // SLI_SI91X_MCU_INTERFACE
-    if(flash_size > 0)
+    if (flash_size > 0)
     {
-        Flash::sReadOnlyPage = (uint8_t*)(flash_addr + flash_size - kPageSize);
+        Flash::sReadOnlyPage = (uint8_t *) (flash_addr + flash_size - kPageSize);
     }
     Flash::sActivePage = Flash::sReadOnlyPage;
     MSC_Init();
@@ -258,12 +257,12 @@ CHIP_ERROR Storage::Initialize(uint32_t flash_addr, uint32_t flash_size)
 
 CHIP_ERROR Storage::Commit()
 {
-    if(Flash::sActivePage == Flash::sTemporaryPage)
+    if (Flash::sActivePage == Flash::sTemporaryPage)
     {
 #if SLI_SI91X_MCU_INTERFACE
         // Erase page
-        sl_status_t status = sl_si91x_command_to_write_common_flash((uint32_t) (Flash::sReadOnlyPage), Flash::sTemporaryPage, kPageSize,
-                                                        FLASH_ERASE);
+        sl_status_t status = sl_si91x_command_to_write_common_flash((uint32_t) (Flash::sReadOnlyPage), Flash::sTemporaryPage,
+                                                                    kPageSize, FLASH_ERASE);
         VerifyOrReturnError(status == SL_STATUS_OK, CHIP_ERROR_WRITE_FAILED);
         // Write to flash
         status = sl_si91x_command_to_write_common_flash((uint32_t) (Flash::sReadOnlyPage), Flash::sTemporaryPage, kPageSize,
@@ -271,20 +270,13 @@ CHIP_ERROR Storage::Commit()
         VerifyOrReturnError(status == SL_STATUS_OK, CHIP_ERROR_WRITE_FAILED);
 #else
         // Erase page
-        MSC_ErasePage((uint32_t *)Flash::sReadOnlyPage);
+        MSC_ErasePage((uint32_t *) Flash::sReadOnlyPage);
         // Write to flash
-        MSC_WriteWord((uint32_t *)Flash::sReadOnlyPage, Flash::sTemporaryPage, kPageSize);
+        MSC_WriteWord((uint32_t *) Flash::sReadOnlyPage, Flash::sTemporaryPage, kPageSize);
 #endif // SLI_SI91X_MCU_INTERFACE
     }
     return CHIP_NO_ERROR;
 }
-
-CHIP_ERROR Storage::GetBaseAddress(uint32_t & value)
-{
-    value = (uint32_t)Flash::sReadOnlyPage;
-    return CHIP_NO_ERROR;
-}
-
 
 //
 // DeviceInstanceInfoProvider
@@ -455,7 +447,7 @@ CHIP_ERROR Storage::SetManufacturingDate(const char * value, size_t len)
     return Flash::Set(Parameters::ID::kManufacturingDate, value, len);
 }
 
-CHIP_ERROR Storage::GetManufacturingDate(uint8_t * value, size_t max, size_t &size)
+CHIP_ERROR Storage::GetManufacturingDate(uint8_t * value, size_t max, size_t & size)
 {
     return Flash::Get(Parameters::ID::kManufacturingDate, value, max, size);
 }
@@ -465,7 +457,7 @@ CHIP_ERROR Storage::SetUniqueId(const uint8_t * value, size_t size)
     return Flash::Set(Parameters::ID::kUniqueId, value, size);
 }
 
-CHIP_ERROR Storage::GetUniqueId(uint8_t * value, size_t max, size_t &size)
+CHIP_ERROR Storage::GetUniqueId(uint8_t * value, size_t max, size_t & size)
 {
     return Flash::Get(Parameters::ID::kUniqueId, value, max, size);
 }
@@ -527,7 +519,7 @@ CHIP_ERROR Storage::SetSpake2pSalt(const char * value, size_t size)
     return Flash::Set(Parameters::ID::kSpake2pSalt, value, size);
 }
 
-CHIP_ERROR Storage::GetSpake2pSalt(char * value, size_t max, size_t &size)
+CHIP_ERROR Storage::GetSpake2pSalt(char * value, size_t max, size_t & size)
 {
     return Flash::Get(Parameters::ID::kSpake2pSalt, value, max, size);
 }
@@ -537,7 +529,7 @@ CHIP_ERROR Storage::SetSpake2pVerifier(const char * value, size_t size)
     return Flash::Set(Parameters::ID::kSpake2pVerifier, value, size);
 }
 
-CHIP_ERROR Storage::GetSpake2pVerifier(char * value, size_t max, size_t &size)
+CHIP_ERROR Storage::GetSpake2pVerifier(char * value, size_t max, size_t & size)
 {
     return Flash::Get(Parameters::ID::kSpake2pVerifier, value, max, size);
 }
@@ -548,7 +540,7 @@ CHIP_ERROR Storage::GetSpake2pVerifier(char * value, size_t max, size_t &size)
 
 CHIP_ERROR Storage::SetFirmwareInformation(const ByteSpan & value)
 {
-    (void)value;
+    (void) value;
     return CHIP_NO_ERROR;
 }
 
@@ -627,11 +619,11 @@ CHIP_ERROR Storage::SetDeviceAttestationKey(const ByteSpan & value)
     return Flash::Set(Parameters::ID::kDacKey, value.data(), value.size());
 }
 
-CHIP_ERROR Storage::GetDeviceAttestationCSR(uint16_t vid, uint16_t pid, const CharSpan &cn, MutableCharSpan & csr)
+CHIP_ERROR Storage::GetDeviceAttestationCSR(uint16_t vid, uint16_t pid, const CharSpan & cn, MutableCharSpan & csr)
 {
     AttestationKey key;
     uint8_t temp[kDeviceAttestationKeySizeMax] = { 0 };
-    size_t size = 0;
+    size_t size                                = 0;
     ReturnErrorOnFailure(key.GenerateCSR(vid, pid, cn, csr));
     ReturnErrorOnFailure(key.Export(temp, sizeof(temp), size));
     return Flash::Set(Parameters::ID::kDacKey, temp, size);
@@ -641,8 +633,8 @@ CHIP_ERROR Storage::SignWithDeviceAttestationKey(const ByteSpan & message, Mutab
 {
     AttestationKey key;
     uint8_t temp[kDeviceAttestationKeySizeMax] = { 0 };
-    size_t size = 0;
-    CHIP_ERROR err = Flash::Get(Parameters::ID::kDacKey, temp, sizeof(temp), size);
+    size_t size                                = 0;
+    CHIP_ERROR err                             = Flash::Get(Parameters::ID::kDacKey, temp, sizeof(temp), size);
 #ifdef CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS
     if (CHIP_DEVICE_ERROR_CONFIG_NOT_FOUND == err)
     {
@@ -659,12 +651,24 @@ CHIP_ERROR Storage::SignWithDeviceAttestationKey(const ByteSpan & message, Mutab
 // Other
 //
 
+CHIP_ERROR Storage::SetCredentialsBaseAddress(uint32_t addr)
+{
+    Flash::sReadOnlyPage = (uint8_t *)addr;
+    return CHIP_NO_ERROR;
+}
+
+CHIP_ERROR Storage::GetCredentialsBaseAddress(uint32_t & addr)
+{
+    addr = (uint32_t) Flash::sReadOnlyPage;
+    return CHIP_NO_ERROR;
+}
+
 CHIP_ERROR Storage::SetProvisionVersion(const char * value, size_t size)
 {
     return Flash::Set(Parameters::ID::kVersion, value, size);
 }
 
-CHIP_ERROR Storage::GetProvisionVersion(char * value, size_t max, size_t &size)
+CHIP_ERROR Storage::GetProvisionVersion(char * value, size_t max, size_t & size)
 {
     return Flash::Get(Parameters::ID::kVersion, value, max, size);
 }
@@ -674,7 +678,7 @@ CHIP_ERROR Storage::SetSetupPayload(const uint8_t * value, size_t size)
     return Flash::Set(Parameters::ID::kSetupPayload, value, size);
 }
 
-CHIP_ERROR Storage::GetSetupPayload(uint8_t * value, size_t max, size_t &size)
+CHIP_ERROR Storage::GetSetupPayload(uint8_t * value, size_t max, size_t & size)
 {
     return Flash::Get(Parameters::ID::kSetupPayload, value, max, size);
 }
@@ -685,23 +689,23 @@ CHIP_ERROR Storage::SetProvisionRequest(bool value)
     return CHIP_ERROR_NOT_IMPLEMENTED;
 }
 
-CHIP_ERROR Storage::GetProvisionRequest(bool &value)
+CHIP_ERROR Storage::GetProvisionRequest(bool & value)
 {
     // return Flash::Set(Parameters::ID::kProvisionRequest, value);
     return CHIP_ERROR_NOT_IMPLEMENTED;
-
 }
 #if OTA_ENCRYPTION_ENABLE
 CHIP_ERROR Storage::SetOtaTlvEncryptionKey(const ByteSpan & value)
 {
     return CHIP_ERROR_NOT_IMPLEMENTED;
-
 }
 #endif
 
 } // namespace Provision
 
 void MigrateDacProvider(void) {}
+
+void MigrateDacKeyToPSA(void) {}
 
 } // namespace Silabs
 } // namespace DeviceLayer

@@ -141,6 +141,7 @@ protected:
 
     // ===== Members available to the implementation subclass.
 
+    CHIP_ERROR ConfigureThreadStack(otInstance * otInst);
     CHIP_ERROR DoInit(otInstance * otInst);
     bool IsThreadAttachedNoLock(void);
     bool IsThreadInterfaceUpNoLock(void);

@@ -1,6 +1,6 @@
 /*
  *
- *    Copyright (c) 2020 Project CHIP Authors
+ *    Copyright (c) 2024 Project CHIP Authors
  *    Copyright (c) 2019 Google LLC.
  *    All rights reserved.
  *
@@ -17,38 +17,35 @@
  *    limitations under the License.
  */
 
-#include "AppTask.h"
-#include "AppConfig.h"
-#include "AppEvent.h"
-#include "operational-state-delegate-impl.h"
+#include <assert.h>
 
+#include <app-common/zap-generated/ids/Attributes.h>
+#include <app-common/zap-generated/attribute-type.h>
 #include <app/server/OnboardingCodesUtil.h>
 #include <app/server/Server.h>
 #include <app/util/attribute-storage.h>
-#include <app-common/zap-generated/ids/Attributes.h>
-#include <app-common/zap-generated/attribute-type.h>
-
-#include <assert.h>
-
+#include <lib/support/CodeUtils.h>
+#include <platform/CHIPDeviceLayer.h>
 #include <platform/silabs/platformAbstraction/SilabsPlatform.h>
-
 #include <setup_payload/QRCodeSetupPayloadGenerator.h>
 #include <setup_payload/SetupPayload.h>
 
-#include <lib/support/CodeUtils.h>
-
-#include <platform/CHIPDeviceLayer.h>
+#include "AppConfig.h"
+#include "AppEvent.h"
+#include "AppTask.h"
+#include "DishwasherManager.h"
+#include "ElectricalSensorManager.h"
+#include "OperationalStateDelegate.h"
 
 #define APP_FUNCTION_BUTTON 0
 #define APP_CONTROL_BUTTON 1
 
 using namespace chip;
 using namespace chip::app;
-using namespace ::chip::DeviceLayer;
-using namespace ::chip::DeviceLayer::Silabs;
-
+using namespace chip::app::Clusters::OperationalState;
+using namespace chip::DeviceLayer;
+using namespace chip::DeviceLayer::Silabs;
 using namespace chip::TLV;
-using namespace ::chip::DeviceLayer;
 
 AppTask AppTask::sAppTask;
 
@@ -71,7 +68,14 @@ CHIP_ERROR AppTask::Init()
     err = DishwasherMgr().Init();
     if (err != CHIP_NO_ERROR)
     {
-        SILABS_LOG("DishwasherMgr::Init() failed");
+        SILABS_LOG("DishwasherMgr.Init() failed");
+        appError(err);
+    }
+
+    err = ElectricalSensorMgr().Init();
+    if (err != CHIP_NO_ERROR)
+    {
+        SILABS_LOG("ElectricalSensorMgr.Init() failed");
         appError(err);
     }
 
@@ -193,6 +197,7 @@ void AppTask::ActionInitiated(OperationalStateEnum action)
     else
     {
         DishwasherMgr().UpdateOperationState(action);
+        ElectricalSensorMgr().UpdateEPMAllAttributes(action);
     } 
 }
 

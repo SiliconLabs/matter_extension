@@ -1,16 +1,30 @@
 #include "AttestationKey.h"
 #include <lib/support/CodeUtils.h>
-#include <platform/silabs/SilabsConfig.h>
-#include <mbedtls/x509_csr.h>
+#include <lib/support/Span.h>
 #include <mbedtls/asn1.h>
 #include <mbedtls/pk.h>
-#include <sl_psa_crypto.h>
+#include <mbedtls/x509_csr.h>
+#include <platform/silabs/SilabsConfig.h>
 #include <stdio.h>
 #include <string.h>
 
-#ifdef SLI_SI91X_MCU_INTERFACE
+#if (SLI_SI91X_MCU_INTERFACE)
+#if (SLI_SECURE_KEY_STORAGE_DEVICE_SI91X)
+extern "C" {
 #include "sl_si91x_psa_wrap.h"
+}
 #endif
+psa_key_location_t sl_psa_get_most_secure_key_location(void)
+{
+#if (SLI_SECURE_KEY_STORAGE_DEVICE_SI91X)
+    return PSA_KEY_VOLATILE_PERSISTENT_WRAPPED;
+#else
+    return PSA_KEY_LOCATION_LOCAL_STORAGE;
+#endif
+}
+#else
+#include <sl_psa_crypto.h>
+#endif // SLI_SI91X_MCU_INTERFACE
 
 namespace chip {
 namespace DeviceLayer {
@@ -18,7 +32,6 @@ namespace Silabs {
 namespace Provision {
 
 using SilabsConfig = chip::DeviceLayer::Internal::SilabsConfig;
-
 
 int destroyKey(uint32_t kid)
 {
@@ -48,14 +61,9 @@ int generateKey(uint32_t kid)
     psa_set_key_algorithm(&attr, PSA_ALG_ECDSA(PSA_ALG_SHA_256));
     psa_set_key_usage_flags(
         &attr, PSA_KEY_USAGE_SIGN_HASH | PSA_KEY_USAGE_VERIFY_HASH | PSA_KEY_USAGE_SIGN_MESSAGE | PSA_KEY_USAGE_VERIFY_MESSAGE);
-#ifdef SLI_SI91X_MCU_INTERFACE
-    psa_set_key_lifetime(
-        &attr, PSA_KEY_LIFETIME_FROM_PERSISTENCE_AND_LOCATION(PSA_KEY_LIFETIME_PERSISTENT, PSA_KEY_VOLATILE_PERSISTENT_WRAPPED));
-#else
     psa_set_key_lifetime(
         &attr, PSA_KEY_LIFETIME_FROM_PERSISTENCE_AND_LOCATION(PSA_KEY_LIFETIME_PERSISTENT, sl_psa_get_most_secure_key_location()));
-#endif
-    psa_key_id_t id = 0;
+    psa_key_id_t id  = 0;
     psa_status_t err = psa_generate_key(&attr, &id);
     return err;
 }
@@ -70,48 +78,40 @@ int importKey(uint32_t kid, const uint8_t * value, size_t size)
     psa_set_key_algorithm(&attr, PSA_ALG_ECDSA(PSA_ALG_SHA_256));
     psa_set_key_usage_flags(
         &attr, PSA_KEY_USAGE_SIGN_HASH | PSA_KEY_USAGE_VERIFY_HASH | PSA_KEY_USAGE_SIGN_MESSAGE | PSA_KEY_USAGE_VERIFY_MESSAGE);
-#ifdef SLI_SI91X_MCU_INTERFACE
-    psa_set_key_lifetime(
-        &attr, PSA_KEY_LIFETIME_FROM_PERSISTENCE_AND_LOCATION(PSA_KEY_LIFETIME_PERSISTENT, PSA_KEY_VOLATILE_PERSISTENT_WRAPPED));
-#else
     psa_set_key_lifetime(
         &attr, PSA_KEY_LIFETIME_FROM_PERSISTENCE_AND_LOCATION(PSA_KEY_LIFETIME_PERSISTENT, sl_psa_get_most_secure_key_location()));
-#endif
 
-    psa_key_id_t id = 0;
+    psa_key_id_t id  = 0;
     psa_status_t err = psa_import_key(&attr, value, size, &id);
     psa_reset_key_attributes(&attr);
     return err;
 }
 
-
-int importCallback(void *ctx, int tag, unsigned char *value, size_t size)
+int importCallback(void * ctx, int tag, unsigned char * value, size_t size)
 {
-    if(MBEDTLS_ASN1_OCTET_STRING == tag)
+    if (MBEDTLS_ASN1_OCTET_STRING == tag)
     {
-        uint32_t kid = *(uint32_t*)ctx;
+        uint32_t kid = *(uint32_t *) ctx;
         return importKey(kid, value, size);
     }
     return 0;
 }
 
-
 CHIP_ERROR AttestationKey::Import(const uint8_t * asn1, size_t size)
 {
-    uint8_t *p = (uint8_t *)asn1;
-    uint8_t *q = p + size;
+    uint8_t * p = (uint8_t *) asn1;
+    uint8_t * q = p + size;
 
     int err = mbedtls_asn1_traverse_sequence_of(&p, q, 0, 0, 0, 0, importCallback, &mId);
     return err ? CHIP_ERROR_INTERNAL : CHIP_NO_ERROR;
 }
 
-CHIP_ERROR AttestationKey::Export(uint8_t * asn1, size_t max, size_t &size)
+CHIP_ERROR AttestationKey::Export(uint8_t * asn1, size_t max, size_t & size)
 {
     return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE;
 }
 
-
-CHIP_ERROR AttestationKey::GenerateCSR(uint16_t vid, uint16_t pid, const CharSpan &cn, MutableCharSpan & csr)
+CHIP_ERROR AttestationKey::GenerateCSR(uint16_t vid, uint16_t pid, const CharSpan & cn, MutableCharSpan & csr)
 {
     mbedtls_pk_context key_ctx;
     mbedtls_x509write_csr csr_ctx;
@@ -123,7 +123,7 @@ CHIP_ERROR AttestationKey::GenerateCSR(uint16_t vid, uint16_t pid, const CharSpa
 
     // Subject name
     char subject_name[64] = { 0 };
-    if(cn.size() > 0)
+    if (cn.size() > 0)
     {
         snprintf(subject_name, sizeof(subject_name), "CN=%s Mvid:%04X Mpid:%04X", cn.data(), vid, pid);
     }
@@ -155,21 +155,15 @@ CHIP_ERROR AttestationKey::GenerateCSR(uint16_t vid, uint16_t pid, const CharSpa
     return CHIP_NO_ERROR;
 }
 
-
 CHIP_ERROR AttestationKey::SignMessage(const ByteSpan & message, MutableByteSpan & out_span)
 {
     uint8_t signature[64] = { 0 };
     size_t signature_size = sizeof(signature);
-
-    psa_status_t err =
-        psa_sign_message(static_cast<psa_key_id_t>(mId), PSA_ALG_ECDSA(PSA_ALG_SHA_256), message.data(),
-                            message.size(), signature, signature_size, &signature_size);
-
-    VerifyOrReturnError(!err, CHIP_ERROR_INTERNAL);
+    psa_status_t err      = psa_sign_message(static_cast<psa_key_id_t>(mId), PSA_ALG_ECDSA(PSA_ALG_SHA_256), message.data(),
+                                             message.size(), signature, signature_size, &signature_size);
+    VerifyOrReturnError(err == PSA_SUCCESS, CHIP_ERROR_INTERNAL);
     return CopySpanToMutableSpan(ByteSpan(signature, signature_size), out_span);
 }
-
-
 } // namespace Provision
 } // namespace Silabs
 } // namespace DeviceLayer

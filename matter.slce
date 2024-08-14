@@ -1,10 +1,10 @@
 id: matter
-version: 2.3.0
+version: 2.3.1
 description: "Matter extension for Simplicity SDK Suite"
 label: "Silicon Labs Matter"
 sdk:
   id: simplicity_sdk
-  version: 2024.6.0
+  version: 2024.6.1
 upgrade_manifest:
   - path: upgrade.slcu
 supplier: Silicon Laboratories Inc.
@@ -33,6 +33,7 @@ component_path:
   - path: slc/component/matter-platform/size-reduction
   - path: slc/component/matter-platform/config
   - path: slc/component/matter-platform/third_party
+  - path: slc/component/matter-platform/air-quality-sensor
   - path: slc/component/matter-clusters
   - path: slc/component/matter-sensors
   - path: slc/component/matter-thread
@@ -44,4 +45,4 @@ component_path:
   - path: slc/component/matter-wifi/917soc
 documentation:
   - docset: matter
-    version: 2.3.0
+    version: 2.3.1

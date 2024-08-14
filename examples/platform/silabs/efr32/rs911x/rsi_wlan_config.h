@@ -21,7 +21,9 @@
 #include "rsi_wlan_defines.h"
 
 // SLC-FIX
+#ifndef SL_MATTER_GN_BUILD
 #include "sl_matter_wifi_config.h"
+#endif //SL_MATTER_GN_BUILD
 
 //! Enable feature
 #define RSI_ENABLE 1

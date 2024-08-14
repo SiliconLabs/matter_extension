@@ -39,3 +39,7 @@ define:
     value: "1"
     condition:
       - brd4338a
+  - name: ENABLE_WSTK_LEDS
+    value: "1"
+    condition:
+      - brd2605a

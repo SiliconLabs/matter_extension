@@ -1,11 +1,11 @@
 
 category: Clusters|Measurement
 description: >
-  Implementation of the Smoke Co Alarm Server Cluster.
-  The user has to enable the Smoke Co Alarm Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  Implementation of the Smoke CO Alarm Server Cluster.
+  The user has to enable the Smoke CO Alarm Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
 id: matter_smoke_co_alarm
 package: Matter
-label: Smoke Co Alarm Server Cluster
+label: Smoke CO Alarm Server Cluster
 quality: production
 metadata:
   sbom:

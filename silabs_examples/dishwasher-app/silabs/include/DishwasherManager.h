@@ -18,20 +18,11 @@
 
 #pragma once
 
-#include <stdbool.h>
-#include <stdint.h>
-
-#include "AppEvent.h"
-
-#include "FreeRTOS.h"
-#include "timers.h" // provides FreeRTOS timer support
 #include <app/clusters/operational-state-server/operational-state-server.h>
 #include <app-common/zap-generated/cluster-objects.h>
-#include <lib/core/ClusterEnums.h>
-
 #include <lib/core/CHIPError.h>
 
-using namespace chip::app::Clusters::OperationalState;
+#include "AppEvent.h"
 
 class DishwasherManager
 {
@@ -39,16 +30,16 @@ public:
     CHIP_ERROR Init();
     void CycleOperationalState();
     void UpdateDishwasherLed();
-    void UpdateOperationState(OperationalStateEnum state);
-    OperationalStateEnum GetOperationalState();
+    void UpdateOperationState(chip::app::Clusters::OperationalState::OperationalStateEnum state);
+    chip::app::Clusters::OperationalState::OperationalStateEnum GetOperationalState();
 
-    typedef void (*Callback_fn_initiated)(OperationalStateEnum action);
+    typedef void (*Callback_fn_initiated)(chip::app::Clusters::OperationalState::OperationalStateEnum action);
     typedef void (*Callback_fn_completed)();
     void SetCallbacks(Callback_fn_initiated aActionInitiated_CB, Callback_fn_completed aActionCompleted_CB);
 
 private:
     friend DishwasherManager & DishwasherMgr(void);
-    OperationalStateEnum mState;
+    chip::app::Clusters::OperationalState::OperationalStateEnum mState;
 
     Callback_fn_initiated mActionInitiated_CB;
     Callback_fn_completed mActionCompleted_CB;

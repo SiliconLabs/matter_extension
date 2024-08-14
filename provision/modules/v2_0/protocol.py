@@ -22,13 +22,13 @@ class Protocol(_base.ProvisionProtocol):
         super().__init__()
 
     def execute(self, paths, args, chan):
-        chan.open()
         action = args.str(ID.kAction)
         # Binary export
         if _base.Actions.kBinary == action:
             e = Exporter(paths, args)
             return e.export()
         # Init
+        chan.open()
         init = InitCommand(paths, args)
         init.execute(chan)
         if _base.Actions.kAuto == action:
@@ -273,7 +273,7 @@ class InitCommand(Command):
         self.put(ID.kFlashAddress)
         self.put(ID.kFlashSize)
         self.put(ID.kFlashPageSize, True, True)
-        self.put(ID.kBaseAddress, True, True)
+        self.put(ID.kCredsAddress, True, True)
 
 
 class CsrCommand(Command):

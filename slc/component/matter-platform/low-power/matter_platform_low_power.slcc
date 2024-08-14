@@ -17,3 +17,4 @@ conflicts:
   - name: matter_default_lcd_config
   - name: matter_qr_code
   - name: matter_lcd
+  - name: matter_lcd_917SOC

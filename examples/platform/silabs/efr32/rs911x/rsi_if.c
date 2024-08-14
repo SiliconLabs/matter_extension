@@ -70,12 +70,6 @@ bool hasNotifiedIPV4 = false;
 #endif /* CHIP_DEVICE_CONFIG_ENABLE_IPV4 */
 bool hasNotifiedWifiConnectivity = false;
 
-/* Declare a flag to differentiate between after boot-up first IP connection or reconnection */
-bool is_wifi_disconnection_event = false;
-
-/* Declare a variable to hold connection time intervals */
-uint32_t retryInterval = WLAN_MIN_RETRY_TIMER_MS;
-
 #if (RSI_BLE_ENABLE)
 extern rsi_semaphore_handle_t sl_rs_ble_init_sem;
 #endif
@@ -142,7 +136,7 @@ int32_t wfx_rsi_get_ap_info(wfx_wifi_scan_result_t * ap)
     uint8_t rssi;
     ap->security = wfx_rsi.sec.security;
     ap->chan     = wfx_rsi.ap_chan;
-    memcpy(&ap->bssid[0], &wfx_rsi.ap_mac.octet[0], BSSID_MAX_STR_LEN);
+    memcpy(&ap->bssid[0], &wfx_rsi.ap_mac.octet[0], BSSID_LEN);
     status = rsi_wlan_get(RSI_RSSI, &rssi, sizeof(rssi));
     if (status == RSI_SUCCESS)
     {
@@ -280,12 +274,7 @@ static void wfx_rsi_join_cb(uint16_t status, const uint8_t * buf, const uint16_t
          * We should enable retry.. (Need config variable for this)
          */
         SILABS_LOG("%s: failed. retry: %d", __func__, wfx_rsi.join_retries);
-        wfx_retry_interval_handler(is_wifi_disconnection_event, wfx_rsi.join_retries++);
-        if (is_wifi_disconnection_event || wfx_rsi.join_retries <= WFX_RSI_CONFIG_MAX_JOIN)
-        {
-            WfxEvent.eventType = WFX_EVT_STA_START_JOIN;
-            WfxPostEvent(&WfxEvent);
-        }
+        wfx_retry_connection(++wfx_rsi.join_retries);
     }
     else
     {
@@ -297,7 +286,6 @@ static void wfx_rsi_join_cb(uint16_t status, const uint8_t * buf, const uint16_t
         WfxEvent.eventType = WFX_EVT_STA_CONN;
         WfxPostEvent(&WfxEvent);
         wfx_rsi.join_retries = 0;
-        retryInterval        = WLAN_MIN_RETRY_TIMER_MS;
     }
 }
 
@@ -317,7 +305,6 @@ static void wfx_rsi_join_fail_cb(uint16_t status, uint8_t * buf, uint32_t len)
     WfxEvent_t WfxEvent;
     wfx_rsi.join_retries += 1;
     wfx_rsi.dev_state &= ~(WFX_RSI_ST_STA_CONNECTING | WFX_RSI_ST_STA_CONNECTED);
-    is_wifi_disconnection_event = true;
     WfxEvent.eventType          = WFX_EVT_STA_START_JOIN;
     WfxPostEvent(&WfxEvent);
 }
@@ -493,7 +480,7 @@ static void wfx_rsi_save_ap_info() // translation
     }
     wfx_rsi.sec.security = WFX_SEC_UNSPECIFIED;
     wfx_rsi.ap_chan      = rsp.scan_info->rf_channel;
-    memcpy(&wfx_rsi.ap_mac.octet[0], &rsp.scan_info->bssid[0], BSSID_MAX_STR_LEN);
+    memcpy(&wfx_rsi.ap_mac.octet[0], &rsp.scan_info->bssid[0], BSSID_LEN);
 
     switch (rsp.scan_info->security_mode)
     {
@@ -511,9 +498,9 @@ static void wfx_rsi_save_ap_info() // translation
     case SME_WEP:
         wfx_rsi.sec.security = WFX_SEC_WEP;
         break;
-    case SME_WPA3_TRANSITION:
+    case SME_WPA3_PERSONAL_TRANSITION:
 #if WIFI_ENABLE_SECURITY_WPA3_TRANSITION
-    case SME_WPA3:
+    case SME_WPA3_PERSONAL:
         wfx_rsi.sec.security = WFX_SEC_WPA3;
 #else
         wfx_rsi.sec.security = WFX_SEC_WPA2;
@@ -557,7 +544,7 @@ static void wfx_rsi_do_join(void)
             break;
 #if WIFI_ENABLE_SECURITY_WPA3_TRANSITION
         case WFX_SEC_WPA3:
-            connect_security_mode = RSI_WPA3_TRANSITION;
+            connect_security_mode = RSI_WPA3_PERSONAL_TRANSITION;
             break;
 #endif // WIFI_ENABLE_SECURITY_WPA3_TRANSITION
         case WFX_SEC_NONE:
@@ -586,27 +573,15 @@ static void wfx_rsi_do_join(void)
         /* Try to connect Wifi with given Credentials
          * untill there is a success or maximum number of tries allowed
          */
-        while (is_wifi_disconnection_event || wfx_rsi.join_retries <= WFX_RSI_CONFIG_MAX_JOIN)
+        if ((status = rsi_wlan_connect_async((int8_t *) &wfx_rsi.sec.ssid[0], connect_security_mode, &wfx_rsi.sec.passkey[0],
+                                             wfx_rsi_join_cb)) != RSI_SUCCESS)
         {
-            /* Call rsi connect call with given ssid and password
-             * And check there is a success
-             */
-            if ((status = rsi_wlan_connect_async((int8_t *) &wfx_rsi.sec.ssid[0], connect_security_mode, &wfx_rsi.sec.passkey[0],
-                                                 wfx_rsi_join_cb)) != RSI_SUCCESS)
-            {
-
-                wfx_rsi.dev_state &= ~WFX_RSI_ST_STA_CONNECTING;
-                SILABS_LOG("%s: rsi_wlan_connect_async failed with status: %02x on try %d", __func__, status, wfx_rsi.join_retries);
-
-                wfx_retry_interval_handler(is_wifi_disconnection_event, wfx_rsi.join_retries);
-                wfx_rsi.join_retries++;
-            }
-            else
-            {
+            wfx_rsi.dev_state &= ~WFX_RSI_ST_STA_CONNECTING;
+            SILABS_LOG("%s: rsi_wlan_connect_async failed with status: %02x on try %d", __func__, status, wfx_rsi.join_retries);
+            wfx_retry_connection(++wfx_rsi.join_retries);
+        } else {
                 SILABS_LOG("%s: starting JOIN to %s after %d tries\n", __func__, (char *) &wfx_rsi.sec.ssid[0],
                            wfx_rsi.join_retries);
-                break; // exit while loop
-            }
         }
     }
 }
@@ -753,9 +728,9 @@ void ProcessEvent(WfxEvent_t inEvent)
                     strncpy(ap.ssid, (char *) scan->ssid, MIN(sizeof(ap.ssid), sizeof(scan->ssid)));
                     ap.security = scan->security_mode;
                     ap.rssi     = (-1) * scan->rssi_val;
-                    configASSERT(sizeof(ap.bssid) >= BSSID_MAX_STR_LEN);
-                    configASSERT(sizeof(scan->bssid) >= BSSID_MAX_STR_LEN);
-                    memcpy(ap.bssid, scan->bssid, BSSID_MAX_STR_LEN);
+                    configASSERT(sizeof(ap.bssid) >= BSSID_LEN);
+                    configASSERT(sizeof(scan->bssid) >= BSSID_LEN);
+                    memcpy(ap.bssid, scan->bssid, BSSID_LEN);
                     (*wfx_rsi.scan_cb)(&ap);
 
                     if (wfx_rsi.scan_ssid)

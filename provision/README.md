@@ -10,7 +10,7 @@ Matter defines three interfaces to access the provisioned data during runtime:
 * [DeviceInstanceInfoProvider](../src/include/platform/DeviceInstanceInfoProvider.h)
 * [CommissionableDataProvider](../src/include/platform/CommissionableDataProvider.h)
 * [DeviceAttestationCredentialsProvider](../src/credentials/DeviceAttestationCredentialsProvider.h)
-In Silicon Labs devices, all three interfaces are implemented by the [ProvisionStorage](../examples/platform/silabs/./ProvisionStorage.h).
+In Silicon Labs devices, all three interfaces are implemented by the [ProvisionStorage](../examples/platform/silabs/provision/ProvisionStorage.h).
 
 The provisioning script on this folder now supercedes the following tools:
 * [Credentials Example](https://github.com/SiliconLabs/matter/tree/release_1.1.0-1.1/silabs_examples/credentials)
@@ -66,6 +66,7 @@ The directory structure is as follows:
     - support
         - efr32mg12
         - efr32mg24
+        - efr32mg26
 
 
 ## Provision Script
@@ -172,6 +173,7 @@ file defines the well-known (default) parameters used by the automatic provision
 | -sf, --commissioning_flow | optional             | dec/hex            | Commissioning Flow 0=Standard, 1=User Action, 2=Custom.                         |
 | -sr, --rendezvous_flags   | optional             | dec/hex            | Rendez-vous flag: 1=SoftAP, 2=BLE 4=OnNetwork (Can be combined).                |
 | -fi, --firmware_info      | optional             | string             | Firmware Information            |
+| -ca, --creds_address      | optional             | string             | Credentials base address            |
 | -cd, --certification      | required             | string             | Path to the Certification Declaration (CD) file.                |
 | -cc, --cd_cert            | optional             | string             | Certification Declaration Signing Cert            |
 | -ck, --cd_key             | optional             | string             | Certification Declaration Signing Key            |
@@ -570,7 +572,6 @@ must match the contents of `cd.der`, `pai_cert.der`, and `dac.der`, respectively
 ## Board Support
 
 Pre-compiled images of the Generator Firmware can be found under ./images. The source
-code of these images is found under ./support. A single image is provided for all EFR32MG12
-parts, and another one for the EFR32MG24 family. To cope with the different flash sizes, the
+code of these images is found under ./support. A single image is provided for each family (EFR32MG12, EFR32MG24, EFR32MG26). To cope with the different flash sizes, the
 `provision.py` script reads the device information using `commander`, and send it to the GFW,
 which configures the NVM3 during the initialization step.

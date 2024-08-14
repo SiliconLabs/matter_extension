@@ -74,7 +74,7 @@ class Encoder(object):
             return x
 
     def addArray(self, x):
-        if x is None: x = bytearray()
+        if x is None: x = bytes()
         if isinstance(x, str): x = x.encode('utf-8')
         self.addType(Types.ARRAY)
         self.data.extend(int(len(x)).to_bytes(2, 'big'))
@@ -85,7 +85,7 @@ class Encoder(object):
         z = int.from_bytes(self.data[self.offset:self.offset + 2], byteorder='big')
         a = self.data[self.offset + 2:self.offset + 2 + z]
         self.offset += (2 + z)
-        return bytearray(a)
+        return bytes(a)
 
 
     def addString(self, x):

@@ -19,7 +19,7 @@ out-of-the-box and therefore has the matter_icd_management component enabled.**
 
 For more general information on running matter applications and pre-requisites please look at online 
 documentation for Matter available on docs.silabs.com. Follow Wi-Fi instructions depending on the example you are running.
-[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.3.0/matter-wifi)
+[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.3.1/matter-wifi)
 
 ## Light Switch Specific Interface
 

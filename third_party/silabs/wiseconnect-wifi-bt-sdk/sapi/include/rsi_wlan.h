@@ -53,6 +53,11 @@
 // maximum no of channels to set rules
 #define RSI_MAX_POSSIBLE_CHANNEL 24
 
+// maximum no of channels to set rules
+#define RSI_MAX_POSSIBLE_SINGLE_BAND_CHANNEL 14
+
+#define RSI_SINGLE_NON_PREF_CHAN_PARAMS_LEN 15
+
 // length of wps pin
 #define RSI_WPS_PIN_LEN 8
 
@@ -99,6 +104,7 @@
 // AKM suite types
 #define RSN_SELECTOR(d, c, b, a) \
   ((((uint32_t)(a)) << 24) | (((uint32_t)(b)) << 16) | (((uint32_t)(c)) << 8) | (uint32_t)(d))
+#define RSN_AKM_COUNT_OFFSET                   10
 #define RSN_AKM_OFFSET                         12
 #define RSN_SELECTOR_LEN                       4
 #define WPA_DRIVER_CAPA_KEY_MGMT_WPA           0x00000001
@@ -107,6 +113,7 @@
 #define WPA_DRIVER_CAPA_KEY_MGMT_WPA2_PSK      0x00000008
 #define WPA_DRIVER_CAPA_KEY_MGMT_WPA_NONE      0x00000010
 #define WPA_DRIVER_CAPA_KEY_MGMT_SAE           0x00010000
+#define WPA_DRIVER_CAPA_KEY_MGMT_FT_SAE        0x00100000
 #define WPA_DRIVER_CAPA_KEY_MGMT_802_1X_SHA256 0x00020000
 #define WPA_DRIVER_CAPA_KEY_MGMT_PSK_SHA256    0x00040000
 
@@ -118,6 +125,7 @@
 #define RSN_AUTH_KEY_MGMT_PSK_SHA256      RSN_SELECTOR(0x00, 0x0f, 0xac, 6)
 #define RSN_AUTH_KEY_MGMT_TPK_HANDSHAKE   RSN_SELECTOR(0x00, 0x0f, 0xac, 7)
 #define RSN_AUTH_KEY_MGMT_SAE             RSN_SELECTOR(0x00, 0x0f, 0xac, 8)
+#define RSN_AUTH_KEY_MGMT_FT_SAE          RSN_SELECTOR(0x00, 0x0f, 0xac, 9)
 
 /******************************************************
  * *                    Constants
@@ -138,79 +146,85 @@ typedef enum rsi_wlan_state_e {
   RSI_WLAN_STATE_IPV6_CONFIG_DONE,
   RSI_WLAN_STATE_AUTO_CONFIG_GOING_ON,
   RSI_WLAN_STATE_AUTO_CONFIG_DONE,
-  RSI_WLAN_STATE_AUTO_CONFIG_FAILED
+  RSI_WLAN_STATE_AUTO_CONFIG_FAILED,
 } rsi_wlan_state_t;
 
 // enumeration for WLAN command response codes
 typedef enum rsi_wlan_cmd_response_e {
-  RSI_WLAN_RSP_CLEAR                  = 0x00,
-  RSI_WLAN_RSP_BAND                   = 0x11,
-  RSI_WLAN_RSP_INIT                   = 0x12,
-  RSI_WLAN_RSP_SCAN                   = 0x13,
-  RSI_WLAN_RSP_JOIN                   = 0x14,
-  RSI_WLAN_RSP_CONFIG                 = 0XBE,
-  RSI_WLAN_RSP_SET_MAC_ADDRESS        = 0x17,
-  RSI_WLAN_RSP_QUERY_NETWORK_PARAMS   = 0x18,
-  RSI_WLAN_RSP_DISCONNECT             = 0x19,
-  RSI_WLAN_RSP_SET_REGION             = 0x1D,
-  RSI_WLAN_RSP_CFG_SAVE               = 0x20,
-  RSI_WLAN_RSP_AUTO_CONFIG_ENABLE     = 0x21,
-  RSI_WLAN_RSP_GET_CFG                = 0x22,
-  RSI_WLAN_RSP_USER_STORE_CONFIG      = 0x23,
-  RSI_WLAN_RSP_AP_CONFIGURATION       = 0x24,
-  RSI_WLAN_RSP_SET_WEP_KEYS           = 0x25,
-  RSI_WLAN_RSP_PING_PACKET            = 0x29,
-  RSI_WLAN_RSP_TWT_PARAMS             = 0x2F,
-  RSI_WLAN_RSP_P2P_CONNECTION_REQUEST = 0x30,
-  RSI_WLAN_RSP_SET_PROFILE            = 0x31,
-  RSI_WLAN_RSP_GET_PROFILE            = 0x32,
-  RSI_WLAN_RSP_DELETE_PROFILE         = 0x33,
-  RSI_WLAN_RSP_RSSI                   = 0x3A,
-  RSI_WLAN_RSP_IPCONFV4               = 0x41,
-  RSI_WLAN_RSP_SOCKET_CREATE          = 0x42,
-  RSI_WLAN_RSP_SOCKET_CLOSE           = 0x43,
-  RSI_WLAN_RSP_WMM_PARAMS             = 0x45,
-  RSI_WLAN_RSP_EAP_CONFIG             = 0x4C,
-  RSI_WLAN_RSP_FW_VERSION             = 0x49,
-  RSI_WLAN_RSP_MAC_ADDRESS            = 0x4A,
-  RSI_WLAN_RSP_QUERY_GO_PARAMS        = 0x4E,
-  RSI_WLAN_RSP_CONN_ESTABLISH         = 0x61,
-  RSI_WLAN_RSP_REMOTE_TERMINATE       = 0x62,
-  RSI_WLAN_RSP_SOCKET_READ_DATA       = 0x6B,
-  RSI_WLAN_RSP_SOCKET_ACCEPT          = 0x6C,
-  RSI_WLAN_RSP_IPCONFV6               = 0xA1,
-  RSI_WLAN_RSP_HOST_PSK               = 0xA5,
-  RSI_WLAN_RSP_SOCKET_CONFIG          = 0xA7,
-  RSI_WLAN_RSP_IPV4_CHANGE            = 0xAA,
-  RSI_WLAN_RSP_TCP_ACK_INDICATION     = 0xAB,
-  RSI_WLAN_RSP_UART_DATA_ACK          = 0xAC,
-  RSI_WLAN_RSP_SET_MULTICAST_FILTER   = 0x40,
-  RSI_WLAN_RSP_GAIN_TABLE             = 0x47,
-  RSI_WLAN_RSP_SET_CERTIFICATE        = 0x4D,
-  RSI_WLAN_RSP_DNS_QUERY              = 0x44,
-  RSI_WLAN_RSP_DNS_UPDATE             = 0xED,
-  RSI_WLAN_RSP_CONNECTION_STATUS      = 0x48,
-  RSI_WLAN_RSP_CONFIGURE_P2P          = 0x4B,
-  RSI_WLAN_RSP_HTTP_CLIENT_GET        = 0x51,
-  RSI_WLAN_RSP_HTTP_CLIENT_POST       = 0x52,
-  RSI_WLAN_RSP_HTTP_CLIENT_POST_DATA  = 0xEB,
-  RSI_WLAN_RSP_HTTP_CLIENT_PUT        = 0x53,
-  RSI_WLAN_RSP_WFD_DEVICE             = 0x54,
-  RSI_WLAN_RSP_DNS_SERVER_ADD         = 0x55,
-  RSI_WLAN_RSP_WIRELESS_FWUP_OK       = 0x59,
-  RSI_WLAN_RSP_WIRELESS_FWUP_DONE     = 0x5A,
-  RSI_WLAN_RSP_BG_SCAN                = 0x6A,
-  RSI_WLAN_RSP_HT_CAPABILITIES        = 0x6D,
-  RSI_WLAN_RSP_REJOIN_PARAMS          = 0x6F,
-  RSI_WLAN_RSP_WPS_METHOD             = 0x72,
-  RSI_WLAN_RSP_ROAM_PARAMS            = 0x7B,
-  RSI_WLAN_RSP_TX_TEST_MODE           = 0x7C,
-  RSI_WLAN_RSP_WMM_PS                 = 0x97,
-  RSI_WLAN_RSP_FWUP                   = 0x99,
-  RSI_WLAN_RSP_RX_STATS               = 0xA2,
-  RSI_WLAN_RSP_MULTICAST              = 0xB1,
-  RSI_WLAN_RSP_HTTP_ABORT             = 0xB3,
-  RSI_WLAN_RSP_HTTP_CREDENTIALS       = 0xB4,
+  RSI_WLAN_RSP_CLEAR                   = 0x00,
+  RSI_WLAN_RSP_BAND                    = 0x11,
+  RSI_WLAN_RSP_INIT                    = 0x12,
+  RSI_WLAN_RSP_SCAN                    = 0x13,
+  RSI_WLAN_RSP_JOIN                    = 0x14,
+  RSI_WLAN_RSP_CONFIG                  = 0XBE,
+  RSI_WLAN_RSP_SET_MAC_ADDRESS         = 0x17,
+  RSI_WLAN_RSP_QUERY_NETWORK_PARAMS    = 0x18,
+  RSI_WLAN_RSP_DISCONNECT              = 0x19,
+  RSI_WLAN_RSP_AP_STOP                 = 0xAE,
+  RSI_WLAN_RSP_SET_REGION              = 0x1D,
+  RSI_WLAN_RSP_CFG_SAVE                = 0x20,
+  RSI_WLAN_RSP_AUTO_CONFIG_ENABLE      = 0x21,
+  RSI_WLAN_RSP_GET_CFG                 = 0x22,
+  RSI_WLAN_RSP_USER_STORE_CONFIG       = 0x23,
+  RSI_WLAN_RSP_AP_CONFIGURATION        = 0x24,
+  RSI_WLAN_RSP_SET_WEP_KEYS            = 0x25,
+  RSI_WLAN_RSP_PING_PACKET             = 0x29,
+  RSI_WLAN_RSP_TWT_AUTO_CONFIG         = 0x2E,
+  RSI_WLAN_RSP_TWT_PARAMS              = 0x2F,
+  RSI_WLAN_RSP_P2P_CONNECTION_REQUEST  = 0x30,
+  RSI_WLAN_RSP_SET_PROFILE             = 0x31,
+  RSI_WLAN_RSP_GET_PROFILE             = 0x32,
+  RSI_WLAN_RSP_DELETE_PROFILE          = 0x33,
+  RSI_WLAN_RSP_RSSI                    = 0x3A,
+  RSI_WLAN_RSP_BEACON_STOP             = 0x63,
+  RSI_WLAN_RSP_IPCONFV4                = 0x41,
+  RSI_WLAN_RSP_SOCKET_CREATE           = 0x42,
+  RSI_WLAN_RSP_SOCKET_CLOSE            = 0x43,
+  RSI_WLAN_RSP_WMM_PARAMS              = 0x45,
+  RSI_WLAN_RSP_EAP_CONFIG              = 0x4C,
+  RSI_WLAN_RSP_FW_VERSION              = 0x49,
+  RSI_WLAN_RSP_MAC_ADDRESS             = 0x4A,
+  RSI_WLAN_RSP_GET_DEVICE_ID           = 0xBB,
+  RSI_WLAN_RSP_QUERY_GO_PARAMS         = 0x4E,
+  RSI_WLAN_RSP_CONN_ESTABLISH          = 0x61,
+  RSI_WLAN_RSP_REMOTE_TERMINATE        = 0x62,
+  RSI_WLAN_RSP_SOCKET_READ_DATA        = 0x6B,
+  RSI_WLAN_RSP_SOCKET_ACCEPT           = 0x6C,
+  RSI_WLAN_RSP_IPCONFV6                = 0xA1,
+  RSI_WLAN_RSP_HOST_PSK                = 0xA5,
+  RSI_WLAN_RSP_SOCKET_CONFIG           = 0xA7,
+  RSI_WLAN_RSP_IPV4_CHANGE             = 0xAA,
+  RSI_WLAN_RSP_TCP_ACK_INDICATION      = 0xAB,
+  RSI_WLAN_RSP_UART_DATA_ACK           = 0xAC,
+  RSI_WLAN_RSP_SET_MULTICAST_FILTER    = 0x40,
+  RSI_WLAN_RSP_GAIN_TABLE              = 0x47,
+  RSI_WLAN_RSP_SET_CERTIFICATE         = 0x4D,
+  RSI_WLAN_RSP_DNS_QUERY               = 0x44,
+  RSI_WLAN_RSP_DNS_UPDATE              = 0xED,
+  RSI_WLAN_RSP_CONNECTION_STATUS       = 0x48,
+  RSI_WLAN_RSP_CONFIGURE_P2P           = 0x4B,
+  RSI_WLAN_RSP_HTTP_CLIENT_GET         = 0x51,
+  RSI_WLAN_RSP_HTTP_CLIENT_POST        = 0x52,
+  RSI_WLAN_RSP_HTTP_CLIENT_POST_DATA   = 0xEB,
+  RSI_WLAN_RSP_HTTP_CLIENT_PUT         = 0x53,
+  RSI_WLAN_RSP_WFD_DEVICE              = 0x54,
+  RSI_WLAN_RSP_DNS_SERVER_ADD          = 0x55,
+  RSI_WLAN_RSP_NWK_APP_PROTOCOL_CONFIG = 0x58,
+  RSI_WLAN_RSP_WIRELESS_FWUP_OK        = 0x59,
+  RSI_WLAN_RSP_WIRELESS_FWUP_DONE      = 0x5A,
+  RSI_WLAN_RSP_BG_SCAN                 = 0x6A,
+  RSI_WLAN_RSP_HT_CAPABILITIES         = 0x6D,
+  RSI_WLAN_RSP_REJOIN_PARAMS           = 0x6F,
+  RSI_WLAN_RSP_WPS_METHOD              = 0x72,
+  RSI_WLAN_RSP_ROAM_PARAMS             = 0x7B,
+  RSI_WLAN_RSP_TX_TEST_MODE            = 0x7C,
+  RSI_WLAN_RSP_WMM_PS                  = 0x97,
+  RSI_WLAN_RSP_FWUP                    = 0x99,
+  RSI_WLAN_RSP_RX_STATS                = 0xA2,
+  RSI_WLAN_RSP_MULTICAST               = 0xB1,
+  RSI_WLAN_RSP_SET_SNI                 = 0x6E,
+  RSI_WLAN_RSP_HTTP_ABORT              = 0xB3,
+  RSI_WLAN_RSP_HTTP_CREDENTIALS        = 0xB4,
 #ifdef RSI_WAC_MFI_ENABLE
   RSI_WLAN_RSP_ADD_MFI_IE = 0xB5,
 #endif
@@ -260,72 +274,78 @@ typedef enum rsi_wlan_cmd_response_e {
   RSI_WLAN_RSP_UPDATE_TCP_WINDOW     = 0xF5,
   RSI_WLAN_RATE_RSP_STATS            = 0x88,
   RSI_WLAN_RSP_GET_CSI_DATA          = 0xC4,
+  RSI_WLAN_RSP_GET_DPD_DATA          = 0xDC,
   RSI_WLAN_RSP_EXT_STATS             = 0x68
-
 } rsi_wlan_cmd_response_t;
 
 // enumeration for WLAN command request codes
 typedef enum rsi_wlan_cmd_request_e {
-  RSI_WLAN_REQ_BAND                  = 0x11,
-  RSI_WLAN_REQ_INIT                  = 0x12,
-  RSI_WLAN_REQ_SCAN                  = 0x13,
-  RSI_WLAN_REQ_JOIN                  = 0x14,
-  RSI_WLAN_REQ_CONFIG                = 0xBE,
-  RSI_WLAN_REQ_SET_SLEEP_TIMER       = 0x16,
-  RSI_WLAN_REQ_SET_MAC_ADDRESS       = 0x17,
-  RSI_WLAN_REQ_QUERY_NETWORK_PARAMS  = 0x18,
-  RSI_WLAN_REQ_DISCONNECT            = 0x19,
-  RSI_WLAN_REQ_SET_REGION            = 0x1D,
-  RSI_WLAN_REQ_CFG_SAVE              = 0x20,
-  RSI_WLAN_REQ_AUTO_CONFIG_ENABLE    = 0x21,
-  RSI_WLAN_REQ_GET_CFG               = 0x22,
-  RSI_WLAN_REQ_USER_STORE_CONFIG     = 0x23,
-  RSI_WLAN_REQ_AP_CONFIGURATION      = 0x24,
-  RSI_WLAN_REQ_SET_WEP_KEYS          = 0x25,
-  RSI_WLAN_REQ_PING_PACKET           = 0x29,
-  RSI_WLAN_REQ_TWT_PARAMS            = 0x2F,
-  RSI_WLAN_REQ_SET_PROFILE           = 0x31,
-  RSI_WLAN_REQ_GET_PROFILE           = 0x32,
-  RSI_WLAN_REQ_DELETE_PROFILE        = 0x33,
-  RSI_WLAN_REQ_RSSI                  = 0x3A,
-  RSI_WLAN_REQ_IPCONFV4              = 0x41,
-  RSI_WLAN_REQ_SOCKET_CREATE         = 0x42,
-  RSI_WLAN_REQ_SOCKET_CLOSE          = 0x43,
-  RSI_WLAN_REQ_WMM_PARAMS            = 0x45,
-  RSI_WLAN_REQ_EAP_CONFIG            = 0x4C,
-  RSI_WLAN_REQ_FW_VERSION            = 0x49,
-  RSI_WLAN_REQ_MAC_ADDRESS           = 0x4A,
-  RSI_WLAN_REQ_QUERY_GO_PARAMS       = 0x4E,
-  RSI_WLAN_REQ_SOCKET_READ_DATA      = 0x6B,
-  RSI_WLAN_REQ_SOCKET_ACCEPT         = 0x6C,
-  RSI_WLAN_REQ_IPCONFV6              = 0x90,
-  RSI_WLAN_REQ_HOST_PSK              = 0xA5,
-  RSI_WLAN_REQ_SET_MULTICAST_FILTER  = 0x40,
-  RSI_WLAN_REQ_GAIN_TABLE            = 0x47,
-  RSI_WLAN_REQ_SET_CERTIFICATE       = 0x4D,
-  RSI_WLAN_REQ_DNS_QUERY             = 0x44,
-  RSI_WLAN_REQ_DNS_UPDATE            = 0xED,
-  RSI_WLAN_REQ_CONNECTION_STATUS     = 0x48,
-  RSI_WLAN_REQ_CONFIGURE_P2P         = 0x4B,
-  RSI_WLAN_REQ_HTTP_CLIENT_GET       = 0x51,
-  RSI_WLAN_REQ_HTTP_CLIENT_POST      = 0x52,
-  RSI_WLAN_REQ_HTTP_CLIENT_POST_DATA = 0xEB,
-  RSI_WLAN_REQ_HTTP_CLIENT_PUT       = 0x53,
-  RSI_WLAN_REQ_DNS_SERVER_ADD        = 0x55,
-  RSI_WLAN_REQ_WIRELESS_FWUP         = 0x59,
-  RSI_WLAN_REQ_BG_SCAN               = 0x6A,
-  RSI_WLAN_REQ_HT_CAPABILITIES       = 0x6D,
-  RSI_WLAN_REQ_REJOIN_PARAMS         = 0x6F,
-  RSI_WLAN_REQ_WPS_METHOD            = 0x72,
-  RSI_WLAN_REQ_ROAM_PARAMS           = 0x7B,
-  RSI_WLAN_REQ_TX_TEST_MODE          = 0x7C,
-  RSI_WLAN_REQ_WMM_PS                = 0x97,
-  RSI_WLAN_REQ_FWUP                  = 0x99,
-  RSI_WLAN_REQ_RX_STATS              = 0xA2,
-  RSI_WLAN_REQ_SOCKET_CONFIG         = 0xA7,
-  RSI_WLAN_REQ_MULTICAST             = 0xB1,
-  RSI_WLAN_REQ_HTTP_ABORT            = 0xB3,
-  RSI_WLAN_REQ_HTTP_CREDENTIALS      = 0xB4,
+  RSI_WLAN_REQ_BAND                    = 0x11,
+  RSI_WLAN_REQ_INIT                    = 0x12,
+  RSI_WLAN_REQ_SCAN                    = 0x13,
+  RSI_WLAN_REQ_JOIN                    = 0x14,
+  RSI_WLAN_REQ_CONFIG                  = 0xBE,
+  RSI_WLAN_REQ_SET_SLEEP_TIMER         = 0x16,
+  RSI_WLAN_REQ_SET_MAC_ADDRESS         = 0x17,
+  RSI_WLAN_REQ_QUERY_NETWORK_PARAMS    = 0x18,
+  RSI_WLAN_REQ_DISCONNECT              = 0x19,
+  RSI_WLAN_REQ_AP_STOP                 = 0xAE,
+  RSI_WLAN_REQ_SET_REGION              = 0x1D,
+  RSI_WLAN_REQ_CFG_SAVE                = 0x20,
+  RSI_WLAN_REQ_AUTO_CONFIG_ENABLE      = 0x21,
+  RSI_WLAN_REQ_GET_CFG                 = 0x22,
+  RSI_WLAN_REQ_USER_STORE_CONFIG       = 0x23,
+  RSI_WLAN_REQ_AP_CONFIGURATION        = 0x24,
+  RSI_WLAN_REQ_SET_WEP_KEYS            = 0x25,
+  RSI_WLAN_REQ_PING_PACKET             = 0x29,
+  RSI_WLAN_REQ_TWT_AUTO_CONFIG         = 0x2E,
+  RSI_WLAN_REQ_TWT_PARAMS              = 0x2F,
+  RSI_WLAN_REQ_SET_PROFILE             = 0x31,
+  RSI_WLAN_REQ_GET_PROFILE             = 0x32,
+  RSI_WLAN_REQ_DELETE_PROFILE          = 0x33,
+  RSI_WLAN_REQ_RSSI                    = 0x3A,
+  RSI_WLAN_REQ_BEACON_STOP             = 0x63,
+  RSI_WLAN_REQ_IPCONFV4                = 0x41,
+  RSI_WLAN_REQ_SOCKET_CREATE           = 0x42,
+  RSI_WLAN_REQ_SOCKET_CLOSE            = 0x43,
+  RSI_WLAN_REQ_WMM_PARAMS              = 0x45,
+  RSI_WLAN_REQ_GET_DEVICE_ID           = 0xBB,
+  RSI_WLAN_REQ_EAP_CONFIG              = 0x4C,
+  RSI_WLAN_REQ_FW_VERSION              = 0x49,
+  RSI_WLAN_REQ_MAC_ADDRESS             = 0x4A,
+  RSI_WLAN_REQ_QUERY_GO_PARAMS         = 0x4E,
+  RSI_WLAN_REQ_SOCKET_READ_DATA        = 0x6B,
+  RSI_WLAN_REQ_SOCKET_ACCEPT           = 0x6C,
+  RSI_WLAN_REQ_SET_SNI                 = 0x6E,
+  RSI_WLAN_REQ_IPCONFV6                = 0x90,
+  RSI_WLAN_REQ_HOST_PSK                = 0xA5,
+  RSI_WLAN_REQ_SET_MULTICAST_FILTER    = 0x40,
+  RSI_WLAN_REQ_GAIN_TABLE              = 0x47,
+  RSI_WLAN_REQ_SET_CERTIFICATE         = 0x4D,
+  RSI_WLAN_REQ_DNS_QUERY               = 0x44,
+  RSI_WLAN_REQ_DNS_UPDATE              = 0xED,
+  RSI_WLAN_REQ_CONNECTION_STATUS       = 0x48,
+  RSI_WLAN_REQ_CONFIGURE_P2P           = 0x4B,
+  RSI_WLAN_REQ_HTTP_CLIENT_GET         = 0x51,
+  RSI_WLAN_REQ_HTTP_CLIENT_POST        = 0x52,
+  RSI_WLAN_REQ_HTTP_CLIENT_POST_DATA   = 0xEB,
+  RSI_WLAN_REQ_HTTP_CLIENT_PUT         = 0x53,
+  RSI_WLAN_REQ_DNS_SERVER_ADD          = 0x55,
+  RSI_WLAN_REQ_NWK_APP_PROTOCOL_CONFIG = 0x58,
+  RSI_WLAN_REQ_WIRELESS_FWUP           = 0x59,
+  RSI_WLAN_REQ_BG_SCAN                 = 0x6A,
+  RSI_WLAN_REQ_HT_CAPABILITIES         = 0x6D,
+  RSI_WLAN_REQ_REJOIN_PARAMS           = 0x6F,
+  RSI_WLAN_REQ_WPS_METHOD              = 0x72,
+  RSI_WLAN_REQ_ROAM_PARAMS             = 0x7B,
+  RSI_WLAN_REQ_TX_TEST_MODE            = 0x7C,
+  RSI_WLAN_REQ_WMM_PS                  = 0x97,
+  RSI_WLAN_REQ_FWUP                    = 0x99,
+  RSI_WLAN_REQ_RX_STATS                = 0xA2,
+  RSI_WLAN_REQ_SOCKET_CONFIG           = 0xA7,
+  RSI_WLAN_REQ_MULTICAST               = 0xB1,
+  RSI_WLAN_REQ_HTTP_ABORT              = 0xB3,
+  RSI_WLAN_REQ_HTTP_CREDENTIALS        = 0xB4,
 #ifdef RSI_WAC_MFI_ENABLE
   RSI_WLAN_REQ_ADD_MFI_IE = 0xB5,
 #endif
@@ -362,8 +382,11 @@ typedef enum rsi_wlan_cmd_request_e {
   RSI_WLAN_REQ_UPDATE_TCP_WINDOW    = 0xF5,
   RSI_WLAN_REQ_11AX_PARAMS          = 0xFF,
   RSI_WLAN_REQ_GET_CSI_DATA         = 0xC4,
-  RSI_WLAN_REQ_EXT_STATS            = 0x68
-
+  RSI_WLAN_REQ_GET_DPD_DATA         = 0xDC,
+  RSI_WLAN_REQ_EVM_OFFSET           = 0x36,
+  RSI_WLAN_REQ_EVM_WRITE            = 0x37,
+  RSI_WLAN_REQ_EXT_STATS            = 0x68,
+  RSI_WLAN_REQ_SET_NON_PREF_CHAN    = 0x5F
 } rsi_wlan_cmd_request_t;
 
 typedef enum rsi_wlan_opermode_e {
@@ -436,6 +459,27 @@ typedef struct rsi_req_band_s {
   // uint8_t, band value to set
   uint8_t band_value;
 } rsi_req_band_t;
+
+#ifdef CHIP_917
+typedef struct rsi_set_non_pref_chan_info_s {
+  uint8_t channel_num;
+
+  struct {
+    /*
+   * mbo non-preferred channel reason codes:
+   * unspecified      = 0
+   * rssi             = 1
+   * ext_interference = 2
+   * int_interference = 3
+   * */
+    uint8_t reason;
+    uint8_t operating_class;
+    uint8_t channel;
+    uint8_t preference;
+  } __attribute__((__packed__)) mbo_non_pref_chan[RSI_MAX_POSSIBLE_SINGLE_BAND_CHANNEL];
+
+} __attribute__((__packed__)) rsi_set_non_pref_chan_info_t;
+#endif
 
 // Config command request structure
 typedef struct rsi_req_config_s {
@@ -653,6 +697,12 @@ typedef struct rsi_req_join_s {
 
 } rsi_req_join_t;
 
+//! beacon stop command request structure
+typedef struct rsi_req_beacon_stop_s {
+  //! beacon stop value
+  uint8_t beacon_stop;
+} rsi_req_beacon_stop_t;
+
 // structure for ping request command
 typedef struct rsi_req_ping_s {
   // ip version
@@ -766,6 +816,10 @@ typedef struct rsi_req_ipv6_parmas_s {
 
   // address of gateway
   uint8_t gateway6[16];
+
+  // vap id, 0 - station and 1 - AP
+  uint8_t vap_id;
+
 } rsi_req_ipv6_parmas_t;
 
 // disassociate command request structure
@@ -919,7 +973,7 @@ typedef struct rsi_req_tx_test_info_s {
 
   // uint8_t, tx test mode delay
   uint8_t delay[4];
-#ifdef CHIP_9117
+#ifdef CHIP_917
   uint8_t enable_11ax;
   uint8_t coding_type;
   uint8_t nominal_pe;
@@ -1148,14 +1202,14 @@ typedef struct rsi_req_socket_s {
   uint8_t max_count[2];
 
   // type of service
-#ifdef CHIP_9117
+#ifdef CHIP_917
   uint8_t tos[2];
 #else
   uint8_t tos[4];
 #endif
 
   // ssl version select bit map
-#ifdef CHIP_9117
+#ifdef CHIP_917
   uint32_t ssl_bitmap;
 #else
   uint8_t ssl_bitmap;
@@ -1192,7 +1246,7 @@ typedef struct rsi_req_socket_s {
   uint32_t ssl_ciphers_bitmap;
 
   //ssl extended ciphers bitmap
-#ifdef CHIP_9117
+#ifdef CHIP_917
   uint32_t ssl_ext_ciphers_bitmap;
 
   //! max retransmission timeout value
@@ -1207,7 +1261,7 @@ typedef struct rsi_req_socket_s {
   uint16_t no_of_tls_extensions;
   uint16_t total_extension_length;
   uint8_t tls_extension_data[MAX_SIZE_OF_EXTENSION_DATA];
-#ifdef CHIP_9117
+#ifdef CHIP_917
   uint16_t recv_buff_len;
 #endif
 
@@ -1743,6 +1797,7 @@ typedef struct rsi_gain_table_info_s {
 typedef struct rsi_ram_dump_s {
   uint32_t addr;
   uint32_t length;
+  uint32_t uartSel;
 } rsi_ram_dump_t;
 // switch protocol structure
 typedef struct rsi_switch_proto_s {
@@ -1752,6 +1807,7 @@ typedef struct rsi_switch_proto_s {
 typedef struct rsi_freq_offset_s {
   int32_t freq_offset_in_khz;
 } rsi_freq_offset_t;
+
 typedef struct rsi_calib_write_s {
 #define BURN_INTO_EFUSE 0
 #define BURN_INTO_FLASH 1
@@ -1767,9 +1823,24 @@ typedef struct rsi_calib_write_s {
 #define SELECT_GAIN_OFFSETS_1P8V BIT(7)
   uint32_t flags;
   int8_t gain_offset[3];
-  int8_t xo_ctune;
+  uint8_t xo_ctune;
 } rsi_calib_write_t;
 
+typedef struct rsi_evm_offset_s {
+  int8_t evm_offset_val;
+  uint8_t evm_index;
+} rsi_evm_offset_t;
+
+typedef struct rsi_evm_write_s {
+  uint8_t target;
+  uint8_t reserved[3];
+  uint32_t flags;
+  int8_t evm_offset_11B;
+  int8_t evm_offset_11G_6M_24M_11N_MCS0_MCS2;
+  int8_t evm_offset_11G_36M_54M_11N_MCS3_MCS7;
+  int8_t evm_offset_11N_MCS0;
+  int8_t evm_offset_11N_MCS7;
+} rsi_evm_write_t;
 // csi config structure
 typedef struct rsi_csi_config_s {
   // enable/disable CSI data retrieval

@@ -104,7 +104,7 @@ void sl_ble_init()
     }
     // Set the two least significant bits as the first 2 bits of the address has to be '11' to ensure the address is a random
     // non-resolvable private address
-    randomAddrBLE[5] |= 0xC0;
+    randomAddrBLE[(RSI_BLE_ADDR_LENGTH - 1)] |= 0xC0;
 #else
     uint64_t randomAddr = chip::Crypto::GetRandU64();
     memcpy(randomAddrBLE, &randomAddr, RSI_BLE_ADDR_LENGTH);
@@ -267,8 +267,8 @@ CHIP_ERROR BLEManagerImpl::_Init()
     sl_rs_ble_init_sem = osSemaphoreNew(1, 0, NULL);
     sl_ble_event_sem   = osSemaphoreNew(1, 0, NULL);
 
-    wfx_rsi.ble_task = xTaskCreateStatic((TaskFunction_t) sl_ble_event_handling_task, "rsi_ble", WFX_RSI_TASK_SZ, NULL, 1,
-                                         wfxBLETaskStack, &rsiBLETaskStruct);
+    wfx_rsi.ble_task = xTaskCreateStatic((TaskFunction_t) sl_ble_event_handling_task, "rsi_ble", WFX_RSI_TASK_SZ, NULL,
+                                         BLE_DRIVER_TASK_PRIORITY, wfxBLETaskStack, &rsiBLETaskStruct);
 
     if (wfx_rsi.ble_task == NULL)
     {
@@ -433,7 +433,6 @@ void BLEManagerImpl::_OnPlatformEvent(const ChipDeviceEvent * event)
 
     case DeviceEventType::kCHIPoBLEIndicateConfirm: {
         ChipLogProgress(DeviceLayer, "_OnPlatformEvent kCHIPoBLEIndicateConfirm");
-        DeviceLayer::SystemLayer().CancelTimer(OnSendIndicationTimeout, this);
         HandleIndicationConfirmation(event->CHIPoBLEIndicateConfirm.ConId, &CHIP_BLE_SVC_ID, &ChipUUID_CHIPoBLEChar_TX);
     }
     break;
@@ -952,6 +951,10 @@ exit:
 
 void BLEManagerImpl::HandleTxConfirmationEvent(BLE_CONNECTION_OBJECT conId)
 {
+    DeviceLayer::PlatformMgr().LockChipStack();
+    // stop the indication confirmation timer
+    DeviceLayer::SystemLayer().CancelTimer(OnSendIndicationTimeout, this);
+    DeviceLayer::PlatformMgr().UnlockChipStack();
     ChipDeviceEvent event;
     event.Type                          = DeviceEventType::kCHIPoBLEIndicateConfirm;
     event.CHIPoBLEIndicateConfirm.ConId = conId;

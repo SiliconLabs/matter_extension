@@ -111,6 +111,14 @@
  * *                      Macros
  * ******************************************************/
 
+#if MEM_CONFIG_917 == 1
+#define MEMORY_CONFIG RAM_LEVEL_NWP_ADV_MCU_BASIC
+#elif MEM_CONFIG_917 == 2
+#define MEMORY_CONFIG RAM_LEVEL_NWP_MEDIUM_MCU_MEDIUM
+#elif MEM_CONFIG_917 == 3
+#define MEMORY_CONFIG RAM_LEVEL_NWP_BASIC_MCU_ADV
+#endif
+
 // string functions
 #define rsi_strcpy(x, y)         strcpy((char *)x, (const char *)y)
 #define rsi_strcat(x, y)         strcat((char *)x, (const char *)y)
@@ -182,6 +190,14 @@ typedef struct rsi_driver_cb_s {
 
   // driver common control block TX queue
   rsi_queue_cb_t common_tx_q;
+
+#ifdef SIDE_BAND_CRYPTO
+  // driver common control block structure pointer
+  rsi_crypto_cb_t *crypto_cb;
+
+  // driver common control block TX queue
+  rsi_queue_cb_t crypto_tx_q;
+#endif
 
   // driver WLAN  control block structure pointer
   rsi_wlan_cb_t *wlan_cb;

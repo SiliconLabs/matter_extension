@@ -167,8 +167,11 @@ include:
 - path: slc/inc
   file_list:
   - path: lwip/lwip_buildconfig.h
+- path: slc/inc/wifi
+  file_list:
   - path: brd4186c.h
   - path: brd4187c.h
+  - path: sl_custom_board.h
 source:
 - path: src/lwip/freertos/sys_arch.c
 - path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/api/tcpip.c
@@ -221,15 +224,5 @@ define:
   value: <sys/errno.h>
 - name: LWIP_NETIF_API
   value: 1
-- name: LWIP_IPV4
-  value: 1
 - name: LWIP_IPV6
-  value: 1
-- name: LWIP_ARP
-  value: 1
-- name: LWIP_ICMP
-  value: 1
-- name: LWIP_IGMP
-  value: 1
-- name: LWIP_DHCP
   value: 1

@@ -59,7 +59,6 @@
 #include <lib/support/logging/CHIPLogging.h>
 
 #include <string.h>
-
 namespace chip {
 namespace Crypto {
 
@@ -451,6 +450,7 @@ static mbedtls_ctr_drbg_context * get_drbg_context()
 
 CHIP_ERROR add_entropy_source(entropy_source fn_source, void * p_source, size_t threshold)
 {
+    // TODO: Move the HW TRNG once SI91X-16666 is fixed
     VerifyOrReturnError(fn_source != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
 
     EntropyContext * const entropy_ctxt = get_entropy_context();
@@ -472,7 +472,6 @@ CHIP_ERROR DRBG_get_bytes(uint8_t * out_buffer, const size_t out_length)
 
     const int result = mbedtls_ctr_drbg_random(drbg_ctxt, Uint8::to_uchar(out_buffer), out_length);
     VerifyOrReturnError(result == 0, CHIP_ERROR_INTERNAL);
-
     return CHIP_NO_ERROR;
 }
 

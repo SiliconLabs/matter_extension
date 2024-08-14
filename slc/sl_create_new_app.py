@@ -9,7 +9,7 @@ from pathlib import Path
 class createApp:
     """Class used to create new app from given arguments and slc"""
     def __init__(self):
-        self.EXAMPLE_USAGE = "python slc/sl_create_new_app.py <NewAppName> <PathToReferenceSlcpFile> <SilabsBoard>"
+        self.EXAMPLE_USAGE = "python slc/sl_create_new_app.py <NewAppName> <PathToReferenceProjectFile(.slcp or .slcw)> <SilabsBoard>"
         self.SoC_boards = ["brd4338a"]
         self.get_environment()
 
@@ -23,17 +23,17 @@ class createApp:
             self.print_usage_and_exit()
 
         self.new_app_name = sys.argv[1]
-        self.reference_slcp_file = sys.argv[2]
+        self.reference_project_file = sys.argv[2]
         self.silabs_board = sys.argv[3]
 
         #check if app is siwx917 wifi app
-        self.wifi917 = True if "917" in self.reference_slcp_file else False
-        if not os.path.exists(self.reference_slcp_file):
-            print("ReferenceSlcp File does not exist:", self.reference_slcp_file)
+        self.wifi917 = True if "917" in self.reference_project_file else False
+        if not os.path.exists(self.reference_project_file):
+            print("ReferenceProject File does not exist:", self.reference_project_file)
             sys.exit(1)
 
-        if not self.reference_slcp_file.endswith('.slcp'):
-            print("ReferenceSlcp File should have a .slcp extension")
+        if not self.reference_project_file.endswith('.slcp') and not self.reference_project_file.endswith('.slcw'):
+            print("ReferenceSlcp File should have a .slcp or .slcw extension")
             sys.exit(1)
 
         if not self.silabs_board:
@@ -42,7 +42,7 @@ class createApp:
         
         if self.silabs_board in self.SoC_boards:
             if not os.path.isdir(self.wiseconnect_root):
-                print(f"\nThe Wifi Extension required to build the {self.reference_slcp_file} does not exist at location:{self.wiseconnect_root}")
+                print(f"\nThe Wifi Extension required to build the {self.reference_project_file} does not exist at location:{self.wiseconnect_root}")
                 sys.exit(1)
 
     def get_environment(self):
@@ -119,12 +119,13 @@ Do you want to trust above SDKs/Extensions (yes / no) ? : "
 
 
     def generate(self):
+        #use appropriate build flag for sample-app/workspaces
+        project_flag = "-p" if self.reference_project_file.endswith('.slcp') else "-w"
         #check for soc boards
-        
         config_args=";wiseconnect3_sdk"  if self.silabs_board in self.SoC_boards else ""
         #run slc generate to create copy of sample app at the 'new_app_name' location
         try:
-            cmd = [self.slc_path, "--java-location", self.java_path, "generate", "-d", self.new_app_name, "-p", self.reference_slcp_file, "--with", self.silabs_board+config_args, "--new-project", "--force"]
+            cmd = [self.slc_path, "--java-location", self.java_path, "generate", "-d", self.new_app_name,project_flag, self.reference_project_file, "--with", self.silabs_board+config_args, "--new-project", "--force"]
             subprocess.run(cmd, check=True)
         except subprocess.CalledProcessError:
             print("Error running 'slc generate'")

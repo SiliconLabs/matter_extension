@@ -28,13 +28,13 @@ class Argument(Parameter):
             else:
                 value = "{}".format(self.value)
         elif Formats.HEX == self.format:
-            value = '0x' + bytearray(self.value).hex()
+            value = '0x' + bytes(self.value).hex()
         elif Formats.PATH == self.format:
             value = "{}".format(self.value)
         elif Formats.STRING == self.format:
             if isinstance(self.value, str):
                 value = "\"{}\"".format(self.value)
-            elif(isinstance(self.value, bytearray)):
+            elif(isinstance(self.value, bytes)):
                 try:
                     value = "{}".format(self.value.decode())
                 except:

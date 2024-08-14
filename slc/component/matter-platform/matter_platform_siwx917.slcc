@@ -18,7 +18,6 @@ requires:
   - name: sl_system
   - name: matter_siwx917
   - name: matter_siwx917_common
-  - name: sl_si91x_trng
   - name: siwx917_soc_custom_startup
   - name: device_init_nvic
   - name: si91x_debug

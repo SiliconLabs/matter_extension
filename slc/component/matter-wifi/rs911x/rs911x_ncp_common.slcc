@@ -36,5 +36,9 @@ include:
 define:
 - name: RSI_BLE_ENABLE
   value: 1
+- name: RSI_BLE_MAX_NBR_PERIPHERALS
+  value: 1
+- name: RSI_BLE_MAX_NBR_CENTRALS
+  value: 1
 - name: SLI_SI91X_ENABLE_BLE
   value: 1

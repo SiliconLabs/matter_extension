@@ -17,15 +17,21 @@
 // <SL_MATTER_LOG_DETAIL=> Detailed log (debug)
 // <SL_MATTER_LOG_AUTOMATION=> Automation
 // <i> Default: SL_MATTER_LOG_DETAIL
+#ifndef SL_MATTER_LOG_LEVEL
 #define SL_MATTER_LOG_LEVEL SL_MATTER_LOG_DETAIL
+#endif
 
 // <q SILABS_LOG_ENABLED> Enable Silabs specific log used in matter
 // <i> Default: 1
+#ifndef SILABS_LOG_ENABLED
 #define SILABS_LOG_ENABLED 1
+#endif
 
 // <q HARD_FAULT_LOG_ENABLE> Enable hard fault logging
 // <i> Default: 1
+#ifndef HARD_FAULT_LOG_ENABLE
 #define HARD_FAULT_LOG_ENABLE 1
+#endif
 
 // <o CHIP_DEVICE_CONFIG_DEVICE_SOFTWARE_VERSION> Device software version
 // <i> Default: 1
@@ -40,7 +46,9 @@
 
 // <q SL_MATTER_CLI_ARG_PARSER> Enable CLI Argument Parser
 // <i> Default: 1
+#ifndef SL_MATTER_CLI_ARG_PARSER
 #define SL_MATTER_CLI_ARG_PARSER 1
+#endif
 
 // <o CHIP_DEVICE_CONFIG_MAX_DISCOVERED_IP_ADDRESSES> Define the default number of ip addresses to discover
 // <i> Default: 5
