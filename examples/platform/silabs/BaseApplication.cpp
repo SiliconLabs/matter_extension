@@ -205,6 +205,14 @@ void BaseApplicationDelegate::OnCommissioningWindowClosed()
         // After the device is provisioned and the commissioning passed
         // resetting the isCommissioningStarted to false
         isComissioningStarted = false;
+#ifdef DISPLAY_ENABLED
+#ifdef QR_CODE_ENABLED
+        SilabsLCD::Screen_e screen;
+        slLCD.GetScreen(screen);
+        VerifyOrReturn(screen == SilabsLCD::Screen_e::QRCodeScreen);
+        slLCD.SetScreen(SilabsLCD::Screen_e::DemoScreen);
+#endif // QR_CODE_ENABLED
+#endif // DISPLAY_ENABLED
     }
 }
 
@@ -886,7 +894,7 @@ void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
 #endif /* SLI_SI917 */
                 if (err != SL_STATUS_OK)
                 {
-                    ChipLogError(AppServer, "wfx_power_save failed: 0x%x", err);
+                    ChipLogError(AppServer, "wfx_power_save failed: 0x%lx", err);
                 }
             }
 #endif /* CHIP_CONFIG_ENABLE_ICD_SERVER && RS911X_WIFI */
@@ -912,7 +920,7 @@ void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
 #endif /* SLI_SI917 */
         if (err != SL_STATUS_OK)
         {
-            ChipLogError(AppServer, "wfx_power_save failed: 0x%x", err);
+            ChipLogError(AppServer, "wfx_power_save failed: 0x%lx", err);
         }
 #endif /* CHIP_CONFIG_ENABLE_ICD_SERVER && RS911X_WIFI */
     }

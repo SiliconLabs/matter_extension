@@ -235,7 +235,7 @@ class SetupCommand(Command):
         # Hardware
         self.part_number = args.str(ID.kPartNumber)
         self.hw_version = args.int(ID.kHwVersion)
-        self.hw_version_str = args.str(ID.kHwVersion)
+        self.hw_version_str = args.str(ID.kHwVersionStr)
         self.manufacturing_date = args.str(ID.kHwVersion)
         # Commissioning
         self.unique_id = args.value(ID.kUniqueId)

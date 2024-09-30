@@ -65,18 +65,17 @@ bool emberAfPerformanceTestingClusterEmptyCommandCallback(chip::app::CommandHand
     if (commandData.payload.HasValue())
     {
         auto payload = commandData.payload;
-        ChipLogDetail(NotSpecified, "  Performance Test Payload: buf %p size %u buf[0] 0x%x buf[1] 0x%x buf[2] 0x%x buf[3] 0x%x",
-                      (payload.Value().data()),
-                      static_cast<unsigned int>(payload.Value().size()),
-                      payload.Value()[0],
-                      payload.Value()[1],
-                      payload.Value()[2],
-                      payload.Value()[3]);
 
         if((payload.Value().size()) >= 4) {
-            uint32_t sequence = ((payload.Value()[0])<<24)|((payload.Value()[1])<<16)|((payload.Value()[2])<<8)|((payload.Value()[3])<<0);
-            // Print message on debug backchannel. sl_debug_binary_format() prints in the big-endian format,
-            // the sender already set the right byte order
+            uint32_t sequence = ((payload.Value()[0])<<0)|((payload.Value()[1])<<8)|((payload.Value()[2])<<16)|((payload.Value()[3])<<24);
+            ChipLogDetail(NotSpecified, "  Performance Test Payload: buf %p size %u sequence number: %lu",
+                      (payload.Value().data()),
+                      static_cast<unsigned int>(payload.Value().size()),
+                      sequence);
+
+            // Print message on debug backchannel. sl_debug_binary_format() prints in the big-endian format
+            sequence = ((payload.Value()[0])<<24)|((payload.Value()[1])<<16)|((payload.Value()[2])<<8)|((payload.Value()[3])<<0);
+
             sl_debug_binary_format(EM_DEBUG_LATENCY, "BBD",
                            1,   // frame control: Latency Stop
                            4,   // length of sequence number
@@ -244,8 +243,8 @@ void MatterPerfTest::PingPerfTest(intptr_t param)
          return;
     }
 
-    ChipLogProgress(NotSpecified, "Executing ping performance test, pingCountTotal: %d fabricId: %ld, nodeId: 0x%lx timeoutMs: %ld",
-                    data->count, (uint32_t)data->fabricIndex,  (uint32_t)data->nodeId, data->timeoutMs );
+    ChipLogProgress(NotSpecified, "Executing ping performance test, pingCountTotal: %d fabricId: %ld, nodeId: 0x%lx length: %u timeoutMs: %ld",
+                    data->count, (uint32_t)data->fabricIndex, (uint32_t)data->nodeId, data->length, data->timeoutMs );
 
     nodeId = data->nodeId;
     fabricIndex = data->fabricIndex;
@@ -268,8 +267,8 @@ void MatterPerfTest::MxPerfTest(intptr_t  params)
 {
     PerfTestCommandData * data = reinterpret_cast<PerfTestCommandData *>(params);
 
-    ChipLogProgress(NotSpecified, "Executing mcast performance test, fabricId: %ld, groupId 0x%lx seqNum 0x%lx",
-                 (uint32_t)data->fabricIndex,  (uint32_t)data->groupId, data->seqNum);
+    ChipLogProgress(NotSpecified, "Executing mcast performance test, fabricId: %ld, groupId 0x%lx length %u seqNum %lu",
+                    (uint32_t)data->fabricIndex,  (uint32_t)data->groupId, data->length,  data->seqNum);
 
     // Print message on debug backchannel, sl_debug_binary_format() prints in the big-endian format so flip the bytes
     uint32_t sequence =  ((data->seqNum & 0xff000000UL)>>24) | ((data->seqNum & 0x00ff0000UL)>>8) |
@@ -293,7 +292,7 @@ void MatterPerfTest::MxPerfTest(intptr_t  params)
     }
 
     Clusters::PerformanceTesting::Commands::EmptyCommand::Type EmptyCommand;
-    EmptyCommand.payload =  chip::MakeOptional(chip::Span<const uint8_t>(buf, MAX(4, length)));
+    EmptyCommand.payload =  chip::MakeOptional(chip::Span<const uint8_t>(buf, MAX(4, data->length)));
 
     Controller::InvokeGroupCommandRequest(&exchangeMgr, data->fabricIndex, data->groupId, EmptyCommand);
 

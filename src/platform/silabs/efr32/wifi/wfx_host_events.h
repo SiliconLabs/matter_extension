@@ -151,11 +151,11 @@ typedef struct __attribute__((__packed__)) sl_wfx_mib_req_s
 // MAX PASSKEY LENGTH including NULL character
 #define WFX_MAX_PASSKEY_LENGTH (64)
 
-// WLAN retry time intervals in milli seconds
-#define WLAN_MAX_RETRY_TIMER_MS 60000
-#define WLAN_MIN_RETRY_TIMER_MS 1000
-#define WLAN_RETRY_TIMER_MS 5000
-#define CONVERT_MS_TO_SEC(TimeInMS) (TimeInMS / 1000)
+// WLAN retry time intervals in seconds
+#define WLAN_MAX_RETRY_TIMER_S 60
+#define WLAN_MIN_RETRY_TIMER_S 1
+#define WLAN_RETRY_TIMER_S 5
+#define CONVERT_S_TO_MS(TimeInS) (TimeInS * 1000)
 
 // WLAN MAX retry
 #define MAX_JOIN_RETRIES_COUNT 5

@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.3.1"
+    version: "2.3.2"
   - id: wiseconnect3_sdk
-    version: "3.3.1"
+    version: "3.3.3"
 
 component:
   - id: matter_wstk_leds
@@ -87,9 +87,7 @@ component:
     from: matter
   - id: matter_fw_upgrade_917
     from: matter
-  - id: matter_lcd_917SOC
-    from: matter
-  - id: matter_qr_code
+  - id: matter_default_lcd_config
     from: matter
 
   - id: sl_si91x_common_flash_nvm3

@@ -11,8 +11,6 @@ requires:
    - name: uartdrv_eusart
      condition:
      - matter_platform_efr32
-   - name: sl_ulp_uart
-     condition: [matter_platform_siwx917]
 provides:
   - name: matter_uart
 source:

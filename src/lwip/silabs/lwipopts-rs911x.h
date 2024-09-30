@@ -70,17 +70,6 @@
 
 #define LWIP_SOCKET 0
 
-#ifdef DIC_ENABLE
-#define LWIP_DNS 1
-#define DNS_RAND_TXID() ((u32_t) rand())
-#define TCP_MSS (4 * 1152)
-#define TCPIP_THREAD_PRIO (3)
-#else
-#define LWIP_DNS 0
-#define TCP_MSS (1152)
-#define TCPIP_THREAD_PRIO (2)
-#endif /* DIC_ENABLE */
-
 #define LWIP_FREERTOS_USE_STATIC_TCPIP_TASK 1
 
 #define LWIP_RAW 1
@@ -97,15 +86,22 @@
 
 #if CHIP_DEVICE_CONFIG_ENABLE_IPV4
 #define LWIP_IPV4   1
+#define DNS_RAND_TXID() ((u32_t) rand())
+#ifdef DIC_ENABLE
+#define TCP_MSS (4 * 1152)
+#define TCPIP_THREAD_PRIO (3)
+#endif // DIC_ENABLE
 #else
 #define LWIP_IPV4   0
+#define TCP_MSS (1152)
+#define TCPIP_THREAD_PRIO (2)
 #endif // CHIP_DEVICE_CONFIG_ENABLE_IPV4
 
 #ifndef LWIP_ARP
 #define LWIP_ARP (LWIP_IPV4)
 #endif /* LWIP_ARP */
 #ifndef LWIP_DNS
-#define LWIP_DNS (LWIP_IPV4)
+#define LWIP_DNS (CHIP_DEVICE_CONFIG_ENABLE_IPV4)
 #endif /* LWIP_DNS */
 #ifndef LWIP_ICMP
 #define LWIP_ICMP (LWIP_IPV4)

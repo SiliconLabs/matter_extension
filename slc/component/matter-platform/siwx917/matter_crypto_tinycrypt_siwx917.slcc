@@ -83,6 +83,7 @@ include:
       - path: tinycrypt/ecc.h
       - path: tinycrypt/ecc_dh.h
       - path: tinycrypt/ecc_dsa.h
+      - path: mbedtls/build_info.h
       - path: mbedtls/check_config.h
       - path: mbedtls/oid.h
       - path: mbedtls/platform.h

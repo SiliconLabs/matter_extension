@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.3.1"
+    version: "2.3.2"
 
 component:
   - id: device_init
@@ -149,6 +149,7 @@ define:
     value: "40960"
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
     value: "4092"
+
 configuration:
   - name: SL_OPENTHREAD_ENABLE_APP_TASK
     value: 0
@@ -181,10 +182,16 @@ configuration:
   - {name: SL_OT_ACTIVE_INTERVAL, value: '500'}
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: 16
-    
-
+   
   - {name: CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED, value: '1'}
   - {name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION, value: '0'}
+
+  - name: SL_BT_RTOS_LINK_LAYER_TASK_STACK_SIZE
+    value: 1024
+  - name: SL_BT_RTOS_HOST_STACK_TASK_STACK_SIZE
+    value: 2048
+  - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+    value: 1536
 
 toolchain_settings:
   - option: cxx_standard

@@ -23,6 +23,7 @@
 
 #include <app/icd/server/ICDServerConfig.h>
 
+#include <lib/support/CodeUtils.h>
 #if SILABS_LOG_ENABLED
 #include "silabs_utils.h"
 #endif
@@ -38,8 +39,16 @@ extern "C" {
 #include "sl_event_handler.h"
 #include "sl_si91x_button.h"
 #include "sl_si91x_button_pin_config.h"
+
+#ifndef SI917_DEVKIT
 #include "sl_si91x_led.h"
 #include "sl_si91x_led_config.h"
+#include "sl_si91x_led_instances.h"
+#else
+#include "sl_si91x_rgb_led.h"
+#include "sl_si91x_rgb_led_config.h"
+#include "sl_si91x_rgb_led_instances.h"
+#endif
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER == 0
 void soc_pll_config(void);
@@ -54,17 +63,23 @@ void soc_pll_config(void);
 #include "SEGGER_SYSVIEW.h"
 #endif
 
+// TODO Remove this when SI91X-16606 is addressed
+#ifdef SI917_DEVKIT
+#define SL_LED_COUNT SL_SI91X_RGB_LED_COUNT
+#else
+#define SL_LED_COUNT SL_SI91x_LED_COUNT
+#endif
+
 namespace chip {
 namespace DeviceLayer {
 namespace Silabs {
 
-
 namespace {
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
-    bool btn0_pressed = false;
-#endif  //CHIP_CONFIG_ENABLE_ICD_SERVER
-    uint8_t sButtonStates[SL_SI91x_BUTTON_COUNT] = { 0 };
-}
+bool btn0_pressed = false;
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
+uint8_t sButtonStates[SL_SI91x_BUTTON_COUNT] = { 0 };
+} // namespace
 
 SilabsPlatform SilabsPlatform::sSilabsPlatformAbstractionManager;
 SilabsPlatform::SilabsButtonCb SilabsPlatform::mButtonCallback = nullptr;
@@ -103,25 +118,30 @@ void SilabsPlatform::InitLed(void)
     RSI_Board_Init();
     SilabsPlatformAbstractionBase::InitLed();
 }
-
 CHIP_ERROR SilabsPlatform::SetLed(bool state, uint8_t led)
 {
-    // TODO add range check
+    VerifyOrReturnError(led < SL_LED_COUNT, CHIP_ERROR_INVALID_ARGUMENT);
+#ifndef SI917_DEVKIT
     (state) ? sl_si91x_led_set(led ? SL_LED_LED1_PIN : SL_LED_LED0_PIN)
             : sl_si91x_led_clear(led ? SL_LED_LED1_PIN : SL_LED_LED0_PIN);
+#else
+    (state) ? sl_si91x_simple_rgb_led_on(&led_led0) : sl_si91x_simple_rgb_led_off(&led_led0);
+#endif
     return CHIP_NO_ERROR;
 }
-
 bool SilabsPlatform::GetLedState(uint8_t led)
 {
     // TODO
     return SilabsPlatformAbstractionBase::GetLedState(led);
 }
-
 CHIP_ERROR SilabsPlatform::ToggleLed(uint8_t led)
 {
-    // TODO add range check
+    VerifyOrReturnError(led < SL_LED_COUNT, CHIP_ERROR_INVALID_ARGUMENT);
+#ifndef SI917_DEVKIT
     sl_si91x_led_toggle(led ? SL_LED_LED1_PIN : SL_LED_LED0_PIN);
+#else
+    sl_si91x_simple_rgb_led_toggle(&led_led0);
+#endif
     return CHIP_NO_ERROR;
 }
 #endif // ENABLE_WSTK_LEDS
@@ -160,7 +180,7 @@ void sl_button_on_change(uint8_t btn, uint8_t btnAction)
         return;
     }
 
-    if(btn < SL_SI91x_BUTTON_COUNT)
+    if (btn < SL_SI91x_BUTTON_COUNT)
     {
         sButtonStates[btn] = btnAction;
     }

@@ -9,13 +9,13 @@ metadata:
     license: Zlib
 
 include:
-- path: third_party/silabs/matter_support/matter/si91x/siwx917/BRD4338A/support/inc
+- path: third_party/silabs/matter_support/matter/si91x/support/inc
   file_list:
   - path: system_si917.h
 
 source:
-- path: third_party/silabs/matter_support/matter/si91x/siwx917/BRD4338A/support/hal/rsi_hal_mcu_m4.c
-- path: third_party/silabs/matter_support/matter/si91x/siwx917/BRD4338A/support/src/startup_common_RS1xxxx.c
+- path: third_party/silabs/matter_support/matter/si91x/support/hal/rsi_hal_mcu_m4.c
+- path: third_party/silabs/matter_support/matter/si91x/support/src/startup_common_RS1xxxx.c
 
 provides:
   - name: siwx917_soc_custom_startup

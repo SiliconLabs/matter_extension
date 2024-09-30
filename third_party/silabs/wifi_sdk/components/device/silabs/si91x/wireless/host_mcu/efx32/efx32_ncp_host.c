@@ -36,14 +36,14 @@
 #define LDMA_MAX_TRANSFER_LENGTH     4096
 #define LDMA_DESCRIPTOR_ARRAY_LENGTH (LDMA_MAX_TRANSFER_LENGTH / 2048)
 
+#ifndef SL_SI91X_NCP_UART_BAUDRATE
 // ToDo: This Macro is depricated and should be removed in upcoming releases.
 //       Keeping this macro functionality intact due to backward compatability.
 #if SL_SI91X_UART_HIGH_SPEED_ENABLE == 1
 #define SL_SI91X_NCP_UART_BAUDRATE 921600
-#endif
-
-#ifndef SL_SI91X_NCP_UART_BAUDRATE
+#else
 #define SL_SI91X_NCP_UART_BAUDRATE 115200
+#endif
 #endif
 
 #ifndef SL_NCP_UART_INTERFACE

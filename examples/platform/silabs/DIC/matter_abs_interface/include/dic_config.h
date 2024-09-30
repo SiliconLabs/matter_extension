@@ -3,7 +3,7 @@
  * @brief Matter abstraction layer for Direct Internet Connectivity.
  *******************************************************************************
  * # License
- * <b>Copyright 2020 Silicon Laboratories Inc.
+ * <b>Copyright 2023 Silicon Laboratories Inc.
  *www.silabs.com</b>
  *******************************************************************************
  *
@@ -21,31 +21,41 @@
 #ifndef __DIC_CONFIG_H
 #define __DIC_CONFIG_H
 
-/*certificates*/
-#define USE_AWS 1
-#define USE_MOSQUITTO 0
+/* Instance configuration */
 
-/* Task Configuration*/
+#ifndef SL_DIC_NVM_EMBED_CERT
+#define SL_DIC_NVM_EMBED_CERT (0)
+#endif
+
+/* Task Configuration */
 #define DIC_TASK_NAME "DIC"
-#define DIC_TASK_STACK_SIZE (2*1024)  //2k
-#define DIC_TASK_PRIORITY 5
+#define DIC_TASK_STACK_SIZE (2 * 1024) // 2k
+#define DIC_TASK_PRIORITY (5)
 
-/* Network Configuration*/
-#define DIC_SERVER_PORT	8883
+/* Network Configuration */
+#define DIC_SERVER_HOST ""
+#define DIC_SERVER_PORT (8883)
 
-#define DIC_KEEP_ALIVE 0
+#define DIC_KEEP_ALIVE (0)
 
-#if USE_AWS
-#define DIC_CLIENT_ID "SQA_DIC_C2"
+/* MQTT Client Configuration */
+#define DIC_CLIENT_ID "sl_dic_client"
 #define DIC_CLIENT_USER NULL
 #define DIC_CLIENT_PASS NULL
 
-#elif USE_MOSQUITTO
+#define MQTT_QOS_0 (0)
+#define MQTT_SUBSCRIBE_TOPIC "command"
 
-#define DIC_CLIENT_USER ""
-#define DIC_CLIENT_PASS ""
+/* MQTT Client Certification Configuration */
+#define DIC_CA_CERT_LENGTH (1212)
+#define DIC_DEV_CERT_LENGTH (1212)
+#define DIC_DEV_KEY_LENGTH (1212)
+#define DIC_HOSTNAME_LENGTH (55)
+#define DIC_CLIENTID_LENGTH (30)
 
-
-#endif //USE_MOSQUITTO
+#ifdef ENABLE_AWS_OTA_FEAT
+#define AWS_OTA_TASK_STACK_SIZE (1024)
+#define AWS_OTA_TASK_PRIORITY (1)
+#endif // ENABLE_AWS_OTA_FEAT
 
 #endif // __DIC_CONFIG_H

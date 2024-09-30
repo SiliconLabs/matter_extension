@@ -37,7 +37,7 @@
 using namespace ::chip;
 using namespace ::chip::DeviceLayer;
 
-static uint16_t retryInterval = WLAN_MIN_RETRY_TIMER_MS;
+static uint8_t retryInterval = WLAN_MIN_RETRY_TIMER_S;
 static osTimerId_t sRetryTimer;
 /*
  * Notifications to the upper-layer
@@ -192,8 +192,8 @@ void wfx_retry_connection(uint16_t retryAttempt)
     // During commissioning, we retry to join the network MAX_JOIN_RETRIES_COUNT
     if(BaseApplication::sAppDelegate.isCommissioningInProgress()) {
         if(retryAttempt < MAX_JOIN_RETRIES_COUNT) {
-            ChipLogProgress(DeviceLayer,"wfx_retry_connection : Next attempt after %d Seconds", CONVERT_MS_TO_SEC(WLAN_RETRY_TIMER_MS));
-            if (osTimerStart(sRetryTimer, pdMS_TO_TICKS(WLAN_RETRY_TIMER_MS)) != osOK) {
+            ChipLogProgress(DeviceLayer,"wfx_retry_connection : Next attempt after %d Seconds", WLAN_RETRY_TIMER_S);
+            if (osTimerStart(sRetryTimer, pdMS_TO_TICKS(CONVERT_S_TO_MS(WLAN_RETRY_TIMER_S))) != osOK) {
                 ChipLogProgress(DeviceLayer,"Failed to start retry timer");
                 return;
             }
@@ -202,22 +202,22 @@ void wfx_retry_connection(uint16_t retryAttempt)
         }
     } else {
         /* After disconnection or power cycle the DUT
-         * At the telescopic time interval device try to reconnect with AP, upto WLAN_MAX_RETRY_TIMER_MS intervals
-         * are telescopic. If interval exceed WLAN_MAX_RETRY_TIMER_MS then it will try to reconnect at
-         * WLAN_MAX_RETRY_TIMER_MS intervals.
+         * At the telescopic time interval device try to reconnect with AP, upto WLAN_MAX_RETRY_TIMER_S intervals
+         * are telescopic. If interval exceed WLAN_MAX_RETRY_TIMER_S then it will try to reconnect at
+         * WLAN_MAX_RETRY_TIMER_S intervals.
          */
-        if (retryInterval > WLAN_MAX_RETRY_TIMER_MS)
+        if (retryInterval > WLAN_MAX_RETRY_TIMER_S)
         {
-            retryInterval = WLAN_MAX_RETRY_TIMER_MS;
+            retryInterval = WLAN_MAX_RETRY_TIMER_S;
         }
-        if (osTimerStart(sRetryTimer, pdMS_TO_TICKS(retryInterval)) != osOK) {
+        if (osTimerStart(sRetryTimer, pdMS_TO_TICKS(CONVERT_S_TO_MS(retryInterval))) != osOK) {
             ChipLogProgress(DeviceLayer,"Failed to start retry timer");
             return;
         }
 #if CHIP_CONFIG_ENABLE_ICD_SERVER && SLI_SI91X_MCU_INTERFACE
         wfx_rsi_power_save(RSI_SLEEP_MODE_8, STANDBY_POWER_SAVE_WITH_RAM_RETENTION);
 #endif // CHIP_CONFIG_ENABLE_ICD_SERVER && SLI_SI91X_MCU_INTERFACE
-        ChipLogProgress(DeviceLayer,"wfx_retry_connection : Next attempt after %d Seconds", CONVERT_MS_TO_SEC(retryInterval));
+        ChipLogProgress(DeviceLayer,"wfx_retry_connection : Next attempt after %d Seconds", retryInterval);
         retryInterval += retryInterval;
         return ;
     }

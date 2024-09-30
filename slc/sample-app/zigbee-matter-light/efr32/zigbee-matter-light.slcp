@@ -192,6 +192,12 @@ configuration:
   value: 1
 - name: CIRCULAR_QUEUE_LEN_MAX
   value: 16
+- name: SL_BT_RTOS_LINK_LAYER_TASK_STACK_SIZE
+  value: 1024
+- name: SL_BT_RTOS_HOST_STACK_TASK_STACK_SIZE
+  value: 2048
+- name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+  value: 1536
 
 define:
 - name: OS_CFG_COMPAT_INIT
@@ -252,4 +258,4 @@ ui_hints:
 
 sdk_extension:
   - id: matter
-    version: "2.3.1"
+    version: "2.3.2"
