@@ -39,10 +39,6 @@ include:
       - path: sl_wfx_constants.h
       - path: sl_wfx.h
       - path: sl_wfx_version.h
-  - path: third_party/silabs/simplicity_sdk/platform/radio/wifi/wfx_fmac_driver/pds/brd4321a
-    condition: [brd4321a]
-    file_list:
-      - path: sl_wfx_pds.h
   - path: third_party/silabs/simplicity_sdk/platform/radio/wifi/wfx_fmac_driver/pds/brd8022a
     condition: [brd8022a]
     file_list:

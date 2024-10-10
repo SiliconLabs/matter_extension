@@ -19,7 +19,6 @@ define:
 description: libopenthread_spinel_ncp
 id: libopenthread_spinel_ncp
 include:
--   path: examples/platform/efr32
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include

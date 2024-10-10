@@ -1,86 +1,82 @@
 category: Matter-WiFi|Features
 define:
--   name: DIC_ENABLE
-    value: "1"
--   name: USE_AWS
-    value: "1"
--   name: SL_DIC_NVM_EMBED_CERT
-    value: "0"
--   name: CHIP_DEVICE_CONFIG_ENABLE_IPV4
-    value: '1'
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: ENABLE_AWS_OTA_FEAT
-    value: "1"
-description:
-    This component enables Direct Internet connectivity OTA feature for matter-wifi
+    - name: DIC_ENABLE
+      value: "1"
+    - name: SL_DIC_NVM_EMBED_CERT
+      value: "0"
+    - name: CHIP_DEVICE_CONFIG_ENABLE_IPV4
+      value: "1"
+    - name: CHIP_HAVE_CONFIG_H
+      value: "1"
+    - name: ENABLE_AWS_OTA_FEAT
+      value: "1"
+description: This component enables Direct Internet connectivity OTA feature for matter-wifi
 id: aws_ota_wifi_dic
 include:
--   path: third_party/silabs/aws_ota_sdk/demos/ota/ota_demo_core_mqtt
-    file_list:
-    - path: core_mqtt_config.h
-    - path: demo_config.h
-    - path: ota_config.h
--   path: third_party/silabs/aws_ota_sdk/demos/ota/common/include
-    file_list:
-    - path: pal.h
-    - path: mqtt_subscription_manager.h
--   path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/include
-    file_list:
-    - path: ota_appversion32.h
-    - path: ota.h
-    - path: ota_base64_private.h
-    - path: ota_cbor_private.h
-    - path: ota_mqtt_interface.h
-    - path: ota_private.h
-    - path: ota_config_defaults.h 
-    - path: ota_cbor_private.h
-    - path: ota_interface_private.h
-    - path: ota_os_interface.h
-    - path: ota_mqtt_private.h
-    - path: ota_platform_interface.h
-    - path: ota_http_interface.h
--   path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/portable/os
-    file_list:
-    - path: ota_os_freertos.h
--   path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/dependency/3rdparty/tinycbor/src
-    file_list:
-    - path: cbor.h
-    - path: tinycbor-version.h
-    - path: cborinternal_p.h
-    - path: compilersupport_p.h
-    - path: cborjson.h
-    - path: utf8_p.h
--   path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/dependency/coreJSON/source/include
-    file_list:
-    - path: core_json.h
+    - path: third_party/silabs/aws_ota_sdk/demos/ota/ota_demo_core_mqtt
+      file_list:
+          - path: demo_config.h
+          - path: ota_config.h
+    - path: third_party/silabs/aws_ota_sdk/demos/ota/common/include
+      file_list:
+          - path: pal.h
+          - path: mqtt_subscription_manager.h
+    - path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/include
+      file_list:
+          - path: ota_appversion32.h
+          - path: ota.h
+          - path: ota_base64_private.h
+          - path: ota_cbor_private.h
+          - path: ota_mqtt_interface.h
+          - path: ota_private.h
+          - path: ota_config_defaults.h
+          - path: ota_cbor_private.h
+          - path: ota_interface_private.h
+          - path: ota_os_interface.h
+          - path: ota_mqtt_private.h
+          - path: ota_platform_interface.h
+          - path: ota_http_interface.h
+    - path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/portable/os
+      file_list:
+          - path: ota_os_freertos.h
+    - path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/dependency/3rdparty/tinycbor/src
+      file_list:
+          - path: cbor.h
+          - path: tinycbor-version.h
+          - path: cborinternal_p.h
+          - path: compilersupport_p.h
+          - path: cborjson.h
+          - path: utf8_p.h
+    - path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/dependency/coreJSON/source/include
+      file_list:
+          - path: core_json.h
 label: OTA Download through AWS Cloud
 package: Matter
 provides:
--   name: aws_ota_wifi_dic
+    - name: aws_ota_wifi_dic
 requires:
-  - name: matter_dic
+    - name: matter_dic
 template_contribution:
-  - name: mbedtls_ssl_content_len_in_requirement
-    value: 5120
-  - name: mbedtls_ssl_content_len_out_requirement
-    value: 1560
+    - name: mbedtls_ssl_content_len_in_requirement
+      value: 5120
+    - name: mbedtls_ssl_content_len_out_requirement
+      value: 1560
 
 quality: production
 metadata:
-  sbom:
-    license: Zlib
+    sbom:
+        license: Zlib
 source:
--   path: third_party/silabs/aws_ota_sdk/demos/ota/ota_demo_core_mqtt/ota_demo_core_mqtt.c
--   path: third_party/silabs/aws_ota_sdk/demos/ota/common/src/mqtt_subscription_manager.c
--   path: third_party/silabs/aws_ota_sdk/demos/ota/common/src/pal.c
--   path: third_party/silabs/aws_ota_sdk/demos/ota/ota_demo_core_mqtt/ota.c
--   path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/ota_base64.c
--   path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/ota_interface.c
--   path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/ota_mqtt.c
--   path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/ota_cbor.c
--   path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/portable/os/ota_os_freertos.c
--   path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/dependency/coreJSON/source/core_json.c
--   path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/dependency/3rdparty/tinycbor/src/cborparser.c
--   path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/dependency/3rdparty/tinycbor/src/cborencoder.c
--   path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/dependency/3rdparty/tinycbor/src/cborencoder_close_container_checked.c
+    - path: third_party/silabs/aws_ota_sdk/demos/ota/ota_demo_core_mqtt/ota_demo_core_mqtt.c
+    - path: third_party/silabs/aws_ota_sdk/demos/ota/common/src/mqtt_subscription_manager.c
+    - path: third_party/silabs/aws_ota_sdk/demos/ota/common/src/pal.c
+    - path: third_party/silabs/aws_ota_sdk/demos/ota/ota_demo_core_mqtt/ota.c
+    - path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/ota_base64.c
+    - path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/ota_interface.c
+    - path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/ota_mqtt.c
+    - path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/ota_cbor.c
+    - path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/portable/os/ota_os_freertos.c
+    - path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/dependency/coreJSON/source/core_json.c
+    - path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/dependency/3rdparty/tinycbor/src/cborparser.c
+    - path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/dependency/3rdparty/tinycbor/src/cborencoder.c
+    - path: third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/dependency/3rdparty/tinycbor/src/cborencoder_close_container_checked.c

@@ -21,7 +21,6 @@ id: efr32_common
 include:
 -   path: .
 -   path: examples/common/QRCode/repo/c
--   path: examples/platform/efr32
 -   path: examples/platform/silabs
 -   path: examples/platform/silabs/efr32
 -   path: examples/platform/silabs/efr32/project_include
@@ -70,7 +69,6 @@ source:
 -   path: examples/platform/silabs/OTAConfig.cpp
 -   path: examples/platform/silabs/SoftwareFaultReports.cpp
 -   path: examples/platform/silabs/uart.cpp
--   path: examples/platform/silabs/heap_4_silabs.c
 -   path: examples/platform/silabs/silabs_utils.cpp
 -   path: examples/platform/silabs/syscalls_stubs.cpp
 ui_hints:

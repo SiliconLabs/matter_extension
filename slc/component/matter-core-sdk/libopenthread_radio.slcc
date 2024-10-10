@@ -21,7 +21,6 @@ define:
 description: libopenthread_radio
 id: libopenthread_radio
 include:
--   path: examples/platform/efr32
 -   path: examples/platform/silabs
 -   path: src
 -   path: src/include

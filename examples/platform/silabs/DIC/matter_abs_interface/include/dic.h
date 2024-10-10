@@ -3,7 +3,7 @@
  * @brief Matter abstraction layer for Direct Internet Connectivity.
  *******************************************************************************
  * # License
- * <b>Copyright 2020 Silicon Laboratories Inc.
+ * <b>Copyright 2023 Silicon Laboratories Inc.
  *www.silabs.com</b>
  *******************************************************************************
  *
@@ -20,45 +20,47 @@
 
 #ifndef __DIC_H
 #define __DIC_H
+
+#include <stdint.h>
+
+#include "dic_config.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 #include "mqtt.h"
-#include "stdint.h"
-typedef enum {
-	DIC_OK = 0,
-	DIC_ERR_INVAL,
-	DIC_ERR_MEM,
-	DIC_ERR_FAIL,
-	DIC_ERR_CONN,
-	DIC_ERR_PUBLISH,
+typedef enum
+{
+    DIC_OK = 0,
+    DIC_ERR_INVAL,
+    DIC_ERR_MEM,
+    DIC_ERR_FAIL,
+    DIC_ERR_CONN,
+    DIC_ERR_PUBLISH,
 } dic_err_t;
 
-#define MQTT_QOS_0 0
-
-typedef struct {
-	uint8_t *dataP;
-	uint16_t dataLen;
+typedef struct
+{
+    uint8_t * dataP;
+    uint16_t dataLen;
 } dic_buff_t;
 
-typedef void (* dic_subscribe_cb)(void);
+typedef void (*dic_subscribe_cb)(void);
 
 dic_err_t dic_init(dic_subscribe_cb subs_cb);
 
-dic_err_t dic_mqtt_subscribe(mqtt_client_t *client, mqtt_incoming_publish_cb_t publish_cb, mqtt_incoming_data_cb_t data_cb, const char * topic, uint8_t qos);
+dic_err_t dic_mqtt_subscribe(mqtt_client_t * client, mqtt_incoming_publish_cb_t publish_cb, mqtt_incoming_data_cb_t data_cb,
+                             const char * topic, uint8_t qos);
 
-dic_err_t dic_sendmsg(const char *subject, const char *content);
-
+dic_err_t dic_sendmsg(const char * subject, const char * content);
 
 #ifdef ENABLE_AWS_OTA_FEAT
 
-#define AWS_OTA_TASK_STACK_SIZE 1024
-#define AWS_OTA_TASK_PRIORITY 1
-
-typedef void (*callback_t)(const char * sub_topic, uint16_t top_len, const void *pload, uint16_t pLoadLength);
-struct sub_cb_info{
-  char *sub_topic;
-  callback_t cb;
+typedef void (*callback_t)(const char * sub_topic, uint16_t top_len, const void * pload, uint16_t pLoadLength);
+struct sub_cb_info
+{
+    char * sub_topic;
+    callback_t cb;
 };
 
 int dic_init_status(void);
@@ -72,7 +74,7 @@ dic_err_t dic_aws_ota_subscribe(const char * topic, uint8_t qos, callback_t subs
 dic_err_t dic_aws_ota_process();
 
 dic_err_t dic_aws_ota_close();
-#endif
+#endif // ENABLE_AWS_OTA_FEAT
 
 #ifdef __cplusplus
 }

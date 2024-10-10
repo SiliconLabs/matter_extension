@@ -15,7 +15,12 @@ requires:
   - name: toolchain_variant_arm
 template_file:
   - path: matter-wifi/917soc/linkerfile_common.ld.jinja
-    condition: [matter_si91x_common_flash_nvm3_enabled]
+    condition: [brd4338a]
+  - path: matter-wifi/917soc/linkerfile_common.ld.jinja
+    condition: [brd2605a]
+# TODO: Cleanup the customized linker file for brd4342a board and use the SDK linker file
+  - path: matter-wifi/917soc/linkerfile_psram_SoC.ld.jinja
+    condition: [brd4342a]
 library:
   - system: gcc
   - system: c
@@ -33,6 +38,12 @@ template_contribution:
 toolchain_settings:
   - option: linkerfile
     value: autogen/linkerfile_common.ld
-    condition: [matter_si91x_common_flash_nvm3_enabled]
+    condition: [brd4338a]
+  - option: linkerfile
+    value: autogen/linkerfile_common.ld
+    condition: [brd2605a]
+  - option: linkerfile
+    value: autogen/linkerfile_psram_SoC.ld
+    condition: [brd4342a]
 ui_hints:
   visibility: never

@@ -60,24 +60,6 @@ int PlatformManagerImpl::uECC_RNG_Function(uint8_t * dest, unsigned int size)
 
     return res;
 }
-
-static void app_get_random(uint8_t * aOutput, size_t aLen)
-{
-    size_t i;
-
-    for (i = 0; i < aLen; i++)
-    {
-        aOutput[i] = rand();
-    }
-}
-
-static int app_entropy_source(void * data, unsigned char * output, size_t len, size_t * olen)
-{
-    app_get_random(reinterpret_cast<uint8_t *>(output), static_cast<uint16_t>(len));
-    *olen = len;
-
-    return 0;
-}
 #endif // SL_MBEDTLS_USE_TINYCRYPT
 
 CHIP_ERROR PlatformManagerImpl::_InitChipStack(void)
@@ -96,9 +78,6 @@ CHIP_ERROR PlatformManagerImpl::_InitChipStack(void)
     ReturnErrorOnFailure(System::Clock::InitClock_RealTime());
 
 #if defined(SL_MBEDTLS_USE_TINYCRYPT)
-    // 16 : Threshold value
-    ReturnErrorOnFailure(chip::Crypto::add_entropy_source(app_entropy_source, NULL, 16));
-
     /* Set RNG function for tinycrypt operations. */
     err_t ret;
     ret = sys_mutex_new(&rngMutexHandle);

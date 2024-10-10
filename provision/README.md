@@ -64,9 +64,10 @@ The directory structure is as follows:
         - v1_0
         - v2_0
     - support
-        - efr32mg12
         - efr32mg24
         - efr32mg26
+        - mgm24
+        - si917
 
 
 ## Provision Script
@@ -440,9 +441,10 @@ commissioner, which can be done using a debugger.
 
 ### Flash Dump
 
-On EFR32MG12, the last page starts at address 0x000FF800. On EFR32MG24,
-the last page is located at 0x0817E000. These addresses can be found in
-the memory map of the board's datasheet. For instance, for a MG24 board:
+The `--creds_address` option controls the location of the attestation
+credentials. By default, these files are located at the beggining of the
+last page of flash (0x817E000 for EFR32MG24, and 0x831E000 for EFR32MG26).
+For instance, for a MG24 board:
 
 ```shell
 commander readmem --range 0x0817E000:+1536 --serialno 440266330
@@ -572,6 +574,7 @@ must match the contents of `cd.der`, `pai_cert.der`, and `dac.der`, respectively
 ## Board Support
 
 Pre-compiled images of the Generator Firmware can be found under ./images. The source
-code of these images is found under ./support. A single image is provided for each family (EFR32MG12, EFR32MG24, EFR32MG26). To cope with the different flash sizes, the
-`provision.py` script reads the device information using `commander`, and send it to the GFW,
-which configures the NVM3 during the initialization step.
+code of these images is found under ./support. A single image is provided for each family
+(EFR32MG24, EFR32MG26, etc.). To cope with the different flash sizes, the `provision.py`
+script reads the device information using `commander`, and send it to the GFW, which
+configures the NVM3 during the initialization step.

@@ -814,6 +814,10 @@ void BaseApplication::ScheduleFactoryReset()
         {
             Provision::Manager::GetInstance().SetProvisionRequired(true);
         }
+#if SL_WIFI
+        // Removing the matter services on factory reset
+        chip::Dnssd::ServiceAdvertiser::Instance().RemoveServices();
+#endif // SL_WIFI
         PlatformMgr().HandleServerShuttingDown(); // HandleServerShuttingDown calls OnShutdown() which is only implemented for the
                                                   // basic information cluster it seems. And triggers and Event flush, which is not
                                                   // relevant when there are no fabrics left
@@ -867,10 +871,20 @@ void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
 
             if (DIC_OK != dic_init(dic::control::subscribeCB))
             {
-                ChipLogError(AppServer, "Failed to initialize DIC module\n");
+                ChipLogError(AppServer, "dic_init failed");
             }
         }
 #endif // DIC_ENABLE
+#ifdef DISPLAY_ENABLED
+        SilabsLCD::Screen_e screen;
+        AppTask::GetLCD().GetScreen(screen);
+        // Update the LCD screen with SSID and connected state
+        if (screen == SilabsLCD::Screen_e::StatusScreen)
+        {
+            BaseApplication::UpdateLCDStatusScreen(false);
+            AppTask::GetLCD().SetScreen(screen);
+        }
+#endif // DISPLAY_ENABLED
         if ((event->ThreadConnectivityChange.Result == kConnectivity_Established) ||
             (event->InternetConnectivityChange.IPv6 == kConnectivity_Established))
         {
@@ -925,18 +939,8 @@ void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
 #endif /* CHIP_CONFIG_ENABLE_ICD_SERVER && RS911X_WIFI */
     }
     break;
-
-    case DeviceEventType::kWiFiConnectivityChange: {
-#ifdef DISPLAY_ENABLED
-        SilabsLCD::Screen_e screen;
-        AppTask::GetLCD().GetScreen(screen);
-        // Update the LCD screen with SSID and connected state
-        VerifyOrReturn(screen == SilabsLCD::Screen_e::StatusScreen);
-        BaseApplication::UpdateLCDStatusScreen(false);
-        AppTask::GetLCD().SetScreen(screen);
-#endif // DISPLAY_ENABLED
-    }
-    break;
+    default:
+        break;
     }
 }
 

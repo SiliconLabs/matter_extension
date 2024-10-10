@@ -4,7 +4,7 @@
  * @brief Matter abstraction layer for Direct Internet Connectivity.
  *******************************************************************************
  * # License
- * <b>Copyright 2020 Silicon Laboratories Inc.
+ * <b>Copyright 2023 Silicon Laboratories Inc.
  *www.silabs.com</b>
  *******************************************************************************
  *
@@ -21,27 +21,16 @@
 
 #ifndef _DIC_NVM_CERT_H
 
-#include <stddef.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include "lib/core/CHIPError.h"
-#include <platform/silabs/SilabsConfig.h>
+#include <lib/core/CHIPError.h>
 
-#define DIC_CA_CERT_LENGTH 1212
-#define DIC_DEV_CERT_LENGTH 1212
-#define DIC_DEV_KEY_LENGTH 1212
-#define DIC_HOSTNAME_LENGTH 55
-#define DIC_CLIENTID_LENGTH 30
+CHIP_ERROR DICGetCACertificate(char * buf, size_t buf_len, size_t * bufSize);
 
+CHIP_ERROR DICGetDeviceCertificate(char * buf, size_t buf_len, size_t * bufSize);
 
-CHIP_ERROR DICGetCACertificate(char * buf, size_t buf_len, size_t *bufSize);
+CHIP_ERROR DICGetDevicePrivKey(char * buf, size_t buf_len, size_t * bufSize);
 
-CHIP_ERROR DICGetDeviceCertificate(char * buf, size_t buf_len, size_t *bufSize);
+CHIP_ERROR DICGetHostname(char * buf, size_t buf_len, size_t * bufSize);
 
-CHIP_ERROR DICGetDevicePrivKey(char * buf, size_t buf_len, size_t *bufSize);
-
-CHIP_ERROR DICGetHostname(char * buf, size_t buf_len, size_t *bufSize);
-
-CHIP_ERROR DICGetClientId(char * buf, size_t buf_len, size_t *bufSize);
+CHIP_ERROR DICGetClientId(char * buf, size_t buf_len, size_t * bufSize);
 
 #endif //_DIC_NVM_CERT_H

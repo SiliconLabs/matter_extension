@@ -18,7 +18,7 @@ requires:
   - name: sl_system
   - name: matter_siwx917
   - name: matter_siwx917_common
-  - name: siwx917_soc_custom_startup
+  - name: siwx917_soc_custom_hal
   - name: device_init_nvic
   - name: si91x_debug
   - name: sl_system_init
@@ -26,6 +26,18 @@ requires:
   - name: memory_manager
   - name: memory_manager_pool
   - name: freertos_heap_3
+# TODO : psram components - should be removed with wiseconnect SDK support
+  - name: rsilib_dcache
+    condition: [brd4342a]
+  - name: psram_core
+    condition: [brd4342a]
+  - name: psram_aps6404l_sqh
+    condition: [brd4342a]
+  - name: device_needs_ram_execution
+    condition: [brd4342a]
+# Configure a text segment in the PSRAM region for boards with PSRAM support
+  - name: siwx917_text_segment_in_psram
+    condition: [brd4342a]
 
 provides:
   - name: matter_platform_siwx917
@@ -52,6 +64,8 @@ source:
   - path: examples/platform/silabs/MatterConfig.cpp
   - path: examples/platform/silabs/SoftwareFaultReports.cpp
 define:
+  - name: SUPPORT_CPLUSPLUS
+    value: 1
   - name: SL_WFX_CONFIG_SCAN
     value: 1
   - name: SIWX_917

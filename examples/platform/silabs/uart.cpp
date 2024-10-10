@@ -38,7 +38,6 @@ extern "C" {
 #include "rsi_board.h"
 #include "rsi_debug.h"
 #include "rsi_rom_egpio.h"
-#include "sl_si91x_usart.h"
 #include "USART.h"
 #else // For EFR32
 #include "em_core.h"

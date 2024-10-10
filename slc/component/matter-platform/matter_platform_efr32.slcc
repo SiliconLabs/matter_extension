@@ -48,6 +48,8 @@ requires:
     condition: [matter_thread]
   - name: matter_efr32_wifi
     condition: [matter_wifi]
+  - name: power_manager
+    condition: [matter_wifi]
   - name: bootloader_interface
   - name: sl_system
   - name: freertos
