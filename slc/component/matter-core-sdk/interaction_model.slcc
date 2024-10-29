@@ -9,13 +9,13 @@ define:
 description: interaction_model
 id: interaction_model
 include:
--   path: examples/platform/silabs
--   path: src
--   path: src/include
--   path: src/lib
--   path: third_party/nlassert/repo/include
--   path: third_party/nlio/repo/include
--   path: src/app
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
+-   path: third_party/nlassert/include
+-   path: third_party/nlio/include
+-   path: third_party/matter_sdk/src/app
     file_list:
     -   path: AttributeAccessToken.h
     -   path: InteractionModelDelegatePointers.h
@@ -80,13 +80,15 @@ include:
     -   path: OperationalSessionSetupPool.h
     -   path: ReadHandler.h
     -   path: OTAUserConsentCommon.h
--   path: src/app/reporting
+-   path: third_party/matter_sdk/src/app/reporting
     file_list:
     -   path: ReportSchedulerImpl.h
     -   path: Engine.h
     -   path: SynchronizedReportSchedulerImpl.h
     -   path: reporting.h
     -   path: ReportScheduler.h
+    -   path: Read.h
+    -   path: Read-Ember.h
 label: interaction_model
 package: Matter
 provides:
@@ -96,23 +98,24 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: src/app/CASEClient.cpp
--   path: src/app/CASESessionManager.cpp
--   path: src/app/CommandSender.cpp
--   path: src/app/DeviceProxy.cpp
--   path: src/app/InteractionModelDelegatePointers.cpp
--   path: src/app/InteractionModelEngine.cpp
--   path: src/app/OperationalSessionSetup.cpp
--   path: src/app/PendingResponseTrackerImpl.cpp
--   path: src/app/ReadClient.cpp
--   path: src/app/SimpleSubscriptionResumptionStorage.cpp
--   path: src/app/StatusResponse.cpp
--   path: src/app/SubscriptionResumptionSessionEstablisher.cpp
--   path: src/app/TimedHandler.cpp
--   path: src/app/TimedRequest.cpp
--   path: src/app/WriteClient.cpp
--   path: src/app/reporting/Engine.cpp
--   path: src/app/reporting/ReportSchedulerImpl.cpp
--   path: src/app/reporting/SynchronizedReportSchedulerImpl.cpp
+-   path: third_party/matter_sdk/src/app/CASEClient.cpp
+-   path: third_party/matter_sdk/src/app/CASESessionManager.cpp
+-   path: third_party/matter_sdk/src/app/CommandSender.cpp
+-   path: third_party/matter_sdk/src/app/DeviceProxy.cpp
+-   path: third_party/matter_sdk/src/app/InteractionModelDelegatePointers.cpp
+-   path: third_party/matter_sdk/src/app/InteractionModelEngine.cpp
+-   path: third_party/matter_sdk/src/app/OperationalSessionSetup.cpp
+-   path: third_party/matter_sdk/src/app/PendingResponseTrackerImpl.cpp
+-   path: third_party/matter_sdk/src/app/ReadClient.cpp
+-   path: third_party/matter_sdk/src/app/SimpleSubscriptionResumptionStorage.cpp
+-   path: third_party/matter_sdk/src/app/StatusResponse.cpp
+-   path: third_party/matter_sdk/src/app/SubscriptionResumptionSessionEstablisher.cpp
+-   path: third_party/matter_sdk/src/app/TimedHandler.cpp
+-   path: third_party/matter_sdk/src/app/TimedRequest.cpp
+-   path: third_party/matter_sdk/src/app/WriteClient.cpp
+-   path: third_party/matter_sdk/src/app/reporting/Engine.cpp
+-   path: third_party/matter_sdk/src/app/reporting/Read-Ember.cpp
+-   path: third_party/matter_sdk/src/app/reporting/ReportSchedulerImpl.cpp
+-   path: third_party/matter_sdk/src/app/reporting/SynchronizedReportSchedulerImpl.cpp
 ui_hints:
     visibility: never

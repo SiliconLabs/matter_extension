@@ -7,13 +7,13 @@ define:
 description: libchipcore
 id: libchipcore
 include:
--   path: examples/platform/silabs
--   path: src
--   path: src/include
--   path: src/lib
--   path: third_party/nlassert/repo/include
--   path: third_party/nlio/repo/include
--   path: src/lib/core
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
+-   path: third_party/nlassert/include
+-   path: third_party/nlio/include
+-   path: third_party/matter_sdk/src/lib/core
     file_list:
     -   path: PeerId.h
     -   path: CHIPVendorIdentifiers.hpp
@@ -26,6 +26,7 @@ include:
     -   path: CHIPEncoding.h
     -   path: TLVWriter.h
     -   path: Global.h
+    -   path: GroupedCallbackList.h
     -   path: TLVTags.h
     -   path: Unchecked.h
     -   path: PasscodeId.h
@@ -61,14 +62,14 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: src/lib/core/CHIPKeyIds.cpp
--   path: src/lib/core/OTAImageHeader.cpp
--   path: src/lib/core/TLVCircularBuffer.cpp
--   path: src/lib/core/TLVDebug.cpp
--   path: src/lib/core/TLVReader.cpp
--   path: src/lib/core/TLVTags.cpp
--   path: src/lib/core/TLVUpdater.cpp
--   path: src/lib/core/TLVUtilities.cpp
--   path: src/lib/core/TLVWriter.cpp
+-   path: third_party/matter_sdk/src/lib/core/CHIPKeyIds.cpp
+-   path: third_party/matter_sdk/src/lib/core/OTAImageHeader.cpp
+-   path: third_party/matter_sdk/src/lib/core/TLVCircularBuffer.cpp
+-   path: third_party/matter_sdk/src/lib/core/TLVDebug.cpp
+-   path: third_party/matter_sdk/src/lib/core/TLVReader.cpp
+-   path: third_party/matter_sdk/src/lib/core/TLVTags.cpp
+-   path: third_party/matter_sdk/src/lib/core/TLVUpdater.cpp
+-   path: third_party/matter_sdk/src/lib/core/TLVUtilities.cpp
+-   path: third_party/matter_sdk/src/lib/core/TLVWriter.cpp
 ui_hints:
     visibility: never

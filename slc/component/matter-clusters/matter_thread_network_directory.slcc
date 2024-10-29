@@ -1,0 +1,26 @@
+
+category: Clusters|Network Infrastructure
+description: >
+  Implementation of the Thread Network Directory Server Cluster.
+  The user has to enable the Thread Network Directory Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_thread_network_directory
+package: Matter
+label: Thread Network Directory Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_thread_network_directory
+source:
+  - path: third_party/matter_sdk/src/app/clusters/thread-network-directory-server/DefaultThreadNetworkDirectoryStorage.cpp
+  - path: third_party/matter_sdk/src/app/clusters/thread-network-directory-server/thread-network-directory-server.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/thread-network-directory-server
+    file_list:
+      - path: DefaultThreadNetworkDirectoryStorage.h
+      - path: thread-network-directory-server.h
+      - path: ThreadNetworkDirectoryStorage.h
+template_contribution:
+  - name: component_catalog
+    value: matter_thread_network_directory

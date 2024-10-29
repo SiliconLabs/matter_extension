@@ -1,0 +1,23 @@
+
+category: Clusters|Network Infrastructure
+description: >
+  Implementation of the Wi-Fi Network Management Server Cluster.
+  The user has to enable the Wi-Fi Network Management Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_wifi_network_management
+package: Matter
+label: Wi-Fi Network Management Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_wifi_network_management
+source:
+  - path: third_party/matter_sdk/src/app/clusters/wifi-network-management-server/wifi-network-management-server.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/wifi-network-management-server
+    file_list:
+      - path: wifi-network-management-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_wifi_network_management

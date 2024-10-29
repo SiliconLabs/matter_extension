@@ -66,6 +66,7 @@ class ID:
     kFlashPageSize      = 0x0103
     kCredsAddress       = 0x0104
     kCsrFile            = 0x0105
+
     # Options
     kVersion            = 0x0111
     kAction             = 0x0112
@@ -83,6 +84,7 @@ class ID:
     kProductionFW       = 0x0136
     kCertToolPath       = 0x0137
     kPylinkLib          = 0x013a
+
     # Instance Info
     kSerialNumber       = 0x0141
     kVendorId           = 0x0142
@@ -95,7 +97,9 @@ class ID:
     kHwVersion          = 0x0151
     kHwVersionStr       = 0x0152
     kManufacturingDate  = 0x0153
-    kUniqueId           = 0x0154
+    # Note: Must be different to the Basic Information cluster's UniqueId
+    kPersistentUniqueId = 0x0154
+
     # Commissionable Data
     kDiscriminator      = 0x0161
     kSpake2pPasscode    = 0x0162
@@ -105,6 +109,7 @@ class ID:
     kSetupPayload       = 0x0166
     kCommissioningFlow  = 0x0167
     kRendezvousFlags    = 0x0168
+
     # Attestation Credentials
     kFirmwareInfo       = 0x0181
     kCertification      = 0x0182
@@ -240,88 +245,6 @@ class Parameter:
     def range(self):
         min = (self.min is not None) and self.min or 0
         return (self.max is not None) and range(min, self.max + 1) or None
-
-    @staticmethod
-    def validate(p, x):
-        if x is None: return None
-        if not p.check: return x
-        h = (x is not None) and (x.__hash__) or None
-        if (p.invalid is not None) and (h is not None) and (x in p.invalid):
-            raise ValueError("Invalid \"{}\" value: {}".format(p.name, x))
-        elif Types.INT8U == p.type:
-            if (Formats.BOOL == p.format):
-                return Parameter.validateBool(p, x)
-            else:
-                return Parameter.validateInt(p, x)
-        elif (Types.INT16U == p.type) or (Types.INT32U == p.type):
-            return Parameter.validateInt(p, x)
-        elif (Types.BINARY == p.type):
-            if (Formats.STRING == p.format):
-                return Parameter.validateString(p, x)
-            elif (Formats.PATH == p.format):
-                return Parameter.validatePath(p, x)
-            else:
-                return Parameter.validateBinary(p, x)
-        return x
-
-    @staticmethod
-    def validateInt(p, x):
-        try:
-            i = isinstance(x, str) and int(x, 0) or int(x)
-        except Exception as e:
-            raise ValueError("Invalid \"{}\" integer value: {}; {}".format(p.name, x, e))
-        r = p.range()
-        if r is not None:
-            if i not in r:
-                raise ValueError("Integer \"{}\" out of range: {} [{}, {}]".format(p.name, x, p.min, p.max))
-        return i
-
-    @staticmethod
-    def validateBool(p, x):
-        try:
-            return bool(x)
-        except Exception as e:
-            raise ValueError("Invalid \"{}\" boolean value: {}; {}".format(p.name, x, e))
-
-    @staticmethod
-    def validateString(p, x):
-        s = None
-        if isinstance(x, str):
-            s = x
-        elif isinstance(x, bytes):
-            try:
-                s = x.decode()
-            except:
-                raise ValueError("Invalid \"{}\" string value: {}".format(p.name, x))
-        else:
-            s = str(x)
-        r = p.range()
-        if r is not None:
-            l = (s is not None) and len(s) or 0
-            if l not in r:
-                raise ValueError("String \"{}\" size out of range: {} [{}, {}]".format(p.name, l, p.min, p.max))
-        return s
-
-    @staticmethod
-    def validatePath(p, x):
-        s = str(x)
-        if not os.path.exists(x):
-            raise ValueError("Invalid \"{}\" path: {}".format(p.name, s))
-        return s
-
-    @staticmethod
-    def validateBinary(p, x):
-        if isinstance(x, str):
-            x = bytes.fromhex(x.removeprefix('0x'))
-        if not isinstance(x, bytes):
-            raise ValueError("Invalid \"{}\" binary value: {}".format(p.name, x))
-        r = p.range()
-        if r is not None:
-            sz = len(x)
-            if sz not in r:
-                raise ValueError("Binary \"{}\" size out of range: {} [{}, {}]".format(p.name, sz, p.min, p.max))
-        return x
-
 
 
 class ParameterList:

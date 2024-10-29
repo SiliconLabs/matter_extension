@@ -2,10 +2,10 @@
 
 The SiWx917 SoC light switch example provides a baseline demonstration of a on-off
 light switch device, built using Matter and the Silicon Labs Gecko SDK. It can
-be controlled by a Chip controller over Wifi network.
+be controlled by a Matter controller over Wifi network.
 
 The SiWx917 SoC device can be commissioned over Bluetooth Low Energy where the device
-and the Chip controller will exchange security information with the Rendez-vous
+and the Matter controller will exchange security information with the Rendez-vous
 procedure.
 
 If the LCD is enabled, the LCD on the Silabs WSTK shows a QR Code containing the
@@ -19,7 +19,7 @@ out-of-the-box and therefore has the matter_icd_management component enabled.**
 
 For more general information on running matter applications and pre-requisites please look at online 
 documentation for Matter available on docs.silabs.com. Follow Wi-Fi instructions depending on the example you are running.
-[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.3.2/matter-wifi)
+[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.3.1/matter-wifi)
 
 ## Light Switch Specific Interface
 

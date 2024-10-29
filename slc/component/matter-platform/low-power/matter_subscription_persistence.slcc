@@ -1,0 +1,22 @@
+id: matter_subscription_persistence
+label: Subscription Persistence
+description: >
+  Allows an end device to re-establish its subscription and by extension its
+  secure session to a subscriber in the event of a power cycle.
+package: "Matter"
+category: Platform|Low-power
+provides:
+  - name: matter_subscription_persistence
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+define:
+  - name: CHIP_CONFIG_PERSIST_SUBSCRIPTIONS
+    value: 1
+include:
+  - path: third_party/matter_sdk/src/app
+    file_list: 
+    - path: SimpleSubscriptionResumptionStorage.h
+source:
+  - path: third_party/matter_sdk/src/app/SimpleSubscriptionResumptionStorage.cpp

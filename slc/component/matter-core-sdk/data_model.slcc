@@ -7,14 +7,15 @@ define:
 description: data_model
 id: data_model
 include:
--   path: examples/platform/silabs
--   path: src
--   path: src/include
--   path: src/lib
--   path: third_party/nlassert/repo/include
--   path: third_party/nlio/repo/include
--   path: src/app
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
+-   path: third_party/nlassert/include
+-   path: third_party/nlio/include
+-   path: third_party/matter_sdk/src/app
     file_list:
+    -   path: data-model/EncodableToTLV.h
     -   path: data-model/FabricScoped.h
     -   path: data-model/Nullable.h
     -   path: data-model/ListLargeSystemExtensions.h
@@ -23,7 +24,6 @@ include:
     -   path: data-model/BasicTypes.h
     -   path: data-model/FabricScopedPreEncodedValue.h
     -   path: data-model/WrappedStructEncoder.h
-    -   path: data-model/TagBoundEncoder.h
     -   path: data-model/DecodableList.h
     -   path: data-model/Encode.h
     -   path: data-model/Decode.h
@@ -37,7 +37,7 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: src/app/data-model/FabricScopedPreEncodedValue.cpp
--   path: src/app/data-model/PreEncodedValue.cpp
+-   path: third_party/matter_sdk/src/app/data-model/FabricScopedPreEncodedValue.cpp
+-   path: third_party/matter_sdk/src/app/data-model/PreEncodedValue.cpp
 ui_hints:
     visibility: never

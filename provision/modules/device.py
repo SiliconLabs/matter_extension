@@ -14,6 +14,7 @@ class Device:
         self.flash_size = flash_size
         self.stack_size = None
         self.firmware = args.str(ID.kGeneratorFW)
+        self.override = False # Override commander's part_num with devices.yaml label
         self.load(paths, part_num, args.str(ID.kVersion))
 
     def __str__(self) -> str:
@@ -30,14 +31,15 @@ class Device:
         info = None
         pn = part_num.lower()
         y = _util.YamlFile(filename).read()
-        for x in y:
-            if self.match(pn, x, y):
-                self.label = x
-                info = y[x]
+        for id, dev in y.items():
+            if self.match(pn, id, dev):
+                self.label = id
+                info = dev
                 break
         if info is None:
             _util.fail("Invalid part number \"{}\"".format(part_num))
 
+        self.override = ('override' in info) and info['override'] or False
         self.ram_addr = info['ram_addr']
         self.flash_addr = int(info['flash_addr'])
         self.stack_size = int(info['stack_size'])

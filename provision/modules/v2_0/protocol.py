@@ -318,7 +318,7 @@ class AutoCommand(Command):
         ID.kHwVersion,
         ID.kHwVersionStr,
         ID.kManufacturingDate,
-        ID.kUniqueId,
+        ID.kPersistentUniqueId,
         # Commissionable Data
         ID.kDiscriminator,
         ID.kSpake2pPasscode,
@@ -338,7 +338,7 @@ class AutoCommand(Command):
     INCOMING = [
         ID.kDiscriminator,
         ID.kSpake2pPasscode,
-        ID.kUniqueId,
+        ID.kPersistentUniqueId,
         ID.kSetupPayload,
         ID.kHwVersionStr
     ]

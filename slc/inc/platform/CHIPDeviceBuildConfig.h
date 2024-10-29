@@ -38,6 +38,7 @@
 #define CHIP_DEVICE_PLATFORM_CONFIG_INCLUDE     <platform/silabs/CHIPDevicePlatformConfig.h>
 #define CHIP_DEVICE_LAYER_TARGET_EFR32          1
 #define CHIP_DEVICE_LAYER_TARGET                silabs
+#define CHIP_DEVICE_CONFIG_THREAD_NETWORK_ENDPOINT_ID 0
 
 // Enable default/generic test-mode CommissionableDataProvider in GenericConfigurationManagerImpl
 // === FOR TRANSITION UNTIL ALL EXAMPLES PROVIDE THEIR OWN ===

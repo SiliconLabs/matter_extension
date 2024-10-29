@@ -212,7 +212,7 @@ instance_info:
     max: 10
 
   - id: 0x0154
-    desc: 'Rotating Device ID, Unique ID'
+    desc: "Rotating Device ID's UniqueID. Different to the Basic Information cluster's UniqueId."
     name: 'unique_id'
     short: 'ui'
     type: 'binary'

@@ -1,7 +1,0 @@
-label: lock-app-917-devkit-soc
-quality: production
-description: Matter workspace container for Lock App over WiFi
-project:
-  - path: ../../../sample-app/lock-app/siwx917/lock-app-917-devkit-soc.slcp
-    id: application
-    output: lock-app-917-devkit-soc

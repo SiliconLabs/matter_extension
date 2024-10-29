@@ -2,7 +2,7 @@
 category: Clusters|CHIP
 description: >
   Implementation of the Power Source Configuration Server Cluster.
-  The user has to enable the Power Source Configuration Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Power Source Configuration Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_power_source_configuration
 package: Matter
 label: Power Source Configuration Server Cluster
@@ -13,7 +13,7 @@ metadata:
 provides:
   - name: matter_power_source_configuration
 source:
-  - path: src/app/clusters/power-source-configuration-server/power-source-configuration-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/power-source-configuration-server/power-source-configuration-server.cpp
 template_contribution:
   - name: component_catalog
     value: matter_power_source_configuration

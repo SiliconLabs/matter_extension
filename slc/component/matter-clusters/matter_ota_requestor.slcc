@@ -2,7 +2,7 @@
 category: Clusters|CHIP
 description: >
   Implementation of the OTA Software Update Requestor Cluster.
-  The user has to enable the OTA Software Update Requestor Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the OTA Software Update Requestor Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_ota_requestor
 package: Matter
 label: OTA Software Update Requestor Cluster
@@ -12,42 +12,42 @@ metadata:
     license: "Apache 2.0"
 provides:
   - name: matter_ota_requestor
-define:
-  - name: NON_SPEC_COMPLIANT_OTA_ACTION_DELAY_FLOOR
-    value: '-1'
 source:
-  - path: src/app/clusters/ota-requestor/OTATestEventTriggerHandler.cpp
-  - path: src/app/clusters/ota-requestor/ota-requestor-server.cpp
-  - path: src/app/clusters/ota-requestor/BDXDownloader.cpp
-  - path: src/app/clusters/ota-requestor/DefaultOTARequestor.cpp
-  - path: src/app/clusters/ota-requestor/ExtendedOTARequestorDriver.cpp
-  - path: src/app/clusters/ota-requestor/DefaultOTARequestorDriver.cpp
-  - path: src/app/clusters/ota-requestor/DefaultOTARequestorStorage.cpp
+  - path: third_party/matter_sdk/src/app/clusters/ota-requestor/BDXDownloader.cpp
+  - path: third_party/matter_sdk/src/app/clusters/ota-requestor/DefaultOTARequestor.cpp
+  - path: third_party/matter_sdk/src/app/clusters/ota-requestor/DefaultOTARequestorDriver.cpp
+  - path: third_party/matter_sdk/src/app/clusters/ota-requestor/DefaultOTARequestorStorage.cpp
+  - path: third_party/matter_sdk/src/app/clusters/ota-requestor/ExtendedOTARequestorDriver.cpp
+  - path: third_party/matter_sdk/src/app/clusters/ota-requestor/ota-requestor-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/ota-requestor/OTATestEventTriggerHandler.cpp
 include:
-  - path: src/controller
+  - path: third_party/matter_sdk/src/controller
     file_list:
-    - path: CHIPCluster.h
-    - path: InvokeInteraction.h
-    - path: TypedCommandCallback.h
-    - path: ReadInteraction.h
-    - path: TypedReadCallback.h
-    - path: WriteInteraction.h
-    - path: CommandSenderAllocator.h
-  - path: src/app/clusters/ota-requestor
+      - path: CHIPCluster.h
+      - path: CommandSenderAllocator.h
+      - path: InvokeInteraction.h
+      - path: ReadInteraction.h
+      - path: TypedCommandCallback.h
+      - path: TypedReadCallback.h
+      - path: WriteInteraction.h
+  - path: third_party/matter_sdk/src/app/clusters/ota-requestor
     file_list:
-      - path: DefaultOTARequestorUserConsent.h
-      - path: DefaultOTARequestorDriver.h
-      - path: OTARequestorInterface.h
-      - path: OTARequestorStorage.h
+      - path: BDXDownloader.h
       - path: DefaultOTARequestor.h
+      - path: DefaultOTARequestorDriver.h
+      - path: DefaultOTARequestorStorage.h
+      - path: DefaultOTARequestorUserConsent.h
+      - path: ExtendedOTARequestorDriver.h
+      - path: ota-requestor-server.h
       - path: OTADownloader.h
       - path: OTARequestorDriver.h
-      - path: ota-requestor-server.h
-      - path: ExtendedOTARequestorDriver.h
+      - path: OTARequestorInterface.h
+      - path: OTARequestorStorage.h
       - path: OTARequestorUserConsentDelegate.h
-      - path: DefaultOTARequestorStorage.h
-      - path: BDXDownloader.h
       - path: OTATestEventTriggerHandler.h
 template_contribution:
   - name: component_catalog
     value: matter_ota_requestor
+define:
+  - name: NON_SPEC_COMPLIANT_OTA_ACTION_DELAY_FLOOR
+    value: -1

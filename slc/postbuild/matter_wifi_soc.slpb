@@ -5,7 +5,8 @@ constants:
   value: "matter_wifi_soc"
 steps:
 - task: "create_rps"
-  input: "{{build_dir}}/{{project_name}}.s37"
+  input: "{{build_dir}}/{{project_name}}.out"
+  map: "{{build_dir}}/{{project_name}}.map"
   app-version: "1"
   output: "{{build_dir}}/{{project_name}}.rps"
 - task: "convert"
@@ -13,4 +14,10 @@ steps:
   output: "{{build_dir}}/{{project_name}}.hex"
 - task: "convert"
   input: "{{build_dir}}/{{project_name}}.rps"
+  output: "{{build_dir}}/{{project_name}}.s37"
+- task: "convert"
+  input: "{{build_dir}}/{{project_name}}.rps"
   output: "{{build_dir}}/{{project_name}}_isp.bin"
+- task: copy
+  input: "{{build_dir}}/{{project_name}}.rps"
+  output: artifact/{{project_name}}.rps

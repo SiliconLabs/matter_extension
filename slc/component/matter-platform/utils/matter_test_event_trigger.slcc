@@ -1,22 +1,30 @@
 id: matter_test_event_trigger
 label: Matter Test Event Trigger
-description: Definition of the TestEventTriggerDelegate class. An application implementing the TestEventTrigger Command must enable this component and implement bool emberAfHandleEventTrigger(uint64_t);
+description: Definition of the TestEventTriggerDelegate class. An application implementing the TestEventTrigger Command must enable this component and implement bool emberAfHandleEventTrigger(uint64_t).
 package: "Matter"
 category: Stack
 quality: production
 metadata:
   sbom:
     license: Zlib
+
 provides:
   - name: matter_test_event_trigger
+
 source:
-  - path: examples/platform/silabs/SilabsTestEventTriggerDelegate.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/SilabsTestEventTriggerDelegate.cpp
+
 include:
-  - path: examples/platform/silabs/
+  - path: third_party/matter_sdk/examples/platform/silabs/
     file_list:
     - path: SilabsTestEventTriggerDelegate.h
+  - path: third_party/matter_sdk/src/app
+    file_list:
+    - path: TestEventTriggerDelegate.h
+
 config_file:
   - path: slc/config/sl_matter_test_event_trigger_config.h
-    file_id: test_event_trigger_config
+    file_id: matter_test_event_trigger_config
+
 define:
-  - name: SILABS_TEST_EVENT_TRIGGER_ENABLED
+  - name: SL_MATTER_TEST_EVENT_TRIGGER_ENABLED

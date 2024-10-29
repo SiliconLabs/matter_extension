@@ -7,12 +7,12 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.3.2"
+    version: "2.4.0"
   - id: wiseconnect3_sdk
-    version: "3.3.3"
+    version: "3.3.4"
 
 component:
-  - id: matter_wstk_leds
+  - id: matter_leds
     from: matter
   - id: matter
     from: matter
@@ -28,6 +28,8 @@ component:
     from: matter
   - id: app_common
     from: matter
+  - id: matter_provision_flash
+    from: matter
 
   - id: matter_access_control
     from: matter
@@ -40,10 +42,6 @@ component:
   - id: matter_descriptor
     from: matter
   - id: matter_diagnostic_logs
-    from: matter
-  - id: matter_electrical_energy_measurement
-    from: matter
-  - id: matter_electrical_power_measurement
     from: matter
   - id: matter_fixed_label
     from: matter
@@ -62,8 +60,6 @@ component:
   - id: matter_operational_credentials
     from: matter
   - id: matter_operational_state
-    from: matter
-  - id: matter_power_topology
     from: matter
   - id: matter_software_diagnostics
     from: matter
@@ -88,6 +84,10 @@ component:
   - id: matter_fw_upgrade_917
     from: matter
   - id: matter_default_lcd_config
+    from: matter
+  - id: matter_shell
+    from: matter
+  - id: matter_log_uart
     from: matter
 
   - id: sl_si91x_common_flash_nvm3
@@ -124,7 +124,12 @@ component:
     instance: [btn0,btn1]
     from: wiseconnect3_sdk
   - id: sl_si91x_led_917
-    instance: [led0,led1]
+    instance: [led0]
+    condition: [si917_dev_board]
+    from: wiseconnect3_sdk
+  - id: sl_si91x_led_917
+    instance: [led0, led1]
+    condition: [si917_prod_board]
     from: wiseconnect3_sdk
   - instance: [timer0]
     from: wiseconnect3_sdk
@@ -134,7 +139,7 @@ configuration:
   - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
 
 config_file:
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/data_model/dishwasher-wifi-app.zap
+  - path: ../../../../examples/dishwasher-app/silabs/data_model/dishwasher-wifi-app.zap
     directory: common
     file_id: zap_config
   - path: ../../../../provision.mattpconf
@@ -142,38 +147,26 @@ config_file:
     file_id: provision_config
 
 include:
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/include
+  - path: ../../../../examples/dishwasher-app/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
       - path: AppTask.h
       - path: CHIPProjectConfig.h
       - path: DishwasherManager.h
-      - path: ElectricalSensorManager.h
-      - path: OperationalStateDelegate.h
-      - path: ElectricalPowerMeasurementDelegate.h
-      - path: ElectricalEnergyMeasurementInstance.h
-      - path: PowerTopologyDelegate.h
+      - path: operational-state-delegate-impl.h
     directory: include
 
 source:
-  - path: ../../../../examples/platform/silabs/main.cpp
+  - path: ../../../../examples/dishwasher-app/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/AppTask.cpp
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/DishwasherManager.cpp
+  - path: ../../../../examples/dishwasher-app/silabs/src/DishwasherManager.cpp
     directory: src
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/ElectricalSensorManager.cpp
+  - path: ../../../../examples/dishwasher-app/silabs/src/operational-state-delegate-impl.cpp
     directory: src
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/OperationalStateDelegate.cpp
-    directory: src
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/ElectricalPowerMeasurementDelegate.cpp
-    directory: src
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/ElectricalEnergyMeasurementInstance.cpp
-    directory: src
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/PowerTopologyDelegate.cpp
-    directory: src
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/ZclCallbacks.cpp
+  - path: ../../../../examples/dishwasher-app/silabs/src/ZclCallbacks.cpp
     directory: src
 
 define:

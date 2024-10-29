@@ -12,6 +12,10 @@
             "discriminator": 3840,
             "passcode": 20202021,
             "iterations": 1500
+        },
+        "attestation_credentials": {
+            "paa_key": "../third_party/matter_sdk/credentials/test/attestation/Chip-Test-PAA-NoVID-Key.der",
+            "paa_cert": "../third_party/matter_sdk/credentials/test/attestation/Chip-Test-PAA-NoVID-Cert.der"
         }
     }
 }

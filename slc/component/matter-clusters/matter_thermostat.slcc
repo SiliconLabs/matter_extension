@@ -2,7 +2,7 @@
 category: Clusters|HVAC
 description: >
   Implementation of the Thermostat Server Cluster.
-  The user has to enable the Thermostat Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Thermostat Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_thermostat
 package: Matter
 label: Thermostat Server Cluster
@@ -13,7 +13,16 @@ metadata:
 provides:
   - name: matter_thermostat
 source:
-  - path: src/app/clusters/thermostat-server/thermostat-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/thermostat-server/PresetStructWithOwnedMembers.cpp
+  - path: third_party/matter_sdk/src/app/clusters/thermostat-server/thermostat-server-atomic.cpp
+  - path: third_party/matter_sdk/src/app/clusters/thermostat-server/thermostat-server-presets.cpp
+  - path: third_party/matter_sdk/src/app/clusters/thermostat-server/thermostat-server.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/thermostat-server
+    file_list:
+      - path: PresetStructWithOwnedMembers.h
+      - path: thermostat-delegate.h
+      - path: thermostat-server.h
 template_contribution:
   - name: component_catalog
     value: matter_thermostat

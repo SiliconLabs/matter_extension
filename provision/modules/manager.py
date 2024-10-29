@@ -113,6 +113,9 @@ class ProvisionManager:
 
         # Read device configuration
         dev = _dev.Device(paths, args, device_num.str(), flash_size)
+        if dev.override:
+            # User configuration part number
+            device_num.set(dev.label)
         print("Device: {}\n".format(dev))
         # Flash address
         fa = args.get(ID.kFlashAddress)

@@ -2,7 +2,7 @@
 category: Clusters|General
 description: >
   Implementation of the Sample MEI Server Cluster.
-  The user has to enable the Sample MEI Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Sample MEI Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_sample_mei
 package: Matter
 label: Sample MEI Server Cluster
@@ -13,9 +13,9 @@ metadata:
 provides:
   - name: matter_sample_mei
 source:
-  - path: src/app/clusters/sample-mei-server/sample-mei-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/sample-mei-server/sample-mei-server.cpp
 include:
-  - path: src/app/clusters/sample-mei-server
+  - path: third_party/matter_sdk/src/app/clusters/sample-mei-server
     file_list:
       - path: sample-mei-server.h
 template_contribution:

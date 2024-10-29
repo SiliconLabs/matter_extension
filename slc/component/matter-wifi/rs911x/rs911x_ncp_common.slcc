@@ -15,30 +15,26 @@ requires:
 - name: freertos
 - name: psa_its
 source:
-- path: examples/platform/silabs/efr32/rs911x/wfx_rsi_host.cpp
-- path: src/platform/silabs/rs911x/BLEManagerImpl.cpp
-- path: src/platform/silabs/rs911x/wfx_sl_ble_init.c
+- path: third_party/matter_sdk/examples/platform/silabs/wifi/wfx_rsi_host.cpp
+- path: third_party/matter_sdk/src/platform/silabs/rs911x/BLEManagerImpl.cpp
+- path: third_party/matter_sdk/src/platform/silabs/rs911x/wfx_sl_ble_init.cpp
 include:
-- path: src/platform/silabs/rs911x
+- path: third_party/matter_sdk/src/platform/silabs/rs911x
   file_list:
   - path: ble_config.h
   - path: rsi_ble_config.h
   - path: wfx_sl_ble_init.h
-- path: examples/platform/silabs
+- path: third_party/matter_sdk/examples/platform/silabs
   file_list:
   - path: wfx_rsi.h
-- path: examples/platform/silabs/efr32/rs911x/hal
+- path: third_party/matter_sdk/examples/platform/silabs/efr32/rs911x/hal
   file_list:
   - path: rsi_hal.h
-- path: examples/platform/silabs/efr32
+- path: third_party/matter_sdk/examples/platform/silabs/efr32
   file_list:
   - path: spi_multiplex.h
 define:
 - name: RSI_BLE_ENABLE
-  value: 1
-- name: RSI_BLE_MAX_NBR_PERIPHERALS
-  value: 1
-- name: RSI_BLE_MAX_NBR_CENTRALS
   value: 1
 - name: SLI_SI91X_ENABLE_BLE
   value: 1

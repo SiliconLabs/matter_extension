@@ -8,52 +8,49 @@ define:
     value: '1'
 -   name: RADIO_CONFIG_DMP_SUPPORT
     value: '1'
--   name: WIFI_ENABLE_SECURITY_WPA3_TRANSITION
-    value: '1'
 description: siwx917_common
 id: siwx917_common
 include:
 -   path: .
--   path: examples/common/QRCode/repo/c
--   path: examples/platform/silabs
--   path: examples/platform/silabs/SiWx917
--   path: examples/platform/silabs/SiWx917/SiWx917
--   path: examples/providers
--   path: src
--   path: src/include
--   path: src/lib
--   path: src/platform/silabs/SiWx917
--   path: src/platform/silabs/SiWx917/wifi
--   path: third_party/nlassert/repo/include
--   path: third_party/nlio/repo/include
--   path: examples/platform/silabs
+-   path: third_party/matter_sdk/examples/common/QRCode/repo/c
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/examples/platform/silabs/SiWx917
+-   path: third_party/matter_sdk/examples/platform/silabs/SiWx917/SiWx917
+-   path: third_party/matter_sdk/examples/providers
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
+-   path: third_party/matter_sdk/src/platform/silabs/SiWx917
+-   path: third_party/matter_sdk/src/platform/silabs/SiWx917/wifi
+-   path: third_party/nlassert/include
+-   path: third_party/nlio/include
+-   path: third_party/matter_sdk/examples/platform/silabs
     file_list:
     -   path: board_config.h
     -   path: wfx_rsi.h
     -   path: OTAConfig.h
     -   path: SoftwareFaultReports.h
     -   path: silabs_utils.h
-    -   path: matter_shell.h
-    -   path: uart.h
     -   path: MatterConfig.h
     -   path: LEDWidget.h
     -   path: sl_systemview_config.h
     -   path: PigweedLogger.h
     -   path: FreeRTOSConfig.h
     -   path: Rpc.h
-    -   path: TemperatureSensor.h
     -   path: silabs_creds.h
     -   path: SilabsTestEventTriggerDelegate.h
     -   path: MemMonitoring.h
     -   path: BaseApplication.h
--   path: src/platform/silabs/SiWx917/wifi
+-   path: third_party/matter_sdk/src/platform/silabs/wifi
+    file_list:
+    -   path: dhcp_client.h
+    -   path: wfx_host_events.h
+-   path: third_party/matter_sdk/src/platform/silabs/SiWx917/wifi
     file_list:
     -   path: ethernetif.h
     -   path: wfx_msgs.h
-    -   path: wfx_host_events.h
-    -   path: dhcp_client.h
     -   path: wifi_config.h
--   path: examples/platform/silabs/SiWx917/SiWx917
+-   path: third_party/matter_sdk/examples/platform/silabs/SiWx917/SiWx917
     file_list:
     -   path: sl_wlan_config.h
 label: siwx917_common
@@ -65,18 +62,18 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: examples/platform/silabs/BaseApplication.cpp
--   path: examples/platform/silabs/LEDWidget.cpp
--   path: examples/platform/silabs/MatterConfig.cpp
--   path: examples/platform/silabs/OTAConfig.cpp
--   path: examples/platform/silabs/SiWx917/SiWx917/sl_wifi_if.cpp
--   path: examples/platform/silabs/SiWx917/SiWx917/wfx_rsi_host.cpp
--   path: examples/platform/silabs/SoftwareFaultReports.cpp
--   path: examples/platform/silabs/silabs_utils.cpp
--   path: examples/platform/silabs/syscalls_stubs.cpp
--   path: examples/platform/silabs/wifi/wfx_notify.cpp
--   path: src/platform/silabs/SiWx917/wifi/dhcp_client.cpp
--   path: src/platform/silabs/SiWx917/wifi/ethernetif.cpp
--   path: src/platform/silabs/SiWx917/wifi/lwip_netif.cpp
+-   path: third_party/matter_sdk/examples/platform/silabs/BaseApplication.cpp
+-   path: third_party/matter_sdk/examples/platform/silabs/LEDWidget.cpp
+-   path: third_party/matter_sdk/examples/platform/silabs/MatterConfig.cpp
+-   path: third_party/matter_sdk/examples/platform/silabs/OTAConfig.cpp
+-   path: third_party/matter_sdk/examples/platform/silabs/SiWx917/SiWx917/sl_wifi_if.cpp
+-   path: third_party/matter_sdk/examples/platform/silabs/wifi/wfx_rsi_host.cpp
+-   path: third_party/matter_sdk/examples/platform/silabs/SoftwareFaultReports.cpp
+-   path: third_party/matter_sdk/examples/platform/silabs/silabs_utils.cpp
+-   path: third_party/matter_sdk/examples/platform/silabs/syscalls_stubs.cpp
+-   path: third_party/matter_sdk/examples/platform/silabs/wifi/wfx_notify.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/wifi/dhcp_client.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/SiWx917/wifi/ethernetif.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/SiWx917/wifi/lwip_netif.cpp
 ui_hints:
     visibility: never

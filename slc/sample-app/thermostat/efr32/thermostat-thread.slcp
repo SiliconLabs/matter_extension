@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.3.2"
+    version: "2.4.0"
 
 component:
   - id: device_init
@@ -15,13 +15,9 @@ component:
   - id: clock_manager
   - id: matter_buttons
     from: matter
-  - id: matter_wstk_leds
+  - id: matter_leds
     from: matter
-
-  - id: i2cspm
-    instance: [sensor]
-
-
+    
   - id: matter
     from: matter
   - id: matter_platform_efr32
@@ -40,6 +36,8 @@ component:
   - id: matter_shell
     from: matter
   - id: matter_gatt
+    from: matter
+  - id: matter_provision_default
     from: matter
 
   - id: matter_thermostat_app
@@ -94,10 +92,12 @@ component:
     from: matter
   - id: matter_wifi_network_diagnostics
     from: matter
-  - id: matter_temperature_sensor
+  - id: matter_si70xx_sensor
     from: matter
   - id: sensor_rht
   - id: matter_default_lcd_config
+    from: matter
+  - id: matter_log_uart
     from: matter
 
   # Override configuration for JTAG use
@@ -105,6 +105,10 @@ component:
     from: matter
   - id: matter_segger_rtt
     from: matter
+
+  - id: matter_si70xx_sensor
+    from: matter
+    condition: [hardware_board_has_si70xx]
 
 requires:
 # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
@@ -114,7 +118,7 @@ requires:
      - device_series_2  
 
 config_file:
-  - path: ../../../../examples/thermostat/thermostat-common/thermostat.zap
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/thermostat-common/thermostat.zap
     directory: common
     file_id: zap_config
   - path: ../../../../provision.mattpconf
@@ -122,7 +126,7 @@ config_file:
     file_id: provision_config
 
 include:
-  - path: ../../../../examples/thermostat/silabs/include
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -132,16 +136,17 @@ include:
       - path: CHIPProjectConfig.h
     directory: include
 
+
 source:
-  - path: ../../../../examples/thermostat/silabs/src/AppTask.cpp
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/thermostat/silabs/src/TemperatureManager.cpp
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/TemperatureManager.cpp
     directory: src
-  - path: ../../../../examples/platform/silabs/main.cpp
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/thermostat/silabs/src/ZclCallbacks.cpp
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/ZclCallbacks.cpp
     directory: src
-  - path: ../../../../examples/thermostat/silabs/src/SensorManager.cpp
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/SensorManager.cpp
     directory: src
 
 define:
@@ -155,9 +160,6 @@ define:
     value: "40960"
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
     value: "4092"
-  - name: USE_TEMP_SENSOR
-    value: "1"
-
 configuration:
   - name: SL_OPENTHREAD_ENABLE_APP_TASK
     value: 0
@@ -182,13 +184,7 @@ configuration:
   - {name: SL_STACK_SIZE, value: '4608'} 
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: 16
-  - name: SL_BT_RTOS_LINK_LAYER_TASK_STACK_SIZE
-    value: 1024
-  - name: SL_BT_RTOS_HOST_STACK_TASK_STACK_SIZE
-    value: 2048
-  - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
-    value: 1536
-
+    
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17

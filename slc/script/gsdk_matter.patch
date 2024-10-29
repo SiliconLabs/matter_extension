@@ -1,0 +1,81 @@
+diff --git a/protocol/openthread/component/ot_platform_abstraction.slcc b/protocol/openthread/component/ot_platform_abstraction.slcc
+index 82c0be7ba27a..645f1ac54e44 100644
+--- a/protocol/openthread/component/ot_platform_abstraction.slcc
++++ b/protocol/openthread/component/ot_platform_abstraction.slcc
+@@ -33,6 +33,7 @@ config_file:
+   - path: protocol/openthread/config/sl_openthread_rtos_config.h
+     condition:
+       - kernel
++    unless: ["matter_integration"]
+   - path: protocol/openthread/config/sl_openthread_subghz_config.h
+     condition:
+       - hardware_board_supports_ot_subghz
+@@ -41,12 +42,14 @@ toolchain_settings:
+     value: sl_openthread_rtos_config.h
+     condition:
+       - kernel
++    unless: ["matter_integration"]
+   - option: preinclude
+     value: sl_openthread_subghz_config.h
+     condition:
+       - hardware_board_supports_ot_subghz
+ include:
+   - path: protocol/openthread/platform-abstraction/rtos
++    unless: ["matter_integration"]
+     file_list:
+       - path: sl_ot_rtos_adaptation.h
+         condition:
+@@ -55,6 +58,7 @@ source:
+   - path: protocol/openthread/platform-abstraction/rtos/sl_ot_rtos_adaptation.c
+     condition:
+       - kernel
++    unless: ["matter_integration"]
+ library:
+   - path: "protocol/openthread/libs/libsl_openthread_efr32mg1x_gcc.a"
+     condition:
+@@ -73,6 +77,7 @@ define:
+     value: 1
+     condition:
+       - freertos
++    unless: ["matter_integration"]
+   - name: OPENTHREAD_CONFIG_PLATFORM_RADIO_COEX_ENABLE
+     value: 1
+     condition:
+@@ -89,6 +94,7 @@ template_contribution:
+       handler: sl_ot_rtos_init
+     condition:
+       - kernel
++    unless: ["matter_integration"]
+   - name: ot_init
+     value: sl_ot_create_instance
+     priority: 0
+diff --git a/protocol/openthread/component/ot_platform_abstraction_core.slcc b/protocol/openthread/component/ot_platform_abstraction_core.slcc
+index 59ff26dcf9c8..9d40d3c7e09e 100644
+--- a/protocol/openthread/component/ot_platform_abstraction_core.slcc
++++ b/protocol/openthread/component/ot_platform_abstraction_core.slcc
+@@ -56,9 +56,11 @@ source:
+       - path: protocol/openthread/platform-abstraction/efr32/uartdrv_uart.c
+         condition:
+           - uartdrv_usart
++        unless: ["matter_integration"]
+       - path: protocol/openthread/platform-abstraction/efr32/iostream_uart.c
+         condition:
+           - iostream_usart
++        unless: ["matter_integration"]
+       - path: protocol/openthread/platform-abstraction/efr32/sleep.c
+         condition:
+           - power_manager
+diff --git a/protocol/openthread/component/ot_platform_abstraction_source.slcc b/protocol/openthread/component/ot_platform_abstraction_source.slcc
+index b7f22731345c..83934e91a244 100644
+--- a/protocol/openthread/component/ot_platform_abstraction_source.slcc
++++ b/protocol/openthread/component/ot_platform_abstraction_source.slcc
+@@ -39,7 +39,9 @@ source:
+       - path: protocol/openthread/platform-abstraction/efr32/entropy.c
+       - path: protocol/openthread/platform-abstraction/efr32/flash.c
+       - path: protocol/openthread/platform-abstraction/efr32/logging.c
++        unless: ["matter_integration"]
+       - path: protocol/openthread/platform-abstraction/efr32/memory.c
++        unless: ["matter_integration"]
+       - path: protocol/openthread/platform-abstraction/efr32/misc.c
+       - path: protocol/openthread/platform-abstraction/efr32/crypto.c
+       - path: protocol/openthread/platform-abstraction/efr32/ieee802154-packet-utils.cpp

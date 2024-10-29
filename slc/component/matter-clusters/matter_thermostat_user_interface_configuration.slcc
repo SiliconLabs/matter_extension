@@ -2,7 +2,7 @@
 category: Clusters|HVAC
 description: >
   Implementation of the Thermostat User Interface Configuration Server Cluster.
-  The user has to enable the Thermostat User Interface Configuration Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Thermostat User Interface Configuration Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_thermostat_user_interface_configuration
 package: Matter
 label: Thermostat User Interface Configuration Server Cluster
@@ -13,7 +13,7 @@ metadata:
 provides:
   - name: matter_thermostat_user_interface_configuration
 source:
-  - path: src/app/clusters/thermostat-user-interface-configuration-server/thermostat-user-interface-configuration-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/thermostat-user-interface-configuration-server/thermostat-user-interface-configuration-server.cpp
 template_contribution:
   - name: component_catalog
     value: matter_thermostat_user_interface_configuration

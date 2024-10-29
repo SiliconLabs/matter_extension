@@ -2,7 +2,7 @@
 category: Clusters|General
 description: >
   Implementation of the Scenes Management Server Cluster.
-  The user has to enable the Scenes Management Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Scenes Management Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_scenes
 package: Matter
 label: Scenes Management Server Cluster
@@ -13,19 +13,19 @@ metadata:
 provides:
   - name: matter_scenes
 source:
-  - path: src/app/clusters/scenes-server/SceneHandlerImpl.cpp
-  - path: src/app/clusters/scenes-server/ExtensionFieldSetsImpl.cpp
-  - path: src/app/clusters/scenes-server/scenes-server.cpp
-  - path: src/app/clusters/scenes-server/SceneTableImpl.cpp
+  - path: third_party/matter_sdk/src/app/clusters/scenes-server/ExtensionFieldSetsImpl.cpp
+  - path: third_party/matter_sdk/src/app/clusters/scenes-server/SceneHandlerImpl.cpp
+  - path: third_party/matter_sdk/src/app/clusters/scenes-server/scenes-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/scenes-server/SceneTableImpl.cpp
 include:
-  - path: src/app/clusters/scenes-server
+  - path: third_party/matter_sdk/src/app/clusters/scenes-server
     file_list:
-      - path: SceneHandlerImpl.h
-      - path: SceneTableImpl.h
-      - path: scenes-server.h
       - path: ExtensionFieldSets.h
       - path: ExtensionFieldSetsImpl.h
+      - path: SceneHandlerImpl.h
+      - path: scenes-server.h
       - path: SceneTable.h
+      - path: SceneTableImpl.h
 template_contribution:
   - name: component_catalog
     value: matter_scenes

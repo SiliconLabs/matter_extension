@@ -2,7 +2,7 @@
 category: Clusters|CHIP
 description: >
   Implementation of the OTA Software Update Provider Cluster.
-  The user has to enable the OTA Software Update Provider Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the OTA Software Update Provider Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_ota_provider
 package: Matter
 label: OTA Software Update Provider Cluster
@@ -13,14 +13,14 @@ metadata:
 provides:
   - name: matter_ota_provider
 source:
-  - path: src/app/clusters/ota-provider/ota-provider.cpp
+  - path: third_party/matter_sdk/src/app/clusters/ota-provider/ota-provider.cpp
 include:
-  - path: src/app/clusters/ota-provider
+  - path: third_party/matter_sdk/src/app/clusters/ota-provider
     file_list:
-      - path: OTAProviderUserConsentDelegate.h
       - path: DefaultOTAProviderUserConsent.h
       - path: ota-provider-delegate.h
       - path: ota-provider.h
+      - path: OTAProviderUserConsentDelegate.h
 template_contribution:
   - name: component_catalog
     value: matter_ota_provider

@@ -1,0 +1,17 @@
+id: matter_subscription_synchronization
+label: Subscription Timout Synchronization
+description: >
+  This component syncrhonizes the maximum interval of the all subscriptions
+  to only require the ICD to become active one.
+package: "Matter"
+category: Platform|Low-power
+provides:
+  - name: matter_subscription_synchronization
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+
+define:
+  - name: CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED
+    value: 1

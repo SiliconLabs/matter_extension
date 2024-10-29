@@ -2,7 +2,7 @@
 category: Clusters|Energy Management
 description: >
   Implementation of the Device Energy Management Server Cluster.
-  The user has to enable the Device Energy Management Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Device Energy Management Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_device_energy_management
 package: Matter
 label: Device Energy Management Server Cluster
@@ -13,11 +13,12 @@ metadata:
 provides:
   - name: matter_device_energy_management
 source:
-  - path: src/app/clusters/device-energy-management-server/device-energy-management-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/device-energy-management-server/device-energy-management-server.cpp
 include:
-  - path: src/app/clusters/device-energy-management-server
+  - path: third_party/matter_sdk/src/app/clusters/device-energy-management-server
     file_list:
       - path: device-energy-management-server.h
+      - path: DeviceEnergyManagementTestEventTriggerHandler.h
 template_contribution:
   - name: component_catalog
     value: matter_device_energy_management

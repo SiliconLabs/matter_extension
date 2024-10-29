@@ -2,7 +2,7 @@
 category: Clusters|CHIP
 description: >
   Implementation of the Fault Injection Server Cluster.
-  The user has to enable the Fault Injection Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Fault Injection Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_fault_injection
 package: Matter
 label: Fault Injection Server Cluster
@@ -13,7 +13,7 @@ metadata:
 provides:
   - name: matter_fault_injection
 source:
-  - path: src/app/clusters/fault-injection-server/fault-injection-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/fault-injection-server/fault-injection-server.cpp
 template_contribution:
   - name: component_catalog
     value: matter_fault_injection

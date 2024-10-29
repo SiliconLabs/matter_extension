@@ -152,3 +152,57 @@ upgrade:
       - name: SL_IDLE_MODE_INTERVAL
         replacement: SL_ACTIVE_MODE_THRESHOLD
       - script: slc/config/scripts/upgrade_validation.lua
+
+  - sdk:
+      id: matter
+      version: "2.3.2"
+    component:
+      - trigger: ot_rtos_wrapers_stub
+        description: >
+          Removing ot_rtos_wrapers_stub
+        remove:
+           - ot_rtos_wrapers_stub
+      - trigger: ot_rtos_wrappers_real
+        description: >
+          Removing ot_rtos_wrappers_real
+        remove:
+           - ot_rtos_wrappers_real
+    configuration:
+      - name: SL_BT_RTOS_LINK_LAYER_TASK_STACK_SIZE
+        replacement: SL_BT_RTOS_LINK_LAYER_TASK_STACK_SIZE
+        description: >
+          Updating value: 
+        value:
+          "(1000)": "(1024)"
+      - name: SL_BT_RTOS_HOST_STACK_TASK_STACK_SIZE
+        replacement: SL_BT_RTOS_HOST_STACK_TASK_STACK_SIZE
+        description: >
+          Updating value: 
+        value:
+          "(2000)": "(2048)"
+      - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+        replacement: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+        description: >
+          Updating value: 
+        value:
+          "(1000)": "(1536)"
+
+  - sdk:
+      id: matter
+      version: "2.4.0"
+      
+    component:
+      - trigger: matter_uart_wifi_wf200
+        description: Removing unused component
+        remove: 
+          - matter_uart_wifi_wf200
+
+      - trigger: matter_uart_wifi
+        description: Removing unused component
+        remove: 
+          - matter_uart_wifi
+      
+      - trigger: matter_sensor
+        description: Removing empty and unused component
+        remove:
+          - matter_sensor

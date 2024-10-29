@@ -9,7 +9,7 @@ metadata:
     license: Zlib
 
 config_file:
-  - path: examples/platform/silabs/FreeRTOSConfig.h
+  - path: third_party/matter_sdk/examples/platform/silabs/FreeRTOSConfig.h
     override:
       component: freertos
       file_id: freertos_config
@@ -17,7 +17,7 @@ config_file:
 provides:
 - name: matter_platform_efr32
 include:
-- path: examples/platform/silabs
+- path: third_party/matter_sdk/examples/platform/silabs
   file_list:
   - path: PigweedLogger.h
   - path: Rpc.h
@@ -25,17 +25,16 @@ include:
   - path: LEDWidget.h
   - path: MatterConfig.h
   - path: OTAConfig.h
-  - path: matter_shell.h
   - path: MemMonitoring.h
   - path: BaseApplication.h
   - path: SoftwareFaultReports.h
 
 source:
-- path: examples/platform/silabs/BaseApplication.cpp
-- path: examples/platform/silabs/silabs_utils.cpp
-- path: examples/platform/silabs/MatterConfig.cpp
-- path: examples/platform/silabs/SoftwareFaultReports.cpp
-- path: examples/platform/silabs/LEDWidget.cpp
+- path: third_party/matter_sdk/examples/platform/silabs/BaseApplication.cpp
+- path: third_party/matter_sdk/examples/platform/silabs/silabs_utils.cpp
+- path: third_party/matter_sdk/examples/platform/silabs/MatterConfig.cpp
+- path: third_party/matter_sdk/examples/platform/silabs/SoftwareFaultReports.cpp
+- path: third_party/matter_sdk/examples/platform/silabs/LEDWidget.cpp
 
 toolchain_settings:
 - option: gcc_linker_option
@@ -47,6 +46,8 @@ requires:
   - name: matter_efr32
     condition: [matter_thread]
   - name: matter_efr32_wifi
+    condition: [matter_wifi]
+  - name: power_manager
     condition: [matter_wifi]
   - name: bootloader_interface
   - name: sl_system

@@ -1,5 +1,5 @@
 id: matter
-version: 2.3.2
+version: 2.4.0
 description: "Matter extension for Simplicity SDK Suite"
 label: "Silicon Labs Matter"
 sdk:
@@ -20,12 +20,13 @@ component_path:
   - path: slc/component/matter-platform/display
   - path: slc/component/matter-platform/device-attestation-credentials
   - path: slc/component/matter-platform/low-power
+  - path: slc/component/matter-platform/logging
   - path: slc/component/matter-platform/crypto
   - path: slc/component/matter-platform/ota
   - path: slc/component/matter-platform/segger
   - path: slc/component/matter-platform/shell
   - path: slc/component/matter-platform/siwx917
-  - path: slc/component/matter-platform/temperature-sensor
+  - path: slc/component/matter-platform/sensors
   - path: slc/component/matter-platform/uart
   - path: slc/component/matter-platform/utils
   - path: slc/component/matter-platform/wstk-leds
@@ -45,4 +46,4 @@ component_path:
   - path: slc/component/matter-wifi/917soc
 documentation:
   - docset: matter
-    version: 2.3.2
+    version: 2.4.0

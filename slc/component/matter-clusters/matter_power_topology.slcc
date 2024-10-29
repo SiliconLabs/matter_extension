@@ -2,7 +2,7 @@
 category: Clusters|Measurement
 description: >
   Implementation of the Power Topology Server Cluster.
-  The user has to enable the Power Topology Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Power Topology Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_power_topology
 package: Matter
 label: Power Topology Server Cluster
@@ -13,9 +13,9 @@ metadata:
 provides:
   - name: matter_power_topology
 source:
-  - path: src/app/clusters/power-topology-server/power-topology-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/power-topology-server/power-topology-server.cpp
 include:
-  - path: src/app/clusters/power-topology-server
+  - path: third_party/matter_sdk/src/app/clusters/power-topology-server
     file_list:
       - path: power-topology-server.h
 template_contribution:

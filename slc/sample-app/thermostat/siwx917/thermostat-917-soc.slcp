@@ -7,12 +7,12 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.3.2"
+    version: "2.4.0"
   - id: wiseconnect3_sdk
-    version: "3.3.3"
+    version: "3.3.4"
 
 component:
-  - id: matter_wstk_leds
+  - id: matter_leds
     from: matter
   - id: matter
     from: matter
@@ -32,6 +32,9 @@ component:
     from: matter   
   - id: app_common
     from: matter
+  - id: matter_provision_flash
+    from: matter
+
   - id: matter_access_control
     from: matter
   - id: matter_administrator_commissioning
@@ -82,11 +85,13 @@ component:
     from: matter
   - id: matter_wifi_network_diagnostics
     from: matter
-  #- id: matter_temperature_sensor
+  #- id: matter_si70xx_sensor
   #  from: matter
   - id: toolchain_gcc_common
     from: matter
   - id: matter_default_lcd_config
+    from: matter
+  - id: matter_log_uart
     from: matter
     
   # Override configuration for JTAG use
@@ -129,7 +134,12 @@ component:
     instance: [btn0,btn1]
     from: wiseconnect3_sdk
   - id: sl_si91x_led_917
-    instance: [led0,led1]
+    instance: [led0]
+    condition: [si917_dev_board]
+    from: wiseconnect3_sdk
+  - id: sl_si91x_led_917
+    instance: [led0, led1]
+    condition: [si917_prod_board]
     from: wiseconnect3_sdk
   - instance: [timer0]
     from: wiseconnect3_sdk
@@ -139,7 +149,7 @@ configuration:
   - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
 
 config_file:
-  - path: ../../../../examples/thermostat/thermostat-common/thermostat.zap
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/thermostat-common/thermostat.zap
     directory: common
     file_id: zap_config
   - path: ../../../../provision.mattpconf
@@ -147,7 +157,7 @@ config_file:
     file_id: provision_config
 
 include:
-  - path: ../../../../examples/thermostat/silabs/include
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -158,15 +168,15 @@ include:
     directory: include
     
 source:
-  - path: ../../../../examples/thermostat/silabs/src/AppTask.cpp
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/thermostat/silabs/src/TemperatureManager.cpp
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/TemperatureManager.cpp
     directory: src
-  - path: ../../../../examples/platform/silabs/main.cpp
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/thermostat/silabs/src/ZclCallbacks.cpp
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/ZclCallbacks.cpp
     directory: src
-  - path: ../../../../examples/thermostat/silabs/src/SensorManager.cpp
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/SensorManager.cpp
     directory: src
 
 define:

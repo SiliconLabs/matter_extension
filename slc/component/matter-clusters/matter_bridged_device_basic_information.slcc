@@ -2,7 +2,7 @@
 category: Clusters|CHIP
 description: >
   Implementation of the Bridged Device Basic Information Server Cluster.
-  The user has to enable the Bridged Device Basic Information Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Bridged Device Basic Information Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_bridged_device_basic_information
 package: Matter
 label: Bridged Device Basic Information Server Cluster
@@ -13,7 +13,7 @@ metadata:
 provides:
   - name: matter_bridged_device_basic_information
 source:
-  - path: src/app/clusters/bridged-device-basic-information-server/bridged-device-basic-information-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/bridged-device-basic-information-server/bridged-device-basic-information-server.cpp
 template_contribution:
   - name: component_catalog
     value: matter_bridged_device_basic_information

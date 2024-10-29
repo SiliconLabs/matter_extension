@@ -56,17 +56,19 @@ define:
 provides:
   - name: matter_efr32_ncp
 include:
-  - path: src/include/platform
-  - path: src/platform/silabs/efr32
-  - path: src/platform/silabs/efr32/wifi
+  - path: third_party/matter_sdk/src/include/platform
+  - path: third_party/matter_sdk/src/platform/silabs/efr32
+  - path: third_party/matter_sdk/src/platform/silabs/wifi
     file_list:
-      - path: wfx_host_events.h
-      - path: wfx_msgs.h
       - path: dhcp_client.h
+      - path: wfx_host_events.h
+  - path: third_party/matter_sdk/src/platform/silabs/efr32/wifi
+    file_list:
+      - path: wfx_msgs.h
       - path: wifi_config.h
       - path: ethernetif.h
 source:
-  - path: src/platform/silabs/efr32/wifi/dhcp_client.cpp
-  - path: src/platform/silabs/efr32/wifi/ethernetif.cpp
-  - path: src/platform/silabs/efr32/wifi/lwip_netif.cpp
-  - path: examples/platform/silabs/wifi/wfx_notify.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/wifi/dhcp_client.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/efr32/wifi/ethernetif.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/efr32/wifi/lwip_netif.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/wifi/wfx_notify.cpp

@@ -2,7 +2,7 @@
 category: Clusters|CHIP
 description: >
   Implementation of the Switch Server Cluster.
-  The user has to enable the Switch Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Switch Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_switch
 package: Matter
 label: Switch Server Cluster
@@ -13,9 +13,9 @@ metadata:
 provides:
   - name: matter_switch
 source:
-  - path: src/app/clusters/switch-server/switch-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/switch-server/switch-server.cpp
 include:
-  - path: src/app/clusters/switch-server
+  - path: third_party/matter_sdk/src/app/clusters/switch-server
     file_list:
       - path: switch-server.h
 template_contribution:

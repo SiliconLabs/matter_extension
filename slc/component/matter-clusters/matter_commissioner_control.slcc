@@ -1,0 +1,23 @@
+
+category: Clusters|General
+description: >
+  Implementation of the Commissioner Control Server Cluster.
+  The user has to enable the Commissioner Control Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_commissioner_control
+package: Matter
+label: Commissioner Control Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_commissioner_control
+source:
+  - path: third_party/matter_sdk/src/app/clusters/commissioner-control-server/commissioner-control-server.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/commissioner-control-server
+    file_list:
+      - path: commissioner-control-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_commissioner_control

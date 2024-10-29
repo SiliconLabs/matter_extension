@@ -24,9 +24,9 @@ requires:
   - name: matter_responders
   - name: matter_address_policy
 include:
-  - path: src/lib/dnssd/minimal_mdns
+  - path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns
 source:
--   path: src/lib/dnssd/minimal_mdns/Parser.cpp
--   path: src/lib/dnssd/minimal_mdns/RecordData.cpp
--   path: src/lib/dnssd/minimal_mdns/ResponseSender.cpp
--   path: src/lib/dnssd/minimal_mdns/Server.cpp
+-   path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/Parser.cpp
+-   path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/RecordData.cpp
+-   path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/ResponseSender.cpp
+-   path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/Server.cpp

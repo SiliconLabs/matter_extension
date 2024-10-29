@@ -1,0 +1,16 @@
+id: matter_log_rtt
+label: Logging to RTT
+description: Sets Log Destination to RTT
+package: "Matter"
+category: Platform|Utils
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+provides:
+  - name: matter_log_rtt
+define:
+  - name: SILABS_LOG_OUT_UART
+    value: 0
+conflicts:
+  - name: matter_log_uart

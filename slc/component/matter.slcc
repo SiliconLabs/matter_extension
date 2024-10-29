@@ -37,6 +37,18 @@ toolchain_settings:
 
 provides:
   - name: matter
+define:
+  - name: SL_MATTER_GN_BUILD 
+    value: 0
+
+include:
+- path: third_party/matter_sdk
+# This should be removed in the next matter_sdk update
+- path: third_party/matter_sdk/src/app/icd/server
+  file_list:
+  -   path: ICDCheckInBackOffStrategy.h
+  -   path: ICDMonitoringTable.h
+
 requires:
   - name: cpp_support
 
@@ -93,6 +105,7 @@ requires:
   - name: matter_callbacks
   - name: matter_check_in_message
   - name: matter_data_model
+  - name: matter_data_model_provider
   - name: matter_error
   - name: matter_libinteractionmodel
   - name: matter_memory
@@ -102,3 +115,4 @@ requires:
 recommends:
   - id: matter_configuration_over_swo
   - id: matter_ot_mbedtls_override
+  - id: matter_provision_default

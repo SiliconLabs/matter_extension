@@ -2,7 +2,7 @@
 category: Clusters|HVAC
 description: >
   Implementation of the Pump Configuration and Control Server Cluster.
-  The user has to enable the Pump Configuration and Control Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Pump Configuration and Control Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_pump_configuration_and_control
 package: Matter
 label: Pump Configuration and Control Server Cluster
@@ -13,7 +13,7 @@ metadata:
 provides:
   - name: matter_pump_configuration_and_control
 source:
-  - path: src/app/clusters/pump-configuration-and-control-server/pump-configuration-and-control-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/pump-configuration-and-control-server/pump-configuration-and-control-server.cpp
 template_contribution:
   - name: component_catalog
     value: matter_pump_configuration_and_control

@@ -5,15 +5,15 @@ define:
 -   name: RADIO_CONFIG_DMP_SUPPORT
     value: '1'
 description: check_in_message
-id: check_in_message
+id: matter_check_in_message
 include:
--   path: examples/platform/silabs
--   path: src
--   path: src/include
--   path: src/lib
--   path: third_party/nlassert/repo/include
--   path: third_party/nlio/repo/include
--   path: src/protocols/secure_channel
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
+-   path: third_party/nlassert/include
+-   path: third_party/nlio/include
+-   path: third_party/matter_sdk/src/protocols/secure_channel
     file_list:
     -   path: UnsolicitedStatusHandler.h
     -   path: StatusReport.h
@@ -41,6 +41,7 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: src/protocols/secure_channel/CheckinMessage.cpp
+-   path: third_party/matter_sdk/src/protocols/secure_channel/CheckinMessage.cpp
+-   path: third_party/matter_sdk/src/protocols/secure_channel/CheckInCounter.cpp
 ui_hints:
     visibility: never

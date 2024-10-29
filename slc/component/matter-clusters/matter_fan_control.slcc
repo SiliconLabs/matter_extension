@@ -2,7 +2,7 @@
 category: Clusters|HVAC
 description: >
   Implementation of the Fan Control Server Cluster.
-  The user has to enable the Fan Control Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Fan Control Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_fan_control
 package: Matter
 label: Fan Control Server Cluster
@@ -13,9 +13,9 @@ metadata:
 provides:
   - name: matter_fan_control
 source:
-  - path: src/app/clusters/fan-control-server/fan-control-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/fan-control-server/fan-control-server.cpp
 include:
-  - path: src/app/clusters/fan-control-server
+  - path: third_party/matter_sdk/src/app/clusters/fan-control-server
     file_list:
       - path: fan-control-delegate.h
       - path: fan-control-server.h

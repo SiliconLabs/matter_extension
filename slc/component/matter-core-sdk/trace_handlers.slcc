@@ -9,14 +9,14 @@ define:
 description: trace_handlers
 id: trace_handlers
 include:
--   path: examples/common/tracing
--   path: examples/platform/silabs
--   path: src
--   path: src/include
--   path: src/lib
--   path: third_party/nlassert/repo/include
--   path: third_party/nlio/repo/include
--   path: examples/common/tracing
+-   path: third_party/matter_sdk/examples/common/tracing
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
+-   path: third_party/nlassert/include
+-   path: third_party/nlio/include
+-   path: third_party/matter_sdk/examples/common/tracing
     file_list:
     -   path: TracingCommandLineArgument.h
     -   path: TraceDecoderOptions.h
@@ -32,6 +32,6 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: examples/common/tracing/TraceHandlers.cpp
+-   path: third_party/matter_sdk/examples/common/tracing/TraceHandlers.cpp
 ui_hints:
     visibility: never

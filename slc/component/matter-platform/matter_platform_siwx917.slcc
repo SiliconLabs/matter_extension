@@ -12,13 +12,14 @@ config_file:
   - override:
       component: "%extension-wiseconnect3_sdk%freertos_config"
       file_id: freertos_config
-    path: examples/platform/silabs/FreeRTOSConfig.h
+    path: third_party/matter_sdk/examples/platform/silabs/FreeRTOSConfig.h
 
 requires:
   - name: sl_system
   - name: matter_siwx917
   - name: matter_siwx917_common
-  - name: siwx917_soc_custom_startup
+  - name: sl_si91x_trng
+  - name: siwx917_soc_custom_hal
   - name: device_init_nvic
   - name: si91x_debug
   - name: sl_system_init
@@ -26,6 +27,18 @@ requires:
   - name: memory_manager
   - name: memory_manager_pool
   - name: freertos_heap_3
+# TODO : psram components - should be removed with wiseconnect SDK support
+  - name: rsilib_dcache
+    condition: [brd4342a]
+  - name: psram_core
+    condition: [brd4342a]
+  - name: psram_aps6404l_sqh
+    condition: [brd4342a]
+  - name: device_needs_ram_execution
+    condition: [brd4342a]
+# Configure a text segment in the PSRAM region for boards with PSRAM support
+  - name: siwx917_text_segment_in_psram
+    condition: [brd4342a]
 
 provides:
   - name: matter_platform_siwx917
@@ -34,7 +47,7 @@ provides:
   - name: matter_si91x_common_flash_nvm3_enabled
 
 include:
-- path: examples/platform/silabs
+- path: third_party/matter_sdk/examples/platform/silabs
   file_list:
   - path: PigweedLogger.h
   - path: Rpc.h
@@ -42,16 +55,17 @@ include:
   - path: LEDWidget.h
   - path: MatterConfig.h
   - path: OTAConfig.h
-  - path: matter_shell.h
   - path: MemMonitoring.h
   - path: BaseApplication.h
   - path: SoftwareFaultReports.h
 source:
-  - path: examples/platform/silabs/BaseApplication.cpp
-  - path: examples/platform/silabs/silabs_utils.cpp
-  - path: examples/platform/silabs/MatterConfig.cpp
-  - path: examples/platform/silabs/SoftwareFaultReports.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/BaseApplication.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/silabs_utils.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/MatterConfig.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/SoftwareFaultReports.cpp
 define:
+  - name: SUPPORT_CPLUSPLUS
+    value: 1
   - name: SL_WFX_CONFIG_SCAN
     value: 1
   - name: SIWX_917
@@ -63,8 +77,6 @@ define:
   - name: RS911X_WIFI
   - name: SL_SI91x_DUAL_INTERRUPTS_ERRATA
   - name: NVM3_LOCK_OVERRIDE
-# TODO : should be removed after code clean-up.
-  - name: BRD4325A
 toolchain_settings:
   - option: gcc_linker_option
     value: "-Wl,--wrap=MemoryAlloc"

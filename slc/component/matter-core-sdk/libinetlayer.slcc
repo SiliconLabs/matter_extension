@@ -7,13 +7,13 @@ define:
 description: libinetlayer
 id: libinetlayer
 include:
--   path: examples/platform/silabs
--   path: src
--   path: src/include
--   path: src/lib
--   path: third_party/nlassert/repo/include
--   path: third_party/nlio/repo/include
--   path: src/inet
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
+-   path: third_party/nlassert/include
+-   path: third_party/nlio/include
+-   path: third_party/matter_sdk/src/inet
     file_list:
     -   path: TCPEndPointImplLwIP.h
     -   path: EndPointStateLwIP.h
@@ -56,15 +56,15 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: src/inet/IPAddress-StringFuncts.cpp
--   path: src/inet/IPAddress.cpp
--   path: src/inet/IPPacketInfo.cpp
--   path: src/inet/IPPrefix.cpp
--   path: src/inet/InetArgParser.cpp
--   path: src/inet/InetError.cpp
--   path: src/inet/InetInterface.cpp
--   path: src/inet/InetInterfaceImplDefault.cpp
--   path: src/inet/UDPEndPoint.cpp
--   path: src/inet/UDPEndPointImplOpenThread.cpp
+-   path: third_party/matter_sdk/src/inet/IPAddress-StringFuncts.cpp
+-   path: third_party/matter_sdk/src/inet/IPAddress.cpp
+-   path: third_party/matter_sdk/src/inet/IPPacketInfo.cpp
+-   path: third_party/matter_sdk/src/inet/IPPrefix.cpp
+-   path: third_party/matter_sdk/src/inet/InetArgParser.cpp
+-   path: third_party/matter_sdk/src/inet/InetError.cpp
+-   path: third_party/matter_sdk/src/inet/InetInterface.cpp
+-   path: third_party/matter_sdk/src/inet/InetInterfaceImplDefault.cpp
+-   path: third_party/matter_sdk/src/inet/UDPEndPoint.cpp
+-   path: third_party/matter_sdk/src/inet/UDPEndPointImplOpenThread.cpp
 ui_hints:
     visibility: never

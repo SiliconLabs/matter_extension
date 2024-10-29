@@ -1,0 +1,59 @@
+id: matter_leds
+label: matter LED Support
+package: Matter
+description: Simple LED and RGB LED Support for Matter applications
+category: Platform
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+provides:
+  - name: matter_leds
+requires:
+# This should cover all supported boards that use simple LEDs
+  - name: simple_led_recommended_instance
+    condition:
+      - device_family_efr32mg24
+  - name: simple_led_recommended_instance
+    condition:
+      - device_family_efr32mg26
+  - name: simple_led_recommended_instance
+    condition:
+      - brd2704a
+
+define:
+# This should cover all supported boards that use simple LEDs
+  - name: ENABLE_WSTK_LEDS
+    value: "1"
+    condition:
+      - device_family_efr32mg26 
+  - name: ENABLE_WSTK_LEDS
+    value: "1"
+    condition:
+      - device_family_efr32mg24
+  - name: ENABLE_WSTK_LEDS
+    value: "1"
+    condition:
+      - brd2704a
+  - name: ENABLE_WSTK_LEDS
+    value: "1"
+    condition:
+      - brd4338a
+  - name: ENABLE_WSTK_LEDS
+    value: "1"
+    condition:
+      - brd4342a
+
+# This should cover all supported boards that supports RGB LEDs
+  - name: SL_MATTER_RGB_LED_ENABLED
+    value: "1"
+    condition:
+      - brd2605a
+  - name: ENABLE_WSTK_LEDS
+    value: "1"
+    condition:
+      - brd4343a
+  - name: ENABLE_WSTK_LEDS
+    value: "1"
+    condition:
+      - brd2605a

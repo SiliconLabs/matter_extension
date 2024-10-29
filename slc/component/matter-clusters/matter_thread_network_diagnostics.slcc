@@ -2,7 +2,7 @@
 category: Clusters|General
 description: >
   Implementation of the Thread Network Diagnostics Server Cluster.
-  The user has to enable the Thread Network Diagnostics Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Thread Network Diagnostics Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_thread_network_diagnostics
 package: Matter
 label: Thread Network Diagnostics Server Cluster
@@ -13,10 +13,10 @@ metadata:
 provides:
   - name: matter_thread_network_diagnostics
 source:
-  - path: src/app/clusters/thread-network-diagnostics-server/thread-network-diagnostics-provider.cpp
-  - path: src/app/clusters/thread-network-diagnostics-server/thread-network-diagnostics-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/thread-network-diagnostics-server/thread-network-diagnostics-provider.cpp
+  - path: third_party/matter_sdk/src/app/clusters/thread-network-diagnostics-server/thread-network-diagnostics-server.cpp
 include:
-  - path: src/app/clusters/thread-network-diagnostics-server
+  - path: third_party/matter_sdk/src/app/clusters/thread-network-diagnostics-server
     file_list:
       - path: thread-network-diagnostics-provider.h
 template_contribution:

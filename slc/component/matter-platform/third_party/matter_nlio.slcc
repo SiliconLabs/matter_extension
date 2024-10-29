@@ -12,7 +12,7 @@ metadata:
   sbom:
     license: Zlib
 include:
-  - path: third_party/nlio/repo/include   
+  - path: third_party/nlio/include   
     file_list:
     - path: nlbyteorder.hpp
     - path: nlio-byteorder.hpp

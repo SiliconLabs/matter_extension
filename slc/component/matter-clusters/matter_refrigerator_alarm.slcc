@@ -2,7 +2,7 @@
 category: Clusters|Appliances
 description: >
   Implementation of the Refrigerator Alarm Server Cluster.
-  The user has to enable the Refrigerator Alarm Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Refrigerator Alarm Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_refrigerator_alarm
 package: Matter
 label: Refrigerator Alarm Server Cluster
@@ -13,9 +13,9 @@ metadata:
 provides:
   - name: matter_refrigerator_alarm
 source:
-  - path: src/app/clusters/refrigerator-alarm-server/refrigerator-alarm-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/refrigerator-alarm-server/refrigerator-alarm-server.cpp
 include:
-  - path: src/app/clusters/refrigerator-alarm-server
+  - path: third_party/matter_sdk/src/app/clusters/refrigerator-alarm-server
     file_list:
       - path: refrigerator-alarm-server.h
 template_contribution:

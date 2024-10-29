@@ -1,0 +1,19 @@
+id: siwx917_data_segment_in_psram
+label: Siwx917 Data Segment in PSRAM
+package: platform
+description: >
+  This component puts Data segment in PSRAM memory region
+category: Device|Si91x|MCU|Peripheral|PSRAM Driver|PSRAM Linker Configurations
+quality: production
+define:
+  - name: NO_DATA_SEGMENT_IN_PSRAM
+    condition: [device_needs_ram_execution, brd4342a]
+provides:
+  - name: siwx917_data_segment_in_psram
+template_contribution:
+  - name: data_segment_in_psram
+    value: 1
+    condition: [brd4342a]
+  - name: psram_linker_config_enabled
+    value: 1
+    condition: [brd4342a]

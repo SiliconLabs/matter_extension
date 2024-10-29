@@ -2,7 +2,7 @@
 category: Clusters|General
 description: >
   Implementation of the Access Control Server Cluster.
-  The user has to enable the Access Control Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Access Control Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_access_control
 package: Matter
 label: Access Control Server Cluster
@@ -13,7 +13,12 @@ metadata:
 provides:
   - name: matter_access_control
 source:
-  - path: src/app/clusters/access-control-server/access-control-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/access-control-server/access-control-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/access-control-server/ArlEncoder.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/access-control-server
+    file_list:
+      - path: ArlEncoder.h
 template_contribution:
   - name: component_catalog
     value: matter_access_control

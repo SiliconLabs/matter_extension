@@ -1,3 +1,4 @@
+# Re-work this component to implement proper matter_sdk source code and/or SiSDK/WiFi SDK components
 id: matter_lwip
 package: Matter
 description: >
@@ -11,12 +12,17 @@ metadata:
 provides:
 - name: matter_lwip
 - name: lwip
-- name: si91x_networking_model
-- name: sl_si91x_network_stack
-#TO-DO: sl_si91x_internal_stack should be removed once sl_si91x_common_flash_nvm3 cleanedup
 - name: sl_si91x_internal_stack
+- name: sl_si91x_network_stack
+- name: lwip_port_freertos
+- name: sl_si91x_errno
+
+requires:
+- name: lwip_api
+- name: lwip_netif_ethernet
+
 include:
-- path: src/lwip/silabs
+- path: third_party/matter_sdk/src/lwip/silabs
   file_list:
   - path: lwipopts.h
   - path: lwipopts-wf200.h
@@ -24,205 +30,19 @@ include:
   - path: arch/cc.h
   - path: arch/perf.h
   - path: lwippools.h
-- path: src/lwip/freertos
-- path: src/lwip/freertos/arch
-  file_list:
-  - path: sys_arch.h
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/include
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/include/lwip
-  file_list:
-  - path: opt.h
-  - path: debug.h
-  - path: arch.h
-  - path: err.h
-  - path: init.h
-  - path: ip_addr.h
-  - path: ip4_addr.h
-  - path: inet.h
-  - path: def.h
-  - path: ip6_addr.h
-  - path: if_api.h
-  - path: sockets.h
-  - path: errno.h
-  - path: netif.h
-  - path: pbuf.h
-  - path: stats.h
-  - path: mem.h
-  - path: memp.h
-  - path: sys.h
-  - path: tcpip.h
-  - path: timeouts.h
-  - path: tcp.h
-  - path: ip.h
-  - path: icmp.h
-  - path: ip6.h
-  - path: ip4.h
-  - path: icmp6.h
-  - path: igmp.h
-  - path: mld6.h
-  - path: raw.h
-  - path: udp.h
-  - path: dns.h
-  - path: nd6.h
-  - path: netifapi.h
-  - path: dhcp.h
-  - path: autoip.h
-  - path: etharp.h
-  - path: ethip6.h
-  - path: inet_chksum.h
-  - path: api.h
-  - path: netifapi.h
-  - path: ip4_frag.h
-  - path: netdb.h
-  - path: ip6_frag.h
-  - path: snmp.h
-  - path: dhcp6.h
-  - path: ip.h
-  - path: netbuf.h
-  - path: ip6_zone.h
-  - path: sio.h
-  - path: tcpbase.h
-  - path: altcp.h
-  - path: altcp_tls.h
-  - path: altcp_tcp.h
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/include/lwip/apps
-  file_list:
-  - path: altcp_proxyconnect.h
-  - path: altcp_tls_mbedtls_opts.h
-  - path: fs.h
-  - path: http_client.h
-  - path: httpd.h
-  - path: httpd_opts.h
-  - path: lwiperf.h
-  - path: mdns.h
-  - path: mdns_opts.h
-  - path: mdns_priv.h
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/include/lwip/priv
-  file_list:
-  - path: memp_std.h
-  - path: mem_priv.h
-  - path: memp_priv.h
-  - path: tcpip_priv.h
-  - path: tcp_priv.h
-  - path: api_msg.h
-  - path: nd6_priv.h
-  - path: raw_priv.h
-  - path: sockets_priv.h
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/include/lwip/prot
-  file_list:
-  - path: ip.h
-  - path: ip4.h
-  - path: icmp.h
-  - path: icmp6.h
-  - path: ip6.h
-  - path: udp.h
-  - path: ethernet.h
-  - path: etharp.h
-  - path: dns.h
-  - path: tcp.h
-  - path: autoip.h
-  - path: dhcp.h
-  - path: igmp.h
-  - path: mld6.h
-  - path: nd6.h
-  - path: dhcp6.h
-  - path: iana.h
-  - path: ieee.h
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/include/netif
-  file_list:
-  - path: etharp.h
-  - path: ethernet.h
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/include/netif/ppp
-  file_list:
-  - path: ppp_opts.h
-  - path: ppp_impl.h
-  - path: pppcrypt.h
-  - path: pppoe.h
-  - path: ppp.h
-  - path: pppdebug.h
-  - path: fsm.h
-  - path: lcp.h
-  - path: ccp.h
-  - path: mppe.h
-  - path: ipcp.h
-  - path: ipv6cp.h
-  - path: upap.h
-  - path: chap-new.h
-  - path: eap.h
-  - path: vj.h
-  - path: eui64.h
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/include/netif/ppp/polarssl
-  file_list:
-  - path: md4.h
-  - path: md5.h
-  - path: sha1.h
-  - path: des.h
-  - path: arc4.h
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/include/compat/posix
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/include/compat/posix/net
-  file_list:
-  - path: if.h
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/include/compat/posix/sys
-  file_list:
-  - path: socket.h
 - path: slc/inc
   file_list:
   - path: lwip/lwip_buildconfig.h
-- path: slc/inc/wifi
-  file_list:
   - path: brd4186c.h
   - path: brd4187c.h
-  - path: sl_custom_board.h
+- path: third_party/matter_sdk/src/lwip/freertos
+  file_list:
+  - path: arch/sys_arch.h
+
 source:
-- path: src/lwip/freertos/sys_arch.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/api/tcpip.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/def.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/dns.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/inet_chksum.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/init.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/ip.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/mem.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/memp.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/netif.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/pbuf.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/raw.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/stats.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/sys.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/tcp.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/tcp_in.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/tcp_out.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/timeouts.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/udp.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/ipv4/autoip.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/ipv4/dhcp.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/ipv4/etharp.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/ipv4/icmp.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/ipv4/igmp.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/ipv4/ip4.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/ipv4/ip4_addr.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/ipv4/ip4_frag.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/ipv6/dhcp6.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/ipv6/ethip6.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/ipv6/icmp6.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/ipv6/inet6.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/ipv6/ip6.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/ipv6/ip6_addr.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/ipv6/ip6_frag.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/ipv6/mld6.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/core/ipv6/nd6.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/api/api_lib.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/api/api_msg.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/api/err.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/api/if_api.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/api/netifapi.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/api/netdb.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/api/netifapi.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/api/sockets.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/api/tcpip.c
-- path: third_party/silabs/simplicity_sdk/util/third_party/lwip/lwip/src/netif/ethernet.c
+- path: third_party/matter_sdk/src/lwip/freertos/sys_arch.c
+
 define:
-- name: LWIP_ERRNO_INCLUDE
-  value: <sys/errno.h>
 - name: LWIP_NETIF_API
   value: 1
 - name: LWIP_IPV6

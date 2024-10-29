@@ -2,7 +2,7 @@
 category: Clusters|Closures
 description: >
   Implementation of the Door Lock Server Cluster.
-  The user has to enable the Door Lock Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Door Lock Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_door_lock
 package: Matter
 label: Door Lock Server Cluster
@@ -13,10 +13,10 @@ metadata:
 provides:
   - name: matter_door_lock
 source:
-  - path: src/app/clusters/door-lock-server/door-lock-server-callback.cpp
-  - path: src/app/clusters/door-lock-server/door-lock-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/door-lock-server/door-lock-server-callback.cpp
+  - path: third_party/matter_sdk/src/app/clusters/door-lock-server/door-lock-server.cpp
 include:
-  - path: src/app/clusters/door-lock-server
+  - path: third_party/matter_sdk/src/app/clusters/door-lock-server
     file_list:
       - path: door-lock-delegate.h
       - path: door-lock-server.h

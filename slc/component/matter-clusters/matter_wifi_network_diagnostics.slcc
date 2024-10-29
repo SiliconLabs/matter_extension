@@ -1,11 +1,11 @@
 
 category: Clusters|General
 description: >
-  Implementation of the WiFi Network Diagnostics Server Cluster.
-  The user has to enable the WiFi Network Diagnostics Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  Implementation of the Wi-Fi Network Diagnostics Server Cluster.
+  The user has to enable the Wi-Fi Network Diagnostics Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_wifi_network_diagnostics
 package: Matter
-label: WiFi Network Diagnostics Server Cluster
+label: Wi-Fi Network Diagnostics Server Cluster
 quality: production
 metadata:
   sbom:
@@ -13,7 +13,7 @@ metadata:
 provides:
   - name: matter_wifi_network_diagnostics
 source:
-  - path: src/app/clusters/wifi-network-diagnostics-server/wifi-network-diagnostics-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/wifi-network-diagnostics-server/wifi-network-diagnostics-server.cpp
 template_contribution:
   - name: component_catalog
     value: matter_wifi_network_diagnostics

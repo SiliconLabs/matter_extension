@@ -9,41 +9,41 @@ define:
 description: chip_trace_decoder
 id: chip_trace_decoder
 include:
--   path: examples/platform/silabs
--   path: src
--   path: src/include
--   path: src/lib
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
 -   path: third_party/jsoncpp/repo/include
--   path: third_party/nlassert/repo/include
--   path: third_party/nlio/repo/include
--   path: examples/common/tracing/decoder/udc
+-   path: third_party/nlassert/include
+-   path: third_party/nlio/include
+-   path: third_party/matter_sdk/examples/common/tracing/decoder/udc
     file_list:
     -   path: Decoder.h
--   path: examples/common/tracing/decoder/interaction_model
+-   path: third_party/matter_sdk/examples/common/tracing/decoder/interaction_model
     file_list:
     -   path: DecoderCustomLog.h
     -   path: Decoder.h
--   path: examples/common/tracing/decoder/logging
+-   path: third_party/matter_sdk/examples/common/tracing/decoder/logging
     file_list:
     -   path: ToCertificateString.h
     -   path: Log.h
--   path: examples/common/tracing/decoder/bdx
+-   path: third_party/matter_sdk/examples/common/tracing/decoder/bdx
     file_list:
     -   path: Decoder.h
--   path: examples/common/tracing
+-   path: third_party/matter_sdk/examples/common/tracing
     file_list:
     -   path: TracingCommandLineArgument.h
     -   path: TraceDecoderOptions.h
     -   path: TraceDecoderArgumentParser.h
     -   path: TraceHandlers.h
     -   path: TraceDecoder.h
--   path: examples/common/tracing/decoder/echo
+-   path: third_party/matter_sdk/examples/common/tracing/decoder/echo
     file_list:
     -   path: Decoder.h
--   path: examples/common/tracing/decoder/secure_channel
+-   path: third_party/matter_sdk/examples/common/tracing/decoder/secure_channel
     file_list:
     -   path: Decoder.h
--   path: examples/common/tracing/decoder
+-   path: third_party/matter_sdk/examples/common/tracing/decoder
     file_list:
     -   path: TraceDecoderProtocols.h
 label: chip_trace_decoder
@@ -55,17 +55,17 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: examples/common/tracing/TraceDecoder.cpp
--   path: examples/common/tracing/TraceDecoderArgumentParser.cpp
--   path: examples/common/tracing/decoder/TraceDecoderProtocols.cpp
--   path: examples/common/tracing/decoder/bdx/Decoder.cpp
--   path: examples/common/tracing/decoder/echo/Decoder.cpp
--   path: examples/common/tracing/decoder/interaction_model/Decoder.cpp
--   path: examples/common/tracing/decoder/interaction_model/DecoderCustomLog.cpp
--   path: examples/common/tracing/decoder/logging/Log.cpp
--   path: examples/common/tracing/decoder/logging/ToCertificateString.cpp
--   path: examples/common/tracing/decoder/secure_channel/Decoder.cpp
--   path: examples/common/tracing/decoder/udc/Decoder.cpp
--   path: examples/common/tracing/main.cpp
+-   path: third_party/matter_sdk/examples/common/tracing/TraceDecoder.cpp
+-   path: third_party/matter_sdk/examples/common/tracing/TraceDecoderArgumentParser.cpp
+-   path: third_party/matter_sdk/examples/common/tracing/decoder/TraceDecoderProtocols.cpp
+-   path: third_party/matter_sdk/examples/common/tracing/decoder/bdx/Decoder.cpp
+-   path: third_party/matter_sdk/examples/common/tracing/decoder/echo/Decoder.cpp
+-   path: third_party/matter_sdk/examples/common/tracing/decoder/interaction_model/Decoder.cpp
+-   path: third_party/matter_sdk/examples/common/tracing/decoder/interaction_model/DecoderCustomLog.cpp
+-   path: third_party/matter_sdk/examples/common/tracing/decoder/logging/Log.cpp
+-   path: third_party/matter_sdk/examples/common/tracing/decoder/logging/ToCertificateString.cpp
+-   path: third_party/matter_sdk/examples/common/tracing/decoder/secure_channel/Decoder.cpp
+-   path: third_party/matter_sdk/examples/common/tracing/decoder/udc/Decoder.cpp
+-   path: third_party/matter_sdk/examples/common/tracing/main.cpp
 ui_hints:
     visibility: never

@@ -12,8 +12,9 @@ from modules.parameters import ID, Types, Formats, Parameter, ParameterList
 
 class Argument(Parameter):
 
-    def __init__(self, y) -> None:
+    def __init__(self, paths, y) -> None:
         super().__init__(y)
+        self.paths = paths
         self.value = None
         self.is_user_input = False
 
@@ -66,7 +67,7 @@ class Argument(Parameter):
         if v is None:
             v = default_value
         if validate:
-            self.value = Parameter.validate(self, v)
+            self.value = self._validate(v)
         else:
             self.value = v
 
@@ -97,6 +98,81 @@ class Argument(Parameter):
             return str(self.value).lower()
         return str(self.value)
 
+    def _validate(self, x):
+        if x is None: return None
+        if not self.check: return x
+        h = (x is not None) and (x.__hash__) or None
+        if (self.invalid is not None) and (h is not None) and (x in self.invalid):
+            raise ValueError("Invalid \"{}\" value: {}".format(self.name, x))
+        elif Types.INT8U == self.type:
+            if (Formats.BOOL == self.format):
+                return self._validateBool(x)
+            else:
+                return self._validateInt(x)
+        elif (Types.INT16U == self.type) or (Types.INT32U == self.type):
+            return self._validateInt(x)
+        elif (Types.BINARY == self.type):
+            if (Formats.STRING == self.format):
+                return self._validateString(x)
+            elif (Formats.PATH == self.format):
+                return self._validatePath(x)
+            else:
+                return self._validateBinary(x)
+        return x
+
+    def _validateInt(self, x):
+        try:
+            i = isinstance(x, str) and int(x, 0) or int(x)
+        except Exception as e:
+            raise ValueError("Invalid \"{}\" integer value: {}; {}".format(self.name, x, e))
+        r = self.range()
+        if r is not None:
+            if i not in r:
+                raise ValueError("Integer \"{}\" out of range: {} [{}, {}]".format(self.name, x, self.min, self.max))
+        return i
+
+    def _validateBool(self, x):
+        try:
+            return bool(x)
+        except Exception as e:
+            raise ValueError("Invalid \"{}\" boolean value: {}; {}".format(self.name, x, e))
+
+    def _validateString(self, x):
+        s = None
+        if isinstance(x, str):
+            s = x
+        elif isinstance(x, bytes):
+            try:
+                s = x.decode()
+            except:
+                raise ValueError("Invalid \"{}\" string value: {}".format(self.name, x))
+        else:
+            s = str(x)
+        r = self.range()
+        if r is not None:
+            l = (s is not None) and len(s) or 0
+            if l not in r:
+                raise ValueError("String \"{}\" size out of range: {} [{}, {}]".format(self.name, l, self.min, self.max))
+        return s
+
+    def _validatePath(self, x):
+        s = self.paths.current(x)
+        if not os.path.exists(s):
+            raise ValueError("Invalid \"{}\" path: {}".format(self.name, s))
+        return s
+
+    def _validateBinary(self, x):
+        if isinstance(x, str):
+            x = bytes.fromhex(x.removeprefix('0x'))
+        if not isinstance(x, bytes):
+            raise ValueError("Invalid \"{}\" binary value: {}".format(self.name, x))
+        r = self.range()
+        if r is not None:
+            sz = len(x)
+            if sz not in r:
+                raise ValueError("Binary \"{}\" size out of range: {} [{}, {}]".format(self.name, sz, self.min, self.max))
+        return x
+
 
 class ArgumentList(ParameterList):
     DEFAULT_INPUTS_PATH = 'defaults.json'
@@ -107,7 +183,7 @@ class ArgumentList(ParameterList):
         self.formatter = None
 
     def create(self, y):
-        return Argument(y)
+        return Argument(self.paths, y)
 
     def set(self, k, v, default_value = None):
         self.get(k).set(v, default_value)

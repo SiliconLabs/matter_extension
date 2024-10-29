@@ -2,10 +2,10 @@
 
 The EFR32 lighting example provides a baseline demonstration of a Light control
 device, built using Matter and the Silicon Labs Gecko SDK. It can be controlled
-by a Chip controller over an Openthread network.
+by a Matter controller over an Openthread network.
 
 The EFR32 device can be commissioned over Bluetooth Low Energy where the device
-and the Chip controller will exchange security information with the Rendez-vous
+and the Matter controller will exchange security information with the Rendez-vous
 procedure. If using Thread, Thread Network credentials are then provided to the
 EFR32 device which will then join the Thread network.
 
@@ -19,7 +19,7 @@ Silicon Labs platform.
 
 For more general information on running matter applications and pre-requisites please look at online 
 documentation for Matter available on docs.silabs.com. Follow Thread demo instructions depending on the example you are running.
-[Demo instructions for Thread](https://docs.silabs.com/matter/2.3.2/matter-thread)
+[Demo instructions for Thread](https://docs.silabs.com/matter/2.3.1/matter-thread)
 
 ## Lighting Example User Interface
 
@@ -90,8 +90,10 @@ If LEDs are supported by the board but not enabled in a project they can be enab
 
 ## Provision and Control
 
-You can provision and control the Matter device using the python controller, chip-tool (standalone or pre-built), Android, iOS app or the mattertool utility from the Matter Hub package provided by Silicon Labs. The pre-built chip-tool instance ships with the Matter Hub image. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.3.2/matter-thread/raspi-img)
-   
+You can provision and control the Matter device using the python controller, Chip tool standalone, Android, iOS app or the Matter Hub provided by Silicon Labs. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.3.1/matter-thread/raspi-img)
+
+The pre-built chip-tool instance ships with the Matter Hub image which is available from Silicon Labs here: [Silicon Labs Matter Hub](https://www.silabs.com/documents/public/software/SilabsMatterPi_2.3.0-1.3-extension.zip)
+    
 More information on using the chip-tool directly can be found here: [CHIPTool](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
 
 

@@ -2,7 +2,7 @@
 category: Clusters|Media
 description: >
   Implementation of the Content Launcher Server Cluster.
-  The user has to enable the Content Launcher Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Content Launcher Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_content_launch
 package: Matter
 label: Content Launcher Server Cluster
@@ -13,9 +13,9 @@ metadata:
 provides:
   - name: matter_content_launch
 source:
-  - path: src/app/clusters/content-launch-server/content-launch-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/content-launch-server/content-launch-server.cpp
 include:
-  - path: src/app/clusters/content-launch-server
+  - path: third_party/matter_sdk/src/app/clusters/content-launch-server
     file_list:
       - path: content-launch-delegate.h
       - path: content-launch-server.h

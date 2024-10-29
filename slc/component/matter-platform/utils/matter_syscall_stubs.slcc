@@ -10,7 +10,7 @@ metadata:
 provides:
   - name: matter_syscall_stubs
 source:
-- path: examples/platform/silabs/syscalls_stubs.cpp
+- path: third_party/matter_sdk/examples/platform/silabs/syscalls_stubs.cpp
 toolchain_settings:
 - option: gcc_linker_option
   value: -Wl,--no-warn-rwx-segment

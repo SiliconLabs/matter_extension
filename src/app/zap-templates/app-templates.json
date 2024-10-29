@@ -18,29 +18,33 @@
         "common/attributes/Accessors.js"
     ],
     "resources": {
-        "config-data": "../common/templates/config-data.yaml"
+        "config-data": "../../../third_party/matter_sdk/src/app/common/templates/config-data.yaml"
     },
     "override": "common/override.js",
     "partials": [
         {
             "name": "header",
-            "path": "partials/header.zapt"
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/partials/header.zapt"
         },
         {
             "name": "cluster_objects_struct",
-            "path": "partials/cluster-objects-struct.zapt"
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/partials/cluster-objects-struct.zapt"
         },
         {
             "name": "cluster_objects_field_init",
-            "path": "partials/cluster-objects-field-init.zapt"
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/partials/cluster-objects-field-init.zapt"
+        },
+        {
+            "name": "cluster_enums_ensure_known_value",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/partials/cluster-enums-ensure-known-value.zapt"
         },
         {
             "name": "cluster_enums_enum",
-            "path": "partials/cluster-enums-enum.zapt"
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/partials/cluster-enums-enum.zapt"
         },
         {
             "name": "cluster_objects_attribute_typeinfo",
-            "path": "partials/cluster-objects-attribute-typeinfo.zapt"
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/partials/cluster-objects-attribute-typeinfo.zapt"
         }
     ],
     "templates": [
@@ -55,87 +59,87 @@
             "output": "app/callback-stub.cpp"
         },
         {
-            "path": "templates/app/cluster-init-callback-src.zapt",
+            "path": "templates/app/slc_compatibility/cluster-init-callback-src.zapt",
             "name": "cluster-init-callback",
             "output": "app/cluster-init-callback.cpp"
         },
         {
-            "path": "templates/app/endpoint_config.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/endpoint_config.zapt",
             "name": "ZCL endpoint configuration",
             "output": "endpoint_config.h"
         },
         {
-            "path": "templates/app/gen_config.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/gen_config.zapt",
             "name": "ZCL gen_config header",
             "output": "gen_config.h"
         },
         {
-            "path": "templates/app/im-cluster-command-handler.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/im-cluster-command-handler.zapt",
             "name": "CHIP Client Callbacks for Interaction Model",
             "output": "IMClusterCommandHandler.cpp"
         },
         {
-            "path": "templates/app/access.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/access.zapt",
             "name": "Matter access definitions",
             "output": "access.h"
         },
         {
-            "path": "templates/app/attribute-type.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/attribute-type.zapt",
             "name": "ZCL attribute-type header",
             "output": "app-common/zap-generated/attribute-type.h"
         },
         {
-            "path": "templates/app/callback.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/callback.zapt",
             "name": "ZCL callback header",
             "output": "app-common/zap-generated/callback.h"
         },
         {
-            "path": "templates/app/attributes/Accessors.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/attributes/Accessors.zapt",
             "name": "Attributes Accessors header",
             "output": "app-common/zap-generated/attributes/Accessors.h"
         },
         {
-            "path": "templates/app/attributes/Accessors-src.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/attributes/Accessors-src.zapt",
             "name": "Attributes Accessors",
             "output": "attributes/Accessors.cpp"
         },
         {
-            "path": "templates/app/ids/Attributes.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/ids/Attributes.zapt",
             "name": "Attributes Ids header",
             "output": "app-common/zap-generated/ids/Attributes.h"
         },
         {
-            "path": "templates/app/ids/Clusters.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/ids/Clusters.zapt",
             "name": "Clusters Ids header",
             "output": "app-common/zap-generated/ids/Clusters.h"
         },
         {
-            "path": "templates/app/ids/Commands.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/ids/Commands.zapt",
             "name": "Commands Ids header",
             "output": "app-common/zap-generated/ids/Commands.h"
         },
         {
-            "path": "templates/app/ids/Events.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/ids/Events.zapt",
             "name": "Events Ids header",
             "output": "app-common/zap-generated/ids/Events.h"
         },
         {
-            "path": "templates/app/cluster-objects.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/cluster-objects.zapt",
             "name": "Cluster objects header for Interaction Model",
             "output": "app-common/zap-generated/cluster-objects.h"
         },
         {
-            "path": "templates/app/cluster-objects-src.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/cluster-objects-src.zapt",
             "name": "Cluster objects source for Interaction Model",
             "output": "cluster-objects.cpp"
         },
         {
-            "path": "templates/app/cluster-enums.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/cluster-enums.zapt",
             "name": "Enum and bitmap header for clusters",
             "output": "app-common/zap-generated/cluster-enums.h"
         },
         {
-            "path": "templates/app/cluster-enums-check.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/cluster-enums-check.zapt",
             "name": "Enum and bitmap method check header for clusters",
             "output": "app-common/zap-generated/cluster-enums-check.h"
         }
