@@ -22,7 +22,7 @@ import shutil
 import argparse
 
 # Directories to exclude from copying
-exclude_directory = ['simplicity_sdk', 'wifi_sdk',"matter_private", "third_party_hw_drivers_extension" "out", "tools", "matter_sdk/zzz_generated","matter_sdk/third_party"]
+exclude_directory = ['simplicity_sdk', 'wifi_sdk',"matter_private", "third_party_hw_drivers_extension", "out", "tools", "matter_sdk/zzz_generated","matter_sdk/third_party"]
 
 # Specific includes for wiseconnect_wifi_bt_sdk
 wiseconnect_wifi_bt_sdk_includes = ['sapi']

@@ -42,8 +42,6 @@ component:
     from: matter   
   - id: app_common
     from: matter
-  - id: matter_icd_core
-    from: matter
   - id: matter_test_event_trigger
     from: matter
   - id: matter_icd_management
@@ -102,10 +100,6 @@ component:
     from: matter
   - id: matter_segger_rtt
     from: matter
-
-  - id: matter_si70xx_sensor
-    from: matter
-  - id: sensor_rht
   - id: matter_default_lcd_config
     from: matter
   - id: matter_shell

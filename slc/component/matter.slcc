@@ -112,6 +112,7 @@ requires:
   - name: matter_types
   - name: matter_naming
   - name: matter_text_only_logging
+  - name: matter_cluster_building_blocks
 recommends:
   - id: matter_configuration_over_swo
   - id: matter_ot_mbedtls_override

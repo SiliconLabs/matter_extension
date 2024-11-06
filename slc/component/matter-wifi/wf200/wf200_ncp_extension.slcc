@@ -83,14 +83,11 @@ include:
       - path: ethernetif.h
 
 define:
-  - name: SL_WFX_DEBUG_MASK
   - name: SL_WFX_CONFIG_SCAN
     value: 1
   - name: SL_WFX_USE_SPI
   - name: WF200_WIFI
     value: 1
-  - name: SL_WFX_DEBUG_MASK
-    value: 0x0003
   - name: CONFIG_USE_EXTERNAL_FLASH
     value: 1
     condition: [brd4186c]

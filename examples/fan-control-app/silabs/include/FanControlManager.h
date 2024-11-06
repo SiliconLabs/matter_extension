@@ -53,7 +53,7 @@ public:
     void SpeedSettingWriteCallback(uint8_t aNewSpeedSetting);
     void FanModeWriteCallback(FanModeEnum aNewFanMode);
 
-    void SetSpeedSetting(DataModel::Nullable<uint8_t> aNewSpeedSetting);
+    void SetPercentSetting(Percent aNewPercentSetting);
     DataModel::Nullable<uint8_t> GetSpeedSetting();
     DataModel::Nullable<Percent> GetPercentSetting();
     void UpdateFanMode();

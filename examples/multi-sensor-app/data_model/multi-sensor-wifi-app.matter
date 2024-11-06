@@ -1669,6 +1669,19 @@ endpoint 0 {
 
   binding cluster OtaSoftwareUpdateProvider;
 
+  server cluster Descriptor {
+    callback attribute deviceTypeList;
+    callback attribute serverList;
+    callback attribute clientList;
+    callback attribute partsList;
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute eventList;
+    callback attribute attributeList;
+    callback attribute featureMap;
+    callback attribute clusterRevision;
+  }
+
   server cluster AccessControl {
     callback attribute acl;
     callback attribute extension;

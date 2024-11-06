@@ -74,10 +74,10 @@ configuration:
     value: 135364608
     condition: [device_sdid_225]
   - name: SLOT0_START
-    value: 135364608
+    value: 135692288
     condition: [device_sdid_225]
   - name: SLOT0_SIZE
-    value: 614400
+    value: 860160
     condition: [device_sdid_225]
   ## device_sdid_230 ##
   - name: BTL_STORAGE_BASE_ADDRESS

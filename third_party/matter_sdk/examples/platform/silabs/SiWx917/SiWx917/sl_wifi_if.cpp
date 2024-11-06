@@ -545,11 +545,12 @@ sl_status_t show_scan_results(sl_wifi_scan_result_t * scan_result)
 
         cur_scan_result.ssid_length = strnlen((char *) scan_result->scan_info[idx].ssid,
                                               chip::min<size_t>(sizeof(scan_result->scan_info[idx].ssid), WFX_MAX_SSID_LENGTH));
-        chip::Platform::CopyString(cur_scan_result.ssid, cur_scan_result.ssid_length, (char *) scan_result->scan_info[idx].ssid);
+        // cur_scan_result.ssid is of size WFX_MAX_SSID_LENGTH+1, we are safe with the cur_scan_result.ssid_length calculated above
+        chip::Platform::CopyString(cur_scan_result.ssid, cur_scan_result.ssid_length + 1, (char *) scan_result->scan_info[idx].ssid); // +1 for null termination
 
         // if user has provided ssid, then check if the current scan result ssid matches the user provided ssid
         if (wfx_rsi.scan_ssid != NULL &&
-            (strncmp(wfx_rsi.scan_ssid, cur_scan_result.ssid, MIN(strlen(wfx_rsi.scan_ssid), strlen(cur_scan_result.ssid))) ==
+            (strncmp(wfx_rsi.scan_ssid, cur_scan_result.ssid, MIN(strlen(wfx_rsi.scan_ssid), strlen(cur_scan_result.ssid))) !=
              CMP_SUCCESS))
         {
             continue;
@@ -603,8 +604,8 @@ static void wfx_rsi_save_ap_info(void) // translation
 #endif
     sl_wifi_ssid_t ssid_arg;
     memset(&ssid_arg, 0, sizeof(ssid_arg));
-    ssid_arg.length = wfx_rsi.sec.ssid_length;
-    chip::Platform::CopyString((char *) &ssid_arg.value[0], ssid_arg.length, wfx_rsi.sec.ssid);
+    ssid_arg.length = chip::min<size_t>(wfx_rsi.sec.ssid_length, sizeof(ssid_arg.value) - 1);
+    chip::Platform::CopyString((char *) &ssid_arg.value[0], ssid_arg.length + 1, wfx_rsi.sec.ssid); // +1 for null termination
     sl_wifi_set_scan_callback(scan_callback_handler, NULL);
     scan_results_complete = false;
 #ifndef EXP_BOARD

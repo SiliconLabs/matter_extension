@@ -112,12 +112,6 @@ component:
     from: wiseconnect3_sdk
   - id: sl_si91x_basic_buffers
     from: wiseconnect3_sdk
-
-
-  - id: matter_si70xx_sensor
-    from: matter
-  - id: sensor_rht
-
   - id: sl_si91x_wireless
     from: wiseconnect3_sdk
   - id: wifi_resources

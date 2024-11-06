@@ -13,7 +13,7 @@ protocols.
 
 Silicon Labs supports Matter on several different hardware platforms including the EFR32, RS9116, WF200 and the new SiWx917 which is a Wi-Fi System-on-Chip (SoC).
 
-**This repo is intended to be used directly for bleeding edge development that closely tracks the CSA Matter codebase. If you are interested in a stable release, we recommend following our official documentation which can be found on [docs.silabs.com](https://docs.silabs.com/matter/2.3.1/matter-start/)**
+**This repo is intended to be used directly for bleeding edge development that closely tracks the CSA Matter codebase. If you are interested in a stable release, we recommend following our official documentation which can be found on [docs.silabs.com](https://docs.silabs.com/matter/2.4.0/matter-start/)**
 
 _To see official release notes containing list of features and known issues go to
 [SiliconLabs/matter_extension/releases](https://github.com/SiliconLabs/matter_extension/releases)
@@ -132,7 +132,7 @@ The relevant entry from `src/app/zap-templates/cluster-to-component-dependencies
     ]
   }
 ```
-More details on how to develop using SLC CLI can be found at [Creating Matter Applications using SLC CLI](https://docs.silabs.com/matter/latest/matter-overview-guides/matter-slc-cli)
+More details on how to develop using SLC CLI can be found at [Creating Matter Applications using SLC CLI](https://docs.silabs.com/matter/2.4.0/matter-overview-guides/matter-slc-cli)
 
 ## Getting Started with Simplicity Studio Development 
 

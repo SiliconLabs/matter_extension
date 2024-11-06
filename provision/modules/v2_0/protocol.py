@@ -325,9 +325,9 @@ class AutoCommand(Command):
         ID.kSpake2pIterations,
         ID.kSpake2pSalt,
         ID.kSpake2pVerifier,
-        ID.kSetupPayload,
         ID.kCommissioningFlow,
         ID.kRendezvousFlags,
+        ID.kSetupPayload,
         # Attestation Credentials
         ID.kFirmwareInfo,
         ID.kDacCert,

@@ -28,6 +28,7 @@
 #include <app-common/zap-generated/ids/Attributes.h>
 #include <app-common/zap-generated/ids/Clusters.h>
 #include <app-common/zap-generated/attributes/Accessors.h>
+#include <app/AttributeAccessInterfaceRegistry.h>
 
 
 using namespace chip;
@@ -37,6 +38,8 @@ using Protocols::InteractionModel::Status;
 
 FanControlManager FanControlManager::sFan(FanControlMgr().GetEndPoint());
 
+
+
 #ifdef SL_CATALOG_SIMPLE_LED_LED1_PRESENT
 #define FAN_LED 1
 #else
@@ -45,6 +48,7 @@ FanControlManager FanControlManager::sFan(FanControlMgr().GetEndPoint());
 
 namespace {
 LEDWidget sFanLED;
+FanControlAttributeAccessInterface sFanControlAttributeAccess(FanControlMgr().GetEndPoint());
 }
 
 CHIP_ERROR FanControlManager::Init()
@@ -167,7 +171,7 @@ void FanControlManager::HandleFanControlAttributeChange(AttributeId attributeId,
     }
 
     case Attributes::FanMode::Id: {
-        FanModeEnum mFanMode = static_cast<FanModeEnum>(*value);
+        mFanMode = *reinterpret_cast<FanModeEnum*>(value);
         FanModeWriteCallback(mFanMode);
         break;
     }
@@ -186,6 +190,7 @@ void FanControlManager::HandleFanControlAttributeChange(AttributeId attributeId,
 void FanControlManager::PercentSettingWriteCallback(uint8_t aNewPercentSetting)
 {
     VerifyOrReturn(aNewPercentSetting != percentCurrent);
+    VerifyOrReturn(mFanMode != FanModeEnum::kAuto);
     ChipLogDetail(NotSpecified, "FanControlManager::PercentSettingWriteCallback: %d", aNewPercentSetting);
     percentCurrent = aNewPercentSetting;
 
@@ -203,6 +208,7 @@ void FanControlManager::PercentSettingWriteCallback(uint8_t aNewPercentSetting)
 void FanControlManager::SpeedSettingWriteCallback(uint8_t aNewSpeedSetting)
 {
     VerifyOrReturn(aNewSpeedSetting != speedCurrent);
+    VerifyOrReturn(mFanMode != FanModeEnum::kAuto);
     ChipLogDetail(NotSpecified, "FanControlManager::SpeedSettingWriteCallback: %d", aNewSpeedSetting);
     speedCurrent  = aNewSpeedSetting;
 
@@ -216,13 +222,7 @@ void FanControlManager::SpeedSettingWriteCallback(uint8_t aNewSpeedSetting)
         ChipLogError(NotSpecified, "FanControlManager::SpeedSettingWriteCallback: failed to set SpeedCurrent attribute");
     }
 
-    // Update the fan mode relative to the new speed.
-    UpdateFanMode();
-}
-
-void FanControlManager::UpdateFanMode()
-{
-    // Change the fan mode as per the current speed.
+    // Update the fan mode as per the current speed.
     if (speedCurrent == 0)
     {
         mFanMode = FanModeEnum::kOff;
@@ -239,7 +239,11 @@ void FanControlManager::UpdateFanMode()
     {
         mFanMode = FanModeEnum::kHigh;
     }
+    UpdateFanMode();
+}
 
+void FanControlManager::UpdateFanMode()
+{
     AttributeUpdateInfo * data = chip::Platform::New<AttributeUpdateInfo>();
     data->endPoint = GetEndPoint();
     data->fanMode = mFanMode;
@@ -253,30 +257,30 @@ void FanControlManager::UpdateFanMode()
 void FanControlManager::FanModeWriteCallback(FanModeEnum aNewFanMode)
 {
     ChipLogDetail(NotSpecified, "FanControlManager::FanModeWriteCallback: %d", (uint8_t) aNewFanMode);
-    // Set Speed Setting based on the Fan mode.
+    // Set Percent Settings, which will update the Speed Settings through callback.
     switch (aNewFanMode)
     {
     case FanModeEnum::kOff: {
         if (speedCurrent != 0)
         {
-            DataModel::Nullable<uint8_t> speedSetting(0);
-            SetSpeedSetting(speedSetting);
+            Percent percentSetting = 0;
+            SetPercentSetting(percentSetting);
         }
         break;
     }
     case FanModeEnum::kLow: {
         if (speedCurrent < kFanModeLowLowerBound || speedCurrent > kFanModeLowUpperBound)
         {
-            DataModel::Nullable<uint8_t> speedSetting(kFanModeLowLowerBound);
-            SetSpeedSetting(speedSetting);
+            Percent percentSetting = kFanModeLowUpperBound * mSpeedMax;
+            SetPercentSetting(percentSetting);
         }
         break;
     }
     case FanModeEnum::kMedium: {
         if (speedCurrent < kFanModeMediumLowerBound || speedCurrent > kFanModeMediumUpperBound)
         {
-            DataModel::Nullable<uint8_t> speedSetting(kFanModeMediumLowerBound);
-            SetSpeedSetting(speedSetting);
+            Percent percentSetting = kFanModeMediumLowerBound * mSpeedMax;
+            SetPercentSetting(percentSetting);
         }
         break;
     }
@@ -284,14 +288,14 @@ void FanControlManager::FanModeWriteCallback(FanModeEnum aNewFanMode)
     case FanModeEnum::kHigh: {
         if (speedCurrent < kFanModeHighLowerBound || speedCurrent > kFanModeHighUpperBound)
         {
-            DataModel::Nullable<uint8_t> speedSetting(kFanModeHighLowerBound);
-            SetSpeedSetting(speedSetting);
+            Percent percentSetting = kFanModeHighLowerBound * mSpeedMax;
+            SetPercentSetting(percentSetting);
         }
         break;
     }
     case FanModeEnum::kSmart:
     case FanModeEnum::kAuto: {
-        ChipLogProgress(NotSpecified, "FanControlManager::FanModeWriteCallback: Auto");
+        UpdateFanMode();
         break;
     }
     case FanModeEnum::kUnknownEnumValue: {
@@ -303,23 +307,17 @@ void FanControlManager::FanModeWriteCallback(FanModeEnum aNewFanMode)
     }
 }
 
-void FanControlManager::SetSpeedSetting(DataModel::Nullable<uint8_t> aNewSpeedSetting)
+void FanControlManager::SetPercentSetting(Percent aNewPercentSetting)
 {
-    if (aNewSpeedSetting.IsNull())
-    {
-        ChipLogError(NotSpecified, "FanControlManager::SetSpeedSetting: invalid value");
-        return;
-    }
-
-    if (aNewSpeedSetting.Value() != speedCurrent)
+    if (aNewPercentSetting != percentCurrent)
     {
         AttributeUpdateInfo * data = chip::Platform::New<AttributeUpdateInfo>();
-        data->speedSetting = aNewSpeedSetting.Value();
+        data->percentCurrent = aNewPercentSetting;
         data->endPoint = GetEndPoint();
-        data->isSpeedSetting = true;
-        if(chip::DeviceLayer::PlatformMgr().ScheduleWork(UpdateClusterState, reinterpret_cast<intptr_t>(data))!=CHIP_NO_ERROR)  
+        data->isPercentCurrent = true;
+        if(chip::DeviceLayer::PlatformMgr().ScheduleWork(UpdateClusterState, reinterpret_cast<intptr_t>(data))!=CHIP_NO_ERROR)
         {
-            ChipLogError(NotSpecified, "FanControlManager::SetSpeedSetting: failed to update SpeedSetting attribute");
+            ChipLogError(NotSpecified, "FanControlManager::SetPercentSetting: failed to update PercentSetting attribute");
         }
     }
 }
@@ -370,4 +368,9 @@ void FanControlManager::UpdateFanControlLED()
 void FanControlManager::UpdateFanControlLCD()
 {
     AppTask::GetAppTask().UpdateFanControlUI();
+}
+
+void emberAfFanControlClusterInitCallback(EndpointId endpoint)
+{
+    AttributeAccessInterfaceRegistry::Instance().Register(&sFanControlAttributeAccess);
 }

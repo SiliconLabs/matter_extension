@@ -32,7 +32,7 @@
 // <i> Default: 200
 #define SL_OT_ACTIVE_INTERVAL 200
 
-// <o SL_CSL_TIMEOUT> 
+// <o SL_CSL_TIMEOUT>
 // <i> Default: 30
 // <i> Feature requires matter_synchronized_sed component
 #define SL_CSL_TIMEOUT 30
@@ -41,16 +41,6 @@
 // <i> Default: 0
 // <i> Set to true if device supports dynamic switching from SIT to LIT operating modes (DSLS)
 #define CHIP_CONFIG_ENABLE_ICD_DSLS 0
-
-// <o CHIP_CONFIG_ENABLE_ICD_DSLS>
-// <i> Default: 0
-// <i> Use subscription syncing
-#define CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED 1
-
-// <o CHIP_CONFIG_ENABLE_ICD_DSLS>
-// <i> Default: 0
-// <i> Enable subscription resumption after timeout. Separate configuration for power use measurement
-#define CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION 0
 
 // <<< end of configuration section >>>
 

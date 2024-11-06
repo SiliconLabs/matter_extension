@@ -18,6 +18,7 @@
 #pragma once
 
 #include "fan-control-delegate.h"
+#include <app/AttributeAccessInterface.h>
 #include <app-common/zap-generated/cluster-objects.h>
 #include <app/util/af-types.h>
 
@@ -25,6 +26,15 @@ namespace chip {
 namespace app {
 namespace Clusters {
 namespace FanControl {
+
+class FanControlAttributeAccessInterface : public AttributeAccessInterface
+{
+public:
+    FanControlAttributeAccessInterface(EndpointId aEndpoint) : AttributeAccessInterface(Optional<EndpointId>(aEndpoint), Id) {}
+
+    CHIP_ERROR Write(const ConcreteDataAttributePath & aPath, AttributeValueDecoder & aDecoder) override;
+    CHIP_ERROR Read(const ConcreteReadAttributePath & aPath, AttributeValueEncoder & aEncoder) override { return CHIP_NO_ERROR; }
+};
 
 void SetDefaultDelegate(EndpointId aEndpoint, Delegate * aDelegate);
 Delegate * GetDelegate(EndpointId aEndpoint);

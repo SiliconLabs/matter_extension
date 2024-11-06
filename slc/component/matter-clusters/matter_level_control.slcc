@@ -15,9 +15,6 @@ provides:
 source:
   - path: third_party/matter_sdk/src/app/clusters/level-control/level-control.cpp
 include:
-  - path: third_party/matter_sdk/src/app/cluster-building-blocks
-    file_list:
-      - path: QuieterReporting.h
   - path: third_party/matter_sdk/src/app/clusters/level-control
     file_list:
       - path: level-control.h

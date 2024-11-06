@@ -96,13 +96,8 @@ component:
     from: matter
   - id: matter_segger_rtt
     from: matter
-
-  - id: matter_si70xx_sensor
-    from: matter
   - id: matter_shell
     from: matter
-  - id: sensor_rht
-
   - id: matter_default_lcd_config
     from: matter
   - id: matter_log_uart
