@@ -15,10 +15,11 @@ define:
 description: libopenthread_platform_utils
 id: libopenthread_platform_utils
 include:
--   path: examples/platform/silabs
--   path: src
--   path: src/include
--   path: src/lib
+-   path: third_party/matter_sdk/examples/platform/efr32
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
 label: libopenthread_platform_utils
 package: Matter
 provides:

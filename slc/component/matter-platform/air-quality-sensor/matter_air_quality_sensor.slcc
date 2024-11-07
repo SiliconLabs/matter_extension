@@ -1,3 +1,4 @@
+
 id: matter_air_quality_sensor
 label: Air Quality Sensor Support
 description: Air Quality Sensor support for Matter applications
@@ -11,11 +12,11 @@ metadata:
 provides:
   - name: matter_air_quality_sensor
 include:
-  - path: examples/platform/silabs/sensors/AirQuality
+  - path: third_party/matter_sdk/examples/platform/silabs/sensors/AirQuality
     file_list:
     - path: AirQualitySensor.h
 source:
-  - path: examples/platform/silabs/sensors/AirQuality/AirQualitySensor.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/sensors/AirQuality/AirQualitySensor.cpp
 
 define:
   - name: USE_AIR_QUALITY_SENSOR

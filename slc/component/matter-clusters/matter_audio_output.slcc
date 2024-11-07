@@ -2,7 +2,7 @@
 category: Clusters|Media
 description: >
   Implementation of the Audio Output Server Cluster.
-  The user has to enable the Audio Output Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Audio Output Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_audio_output
 package: Matter
 label: Audio Output Server Cluster
@@ -13,9 +13,9 @@ metadata:
 provides:
   - name: matter_audio_output
 source:
-  - path: src/app/clusters/audio-output-server/audio-output-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/audio-output-server/audio-output-server.cpp
 include:
-  - path: src/app/clusters/audio-output-server
+  - path: third_party/matter_sdk/src/app/clusters/audio-output-server
     file_list:
       - path: audio-output-delegate.h
       - path: audio-output-server.h

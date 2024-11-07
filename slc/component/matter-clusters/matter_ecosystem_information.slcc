@@ -1,0 +1,23 @@
+
+category: Clusters|General
+description: >
+  Implementation of the Ecosystem Information Server Cluster.
+  The user has to enable the Ecosystem Information Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_ecosystem_information
+package: Matter
+label: Ecosystem Information Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_ecosystem_information
+source:
+  - path: third_party/matter_sdk/src/app/clusters/ecosystem-information-server/ecosystem-information-server.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/ecosystem-information-server
+    file_list:
+      - path: ecosystem-information-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_ecosystem_information

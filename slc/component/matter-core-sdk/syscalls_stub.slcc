@@ -3,7 +3,7 @@ define: []
 description: syscalls_stub
 id: syscalls_stub
 include:
--   path: src/platform
+-   path: third_party/matter_sdk/src/platform
     file_list:
     -   path: DeviceSafeQueue.h
     -   path: GLibTypeDeleter.h
@@ -16,6 +16,6 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: src/platform/SyscallStubs.cpp
+-   path: third_party/matter_sdk/src/platform/SyscallStubs.cpp
 ui_hints:
     visibility: never

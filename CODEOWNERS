@@ -1,0 +1,23 @@
+@@@MatterWatt @jumartin @jepenven @ricasall @makardou @selissia @rerasool @mirupp @sashaha @lobelive
+@@@MatterWifi @sekumar @naagarwa @chbansal @rosahay
+@@@Documentation @rerasool @berush
+@@@CICD @yushu @shmakdis @jepenven 
+@@@Matter @@MatterWatt @@MatterWifi @@Documentation @@CICD
+
+# Pipeline rule
+Jenkinsfile @@MatterWatt @@MatterWifi @@CICD
+jenkins/ @@MatterWatt @@MatterWifi @@CICD 
+
+# Documentation is everyone business
+**/*.md @@Documentation @@MatterWatt @@MatterWifi
+docs/silabs/ @@Documentation @@MatterWatt @@MatterWifi
+
+CODEOWNERS               @@MatterWatt
+
+# Ensure CODEOWNERS is triggered for every PR
+* @@MatterWatt @@MatterWifi
+
+# Require at least one reviewer from MatterWatt and two from Matter
+(Check(@@MatterWatt >= 1) & Check(@@Matter >= 2))
+
+OverallCheck(2)

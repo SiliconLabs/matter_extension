@@ -7,13 +7,13 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.3.2"
+    version: "2.4.0"
 
 component:
   - id: device_init
   - id: matter_buttons
     from: matter
-  - id: matter_wstk_leds
+  - id: matter_leds
     from: matter
     
   - id: matter
@@ -39,6 +39,8 @@ component:
   - id: matter_lock
     from: matter   
   - id: app_common
+    from: matter
+  - id: matter_provision_default
     from: matter
 
   - id: matter_access_control
@@ -99,7 +101,11 @@ component:
     from: matter
   - id: matter_icd_core
     from: matter
+  - id: matter_test_event_trigger
+    from: matter
   - id: matter_icd_management
+    from: matter
+  - id: matter_log_uart
     from: matter
 
 # Require LCD and QR Code components only on the boards that support LCD
@@ -114,7 +120,7 @@ requires:
      - device_series_2
 
 config_file:
-  - path: ../../../../examples/lock-app/lock-common/lock-app.zap
+  - path: ../../../../third_party/matter_sdk/examples/lock-app/lock-common/lock-app.zap
     directory: common
     file_id: zap_config
   - path: ../../../../provision.mattpconf
@@ -122,7 +128,7 @@ config_file:
     file_id: provision_config
 
 include:
-  - path: ../../../../examples/lock-app/silabs/include
+  - path: ../../../../third_party/matter_sdk/examples/lock-app/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -132,13 +138,13 @@ include:
     directory: include
 
 source:
-  - path: ../../../../examples/lock-app/silabs/src/AppTask.cpp
+  - path: ../../../../third_party/matter_sdk/examples/lock-app/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/lock-app/silabs/src/LockManager.cpp
+  - path: ../../../../third_party/matter_sdk/examples/lock-app/silabs/src/LockManager.cpp
     directory: src
-  - path: ../../../../examples/platform/silabs/main.cpp
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/lock-app/silabs/src/ZclCallbacks.cpp
+  - path: ../../../../third_party/matter_sdk/examples/lock-app/silabs/src/ZclCallbacks.cpp
     directory: src
     
 define:

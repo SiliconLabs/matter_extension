@@ -12,7 +12,7 @@ Matter defines three interfaces to access the provisioned data during runtime:
 * [DeviceAttestationCredentialsProvider](../src/credentials/DeviceAttestationCredentialsProvider.h)
 In Silicon Labs devices, all three interfaces are implemented by the [ProvisionStorage](../examples/platform/silabs/provision/ProvisionStorage.h).
 
-The provisioning script on this folder now supercedes the following tools:
+The provisioning script on this folder now supersedes the following tools:
 * [Credentials Example](https://github.com/SiliconLabs/matter/tree/release_1.1.0-1.1/silabs_examples/credentials)
 * [Factory Data Provider](../scripts/tools/silabs/README.md)
 
@@ -87,7 +87,7 @@ The Provisioner Script executes the following steps:
 4. Generates default values for the SPAKE2+ arguments, if necessary.
 5. Saves the input parameters as a JSON file (`latest.json` in the local folder, or the file indicated by `--output`).
 5. Flashes the Generator Firmware (GFW) onto the device, if required.
-6. Sends the provisioned data to the targed device using the selected channel and protocol.
+6. Sends the provisioned data to the targeted device using the selected channel and protocol.
 7. Flashes the Production Firmware (PFW), if provided the inputs.
 
 ## Provision Protocol
@@ -127,7 +127,7 @@ The Provision Tool can transfer the arguments to the device in two ways:
 This method can be used both in development and factory environments. This method works with the legacy Protocol version 1.x or
 the new protocol version 2.x.
 * Bluetooth: The provision script can transmit the data directly to applications running in provision-mode. While in this mode,
-Silicon Labs' example applications use the bluetooth communication to receive provisionning data. The Bluetooh channel requires
+Silicon Labs' example applications use the bluetooth communication to receive provisioning data. The Bluetooh channel requires
 Provision Protocol v2.x.
 
 ### Parameters
@@ -164,7 +164,7 @@ file defines the well-known (default) parameters used by the automatic provision
 | -hv, --hw_version         | optional             | dec/hex            | The hardware version value (Max 2 bytes).                                       |
 | -hs, --hw_version_str     | optional             | string             | The hardware version string (Max 64 char).                                      |
 | -md, --manufacturing_date | optional             | string             | Manufacturing date.                |
-| -ui, --unique_id         | optional<sup>5</sup> | hex string         | A 128 bits hex string unique id (without 0x).                                           |
+| -ui, --unique_id         | optional<sup>5</sup> | hex string          | Rotating Device ID's UniqueID (128-bits hex string). Not to be confused with the Basic Information cluster's UniqueId. |
 | -sd,  --discriminator     | optional<sup>2</sup> | dec/hex            | BLE pairing discriminator. e.g: 3840 or 0xF00. (12-bit)                                 |
 | -sp, --spake2p_passcode   | required             | dec/hex            | Session passcode used to generate the SPAKE2+ verifier.        |
 | -si, --spake2p_iterations | required             | dec/hex            | Iteration count used to generate the SPAKE2+ verifier.                  |
@@ -227,7 +227,7 @@ Custom IDs are ranged 0x00 to 0xff (255). To avoid conflict, well-defined (defau
 If a parameters file named `parameters.yaml` exists in the local directory, the parameters from that file are loaded automatically.
 Otherwise, the path to the parameters file may be provided with the `--params` option.
 
-Supported types are int8u, int16u, int32u, string, binary, and path. The `path` parameters must point to an existing file in the filesystem.
+Supported types are int8u, int16u, int32u, string, binary, and path. The `path` parameters must point to an existing file in the file system.
 If such file exists, its contents are read and sent to the firmware as a binary value.
 
 Given the previous configuration, the actual arguments may be provided as command-line:

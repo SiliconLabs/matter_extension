@@ -38,8 +38,9 @@ class Commander:
         if res is None: _util.fail("Cannot retrieve device info")
         return DeviceInfo(res)
 
-    def flash(self, image_path):
-        _, ext = os.path.splitext(image_path)
+    def flash(self, path):
+        _, ext = os.path.splitext(path)
+        image_path = '"{}"'.format(path)
         if self.auto and ('si917' == self.device):
             self.execute(['manufacturing', 'erase', 'userdata'], False, True)
         if '.rps' == ext:
@@ -149,8 +150,6 @@ class CertTool:
     def execute(self, args):
         if self.tool is None:
             raise ValueError("Missing Cert Tool");
-        if (not os.path.exists(self.tool)) or (not os.path.isfile(self.tool)):
-            raise ValueError("Invalid Cert Tool: {}".format(self.tool));
         _util.execute([ self.tool ] + args)
 
 class Spake2p:

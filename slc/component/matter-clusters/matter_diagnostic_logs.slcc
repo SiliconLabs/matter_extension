@@ -2,7 +2,7 @@
 category: Clusters|CHIP
 description: >
   Implementation of the Diagnostic Logs Server Cluster.
-  The user has to enable the Diagnostic Logs Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Diagnostic Logs Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_diagnostic_logs
 package: Matter
 label: Diagnostic Logs Server Cluster
@@ -13,14 +13,14 @@ metadata:
 provides:
   - name: matter_diagnostic_logs
 source:
-  - path: src/app/clusters/diagnostic-logs-server/diagnostic-logs-server.cpp
-  - path: src/app/clusters/diagnostic-logs-server/BDXDiagnosticLogsProvider.cpp
+  - path: third_party/matter_sdk/src/app/clusters/diagnostic-logs-server/BDXDiagnosticLogsProvider.cpp
+  - path: third_party/matter_sdk/src/app/clusters/diagnostic-logs-server/diagnostic-logs-server.cpp
 include:
-  - path: src/app/clusters/diagnostic-logs-server
+  - path: third_party/matter_sdk/src/app/clusters/diagnostic-logs-server
     file_list:
-      - path: DiagnosticLogsProviderDelegate.h
       - path: BDXDiagnosticLogsProvider.h
       - path: diagnostic-logs-server.h
+      - path: DiagnosticLogsProviderDelegate.h
 template_contribution:
   - name: component_catalog
     value: matter_diagnostic_logs

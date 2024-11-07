@@ -8,35 +8,12 @@ quality: production
 metadata:
   sbom:
     license: Zlib
+
 provides:
   - name: matter_crypto_psa_siwx917
 
-source:
-  - path: src/crypto/CHIPCryptoPAL.h
-  - path: src/crypto/CHIPCryptoPAL.cpp
-  - path: src/crypto/CHIPCryptoPALPSA.h
-  - path: src/crypto/PersistentStorageOperationalKeystore.h
-  - path: src/crypto/PersistentStorageOperationalKeystore.cpp
-  - path: src/crypto/RandUtils.h
-  - path: src/crypto/RandUtils.cpp
-  - path: src/crypto/RawKeySessionKeystore.h
-  - path: src/crypto/RawKeySessionKeystore.cpp
-  - path: src/crypto/PSAOperationalKeystore.h
-  - path: src/crypto/PSAOperationalKeystore.cpp
-  - path: src/crypto/PSASessionKeystore.h
-  - path: src/crypto/PSASessionKeystore.cpp
-  - path: src/platform/silabs/efr32/CHIPCryptoPALPsaEfr32.cpp
-
-include:
-  - path: src/crypto
-    file_list:
-      - path: CHIPCryptoPAL.h
-      - path: OperationalKeystore.h
-      - path: SessionKeystore.h
-  - path: src/platform/silabs/SiWx917
-    file_list:
-      - path: siwx917-chip-mbedtls-config.h
-      - path: siwx917-chip-psa-config.h
+conflicts:
+  - name: matter_crypto_tinycrypt_siwx917
 
 requires:
   # PSA crypto components
@@ -82,6 +59,33 @@ requires:
   - name: sl_si91x_psa_ecdsa
   - name: sl_si91x_psa_sha
   - name: sl_si91x_crypto_multithread
+
+source:
+  - path: src/crypto/CHIPCryptoPAL.h
+  - path: src/crypto/CHIPCryptoPAL.cpp
+  - path: src/crypto/CHIPCryptoPALPSA.h
+  - path: src/crypto/PersistentStorageOperationalKeystore.h
+  - path: src/crypto/PersistentStorageOperationalKeystore.cpp
+  - path: src/crypto/RandUtils.h
+  - path: src/crypto/RandUtils.cpp
+  - path: src/crypto/RawKeySessionKeystore.h
+  - path: src/crypto/RawKeySessionKeystore.cpp
+  - path: src/crypto/PSAOperationalKeystore.h
+  - path: src/crypto/PSAOperationalKeystore.cpp
+  - path: src/crypto/PSASessionKeystore.h
+  - path: src/crypto/PSASessionKeystore.cpp
+  - path: src/platform/silabs/efr32/CHIPCryptoPALPsaEfr32.cpp
+
+include:
+  - path: src/crypto
+    file_list:
+      - path: CHIPCryptoPAL.h
+      - path: OperationalKeystore.h
+      - path: SessionKeystore.h
+  - path: src/platform/silabs/SiWx917
+    file_list:
+      - path: siwx917-chip-mbedtls-config.h
+      - path: siwx917-chip-psa-config.h
 
 define:
   - name: MBEDTLS_CONFIG_FILE

@@ -2,7 +2,7 @@
 category: Clusters|General
 description: >
   Implementation of the Time Format Localization Server Cluster.
-  The user has to enable the Time Format Localization Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Time Format Localization Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_time_format_localization
 package: Matter
 label: Time Format Localization Server Cluster
@@ -13,7 +13,7 @@ metadata:
 provides:
   - name: matter_time_format_localization
 source:
-  - path: src/app/clusters/time-format-localization-server/time-format-localization-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/time-format-localization-server/time-format-localization-server.cpp
 template_contribution:
   - name: component_catalog
     value: matter_time_format_localization

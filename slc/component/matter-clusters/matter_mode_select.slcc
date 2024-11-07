@@ -2,7 +2,7 @@
 category: Clusters|General
 description: >
   Implementation of the Mode Select Server Cluster.
-  The user has to enable the Mode Select Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Mode Select Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_mode_select
 package: Matter
 label: Mode Select Server Cluster
@@ -13,9 +13,9 @@ metadata:
 provides:
   - name: matter_mode_select
 source:
-  - path: src/app/clusters/mode-select-server/mode-select-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/mode-select-server/mode-select-server.cpp
 include:
-  - path: src/app/clusters/mode-select-server
+  - path: third_party/matter_sdk/src/app/clusters/mode-select-server
     file_list:
       - path: supported-modes-manager.h
 template_contribution:

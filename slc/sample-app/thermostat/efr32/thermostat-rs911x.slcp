@@ -7,13 +7,13 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.3.2"
+    version: "2.4.0"
 
 component:
   - id: device_init
   - id: matter_buttons
     from: matter
-  - id: matter_wstk_leds
+  - id: matter_leds
     from: matter
     
   - id: matter
@@ -39,6 +39,8 @@ component:
   - id: matter_thermostat_app
     from: matter   
   - id: app_common
+    from: matter
+  - id: matter_provision_default
     from: matter
 
   - id: matter_access_control
@@ -94,14 +96,11 @@ component:
     from: matter
   - id: matter_segger_rtt
     from: matter
-
-  - id: matter_temperature_sensor
-    from: matter
   - id: matter_shell
     from: matter
-  - id: sensor_rht
-
   - id: matter_default_lcd_config
+    from: matter
+  - id: matter_log_uart
     from: matter
 
 # Require LCD and QR Code components only on the boards that support LCD
@@ -116,7 +115,7 @@ requires:
      - device_series_2
 
 config_file:
-  - path: ../../../../examples/thermostat/thermostat-common/thermostat.zap
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/thermostat-common/thermostat.zap
     directory: common
     file_id: zap_config
   - path: ../../../../provision.mattpconf
@@ -124,7 +123,7 @@ config_file:
     file_id: provision_config
 
 include:
-  - path: ../../../../examples/thermostat/silabs/include
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -135,15 +134,15 @@ include:
     directory: include
 
 source:
-  - path: ../../../../examples/thermostat/silabs/src/AppTask.cpp
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/thermostat/silabs/src/TemperatureManager.cpp
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/TemperatureManager.cpp
     directory: src
-  - path: ../../../../examples/platform/silabs/main.cpp
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/thermostat/silabs/src/ZclCallbacks.cpp
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/ZclCallbacks.cpp
     directory: src
-  - path: ../../../../examples/thermostat/silabs/src/SensorManager.cpp
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/SensorManager.cpp
     directory: src
 
 define:

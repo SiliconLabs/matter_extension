@@ -1,0 +1,33 @@
+category: Matter|Core
+define:
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
+description: im_status
+id: im_status
+include:
+-   path: third_party/matter_sdk/examples/lighting-app/silabs/include
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
+-   path: third_party/nlassert/include
+-   path: third_party/nlio/include
+-   path: third_party/matter_sdk/src/protocols/interaction_model
+    file_list:
+    -   path: Constants.h
+    -   path: StatusCode.h
+    -   path: StatusCodeList.h
+label: im_status
+package: Matter
+provides:
+-   name: matter_im_status
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+source:
+-   path: third_party/matter_sdk/src/protocols/interaction_model/StatusCode.cpp
+ui_hints:
+    visibility: never

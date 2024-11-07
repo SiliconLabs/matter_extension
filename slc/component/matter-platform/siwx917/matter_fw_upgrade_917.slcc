@@ -1,3 +1,4 @@
+# TODO Remove this component once proper SDK components are implemented
 id: matter_fw_upgrade_917
 label: matter_fw_upgrade_917
 package: "Matter"
@@ -8,8 +9,7 @@ quality: production
 metadata:
   sbom:
     license: Zlib
-component_root_path: "third_party/silabs/wifi_sdk/components/device/silabs/si91x/wireless"
-
+component_root_path: "slc/component/sdk-content/wifi-sdk/device/silabs/si91x/wireless"
 source:
   - path: "firmware_upgrade/firmware_upgradation.c"
 include:

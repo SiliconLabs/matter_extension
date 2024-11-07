@@ -1,0 +1,24 @@
+
+category: Clusters|Network Infrastructure
+description: >
+  Implementation of the Thread Border Router Management Server Cluster.
+  The user has to enable the Thread Border Router Management Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_thread_border_router_management
+package: Matter
+label: Thread Border Router Management Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_thread_border_router_management
+source:
+  - path: third_party/matter_sdk/src/app/clusters/thread-border-router-management-server/thread-border-router-management-server.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/thread-border-router-management-server
+    file_list:
+      - path: thread-border-router-management-server.h
+      - path: thread-br-delegate.h
+template_contribution:
+  - name: component_catalog
+    value: matter_thread_border_router_management

@@ -1,0 +1,24 @@
+
+category: Clusters|Energy Management
+description: >
+  Implementation of the Water Heater Management Server Cluster.
+  The user has to enable the Water Heater Management Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_water_heater_management
+package: Matter
+label: Water Heater Management Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_water_heater_management
+source:
+  - path: third_party/matter_sdk/src/app/clusters/water-heater-management-server/water-heater-management-server.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/water-heater-management-server
+    file_list:
+      - path: water-heater-management-server.h
+      - path: WaterHeaterManagementTestEventTriggerHandler.h
+template_contribution:
+  - name: component_catalog
+    value: matter_water_heater_management

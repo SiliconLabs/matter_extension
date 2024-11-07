@@ -21,6 +21,8 @@ template_file:
 # TODO: Cleanup the customized linker file for brd4342a board and use the SDK linker file
   - path: matter-wifi/917soc/linkerfile_psram_SoC.ld.jinja
     condition: [brd4342a]
+  - path: matter-wifi/917soc/linkerfile_common.ld.jinja
+    condition: [brd4343a]
 library:
   - system: gcc
   - system: c
@@ -45,5 +47,8 @@ toolchain_settings:
   - option: linkerfile
     value: autogen/linkerfile_psram_SoC.ld
     condition: [brd4342a]
+  - option: linkerfile
+    value: autogen/linkerfile_common.ld
+    condition: [brd4343a]
 ui_hints:
   visibility: never

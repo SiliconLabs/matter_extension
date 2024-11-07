@@ -2,17 +2,17 @@ project_name: air-quality-sensor-app-917-soc
 label: Matter Air Quality Sensor
 description: >
   Matter Air Quality Sensor App.
-quality: evaluation
+quality: production
 package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.3.2"
+    version: "2.4.0"
   - id: wiseconnect3_sdk
-    version: "3.3.3"
+    version: "3.3.4"
 
 component:
-  - id: matter_wstk_leds
+  - id: matter_leds
     from: matter
   - id: matter
     from: matter
@@ -27,12 +27,17 @@ component:
     from: matter
   - id: matter_air_quality
     from: matter
+  - id: matter_concentration_measurement
+    from: matter
   - id: matter_ethernet_network_diagnostics
     from: matter
   - id: matter_wifi_network_diagnostics
     from: matter
   - id: app_common
     from: matter
+  - id: matter_provision_flash
+    from: matter
+
   - id: matter_access_control
     from: matter
   - id: matter_administrator_commissioning
@@ -82,7 +87,6 @@ component:
   - id: matter_default_lcd_config
     from: matter
 
-
   - id: matter_air_quality_app
     from: matter
 
@@ -120,7 +124,12 @@ component:
     instance: [btn0,btn1]
     from: wiseconnect3_sdk
   - id: sl_si91x_led_917
-    instance: [led0,led1]
+    instance: [led0]
+    condition: [si917_dev_board]
+    from: wiseconnect3_sdk
+  - id: sl_si91x_led_917
+    instance: [led0, led1]
+    condition: [si917_prod_board]
     from: wiseconnect3_sdk
   - instance: [timer0]
     from: wiseconnect3_sdk
@@ -130,15 +139,15 @@ configuration:
   - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
   
 config_file:
-  - path: ../../../../examples/air-quality-sensor-app/air-quality-sensor-common/air-quality-sensor-app.zap
+  - path: ../../../../third_party/matter_sdk/examples/air-quality-sensor-app/air-quality-sensor-common/air-quality-sensor-app.zap
     directory: common
     file_id: zap_config
   - path: ../../../../provision.mattpconf
     directory: provision
-    file_id: provision_config  
+    file_id: provision_config
 
 include:
-  - path: ../../../../examples/air-quality-sensor-app/silabs/include
+  - path: ../../../../third_party/matter_sdk/examples/air-quality-sensor-app/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -146,7 +155,7 @@ include:
       - path: CHIPProjectConfig.h
       - path: SensorManager.h
     directory: include
-  - path: ../../../../examples/air-quality-sensor-app/air-quality-sensor-common/include/
+  - path: ../../../../third_party/matter_sdk/examples/air-quality-sensor-app/air-quality-sensor-common/include/
     file_list:
       - path: air-quality-sensor-manager.h
       - path: relative-humidity-sensor-manager.h
@@ -154,15 +163,15 @@ include:
     directory: include
     
 source:
-  - path: ../../../../examples/air-quality-sensor-app/silabs/src/AppTask.cpp
+  - path: ../../../../third_party/matter_sdk/examples/air-quality-sensor-app/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/air-quality-sensor-app/air-quality-sensor-common/src/air-quality-sensor-manager.cpp
+  - path: ../../../../third_party/matter_sdk/examples/air-quality-sensor-app/air-quality-sensor-common/src/air-quality-sensor-manager.cpp
     directory: src
-  - path: ../../../../examples/platform/silabs/main.cpp
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/air-quality-sensor-app/silabs/src/ZclCallbacks.cpp
+  - path: ../../../../third_party/matter_sdk/examples/air-quality-sensor-app/silabs/src/ZclCallbacks.cpp
     directory: src
-  - path: ../../../../examples/air-quality-sensor-app/silabs/src/SensorManager.cpp
+  - path: ../../../../third_party/matter_sdk/examples/air-quality-sensor-app/silabs/src/SensorManager.cpp
     directory: src
 
 define:

@@ -2,7 +2,7 @@
 category: Clusters|General
 description: >
   Implementation of the Group Key Management Server Cluster.
-  The user has to enable the Group Key Management Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Group Key Management Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_group_key_mgmt
 package: Matter
 label: Group Key Management Server Cluster
@@ -13,7 +13,7 @@ metadata:
 provides:
   - name: matter_group_key_mgmt
 source:
-  - path: src/app/clusters/group-key-mgmt-server/group-key-mgmt-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/group-key-mgmt-server/group-key-mgmt-server.cpp
 template_contribution:
   - name: component_catalog
     value: matter_group_key_mgmt

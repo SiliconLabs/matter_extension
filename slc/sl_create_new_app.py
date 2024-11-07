@@ -10,7 +10,7 @@ class createApp:
     """Class used to create new app from given arguments and slc"""
     def __init__(self):
         self.EXAMPLE_USAGE = "python slc/sl_create_new_app.py <NewAppName> <PathToReferenceProjectFile(.slcp or .slcw)> <SilabsBoard>"
-        self.SoC_boards = ["brd4338a"]
+        self.SoC_boards = ["brd4338a", "brd4342a", "brd2605a"]
         self.get_environment()
 
     def print_usage_and_exit(self):
@@ -24,7 +24,7 @@ class createApp:
 
         self.new_app_name = sys.argv[1]
         self.reference_project_file = sys.argv[2]
-        self.silabs_board = sys.argv[3]
+        self.silabs_board = sys.argv[3].lower()
 
         #check if app is siwx917 wifi app
         self.wifi917 = True if "917" in self.reference_project_file else False
@@ -44,6 +44,11 @@ class createApp:
             if not os.path.isdir(self.wiseconnect_root):
                 print(f"\nThe Wifi Extension required to build the {self.reference_project_file} does not exist at location:{self.wiseconnect_root}")
                 sys.exit(1)
+        #Checkout third_party_hw_drivers_extension submodule for air-quality-sensor-app-sparkfun-thread app and trust the extension
+        if "sparkfun" in self.reference_project_file:
+            third_party_hw_drivers_extension_path = os.path.join(os.getcwd(),"third_party","third_party_hw_drivers_extension")
+            subprocess.run(["git", "submodule", "update", "--init", "--checkout",third_party_hw_drivers_extension_path ])
+            subprocess.run([self.slc_path, "signature", "trust", "--extension-path", third_party_hw_drivers_extension_path])
 
     def get_environment(self):
         try:
@@ -54,8 +59,8 @@ class createApp:
             self.silabs_chip_root = os.getenv("silabs_chip_root")
             self.POST_BUILD_EXE = os.getenv("POST_BUILD_EXE")
             self.NINJA_EXE_PATH = os.getenv("NINJA_EXE_PATH")
-            self.gsdk_root = Path(os.getcwd()).parent.parent
-            self.wiseconnect_root = os.path.join(self.gsdk_root,"extension","wiseconnect")
+            self.sisdk_root = os.getenv("SISDK_ROOT")
+            self.wiseconnect_root = os.getenv("WISECONNECT_ROOT")
             self.arm_toolchain_path = os.path.join(os.getenv("ARM_GCC_DIR"))
         except:
             print("Could not load the .env file. Run sl_setup_env.py generate .env file")
@@ -69,52 +74,35 @@ class createApp:
                 print("SLC undefined. Set SLC from the sl_env_vars.bat")
 
     def trust_location(self, trust_locations):
-        #Ask user permission to trust SDK/Extension at given location
-        #verify the location
-        sdk_ext = ""
         for locations in trust_locations:
             sdk_or_ext = locations[0]
             location = locations[1]
+
+            #verify the location of sdk and extensions
             if not os.path.isdir(location):
                 print(f"\nThe {sdk_or_ext} does not exist at location:{location}")
                 sys.exit(1)
-            locations_str = sdk_or_ext + ":" + str(location)
-            sdk_ext += locations_str + "\n"
 
-        trust = "no"
-        trust_msg = f"\nSLC is trying to trust the following SDKs/Extensions.\n\n{sdk_ext}\n\
-SDKs/Extensions can provide executables and scripts that SLC may automatically execute.\n\
-They can also provide malicious embedded code or libraries\n\
-SLC cannot verify the contents of the SDKs/Extensions.\n\
-Do you want to trust above SDKs/Extensions (yes / no) ? : "
-        
-        
-        trust = input(trust_msg ).strip().lower()
-        if trust not in ["yes","no"]:
-            print("\nINVALID response!! Please select from 'yes' / 'no'\n")
-            trust = input(trust_msg ).strip().lower()
-        if trust == "yes":
-            for locations in trust_locations:
-                sdk_or_ext = locations[0]
-                location = locations[1] 
+            #trust the sdk and extensions
+            print(f"\nTrusting {sdk_or_ext} at location: {location}")
+            try:
                 if sdk_or_ext=="SDK":
                     subprocess.run([self.slc_path, "configuration", "--sdk", location])
                     subprocess.run([self.slc_path, "signature", "trust", "--sdk", location])
                 else:#sdk_ext="Extension":
                     subprocess.run([self.slc_path, "signature", "trust", "--extension-path", location])
-        else:
-            print(f"{sdk_or_ext} : '{location}' not trusted")
-            sys.exit(1)
+            except Exception as e:
+                print("Error while trusting the location",location)
+                print(e)
+                sys.exit(1)
 
-    def slc_trust(self , wifi917):
+    def slc_trust(self):
         #Get user permission to trust simplicity_sdk and extensions with use arm gcc
         #use arm-gcc toolchain with slc
         subprocess.run([self.slc_path, "configuration","-gcc", self.arm_toolchain_path])
 
-        trust_locations = [["SDK",self.gsdk_root],["Extension", self.silabs_chip_root]]
-        if wifi917:
-            trust_locations.append(["Extension",self.wiseconnect_root])
-
+        trust_locations = [["SDK",self.sisdk_root],["Extension", self.silabs_chip_root],
+                                                    ["Extension",self.wiseconnect_root]]
         self.trust_location(trust_locations)
 
 
@@ -125,7 +113,7 @@ Do you want to trust above SDKs/Extensions (yes / no) ? : "
         config_args=";wiseconnect3_sdk"  if self.silabs_board in self.SoC_boards else ""
         #run slc generate to create copy of sample app at the 'new_app_name' location
         try:
-            cmd = [self.slc_path, "--java-location", self.java_path, "generate", "-d", self.new_app_name,project_flag, self.reference_project_file, "--with", self.silabs_board+config_args, "--new-project", "--force"]
+            cmd = [self.slc_path, "--java-location", self.java_path, "generate", "-d", self.new_app_name,project_flag, self.reference_project_file, "--with", self.silabs_board+config_args, "--new-project", "--force", "--generator-timeout=180", "-o", "makefile"]
             subprocess.run(cmd, check=True)
         except subprocess.CalledProcessError:
             print("Error running 'slc generate'")

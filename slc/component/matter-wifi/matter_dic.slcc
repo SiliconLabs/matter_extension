@@ -1,49 +1,52 @@
 category: Matter-WiFi|Features
 define:
-  - name: DIC_ENABLE
+-   name: DIC_ENABLE
     value: "1"
-  - name: SL_DIC_NVM_EMBED_CERT
+-   name: USE_AWS
+    value: "1"
+-   name: SL_DIC_NVM_EMBED_CERT
     value: "0"
-  - name: CHIP_DEVICE_CONFIG_ENABLE_IPV4
-    value: "1"
-  - name: CHIP_HAVE_CONFIG_H
-    value: "1"
-  - name: MBEDTLS_SSL_MAX_CONTENT_LEN
+-   name: CHIP_DEVICE_CONFIG_ENABLE_IPV4
+    value: '1'
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: MBEDTLS_SSL_MAX_CONTENT_LEN
     value: "768"
     condition: [matter_efr32_wifi]
-  - name: SIWX_917
+-   name: SIWX_917
     value: "1"
     condition: [matter_platform_siwx917]
-description: This component enables Direct Internet connectivity feature for matter-wifi
+description:
+    This component enables Direct Internet connectivity feature for matter-wifi
 id: matter_dic
 include:
-  - path: examples/platform/silabs/DIC/matter_abs_interface/include
+-   path: third_party/matter_sdk/examples/platform/silabs/DIC/matter_abs_interface/include
     file_list:
-      - path: dic.h
-      - path: dic_config.h
-      - path: dic_control.h
-      - path: dic_nvm_cert.h
-  - path: third_party/silabs/mqtt/stack
+    - path: dic.h
+    - path: dic_config.h
+    - path: dic_control.h
+    - path: dic_nvm_cert.h
+-   path: third_party/silabs/mqtt/stack
     file_list:
-      - path: mqtt.h
-      - path: mqtt_opts.h
-  - path: third_party/silabs/mqtt/mqtt_transport_interface/include
+    - path: mqtt.h
+    - path: mqtt_opts.h
+-   path: third_party/silabs/mqtt/mqtt_transport_interface/include
     file_list:
-      - path: altcp.h
-      - path: altcp_opt.h
-      - path: altcp_priv.h
-      - path: altcp_tcp.h
-      - path: altcp_tls.h
-      - path: altcp_tls_mbedtls_mem.h
-      - path: altcp_tls_mbedtls_opts.h
-      - path: altcp_tls_mbedtls_structs.h
-      - path: MQTT_transport.h
-      - path: tcpbase.h
-  - path: src/platform/silabs/efr32
+    - path: altcp.h
+    - path: altcp_opt.h
+    - path: altcp_priv.h
+    - path: altcp_tcp.h
+    - path: altcp_tls.h
+    - path: altcp_tls_mbedtls_mem.h
+    - path: altcp_tls_mbedtls_opts.h
+    - path: altcp_tls_mbedtls_structs.h
+    - path: MQTT_transport.h
+    - path: tcpbase.h
+-   path: third_party/matter_sdk/src/platform/silabs/efr32
 label: Direct Internet connectivity for Matter WiFi
 package: Matter
 provides:
-  - name: matter_dic
+-   name: matter_dic
 requires:
   - name: mbedtls_tls
     condition: [matter_efr32_wifi]
@@ -68,13 +71,13 @@ metadata:
   sbom:
     license: Zlib
 source:
-  - path: examples/platform/silabs/DIC/matter_abs_interface/src/dic.cpp
-  - path: examples/platform/silabs/DIC/matter_abs_interface/src/dic_control.cpp
-  - path: examples/platform/silabs/DIC/matter_abs_interface/src/dic_nvm_cert.cpp
-  - path: third_party/silabs/mqtt/mqtt_transport_interface/src/MQTT_transport.c
-  - path: third_party/silabs/mqtt/mqtt_transport_interface/src/altcp.c
-  - path: third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_alloc.c
-  - path: third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_tcp.c
-  - path: third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls.c
-  - path: third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls_mem.c
-  - path: third_party/silabs/mqtt/stack/mqtt.c
+-   path: third_party/matter_sdk/examples/platform/silabs/DIC/matter_abs_interface/src/dic.cpp
+-   path: third_party/matter_sdk/examples/platform/silabs/DIC/matter_abs_interface/src/dic_control.cpp
+-   path: third_party/matter_sdk/examples/platform/silabs/DIC/matter_abs_interface/src/dic_nvm_cert.cpp
+-   path: third_party/silabs/mqtt/mqtt_transport_interface/src/MQTT_transport.c
+-   path: third_party/silabs/mqtt/mqtt_transport_interface/src/altcp.c
+-   path: third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_alloc.c
+-   path: third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_tcp.c
+-   path: third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls.c
+-   path: third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls_mem.c
+-   path: third_party/silabs/mqtt/stack/mqtt.c

@@ -4,8 +4,6 @@ import os
 import sys
 import subprocess
 import shutil
-import sys
-from dotenv import load_dotenv
 from sl_create_new_app import createApp
 
 App = createApp()
@@ -17,15 +15,15 @@ if len(os.sys.argv) < 3:
     exit(1)
 else:
     reference_project_file = os.sys.argv[1]
-    #use appropriate build flag for sample-app/workspaces
+    # use appropriate build flag for sample-app/workspaces
     if reference_project_file.endswith('.slcp'):
-        project_flag = "-p" 
-        silabs_app = os.path.basename(reference_project_file).removesuffix(".slcp")
+        project_flag = "-p"
+        silabs_app = os.path.basename(reference_project_file)[:-5] 
         output_dir = os.path.dirname(reference_project_file)
         makefile_path = f"{silabs_app}.Makefile"
     elif reference_project_file.endswith('.slcw'):
         project_flag = "-w"
-        silabs_app = os.path.basename(reference_project_file).removesuffix(".slcw")
+        silabs_app = os.path.basename(reference_project_file)[:-5] 
         output_dir = os.path.dirname(reference_project_file)
         makefile_path = f"{silabs_app}.solution.Makefile"
     else:
@@ -33,7 +31,7 @@ else:
         print("Example usage:", EXAMPLE_USAGE)
         exit(1)
 
-silabs_board = os.sys.argv[2]
+silabs_board = os.sys.argv[2].lower()
 
 if not shutil.which("slc"):
     print("slc not detected on host")
@@ -47,10 +45,10 @@ if not shutil.which("arm-none-eabi-gcc"):
 
 slc_path = App.slc_path
 java_path = App.java_path
-#check for soc boards
-SoC_boards = ["brd4338a"]
-config_args=";wiseconnect3_sdk"  if silabs_board in SoC_boards else ""
+# check for soc boards
+SoC_boards = App.SoC_boards
+config_args = ";wiseconnect3_sdk" if silabs_board in SoC_boards else ""
 
-subprocess.run([slc_path, "--java-location", java_path, "generate", "-d", output_dir, project_flag, reference_project_file, "--with", silabs_board+config_args, "--force"])
+subprocess.run([slc_path, "--java-location", java_path, "generate", "-d", output_dir, project_flag, reference_project_file, "--with", silabs_board + config_args, "--force", "--generator-timeout=180", "-o", "makefile"])
 
-subprocess.run(["make","all", "-C", output_dir, "-f", makefile_path, "-j13"])
+subprocess.run(["make", "all", "-C", output_dir, "-f", makefile_path, "-j13"])

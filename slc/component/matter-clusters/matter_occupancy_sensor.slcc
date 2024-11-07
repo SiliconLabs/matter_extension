@@ -2,7 +2,7 @@
 category: Clusters|Measurement
 description: >
   Implementation of the Occupancy Sensing Server Cluster.
-  The user has to enable the Occupancy Sensing Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Occupancy Sensing Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_occupancy_sensor
 package: Matter
 label: Occupancy Sensing Server Cluster
@@ -13,9 +13,9 @@ metadata:
 provides:
   - name: matter_occupancy_sensor
 source:
-  - path: src/app/clusters/occupancy-sensor-server/occupancy-sensor-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/occupancy-sensor-server/occupancy-sensor-server.cpp
 include:
-  - path: src/app/clusters/occupancy-sensor-server
+  - path: third_party/matter_sdk/src/app/clusters/occupancy-sensor-server
     file_list:
       - path: occupancy-hal.h
       - path: occupancy-sensor-server.h

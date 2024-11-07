@@ -3,8 +3,8 @@ define: []
 description: libqrcode_common
 id: libqrcode_common
 include:
--   path: examples/common/QRCode/repo/c
--   path: examples/common/QRCode/repo/c
+-   path: third_party/QR-Code-generator/c
+-   path: third_party/QR-Code-generator/c
     file_list:
     -   path: qrcodegen.h
 label: libqrcode_common
@@ -16,6 +16,6 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: examples/common/QRCode/repo/c/qrcodegen.c
+-   path: third_party/QR-Code-generator/c/qrcodegen.c
 ui_hints:
     visibility: never

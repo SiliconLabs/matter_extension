@@ -7,13 +7,13 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.3.2"
+    version: "2.4.0"
   - id: wiseconnect3_sdk
-    version: "3.3.3"
+    version: "3.3.4"
 
 component:
 
-  - id: matter_wstk_leds
+  - id: matter_leds
     from: matter
   - id: matter
     from: matter
@@ -30,6 +30,8 @@ component:
   - id: matter_light_switch
     from: matter     
   - id: app_common
+    from: matter
+  - id: matter_provision_flash
     from: matter
 
   - id: matter_access_control
@@ -96,6 +98,15 @@ component:
     from: matter
   - id: matter_default_lcd_config
     from: matter
+  # ICD configurations
+  - id: matter_icd_core
+    from: matter
+  - id: matter_test_event_trigger
+    from: matter
+  - id: matter_icd_management
+    from: matter
+  - id: matter_log_uart
+    from: matter
 
   - id: sl_si91x_common_flash_nvm3
     from: wiseconnect3_sdk
@@ -131,14 +142,19 @@ component:
     instance: [btn0,btn1]
     from: wiseconnect3_sdk
   - id: sl_si91x_led_917
-    instance: [led0,led1]
+    instance: [led0]
+    condition: [si917_dev_board]
+    from: wiseconnect3_sdk
+  - id: sl_si91x_led_917
+    instance: [led0, led1]
+    condition: [si917_prod_board]
     from: wiseconnect3_sdk
   - instance: [timer0]
     from: wiseconnect3_sdk
     id: ulp_timers_instance
 
 config_file:
-  - path: ../../../../examples/light-switch-app/light-switch-common/light-switch-app-wifi.zap
+  - path: ../../../../third_party/matter_sdk/examples/light-switch-app/light-switch-common/light-switch-app.zap
     directory: common
     file_id: zap_config
   - path: ../../../../provision.mattpconf
@@ -146,7 +162,7 @@ config_file:
     file_id: provision_config
 
 include:
-  - path: ../../../../examples/light-switch-app/silabs/include
+  - path: ../../../../third_party/matter_sdk/examples/light-switch-app/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -158,17 +174,17 @@ include:
     directory: include
 
 source:
-  - path: ../../../../examples/light-switch-app/silabs/src/AppTask.cpp
+  - path: ../../../../third_party/matter_sdk/examples/light-switch-app/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/platform/silabs/main.cpp
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/light-switch-app/silabs/src/ZclCallbacks.cpp
+  - path: ../../../../third_party/matter_sdk/examples/light-switch-app/silabs/src/ZclCallbacks.cpp
     directory: src
-  - path: ../../../../examples/light-switch-app/silabs/src/BindingHandler.cpp
+  - path: ../../../../third_party/matter_sdk/examples/light-switch-app/silabs/src/BindingHandler.cpp
     directory: src
-  - path: ../../../../examples/light-switch-app/silabs/src/LightSwitchMgr.cpp
+  - path: ../../../../third_party/matter_sdk/examples/light-switch-app/silabs/src/LightSwitchMgr.cpp
     directory: src
-  - path: ../../../../examples/light-switch-app/silabs/src/ShellCommands.cpp
+  - path: ../../../../third_party/matter_sdk/examples/light-switch-app/silabs/src/ShellCommands.cpp
     directory: src
 
 define:
@@ -188,6 +204,13 @@ define:
   
 configuration:
   - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
+  # Default ICD configurations
+  - {name: SL_IDLE_MODE_DURATION_S, value: '600'}
+  - {name: SL_ACTIVE_MODE_DURATION_MS, value: '0'}
+  - {name: SL_ACTIVE_MODE_THRESHOLD, value: '0'}
+
+  - {name: CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED, value: '1'}
+  - {name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION, value: '0'}
 
 toolchain_settings:
   - option: cxx_standard

@@ -13,9 +13,9 @@ metadata:
 provides:
   - name: matter_on_off
 source:
-  - path: src/app/clusters/on-off-server/on-off-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/on-off-server/on-off-server.cpp
 include:
-  - path: src/app/clusters/on-off-server
+  - path: third_party/matter_sdk/src/app/clusters/on-off-server
     file_list:
       - path: on-off-server.h
 template_contribution:

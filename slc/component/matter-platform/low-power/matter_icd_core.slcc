@@ -43,6 +43,7 @@ conflicts:
 
 provides:
   - name: matter_icd_core
+  - name: matter_icd
 
 validation_helper:
   - path: slc/config/scripts/icd_server_validation.lua

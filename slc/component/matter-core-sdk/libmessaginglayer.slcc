@@ -7,13 +7,13 @@ define:
 description: libmessaginglayer
 id: libmessaginglayer
 include:
--   path: examples/platform/silabs
--   path: src
--   path: src/include
--   path: src/lib
--   path: third_party/nlassert/repo/include
--   path: third_party/nlio/repo/include
--   path: src/messaging
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
+-   path: third_party/nlassert/include
+-   path: third_party/nlio/include
+-   path: third_party/matter_sdk/src/messaging
     file_list:
     -   path: SessionParameters.h
     -   path: ExchangeDelegate.h
@@ -37,13 +37,13 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: src/messaging/ApplicationExchangeDispatch.cpp
--   path: src/messaging/ErrorCategory.cpp
--   path: src/messaging/ExchangeContext.cpp
--   path: src/messaging/ExchangeMessageDispatch.cpp
--   path: src/messaging/ExchangeMgr.cpp
--   path: src/messaging/ReliableMessageContext.cpp
--   path: src/messaging/ReliableMessageMgr.cpp
--   path: src/messaging/ReliableMessageProtocolConfig.cpp
+-   path: third_party/matter_sdk/src/messaging/ApplicationExchangeDispatch.cpp
+-   path: third_party/matter_sdk/src/messaging/ErrorCategory.cpp
+-   path: third_party/matter_sdk/src/messaging/ExchangeContext.cpp
+-   path: third_party/matter_sdk/src/messaging/ExchangeMessageDispatch.cpp
+-   path: third_party/matter_sdk/src/messaging/ExchangeMgr.cpp
+-   path: third_party/matter_sdk/src/messaging/ReliableMessageContext.cpp
+-   path: third_party/matter_sdk/src/messaging/ReliableMessageMgr.cpp
+-   path: third_party/matter_sdk/src/messaging/ReliableMessageProtocolConfig.cpp
 ui_hints:
     visibility: never

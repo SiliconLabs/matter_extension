@@ -9,12 +9,10 @@ from modules.parameters import Types, Formats, ID
 class Credentials:
     DEFAULT_CD_CERT = "credentials/test/certification-declaration/Chip-Test-CD-Signing-Cert.pem"
     DEFAULT_CD_KEY = "credentials/test/certification-declaration/Chip-Test-CD-Signing-Key.pem"
-    DEFAULT_PAA_CERT = "credentials/test/attestation/Chip-Test-PAA-NoVID-Cert.der"
-    DEFAULT_PAA_KEY = "credentials/test/attestation/Chip-Test-PAA-NoVID-Key.der"
     PKCS_GENERATED = 'certs.p12'
     DEFAULT_HEADER_TEMPLATE = 'silabs_creds.tmpl'
     DEFAULT_HEADER_FILE = 'silabs_creds.h'
-    DEFAULT_CERT_TOOL = 'out/tools/chip-cert'
+    DEFAULT_CERT_TOOL = 'chip-cert'
 
     def __init__(self, paths, args) -> None:
         self.paths = paths
@@ -22,7 +20,7 @@ class Credentials:
         self.version = args.str(ID.kVersion)
         vid = args.hex(ID.kVendorId)
         pid = args.hex(ID.kProductId)
-        tool_path = args.str(ID.kCertToolPath) or paths.root(Credentials.DEFAULT_CERT_TOOL)
+        tool_path = args.str(ID.kCertToolPath) or Credentials.DEFAULT_CERT_TOOL
         self.cert_tool = _tools.CertTool(tool_path, vid, pid)
         self.generate = args.bool(ID.kGenerateCreds)
         self.csr_mode = args.bool(ID.kCsrMode)
@@ -96,10 +94,10 @@ class Credentials:
         elif self.generate:
             # Signing Certificate
             if cdc.value is None:
-                cdc.set(self.paths.root(Credentials.DEFAULT_CD_CERT))
+                cdc.set(self.paths.matter(Credentials.DEFAULT_CD_CERT))
             # Signing Key
             if cdk.value is None:
-                cdk.set(self.paths.root(Credentials.DEFAULT_CD_KEY))
+                cdk.set(self.paths.matter(Credentials.DEFAULT_CD_KEY))
             # Generate CD
             cd.set(cd_temp, None, False)
             self.cert_tool.generateCD(cdc.value, cdk.value, cd.value)
@@ -141,21 +139,25 @@ class Credentials:
                 _util.warn("PAA certificate ignored: {}".format(paa_cert.value))
             if paa_key.value is not None:
                 _util.warn("PAA key ignored: {}".format(paa_key.value))
+            paa_cert.set(self.paths.temp('paa_cert.pem'), None, False)
+            paa_key.set(self.paths.temp('paa_key.pem'), None, False)
+            self.cert_tool.generatePAA(paa_cert.value, paa_key.value)
         else:
             # Use provided PAA and PAA key
             if paa_cert.value is None:
                 _util.fail("Missing: PAA certificate")
             if paa_key.value is None:
                 _util.fail("Missing: PAA key")
-            cert_pem, cert_der = self.x509Copy(paa_cert.value, 'paa_cert')
-            key_pem, key_der = self.x509Copy(paa_key.value, 'paa_key', True)
+        # Copy into DER format (if needed)
+        self.x509Copy(paa_cert.value, 'paa_cert')
+        self.x509Copy(paa_key.value, 'paa_key', True)
 
     def collectPAI(self, paa_cert, paa_key, pai_cert, pai_key, generate):
         if generate:
-            if (paa_cert.value is None) or (paa_key.value is None):
-                _util.warn("Using default PAA certificate and key")
-                paa_cert.set(self.paths.root(Credentials.DEFAULT_PAA_CERT))
-                paa_key.set(self.paths.root(Credentials.DEFAULT_PAA_KEY))
+            if paa_cert.value is None:
+                _util.fail("Missing PAA certificate")
+            if paa_key.value is None:
+                _util.fail("Missing PAA key")
             if pai_cert.value is not None:
                 _util.warn("PAI certificate ignored: {}".format(pai_cert.value))
             if pai_key.value is not None:

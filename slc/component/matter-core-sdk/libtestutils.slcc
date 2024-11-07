@@ -7,17 +7,16 @@ define:
 description: libtestutils
 id: libtestutils
 include:
--   path: examples/platform/silabs
--   path: src
--   path: src/include
--   path: src/lib
--   path: third_party/nlassert/repo/include
--   path: third_party/nlio/repo/include
--   path: src/lib/support
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
+-   path: third_party/nlassert/include
+-   path: third_party/nlio/include
+-   path: third_party/matter_sdk/src/lib/support
     file_list:
     -   path: StringSplitter.h
     -   path: PersistentStorageAudit.h
-    -   path: UnitTestRegistration.h
     -   path: CHIPPlatformMemory.h
     -   path: SafeString.h
     -   path: ScopedBuffer.h
@@ -77,10 +76,8 @@ include:
     -   path: BytesCircularBuffer.h
     -   path: utf8.h
     -   path: BitFlags.h
-    -   path: UnitTestContext.h
     -   path: FibonacciUtils.h
     -   path: ThreadOperationalDataset.h
-    -   path: UnitTestExtendedAssertions.h
     -   path: Variant.h
     -   path: PoolWrapper.h
 label: libtestutils
@@ -92,6 +89,6 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: src/lib/support/UnitTestUtils.cpp
+-   path: third_party/matter_sdk/src/lib/support/UnitTestUtils.cpp
 ui_hints:
     visibility: never

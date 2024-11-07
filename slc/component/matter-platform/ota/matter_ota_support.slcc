@@ -14,10 +14,10 @@ requires:
 provides:
   - name: matter_ota_support
 source:
-  - path: examples/platform/silabs/OTAConfig.cpp
-  - path: src/platform/silabs/efr32/OTAImageProcessorImpl.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/OTAConfig.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/efr32/OTAImageProcessorImpl.cpp
     condition: [matter_platform_efr32]
-  - path: src/platform/silabs/SiWx917/OTAImageProcessorImpl.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/SiWx917/OTAImageProcessorImpl.cpp
     condition: [matter_platform_siwx917]
 config_file:
   - path: slc/config/sl_matter_ota_config.h

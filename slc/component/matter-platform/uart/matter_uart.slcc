@@ -7,18 +7,23 @@ quality: production
 metadata:
   sbom:
     license: Zlib
+
 requires:
    - name: uartdrv_eusart
      condition:
      - matter_platform_efr32
+
 provides:
   - name: matter_uart
+
 source:
-  - path: examples/platform/silabs/uart.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/uart.cpp
+  
 include:
-- path: examples/platform/silabs
+- path: third_party/matter_sdk/examples/platform/silabs
   file_list:
   - path: uart.h
+  
 define:
   - name: CONFIG_ENABLE_EUART
     condition:

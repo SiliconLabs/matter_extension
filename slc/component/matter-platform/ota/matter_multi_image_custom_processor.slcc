@@ -15,10 +15,10 @@ requires:
   - name: matter_multi_image_ota
 
 source:
-  - path: src/platform/silabs/multi-ota/OTACustomProcessor.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/multi-ota/OTACustomProcessor.cpp
 
 include: 
-  - path: src/platform/silabs/multi-ota
+  - path: third_party/matter_sdk/src/platform/silabs/multi-ota
     file_list:
     - path: OTACustomProcessor.h
 

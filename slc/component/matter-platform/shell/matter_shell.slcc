@@ -14,66 +14,75 @@ requires:
 provides:
 - name: matter_shell
 source:
-- path: examples/platform/silabs/matter_shell.cpp
-- path: examples/shell/shell_common/cmd_misc.cpp
-- path: examples/shell/shell_common/cmd_otcli.cpp
+- path: third_party/matter_sdk/examples/platform/silabs/MatterShell.cpp
+- path: third_party/matter_sdk/examples/shell/shell_common/cmd_misc.cpp
+- path: third_party/matter_sdk/examples/shell/shell_common/cmd_otcli.cpp
   condition: [matter_thread]
-- path: examples/shell/shell_common/globals.cpp
-- path: src/lib/shell/Engine.cpp
-- path: src/lib/shell/streamer.cpp
-- path: src/lib/shell/streamer_silabs.cpp
-- path: src/lib/shell/MainLoopSilabs.cpp
-- path: src/lib/shell/commands/Base64.cpp
-- path: src/lib/shell/commands/Help.cpp
-- path: src/lib/shell/commands/Meta.cpp
-- path: src/lib/shell/commands/Config.cpp
-- path: src/lib/shell/commands/Device.cpp
-- path: src/lib/shell/commands/Stat.cpp
-- path: src/lib/shell/commands/OnboardingCodes.cpp
-- path: src/lib/shell/commands/Dns.cpp
-- path: src/lib/shell/commands/BLE.cpp
+- path: third_party/matter_sdk/examples/shell/shell_common/globals.cpp
+- path: third_party/matter_sdk/src/lib/shell/CommandSet.cpp
+- path: third_party/matter_sdk/src/lib/shell/Engine.cpp
+- path: third_party/matter_sdk/src/lib/shell/streamer.cpp
+- path: third_party/matter_sdk/src/lib/shell/streamer_silabs.cpp
+- path: third_party/matter_sdk/src/lib/shell/MainLoopSilabs.cpp
+- path: third_party/matter_sdk/src/lib/shell/commands/Help.cpp
+- path: third_party/matter_sdk/src/lib/shell/commands/Meta.cpp
+- path: third_party/matter_sdk/src/lib/shell/commands/Config.cpp
+- path: third_party/matter_sdk/src/lib/shell/commands/Device.cpp
+- path: third_party/matter_sdk/src/lib/shell/commands/Stat.cpp
+- path: third_party/matter_sdk/src/lib/shell/commands/OnboardingCodes.cpp
+- path: third_party/matter_sdk/src/lib/shell/commands/Dns.cpp
+- path: third_party/matter_sdk/src/lib/shell/commands/BLE.cpp
   condition: [matter_ble]
-- path: src/lib/shell/commands/BLE.cpp
+- path: third_party/matter_sdk/src/lib/shell/commands/BLE.cpp
   condition: [matter_wifi_ble]
-- path: src/lib/shell/commands/WiFi.cpp
+- path: third_party/matter_sdk/src/lib/shell/commands/WiFi.cpp
   condition: [matter_wifi]
-- path: src/lib/shell/commands/NFC.cpp
+- path: third_party/matter_sdk/src/lib/shell/commands/NFC.cpp
   condition: [matter_nfc]
-- path: src/lib/shell/commands/Ota.cpp
+- path: third_party/matter_sdk/src/lib/shell/commands/Ota.cpp
   condition: [matter_ota_support]
-- path: src/lib/shell/commands/Ota.cpp
+- path: third_party/matter_sdk/src/lib/shell/commands/Ota.cpp
   condition: [matter_multi_image_ota]
-- path: src/lib/shell/commands/Ota.cpp
+- path: third_party/matter_sdk/src/lib/shell/commands/Ota.cpp
   condition: [matter_platform_siwx917]
-- path: examples/lock-app/silabs/src/EventHandlerLibShell.cpp
+- path: third_party/matter_sdk/examples/lock-app/silabs/src/EventHandlerLibShell.cpp
   condition:
     - matter_lock
+- path: third_party/matter_sdk/examples/platform/silabs/shell/ICDShellCommands.cpp
+  condition: [matter_icd]
 
 include:
-- path: src/lib/shell
+- path: third_party/matter_sdk/src/lib/shell
   file_list:
   - path: Engine.h
+  - path: Command.h
   - path: Commands.h
+  - path: CommandSet.h
   - path: streamer.h
-- path: src/lib/shell/commands
+  - path: SubShellCommand.h
+- path: third_party/matter_sdk/src/lib/shell/commands
   file_list:
   - path: Help.h
-- path: examples/platform/silabs
+  - path: WiFi.h
+    condition: matter_wifi
+- path: third_party/matter_sdk/examples/platform/silabs
   file_list:
-  - path: matter_shell.h
-- path: examples/shell/shell_common/include
+  - path: MatterShell.h
+- path: third_party/matter_sdk/examples/shell/shell_common/include
   file_list:
   - path: ChipShellCollection.h
   - path: Globals.h
-- path: examples/lock-app/silabs/include
+- path: third_party/matter_sdk/examples/lock-app/silabs/include
   file_list:
     - path: EventHandlerLibShell.h
       condition:
         - matter_lock
+- path: third_party/matter_sdk/examples/platform/silabs/shell
+  file_list:
+    - path: ICDShellCommands.h
+      condition: [matter_icd]
 
 define:
-- name: OPENTHREAD_CONFIG_CLI_PROMPT_ENABLE
-  value: 0
 - name: ENABLE_CHIP_SHELL
 - name: OPENTHREAD_CONFIG_CLI_TRANSPORT
   value: OT_CLI_TRANSPORT_CONSOLE

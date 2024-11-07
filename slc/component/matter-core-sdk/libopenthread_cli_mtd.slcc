@@ -21,10 +21,11 @@ define:
 description: libopenthread_cli_mtd
 id: libopenthread_cli_mtd
 include:
--   path: examples/platform/silabs
--   path: src
--   path: src/include
--   path: src/lib
+-   path: third_party/matter_sdk/examples/platform/efr32
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
 label: libopenthread_cli_mtd
 package: Matter
 provides:

@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.3.2"
+    version: "2.4.0"
 
 component:
   - id: device_init
@@ -16,9 +16,10 @@ component:
   - id: matter_performance_testing
     from: matter
   - id: ot_stack_ftd
+  - id: ot_rtos_wrappers_real
   - id: matter_buttons
     from: matter
-  - id: matter_wstk_leds
+  - id: matter_leds
     from: matter
 
   - id: matter
@@ -37,6 +38,10 @@ component:
   - id: matter_shell
     from: matter
   - id: matter_gatt
+    from: matter
+  - id: matter_provision_default
+    from: matter
+  - id: matter_log_uart
     from: matter
 
 #  - id: matter_lighting
@@ -97,6 +102,8 @@ component:
   - id: matter_segger_rtt
     from: matter
 
+
+
 requires:
 # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
 # Select UART/EUART drivers based on device series
@@ -104,8 +111,9 @@ requires:
     condition:
      - device_series_2
 
+
 include:
-  - path: ../../../../examples/lighting-app/silabs/include
+  - path: ../../../../third_party/matter_sdk/examples/lighting-app/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -115,13 +123,13 @@ include:
     directory: include
 
 source:
-  - path: ../../../../examples/lighting-app/silabs/src/AppTask.cpp
+  - path: ../../../../third_party/matter_sdk/examples/lighting-app/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/lighting-app/silabs/src/LightingManager.cpp
+  - path: ../../../../third_party/matter_sdk/examples/lighting-app/silabs/src/LightingManager.cpp
     directory: src
-  - path: ../../../../examples/platform/silabs/main.cpp
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/lighting-app/silabs/src/ZclCallbacks.cpp
+  - path: ../../../../third_party/matter_sdk/examples/lighting-app/silabs/src/ZclCallbacks.cpp
     directory: src
 
 define:
@@ -139,7 +147,6 @@ define:
     value: "4092"
   - name: IS_DEMO_LIGHT
     value: "1"
-
 configuration:
   - name: SL_OPENTHREAD_ENABLE_APP_TASK
     value: 0
@@ -164,13 +171,7 @@ configuration:
   - {name: SL_STACK_SIZE, value: '4608'}
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: 16
-  - name: SL_BT_RTOS_LINK_LAYER_TASK_STACK_SIZE
-    value: 1024
-  - name: SL_BT_RTOS_HOST_STACK_TASK_STACK_SIZE
-    value: 2048
-  - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
-    value: 1536
-
+    
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17

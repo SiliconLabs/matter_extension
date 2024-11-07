@@ -7,10 +7,10 @@ define:
 description: liblogging_stdio
 id: liblogging_stdio
 include:
--   path: examples/platform/silabs
--   path: src
--   path: src/include
--   path: src/lib
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
 label: liblogging_stdio
 package: Matter
 provides:
@@ -20,6 +20,6 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: src/platform/logging/impl/stdio/Logging.cpp
+-   path: third_party/matter_sdk/src/platform/logging/impl/stdio/Logging.cpp
 ui_hints:
     visibility: never

@@ -10,7 +10,7 @@ metadata:
   sbom:
     license: Zlib
 include:
-  - path: third_party/nlassert/repo/include
+  - path: third_party/nlassert/include
     file_list:
     - path: nlassert-production.h
     - path: nlassert-nonproduction.h

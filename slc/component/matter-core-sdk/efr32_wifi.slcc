@@ -7,15 +7,15 @@ define:
 description: efr32_wifi
 id: efr32_wifi
 include:
--   path: examples/platform/silabs
--   path: examples/platform/silabs/efr32
--   path: src
--   path: src/include
--   path: src/lib
--   path: src/platform/silabs/efr32
--   path: third_party/nlassert/repo/include
--   path: third_party/nlio/repo/include
--   path: src/include/platform
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/examples/platform/silabs/efr32
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
+-   path: third_party/matter_sdk/src/platform/silabs/efr32
+-   path: third_party/nlassert/include
+-   path: third_party/nlio/include
+-   path: third_party/matter_sdk/src/include/platform
     file_list:
     -   path: RuntimeOptionsProvider.h
     -   path: DeviceInfoProvider.h
@@ -43,7 +43,7 @@ include:
     -   path: ThreadStackManager.h
     -   path: TestOnlyCommissionableDataProvider.h
     -   path: CHIPDeviceError.h
--   path: src/include/platform/internal
+-   path: third_party/matter_sdk/src/include/platform/internal
     file_list:
     -   path: GenericPlatformManagerImpl.ipp
     -   path: GenericConnectivityManagerImpl_UDP.h
@@ -75,79 +75,70 @@ include:
     -   path: GenericConnectivityManagerImpl_TCP.h
     -   path: GenericConnectivityManagerImpl_WiFi.h
     -   path: GenericConnectivityManagerImpl_TCP.ipp
--   path: src/platform/logging
+-   path: third_party/matter_sdk/src/platform/logging
     file_list:
     -   path: LogV.h
--   path: src/include/platform/internal/testing
+-   path: third_party/matter_sdk/src/include/platform/internal/testing
     file_list:
     -   path: ConfigUnitTest.h
--   path: src/lib/dnssd/platform
+-   path: third_party/matter_sdk/src/lib/dnssd/platform
     file_list:
     -   path: DnssdBrowseDelegate.h
     -   path: Dnssd.h
--   path: src/lib/dnssd/platform
+-   path: third_party/matter_sdk/src/lib/dnssd/platform
     file_list:
     -   path: DnssdBrowseDelegate.h
     -   path: Dnssd.h
--   path: src/app/common
+-   path: third_party/matter_sdk/src/app/common
     file_list:
     -   path: CompatEnumNames.h
--   path: src/platform/silabs/multi-ota
-    file_list:
-    -   path: OtaTlvEncryptionKey.h
-    -   path: OTATlvProcessor.h
-    -   path: OTACustomProcessor.h
-    -   path: OTAFirmwareProcessor.h
-    -   path: OTAMultiImageProcessorImpl.h
-    -   path: OTAFactoryDataProcessor.h
--   path: src/lwip/silabs
+-   path: third_party/matter_sdk/src/lwip/silabs
     file_list:
     -   path: lwipopts-wf200.h
     -   path: lwipopts-rs911x.h
     -   path: lwippools.h
     -   path: lwipopts.h
--   path: examples/platform/silabs
+-   path: third_party/matter_sdk/examples/platform/silabs
     file_list:
     -   path: board_config.h
     -   path: wfx_rsi.h
     -   path: OTAConfig.h
     -   path: SoftwareFaultReports.h
     -   path: silabs_utils.h
-    -   path: matter_shell.h
-    -   path: uart.h
     -   path: MatterConfig.h
     -   path: LEDWidget.h
     -   path: sl_systemview_config.h
     -   path: PigweedLogger.h
     -   path: FreeRTOSConfig.h
     -   path: Rpc.h
-    -   path: TemperatureSensor.h
     -   path: silabs_creds.h
     -   path: SilabsTestEventTriggerDelegate.h
     -   path: MemMonitoring.h
     -   path: BaseApplication.h
--   path: src/platform/silabs/efr32/wifi
+-   path: third_party/matter_sdk/src/platform/silabs/wifi
+    file_list:
+    -   path: dhcp_client.h
+    -   path: wfx_host_events.h
+-   path: third_party/matter_sdk/src/platform/silabs/efr32/wifi
     file_list:
     -   path: ethernetif.h
     -   path: wfx_msgs.h
-    -   path: wfx_host_events.h
-    -   path: dhcp_client.h
     -   path: wifi_config.h
--   path: src/platform/silabs/platformAbstraction
+-   path: third_party/matter_sdk/src/platform/silabs/platformAbstraction
     file_list:
     -   path: SilabsPlatformBase.h
     -   path: SilabsPlatform.h
--   path: src/platform
+-   path: third_party/matter_sdk/src/platform
     file_list:
     -   path: DeviceSafeQueue.h
     -   path: GLibTypeDeleter.h
--   path: src/platform/silabs/efr32
+-   path: third_party/matter_sdk/src/platform/silabs/efr32
     file_list:
     -   path: Efr32PsaOperationalKeystore.h
     -   path: Efr32OpaqueKeypair.h
     -   path: efr32-psa-crypto-config.h
     -   path: efr32-chip-mbedtls-config.h
--   path: src/platform/silabs
+-   path: third_party/matter_sdk/src/platform/silabs
     file_list:
     -   path: OTAImageProcessorImpl.h
     -   path: InetPlatformConfig.h
@@ -167,7 +158,7 @@ include:
     -   path: BlePlatformConfig.h
     -   path: KeyValueStoreManagerImpl.h
     -   path: SystemPlatformConfig.h
--   path: src/platform/FreeRTOS
+-   path: third_party/matter_sdk/src/platform/FreeRTOS
     file_list:
     -   path: SystemTimeSupport.h
     -   path: GenericThreadStackManagerImpl_FreeRTOS.h
@@ -181,25 +172,25 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: src/platform/FreeRTOS/SystemTimeSupport.cpp
--   path: src/platform/SingletonConfigurationManager.cpp
--   path: src/platform/silabs/CHIPMem-Platform.cpp
--   path: src/platform/silabs/ConfigurationManagerImpl.cpp
--   path: src/platform/silabs/ConnectivityManagerImpl_WIFI.cpp
--   path: src/platform/silabs/DiagnosticDataProviderImpl.cpp
--   path: src/platform/silabs/KeyValueStoreManagerImpl.cpp
--   path: src/platform/silabs/Logging.cpp
--   path: src/platform/silabs/MigrationManager.cpp
--   path: src/platform/silabs/NetworkCommissioningWiFiDriver.cpp
--   path: src/platform/silabs/SilabsConfig.cpp
--   path: src/platform/silabs/efr32/CHIPCryptoPALPsaEfr32.cpp
--   path: src/platform/silabs/efr32/Efr32PsaOpaqueKeypair.cpp
--   path: src/platform/silabs/efr32/Efr32PsaOperationalKeystore.cpp
--   path: src/platform/silabs/efr32/OTAImageProcessorImpl.cpp
--   path: src/platform/silabs/efr32/PlatformManagerImpl.cpp
--   path: src/platform/silabs/efr32/wifi/dhcp_client.cpp
--   path: src/platform/silabs/efr32/wifi/ethernetif.cpp
--   path: src/platform/silabs/efr32/wifi/lwip_netif.cpp
--   path: src/platform/silabs/platformAbstraction/GsdkSpam.cpp
+-   path: third_party/matter_sdk/src/platform/FreeRTOS/SystemTimeSupport.cpp
+-   path: third_party/matter_sdk/src/platform/SingletonConfigurationManager.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/CHIPMem-Platform.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/ConfigurationManagerImpl.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/ConnectivityManagerImpl_WIFI.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/DiagnosticDataProviderImpl.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/KeyValueStoreManagerImpl.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/Logging.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/MigrationManager.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/NetworkCommissioningWiFiDriver.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/SilabsConfig.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/efr32/CHIPCryptoPALPsaEfr32.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/efr32/Efr32PsaOpaqueKeypair.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/efr32/Efr32PsaOperationalKeystore.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/efr32/OTAImageProcessorImpl.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/PlatformManagerImpl.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/wifi/dhcp_client.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/efr32/wifi/ethernetif.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/efr32/wifi/lwip_netif.cpp
+-   path: third_party/matter_sdk/src/platform/silabs/platformAbstraction/GsdkSpam.cpp
 ui_hints:
     visibility: never

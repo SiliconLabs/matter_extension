@@ -6,12 +6,12 @@ description: siwx917_tinycrypt
 id: siwx917_tinycrypt
 include:
 -   path: .
--   path: examples/platform/silabs
--   path: examples/platform/silabs/SiWx917
--   path: examples/platform/silabs/SiWx917/SiWx917
--   path: src/lib
--   path: src/platform/silabs/SiWx917
--   path: third_party/mbedtls/repo/library
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/examples/platform/silabs/SiWx917
+-   path: third_party/matter_sdk/examples/platform/silabs/SiWx917/SiWx917
+-   path: third_party/matter_sdk/src/lib
+-   path: third_party/matter_sdk/src/platform/silabs/SiWx917
+-   path: third_party/mbedtls/library
     file_list:
     -   path: constant_time_invasive.h
     -   path: psa_crypto_aead.h
@@ -47,30 +47,30 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/mbedtls/repo/library/aes.c
--   path: third_party/mbedtls/repo/library/asn1parse.c
--   path: third_party/mbedtls/repo/library/asn1write.c
--   path: third_party/mbedtls/repo/library/base64.c
--   path: third_party/mbedtls/repo/library/bignum.c
--   path: third_party/mbedtls/repo/library/ccm.c
--   path: third_party/mbedtls/repo/library/cipher.c
--   path: third_party/mbedtls/repo/library/cipher_wrap.c
--   path: third_party/mbedtls/repo/library/constant_time.c
--   path: third_party/mbedtls/repo/library/ctr_drbg.c
--   path: third_party/mbedtls/repo/library/ecdh.c
--   path: third_party/mbedtls/repo/library/ecdsa.c
--   path: third_party/mbedtls/repo/library/ecp.c
--   path: third_party/mbedtls/repo/library/ecp_curves.c
--   path: third_party/mbedtls/repo/library/entropy.c
--   path: third_party/mbedtls/repo/library/hkdf.c
--   path: third_party/mbedtls/repo/library/hmac_drbg.c
--   path: third_party/mbedtls/repo/library/md.c
--   path: third_party/mbedtls/repo/library/pem.c
--   path: third_party/mbedtls/repo/library/pkcs5.c
--   path: third_party/mbedtls/repo/library/platform.c
--   path: third_party/mbedtls/repo/library/sha256.c
--   path: third_party/mbedtls/repo/library/sha512.c
--   path: third_party/mbedtls/repo/library/version.c
--   path: third_party/mbedtls/repo/library/x509_create.c
+-   path: third_party/mbedtls/library/aes.c
+-   path: third_party/mbedtls/library/asn1parse.c
+-   path: third_party/mbedtls/library/asn1write.c
+-   path: third_party/mbedtls/library/base64.c
+-   path: third_party/mbedtls/library/bignum.c
+-   path: third_party/mbedtls/library/ccm.c
+-   path: third_party/mbedtls/library/cipher.c
+-   path: third_party/mbedtls/library/cipher_wrap.c
+-   path: third_party/mbedtls/library/constant_time.c
+-   path: third_party/mbedtls/library/ctr_drbg.c
+-   path: third_party/mbedtls/library/ecdh.c
+-   path: third_party/mbedtls/library/ecdsa.c
+-   path: third_party/mbedtls/library/ecp.c
+-   path: third_party/mbedtls/library/ecp_curves.c
+-   path: third_party/mbedtls/library/entropy.c
+-   path: third_party/mbedtls/library/hkdf.c
+-   path: third_party/mbedtls/library/hmac_drbg.c
+-   path: third_party/mbedtls/library/md.c
+-   path: third_party/mbedtls/library/pem.c
+-   path: third_party/mbedtls/library/pkcs5.c
+-   path: third_party/mbedtls/library/platform.c
+-   path: third_party/mbedtls/library/sha256.c
+-   path: third_party/mbedtls/library/sha512.c
+-   path: third_party/mbedtls/library/version.c
+-   path: third_party/mbedtls/library/x509_create.c
 ui_hints:
     visibility: never

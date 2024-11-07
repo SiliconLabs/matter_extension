@@ -2,7 +2,7 @@
 category: Clusters|Measurement
 description: >
   Implementation of the Radon Concentration Measurement Server Cluster.
-  The user has to enable the Radon Concentration Measurement Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Radon Concentration Measurement Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_concentration_measurement
 package: Matter
 label: Radon Concentration Measurement Server Cluster
@@ -13,10 +13,10 @@ metadata:
 provides:
   - name: matter_concentration_measurement
 include:
-  - path: src/app/clusters/concentration-measurement-server
+  - path: third_party/matter_sdk/src/app/clusters/concentration-measurement-server
     file_list:
-      - path: concentration-measurement-server.h
       - path: concentration-measurement-cluster-objects.h
+      - path: concentration-measurement-server.h
 template_contribution:
   - name: component_catalog
     value: matter_concentration_measurement

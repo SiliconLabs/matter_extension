@@ -15,13 +15,14 @@ define:
 description: libopenthread_efr32
 id: libopenthread_efr32
 include:
--   path: examples/platform/silabs
--   path: examples/platform/silabs/efr32
--   path: examples/platform/silabs/efr32/project_include
--   path: src
--   path: src/include
--   path: src/lib
--   path: src/platform/silabs/efr32
+-   path: third_party/matter_sdk/examples/platform/efr32
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/examples/platform/silabs/efr32
+-   path: third_party/matter_sdk/examples/platform/silabs/efr32/project_include
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
+-   path: third_party/matter_sdk/src/platform/silabs/efr32
 label: libopenthread_efr32
 package: Matter
 provides:

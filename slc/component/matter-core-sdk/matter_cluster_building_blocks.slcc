@@ -1,0 +1,19 @@
+
+category: General
+description: >
+  This component includes QuieterReporting.h which is needed by Level Control, color-control and operational-state-server clusters.
+id: matter_cluster_building_blocks
+package: Matter
+label: Includes header file QuieterReporting.h
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_cluster_building_blocks
+include:
+  - path: third_party/matter_sdk/src/app/cluster-building-blocks
+    file_list:
+      - path: QuieterReporting.h
+ui_hints:
+    visibility: never

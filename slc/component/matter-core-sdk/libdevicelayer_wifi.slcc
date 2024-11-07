@@ -7,13 +7,13 @@ define:
 description: libdevicelayer_wifi
 id: libdevicelayer_wifi
 include:
--   path: examples/platform/silabs
--   path: src
--   path: src/include
--   path: src/lib
--   path: third_party/nlassert/repo/include
--   path: third_party/nlio/repo/include
--   path: src/platform
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
+-   path: third_party/nlassert/include
+-   path: third_party/nlio/include
+-   path: third_party/matter_sdk/src/platform
     file_list:
     -   path: DeviceSafeQueue.h
     -   path: GLibTypeDeleter.h
@@ -26,17 +26,17 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: src/platform/CommissionableDataProvider.cpp
--   path: src/platform/DeviceControlServer.cpp
--   path: src/platform/DeviceInfoProvider.cpp
--   path: src/platform/DeviceInstanceInfoProvider.cpp
--   path: src/platform/DiagnosticDataProvider.cpp
--   path: src/platform/Entropy.cpp
--   path: src/platform/GeneralUtils.cpp
--   path: src/platform/Globals.cpp
--   path: src/platform/LockTracker.cpp
--   path: src/platform/PersistedStorage.cpp
--   path: src/platform/PlatformEventSupport.cpp
--   path: src/platform/RuntimeOptionsProvider.cpp
+-   path: third_party/matter_sdk/src/platform/CommissionableDataProvider.cpp
+-   path: third_party/matter_sdk/src/platform/DeviceControlServer.cpp
+-   path: third_party/matter_sdk/src/platform/DeviceInfoProvider.cpp
+-   path: third_party/matter_sdk/src/platform/DeviceInstanceInfoProvider.cpp
+-   path: third_party/matter_sdk/src/platform/DiagnosticDataProvider.cpp
+-   path: third_party/matter_sdk/src/platform/Entropy.cpp
+-   path: third_party/matter_sdk/src/platform/GeneralUtils.cpp
+-   path: third_party/matter_sdk/src/platform/Globals.cpp
+-   path: third_party/matter_sdk/src/platform/LockTracker.cpp
+-   path: third_party/matter_sdk/src/platform/PersistedStorage.cpp
+-   path: third_party/matter_sdk/src/platform/PlatformEventSupport.cpp
+-   path: third_party/matter_sdk/src/platform/RuntimeOptionsProvider.cpp
 ui_hints:
     visibility: never

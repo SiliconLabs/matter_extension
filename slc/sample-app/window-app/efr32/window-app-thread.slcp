@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.3.2"
+    version: "2.4.0"
 
 provides:
   - name: window_app
@@ -18,7 +18,7 @@ component:
   - id: clock_manager
   - id: matter_buttons
     from: matter
-  - id: matter_wstk_leds
+  - id: matter_leds
     from: matter
   - id: matter
     from: matter
@@ -26,6 +26,7 @@ component:
     from: matter
   - id: matter_ble
     from: matter
+  - id: ot_rtos_wrappers_real
   - id: matter_thread
     from: matter
   - id: rail_util_pti
@@ -36,6 +37,8 @@ component:
   - id: matter_shell
     from: matter
   - id: matter_gatt
+    from: matter
+  - id: matter_provision_default
     from: matter
 
   - id: matter_window
@@ -97,7 +100,11 @@ component:
     from: matter
   - id: matter_icd_core
     from: matter
+  - id: matter_test_event_trigger
+    from: matter
   - id: matter_icd_management
+    from: matter
+  - id: matter_log_uart
     from: matter
     
 requires:
@@ -108,7 +115,7 @@ requires:
      - device_series_2
 
 config_file:
-  - path: ../../../../examples/window-app/common/window-app.zap
+  - path: ../../../../third_party/matter_sdk/examples/window-app/common/window-app.zap
     directory: common
     file_id: zap_config
   - path: ../../../../provision.mattpconf
@@ -116,7 +123,7 @@ config_file:
     file_id: provision_config
 
 include:
-  - path: ../../../../examples/window-app/silabs/include
+  - path: ../../../../third_party/matter_sdk/examples/window-app/silabs/include
     file_list:
     - path: AppConfig.h
     - path: CHIPProjectConfig.h
@@ -126,13 +133,13 @@ include:
     directory: include
 
 source:
-  - path: ../../../../examples/window-app/silabs/src/AppTask.cpp
+  - path: ../../../../third_party/matter_sdk/examples/window-app/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/platform/silabs/main.cpp
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/window-app/silabs/src/WindowManager.cpp
+  - path: ../../../../third_party/matter_sdk/examples/window-app/silabs/src/WindowManager.cpp
     directory: src
-  - path: ../../../../examples/window-app/silabs/src/ZclCallbacks.cpp
+  - path: ../../../../third_party/matter_sdk/examples/window-app/silabs/src/ZclCallbacks.cpp
     directory: src
 
 define:
@@ -144,7 +151,6 @@ define:
     value: "40960"
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
     value: "4092"
-
 configuration:
   - name: SL_OPENTHREAD_ENABLE_APP_TASK
     value: 0
@@ -170,13 +176,7 @@ configuration:
   - {name: SL_STACK_SIZE, value: '4608'} 
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: 16
-
-  - name: SL_BT_RTOS_LINK_LAYER_TASK_STACK_SIZE
-    value: 1024
-  - name: SL_BT_RTOS_HOST_STACK_TASK_STACK_SIZE
-    value: 2048
-  - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
-    value: 1536
+    
 
 # Default ICD configurations for window-app (SIT)
   - {name: SL_IDLE_MODE_DURATION_S, value: '600'}

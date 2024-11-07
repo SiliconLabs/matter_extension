@@ -8,14 +8,17 @@ import yaml
 MARGIN = '  '
 
 class Paths:
-    DEFAULT_TEMP = 'temp'
-    DEFAULT_SUPPORT = 'support'
+    TEMP_DIR = 'temp'
+    SUPPORT_DIR = 'support'
+    MATTER_DIR = '../third_party/matter_sdk'
 
     def __init__(self, base_dir) -> None:
-        self.base_dir = os.path.normpath(base_dir)
-        self.root_dir = "{}/..".format(base_dir)
-        self.temp_dir = "{}/{}".format(base_dir, Paths.DEFAULT_TEMP)
-        self.support_dir = "{}/{}".format(base_dir, Paths.DEFAULT_SUPPORT)
+        self.current_dir = os.getcwd()
+        self.base_dir = self.normalize(base_dir)
+        self.root_dir = "{}/..".format(self.base_dir)
+        self.temp_dir = "{}/{}".format(self.current_dir, Paths.TEMP_DIR)
+        self.support_dir = "{}/{}".format(self.base_dir, Paths.SUPPORT_DIR)
+        self.matter_dir = "{}/{}".format(self.base_dir, Paths.MATTER_DIR)
 
     def setTemp(self, temp):
         self.temp_dir = temp
@@ -23,18 +26,29 @@ class Paths:
     def base(self, path = None):
         return self.normalize(self.base_dir, path)
 
+    def current(self, path = None):
+        return self.normalize(self.current_dir, path)
+
     def root(self, path = None):
         return self.normalize(self.root_dir, path)
 
     def support(self, path = None):
         return self.normalize(self.support_dir, path)
 
+    def matter(self, path = None):
+        return self.normalize(self.matter_dir, path)
+
     def temp(self, path = None):
         return self.normalize(self.temp_dir, path)
 
     def normalize(self, base, path = None):
+        if os.path.isfile(base):
+            base = os.path.dirname(base)
+        if not base: base = '.'
         if (path is None) or ('' == path) or ('.' == path):
             full = base
+        elif os.path.isabs(path):
+            full = path
         else:
             full = "{}/{}".format(base, path)
         return os.path.abspath(os.path.normpath(full))

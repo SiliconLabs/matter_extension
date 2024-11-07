@@ -9,13 +9,13 @@ define:
 description: lock_cluster_service
 id: lock_cluster_service
 include:
--   path: examples/lock-app/lock-common/include
--   path: examples/platform/silabs
--   path: src
--   path: src/include
--   path: src/lib
--   path: third_party/nlassert/repo/include
--   path: third_party/nlio/repo/include
+-   path: third_party/matter_sdk/examples/lock-app/lock-common/include
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
+-   path: third_party/nlassert/include
+-   path: third_party/nlio/include
 label: lock_cluster_service
 package: Matter
 provides:
@@ -25,8 +25,8 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: examples/lock-app/lock-common/src/LockEndpoint.cpp
--   path: examples/lock-app/lock-common/src/LockManager.cpp
--   path: examples/lock-app/lock-common/src/ZCLDoorLockCallbacks.cpp
+-   path: third_party/matter_sdk/examples/lock-app/lock-common/src/LockEndpoint.cpp
+-   path: third_party/matter_sdk/examples/lock-app/lock-common/src/LockManager.cpp
+-   path: third_party/matter_sdk/examples/lock-app/lock-common/src/ZCLDoorLockCallbacks.cpp
 ui_hints:
     visibility: never

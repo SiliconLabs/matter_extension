@@ -70,6 +70,7 @@ component:
 - id: bluetooth_stack
 #OpenThread Components
 - id: ot_stack_ftd
+- id: ot_rtos_wrappers_real
 #Matter Components
 - {from: matter, id: matter_groups}
 - {from: matter, id: matter_group_key_mgmt}
@@ -100,6 +101,9 @@ component:
 - {from: matter, id: matter_shell}
 - {from: matter, id: matter_power_source}
 - {from: matter, id: app_common}
+- {from: matter, id: matter_provision_default}
+- {from: matter, id: matter_log_uart}
+
 #Matter components wrapper from simplicity_sdk
 - {from: matter, id: matter_default_lcd_config}
 - {from: matter, id: matter_buttons}
@@ -107,7 +111,7 @@ component:
 - {from: matter, id: matter_ble}
 - {from: matter, id: matter_thread_network_diagnostics}
 - {from: matter, id: matter_thread}
-- {from: matter, id: matter_wstk_leds}
+- {from: matter, id: matter_leds}
 - {from: matter, id: matter_platform_efr32}
 
 toolchain_settings:
@@ -191,12 +195,6 @@ configuration:
   value: 1
 - name: CIRCULAR_QUEUE_LEN_MAX
   value: 16
-- name: SL_BT_RTOS_LINK_LAYER_TASK_STACK_SIZE
-  value: 1024
-- name: SL_BT_RTOS_HOST_STACK_TASK_STACK_SIZE
-  value: 2048
-- name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
-  value: 1536
 
 define:
 - name: OS_CFG_COMPAT_INIT
@@ -217,25 +215,25 @@ define:
   value: 0
 
 config_file:
-- path: ../../../../silabs_examples/zigbee-matter-light/config/sl_cmp_config.h
-- path: ../../../../silabs_examples/zigbee-matter-light/config/zcl/zcl_config.zap
-  file_id: zap_configuration_file_id
-  directory: zcl
+- path: ../../../../examples/zigbee-matter-light/config/sl_cmp_config.h
+- path: ../../../../examples/zigbee-matter-light/config/zcl/zcl_config.zap
+  file_id: zap_config
+  directory: common
 - override:
     component: gatt_configuration
     file_id: gatt_configuration_file_id
-  path: ../../../../examples/platform/silabs/gatt_configuration.btconf
+  path: ../../../../third_party/matter_sdk/examples/platform/silabs/gatt_configuration.btconf
   directory: btconf
 
 source:
-  - path: ../../../../examples/platform/silabs/main.cpp
-  - path: ../../../../silabs_examples/zigbee-matter-light/src/AppTask.cpp
-  - path: ../../../../silabs_examples/zigbee-matter-light/src/MatterDMCallbacks.cpp
-  - path: ../../../../silabs_examples/zigbee-matter-light/src/ZigbeeCallbacks.cpp
-  - path: ../../../../silabs_examples/zigbee-matter-light/src/LightingManager.cpp
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
+  - path: ../../../../examples/zigbee-matter-light/src/AppTask.cpp
+  - path: ../../../../examples/zigbee-matter-light/src/MatterDMCallbacks.cpp
+  - path: ../../../../examples/zigbee-matter-light/src/ZigbeeCallbacks.cpp
+  - path: ../../../../examples/zigbee-matter-light/src/LightingManager.cpp
 
 include:
-  - path: ../../../../silabs_examples/zigbee-matter-light/include
+  - path: ../../../../examples/zigbee-matter-light/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -257,4 +255,4 @@ ui_hints:
 
 sdk_extension:
   - id: matter
-    version: "2.3.2"
+    version: "2.4.0"

@@ -2,7 +2,7 @@
 category: Clusters|Measurement
 description: >
   Implementation of the Electrical Power Measurement Server Cluster.
-  The user has to enable the Electrical Power Measurement Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Electrical Power Measurement Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_electrical_power_measurement
 package: Matter
 label: Electrical Power Measurement Server Cluster
@@ -13,9 +13,9 @@ metadata:
 provides:
   - name: matter_electrical_power_measurement
 source:
-  - path: src/app/clusters/electrical-power-measurement-server/electrical-power-measurement-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/electrical-power-measurement-server/electrical-power-measurement-server.cpp
 include:
-  - path: src/app/clusters/electrical-power-measurement-server
+  - path: third_party/matter_sdk/src/app/clusters/electrical-power-measurement-server
     file_list:
       - path: electrical-power-measurement-server.h
 template_contribution:

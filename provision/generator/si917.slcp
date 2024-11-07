@@ -7,19 +7,19 @@ category: Example|Platform
 package: platform
 quality: production
 filter:
-  - { name: Device Type, value: [SoC] }
-  - { name: MCU, value: [32-bit MCU] }
-  - { name: Project Difficulty, value: [Beginner] }
+  - { name: Device Type,  value: [SoC] }
+  - { name: MCU,  value: [32-bit MCU] }
+  - { name: Project Difficulty,  value: [Beginner] }
 ui_hints:
   highlight:
-    - { path: README.md, focus: true }
+  - { path: README.md, focus: true }
 readme:
   - { path: README.md }
 
-sdk: { id: simplicity_sdk, version: 2024.6.0 }
+sdk: { id: simplicity_sdk, version: 2024.6.0}
 
 sdk_extension:
-  - { id: wiseconnect3_sdk, version: 3.3.3 }
+  - { id: wiseconnect3_sdk, version: 3.3.0 }
 
 component:
   - { id: freertos }
@@ -40,8 +40,6 @@ component:
   - { id: brd4338a, from: wiseconnect3_sdk }
   - { id: wifi, from: wiseconnect3_sdk }
   - { id: si91x_debug, from: wiseconnect3_sdk }
-  - { id: sl_si91x_trng, from: wiseconnect3_sdk }
-  - { id: sl_si91x_crypto_multithread, from: wiseconnect3_sdk }
 
 include:
   - path: .
@@ -60,17 +58,6 @@ include:
   - path: ../../src/lib/support/
   - path: ../../src/platform/silabs/
   - path: ../../third_party/silabs/matter_support/matter/si91x/siwx917/BRD4338A/support/inc
-  - path: ../../third_party/silabs/matter_support/matter/si91x/siwx917/BRD4338A/config/
-    file_list:
-      - path: sl_mbedtls_config.h
-  - path: ../../third_party/silabs/matter_support/matter/si91x/siwx917/BRD4338A/autogen/
-    file_list:
-      - path: sli_mbedtls_config_autogen.h
-      - path: sli_mbedtls_config_transform_autogen.h
-  - path: ../../third_party/silabs/simplicity_sdk/platform/security/sl_component/sl_mbedtls_support/config/
-    file_list:
-      - path: sli_mbedtls_omnipresent.h
-      - path: sli_mbedtls_acceleration.h
 
 source:
   - { path: app.cpp }
@@ -148,13 +135,15 @@ source:
 
 define:
   - { name: DEBUG_EFM }
-  - { name: SL_PROVISION_GENERATOR, value: "1" }
-  - { name: SL_PROVISION_CHANNEL_ENABLED, value: "1" }
-  - { name: SILABS_PROVISION_PROTOCOL_V1, value: "0" }
-  - { name: CHIP_SYSTEM_CONFIG_USE_SOCKETS, value: "1" }
-  - { name: SL_MBEDTLS_USE_TINYCRYPT, value: "1" }
-  - { name: MBEDTLS_CONFIG_FILE, value: \"siwx917-chip-mbedtls-config.h\" }
-  - { name: NVM3_LOCK_OVERRIDE, value: "1" }
+  - { name: SL_PROVISION_GENERATOR, value: '1' }
+  - { name: SL_PROVISION_CHANNEL_ENABLED, value: '1' }
+  - { name: SILABS_PROVISION_PROTOCOL_V1, value: '0' }
+  - { name: CHIP_SYSTEM_CONFIG_USE_SOCKETS, value: '1' }
+  - { name: OPTIMIZE_TINYCRYPT_ASM }
+  - { name: TINYCRYPT_PRIMITIVES }
+  - { name: MBEDTLS_CONFIG_FILE, value: \"siwx917-chip-tinycrypt-config.h\" }
+  - { name: SL_MBEDTLS_USE_TINYCRYPT, value: '1' }
+  - { name: NVM3_LOCK_OVERRIDE, value: '1' }
 
 toolchain_settings:
   - { option: optimize, value: debug }

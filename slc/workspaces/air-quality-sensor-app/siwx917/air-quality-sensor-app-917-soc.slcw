@@ -5,3 +5,4 @@ project:
   - path: ../../../sample-app/air-quality-sensor-app/siwx917/air-quality-sensor-app-917-soc.slcp
     id: application
     output: air-quality-sensor-app-917-soc
+    

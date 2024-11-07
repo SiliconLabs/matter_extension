@@ -186,3 +186,50 @@ upgrade:
           Updating value: 
         value:
           "(1000)": "(1536)"
+
+  - sdk:
+      id: matter
+      version: "2.4.0"
+      
+    component:
+      - trigger: matter_uart_wifi_wf200
+        description: Removing the matter_uart_wifi_wf200 component
+        remove: 
+          - matter_uart_wifi_wf200
+
+      - trigger: matter_uart_wifi
+        description: Removing the matter_uart_wifi component
+        remove: 
+          - matter_uart_wifi
+      
+      - trigger: matter_sensor
+        description: Removing the matter_sensor component 
+        remove:
+          - matter_sensor
+
+      - trigger: matter_platform_efr32
+        description: Adding the matter_provision_default component
+        add:
+          - matter_provision_default
+
+      - trigger: matter_platform_siwx917
+        description: Adding the matter_provision_flash component
+        add:
+          - matter_provision_flash
+
+      - trigger: matter_thread
+        description: Adding the ot_rtos_wrappers_real component
+        add:
+          - ot_rtos_wrappers_real
+
+      - trigger: matter_icd_core
+        description: Adding the matter_test_event_trigger component
+        add:
+          - matter_test_event_trigger
+
+      - trigger: matter_wstk_leds
+        description: Renaming  matter_wstk_leds component to matter_leds
+        remove:
+          - matter_wstk_leds
+        add:
+          - matter_leds

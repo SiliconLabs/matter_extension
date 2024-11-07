@@ -18,16 +18,17 @@ provides:
   - name: matter_icd_checkin_sender
 
 include:
-  - path: src/app/icd/server
+  - path: third_party/matter_sdk/src/app/icd/server
     file_list:
       - path: ICDCheckInSender.h
+      - path: DefaultICDCheckInBackOffStrategy.h
 
 source:
-  - path: src/app/icd/server/ICDCheckInSender.cpp
+  - path: third_party/matter_sdk/src/app/icd/server/ICDCheckInSender.cpp
 
 requires:
  - name: matter_icd_core
- - name: check_in_message
+ - name: matter_check_in_message
 
 documentation:
   docset: matter

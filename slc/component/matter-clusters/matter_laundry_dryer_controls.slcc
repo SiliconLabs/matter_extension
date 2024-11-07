@@ -2,7 +2,7 @@
 category: Clusters|Appliances
 description: >
   Implementation of the Laundry Dryer Controls Server Cluster.
-  The user has to enable the Laundry Dryer Controls Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Laundry Dryer Controls Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_laundry_dryer_controls
 package: Matter
 label: Laundry Dryer Controls Server Cluster
@@ -13,9 +13,9 @@ metadata:
 provides:
   - name: matter_laundry_dryer_controls
 source:
-  - path: src/app/clusters/laundry-dryer-controls-server/laundry-dryer-controls-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/laundry-dryer-controls-server/laundry-dryer-controls-server.cpp
 include:
-  - path: src/app/clusters/laundry-dryer-controls-server
+  - path: third_party/matter_sdk/src/app/clusters/laundry-dryer-controls-server
     file_list:
       - path: laundry-dryer-controls-delegate.h
       - path: laundry-dryer-controls-server.h

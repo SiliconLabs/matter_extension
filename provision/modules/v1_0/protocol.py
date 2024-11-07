@@ -238,7 +238,7 @@ class SetupCommand(Command):
         self.hw_version_str = args.str(ID.kHwVersionStr)
         self.manufacturing_date = args.str(ID.kHwVersion)
         # Commissioning
-        self.unique_id = args.value(ID.kUniqueId)
+        self.unique_id = args.value(ID.kPersistentUniqueId)
         self.commissioning_flow = args.int(ID.kCommissioningFlow)
         self.rendezvous_flags = args.int(ID.kRendezvousFlags)
         self.discriminator = args.int(ID.kDiscriminator)

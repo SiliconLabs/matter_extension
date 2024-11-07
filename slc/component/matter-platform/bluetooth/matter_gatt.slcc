@@ -10,7 +10,7 @@ metadata:
     license: Zlib
 config_file:
 -   directory: btconf
-    path: examples/platform/silabs/gatt_configuration.btconf
+    path: third_party/matter_sdk/examples/platform/silabs/gatt_configuration.btconf
 provides:
 -   name: gatt_configuration
 -   name: "bluetooth_gatt_database"

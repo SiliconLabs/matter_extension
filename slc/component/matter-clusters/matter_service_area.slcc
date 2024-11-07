@@ -1,0 +1,28 @@
+
+category: Clusters|General
+description: >
+  Implementation of the Service Area Server Cluster.
+  The user has to enable the Service Area Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_service_area
+package: Matter
+label: Service Area Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_service_area
+source:
+  - path: third_party/matter_sdk/src/app/clusters/service-area-server/service-area-delegate.cpp
+  - path: third_party/matter_sdk/src/app/clusters/service-area-server/service-area-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/service-area-server/service-area-storage-delegate.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/service-area-server
+    file_list:
+      - path: service-area-cluster-objects.h
+      - path: service-area-delegate.h
+      - path: service-area-server.h
+      - path: service-area-storage-delegate.h
+template_contribution:
+  - name: component_catalog
+    value: matter_service_area

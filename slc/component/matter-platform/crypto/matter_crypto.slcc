@@ -27,6 +27,10 @@ requires:
   - name: mbedtls_platform_dynamic_memory_allocation_config_init_runtime
   - name: mbedtls_base64
   - name: mbedtls_cmac
+  - name: mbedtls_sha256
+    condition: [matter_provision]
+  - name: mbedtls_ecdsa_deterministic
+    condition: [matter_provision]
 
 config_file:
   - path: slc/config/sli_psa_builtin_config.h

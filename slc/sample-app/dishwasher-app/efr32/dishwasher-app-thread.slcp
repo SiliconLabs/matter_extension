@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.3.2"
+    version: "2.4.0"
 
 component:
   - id: device_init
@@ -16,7 +16,7 @@ component:
   - id: matter_buttons
     from: matter
 
-  - id: matter_wstk_leds
+  - id: matter_leds
     from: matter
 
   - id: matter
@@ -26,6 +26,7 @@ component:
   - id: matter_ble
     from: matter
   - id: ot_stack_ftd
+  - id: ot_rtos_wrappers_real
   - id: matter_thread
     from: matter
   - id: rail_util_pti
@@ -36,6 +37,10 @@ component:
   - id: matter_shell
     from: matter
   - id: matter_gatt
+    from: matter
+  - id: matter_provision_default
+    from: matter
+  - id: matter_log_uart
     from: matter
 
   - id: matter_dishwasher
@@ -53,10 +58,6 @@ component:
   - id: matter_descriptor
     from: matter
   - id: matter_diagnostic_logs
-    from: matter
-  - id: matter_electrical_energy_measurement
-    from: matter
-  - id: matter_electrical_power_measurement
     from: matter
   - id: matter_fixed_label
     from: matter
@@ -79,8 +80,6 @@ component:
   - id: matter_ota_requestor
     from: matter
   - id: matter_power_source
-    from: matter
-  - id: matter_power_topology
     from: matter
   - id: matter_software_diagnostics
     from: matter
@@ -106,7 +105,7 @@ requires:
      - device_series_2
 
 config_file:
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/data_model/dishwasher-thread-app.zap
+  - path: ../../../../examples/dishwasher-app/silabs/data_model/dishwasher-thread-app.zap
     directory: common
     file_id: zap_config
   - path: ../../../../provision.mattpconf
@@ -114,38 +113,26 @@ config_file:
     file_id: provision_config
 
 include:
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/include
+  - path: ../../../../examples/dishwasher-app/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
       - path: AppTask.h
       - path: CHIPProjectConfig.h
       - path: DishwasherManager.h
-      - path: ElectricalSensorManager.h
-      - path: OperationalStateDelegate.h
-      - path: ElectricalPowerMeasurementDelegate.h
-      - path: ElectricalEnergyMeasurementInstance.h
-      - path: PowerTopologyDelegate.h
+      - path: operational-state-delegate-impl.h
     directory: include
 
 source:
-  - path: ../../../../examples/platform/silabs/main.cpp
+  - path: ../../../../examples/dishwasher-app/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/AppTask.cpp
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/DishwasherManager.cpp
+  - path: ../../../../examples/dishwasher-app/silabs/src/DishwasherManager.cpp
     directory: src
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/ElectricalSensorManager.cpp
+  - path: ../../../../examples/dishwasher-app/silabs/src/operational-state-delegate-impl.cpp
     directory: src
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/OperationalStateDelegate.cpp
-    directory: src
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/ElectricalPowerMeasurementDelegate.cpp
-    directory: src
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/ElectricalEnergyMeasurementInstance.cpp
-    directory: src
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/PowerTopologyDelegate.cpp
-    directory: src
-  - path: ../../../../silabs_examples/dishwasher-app/silabs/src/ZclCallbacks.cpp
+  - path: ../../../../examples/dishwasher-app/silabs/src/ZclCallbacks.cpp
     directory: src
 
 define:
@@ -182,13 +169,7 @@ configuration:
   - {name: SL_STACK_SIZE, value: '4608'} 
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: 16
-  - name: SL_BT_RTOS_LINK_LAYER_TASK_STACK_SIZE
-    value: 1024
-  - name: SL_BT_RTOS_HOST_STACK_TASK_STACK_SIZE
-    value: 2048
-  - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
-    value: 1536
-
+    
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17

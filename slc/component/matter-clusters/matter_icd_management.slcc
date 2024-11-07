@@ -2,7 +2,7 @@
 category: Clusters|General
 description: >
   Implementation of the ICD Management Server Cluster.
-  The user has to enable the ICD Management Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the ICD Management Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_icd_management
 package: Matter
 label: ICD Management Server Cluster
@@ -13,23 +13,23 @@ metadata:
 provides:
   - name: matter_icd_management
 source:
-  - path: src/app/clusters/icd-management-server/icd-management-server.cpp
-  - path: src/app/icd/server/ICDConfigurationData.cpp
-  - path: src/app/icd/server/ICDMonitoringTable.cpp
-  - path: src/app/icd/server/ICDManager.cpp
-  - path: src/app/icd/server/ICDNotifier.cpp
+  - path: third_party/matter_sdk/src/app/clusters/icd-management-server/icd-management-server.cpp
+  - path: third_party/matter_sdk/src/app/icd/server/ICDConfigurationData.cpp
+  - path: third_party/matter_sdk/src/app/icd/server/ICDManager.cpp
+  - path: third_party/matter_sdk/src/app/icd/server/ICDMonitoringTable.cpp
+  - path: third_party/matter_sdk/src/app/icd/server/ICDNotifier.cpp
 include:
-  - path: src/app/clusters/icd-management-server
+  - path: third_party/matter_sdk/src/app/icd/server
     file_list:
-      - path: icd-management-server.h
-  - path: src/app/icd/server
-    file_list:
-      - path: ICDMonitoringTable.h
-      - path: ICDManager.h
       - path: ICDConfigurationData.h
+      - path: ICDManager.h
+      - path: ICDMonitoringTable.h
+      - path: ICDNotifier.h
       - path: ICDServerConfig.h
       - path: ICDStateObserver.h
-      - path: ICDNotifier.h
+  - path: third_party/matter_sdk/src/app/clusters/icd-management-server
+    file_list:
+      - path: icd-management-server.h
 template_contribution:
   - name: component_catalog
     value: matter_icd_management

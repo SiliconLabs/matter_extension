@@ -2,7 +2,7 @@
 category: Clusters|General
 description: >
   Implementation of the User Label Server Cluster.
-  The user has to enable the User Label Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the User Label Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_user_label
 package: Matter
 label: User Label Server Cluster
@@ -13,7 +13,7 @@ metadata:
 provides:
   - name: matter_user_label
 source:
-  - path: src/app/clusters/user-label-server/user-label-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/user-label-server/user-label-server.cpp
 template_contribution:
   - name: component_catalog
     value: matter_user_label

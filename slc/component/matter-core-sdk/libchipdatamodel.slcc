@@ -9,15 +9,21 @@ define:
 description: libchipdatamodel
 id: libchipdatamodel
 include:
--   path: examples/platform/silabs
--   path: src
--   path: src/include
--   path: src/lib
--   path: third_party/nlassert/repo/include
--   path: third_party/nlio/repo/include
--   path: src/app
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
+-   path: third_party/nlassert/include
+-   path: third_party/nlio/include
+-   path: third_party/matter_sdk/src/app
     file_list:
     -   path: AttributeAccessToken.h
+    -   path: AttributeValueEncoder.h
+    -   path: AttributeValueDecoder.h
+    -   path: AttributeEncodeState.h
+    -   path: AttributeReportBuilder.h
+    -   path: AttributePathExpandIterator.h
+    -   path: AttributePathExpandIterator-Ember.h
     -   path: InteractionModelDelegatePointers.h
     -   path: InteractionModelTimeout.h
     -   path: SubscriptionsInfoProvider.h
@@ -38,6 +44,8 @@ include:
     -   path: ConcreteClusterPath.h
     -   path: PendingResponseTrackerImpl.h
     -   path: SubscriptionResumptionSessionEstablisher.h
+    -   path: CommandHandlerExchangeInterface.h
+    -   path: CommandHandlerImpl.h
     -   path: CommandHandler.h
     -   path: DefaultAttributePersistenceProvider.h
     -   path: SimpleSubscriptionResumptionStorage.h
@@ -66,6 +74,7 @@ include:
     -   path: EventPathParams.h
     -   path: CommandResponseHelper.h
     -   path: CommandHandlerInterface.h
+    -   path: CommandHandlerInterfaceRegistry.h
     -   path: DataVersionFilter.h
     -   path: AttributeAccessInterfaceCache.h
     -   path: RequiredPrivilege.h
@@ -80,6 +89,9 @@ include:
     -   path: OperationalSessionSetupPool.h
     -   path: ReadHandler.h
     -   path: OTAUserConsentCommon.h
+    -   path: AttributeAccessInterfaceRegistry.h
+    -   path: AttributeReportBuilder.cpp
+    -   path: AttributeValueEncoder.cpp
 label: libchipdatamodel
 package: Matter
 provides:
@@ -89,19 +101,23 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: src/app/AttributeAccessInterface.cpp
--   path: src/app/AttributePathExpandIterator.cpp
--   path: src/app/BufferedReadCallback.cpp
--   path: src/app/ChunkedWriteCallback.cpp
--   path: src/app/ClusterStateCache.cpp
--   path: src/app/CommandHandler.cpp
--   path: src/app/CommandResponseSender.cpp
--   path: src/app/DefaultAttributePersistenceProvider.cpp
--   path: src/app/DeferredAttributePersistenceProvider.cpp
--   path: src/app/EventManagement.cpp
--   path: src/app/FailSafeContext.cpp
--   path: src/app/ReadHandler.cpp
--   path: src/app/TimerDelegates.cpp
--   path: src/app/WriteHandler.cpp
+-   path: third_party/matter_sdk/src/app/AttributeAccessInterfaceRegistry.cpp
+-   path: third_party/matter_sdk/src/app/AttributeReportBuilder.cpp
+-   path: third_party/matter_sdk/src/app/AttributePathExpandIterator-Ember.cpp
+-   path: third_party/matter_sdk/src/app/AttributeValueEncoder.cpp
+-   path: third_party/matter_sdk/src/app/BufferedReadCallback.cpp
+-   path: third_party/matter_sdk/src/app/ChunkedWriteCallback.cpp
+-   path: third_party/matter_sdk/src/app/ClusterStateCache.cpp
+-   path: third_party/matter_sdk/src/app/CommandHandler.cpp
+-   path: third_party/matter_sdk/src/app/CommandHandlerImpl.cpp
+-   path: third_party/matter_sdk/src/app/CommandHandlerInterfaceRegistry.cpp
+-   path: third_party/matter_sdk/src/app/CommandResponseSender.cpp
+-   path: third_party/matter_sdk/src/app/DefaultAttributePersistenceProvider.cpp
+-   path: third_party/matter_sdk/src/app/DeferredAttributePersistenceProvider.cpp
+-   path: third_party/matter_sdk/src/app/EventManagement.cpp
+-   path: third_party/matter_sdk/src/app/FailSafeContext.cpp
+-   path: third_party/matter_sdk/src/app/ReadHandler.cpp
+-   path: third_party/matter_sdk/src/app/TimerDelegates.cpp
+-   path: third_party/matter_sdk/src/app/WriteHandler.cpp
 ui_hints:
     visibility: never

@@ -7,12 +7,12 @@ define:
 description: text_only_logging
 id: text_only_logging
 include:
--   path: examples/platform/silabs
--   path: src
--   path: src/include
--   path: src/lib
--   path: third_party/nlassert/repo/include
--   path: src/lib/support/logging
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
+-   path: third_party/nlassert/include
+-   path: third_party/matter_sdk/src/lib/support/logging
     file_list:
     -   path: BinaryLogging.h
     -   path: CHIPLogging.h
@@ -27,6 +27,6 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: src/lib/support/logging/TextOnlyLogging.cpp
+-   path: third_party/matter_sdk/src/lib/support/logging/TextOnlyLogging.cpp
 ui_hints:
     visibility: never

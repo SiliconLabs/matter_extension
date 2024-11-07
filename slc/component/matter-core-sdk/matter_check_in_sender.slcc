@@ -1,0 +1,33 @@
+category: Matter|Core
+define:
+-   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
+-   name: CHIP_HAVE_CONFIG_H
+    value: '1'
+-   name: RADIO_CONFIG_DMP_SUPPORT
+    value: '1'
+description: icd check-in sender
+id: matter_check_in_sender
+include:
+-   path: third_party/matter_sdk/examples/lighting-app/silabs/include
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
+-   path: third_party/nlassert/include
+-   path: third_party/nlio/include
+label: sender
+package: Matter
+provides:
+-   name: matter_check_in_sender
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+source:
+-   path: third_party/matter_sdk/src/app/icd/server/ICDCheckInSender.cpp
+requires:
+  - name : matter_icd_core
+
+ui_hints:
+    visibility: never

@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.3.2"
+    version: "2.4.0"
 
 component:
   - id: device_init
@@ -15,7 +15,7 @@ component:
   - id: clock_manager
   - id: matter_buttons
     from: matter
-  - id: matter_wstk_leds
+  - id: matter_leds
     from: matter
 
   - id: matter
@@ -25,6 +25,7 @@ component:
   - id: matter_ble
     from: matter
   - id: ot_stack_mtd
+  - id: ot_rtos_wrappers_real
   - id: matter_thread
     from: matter
   - id: rail_util_pti
@@ -35,6 +36,8 @@ component:
   - id: matter_shell
     from: matter
   - id: matter_gatt
+    from: matter
+  - id: matter_provision_default
     from: matter
     
   - id: matter_light_switch
@@ -91,6 +94,8 @@ component:
     from: matter
   - id: matter_default_lcd_config
     from: matter
+  - id: matter_log_uart
+    from: matter
     
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
@@ -101,9 +106,12 @@ component:
   # ICD configurations
   - id: matter_icd_core
     from: matter
-  - id: matter_icd_management
+  - id: matter_test_event_trigger
     from: matter
-
+  - id: matter_check_in_message
+    from: matter
+  - id: matter_icd_checkin_sender
+    from: matter
 
 requires:
 # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
@@ -113,7 +121,7 @@ requires:
      - device_series_2
 
 config_file:
-  - path: ../../../../examples/light-switch-app/light-switch-common/light-switch-app.zap
+  - path: ../../../../third_party/matter_sdk/examples/light-switch-app/light-switch-common/icd-lit-light-switch-app.zap
     directory: common
     file_id: zap_config
   - path: ../../../../provision.mattpconf
@@ -121,7 +129,7 @@ config_file:
     file_id: provision_config
 
 include:
-  - path: ../../../../examples/light-switch-app/silabs/include
+  - path: ../../../../third_party/matter_sdk/examples/light-switch-app/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
@@ -129,7 +137,7 @@ include:
       - path: CHIPProjectConfig.h
     directory: include
 
-  - path: ../../../../examples/light-switch-app/silabs/include
+  - path: ../../../../third_party/matter_sdk/examples/light-switch-app/silabs/include
     file_list:
       - path: BindingHandler.h
       - path: LightSwitchMgr.h
@@ -137,17 +145,17 @@ include:
     directory: include
 
 source:
-  - path: ../../../../examples/light-switch-app/silabs/src/AppTask.cpp
+  - path: ../../../../third_party/matter_sdk/examples/light-switch-app/silabs/src/AppTask.cpp
     directory: src
-  - path: ../../../../examples/platform/silabs/main.cpp
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../examples/light-switch-app/silabs/src/ZclCallbacks.cpp
+  - path: ../../../../third_party/matter_sdk/examples/light-switch-app/silabs/src/ZclCallbacks.cpp
     directory: src
-  - path: ../../../../examples/light-switch-app/silabs/src/BindingHandler.cpp
+  - path: ../../../../third_party/matter_sdk/examples/light-switch-app/silabs/src/BindingHandler.cpp
     directory: src
-  - path: ../../../../examples/light-switch-app/silabs/src/LightSwitchMgr.cpp
+  - path: ../../../../third_party/matter_sdk/examples/light-switch-app/silabs/src/LightSwitchMgr.cpp
     directory: src
-  - path: ../../../../examples/light-switch-app/silabs/src/ShellCommands.cpp
+  - path: ../../../../third_party/matter_sdk/examples/light-switch-app/silabs/src/ShellCommands.cpp
     directory: src
 
 define:
@@ -159,7 +167,6 @@ define:
     value: "40960"
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
     value: "4092"
-
 configuration:
   - name: SL_OPENTHREAD_ENABLE_APP_TASK
     value: 0
@@ -184,20 +191,19 @@ configuration:
   - {name: SL_STACK_SIZE, value: '4608'} 
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: 16
-  - name: SL_BT_RTOS_LINK_LAYER_TASK_STACK_SIZE
-    value: 1024
-  - name: SL_BT_RTOS_HOST_STACK_TASK_STACK_SIZE
-    value: 2048
-  - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
-    value: 1536
 
 # Default ICD configurations
-  - {name: SL_IDLE_MODE_DURATION_S, value: '3600'}
-  - {name: SL_ACTIVE_MODE_DURATION_MS, value: '0'}
-  - {name: SL_ACTIVE_MODE_THRESHOLD, value: '0'}
+  - { name: CHIP_CONFIG_ENABLE_ICD_LIT, value: 1 }
+  - { name: CHIP_CONFIG_ENABLE_ICD_CIP, value: 1 }
+  - { name: CHIP_CONFIG_ENABLE_ICD_UAT, value: 1 }
+  - { name: CHIP_CONFIG_ENABLE_ICD_DSLS, value: 1 }
 
-  - {name: SL_OT_IDLE_INTERVAL, value: '15000'}
-  - {name: SL_OT_ACTIVE_INTERVAL, value: '500'}
+  - {name: SL_IDLE_MODE_DURATION_S, value: '600'}
+  - {name: SL_ACTIVE_MODE_DURATION_MS, value: '0'}
+  - {name: SL_ACTIVE_MODE_THRESHOLD, value: '5000'}
+
+  - {name: SL_OT_IDLE_INTERVAL, value: '900'}
+  - {name: SL_OT_ACTIVE_INTERVAL, value: '1000'}
     
   - {name: CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED, value: '1'}
   - {name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION, value: '0'}

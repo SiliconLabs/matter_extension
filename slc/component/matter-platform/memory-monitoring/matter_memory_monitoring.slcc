@@ -10,10 +10,10 @@ metadata:
 provides:
   - name: matter_memory_monitoring
 source:
-  - path: examples/platform/silabs/MemMonitoring.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/MemMonitoring.cpp
 
 include:
-  - path: examples/platform/silabs/
+  - path: third_party/matter_sdk/examples/platform/silabs/
     file_list:
       - path: MemMonitoring.h
 define:

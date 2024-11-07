@@ -12,6 +12,7 @@ metadata:
 include:
   - path: slc/inc
     file_list:
+    - path: access/AccessBuildConfig.h
     - path: core/CHIPBuildConfig.h
     - path: asn1/ASN1OID.h
     - path: ble/BleBuildConfig.h
@@ -25,10 +26,10 @@ include:
     - path: system/SystemBuildConfig.h
     - path: CHIPVersion.h
     - path: FirmwareBuildTime.h
-  - path: src
+  - path: third_party/matter_sdk/src/app/icd/server
     file_list:
-    - path: app/icd/server/ICDServerConfig.h
-    - path: app/icd/server/ICDStateObserver.h
+    - path: ICDServerConfig.h
+    - path: ICDStateObserver.h
 
 config_file:
   - path: slc/inc/app/AppBuildConfig.h

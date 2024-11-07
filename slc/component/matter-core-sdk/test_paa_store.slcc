@@ -7,12 +7,12 @@ define:
 description: test_paa_store
 id: test_paa_store
 include:
--   path: examples/platform/silabs
--   path: src
--   path: src/include
--   path: src/lib
--   path: third_party/nlassert/repo/include
--   path: src/credentials/attestation_verifier
+-   path: third_party/matter_sdk/examples/platform/silabs
+-   path: third_party/matter_sdk/src
+-   path: third_party/matter_sdk/src/include
+-   path: third_party/matter_sdk/src/lib
+-   path: third_party/nlassert/include
+-   path: third_party/matter_sdk/src/credentials/attestation_verifier
     file_list:
     -   path: DefaultDeviceAttestationVerifier.h
     -   path: DacOnlyPartialAttestationVerifier.h
@@ -29,6 +29,6 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: src/credentials/attestation_verifier/TestPAAStore.cpp
+-   path: third_party/matter_sdk/src/credentials/attestation_verifier/TestPAAStore.cpp
 ui_hints:
     visibility: never

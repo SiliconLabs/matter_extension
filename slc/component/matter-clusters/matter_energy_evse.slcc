@@ -2,7 +2,7 @@
 category: Clusters|Energy Management
 description: >
   Implementation of the Energy EVSE Server Cluster.
-  The user has to enable the Energy EVSE Server Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Energy EVSE Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_energy_evse
 package: Matter
 label: Energy EVSE Server Cluster
@@ -13,12 +13,12 @@ metadata:
 provides:
   - name: matter_energy_evse
 source:
-  - path: src/app/clusters/energy-evse-server/energy-evse-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/energy-evse-server/energy-evse-server.cpp
 include:
-  - path: src/app/clusters/energy-evse-server
+  - path: third_party/matter_sdk/src/app/clusters/energy-evse-server
     file_list:
-      - path: EnergyEvseTestEventTriggerHandler.h
       - path: energy-evse-server.h
+      - path: EnergyEvseTestEventTriggerHandler.h
 template_contribution:
   - name: component_catalog
     value: matter_energy_evse

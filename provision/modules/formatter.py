@@ -9,6 +9,7 @@ class Formatter:
     def __init__(self, args, is_user_input = False) -> None:
         self.args = args
         self.is_user_input = is_user_input
+        self.paths = None
 
     @staticmethod
     def read(filename):
@@ -26,6 +27,7 @@ class Formatter:
         return json['version']
 
     def parseAll(self, filename):
+        self.paths = _util.Paths(filename)
         json = Formatter.read(filename)
         # Parse main parameters
         self.parse(json)
@@ -102,7 +104,11 @@ class Formatter:
         if data is None: return
         arg = self.args.find(tag2 or tag)
         if tag in data:
-            arg.set(data[tag])
+            value = data[tag]
+            if (Formats.PATH == arg.format) and self.paths:
+                # Paths are relative to the JSON file
+                value = self.paths.base(value)
+            arg.set(value)
             arg.is_user_input = self.is_user_input
 
     def insert(self, data, tag, tag2 = None):

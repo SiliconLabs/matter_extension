@@ -318,16 +318,16 @@ class AutoCommand(Command):
         ID.kHwVersion,
         ID.kHwVersionStr,
         ID.kManufacturingDate,
-        ID.kUniqueId,
+        ID.kPersistentUniqueId,
         # Commissionable Data
         ID.kDiscriminator,
         ID.kSpake2pPasscode,
         ID.kSpake2pIterations,
         ID.kSpake2pSalt,
         ID.kSpake2pVerifier,
-        ID.kSetupPayload,
         ID.kCommissioningFlow,
         ID.kRendezvousFlags,
+        ID.kSetupPayload,
         # Attestation Credentials
         ID.kFirmwareInfo,
         ID.kDacCert,
@@ -338,7 +338,7 @@ class AutoCommand(Command):
     INCOMING = [
         ID.kDiscriminator,
         ID.kSpake2pPasscode,
-        ID.kUniqueId,
+        ID.kPersistentUniqueId,
         ID.kSetupPayload,
         ID.kHwVersionStr
     ]

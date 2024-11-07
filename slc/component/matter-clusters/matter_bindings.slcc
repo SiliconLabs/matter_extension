@@ -2,7 +2,7 @@
 category: Clusters|General
 description: >
   Implementation of the Binding Cluster.
-  The user has to enable the Binding Cluster in the Zigbee Cluster Configurator (ZAP) in order to enable this functionality.
+  The user has to enable the Binding Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_bindings
 package: Matter
 label: Binding Cluster
@@ -13,15 +13,15 @@ metadata:
 provides:
   - name: matter_bindings
 source:
-  - path: src/app/clusters/bindings/BindingManager.cpp
-  - path: src/app/clusters/bindings/PendingNotificationMap.cpp
-  - path: src/app/clusters/bindings/bindings.cpp
+  - path: third_party/matter_sdk/src/app/clusters/bindings/BindingManager.cpp
+  - path: third_party/matter_sdk/src/app/clusters/bindings/bindings.cpp
+  - path: third_party/matter_sdk/src/app/clusters/bindings/PendingNotificationMap.cpp
 include:
-  - path: src/app/clusters/bindings
+  - path: third_party/matter_sdk/src/app/clusters/bindings
     file_list:
-      - path: PendingNotificationMap.h
       - path: BindingManager.h
       - path: bindings.h
+      - path: PendingNotificationMap.h
 template_contribution:
   - name: component_catalog
     value: matter_bindings

@@ -1,7 +1,0 @@
-label: lighting-app-917-devkit-soc
-quality: production
-description: Matter workspace container for Lighting App over WiFi
-project:
-  - path: ../../../sample-app/lighting-app/siwx917/lighting-app-917-devkit-soc.slcp
-    id: application
-    output: lighting-app-917-devkit-soc
