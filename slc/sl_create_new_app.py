@@ -10,7 +10,7 @@ class createApp:
     """Class used to create new app from given arguments and slc"""
     def __init__(self):
         self.EXAMPLE_USAGE = "python slc/sl_create_new_app.py <NewAppName> <PathToReferenceProjectFile(.slcp or .slcw)> <SilabsBoard>"
-        self.SoC_boards = ["brd4338a"]
+        self.SoC_boards = ["brd4338a", "brd4342a", "brd2605a"]
         self.get_environment()
 
     def print_usage_and_exit(self):
@@ -24,7 +24,7 @@ class createApp:
 
         self.new_app_name = sys.argv[1]
         self.reference_project_file = sys.argv[2]
-        self.silabs_board = sys.argv[3]
+        self.silabs_board = sys.argv[3].lower()
 
         #check if app is siwx917 wifi app
         self.wifi917 = True if "917" in self.reference_project_file else False
@@ -107,7 +107,7 @@ class createApp:
 
 
     def generate(self):
-        #use appropriate build flag for sample-app/workspaces
+        #use appropriate build flag for sample-app/solutions
         project_flag = "-p" if self.reference_project_file.endswith('.slcp') else "-w"
         #check for soc boards
         config_args=";wiseconnect3_sdk"  if self.silabs_board in self.SoC_boards else ""

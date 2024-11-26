@@ -45,6 +45,12 @@ include:
     condition: [matter_fan_control_app]
   - path: FanControlIcons.h
     condition: [matter_fan_control_app]
+- path: third_party/matter_sdk/examples/refrigerator-app/silabs/include/
+  file_list:
+  - path: RefrigeratorUI.h
+    condition: [matter_refrigerator]
+  - path: RefrigeratorIcons.h
+    condition: [matter_refrigerator]
 
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/display/demo-ui.c

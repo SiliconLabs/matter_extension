@@ -7,14 +7,14 @@ data. To facilitate the transition between development and production, this tool
 is stored once during the manufacturing process, and do not change during the lifetime of the device.
 
 Matter defines three interfaces to access the provisioned data during runtime:
-* [DeviceInstanceInfoProvider](../src/include/platform/DeviceInstanceInfoProvider.h)
-* [CommissionableDataProvider](../src/include/platform/CommissionableDataProvider.h)
-* [DeviceAttestationCredentialsProvider](../src/credentials/DeviceAttestationCredentialsProvider.h)
-In Silicon Labs devices, all three interfaces are implemented by the [ProvisionStorage](../examples/platform/silabs/provision/ProvisionStorage.h).
+* [DeviceInstanceInfoProvider](../third_party/matter_sdk/src/include/platform/DeviceInstanceInfoProvider.h)
+* [CommissionableDataProvider](../third_party/matter_sdk/src/include/platform/CommissionableDataProvider.h)
+* [DeviceAttestationCredentialsProvider](../third_party/matter_sdk/src/credentials/DeviceAttestationCredsProvider.h)
+In Silicon Labs devices, all three interfaces are implemented by the [ProvisionStorage](../third_party/matter_sdk/src/platform/silabs/provision/ProvisionStorage.h).
 
 The provisioning script on this folder now supersedes the following tools:
 * [Credentials Example](https://github.com/SiliconLabs/matter/tree/release_1.1.0-1.1/silabs_examples/credentials)
-* [Factory Data Provider](../scripts/tools/silabs/README.md)
+* [Factory Data Provider](../third_party/matter_sdk/scripts/tools/silabs/README.md)
 
 ## Provisioned Data
 
@@ -82,7 +82,7 @@ The `provision.py` file is the main script used to load all the required data on
 The Provisioner Script executes the following steps:
 1. Gathers the parameter definitions from the internal `./modules/parameters.yaml` file, local `parameters.yaml`, and the file indicated by the `--params` option.
 2. Parses the inputs from the local `default.json` file, the file indicated by the `--inputs` option, and command-line arguments.
-3. Generates test certificates (if the `--generate` option is used). This step requires an external [`chip-cert`](../src/tools/chip-cert/README.md) tool binary.
+3. Generates test certificates (if the `--generate` option is used). This step requires an external [`chip-cert`](../third_party/matter_sdk/src/tools/chip-cert/README.md) tool binary.
 4. If a PKCS#12 file is provided, extracts the PAI, DAC, and DAC key files in DER format.
 4. Generates default values for the SPAKE2+ arguments, if necessary.
 5. Saves the input parameters as a JSON file (`latest.json` in the local folder, or the file indicated by `--output`).
@@ -364,7 +364,7 @@ Which will generate the test certificates using `chip-cert`, and provide the dev
 ## Attestation Files
 
 The `--generate` option instructs the `provider.py` script to generate test attestation files with the given _Vendor ID_, and _Product ID_.
-These files are generated using [the chip-cert tool](../src/tools/chip-cert/README.md),
+These files are generated using [the chip-cert tool](../third_party/matter_sdk/src/tools/chip-cert/README.md),
 and stored under the `./temp` folder (or the folder selected with `--temp` option).
 
 To generate the certificates manually (check chip-cert help for details):
@@ -378,9 +378,9 @@ chip-cert gen-att-cert -t i -l 3660 -c "Matter PAI" -V 0xfff1 -P 0x8005 -C ./tem
 chip-cert gen-att-cert -t d -l 3660 -c "Matter DAC" -V 0xfff1 -P 0x8005 -C ./temp/pai_cert.pem -K ./temp/pai_key.pem -o ./temp/dac_cert.pem -O ./temp/dac_key.pem
 ```
 
-By default, `provision.py` uses the Matter Test PAA [Chip-Test-PAA-NoVID-Cert.der](../credentials/test/attestation/Chip-Test-PAA-NoVID-Cert.der) and
-its key [Chip-Test-PAA-NoVID-Key.der](../credentials/test/attestation/Chip-Test-PAA-NoVID-Key.der), which are recognized by
-[chip-tool](../examples/chip-tool). So when using `chip-tool`, no `--paa-trust-store-path` argument is required.
+By default, `provision.py` uses the Matter Test PAA [Chip-Test-PAA-NoVID-Cert.der](../third_party/matter_sdk/credentials/test/attestation/Chip-Test-PAA-NoVID-Cert.der) and
+its key [Chip-Test-PAA-NoVID-Key.der](../third_party/matter_sdk/credentials/test/attestation/Chip-Test-PAA-NoVID-Key.der), which are recognized by
+[chip-tool](../third_party/matter_sdk/examples/chip-tool). So when using `chip-tool`, no `--paa-trust-store-path` argument is required.
 
 ### Example
 

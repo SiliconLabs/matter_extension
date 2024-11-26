@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.4.0"
+    version: "2.5.0"
   - id: wiseconnect3_sdk
-    version: "3.3.4"
+    version: "3.4.0"
 
 provides:
   - name: window_app
@@ -22,7 +22,7 @@ component:
     from: matter 
   - id: matter
     from: matter
-  - id: matter_platform_efr32
+  - id: matter_platform_mg
     from: matter
   - id: matter_wifi_ble
     from: matter
@@ -37,7 +37,7 @@ component:
     from: matter
   - id: matter_wifi
     from: matter
-  - id: siwx917_ncp_extension
+  - id: siwx917_ncp
     from: matter
     
   - id: matter_window
@@ -108,8 +108,17 @@ component:
   - id: matter_log_uart
     from: matter
 
-  - id: efx_ncp_custom_host_mcu
+
+  # Copy of the component to point to a different sl_net_for_lwip.c file
+  - id: network_manager
     from: matter
+
+  # Copy of the component to remove the default lwipopts.h file
+  - id: wifi_resources
+    from: matter
+
+  - id: sl_si91x_lwip_stack
+    from: wiseconnect3_sdk
   - id: wifi
     from: wiseconnect3_sdk
   - id: basic_network_config_manager
@@ -118,11 +127,7 @@ component:
     from: wiseconnect3_sdk
   - id: sl_si91x_wireless
     from: wiseconnect3_sdk
-  - id: wifi_resources
-    from: wiseconnect3_sdk
   - id: ble
-    from: wiseconnect3_sdk
-  - id: network_manager
     from: wiseconnect3_sdk
 
 # Require LCD and QR Code components only on the boards that support LCD
@@ -212,6 +217,12 @@ template_contribution:
   - name: memory_flash_size
     value: 0x00318000
     condition: [device_family_efr32mg26]
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_family_mgm26]
+  - name: memory_flash_size
+    value: 0x00318000
+    condition: [device_family_mgm26]
   - name: memory_ram_start
     value: 0x20000000
   - name: memory_ram_size

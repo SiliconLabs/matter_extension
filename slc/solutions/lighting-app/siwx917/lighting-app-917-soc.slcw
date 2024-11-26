@@ -1,0 +1,7 @@
+label: lighting-app-917-soc
+quality: production
+description: Matter solution containing for Lighting App over WiFi
+project:
+  - path: ../../../sample-app/lighting-app/siwx917/lighting-app-917-soc.slcp
+    id: application
+    output: lighting-app-917-soc

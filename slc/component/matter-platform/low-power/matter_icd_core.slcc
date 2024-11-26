@@ -32,6 +32,8 @@ requires:
     condition: [matter_thread]
   - name: sl_power_manager
     condition: [matter_platform_siwx917]
+  - name: sleep_manager
+    condition: [matter_wifi]
 
 recommends:
   - id: ot_stack_mtd

@@ -22,7 +22,12 @@ import shutil
 import argparse
 
 # Directories to exclude from copying
-exclude_directory = ['simplicity_sdk', 'wifi_sdk',"matter_private", "third_party_hw_drivers_extension", "out", "tools", "matter_sdk/zzz_generated","matter_sdk/third_party"]
+exclude_root_directories = [ "matter_extension/out", "matter_extension/slc/tools"]
+
+exlude_submodules = ['simplicity_sdk', 'wifi_sdk', "matter_private", "third_party_hw_drivers_extension"]
+
+#specific exlude from matter_sdk
+matter_sdk_exclude = ['third_party','zzz_generated']
 
 # Specific includes for wiseconnect_wifi_bt_sdk
 wiseconnect_wifi_bt_sdk_includes = ['sapi']
@@ -36,29 +41,52 @@ def should_exclude(root, path):
     """
     # Exclude hidden files and directories
     if path.startswith("."):
+        #print(f"Excluding hidden path: {path}")
         return True
     
     full_path = os.path.join(root, path)
     
     # Check for wiseconnect_wifi_bt_sdk specific includes
     if "wiseconnect-wifi-bt-sdk/" in full_path:
-        return not any(include in full_path for include in wiseconnect_wifi_bt_sdk_includes)
-    
+        if not any(include in full_path for include in wiseconnect_wifi_bt_sdk_includes):
+            #print(f"Excluding wiseconnect_wifi_bt_sdk path: {full_path}")
+            return True
+
     # Check for matter_support specific includes
     if "matter_support/matter/" in full_path:
-        return not any(include in full_path for include in matter_support_includes)
+        if not any(include in full_path for include in matter_support_includes):
+            #print(f"Excluding matter_support path: {full_path}")
+            return True
     
     # Exclude other matter_support directories
     if "matter_support/" in full_path and "matter_support/matter" not in full_path:
+        #print(f"Excluding other matter_support path: {full_path}")
         return True
+
+    # Exclude submodules
+    if "third_party/" in full_path:
+        if any(exclude in full_path for exclude in exlude_submodules):
+            #print(f"Excluding submodule path: {full_path}")
+            return True
+    
+    # Exclude matter_sdk directories
+    if "matter_sdk/" in full_path:
+        if not any(exclude in full_path for exclude in matter_sdk_exclude):
+            #print(f"Excluding matter_sdk path: {full_path}")
+            return True
     
     # Exclude directories listed in exclude_directory
-    for exclude in exclude_directory:
+    for exclude in exclude_root_directories:
         if exclude in full_path:
+            #print(f"Excluding directory from exclude list: {full_path}")
             return True
 
     # Exclude directories if any part of the path matches exclude_directory
-    return any(exclude in full_path.split(os.sep) for exclude in exclude_directory)
+    if any(exclude in full_path.split(os.sep) for exclude in exclude_root_directories):
+        #print(f"Excluding directory from split path: {full_path}")
+        return True
+
+    return False
 
 def copy_directory(source_directory, target_location):
     """

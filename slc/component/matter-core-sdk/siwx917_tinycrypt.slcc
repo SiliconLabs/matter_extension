@@ -7,8 +7,6 @@ id: siwx917_tinycrypt
 include:
 -   path: .
 -   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/examples/platform/silabs/SiWx917
--   path: third_party/matter_sdk/examples/platform/silabs/SiWx917/SiWx917
 -   path: third_party/matter_sdk/src/lib
 -   path: third_party/matter_sdk/src/platform/silabs/SiWx917
 -   path: third_party/mbedtls/library

@@ -1,0 +1,12 @@
+label: zigbee-matter-light-bootloader
+quality: production
+description: Matter solution containing both a Matter external bootloader and Light Zigbee Matter Example
+project:
+  - path: ../../../sample-app/zigbee-matter-light/efr32/zigbee-matter-light.slcp
+    id: application
+    output: zigbee-matter-light
+  - path: ../../../sample-app/bootloaders/bootloader-storage-external-single-series-2/bootloader-storage-external-single-series-2.slcp
+    id: bootloader
+    output: matter-bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

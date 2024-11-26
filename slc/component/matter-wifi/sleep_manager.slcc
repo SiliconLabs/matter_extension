@@ -1,0 +1,18 @@
+id: sleep_manager
+package: Matter
+description: >
+  matter wifi sleep manager
+label: Matter WiFi
+category: Matter-WiFi|SleepManager
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+provides:
+  - name: sleep_manager
+include:
+  - path: third_party/matter_sdk/src/platform/silabs/wifi/icd
+    file_list:
+      - path: WifiSleepManager.h
+source:
+  - path: third_party/matter_sdk/src/platform/silabs/wifi/icd/WifiSleepManager.cpp

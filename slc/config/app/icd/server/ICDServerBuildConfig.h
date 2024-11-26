@@ -18,11 +18,11 @@
 #define SL_ICD_SUPPORTED_CLIENTS_PER_FABRIC 2
 
 // These defines are needed only for applications using OpenThread
-// <o SL_OT_IDLE_INTERVAL> OpenThread Idle Interval
-#define SL_OT_IDLE_INTERVAL 15000 
+// <o SL_TRANSPORT_IDLE_INTERVAL> OpenThread Idle Interval
+#define SL_TRANSPORT_IDLE_INTERVAL 15000
 
-// <o SL_OT_ACTIVE_INTERVAL> OpenThread Active Interval
-#define SL_OT_ACTIVE_INTERVAL 200
+// <o SL_TRANSPORT_ACTIVE_INTERVAL> OpenThread Active Interval
+#define SL_TRANSPORT_ACTIVE_INTERVAL 200
 
 // <o SL_IDLE_MODE_DURATION_S> Matter Idle Mode duration
 #define SL_IDLE_MODE_DURATION_S 600

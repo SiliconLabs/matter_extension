@@ -11,6 +11,9 @@ metadata:
 requires:
   - name: matter_lcd
     condition: 
+      - brd1019a
+  - name: matter_lcd
+    condition: 
       - brd4116a
   - name: matter_lcd
     condition: 
@@ -42,6 +45,12 @@ requires:
   - name: matter_lcd_917SOC
     condition:
       - brd4343a
+  - name: matter_lcd
+    condition:
+      - brd4350a
+  - name: matter_lcd
+    condition:
+      - brd4351a
   - name: matter_qr_code
     condition: 
       - brd4116a
@@ -75,6 +84,12 @@ requires:
   - name: matter_qr_code
     condition:
       - brd4343a
+  - name: matter_qr_code
+    condition:
+      - brd4350a
+  - name: matter_qr_code
+    condition:
+      - brd4351a
 provides:
   - name: matter_default_lcd_config
 conflicts:

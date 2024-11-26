@@ -92,6 +92,9 @@ if (chip_device_platform != "none" && chip_device_platform != "fake") {
     if (chip_device_platform == "linux") {
       test_sources += [ "TestConnectivityMgr.cpp" ]
     }
+
+    test_sources += [ "TestSilabsTracing.cpp" ]
+    public_deps += [ "${chip_root}/src/platform/silabs/tracing:SilabsTracing" ]
   }
 } else {
   import("${chip_root}/build/chip/chip_test_group.gni")

@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.4.0"
+    version: "2.5.0"
 
 component:
   - id: device_init
@@ -20,12 +20,11 @@ component:
 
   - id: matter
     from: matter
-  - id: matter_platform_efr32
+  - id: matter_platform_mg
     from: matter
   - id: matter_ble
     from: matter
   - id: ot_stack_ftd
-  - id: ot_rtos_wrappers_real 
   - id: matter_thread
     from: matter
   - id: rail_util_pti
@@ -108,7 +107,6 @@ component:
     from: matter
   - id: matter_segger_rtt
     from: matter
-
 
 requires:
 # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
@@ -206,6 +204,18 @@ template_contribution:
   - name: memory_flash_size
     value: 0x00318000
     condition: [device_family_efr32mg26]
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_family_mgm26]
+  - name: memory_flash_size
+    value: 0x00318000
+    condition: [device_family_mgm26]
+  - name: memory_flash_start
+    value: 0x1008000
+    condition: [device_family_simg301]
+  - name: memory_flash_size
+    value: 0x3c7000
+    condition: [device_family_simg301]
 
 readme:
   - path: ./README.md

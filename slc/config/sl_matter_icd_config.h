@@ -24,13 +24,13 @@
 // <i> Default: 2
 #define SL_ICD_SUPPORTED_CLIENTS_PER_FABRIC 2
 
-// <o SL_OT_IDLE_INTERVAL>   15s Idle Intervals
+// <o SL_TRANSPORT_IDLE_INTERVAL>   15s Idle Intervals
 // <i> Default: 15000
-#define SL_OT_IDLE_INTERVAL 15000
+#define SL_TRANSPORT_IDLE_INTERVAL 15000
 
-// <o SL_OT_ACTIVE_INTERVAL> 200ms Active Intervals
+// <o SL_TRANSPORT_ACTIVE_INTERVAL> 200ms Active Intervals
 // <i> Default: 200
-#define SL_OT_ACTIVE_INTERVAL 200
+#define SL_TRANSPORT_ACTIVE_INTERVAL 200
 
 // <o SL_CSL_TIMEOUT>
 // <i> Default: 30

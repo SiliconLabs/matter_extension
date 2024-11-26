@@ -1,7 +1,0 @@
-label: light-switch-app-917-soc
-quality: production
-description: Matter workspace container for Light Switch App over WiFi
-project:
-  - path: ../../../sample-app/light-switch-app/siwx917/light-switch-app-917-soc.slcp
-    id: application
-    output: light-switch-app-917-soc

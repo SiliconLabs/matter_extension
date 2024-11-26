@@ -89,7 +89,7 @@ class BaseApplication
 
 public:
     BaseApplication() = default;
-    virtual ~BaseApplication(){};
+    virtual ~BaseApplication() {};
     static bool sIsProvisioned;
     static bool sIsFactoryResetTriggered;
     static LEDWidget * sAppActionLed;

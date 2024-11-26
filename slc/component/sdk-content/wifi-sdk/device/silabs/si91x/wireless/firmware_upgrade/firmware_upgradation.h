@@ -31,51 +31,90 @@
 
 #include "sl_status.h"
 
-/** \addtogroup SI91X_FIRMWARE_UPDATE_FROM_MODULE_FUNCTIONS Firmware Update From Module
+/** \addtogroup SI91X_FIRMWARE_UPDATE_FROM_MODULE_FUNCTIONS
  * \ingroup SI91X_FIRMWARE_UPDATE_FUNCTIONS
  * @{ */
 
-/***************************************************************************/ /**
- * @brief      
- *   Post the HTTP data for the requested URL to HTTP server.This is a non-blocking API. 
+/***************************************************************************/
+/**
+ * @brief
+ *  Sends an HTTP request to a specified server URL
+ * 
+ * @details      
+ *  This function sends an HTTP request to a specified server URL with optional data and headers,
+ *  and facilitates firmware downloads from the server. 
+ * 
+ *  This API is blocking API.
+ * 
+ *  By default, the following values are used:
+ *  - SSL version: 1.0
+ *  - HTTP version: 1.0
+ *  - Certificate index: 0
+ * 
  * @param[in] type
- *   Valid values are: 0 - HTTPGET, 1 - HTTPPOST
+ *   Valid values are: 2 - HTTP_OTAF.
+ * 
  * @param[in] flags 
- *   Select version and security: 
-* 
- *   |Flags  |     Macro       |          Description |
- *   |:------|:----------------|:-----------------------------------------------------------------------|
- *   |BIT(0) | HTTPS_SUPPORT   |    Set this bit to enable HTTPS_SUPPORT to use HTTPS feature. |
- *   |BIT(1) | SSL_ENABLE	   |    Set this bit to enable SSL feature. |
- *   |BIT(2) | SI91X_TLS_V_1_0 |    Set this bit to support SSL TLS Version 1.0 if HTTPS is enabled. |
- *   |BIT(3) | IPV6            |    Set this bit to enable IPv6, by default it is configured to IPv4. |
- *   |BIT(4) | SI91X_TLS_V_1_1 |    Set this bit to support SSL_TLS Version 1.1 if HTTPS is enabled. |
- *   |BIT(5) | HTTP_POST_DATA  |    Set this bit to enable Http_post large data feature.|
- *   |BIT(6) | HTTP_V_1_1      |    Set this bit to use HTTP version 1.1 |
+ *   Configuration flags. See the table below for details.
+ * 
  * @param[in] ip_address 
  *   Server IP address.
+ * 
  * @param[in] port 
- *   Port number. Default : 80 - HTTP, 443 - HTTPS
+ *   Port number. Default: 80 - HTTP, 443 - HTTPS
+ * 
  * @param[in] resource 
- *   Requested resource URL in string format.
+ *   Requested resource URL in string format. 
+ *   - The maximum supported HTTP URL is 2048 bytes, when the SL_SI91X_FEAT_LONG_HTTP_URL Bit is enabled in the feature_bit_map. 
+ *   - If the SL_SI91X_FEAT_LONG_HTTP_URL Bit is disabled, then the maximum supported length for HTTP URL is (872-(length of User_name + length of Password) - length of hostname - length of IP address) bytes excluding delimiters.
+ * 
  * @param[in] host_name       
  *   Host name.
+ * 
  * @param[in] extended_header 
- *   Extender header if present, after each header member append \r\c 
-*
- * @param[in] username        
+ *  - The purpose of this function is to append user configurable header fields to the default HTTP/HTTPS header.
+ *     The extended header can have multiple header fields, each ended by "\r\n" (0xD 0xA)
+ *  - If "\r\n" is present in the extended header content, "0xDB 0xDC" bytes can be used to separate multiple header fields.
+ *  Example: key1:value1"\r\n"key2:value2"\r\n"
+ * 
+ * @param[in] user_name        
  *   Username for server authentication.
+ * 
  * @param[in] password         
  *   Password for server authentication.
+ * 
  * @param[in] post_data        
- *   HTTP data to be posted to server.
+ *   HTTP data to be posted to the server. (Currently not supported)
+ * 
  * @param[in] post_data_length 
- *   HTTP data length to be posted to server.
+ *   HTTP data length to be posted to the server. (Currently not supported)
+ * 
  * @return
- *   sl_status_t. See https://docs.silabs.com/gecko-platform/4.1/common/api/group-status for details.
+ *   sl_status_t. See https://docs.silabs.com/gecko-platform/latest/platform-common/status for details.
+ * 
+ * @note
+ *   The following table lists the flags that can be used with this function:
+ * 
+ *   | Flags  |     Macro                           | Description                                                            |
+ *   |:-------|:------------------------------------|:-----------------------------------------------------------------------|
+ *   | BIT(0) | HTTPS_SUPPORT                       | Set this bit to enable HTTPS_SUPPORT to use HTTPS feature.             |
+ *   | BIT(1) | IP_VERSION_6                        | Set this bit to enable IPv6. By default, it is configured to IPv4.      |
+ *   | BIT(2) | SI91X_TLS_V_1_0                     | Set this bit to support SSL TLS Version 1.0 if HTTPS is enabled.       |
+ *   | BIT(3) | SI91X_TLS_V_1_2                     | Set this bit to support SSL TLS Version 1.2 if HTTPS is enabled.       |
+ *   | BIT(4) | SI91X_TLS_V_1_1                     | Set this bit to support SSL_TLS Version 1.1 if HTTPS is enabled.       |
+ *   | BIT(6) | HTTP_V_1_1                          | Set this bit to use HTTP version 1.1                                   |
+ *   | BIT(9) | SL_SI91X_HTTPS_CERTIFICATE_INDEX_1  | Set this bit to specify index of SSL cert to be used for HTTPS.        |
+ *   | BIT(10)| SL_SI91X_HTTPS_CERTIFICATE_INDEX_2  | Set this bit to specify index of SSL cert to be used for HTTPS.        |
+ * 
+ * @note
+ * - Maximum supported length for user_name, password together is 278 bytes.
+ * - Maximum length should be 872 bytes, which includes user_name, password, host_name, ip_address, resource, and extended_header.
+ * - If username, password, hostname and extended http headers are not required, user should send empty string separated by delimiter.
+ * - If content of any field contains a comma then NULL delimiter should be used.
+ * - This API will wait until the response is received from NWP.
  ******************************************************************************/
 sl_status_t sl_si91x_http_otaf(uint8_t type,
-                               uint8_t flags,
+                               uint16_t flags,
                                uint8_t *ip_address,
                                uint16_t port,
                                uint8_t *resource,
@@ -83,7 +122,7 @@ sl_status_t sl_si91x_http_otaf(uint8_t type,
                                uint8_t *extended_header,
                                uint8_t *user_name,
                                uint8_t *password,
-                               uint8_t *post_data,
+                               const uint8_t *post_data,
                                uint32_t post_data_length);
 
 /** @} */

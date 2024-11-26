@@ -1,0 +1,12 @@
+label: thermostat-thread-bootloader
+quality: production
+description: Matter solution containing both a Matter bootloader and Thermostat over Thread Example
+project:
+  - path: ../../../sample-app/thermostat/efr32/thermostat-thread.slcp
+    id: application
+    output: thermostat-thread
+  - path: ../../../sample-app/bootloaders/bootloader-storage-external-single-series-2/bootloader-storage-external-single-series-2.slcp
+    id: bootloader
+    output: matter-bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

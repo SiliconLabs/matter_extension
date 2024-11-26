@@ -7,8 +7,10 @@ from modules.parameters import Types, Formats, ID
 
 
 class Credentials:
-    DEFAULT_CD_CERT = "credentials/test/certification-declaration/Chip-Test-CD-Signing-Cert.pem"
-    DEFAULT_CD_KEY = "credentials/test/certification-declaration/Chip-Test-CD-Signing-Key.pem"
+    DEFAULT_CD_CERT = "third_party/matter_sdk/credentials/test/certification-declaration/Chip-Test-CD-Signing-Cert.pem"
+    DEFAULT_CD_KEY = "third_party/matter_sdk/credentials/test/certification-declaration/Chip-Test-CD-Signing-Key.pem"
+    DEFAULT_PAA_CERT = "third_party/matter_sdk/credentials/test/attestation/Chip-Test-PAA-NoVID-Cert.der"
+    DEFAULT_PAA_KEY = "third_party/matter_sdk/credentials/test/attestation/Chip-Test-PAA-NoVID-Key.der"
     PKCS_GENERATED = 'certs.p12'
     DEFAULT_HEADER_TEMPLATE = 'silabs_creds.tmpl'
     DEFAULT_HEADER_FILE = 'silabs_creds.h'

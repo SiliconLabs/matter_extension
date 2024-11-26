@@ -25,7 +25,6 @@ toolchain_settings:
     value: -Wno-cast-function-type
   - option: gcc_compiler_option
     value: -Wno-psabi
-
   - option: gcc_compiler_option
     value: -fno-strict-aliasing
   - option: gcc_compiler_option
@@ -34,6 +33,8 @@ toolchain_settings:
     value: -fno-asynchronous-unwind-tables
   - option: gcc_compiler_option
     value: -fno-common
+  - option: gcc_compiler_option
+    value: -Wno-unused-parameter
 
 provides:
   - name: matter
@@ -101,7 +102,6 @@ requires:
   - name: matter_messagedef
   - name: matter_interaction_model
   - name: matter_provision
-  - name: matter_syscalls_stub
   - name: matter_callbacks
   - name: matter_check_in_message
   - name: matter_data_model
@@ -112,7 +112,6 @@ requires:
   - name: matter_types
   - name: matter_naming
   - name: matter_text_only_logging
-  - name: matter_cluster_building_blocks
 recommends:
   - id: matter_configuration_over_swo
   - id: matter_ot_mbedtls_override

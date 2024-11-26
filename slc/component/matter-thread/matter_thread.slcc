@@ -12,6 +12,7 @@ metadata:
 requires:
   - name: matter
   - name: ot_stack
+  - name: ot_platform_abstraction
 provides:
   - name: matter_thread
 define:

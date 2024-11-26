@@ -50,14 +50,14 @@ def recurse_dir(file_or_dir):
     else:
         if '.ds_store' in file_or_dir.lower():
             os.remove(file_or_dir)        
-        elif '.s37' in file_or_dir:
+        elif '.s37' in file_or_dir or '.rps' in file_or_dir:
             for leaf in file_or_dir.split('/'):
                 if 'BRD' in leaf:
                     brd = leaf
                 elif 'OpenThread' in leaf or 'WiFi' in leaf:
                     tech_ = leaf
 
-            board_type = (str(os.path.basename(file_or_dir).replace('.s37', '')).split('-'))[-1]
+            board_type = (str(os.path.basename(file_or_dir).replace('.s37', '')).replace('.rps','').split('-'))[-1]
             if board_type == "ncp":
                 board_type = "917-ncp"
             elif board_type == "soc" or board_type == "example":
@@ -69,7 +69,7 @@ def recurse_dir(file_or_dir):
             if tech_ == 'OpenThread':
                 demos_map['demos'][brd][tech_].append(str(os.path.basename(file_or_dir).replace('.s37', '')))
             elif tech_ == 'WiFi':
-                demos_map['demos'][brd][tech_][board_type].append(str(os.path.basename(file_or_dir).replace('.s37', '')))
+                demos_map['demos'][brd][tech_][board_type].append(str(os.path.basename(file_or_dir).replace('.s37', '').replace('.rps','')))
   
 
 recurse_dir(out_folder_dir)
@@ -207,17 +207,17 @@ for brd, val in demos_map['demos'].items():
                     boardCompatibilityProp.set('value', brd.lower())
 
                     imageFileProp.set('key', 'demos.imageFile')
-                    demoFilename = (("".join(demo_name+" "+board_type if 'thermostat' in demo_name else demo_name+" app"+" "+board_type)).replace(" ", "-") + ".s37")
                     if "soc" in board_type:
                         #exception for thermostat app name 
                         if demo_name=="thermostat":
                             demo_name = "SiWx917-thermostat-example"
                         demoFilename = demo_name.replace(' ','-') + ".rps"
+                    else:
+                        demoFilename = (("".join(demo_name+" "+board_type if 'thermostat' in demo_name else demo_name+" app"+" "+board_type)).replace(" ", "-") + ".s37")
                     imageFileProp.set('value', asset_prefix + os.path.join("demos", brd, technology, demoFilename))
-
                     readmeFileProp.set('key', 'core.readmeFiles')
                     readmeFileProp.set(
-                        'value',  os.path.join("slc","sample-app", '-'.join([demo_name.replace(" ", "-").replace("SiWx917-","").replace("-example",""), 'app']) if 'thermostat' not in demo_name else "thermostat", ("siwx917" if "soc" in board_type else "efr32"),"README_WiFi.md"))
+                        'value',  os.path.join("slc","sample-app", '-'.join([demo_name.replace(" ", "-").replace("SiWx917-","").replace("-example","").replace('.rps',''), 'app']) if 'thermostat' not in demo_name else "thermostat", ("siwx917" if "soc" in board_type else "efr32"),"README_WiFi.md"))
 
                     filtersProp.set('key', 'filters')
                     filtersProp.set('value', "Type|" + ("SoC" if "soc" in board_type else "NCP") + " Project\\ Difficulty|Advanced Wireless\\ Technology|Matter")

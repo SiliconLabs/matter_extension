@@ -1,10 +1,10 @@
 id: matter
-version: 2.4.0
+version: 2.5.0
 description: "Matter extension for Simplicity SDK Suite"
 label: "Silicon Labs Matter"
 sdk:
   id: simplicity_sdk
-  version: 2024.6.2
+  version: 2024.12.0
 upgrade_manifest:
   - path: upgrade.slcu
 supplier: Silicon Laboratories Inc.
@@ -43,7 +43,8 @@ component_path:
   - path: slc/component/matter-wifi
   - path: slc/component/matter-wifi/rs911x
   - path: slc/component/matter-wifi/wf200
-  - path: slc/component/matter-wifi/917soc
+  - path: slc/component/matter-wifi/917-soc
+  - path: slc/component/matter-wifi/917-ncp
 documentation:
   - docset: matter
-    version: 2.4.0
+    version: 2.5.0

@@ -9,7 +9,12 @@ metadata:
     license: Zlib
 requires:
   - name: matter
-  - name: matter_platform_efr32
+  - name: matter_platform_mg
+    condition :
+    - device_series_2
+  - name: matter_platform_mg
+    condition:
+    - device_series_3
   - name: matter_uart
   - name: glib
 provides:
@@ -37,6 +42,12 @@ include:
   file_list:
   - path: AirQualitySensorUI.h
     condition: [matter_air_quality_app]
+- path: third_party/matter_sdk/examples/refrigerator-app/silabs/include/
+  file_list:
+  - path: RefrigeratorUI.h
+    condition: [matter_refrigerator]
+  - path: RefrigeratorIcons.h
+    condition: [matter_refrigerator]
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/display/demo-ui.c
   - path: third_party/matter_sdk/examples/platform/silabs/display/lcd.cpp

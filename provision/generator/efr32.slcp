@@ -17,6 +17,9 @@ readme:
 
 sdk: { id: simplicity_sdk, version: 2024.6.0}
 
+provides:
+  - name: nvm3_custom_init
+
 component:
   - { id: freertos }
   - { id: sl_system }
@@ -35,54 +38,62 @@ component:
   - { id: mbedtls_sha }
   - { id: mbedtls_x509 }
   - { id: bootloader_app_properties }
+  - id: emlib_rmu 
+    condition: [device_series_2]
+  - id: hal_emu 
+    condition: [device_series_3]
 
 include:
   - { path: '.' }
-  - { path: ../../examples }
-  - { path: ../../examples/platform/silabs }
-  - { path: ../../src }
-  - { path: ../../src/include }
-  - { path: ../../zzz_generated/app-common }
-  - { path: ../../third_party/nlassert/repo/include }
-  - { path: ../../third_party/nlio/repo/include }
-  - { path: ../../third_party/silabs/simplicity_sdk/platform/bootloader }
-  - { path: ../../third_party/silabs/simplicity_sdk/protocol/bluetooth/config }
+  - { path: ../../third_party/matter_sdk/examples }
+  - { path: ../../third_party/matter_sdk/examples/platform/silabs }
+  - { path: ../../third_party/matter_sdk/src }
+  - { path: ../../third_party/matter_sdk/src/include }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/provision }
+  - { path: ../../third_party/matter_sdk/zzz_generated/app-common }
+  - { path: ../../third_party/nlassert/include }
+  - { path: ../../third_party/nlio/include }
+  - { path: ../../third_party/simplicity_sdk/platform/bootloader }
+  - { path: ../../third_party/simplicity_sdk/protocol/bluetooth/config }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/platformAbstraction }
 
 source:
   - { path: app.h }
   - { path: app.cpp }
   - { path: main.cpp }
   - { path: efr32.cpp }
-  - { path: ../../examples/platform/silabs/provision/AttestationKey.h }
-  - { path: ../../examples/platform/silabs/provision/AttestationKeyPSA.cpp }
-  - { path: ../../examples/platform/silabs/provision/ProvisionChannel.h }
-  - { path: ../../examples/platform/silabs/provision/ProvisionChannelRTT.cpp }
-  - { path: ../../examples/platform/silabs/provision/ProvisionEncoder.h }
-  - { path: ../../examples/platform/silabs/provision/ProvisionEncoder.cpp }
-  - { path: ../../examples/platform/silabs/provision/ProvisionManager.h }
-  - { path: ../../examples/platform/silabs/provision/ProvisionManager.cpp }
-  - { path: ../../examples/platform/silabs/provision/ProvisionProtocol.h }
-  - { path: ../../examples/platform/silabs/provision/ProvisionProtocolV1.cpp }
-  - { path: ../../examples/platform/silabs/provision/ProvisionProtocolV2.cpp }
-  - { path: ../../examples/platform/silabs/provision/ProvisionStorage.h }
-  - { path: ../../examples/platform/silabs/provision/ProvisionStorageGeneric.h }
-  - { path: ../../examples/platform/silabs/provision/ProvisionStorage.cpp }
-  - { path: ../../examples/platform/silabs/provision/ProvisionStorageCustom.cpp }
-  - { path: ../../examples/platform/silabs/provision/ProvisionStorageDefault.cpp }
-  - { path: ../../src/lib/support/Base64.h }
-  - { path: ../../src/lib/support/Base64.cpp }
-  - { path: ../../src/lib/support/BytesToHex.h }
-  - { path: ../../src/lib/support/BytesToHex.cpp }
-  - { path: ../../src/lib/support/logging/CHIPLogging.h }
-  - { path: ../../src/lib/support/logging/TextOnlyLogging.cpp }
-  - { path: ../../src/platform/silabs/SilabsConfig.h }
-  - { path: ../../src/platform/silabs/SilabsConfig.cpp }
-  - { path: ../../src/platform/silabs/Logging.cpp }
-  - { path: ../../src/crypto/CHIPCryptoPALPSA.cpp }
-  - { path: ../../src/setup_payload/Base38Encode.h }
-  - { path: ../../src/setup_payload/Base38Encode.cpp }
-  - { path: ../../src/platform/silabs/multi-ota/OtaTlvEncryptionKey.h }
-  - { path: ../../src/platform/silabs/multi-ota/OtaTlvEncryptionKey.cpp }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/platformAbstraction/GsdkSpam.cpp }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/provision/AttestationKey.h }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/provision/AttestationKeyPSA.cpp }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionChannel.h }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionChannelRTT.cpp }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionEncoder.h }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionEncoder.cpp }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionManager.h }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionManager.cpp }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionProtocol.h }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionProtocolV1.cpp }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionProtocolV2.cpp }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionStorage.h }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionStorageGeneric.h }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionStorage.cpp }
+  - { path: ../../third_party/matter_sdk/examples/platform/silabs/provision/ProvisionStorageCustom.cpp }
+  - { path: ../../third_party/matter_sdk/examples/platform/silabs/provision/ProvisionStorageDefault.cpp }
+  - { path: ../../third_party/matter_sdk/src/lib/support/Base64.h }
+  - { path: ../../third_party/matter_sdk/src/lib/support/Base64.cpp }
+  - { path: ../../third_party/matter_sdk/src/lib/support/BytesToHex.h }
+  - { path: ../../third_party/matter_sdk/src/lib/support/BytesToHex.cpp }
+  - { path: ../../third_party/matter_sdk/src/lib/support/logging/CHIPLogging.h }
+  - { path: ../../third_party/matter_sdk/src/lib/support/logging/TextOnlyLogging.cpp }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/SilabsConfig.h }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/SilabsConfig.cpp }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/Logging.cpp }
+  - { path: ../../third_party/matter_sdk/src/crypto/CHIPCryptoPALPSA.cpp }
+  - { path: ../../third_party/matter_sdk/src/setup_payload/Base38Encode.h }
+  - { path: ../../third_party/matter_sdk/src/setup_payload/Base38Encode.cpp }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/multi-ota/OtaTlvEncryptionKey.h }
+  - { path: ../../third_party/matter_sdk/src/platform/silabs/multi-ota/OtaTlvEncryptionKey.cpp }
 
 define:
 - { name: SL_PROVISION_GENERATOR, value: '1' }
@@ -99,3 +110,11 @@ toolchain_settings:
 - { option: optimize, value: size }
 - { option: cxx_standard, value: c++17 }
 - { option: gcc_compiler_option, value: -Wno-unused-parameter }
+
+template_contribution:
+  - name: memory_flash_start
+    value: 0x1008000
+    condition: [device_family_simg301]
+  - name: memory_flash_size
+    value: 0x3c7000
+    condition: [device_family_simg301]

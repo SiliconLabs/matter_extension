@@ -53,7 +53,13 @@ end
 if slc.is_selected('matter_thread') then
     table.insert(changeset, {
       ['component'] = 'ot_rtos_wrapers_stub',
-      ['action'] = 'add'
+      ['action'] = 'remove'
+    })
+end
+if slc.is_selected('matter_thread') then
+    table.insert(changeset, {
+      ['component'] = 'ot_rtos_wrappers_real',
+      ['action'] = 'remove'
     })
 end
 if slc.is_selected('silabs_factory_data_provider') then

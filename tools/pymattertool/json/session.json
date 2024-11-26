@@ -1,0 +1,15 @@
+{
+  "MATTER_ROOT": "~/connectedhomeip",
+  "CHIPTOOL_PATH": "/out/standalone/chip-tool",
+  "PINCODE": 20202021,
+  "DISCRIMINATOR": 3840,
+  "ENDPOINT": 1,
+  "NODE_ID": 15076,
+  "LAST_NODE_ID": 0,
+  "THREAD_DATA_SET": "",
+  "SSID": "",
+  "WIFI_PW": "",
+  "VERBOSE": true,
+  "DEFAULT_GROUP_INITIALIZED": false,
+  "LOGS_LIFESPAN_DAYS": 10
+}

@@ -52,6 +52,9 @@ library:
   - path: third_party/matter_support/matter/provision/lib/libProvisionFlash_mgm24.a
     condition:
       - device_family_mgm24
+  - path: third_party/matter_support/matter/provision/lib/libProvisionFlash_efr32mg26.a
+    condition:
+      - device_family_mgm26
   - path: third_party/matter_support/matter/provision/lib/libProvision_si917.a
     condition:
       - device_family_siwg917

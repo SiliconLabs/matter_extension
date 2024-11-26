@@ -1,5 +1,6 @@
 /* See Project CHIP LICENSE file for licensing information. */
 #include <platform/logging/LogV.h>
+#include <platform/silabs/Logging.h>
 
 #include <lib/core/CHIPConfig.h>
 #include <platform/CHIPDeviceConfig.h>
@@ -199,6 +200,13 @@ extern "C" void silabsLog(const char * aFormat, ...)
 
     va_end(v);
 }
+
+#if SILABS_LOG_ENABLED
+bool isLogInitialized()
+{
+    return sLogInitialized;
+}
+#endif // SILABS_LOG_ENABLED
 
 namespace chip {
 namespace DeviceLayer {

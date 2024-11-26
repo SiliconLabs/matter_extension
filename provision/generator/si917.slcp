@@ -19,7 +19,7 @@ readme:
 sdk: { id: simplicity_sdk, version: 2024.6.0}
 
 sdk_extension:
-  - { id: wiseconnect3_sdk, version: 3.3.0 }
+  - { id: wiseconnect3_sdk, version: 3.4.0 }
 
 component:
   - { id: freertos }
@@ -40,59 +40,76 @@ component:
   - { id: brd4338a, from: wiseconnect3_sdk }
   - { id: wifi, from: wiseconnect3_sdk }
   - { id: si91x_debug, from: wiseconnect3_sdk }
+  - { id: sl_si91x_trng, from: wiseconnect3_sdk }
+  - { id: sl_si91x_crypto_multithread, from: wiseconnect3_sdk }
 
 include:
   - path: .
-  - path: ../../examples/
-  - path: ../../examples/platform/silabs/
-  - path: ../../src/
-  - path: ../../src/platform/silabs/SiWx917/
-  - path: ../../src/include/
-  - path: ../../zzz_generated/app-common/
-  - path: ../../third_party/nlassert/repo/include/
-  - path: ../../third_party/nlio/repo/include/
-  - path: ../../third_party/silabs/matter_support/matter/mbedtls/tinycrypt/inc
-  - path: ../../third_party/mbedtls/repo/library
-  - path: ../../third_party/mbedtls/repo/include
-  - path: ../../src/platform/silabs/SiWx917
-  - path: ../../src/lib/support/
-  - path: ../../src/platform/silabs/
-  - path: ../../third_party/silabs/matter_support/matter/si91x/siwx917/BRD4338A/support/inc
+  - path: ../../third_party/matter_sdk/examples/
+  - path: ../../third_party/matter_sdk/examples/platform/silabs/
+  - path: ../../third_party/matter_sdk/src/
+  - path: ../../third_party/matter_sdk/src/platform/silabs/SiWx917/
+  - path: ../../third_party/matter_sdk/src/include/
+  - path: ../../third_party/matter_sdk/src/platform/silabs 
+  - path: ../../third_party/matter_sdk/src/platform/silabs/provision
+  - path: ../../third_party/matter_sdk/src/platform/silabs/platformAbstraction
+  - path: ../../third_party/matter_sdk/zzz_generated/app-common/
+  - path: ../../third_party/nlassert/include/
+  - path: ../../third_party/nlio/include/
+  - path: ../../third_party/matter_support/matter/mbedtls/tinycrypt/inc
+  - path: ../../third_party/mbedtls/library
+  - path: ../../third_party/mbedtls/include
+  - path: ../../third_party/matter_sdk/src/platform/silabs/SiWx917
+  - path: ../../third_party/matter_sdk/src/lib/support/
+  - path: ../../third_party/matter_sdk/src/platform/silabs/
+  - path: ../../third_party/matter_support/matter/si91x/siwx917/BRD4338A/support/inc
+  - path: ../../third_party/matter_support/matter/si91x/siwx917/BRD4338A/config/
+    file_list:
+      - path: sl_mbedtls_config.h
+  - path: ../../third_party/matter_support/matter/si91x/siwx917/BRD4338A/autogen/
+    file_list:
+      - path: sli_mbedtls_config_autogen.h
+      - path: sli_mbedtls_config_transform_autogen.h
+  - path: ../../third_party/simplicity_sdk/platform/security/sl_component/sl_mbedtls_support/config/
+    file_list:
+      - path: sli_mbedtls_omnipresent.h
+      - path: sli_mbedtls_acceleration.h
 
 source:
   - { path: app.cpp }
   - { path: main.cpp }
   - { path: si917.cpp }
-  - path: ../../examples/platform/silabs/provision/AttestationKey.h
-  - path: ../../examples/platform/silabs/provision/AttestationKeyMbed.cpp
-  - path: ../../examples/platform/silabs/provision/ProvisionChannel.h
-  - path: ../../examples/platform/silabs/provision/ProvisionChannelRTT.cpp
-  - path: ../../examples/platform/silabs/provision/ProvisionEncoder.h
-  - path: ../../examples/platform/silabs/provision/ProvisionEncoder.cpp
-  - path: ../../examples/platform/silabs/provision/ProvisionManager.h
-  - path: ../../examples/platform/silabs/provision/ProvisionManager.cpp
-  - path: ../../examples/platform/silabs/provision/ProvisionProtocol.h
-  - path: ../../examples/platform/silabs/provision/ProvisionProtocolV1.cpp
-  - path: ../../examples/platform/silabs/provision/ProvisionProtocolV2.cpp
-  - path: ../../examples/platform/silabs/provision/ProvisionStorage.h
-  - path: ../../examples/platform/silabs/provision/ProvisionStorageGeneric.h
-  - path: ../../examples/platform/silabs/provision/ProvisionStorage.cpp
-  - path: ../../examples/platform/silabs/provision/ProvisionStorageCustom.cpp
-  - path: ../../examples/platform/silabs/provision/ProvisionStorageFlash.cpp
-  - path: ../../src/system_si917.h
-  - path: ../../src/lib/support/Base64.h
-  - path: ../../src/lib/support/Base64.cpp
-  - path: ../../src/lib/support/BytesToHex.h
-  - path: ../../src/lib/support/BytesToHex.cpp
-  - path: ../../src/lib/support/logging/CHIPLogging.h
-  - path: ../../src/lib/support/logging/TextOnlyLogging.cpp
-  - path: ../../src/platform/silabs/SilabsConfig.h
-  - path: ../../src/platform/silabs/SilabsConfig.cpp
-  - path: ../../src/platform/silabs/Logging.cpp
-  - path: ../../src/setup_payload/Base38Encode.h
-  - path: ../../src/setup_payload/Base38Encode.cpp
-  - path: ../../src/lib/support/CHIPPlatformMemory.h
-  - path: ../../examples/platform/silabs/syscalls_stubs.cpp
+  - path: ../../third_party/matter_sdk/src/platform/silabs/platformAbstraction/WiseMcuSpam.cpp
+  - path: ../../third_party/matter_sdk/src/platform/silabs/provision/AttestationKey.h
+  - path: ../../third_party/matter_sdk/src/platform/silabs/provision/AttestationKeyMbed.cpp
+  - path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionChannel.h
+  - path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionChannelRTT.cpp
+  - path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionEncoder.h
+  - path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionEncoder.cpp
+  - path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionManager.h
+  - path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionManager.cpp
+  - path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionProtocol.h
+  - path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionProtocolV1.cpp
+  - path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionProtocolV2.cpp
+  - path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionStorage.h
+  - path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionStorageGeneric.h
+  - path: ../../third_party/matter_sdk/src/platform/silabs/provision/ProvisionStorage.cpp
+  - path: ../../third_party/matter_sdk/examples/platform/silabs/provision/ProvisionStorageCustom.cpp
+  - path: ../../third_party/matter_sdk/examples/platform/silabs/provision/ProvisionStorageFlash.cpp
+  - path: ../../third_party/matter_sdk/src/system_si917.h
+  - path: ../../third_party/matter_sdk/src/lib/support/Base64.h
+  - path: ../../third_party/matter_sdk/src/lib/support/Base64.cpp
+  - path: ../../third_party/matter_sdk/src/lib/support/BytesToHex.h
+  - path: ../../third_party/matter_sdk/src/lib/support/BytesToHex.cpp
+  - path: ../../third_party/matter_sdk/src/lib/support/logging/CHIPLogging.h
+  - path: ../../third_party/matter_sdk/src/lib/support/logging/TextOnlyLogging.cpp
+  - path: ../../third_party/matter_sdk/src/platform/silabs/SilabsConfig.h
+  - path: ../../third_party/matter_sdk/src/platform/silabs/SilabsConfig.cpp
+  - path: ../../third_party/matter_sdk/src/platform/silabs/Logging.cpp
+  - path: ../../third_party/matter_sdk/src/setup_payload/Base38Encode.h
+  - path: ../../third_party/matter_sdk/src/setup_payload/Base38Encode.cpp
+  - path: ../../third_party/matter_sdk/src/lib/support/CHIPPlatformMemory.h
+  - path: ../../third_party/matter_sdk/examples/platform/silabs/syscalls_stubs.cpp
   - path: ../../third_party/mbedtls/repo/library/aes.c
   - path: ../../third_party/mbedtls/repo/library/asn1parse.c
   - path: ../../third_party/mbedtls/repo/library/asn1write.c
@@ -118,32 +135,30 @@ source:
   - path: ../../third_party/mbedtls/repo/library/sha512.c
   - path: ../../third_party/mbedtls/repo/library/x509.c
   - path: ../../third_party/mbedtls/repo/library/x509_create.c
-  - path: ../../third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/ecc.c
-  - path: ../../third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/ecc_dh.c
-  - path: ../../third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/ecc_dsa.c
-  - path: ../../third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/error.c
-  - path: ../../third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/oid.c
-  - path: ../../third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/pk.c
-  - path: ../../third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/pk_wrap.c
-  - path: ../../third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/pkparse.c
-  - path: ../../third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/pkwrite.c
-  - path: ../../third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/platform_util.c
-  - path: ../../third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/x509_crt.c
-  - path: ../../third_party/silabs/matter_support/matter/mbedtls/tinycrypt/src/x509write_csr.c
-  - path: ../../third_party/silabs/matter_support/matter/si91x/siwx917/BRD4338A/support/src/startup_common_RS1xxxx.c
-  - path: ../../src/platform/silabs/SiWx917/CHIPCryptoPALTinyCrypt.cpp
+  - path: ../../third_party/matter_support/matter/mbedtls/tinycrypt/src/ecc.c
+  - path: ../../third_party/matter_support/matter/mbedtls/tinycrypt/src/ecc_dh.c
+  - path: ../../third_party/matter_support/matter/mbedtls/tinycrypt/src/ecc_dsa.c
+  - path: ../../third_party/matter_support/matter/mbedtls/tinycrypt/src/error.c
+  - path: ../../third_party/matter_support/matter/mbedtls/tinycrypt/src/oid.c
+  - path: ../../third_party/matter_support/matter/mbedtls/tinycrypt/src/pk.c
+  - path: ../../third_party/matter_support/matter/mbedtls/tinycrypt/src/pk_wrap.c
+  - path: ../../third_party/matter_support/matter/mbedtls/tinycrypt/src/pkparse.c
+  - path: ../../third_party/matter_support/matter/mbedtls/tinycrypt/src/pkwrite.c
+  - path: ../../third_party/matter_support/matter/mbedtls/tinycrypt/src/platform_util.c
+  - path: ../../third_party/matter_support/matter/mbedtls/tinycrypt/src/x509_crt.c
+  - path: ../../third_party/matter_support/matter/mbedtls/tinycrypt/src/x509write_csr.c
+  - path: ../../third_party/matter_support/matter/si91x/siwx917/BRD4338A/support/src/startup_common_RS1xxxx.c
+  - path: ../../third_party/matter_sdk/src/platform/silabs/SiWx917/CHIPCryptoPALTinyCrypt.cpp
 
 define:
   - { name: DEBUG_EFM }
-  - { name: SL_PROVISION_GENERATOR, value: '1' }
-  - { name: SL_PROVISION_CHANNEL_ENABLED, value: '1' }
-  - { name: SILABS_PROVISION_PROTOCOL_V1, value: '0' }
-  - { name: CHIP_SYSTEM_CONFIG_USE_SOCKETS, value: '1' }
-  - { name: OPTIMIZE_TINYCRYPT_ASM }
-  - { name: TINYCRYPT_PRIMITIVES }
-  - { name: MBEDTLS_CONFIG_FILE, value: \"siwx917-chip-tinycrypt-config.h\" }
-  - { name: SL_MBEDTLS_USE_TINYCRYPT, value: '1' }
-  - { name: NVM3_LOCK_OVERRIDE, value: '1' }
+  - { name: SL_PROVISION_GENERATOR, value: "1" }
+  - { name: SL_PROVISION_CHANNEL_ENABLED, value: "1" }
+  - { name: SILABS_PROVISION_PROTOCOL_V1, value: "0" }
+  - { name: CHIP_SYSTEM_CONFIG_USE_SOCKETS, value: "1" }
+  - { name: SL_MBEDTLS_USE_TINYCRYPT, value: "1" }
+  - { name: MBEDTLS_CONFIG_FILE, value: \"siwx917-chip-mbedtls-config.h\" }
+  - { name: NVM3_LOCK_OVERRIDE, value: "1" }
 
 toolchain_settings:
   - { option: optimize, value: debug }

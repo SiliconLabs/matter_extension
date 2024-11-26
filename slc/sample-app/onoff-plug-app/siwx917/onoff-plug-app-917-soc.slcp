@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.4.0"
+    version: "2.5.0"
   - id: wiseconnect3_sdk
-    version: "3.3.4"
+    version: "3.4.0"
 
 component:
   - id: matter_leds
@@ -95,11 +95,21 @@ component:
     from: matter
   - id: matter_log_uart
     from: matter
-    
+
+  # Copy of the component to point to a different sl_net_for_lwip.c file
+  - id: network_manager
+    from: matter
+
+  # Copy of the component to remove the default lwipopts.h file
+  - id: wifi_resources
+    from: matter
+   
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
   - id: segger_rtt
+  - id: sl_si91x_lwip_stack
+    from: wiseconnect3_sdk
   - id: sl_si91x_common_flash_nvm3
     from: wiseconnect3_sdk
   - id: sl_si91x_wireless
@@ -108,7 +118,7 @@ component:
     from: wiseconnect3_sdk
   - id: basic_network_config_manager
     from: wiseconnect3_sdk
-  - id: si917_mem_config_3
+  - id: si91x_mem_config_3
     from: wiseconnect3_sdk
   - id: sl_si91x_basic_buffers
     from: wiseconnect3_sdk
@@ -122,13 +132,9 @@ component:
     from: matter
   - id: wiseconnect3_common
     from: wiseconnect3_sdk
-  - id: wifi_resources
-    from: wiseconnect3_sdk
   - id: sl_si91x_soc_soft_reset
     from: wiseconnect3_sdk
   - id: ble
-    from: wiseconnect3_sdk
-  - id: network_manager
     from: wiseconnect3_sdk
   - id: sl_si91x_button_917
     instance: [btn0,btn1]
@@ -140,6 +146,10 @@ component:
   - id: sl_si91x_led_917
     instance: [led0, led1]
     condition: [si917_prod_board]
+    from: wiseconnect3_sdk
+  - id: sl_si91x_led_917
+    instance: [led0, led1]
+    condition: [device_is_917_module_dev_kit]
     from: wiseconnect3_sdk
   - instance: [timer0]
     from: wiseconnect3_sdk
