@@ -160,6 +160,8 @@ CHIP_ERROR WifiSleepManager::VerifyAndTransitionToLowPowerMode()
 #elif RS911X_WIFI // rs9116
     VerifyOrReturnError(ConfigurePowerSave() == SL_STATUS_OK, CHIP_ERROR_INTERNAL);
     return CHIP_NO_ERROR;
+#else             // wf200
+    return CHIP_NO_ERROR;
 #endif
 }
 

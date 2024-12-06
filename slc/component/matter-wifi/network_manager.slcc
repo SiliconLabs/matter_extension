@@ -15,8 +15,8 @@ source:
 - path: slc/component/sdk-content/wifi-sdk/components/service/network_manager/src/sl_net.c
 - path: slc/component/sdk-content/wifi-sdk/components/service/network_manager/si91x/sl_net_si91x.c
   condition: ["sl_si91x_internal_stack"]
-# Use file from matter_support for build error fixes
-- path: third_party/matter_support/components/service/network_manager/src/sl_net_for_lwip.c
+# Use copied and modified file until the next wiseconnect patch
+- path: slc/component/sdk-content/wifi-sdk/components/service/network_manager/src/sl_net_for_lwip.c
   condition: ["sl_si91x_lwip_stack"]
 include:
 - path: slc/component/sdk-content/wifi-sdk/components/service/network_manager/inc

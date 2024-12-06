@@ -33,6 +33,9 @@
 #include <platform/silabs/wifi/wf200/platform/spi_multiplex.h>
 #include <stdbool.h>
 #include <string.h>
+#include "sl_spidrv_exp_config.h"
+#include "sl_spidrv_instances.h"
+#include "spidrv.h"
 
 #if defined(SL_CATLOG_POWER_MANAGER_PRESENT)
 #include "sl_power_manager.h"
@@ -42,24 +45,20 @@
 #include "sl_board_control.h"
 #endif // SL_BOARD_NAME
 
-#include "sl_spidrv_exp_config.h"
-#include "sl_spidrv_instances.h"
-#include "spidrv.h"
 
-#define MAX_DATA_PACKET_SIZE 1800
 #define LDMA_MAX_TRANSFER_LENGTH 4096
 #define LDMA_DESCRIPTOR_ARRAY_LENGTH (LDMA_MAX_TRANSFER_LENGTH / 2048)
+#define SPI_HANDLE sl_spidrv_exp_handle
+#define MAX_DATA_PACKET_SIZE 1800
 
 // use SPI handle for EXP header (configured in project settings)
 extern SPIDRV_Handle_t sl_spidrv_exp_handle;
-#define SPI_HANDLE sl_spidrv_exp_handle
 static uint8_t dummy_buffer[MAX_DATA_PACKET_SIZE] = { 0 };
+static sl_si91x_host_init_configuration init_config = { 0 };
 
 uint32_t rx_ldma_channel;
 uint32_t tx_ldma_channel;
 osMutexId_t ncp_transfer_mutex = 0;
-
-static sl_si91x_host_init_configuration init_config = { 0 };
 
 // LDMA descriptor and transfer configuration structures for USART TX channel
 LDMA_Descriptor_t ldmaTXDescriptor[LDMA_DESCRIPTOR_ARRAY_LENGTH];

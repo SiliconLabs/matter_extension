@@ -18,7 +18,7 @@ The provisioning script on this folder now supersedes the following tools:
 
 ## Provisioned Data
 
-The _Commissionable Data_ includes _Serial Number_, _Vendor Id_, _Product Id_, and the _Setup Payload_ (typicallty displayed in the QR code),
+The _Commissionable Data_ includes _Serial Number_, _Vendor Id_, _Product Id_, and the _Setup Payload_ (typically displayed in the QR code),
 while the _Attestation Credentials_ include the _Certificate Declaration_ (CD), the _Product Attestation Intermediate certificate_ (PAI),
 and the _Device Attestation Certificate_ (DAC).
 
@@ -127,7 +127,7 @@ The Provision Tool can transfer the arguments to the device in two ways:
 This method can be used both in development and factory environments. This method works with the legacy Protocol version 1.x or
 the new protocol version 2.x.
 * Bluetooth: The provision script can transmit the data directly to applications running in provision-mode. While in this mode,
-Silicon Labs' example applications use the bluetooth communication to receive provisioning data. The Bluetooh channel requires
+Silicon Labs' example applications use the bluetooth communication to receive provisioning data. The Bluetooth channel requires
 Provision Protocol v2.x.
 
 ### Parameters
@@ -551,7 +551,7 @@ sections of the flash storage.
 
 ### Device Terminal
 
-Logs have beed added to the SilabsDeviceAttestationCreds, to help verify if the attestation
+Logs have been added to the SilabsDeviceAttestationCreds, to help verify if the attestation
 files are loaded correctly. The size and first eight bytes of CD, PAI, and DAC are printed and
 must match the contents of `cd.der`, `pai_cert.der`, and `dac.der`, respectively:
 ```
@@ -576,5 +576,5 @@ must match the contents of `cd.der`, `pai_cert.der`, and `dac.der`, respectively
 Pre-compiled images of the Generator Firmware can be found under ./images. The source
 code of these images is found under ./support. A single image is provided for each family
 (EFR32MG24, EFR32MG26, etc.). To cope with the different flash sizes, the `provision.py`
-script reads the device information using `commander`, and send it to the GFW, which
+script reads the device information using `commander`, and sends it to the GFW, which
 configures the NVM3 during the initialization step.

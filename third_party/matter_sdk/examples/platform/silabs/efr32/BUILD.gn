@@ -18,6 +18,7 @@ import("${chip_root}/examples/common/pigweed/pigweed_rpcs.gni")
 import("${chip_root}/src/app/icd/icd.gni")
 import("${chip_root}/src/lib/lib.gni")
 import("${chip_root}/src/platform/device.gni")
+import("${chip_root}/src/tracing/tracing_args.gni")
 import("${silabs_sdk_build_root}/efr32_sdk.gni")
 import("${silabs_sdk_build_root}/silabs_board.gni")
 
@@ -110,6 +111,9 @@ source_set("matter-shell") {
     "${chip_root}/src/lib/shell:shell",
     "${chip_root}/src/lib/shell:shell_core",
   ]
+  if (matter_enable_tracing_support) {
+    public_deps += [ "${chip_root}/src/platform/silabs/tracing:SilabsTracing" ]
+  }
 }
 
 config("efr32-common-config") {
@@ -210,6 +214,9 @@ source_set("efr32-common") {
     if (chip_enable_icd_server) {
       deps += [ "${silabs_common_plat_dir}/shell:icd" ]
     }
+    if (matter_enable_tracing_support) {
+      public_deps += [ "${silabs_common_plat_dir}/shell:tracing" ]
+    }
   }
 
   public_deps += [
@@ -232,5 +239,9 @@ source_set("efr32-common") {
 
   if (app_data_model != "") {
     public_deps += [ app_data_model ]
+  }
+
+  if (matter_enable_tracing_support) {
+    public_deps += [ "${chip_root}/src/platform/silabs/tracing:SilabsTracing" ]
   }
 }

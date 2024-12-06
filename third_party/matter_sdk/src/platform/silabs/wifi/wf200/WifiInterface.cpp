@@ -26,6 +26,7 @@
 #include "sl_wfx_cmd_api.h"
 #include "sl_wfx_constants.h"
 #include "task.h"
+#include <app/icd/server/ICDServerConfig.h>
 #include <lib/support/CHIPMemString.h>
 #include <lib/support/CodeUtils.h>
 #include <lib/support/logging/CHIPLogging.h>
@@ -729,7 +730,7 @@ static void wfx_events_task(void * p_arg)
             retryJoin = 0;
             wfx_lwip_set_sta_link_up();
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
-            if (!(wfx_get_wifi_state() & SL_WFX_AP_INTERFACE_UP))
+            if (!(wifiContext.state & SL_WFX_AP_INTERFACE_UP))
             {
                 // Enable the power save
                 ChipLogProgress(DeviceLayer, "WF200 going to DTIM based sleep");

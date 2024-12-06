@@ -74,6 +74,7 @@ private:
     void OnCommissioningSessionStarted() override;
     void OnCommissioningSessionStopped() override;
     void OnCommissioningWindowClosed() override;
+    void OnCommissioningWindowOpened() override;
 
     // FabricTable::Delegate
     void OnFabricCommitted(const chip::FabricTable & fabricTable, chip::FabricIndex fabricIndex) override;
@@ -89,7 +90,7 @@ class BaseApplication
 
 public:
     BaseApplication() = default;
-    virtual ~BaseApplication() {};
+    virtual ~BaseApplication(){};
     static bool sIsProvisioned;
     static bool sIsFactoryResetTriggered;
     static LEDWidget * sAppActionLed;
@@ -122,6 +123,7 @@ public:
      *
      * @param event AppEvent to post
      */
+
     static void PostEvent(const AppEvent * event);
 
     /**
@@ -175,6 +177,14 @@ public:
 
 protected:
     CHIP_ERROR Init();
+
+    /** @brief
+     * Function to be called at the end of Init to indicate that the application has completed its initialization.
+     * Currently only used for tracing, might want to move logging here as well in the future
+     * @param err CHIP_NO_ERROR on success, corresponding error code on Init failure, note that Init failure leads to an app error so
+     * this is purely to have a trace logged with the error code
+     */
+    void InitCompleteCallback(CHIP_ERROR err);
 
     /**
      * @brief Function called to start the function timer

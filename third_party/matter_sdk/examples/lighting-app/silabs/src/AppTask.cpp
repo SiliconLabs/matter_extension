@@ -105,6 +105,7 @@ CHIP_ERROR AppTask::Init()
 #endif // QR_CODE_ENABLED
 #endif
 
+    BaseApplication::InitCompleteCallback(err);
     return err;
 }
 

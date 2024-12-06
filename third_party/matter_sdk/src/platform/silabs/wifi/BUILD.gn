@@ -32,6 +32,9 @@ declare_args() {
 
   #default Wifi Password
   chip_default_wifi_psk = ""
+
+  # Argument to enable LwIP debug logs
+  sl_enable_wifi_debug_logs = false
 }
 
 if (chip_enable_wifi && !wifi_soc) {
@@ -49,8 +52,14 @@ if (chip_enable_wifi && !wifi_soc) {
 }
 
 config("wifi-platform-config") {
-  defines = [ "WIFI_DEBUG_ENABLED=0" ]
+  defines = []
   include_dirs = []
+
+  if (sl_enable_wifi_debug_logs) {
+    defines += [ "WIFI_DEBUG_ENABLED=1" ]
+  } else {
+    defines += [ "WIFI_DEBUG_ENABLED=0" ]
+  }
 
   if (use_rs9116) {
     # All the stuff from wiseconnect

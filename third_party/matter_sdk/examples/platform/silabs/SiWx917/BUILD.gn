@@ -16,6 +16,7 @@ import("//build_overrides/chip.gni")
 import("//build_overrides/efr32_sdk.gni")
 import("${chip_root}/examples/common/pigweed/pigweed_rpcs.gni")
 import("${chip_root}/examples/platform/silabs/args.gni")
+import("${chip_root}/src/app/icd/icd.gni")
 import("${chip_root}/src/lib/lib.gni")
 import("${chip_root}/src/platform/device.gni")
 import("${chip_root}/src/platform/silabs/wifi/args.gni")
@@ -202,6 +203,10 @@ source_set("siwx917-common") {
       "${silabs_common_plat_dir}/Si70xxSensor.cpp",
       "${silabs_common_plat_dir}/Si70xxSensor.h",
     ]
+  }
+
+  if (chip_enable_icd_server) {
+    public_deps += [ "${silabs_common_plat_dir}/wifi/icd:app-sleep-manager" ]
   }
 
   if (app_data_model != "") {

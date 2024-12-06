@@ -1005,7 +1005,8 @@ void BLEManagerImpl::BleAdvTimeoutHandler(void * arg)
 {
     if (BLEMgrImpl().mFlags.Has(Flags::kFastAdvertisingEnabled))
     {
-        ChipLogDetail(DeviceLayer, "bleAdv Timeout : Start slow advertisement");
+        // TODO : This log causes a stack overflow in Series 3, need to investigate before re-enabling
+        // ChipLogDetail(DeviceLayer, "bleAdv Timeout : Start slow advertisement");
         BLEMgrImpl().mFlags.Set(Flags::kAdvertising);
         BLEMgr().SetAdvertisingMode(BLEAdvertisingMode::kSlowAdvertising);
 #if CHIP_DEVICE_CONFIG_EXT_ADVERTISING
@@ -1016,7 +1017,8 @@ void BLEManagerImpl::BleAdvTimeoutHandler(void * arg)
 #if CHIP_DEVICE_CONFIG_EXT_ADVERTISING
     else
     {
-        ChipLogDetail(DeviceLayer, "bleAdv Timeout : Start extended advertisement");
+        // TODO : This log causes a stack overflow in Series 3, need to investigate before re-enabling
+        // ChipLogDetail(DeviceLayer, "bleAdv Timeout : Start extended advertisement");
         BLEMgrImpl().mFlags.Set(Flags::kAdvertising);
         BLEMgrImpl().mFlags.Set(Flags::kExtAdvertisingEnabled);
         BLEMgr().SetAdvertisingMode(BLEAdvertisingMode::kSlowAdvertising);

@@ -667,14 +667,14 @@ TEST_F(TestSilabsTracing, TestLogs)
     // Verify OTA log
     EXPECT_EQ(SilabsTracer::Instance().GetTraceByOperation(TimeTraceOperation::kOTA, span), CHIP_NO_ERROR);
     const char * expectedOTALogFormat =
-        "TimeTracker - StartTime: 0, EndTime: 100, Duration: 100 ms, Operation: OTA, Type: End, Error: 0x0";
+        "TimeTracker - Type: End, Operation: OTA, Status: 0x0, StartTime: 0, EndTime: 100, Duration: 100 ms";
     EXPECT_STREQ(reinterpret_cast<const char *>(span.data()), expectedOTALogFormat);
 
     // Verify Bootup log
     span = MutableByteSpan(logBuffer);
     EXPECT_EQ(SilabsTracer::Instance().GetTraceByOperation(TimeTraceOperation::kBootup, span), CHIP_NO_ERROR);
     const char * expectedBootupLogFormat =
-        "TimeTracker - StartTime: 100, EndTime: 300, Duration: 200 ms, Operation: Bootup, Type: End, Error: 0x0";
+        "TimeTracker - Type: End, Operation: Bootup, Status: 0x0, StartTime: 100, EndTime: 300, Duration: 200 ms";
     EXPECT_STREQ(reinterpret_cast<const char *>(span.data()), expectedBootupLogFormat);
 
     // Test buffer too small behavior
@@ -733,7 +733,7 @@ TEST_F(TestSilabsTracing, TestBufferBusting)
     uint8_t logBuffer[256];
     MutableByteSpan logSpan(logBuffer);
     EXPECT_EQ(SilabsTracer::Instance().GetTraceByOperation(TimeTraceOperation::kBufferFull, logSpan), CHIP_NO_ERROR);
-    const char * expectedNumLogFormat = "TimeTracker - EventTime: 6200, Operation: BufferFull, Type: Instant, Error: 0x19";
+    const char * expectedNumLogFormat = "TimeTracker - Type: Instant, Operation: BufferFull, Status: 0x19, EventTime: 6200";
     EXPECT_STREQ(reinterpret_cast<const char *>(logSpan.data()), expectedNumLogFormat);
 
     // Verify the kImageUpload operation was not added

@@ -162,6 +162,7 @@ CHIP_ERROR AppTask::Init()
     }
 #endif // SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
 
+    BaseApplication::InitCompleteCallback(err);
     return err;
 }
 

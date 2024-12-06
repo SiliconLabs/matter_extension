@@ -20,6 +20,8 @@ import("//build_overrides/chip.gni")
 
 static_library("SilabsTracing") {
   sources = [
+    "BackendImpl.cpp",
+    "BackendImpl.h",
     "SilabsTracing.cpp",
     "SilabsTracing.h",
   ]
@@ -27,7 +29,8 @@ static_library("SilabsTracing") {
   deps = [
     "${chip_root}/src/lib/core",
     "${chip_root}/src/lib/support",
-    "${chip_root}/src/platform",
     "${chip_root}/src/system",
   ]
+
+  public_deps = [ "${chip_root}/src/tracing:tracing" ]
 }

@@ -101,6 +101,8 @@ component:
 - {from: matter, id: app_common}
 - {from: matter, id: matter_provision_default}
 - {from: matter, id: matter_log_uart}
+- {from: matter, id: matter_tracing}
+    
 
 #Matter components wrapper from simplicity_sdk
 - {from: matter, id: matter_default_lcd_config}

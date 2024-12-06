@@ -13,7 +13,7 @@ provides:
   - name: matter_platform_low_power
 conflicts:
   - name: matter_shell
-  - name: matter_ot_cli
+  - name: matter_thread_cli
   - name: matter_default_lcd_config
   - name: matter_qr_code
   - name: matter_lcd

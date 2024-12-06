@@ -1,0 +1,28 @@
+id: matter_tracing_headers
+package: Matter
+label: tracing
+description: >
+    Provides the stubs for building without tracing with the copys-sources tag
+category: Matter|Core
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+
+provides:
+-   name: matter_tracing_headers
+
+include:
+-   path: third_party/matter_sdk/src/tracing
+    file_list:
+    -   path: backend.h
+    -   path: log_declares.h
+    -   path: metric_macros.h
+    -   path: metric_keys.h
+    -   path: metric_event.h
+    -   path: registry.h
+    -   path: macros.h
+-   path: third_party/matter_sdk/src/platform/silabs/tracing
+    file_list:
+    -   path: SilabsTracingMacros.h
+    -   path: SilabsTracingTypes.h

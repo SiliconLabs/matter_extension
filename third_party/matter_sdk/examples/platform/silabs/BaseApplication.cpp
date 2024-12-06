@@ -89,6 +89,17 @@
 #include "sl_cmp_config.h"
 #endif
 
+// Tracing
+#include <platform/silabs/tracing/SilabsTracingMacros.h>
+#if MATTER_TRACING_ENABLED && defined(ENABLE_CHIP_SHELL)
+#include <TracingShellCommands.h>
+#endif // MATTER_TRACING_ENABLED
+
+// sl-only
+#if SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+#include <ApplicationSleepManager.h>
+#endif // SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+
 /**********************************************************
  * Defines and Constants
  *********************************************************/
@@ -113,6 +124,7 @@ using namespace chip::app;
 using namespace ::chip::DeviceLayer;
 using namespace ::chip::DeviceLayer::Silabs;
 
+using TimeTraceOperation = chip::Tracing::Silabs::TimeTraceOperation;
 namespace {
 
 /**********************************************************
@@ -201,8 +213,19 @@ void BaseApplicationDelegate::OnCommissioningSessionStopped()
 #endif // SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
 }
 
+void BaseApplicationDelegate::OnCommissioningWindowOpened()
+{
+#if SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+    app::Silabs::ApplicationSleepManager::GetInstance().OnCommissioningWindowOpened();
+#endif // SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+}
+
 void BaseApplicationDelegate::OnCommissioningWindowClosed()
 {
+#if SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+    app::Silabs::ApplicationSleepManager::GetInstance().OnCommissioningWindowClosed();
+#endif // SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+
     if (BaseApplication::GetProvisionStatus())
     {
         // After the device is provisioned and the commissioning passed
@@ -322,6 +345,9 @@ CHIP_ERROR BaseApplication::Init()
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
     ICDCommands::RegisterCommands();
 #endif // CHIP_CONFIG_ENABLE_ICD_SERVER
+#if MATTER_TRACING_ENABLED
+    TracingCommands::RegisterCommands();
+#endif // MATTER_TRACING_ENABLED
 #endif // ENABLE_CHIP_SHELL
 
 #ifdef PERFORMANCE_TEST_ENABLED
@@ -338,6 +364,12 @@ CHIP_ERROR BaseApplication::Init()
 
     err = chip::Server::GetInstance().GetFabricTable().AddFabricDelegate(&sAppDelegate);
     return err;
+}
+
+void BaseApplication::InitCompleteCallback(CHIP_ERROR err)
+{
+    SILABS_TRACE_END(TimeTraceOperation::kAppInit);
+    SILABS_TRACE_END(TimeTraceOperation::kBootup);
 }
 
 void BaseApplication::FunctionTimerEventHandler(void * timerCbArg)

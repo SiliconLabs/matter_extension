@@ -14,7 +14,7 @@ provides:
 
 requires:
 - name: matter_uart
-- name: matter_ot_cli
+- name: matter_thread_cli
   condition: [matter_thread]
 
 include:
@@ -43,11 +43,20 @@ include:
     - path: EventHandlerLibShell.h
       condition:
         - matter_lock
-- path: third_party/matter_sdk/examples/platform/silabs/shell
+- path: third_party/matter_sdk/examples/refrigerator-app/silabs/include
+  file_list:
+    - path: EventHandlerLibShell.h
+      condition:
+        - matter_refrigerator
+- path: third_party/matter_sdk/examples/platform/silabs/shell/icd
   file_list:
     - path: ICDShellCommands.h
       condition: [matter_icd]
-
+- path: third_party/matter_sdk/examples/platform/silabs/shell/tracing
+  file_list:
+    - path: TracingShellCommands.h
+      condition: [matter_tracing]
+      
 source:
 - path: third_party/matter_sdk/examples/platform/silabs/MatterShell.cpp
 - path: third_party/matter_sdk/examples/shell/shell_common/cmd_misc.cpp
@@ -82,8 +91,12 @@ source:
   condition: [matter_platform_siwx917]
 - path: third_party/matter_sdk/examples/lock-app/silabs/src/EventHandlerLibShell.cpp
   condition: [matter_lock]
-- path: third_party/matter_sdk/examples/platform/silabs/shell/ICDShellCommands.cpp
+- path: third_party/matter_sdk/examples/refrigerator-app/silabs/src/EventHandlerLibShell.cpp
+  condition: [matter_refrigerator]
+- path: third_party/matter_sdk/examples/platform/silabs/shell/icd/ICDShellCommands.cpp
   condition: [matter_icd]
+- path: third_party/matter_sdk/examples/platform/silabs/shell/tracing/TracingShellCommands.cpp
+  condition: [matter_tracing]
 
 define:
 - name: ENABLE_CHIP_SHELL

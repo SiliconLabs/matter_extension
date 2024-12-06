@@ -234,7 +234,7 @@ upgrade:
         add:
           - matter_leds
 
-    - sdk:
+  - sdk:
       id: matter
       version: "2.5.0"
     

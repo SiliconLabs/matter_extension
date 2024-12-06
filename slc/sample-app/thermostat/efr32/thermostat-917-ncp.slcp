@@ -127,10 +127,8 @@ component:
     from: wiseconnect3_sdk
 
 # Require LCD and QR Code components only on the boards that support LCD
-requires:
-  - name: matter_default_lcd_config
-    condition:
-    - device_series_2
+#requires:
+#  - name: matter_default_lcd_config
 
 config_file:
   - path: ../../../../third_party/matter_sdk/examples/thermostat/thermostat-common/thermostat.zap

@@ -30,7 +30,6 @@
 #include <app-common/zap-generated/attributes/Accessors.h>
 #include <app/AttributeAccessInterfaceRegistry.h>
 
-
 using namespace chip;
 using namespace chip::app;
 using namespace ::chip::app::Clusters::FanControl;
@@ -121,16 +120,20 @@ Status FanControlManager::HandleStep(StepDirectionEnum aDirection, bool aWrap, b
     }
     }
 
+    // Convert SpeedSetting to PercentSetting
+    uint8_t curPercentSetting = ((static_cast<uint16_t>(curSpeedSetting) * 100) / mSpeedMax);
+
     AttributeUpdateInfo * data = chip::Platform::New<AttributeUpdateInfo>();
-    data->speedSetting = curSpeedSetting;
+    data->percentSetting = curPercentSetting;
     data->endPoint = GetEndPoint();
-    data->isSpeedSetting = true;
+    data->isPercentSetting = true;
 
     if(chip::DeviceLayer::PlatformMgr().ScheduleWork(UpdateClusterState, reinterpret_cast<intptr_t>(data))!=CHIP_NO_ERROR)
     {
-        ChipLogError(NotSpecified, "FanControlManager::HandleStep: Failed to update SpeedSetting attribute");
+        ChipLogError(NotSpecified, "FanControlManager::HandleStep: Failed to update PercentSetting attribute");
         return Status::Failure;
     }
+
     return Status::Success;
 }
 
@@ -153,6 +156,10 @@ void FanControlManager::UpdateClusterState(intptr_t arg)
     {
         Attributes::FanMode::Set(data->endPoint, data->fanMode);
     }
+    else if (data->isPercentSetting)
+    {
+        Attributes::PercentSetting::Set(data->endPoint, data->percentSetting);
+    }
     chip::Platform::Delete(data);
 }
 
@@ -173,6 +180,10 @@ void FanControlManager::HandleFanControlAttributeChange(AttributeId attributeId,
     case Attributes::FanMode::Id: {
         mFanMode = *reinterpret_cast<FanModeEnum*>(value);
         FanModeWriteCallback(mFanMode);
+        UpdateFanControlLED();
+#if DISPLAY_ENABLED
+        UpdateFanControlLCD();
+#endif
         break;
     }
 
@@ -180,11 +191,6 @@ void FanControlManager::HandleFanControlAttributeChange(AttributeId attributeId,
         break;
     }
     }
-
-    UpdateFanControlLED();
-#if DISPLAY_ENABLED
-    UpdateFanControlLCD();
-#endif
 }
 
 void FanControlManager::PercentSettingWriteCallback(uint8_t aNewPercentSetting)

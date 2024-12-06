@@ -1,0 +1,29 @@
+id: matter_sleep_manager
+package: Matter
+label: Sleep Manager for Matter WiFi
+description: >
+  Sleep Manager manages the sleep states of the Wi-Fi radio
+category: Matter-WiFi|SleepManager
+quality: production
+metadata:
+  sbom:
+    license: MSLA
+
+provides:
+- name: matter_sleep_manager
+
+include:
+- path: third_party/matter_sdk/src/platform/silabs/wifi/icd
+  file_list:
+  - path: WifiSleepManager.h
+- path: third_party/matter_sdk/examples/platform/silabs/wifi/icd
+  file_list:
+  - path: ApplicationSleepManager.h
+
+source:
+- path: third_party/matter_sdk/src/platform/silabs/wifi/icd/WifiSleepManager.cpp
+- path: third_party/matter_sdk/examples/platform/silabs/wifi/icd/ApplicationSleepManager.cpp
+
+define:
+-   name: SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+    value: 1

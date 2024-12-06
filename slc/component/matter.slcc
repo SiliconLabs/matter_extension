@@ -14,6 +14,10 @@ config_file:
   - path: slc/inc/app/icd/server/ICDServerBuildConfig.h
     file_id: matter_icd_server_build_config
     directory: app/icd/server
+# Tracing configuration is needed by the core SDK regardless of tracing enablement
+  - path: slc/inc/matter/tracing/build_config.h
+    file_id: build_config
+    directory: matter/tracing
 toolchain_settings:
   - option: gcc_compiler_option
     value: -Wno-deprecated-declarations
@@ -41,7 +45,7 @@ provides:
 define:
   - name: SL_MATTER_GN_BUILD 
     value: 0
-
+    
 include:
 - path: third_party/matter_sdk
 # This should be removed in the next matter_sdk update
@@ -49,7 +53,6 @@ include:
   file_list:
   -   path: ICDCheckInBackOffStrategy.h
   -   path: ICDMonitoringTable.h
-
 requires:
   - name: cpp_support
 
@@ -97,7 +100,6 @@ requires:
   - name: matter_syscall_stubs
   - name: matter_nlassert
   - name: matter_nlio
-  - name: matter_tracing
   - name: matter_includes
   - name: matter_messagedef
   - name: matter_interaction_model
@@ -112,6 +114,7 @@ requires:
   - name: matter_types
   - name: matter_naming
   - name: matter_text_only_logging
+  - name: matter_tracing_headers
 recommends:
   - id: matter_configuration_over_swo
   - id: matter_ot_mbedtls_override

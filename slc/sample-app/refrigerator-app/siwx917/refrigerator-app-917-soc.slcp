@@ -79,9 +79,6 @@ component:
     from: matter
   - id: matter_ota_support
     from: matter
-  # TODO:: this will be removed in bigfix facing some linking error because of this 
-  - id: matter_ota_provider
-    from: matter
   - id: toolchain_gcc_common
     from: matter
   - id: matter_power_source
@@ -170,11 +167,9 @@ include:
       - path: AppTask.h
       - path: CHIPProjectConfig.h
       - path: RefrigeratorManager.h
-    directory: include
   - path: ../../../../third_party/matter_sdk/examples/refrigerator-app/refrigerator-common/include
     file_list:
       - path: static-supported-temperature-levels.h
-    directory: include
 
 source:
   - path: ../../../../third_party/matter_sdk/examples/refrigerator-app/silabs/src/AppTask.cpp

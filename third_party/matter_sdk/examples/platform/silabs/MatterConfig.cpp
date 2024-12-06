@@ -32,6 +32,10 @@
 #endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 #endif /* SL_WIFI */
 
+#if SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+#include "ApplicationSleepManager.h"
+#endif // SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+
 #if PW_RPC_ENABLED
 #include "Rpc.h"
 #endif
@@ -44,10 +48,12 @@
 #include "MemMonitoring.h"
 #endif
 
-#if defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1
-#include <platform/silabs/SiWx917/SiWxPlatformInterface.h>
+#if ((defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1) || defined(EXP_BOARD))
 #include <platform/silabs/wifi/wiseconnect-abstraction/WiseconnectInterfaceAbstraction.h>
-#endif // SLI_SI91X_MCU_INTERFACE
+#if !defined(EXP_BOARD)
+#include <platform/silabs/SiWx917/SiWxPlatformInterface.h>
+#endif //! defined(EXP_BOARD)
+#endif // ( ( defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1 ) || defined(EXP_BOARD) )
 
 #include <crypto/CHIPCryptoPAL.h>
 // If building with the EFR32-provided crypto backend, we can use the
@@ -91,6 +97,12 @@ static chip::DeviceLayer::Internal::Efr32PsaOperationalKeystore gOperationalKeys
 #include "sl_power_manager.h"
 #endif
 
+#include <platform/silabs/tracing/SilabsTracingMacros.h>
+#if MATTER_TRACING_ENABLED
+#include <platform/silabs/tracing/BackendImpl.h>
+#include <tracing/registry.h>
+#endif // MATTER_TRACING_ENABLED
+
 /**********************************************************
  * Defines
  *********************************************************/
@@ -100,6 +112,7 @@ using namespace ::chip::Inet;
 using namespace ::chip::DeviceLayer;
 using namespace ::chip::Credentials;
 using namespace chip::DeviceLayer::Silabs;
+using TimeTraceOperation = chip::Tracing::Silabs::TimeTraceOperation;
 
 #if CHIP_ENABLE_OPENTHREAD
 #include <inet/EndPointStateOpenThread.h>
@@ -175,6 +188,9 @@ void ApplicationStart(void * unused)
     if (err != CHIP_NO_ERROR)
         appError(err);
 
+    SILABS_TRACE_END(TimeTraceOperation::kMatterInit);
+    SILABS_TRACE_BEGIN(TimeTraceOperation::kAppInit);
+
     gExampleDeviceInfoProvider.SetStorageDelegate(&chip::Server::GetInstance().GetPersistentStorage());
     chip::DeviceLayer::SetDeviceInfoProvider(&gExampleDeviceInfoProvider);
 
@@ -205,6 +221,7 @@ void SilabsMatterConfig::AppInit()
     sMainTaskHandle = osThreadNew(ApplicationStart, nullptr, &kMainTaskAttr);
     ChipLogProgress(DeviceLayer, "Starting scheduler");
     VerifyOrDie(sMainTaskHandle); // We can't proceed if the Main Task creation failed.
+
     GetPlatform().StartScheduler();
 
     // Should never get here.
@@ -309,8 +326,27 @@ CHIP_ERROR SilabsMatterConfig::InitMatter(const char * appName)
 
     initParams.appDelegate = &BaseApplication::sAppDelegate;
 
+    // [sl-only]: Configure Wi-Fi App Sleep Manager
+#if SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+    err = app::Silabs::ApplicationSleepManager::GetInstance()
+              .SetFabricTable(&Server::GetInstance().GetFabricTable())
+              .SetSubscriptionInfoProvider(app::InteractionModelEngine::GetInstance())
+              .SetWifiSleepManager(&WifiSleepManager::GetInstance())
+              .Init();
+    VerifyOrReturnError(err == CHIP_NO_ERROR, err, ChipLogError(DeviceLayer, "ApplicationSleepManager init failed"));
+
+    // Register ReadHandler::ApplicationCallback
+    app::InteractionModelEngine::GetInstance()->RegisterReadHandlerAppCallback(
+        &app::Silabs::ApplicationSleepManager::GetInstance());
+#endif // SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+
     // Init Matter Server and Start Event Loop
     err = chip::Server::GetInstance().Init(initParams);
+
+#if MATTER_TRACING_ENABLED
+    static Tracing::Silabs::BackendImpl backend;
+    Tracing::Register(backend);
+#endif // MATTER_TRACING_ENABLED
 
     chip::DeviceLayer::PlatformMgr().UnlockChipStack();
 
@@ -338,9 +374,9 @@ CHIP_ERROR SilabsMatterConfig::InitWiFi(void)
 #endif // SL_WFX_USE_SECURE_LINK
 #endif // WF200_WIFI
 
-#if defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1
+#if ((defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1) || defined(EXP_BOARD))
     VerifyOrReturnError(sl_matter_wifi_platform_init() == SL_STATUS_OK, CHIP_ERROR_INTERNAL);
-#endif // SLI_SI91X_MCU_INTERFACE
+#endif // ( ( defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1 ) || defined(EXP_BOARD) )
 
     return CHIP_NO_ERROR;
 }

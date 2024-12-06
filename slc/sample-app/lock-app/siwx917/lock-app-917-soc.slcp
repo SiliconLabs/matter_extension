@@ -209,6 +209,7 @@ configuration:
   - {name: SL_IDLE_MODE_DURATION_S, value: '600'}
   - {name: SL_ACTIVE_MODE_DURATION_MS, value: '0'}
   - {name: SL_ACTIVE_MODE_THRESHOLD, value: '0'}
+  - {name: SL_TRANSPORT_IDLE_INTERVAL, value: '3000'}
 
   - {name: CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED, value: '1'}
   - {name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION, value: '0'}

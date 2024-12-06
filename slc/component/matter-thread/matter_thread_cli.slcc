@@ -1,4 +1,4 @@
-id: matter_ot_cli
+id: matter_thread_cli
 label: OpenThread CLI
 description: Enables OpenThread CLI for Matter projects
 package: "Matter"
@@ -12,7 +12,7 @@ requires:
   - name: matter_thread
   - name: ot_cli
 provides:
-  - name: matter_ot_cli
+  - name: matter_thread_cli
 recommends:
   - id: ot_cli_source
 conflicts:
