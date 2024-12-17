@@ -170,6 +170,7 @@ configuration:
     value: 1
     condition: [matter_thread_coap_cert_libs]
   - {name: SL_STACK_SIZE, value: '4608'}
+  - {name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE, value: '1536'}
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: 16
     
@@ -215,3 +216,6 @@ ui_hints:
 
 post_build:
   profile: application
+  
+other_file:
+  - path: ../../../image/qr_code_img.png

@@ -77,10 +77,6 @@ bool hasNotifiedIPV4 = false;
 #endif /* CHIP_DEVICE_CONFIG_ENABLE_IPV4 */
 bool hasNotifiedWifiConnectivity = false;
 
-#if (RSI_BLE_ENABLE)
-extern rsi_semaphore_handle_t sl_rs_ble_init_sem;
-#endif
-
 // DHCP Poll timer
 static osTimerId_t sDHCPTimer;
 static osMessageQueueId_t sWifiEventQueue = NULL;
@@ -365,7 +361,7 @@ static int32_t sl_matter_wifi_init(void)
     }
 
     buf[sizeof(buf) - 1] = 0;
-    ChipLogProgress(DeviceLayer, "RSI firmware version: %s", buf);
+
     //! Send feature frame
     if ((status = rsi_send_feature_frame()) != RSI_SUCCESS)
     {
@@ -382,6 +378,7 @@ static int32_t sl_matter_wifi_init(void)
         return status;
     }
 
+    ChipLogProgress(DeviceLayer, "rsi_firmware_version: %s", buf);
     ChipLogDetail(DeviceLayer, "MAC: %02x:%02x:%02x %02x:%02x:%02x", wfx_rsi.sta_mac.octet[0], wfx_rsi.sta_mac.octet[1],
                   wfx_rsi.sta_mac.octet[2], wfx_rsi.sta_mac.octet[3], wfx_rsi.sta_mac.octet[4], wfx_rsi.sta_mac.octet[5]);
 
@@ -413,10 +410,6 @@ static int32_t sl_matter_wifi_init(void)
         ChipLogError(DeviceLayer, "rsi_wlan_register_callbacks failed: %ld", status);
         return status;
     }
-
-#if (RSI_BLE_ENABLE)
-    rsi_semaphore_post(&sl_rs_ble_init_sem);
-#endif
 
     wfx_rsi.dev_state.Set(WifiState::kStationInit);
     return RSI_SUCCESS;
@@ -776,6 +769,12 @@ void ProcessEvent(WifiEvent event)
     }
 }
 
+sl_status_t sl_matter_wifi_platform_init(void)
+{
+    VerifyOrReturnError(sl_matter_wifi_init() == RSI_SUCCESS, SL_STATUS_FAIL);
+    return SL_STATUS_OK;
+}
+
 /*********************************************************************************
  * @fn  void sl_matter_wifi_task(void *arg)
  * @brief
@@ -790,12 +789,6 @@ void ProcessEvent(WifiEvent event)
 void sl_matter_wifi_task(void * arg)
 {
     (void) arg;
-    uint32_t rsi_status = sl_matter_wifi_init();
-    if (rsi_status != RSI_SUCCESS)
-    {
-        ChipLogError(DeviceLayer, "sl_matter_wifi_task: sl_matter_wifi_init failed: %ld", rsi_status);
-        return;
-    }
     WifiEvent event;
     sl_matter_lwip_start();
     sl_matter_wifi_task_started();
@@ -928,7 +921,7 @@ int32_t wfx_rsi_send_data(void * p, uint16_t len)
     return status;
 }
 
-#if SL_ICD_ENABLED
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
 /*********************************************************************
  * @fn  sl_status_t ConfigurePowerSave(void)
  * @brief
@@ -959,4 +952,4 @@ sl_status_t ConfigurePowerSave(void)
     ChipLogDetail(DeviceLayer, "Powersave Config Success");
     return SL_STATUS_OK;
 }
-#endif /* SL_ICD_ENABLED */
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER

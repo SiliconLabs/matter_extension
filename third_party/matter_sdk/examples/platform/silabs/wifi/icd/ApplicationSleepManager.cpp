@@ -16,11 +16,21 @@
  ******************************************************************************/
 
 #include "ApplicationSleepManager.h"
+#include <lib/core/DataModelTypes.h>
 #include <lib/support/logging/CHIPLogging.h>
 
 namespace chip {
 namespace app {
 namespace Silabs {
+
+namespace {
+
+enum class SpecialCaseVendorID : uint16_t
+{
+    kAppleKeychain = 4996,
+};
+
+} // namespace
 
 ApplicationSleepManager ApplicationSleepManager::mInstance;
 
@@ -43,13 +53,17 @@ CHIP_ERROR ApplicationSleepManager::Init()
 void ApplicationSleepManager::OnCommissioningWindowOpened()
 {
     mIsCommissionningWindowOpen = true;
+#if (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
     mWifiSleepManager->VerifyAndTransitionToLowPowerMode();
+#endif // (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
 }
 
 void ApplicationSleepManager::OnCommissioningWindowClosed()
 {
     mIsCommissionningWindowOpen = false;
+#if (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
     mWifiSleepManager->VerifyAndTransitionToLowPowerMode();
+#endif // (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
 }
 
 void ApplicationSleepManager::OnSubscriptionEstablished(chip::app::ReadHandler & aReadHandler)
@@ -88,22 +102,97 @@ bool ApplicationSleepManager::CanGoToLIBasedSleep()
         ChipLogProgress(AppServer, "Commissioning Window is Open - Cannot go to LI based sleep");
         canGoToLIBasedSleep = false;
     }
+    else if (mIsInActiveMode)
+    {
+        ChipLogProgress(AppServer, "Device is in active mode - Cannot go to LI based sleep");
+        canGoToLIBasedSleep = false;
+    }
     else
     {
         for (auto it = mFabricTable->begin(); it != mFabricTable->end(); ++it)
         {
             if (!mSubscriptionsInfoProvider->FabricHasAtLeastOneActiveSubscription(it->GetFabricIndex()))
             {
-                ChipLogProgress(AppServer, "Fabric index %u has no active subscriptions - Cannot go to LI based sleep",
-                                it->GetFabricIndex());
-                canGoToLIBasedSleep = false;
-                break;
+                ChipLogProgress(AppServer, "Fabric index %u has no active subscriptions", it->GetFabricIndex());
+                canGoToLIBasedSleep = ProcessSpecialVendorIDCase(it->GetVendorId());
+
+                if (canGoToLIBasedSleep)
+                {
+                    ChipLogProgress(AppServer,
+                                    "Fabric index %u with vendor ID : %d  has an edge case that allows for LI based sleep",
+                                    it->GetFabricIndex(), it->GetVendorId());
+                }
+                else
+                {
+                    // Fabric doesn't meet the requirements to allow us to go to LI based sleep
+                    break;
+                }
             }
-            ChipLogProgress(AppServer, "All Fabrics have at least 1 active subscription!");
         }
     }
 
     return canGoToLIBasedSleep;
+}
+
+bool ApplicationSleepManager::ProcessSpecialVendorIDCase(chip::VendorId vendorId)
+{
+    bool hasValidException = false;
+    switch (to_underlying(vendorId))
+    {
+    case to_underlying(SpecialCaseVendorID::kAppleKeychain):
+        hasValidException = ProcessKeychainEdgeCase();
+        break;
+
+    default:
+        break;
+    }
+
+    return hasValidException;
+}
+
+bool ApplicationSleepManager::ProcessKeychainEdgeCase()
+{
+    bool hasValidException = false;
+
+    for (auto it = mFabricTable->begin(); it != mFabricTable->end(); ++it)
+    {
+        if ((it->GetVendorId() == chip::VendorId::Apple) &&
+            mSubscriptionsInfoProvider->FabricHasAtLeastOneActiveSubscription(it->GetFabricIndex()))
+        {
+            hasValidException = true;
+            break;
+        }
+    }
+
+    return hasValidException;
+}
+
+void ApplicationSleepManager::OnEnterActiveMode()
+{
+    mIsInActiveMode = true;
+// TEMP-fix: Added SLI_SI91X_MCU_INTERFACE to delay 917 NCP sleep till wifi-connection
+#if (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
+    mWifiSleepManager->VerifyAndTransitionToLowPowerMode();
+#endif // (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
+}
+
+void ApplicationSleepManager::OnEnterIdleMode()
+{
+    mIsInActiveMode = false;
+// TEMP-fix: Added SLI_SI91X_MCU_INTERFACE to delay 917 NCP sleep till wifi-connection
+#if (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
+    mWifiSleepManager->VerifyAndTransitionToLowPowerMode();
+#endif // (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
+}
+
+void ApplicationSleepManager::OnTransitionToIdle()
+{
+    // Nothing to do
+}
+
+void ApplicationSleepManager::OnICDModeChange()
+{
+    // Nothing to do
 }
 
 } // namespace Silabs

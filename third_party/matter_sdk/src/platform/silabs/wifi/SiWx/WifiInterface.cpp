@@ -83,7 +83,6 @@ extern "C" {
 #endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 
 WfxRsi_t wfx_rsi;
-extern osSemaphoreId_t sl_rs_ble_init_sem;
 
 namespace {
 
@@ -116,7 +115,7 @@ osMessageQueueId_t sWifiEventQueue = nullptr;
 sl_net_wifi_lwip_context_t wifi_client_context;
 sl_wifi_security_t security = SL_WIFI_SECURITY_UNKNOWN;
 
-// TODO : Temporary work-around for wifi-init failure in 917NCP ACX module board(BRD4357A). Can be removed after 
+// TODO : Temporary work-around for wifi-init failure in 917NCP ACX module board(BRD4357A). Can be removed after
 // Wiseconnect fixes region code for all ACX module boards.
 #ifdef EXP_BOARD
 #define REGION_CODE IGNORE_REGION
@@ -199,6 +198,7 @@ constexpr uint8_t kAdvRssiToleranceThreshold = 5;
 constexpr uint8_t kAdvActiveScanDuration     = 15;
 constexpr uint8_t kAdvPassiveScanDuration    = 20;
 constexpr uint8_t kAdvMultiProbe             = 1;
+constexpr uint8_t kAdvEnableInstantbgScan    = 1;
 constexpr uint8_t kAdvScanPeriodicity        = 10;
 
 // TODO: Confirm that this value works for size and timing
@@ -283,7 +283,6 @@ sl_status_t sl_wifi_siwx917_init(void)
 #endif // SL_MBEDTLS_USE_TINYCRYPT
 
     wfx_rsi.dev_state.Set(WifiState::kStationInit);
-    osSemaphoreRelease(sl_rs_ble_init_sem);
     return status;
 }
 
@@ -408,11 +407,11 @@ sl_status_t SetWifiConfigurations()
 /**
  * @brief Callback function for the SL_WIFI_JOIN_EVENTS group
  *
- * This callback handler will be invoked when any event within join event group occurs, providing the event details and any associated data
- * The callback doesn't get called when we join a network using the sl net APIs
+ * This callback handler will be invoked when any event within join event group occurs, providing the event details and any
+ * associated data The callback doesn't get called when we join a network using the sl net APIs
  *
-  * @note In case of failure, the 'result' parameter will be of type sl_status_t, and the 'resultLenght' parameter should be ignored
-  *
+ * @note In case of failure, the 'result' parameter will be of type sl_status_t, and the 'resultLenght' parameter should be ignored
+ *
  * @param[in] event sl_wifi_event_t that triggered the callback
  * @param[in] result Pointer to the response data received
  * @param[in] result_length Length of the data received in bytes
@@ -461,7 +460,7 @@ sl_status_t JoinWifiNetwork(void)
 
     status = sl_net_up((sl_net_interface_t) SL_NET_WIFI_CLIENT_INTERFACE, SL_NET_DEFAULT_WIFI_CLIENT_PROFILE_ID);
 
-    if (status == SL_STATUS_OK || status == SL_STATUS_IN_PROGRESS)
+    if (status == SL_STATUS_OK)
     {
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
         // TODO: We need a way to identify if this was a retry or a first attempt connect to avoid removing a req that was not ours
@@ -475,7 +474,14 @@ sl_status_t JoinWifiNetwork(void)
     }
 
     // failure only happens when the firmware returns an error
-    ChipLogError(DeviceLayer, "sl_wifi_connect failed: 0x%lx", static_cast<uint32_t>(status));
+    ChipLogError(DeviceLayer, "sl_net_up failed: 0x%lx", static_cast<uint32_t>(status));
+
+    // Deactivate the network interface before activating it on the next retry.
+    if ((status == SL_STATUS_SI91X_SCAN_ISSUED_IN_ASSOCIATED_STATE) || (status == SL_STATUS_SI91X_COMMAND_GIVEN_IN_INVALID_STATE))
+    {
+        status = sl_net_down((sl_net_interface_t) SL_NET_WIFI_CLIENT_INTERFACE);
+        ChipLogProgress(DeviceLayer, "sl_net_down status 0x%lx", static_cast<uint32_t>(status));
+    }
 
     wfx_rsi.dev_state.Clear(WifiState::kStationConnecting).Clear(WifiState::kStationConnected);
 
@@ -785,6 +791,7 @@ void ProcessEvent(WifiEvent event)
             advanced_scan_configuration.trigger_level        = kAdvScanThreshold;
             advanced_scan_configuration.trigger_level_change = kAdvRssiToleranceThreshold;
             advanced_scan_configuration.enable_multi_probe   = kAdvMultiProbe;
+            advanced_scan_configuration.enable_instant_scan  = kAdvEnableInstantbgScan;
             status = sl_wifi_set_advanced_scan_configuration(&advanced_scan_configuration);
             if (SL_STATUS_OK != status)
             {
@@ -897,7 +904,7 @@ void wfx_dhcp_got_ipv4(uint32_t ip)
     /*
      * Acquire the new IP address
      */
-    wfx_rsi.ip4_addr[0] = (ip) & 0xFF;
+    wfx_rsi.ip4_addr[0] = (ip) &0xFF;
     wfx_rsi.ip4_addr[1] = (ip >> 8) & 0xFF;
     wfx_rsi.ip4_addr[2] = (ip >> 16) & 0xFF;
     wfx_rsi.ip4_addr[3] = (ip >> 24) & 0xFF;
@@ -913,7 +920,7 @@ void wfx_dhcp_got_ipv4(uint32_t ip)
 sl_status_t ConfigurePowerSave(rsi_power_save_profile_mode_t sl_si91x_ble_state, sl_si91x_performance_profile_t sl_si91x_wifi_state,
                                uint32_t listenInterval)
 {
-    int32_t error = rsi_bt_power_save_profile(sl_si91x_ble_state, 0);
+    int32_t error = rsi_bt_power_save_profile(sl_si91x_ble_state, RSI_MAX_PSP);
     VerifyOrReturnError(error == RSI_SUCCESS, SL_STATUS_FAIL,
                         ChipLogError(DeviceLayer, "rsi_bt_power_save_profile failed: %ld", error));
 

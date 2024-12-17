@@ -19,6 +19,7 @@
 
 #include <app/ReadHandler.h>
 #include <app/SubscriptionsInfoProvider.h>
+#include <app/icd/server/ICDStateObserver.h>
 #include <app/server/CommissioningWindowManager.h>
 #include <credentials/FabricTable.h>
 #include <platform/silabs/wifi/icd/WifiSleepManager.h>
@@ -29,7 +30,8 @@ namespace Silabs {
 
 class ApplicationSleepManager : public chip::app::ReadHandler::ApplicationCallback,
                                 public chip::DeviceLayer::Silabs::WifiSleepManager::ApplicationCallback,
-                                public chip::FabricTable::Delegate
+                                public chip::FabricTable::Delegate,
+                                public chip::app::ICDStateObserver
 {
 public:
     static ApplicationSleepManager & GetInstance() { return mInstance; }
@@ -131,12 +133,45 @@ public:
 
     void OnFabricUpdated(const chip::FabricTable & fabricTable, chip::FabricIndex fabricIndex) override {}
 
+    // ICDStateObserver implementation
+    void OnEnterActiveMode() override;
+    void OnEnterIdleMode() override;
+    void OnTransitionToIdle() override;
+    void OnICDModeChange() override;
+
 private:
     ApplicationSleepManager()  = default;
     ~ApplicationSleepManager() = default;
 
     ApplicationSleepManager(const ApplicationSleepManager &)             = delete;
     ApplicationSleepManager & operator=(const ApplicationSleepManager &) = delete;
+
+    /**
+     * @brief Processes special cases based on the vendor ID.
+     *
+     * This method checks if the given vendor ID has any special cases that allow
+     * the device to go to LI based sleep when the fabric associated to the vendor ID does not have an active subscription.
+     *
+     * @param vendorId The vendor ID to check for special cases.
+     * @return true if the vendor ID has a special case that allows LI based sleep, false otherwise.
+     */
+    bool ProcessSpecialVendorIDCase(chip::VendorId vendorId);
+
+    /**
+     * @brief Processes the Apple Keychain edge case.
+     *
+     * Apple, when commissioning, adds two fabric to the device. One for Apple Home and one for the Appley Keychain.
+     * Apple Home is the active fabric which is used to communication with the device. The associated fabric also has the active
+     * subcription. Applye Keychain fabric acts as a safety and doesn't have an active fabric with the device. As such, we need an
+     * alternate method to check if the device can go to LI based sleep.
+     *
+     * This method checks if there is any fabric with the Apple Home vendor ID that
+     * has at least one active subscription. If such a fabric is found, it allows
+     * the device to go to LI based sleep.
+     *
+     * @return true if the Apple Keychain edge case allows low-power mode, false otherwise.
+     */
+    bool ProcessKeychainEdgeCase();
 
     static ApplicationSleepManager mInstance;
     chip::FabricTable * mFabricTable                                  = nullptr;
@@ -145,6 +180,7 @@ private:
     chip::DeviceLayer::Silabs::WifiSleepManager * mWifiSleepManager   = nullptr;
 
     bool mIsCommissionningWindowOpen = false;
+    bool mIsInActiveMode             = false;
 };
 
 } // namespace Silabs

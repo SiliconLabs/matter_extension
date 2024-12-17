@@ -287,3 +287,10 @@ upgrade:
         replacement: SL_TRANSPORT_ACTIVE_INTERVAL
         description: >
           Replacing SL_OT_ACTIVE_INTERVAL with SL_TRANSPORT_ACTIVE_INTERVAL to render the configuration transport agnostic
+
+      - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+        replacement: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+        description: >
+          Updating value:
+        value:
+          "(1000)": "(1536)"

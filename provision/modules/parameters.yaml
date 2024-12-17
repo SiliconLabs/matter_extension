@@ -134,6 +134,12 @@ options:
     short: 'jl'
     type: 'path'
 
+  - id: 0x013b
+    desc: 'Buffer size'
+    name: 'buffer_size'
+    short: 'bz'
+    type: 'int16u'
+
 instance_info:
   - id: 0x0141
     desc: 'Serial Number'

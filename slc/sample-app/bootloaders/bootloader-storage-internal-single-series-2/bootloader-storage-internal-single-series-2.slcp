@@ -22,8 +22,7 @@ component:
   - id: bootloader_compression_lzma
   - id: psa_crypto_config
   - id: matter_syscall_stubs
-    from: matter 
-
+    from: matter
 
 configuration:
   - name: SLOT0_ENABLE
@@ -86,6 +85,10 @@ configuration:
   - name: SLOT0_START
     value: 134496256
     condition: [device_sdid_230]
+# Workaround until the bootloader DMA issue is fixed
+  - name: BOOTLOADER_MSC_DMA_WRITE
+    value: 0
+
 post_build:
   profile: bootloader_series_2
 

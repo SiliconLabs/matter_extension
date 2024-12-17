@@ -35,6 +35,13 @@ public:
 
     static WifiSleepManager & GetInstance() { return mInstance; }
 
+    enum class PowerEvent : uint8_t
+    {
+        kGenericEvent          = 0,
+        kCommissioningComplete = 1,
+        kConnectivityChange    = 2,
+    };
+
     /**
      * @brief Class implements the callbacks that the application can implement
      *        to alter the WifiSleepManager behaviors.
@@ -122,14 +129,25 @@ public:
      *        3. If no commissioning is in progress and the device is unprovisioned, configure deep sleep.
      *        4. If the application callback allows, configure LI based sleep; otherwise, configure DTIM based sleep.
      *
+     * @param event PowerEvent triggering the Verify and transition to low power mode processing
+     *
      * @return CHIP_ERROR CHIP_NO_ERROR if the device was transitionned to low power
      *         CHIP_ERROR_INTERNAL if an error occured
      */
-    CHIP_ERROR VerifyAndTransitionToLowPowerMode();
+    CHIP_ERROR VerifyAndTransitionToLowPowerMode(PowerEvent event = PowerEvent::kGenericEvent);
 
 private:
     WifiSleepManager()  = default;
     ~WifiSleepManager() = default;
+
+    /**
+     * @brief Function to handle the power events before transitionning the device to the appropriate low power mode.
+     *
+     * @param event PowerEvent to handle
+     * @return CHIP_ERROR CHIP_NO_ERROR if the event was handled successfully
+     *         CHIP_ERROR_INVALID_ARGUMENT if the event is not supported
+     */
+    CHIP_ERROR HandlePowerEvent(PowerEvent event);
 
     static WifiSleepManager mInstance;
 

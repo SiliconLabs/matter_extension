@@ -37,12 +37,8 @@ public:
     /**
      * Must hold the header plus complete argument value
      */
-    Protocol(Storage & store) : mStore(store) {}
-    virtual ~Protocol()                                                  = default;
-    virtual bool Execute(ByteSpan & request, MutableByteSpan & response) = 0;
-
-protected:
-    Storage & mStore;
+    virtual ~Protocol()                                                                   = default;
+    virtual bool Execute(Storage * store, ByteSpan & request, MutableByteSpan & response) = 0;
 };
 
 //------------------------------------------------------------------------------
@@ -55,15 +51,14 @@ class Protocol1 : public Protocol
 public:
     static constexpr size_t kVersion = 1;
 
-    Protocol1(Storage & store) : Protocol(store) {}
-    virtual bool Execute(ByteSpan & request, MutableByteSpan & response);
+    virtual bool Execute(Storage * store, ByteSpan & request, MutableByteSpan & response);
 
 private:
-    CHIP_ERROR Init(Encoding::Buffer & in, Encoding::Buffer & out);
-    CHIP_ERROR GenerateCSR(Encoding::Buffer & in, Encoding::Buffer & out);
-    CHIP_ERROR Import(Encoding::Buffer & in, Encoding::Buffer & out);
-    CHIP_ERROR Setup(Encoding::Buffer & in, Encoding::Buffer & out);
-    CHIP_ERROR Read(Encoding::Buffer & in, Encoding::Buffer & out);
+    CHIP_ERROR Init(Storage * store, Encoding::Buffer & in, Encoding::Buffer & out);
+    CHIP_ERROR GenerateCSR(Storage * store, Encoding::Buffer & in, Encoding::Buffer & out);
+    CHIP_ERROR Import(Storage * store, Encoding::Buffer & in, Encoding::Buffer & out);
+    CHIP_ERROR Setup(Storage * store, Encoding::Buffer & in, Encoding::Buffer & out);
+    CHIP_ERROR Read(Storage * store, Encoding::Buffer & in, Encoding::Buffer & out);
 };
 
 #endif // SILABS_PROVISION_PROTOCOL_V1
@@ -97,8 +92,7 @@ public:
     static constexpr size_t kResponseHeaderSize = 8;
     static_assert(kPackageSizeMax > (kResponseHeaderSize + kChecksumSize));
 
-    Protocol2(Storage & store) : Protocol(store) {}
-    virtual bool Execute(ByteSpan & request, MutableByteSpan & response);
+    virtual bool Execute(Storage * store, ByteSpan & request, MutableByteSpan & response);
 };
 
 } // namespace Provision

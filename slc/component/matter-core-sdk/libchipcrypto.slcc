@@ -54,8 +54,15 @@ template_contribution:
     - name: psa_key_slots
       value:
         name: psa_key_slots_matter
+        count: 30
+      condition: [wf200_ncp, psa_crypto]
+    - name: psa_key_slots
+      value:
+        name: psa_key_slots_matter
         count: 22
       condition:
         - psa_crypto
+      unless:
+        - wf200_ncp
 ui_hints:
     visibility: never

@@ -931,7 +931,7 @@ void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
 #if SL_WIFI
             chip::app::DnssdServer::Instance().StartServer();
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
-            WifiSleepManager::GetInstance().VerifyAndTransitionToLowPowerMode();
+            WifiSleepManager::GetInstance().VerifyAndTransitionToLowPowerMode(WifiSleepManager::PowerEvent::kConnectivityChange);
 #endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 #endif // SL_WIFI
 
@@ -946,12 +946,12 @@ void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
 
     case DeviceEventType::kCommissioningComplete: {
 #if SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
-        WifiSleepManager::GetInstance().VerifyAndTransitionToLowPowerMode();
+        WifiSleepManager::GetInstance().VerifyAndTransitionToLowPowerMode(WifiSleepManager::PowerEvent::kCommissioningComplete);
 #endif // SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
 
 // SL-Only
 #ifdef SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
-#if defined(SL_MATTER_ZIGBEE_CMP) && defined(_SILICON_LABS_32B_SERIES_3)
+#if defined(SL_MATTER_ZIGBEE_CMP) && !defined(SL_CATALOG_RAIL_UTIL_IEEE802154_FAST_CHANNEL_SWITCHING_PRESENT)
         uint8_t channel = otLinkGetChannel(DeviceLayer::ThreadStackMgrImpl().OTInstance());
         Zigbee::RequestStart(channel);     // leave handle internally
 #elif defined(SL_MATTER_ZIGBEE_SEQUENTIAL) // Matter Zigbee sequential

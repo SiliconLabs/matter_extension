@@ -47,6 +47,8 @@
     ::chip::Tracing::Silabs::SilabsTracer::Instance().TimeTraceInstant(operation, error)
 
 #define SILABS_TRACE_FLUSH_ALL() ::chip::Tracing::Silabs::SilabsTracer::Instance().TraceBufferFlushAll()
+#define SILABS_TRACE_REGISTER(operationKey)                                                                                        \
+    ::chip::Tracing::Silabs::SilabsTracer::Instance().RegisterAppTimeTraceOperation(operationKey)
 
 #else // MATTER_TRACING_ENABLED
 
@@ -63,5 +65,6 @@
 #define SILABS_TRACE_INSTANT_ERROR(operation, error) _MATTER_TRACE_DISABLE(operation, error)
 
 #define SILABS_TRACE_FLUSH_ALL() _MATTER_TRACE_DISABLE()
+#define SILABS_TRACE_REGISTER(operationKey) _MATTER_TRACE_DISABLE(operationKey)
 
 #endif // MATTER_TRACING_ENABLED

@@ -270,6 +270,7 @@ class InitCommand(Command):
 
     def __init__(self, paths, args):
         super().__init__(paths, args, Command.INIT, 'Init')
+        self.put(ID.kBufferSize)
         self.put(ID.kFlashAddress)
         self.put(ID.kFlashSize)
         self.put(ID.kFlashPageSize, True, True)

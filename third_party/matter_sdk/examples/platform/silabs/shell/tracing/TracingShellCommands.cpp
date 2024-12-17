@@ -18,6 +18,7 @@
 #include <lib/shell/Command.h>
 #include <lib/shell/Engine.h>
 #include <lib/shell/commands/Help.h>
+#include <lib/support/Span.h>
 #include <platform/silabs/tracing/SilabsTracing.h>
 
 using namespace chip;
@@ -29,6 +30,7 @@ using Shell::streamer_printf;
 namespace {
 
 using TimeTraceOperation = Tracing::Silabs::TimeTraceOperation;
+using SilabsTracer       = Tracing::Silabs::SilabsTracer;
 
 TimeTraceOperation StringToTimeTraceOperation(const char * str)
 {
@@ -144,9 +146,11 @@ CHIP_ERROR TracingHelpHandler(int argc, char ** argv)
 
 CHIP_ERROR TracingListTimeOperations(int argc, char ** argv)
 {
-    for (size_t i = 0; i < static_cast<size_t>(TimeTraceOperation::kNumTraces); ++i)
+    size_t TotalTraceNumber =
+        to_underlying(TimeTraceOperation::kNumTraces) + SilabsTracer::Instance().GetRegisteredAppOperationsCount();
+    for (size_t i = 0; i < TotalTraceNumber; ++i)
     {
-        streamer_printf(streamer_get(), "Operation: %s\r\n", TimeTraceOperationToString(static_cast<TimeTraceOperation>(i)));
+        streamer_printf(streamer_get(), "Operation: %s\r\n", Tracing::Silabs::TimeTraceOperationToString(i));
     }
     return CHIP_NO_ERROR;
 }
@@ -164,14 +168,20 @@ CHIP_ERROR TracingCommandHandler(int argc, char ** argv)
 CHIP_ERROR WatermarksCommandHandler(int argc, char ** argv)
 {
     CHIP_ERROR error = CHIP_NO_ERROR;
+    if (argc == 0 || argv == nullptr || argv[0] == nullptr)
+    {
+        streamer_printf(streamer_get(), "Usage: tracing watermarks <TimeTraceOperation>\r\n");
+        return CHIP_ERROR_INVALID_ARGUMENT;
+    }
+
     if (strcmp(argv[0], "all") == 0)
     {
-        error = Tracing::Silabs::SilabsTracer::Instance().OutputAllWaterMarks();
+        error = SilabsTracer::Instance().OutputAllWaterMarks();
     }
     else
     {
         TimeTraceOperation operation = StringToTimeTraceOperation(argv[0]);
-        error                        = Tracing::Silabs::SilabsTracer::Instance().OutputWaterMark(operation);
+        error                        = SilabsTracer::Instance().OutputWaterMark(operation);
     }
     return error;
 }
@@ -179,14 +189,31 @@ CHIP_ERROR WatermarksCommandHandler(int argc, char ** argv)
 CHIP_ERROR FlushCommandHandler(int argc, char ** argv)
 {
     CHIP_ERROR error = CHIP_NO_ERROR;
+    size_t index;
+    if (argc == 0 || argv == nullptr || argv[0] == nullptr)
+    {
+        streamer_printf(streamer_get(), "Usage: tracing flush <TimeTraceOperation>\r\n");
+        return CHIP_ERROR_INVALID_ARGUMENT;
+    }
+
+    CharSpan opKey(argv[0], sizeof(argv[0]));
     if (strcmp(argv[0], "all") == 0)
     {
-        error = Tracing::Silabs::SilabsTracer::Instance().TraceBufferFlushAll();
+        error = SilabsTracer::Instance().TraceBufferFlushAll();
+    }
+    else if (CHIP_NO_ERROR == SilabsTracer::Instance().FindAppOperationIndex(opKey, index))
+    {
+        SilabsTracer::Instance().TraceBufferFlushByOperation(opKey);
     }
     else
     {
         TimeTraceOperation operation = StringToTimeTraceOperation(argv[0]);
-        error                        = Tracing::Silabs::SilabsTracer::Instance().TraceBufferFlushByOperation(operation);
+        if (operation == TimeTraceOperation::kNumTraces)
+        {
+            streamer_printf(streamer_get(), "Unknown Operation Key\r\n");
+            return CHIP_ERROR_INVALID_ARGUMENT;
+        }
+        error = SilabsTracer::Instance().TraceBufferFlushByOperation(to_underlying(operation));
     }
     return error;
 }

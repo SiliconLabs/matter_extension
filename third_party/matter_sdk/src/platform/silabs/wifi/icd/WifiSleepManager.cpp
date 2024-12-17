@@ -32,13 +32,14 @@ namespace {
  */
 CHIP_ERROR ConfigureLIBasedSleep()
 {
+    VerifyOrReturnError(ConfigureBroadcastFilter(true) == SL_STATUS_OK, CHIP_ERROR_INTERNAL,
+                        ChipLogError(DeviceLayer, "Failed to configure broadcasts filter."));
+    
+    // Allowing the device to go to sleep must be the last actions to avoid configuration failures.
     VerifyOrReturnError(ConfigurePowerSave(RSI_SLEEP_MODE_2, ASSOCIATED_POWER_SAVE,
                                            chip::ICDConfigurationData::GetInstance().GetSlowPollingInterval().count()) ==
                             SL_STATUS_OK,
                         CHIP_ERROR_INTERNAL, ChipLogError(DeviceLayer, "Failed to enable LI based sleep."));
-
-    VerifyOrReturnError(ConfigureBroadcastFilter(true) == SL_STATUS_OK, CHIP_ERROR_INTERNAL,
-                        ChipLogError(DeviceLayer, "Failed to configure broadcasts filter."));
 
     return CHIP_NO_ERROR;
 }
@@ -51,11 +52,12 @@ CHIP_ERROR ConfigureLIBasedSleep()
  */
 CHIP_ERROR ConfigureDTIMBasedSleep()
 {
-    VerifyOrReturnError(ConfigurePowerSave(RSI_SLEEP_MODE_2, ASSOCIATED_POWER_SAVE, 0) == SL_STATUS_OK, CHIP_ERROR_INTERNAL,
-                        ChipLogError(DeviceLayer, "Failed to enable to enable DTIM basedsleep."));
-
     VerifyOrReturnError(ConfigureBroadcastFilter(false) == SL_STATUS_OK, CHIP_ERROR_INTERNAL,
                         ChipLogError(DeviceLayer, "Failed to configure broadcast filter."));
+
+    // Allowing the device to go to sleep must be the last actions to avoid configuration failures.
+    VerifyOrReturnError(ConfigurePowerSave(RSI_SLEEP_MODE_2, ASSOCIATED_POWER_SAVE, 0) == SL_STATUS_OK, CHIP_ERROR_INTERNAL,
+                        ChipLogError(DeviceLayer, "Failed to enable to enable DTIM basedsleep."));
 
     return CHIP_NO_ERROR;
 }
@@ -108,7 +110,7 @@ CHIP_ERROR WifiSleepManager::RequestHighPerformance()
 
     mHighPerformanceRequestCounter++;
 
-    // We don't do the mHighPerformanceRequestCounter check here; the check is in TransitionToLowPowerMode function
+    // We don't do the mHighPerformanceRequestCounter check here; the check is in VerifyAndTransitionToLowPowerMode function
     ReturnErrorOnFailure(VerifyAndTransitionToLowPowerMode());
 
     return CHIP_NO_ERROR;
@@ -121,14 +123,34 @@ CHIP_ERROR WifiSleepManager::RemoveHighPerformanceRequest()
 
     mHighPerformanceRequestCounter--;
 
-    // We don't do the mHighPerformanceRequestCounter check here; the check is in TransitionToLowPowerMode function
+    // We don't do the mHighPerformanceRequestCounter check here; the check is in VerifyAndTransitionToLowPowerMode function
     ReturnErrorOnFailure(VerifyAndTransitionToLowPowerMode());
 
     return CHIP_NO_ERROR;
 }
 
-CHIP_ERROR WifiSleepManager::VerifyAndTransitionToLowPowerMode()
+CHIP_ERROR WifiSleepManager::HandlePowerEvent(PowerEvent event)
 {
+    switch (event)
+    {
+    case PowerEvent::kCommissioningComplete:
+        ChipLogProgress(AppServer, "WifiSleepManager: Handling Commissioning Complete Event");
+        mIsCommissioningInProgress = false;
+        break;
+    case PowerEvent::kConnectivityChange:
+    case PowerEvent::kGenericEvent:
+        // No additional processing needed for these events at the moment
+        break;
+    default:
+        ChipLogError(AppServer, "Unknown Power Event");
+        return CHIP_ERROR_INVALID_ARGUMENT;
+    }
+    return CHIP_NO_ERROR;
+}
+
+CHIP_ERROR WifiSleepManager::VerifyAndTransitionToLowPowerMode(PowerEvent event)
+{
+    ReturnErrorOnFailure(HandlePowerEvent(event));
 
 #if SLI_SI917 // 917 SoC & NCP
     if (mHighPerformanceRequestCounter > 0)

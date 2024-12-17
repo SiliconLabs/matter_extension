@@ -15,7 +15,6 @@ provides:
 conflicts:
   - name: matter_crypto_tinycrypt_siwx917
 
-component_root_path: "third_party/matter_sdk"
 
 requires:
   # PSA crypto components

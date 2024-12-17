@@ -36,6 +36,7 @@
 #include <assert.h>
 
 #include <platform/silabs/platformAbstraction/SilabsPlatform.h>
+#include <platform/silabs/tracing/SilabsTracingMacros.h>
 
 #include <setup_payload/QRCodeSetupPayloadGenerator.h>
 #include <setup_payload/SetupPayload.h>
@@ -96,6 +97,9 @@ CHIP_ERROR AppTask::Init()
     CHIP_ERROR err = CHIP_NO_ERROR;
     app::SetAttributePersistenceProvider(&gDeferredAttributePersister);
     chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(AppTask::ButtonEventHandler);
+    char rebootLightOnKey[] = "Reboot->LightOn";
+    CharSpan rebootLighOnSpan(rebootLightOnKey);
+    SILABS_TRACE_REGISTER(rebootLighOnSpan);
 
 #ifdef DISPLAY_ENABLED
     GetLCD().Init((uint8_t *) "CMP-Lighting-App");
@@ -125,6 +129,7 @@ CHIP_ERROR AppTask::Init()
 
     sLightLED.Init(LIGHT_LED);
     sLightLED.Set(LightMgr().IsLightOn());
+    SILABS_TRACE_INSTANT(rebootLighOnSpan);
 
 // Update the LCD with the Stored value. Show QR Code if not provisioned
 #ifdef DISPLAY_ENABLED
@@ -141,7 +146,8 @@ CHIP_ERROR AppTask::Init()
 #endif // QR_CODE_ENABLED
 #endif
 #ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
-#if defined(SL_MATTER_ZIGBEE_SEQUENTIAL) || (defined(SL_MATTER_ZIGBEE_CMP) && defined(_SILICON_LABS_32B_SERIES_3))
+#if defined(SL_MATTER_ZIGBEE_SEQUENTIAL) ||                                                                                        \
+    (defined(SL_MATTER_ZIGBEE_CMP) && !defined(SL_CATALOG_RAIL_UTIL_IEEE802154_FAST_CHANNEL_SWITCHING_PRESENT))
     PlatformMgr().LockChipStack();
     uint16_t nbOfMatterFabric = chip::Server::GetInstance().GetFabricTable().FabricCount();
     PlatformMgr().UnlockChipStack();
@@ -156,7 +162,7 @@ CHIP_ERROR AppTask::Init()
 #endif // SL_MATTER_ZIGBEE_CMP
     }
     else
-#endif // SL_MATTER_ZIGBEE_SEQUENTIAL || (SL_MATTER_ZIGBEE_CMP && _SILICON_LABS_32B_SERIES_3)
+#endif // SL_MATTER_ZIGBEE_SEQUENTIAL || (SL_MATTER_ZIGBEE_CMP && !SL_CATALOG_RAIL_UTIL_IEEE802154_FAST_CHANNEL_SWITCHING_PRESENT)
     {
         Zigbee::RequestStart();
     }

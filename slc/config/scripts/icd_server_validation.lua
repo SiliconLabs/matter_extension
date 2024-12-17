@@ -1,7 +1,7 @@
 local lit = slc.config("CHIP_CONFIG_ENABLE_ICD_LIT").value
 local cip = slc.config("CHIP_CONFIG_ENABLE_ICD_CIP").value
 local uat = slc.config("CHIP_CONFIG_ENABLE_ICD_UAT").value
-local active_mode_threshold = slc.config("SL_ACTIVE_MODE_THRESHOLD").value
+local active_mode_threshold = tonumber(slc.config("SL_ACTIVE_MODE_THRESHOLD").value)
 local const_min_active_mode_threshold = 5000
 
 
@@ -19,7 +19,7 @@ if lit == "1" and uat ~= "1" then
                       nil
     )
 end
-if lit == "1" and autonumber_common.autonumber(active_mode_threshold) < const_min_active_mode_threshold then
+if lit == "1" and active_mode_threshold < const_min_active_mode_threshold then
     validation.error("SL_ACTIVE_MODE_THRESHOLD must greater than 5 seconds.",
                       validation.target_for_project(),
                       "Increase SL_ACTIVE_MODE_THRESHOLD within configuration settings.",

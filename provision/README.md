@@ -153,18 +153,19 @@ file defines the well-known (default) parameters used by the automatic provision
 | -pf, --prod_fw            | optional             | dec/hex            | Path to the Production Firmware image.                                                   |
 | -ct, --cert_tool          | optional             | string             | Path to the chip-cert tool. Defaults to `../out/tools/chip-cert`          |
 | -jl, --pylink_lib         | optional             | string             | Path to the PyLink library.  |
-| -sn,  --serial_number     | optional             | string             | Serial Number.          |
-| -vi,  --vendor_id         | optional             | dec/hex            | Vendor ID. e.g: 65521 or 0xFFF1 (Max 2 bytes).                              |
-| -vn,  --vendor_name       | optional             | string             | Vendor name (Max 32 char).                                                  |
-| -pi,  --product_id        | optional             | dec/hex            | Product ID. e.g: 32773 or 0x8005 (Max 2 bytes).                             |
-| -pn,  --product_name      | optional             | string             | Product name (Max 32 char).                                                 |
+| -bz, --buffer_size        | optional             | string             | Size of the buffer used to hold transmitted arguments.  |
+| -sn, --serial_number      | optional             | string             | Serial Number.          |
+| -vi, --vendor_id          | optional             | dec/hex            | Vendor ID. e.g: 65521 or 0xFFF1 (Max 2 bytes).                              |
+| -vn, --vendor_name        | optional             | string             | Vendor name (Max 32 char).                                                  |
+| -pi, --product_id         | optional             | dec/hex            | Product ID. e.g: 32773 or 0x8005 (Max 2 bytes).                             |
+| -pn, --product_name       | optional             | string             | Product name (Max 32 char).                                                 |
 | -pl, --product_label      | optional             | string             | Product label.                |
 | -pu, --product_url        | optional             | string             | Product URL.                |
 | -pm, --part_number        | optional             | dec/hex            | Device Part Number (Max 32 char).                                               |
 | -hv, --hw_version         | optional             | dec/hex            | The hardware version value (Max 2 bytes).                                       |
 | -hs, --hw_version_str     | optional             | string             | The hardware version string (Max 64 char).                                      |
 | -md, --manufacturing_date | optional             | string             | Manufacturing date.                |
-| -ui, --unique_id         | optional<sup>5</sup> | hex string          | Rotating Device ID's UniqueID (128-bits hex string). Not to be confused with the Basic Information cluster's UniqueId. |
+| -ui, --unique_id          | optional<sup>5</sup> | hex string         | Rotating Device ID's UniqueID (128-bits hex string). Not to be confused with the Basic Information cluster's UniqueId. |
 | -sd,  --discriminator     | optional<sup>2</sup> | dec/hex            | BLE pairing discriminator. e.g: 3840 or 0xF00. (12-bit)                                 |
 | -sp, --spake2p_passcode   | required             | dec/hex            | Session passcode used to generate the SPAKE2+ verifier.        |
 | -si, --spake2p_iterations | required             | dec/hex            | Iteration count used to generate the SPAKE2+ verifier.                  |

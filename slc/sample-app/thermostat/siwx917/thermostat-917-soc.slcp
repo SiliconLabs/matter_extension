@@ -233,3 +233,6 @@ tag:
 
 post_build:
   path: ../../../postbuild/matter_wifi_soc.slpb
+
+other_file:
+  - path: ../../../image/qr_code_img.png

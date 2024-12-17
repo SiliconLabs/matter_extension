@@ -42,7 +42,7 @@ struct TimeTracker
     // Temporary values
     System::Clock::Milliseconds32 mStartTime;
     System::Clock::Milliseconds32 mEndTime;
-    TimeTraceOperation mOperation;
+    size_t mOperation;
     OperationType mType;
     CHIP_ERROR mError;
 
@@ -52,14 +52,14 @@ struct TimeTracker
      * @param buffer The buffer to write the string to
      * @return The number of characters written to the buffer, or the size of the buffer required if the buffer is too small
      */
-    int ToCharArray(MutableByteSpan & buffer) const;
+    int ToCharArray(MutableCharSpan & buffer) const;
 
     /** @brief Get the size of the string representation of the TimeTracker
      * @return The size of the string representation of the TimeTracker
      */
     int GetSize() const
     {
-        MutableByteSpan temp;
+        MutableCharSpan temp;
         return ToCharArray(temp);
     }
 };
@@ -80,9 +80,11 @@ struct Watermark
 class SilabsTracer
 {
 public:
-    static constexpr size_t kNumTraces         = to_underlying(TimeTraceOperation::kNumTraces);
-    static constexpr size_t kMaxBufferedTraces = 64;
-    static constexpr size_t kMaxTraceSize      = 128;
+    static constexpr size_t kNumTraces                = to_underlying(TimeTraceOperation::kNumTraces);
+    static constexpr size_t kMaxAppOperationKeys      = 5;
+    static constexpr size_t kMaxAppOperationKeyLength = 16;
+    static constexpr size_t kMaxBufferedTraces        = 64;
+    static constexpr size_t kMaxTraceSize             = 128;
 
     /** @brief Get the singleton instance of SilabsTracer */
     static SilabsTracer & Instance() { return sInstance; }
@@ -130,6 +132,12 @@ public:
     {
         return TimeTraceInstant(aOperation, ChipError((error)));
     }
+    /** @brief TimeTraceInstant
+     *  We currently allow to register App specific operations to be tracked by the time tracer, but only for instant traces, and
+     * not for watermarks.
+     * @param appOperation The name of the app operation key to generate a trace for
+     */
+    CHIP_ERROR TimeTraceInstant(CharSpan & appOperationKey, CHIP_ERROR error = CHIP_NO_ERROR);
 
     /** @brief Output a time tracker
      * This will output the latest time tracker for a specific operation, without affecting the buffer.
@@ -162,7 +170,8 @@ public:
      *  @param aOperation The operation to flush traces for
      *  @return CHIP_ERROR, returns CHIP_ERROR_UNINITIALIZED if the logs are not initialized
      */
-    CHIP_ERROR TraceBufferFlushByOperation(TimeTraceOperation aOperation);
+    CHIP_ERROR TraceBufferFlushByOperation(size_t aOperation);
+    CHIP_ERROR TraceBufferFlushByOperation(CharSpan & appOperationKey);
 
     // prevent copy constructor and assignment operator
     SilabsTracer(SilabsTracer const &)             = delete;
@@ -192,7 +201,29 @@ public:
      */
     Watermark GetWatermark(TimeTraceOperation aOperation) { return mWatermarks[to_underlying(aOperation)]; }
     size_t GetTimeTracesCount() { return mBufferedTrackerCount; }
-    CHIP_ERROR GetTraceByOperation(TimeTraceOperation aOperation, MutableByteSpan & buffer) const;
+
+    CHIP_ERROR GetTraceByOperation(size_t aOperation, MutableCharSpan & buffer) const;
+    CHIP_ERROR GetTraceByOperation(CharSpan & appOperationKey, MutableCharSpan & buffer) const;
+
+    /** @brief Register an App specific time trace operation
+     * This will register an App specific operation to be tracked by the time tracer. The string will be mapped to a
+     * TimeTraceOperation higher than the kNumTraces value.
+     *  @param appOperationKey The key of the custom operation, can only be in the array once
+     * @return CHIP_ERROR, returns CHIP_ERROR_BUFFER_TOO_SMALL if the key is too long, CHIP_ERROR_NO_MEMORY if the buffer is full,
+     * and CHIP_ERROR_INVALID_ARGUMENT if the key is null or already in the array.
+     */
+    CHIP_ERROR RegisterAppTimeTraceOperation(CharSpan & appOperationKey);
+
+    /** @brief Find the index of a custom operation
+     * @param appOperation The key of the custom operation to find
+     *  @param index The index of the custom operation
+     *  @return CHIP_ERROR, returns CHIP_ERROR_NOT_FOUND if the buffer is full, the index will be set to the maximum number of
+     * custom operations if the operationis not found
+     */
+    CHIP_ERROR FindAppOperationIndex(CharSpan & appOperationKey, size_t & index) const;
+
+    inline size_t GetRegisteredAppOperationsCount() { return mAppOperationKeyCount; }
+    inline char * GetAppOperationKey(size_t index) { return mAppOperationKeys[index]; }
 
 private:
     struct TimeTrackerList
@@ -254,6 +285,10 @@ private:
 
     size_t mBufferedTrackerCount = 0;
 
+    // App specific Operation keys buffer
+    char mAppOperationKeys[SilabsTracer::kMaxAppOperationKeys][SilabsTracer::kMaxAppOperationKeyLength];
+    size_t mAppOperationKeyCount = 0;
+
     /** @brief Clear the trace buffer */
     void TraceBufferClear();
 
@@ -268,6 +303,7 @@ private:
 };
 
 const char * TimeTraceOperationToString(TimeTraceOperation operation);
+const char * TimeTraceOperationToString(size_t operation);
 
 } // namespace Silabs
 } // namespace Tracing

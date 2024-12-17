@@ -18,7 +18,6 @@ component:
 - instance: [vcom]
   id: uartdrv_eusart
 #Zigbee Components
-- id: zigbee_basic
 - id: zigbee_ble_dmp_cli
 - id: zigbee_address_table
 - id: zigbee_application_bootloader
@@ -120,10 +119,15 @@ requires:
     condition: [device_series_2]
   - name: matter_drivers_series_2
     condition: [device_series_3]
-  - name: rail_util_ieee802154_fast_channel_switching
-    condition: [device_series_2]
-  - name: rail_util_dma
-    condition: [device_series_2]
+
+# RAIL components that enable Concurrent Listening 
+# These are disabled by default until the OTA Bootloader issue 1385197 is fixed
+# !!! WARNING: Enabling these components requires that the device is running a
+# bootloader built with BOOTLOADER_MSC_DMA_WRITE set to false !!!
+# - name: rail_util_ieee802154_fast_channel_switching
+#   condition: [device_series_2]
+# - name: rail_util_dma
+#   condition: [device_series_2]
 
 toolchain_settings:
   - option: cxx_standard

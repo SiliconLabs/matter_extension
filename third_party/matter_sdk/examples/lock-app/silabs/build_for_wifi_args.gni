@@ -30,5 +30,7 @@ sl_use_subscription_syncing = true
 
 # ICD Matter Configuration flags
 sl_idle_mode_duration_s = 600  # 10min Idle Mode Duration
-sl_active_mode_duration_ms = 10000  # 10s Active Mode Duration
-sl_active_mode_threshold_ms = 1000  # 1s Active Mode Threshold
+sl_active_mode_duration_ms = 0  # 0ms Active Mode Duration
+sl_active_mode_threshold_ms = 0  # 1s Active Mode Threshold
+
+sl_transport_idle_interval_ms = 3000  # 3s Transport Idle Interval

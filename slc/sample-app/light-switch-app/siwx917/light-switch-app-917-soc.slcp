@@ -99,8 +99,9 @@ component:
   - id: matter_default_lcd_config
     from: matter
   # ICD configurations
-  - id: matter_icd_core
-    from: matter
+  # MATTER-4257 : Disabling ICD for light-switch as Button1 is not working as expected for 917SoC Sleepy apps.
+#  - id: matter_icd_core
+#    from: matter
   - id: matter_test_event_trigger
     from: matter
   - id: matter_icd_management
@@ -251,3 +252,6 @@ tag:
 
 post_build:
   path: ../../../postbuild/matter_wifi_soc.slpb
+
+other_file:
+  - path: ../../../image/qr_code_img.png

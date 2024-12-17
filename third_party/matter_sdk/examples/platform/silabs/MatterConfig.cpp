@@ -48,12 +48,12 @@
 #include "MemMonitoring.h"
 #endif
 
-#if ((defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1) || defined(EXP_BOARD))
+#if RS911X_WIFI
 #include <platform/silabs/wifi/wiseconnect-abstraction/WiseconnectInterfaceAbstraction.h>
-#if !defined(EXP_BOARD)
+#if (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
 #include <platform/silabs/SiWx917/SiWxPlatformInterface.h>
-#endif //! defined(EXP_BOARD)
-#endif // ( ( defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1 ) || defined(EXP_BOARD) )
+#endif // (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
+#endif // RS911X_WIFI
 
 #include <crypto/CHIPCryptoPAL.h>
 // If building with the EFR32-provided crypto backend, we can use the
@@ -338,6 +338,9 @@ CHIP_ERROR SilabsMatterConfig::InitMatter(const char * appName)
     // Register ReadHandler::ApplicationCallback
     app::InteractionModelEngine::GetInstance()->RegisterReadHandlerAppCallback(
         &app::Silabs::ApplicationSleepManager::GetInstance());
+
+    // Register ICDStateObserver
+    chip::Server::GetInstance().GetICDManager().RegisterObserver(&app::Silabs::ApplicationSleepManager::GetInstance());
 #endif // SL_MATTER_ENABLE_APP_SLEEP_MANAGER
 
     // Init Matter Server and Start Event Loop
@@ -374,9 +377,9 @@ CHIP_ERROR SilabsMatterConfig::InitWiFi(void)
 #endif // SL_WFX_USE_SECURE_LINK
 #endif // WF200_WIFI
 
-#if ((defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1) || defined(EXP_BOARD))
+#if (RS911X_WIFI)
     VerifyOrReturnError(sl_matter_wifi_platform_init() == SL_STATUS_OK, CHIP_ERROR_INTERNAL);
-#endif // ( ( defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1 ) || defined(EXP_BOARD) )
+#endif // (RS911X_WIFI))
 
     return CHIP_NO_ERROR;
 }
@@ -388,7 +391,9 @@ CHIP_ERROR SilabsMatterConfig::InitWiFi(void)
 extern "C" void vApplicationIdleHook(void)
 {
 #if (SLI_SI91X_MCU_INTERFACE && CHIP_CONFIG_ENABLE_ICD_SERVER)
+#ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
     SiWxPlatformInterface::sl_si91x_btn_event_handler();
+#endif  //SL_CATALOG_SIMPLE_BUTTON_PRESENT
     SiWxPlatformInterface::sl_si91x_uart_power_requirement_handler();
 #endif
 }

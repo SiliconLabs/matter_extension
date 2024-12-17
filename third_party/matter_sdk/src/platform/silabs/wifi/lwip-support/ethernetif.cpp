@@ -414,7 +414,7 @@ static err_t low_level_output(struct netif * netif, struct pbuf * p)
     status = wfx_rsi_send_data(packet, datalength);
     if (status != 0)
     {
-        ChipLogError(DeviceLayer, "*ERR*EN-RSI:Send fail: %ld", status);
+        ChipLogError(DeviceLayer, "wfx_rsi_send_data failed: %ld", status);
         xSemaphoreGive(ethout_sem);
         return ERR_IF;
     }

@@ -1,7 +1,7 @@
 id: matter_crypto_tinycrypt_siwx917
 label: Matter MbedTLS Integration
 description: >
-  mbedlts and Tinycrypt for SiWx917 SoC
+  mbedtls and Tinycrypt for SiWx917 SoC
 package: "Matter"
 category: "Matter-WiFi|Platform|Tinycrypt"
 quality: production
@@ -13,144 +13,58 @@ provides:
   - name: matter_crypto_tinycrypt_siwx917
 
 requires:
+  # mbedTLS components
   - name: mbedtls_config
+  - name: mbedtls_source
+  - name: mbedtls_platform_dynamic_memory_allocation_config_init_runtime
+
+  - name: mbedtls_aes
+  - name: mbedtls_asn1
+  - name: mbedtls_base64
+  - name: mbedtls_ccm
+  - name: mbedtls_cipher
+  - name: mbedtls_ecdh
+  - name: mbedtls_ecdsa
+  - name: mbedtls_ecc
+  - name: mbedtls_error
+  - name: mbedtls_hash
+  - name: mbedtls_hkdf
+  - name: mbedtls_jpake
+  - name: mbedtls_mpi
+  - name: mbedtls_oid
+  - name: mbedtls_pem
+  - name: mbedtls_pkcs5
+  - name: mbedtls_pki
+  - name: mbedtls_random
+  - name: mbedtls_sha256
+  - name: mbedtls_sha512
+  - name: mbedtls_version
+  - name: mbedtls_x509
+
+  # Wiseconnect SDK 3.xx.xx components
+  - name: sl_si91x_trng
 
 conflicts:
   - name: matter_crypto_psa_siwx917
 
 source:
+  # tinycrypt source
   - path: third_party/matter_sdk/src/platform/silabs/SiWx917/CHIPCryptoPALTinyCrypt.cpp
-  - path: third_party/mbedtls/library/aes.c
-  - path: third_party/mbedtls/library/asn1parse.c
-  - path: third_party/mbedtls/library/asn1write.c
-  - path: third_party/mbedtls/library/base64.c
-  - path: third_party/mbedtls/library/bignum.c
-  - path: third_party/mbedtls/library/ccm.c
-  - path: third_party/mbedtls/library/cipher.c
-  - path: third_party/mbedtls/library/cipher_wrap.c
-  - path: third_party/mbedtls/library/constant_time.c
-  - path: third_party/mbedtls/library/ctr_drbg.c
-  - path: third_party/mbedtls/library/ecdh.c
-  - path: third_party/mbedtls/library/ecdsa.c
-  - path: third_party/mbedtls/library/ecp.c
-  - path: third_party/mbedtls/library/ecp_curves.c
-  - path: third_party/mbedtls/library/entropy.c
-  - path: third_party/mbedtls/library/hkdf.c
-  - path: third_party/mbedtls/library/hmac_drbg.c
-  - path: third_party/mbedtls/library/md.c
-  - path: third_party/mbedtls/library/pem.c
-  - path: third_party/mbedtls/library/pkcs5.c
-  - path: third_party/mbedtls/library/platform.c
-  - path: third_party/mbedtls/library/sha256.c
-  - path: third_party/mbedtls/library/sha512.c
-  - path: third_party/mbedtls/library/x509.c
-  - path: third_party/mbedtls/library/x509_create.c
   - path: third_party/matter_support/matter/mbedtls/tinycrypt/src/ecc.c
   - path: third_party/matter_support/matter/mbedtls/tinycrypt/src/ecc_dh.c
   - path: third_party/matter_support/matter/mbedtls/tinycrypt/src/ecc_dsa.c
-  - path: third_party/matter_support/matter/mbedtls/tinycrypt/src/error.c
-  - path: third_party/matter_support/matter/mbedtls/tinycrypt/src/oid.c
-  - path: third_party/matter_support/matter/mbedtls/tinycrypt/src/pk.c
-  - path: third_party/matter_support/matter/mbedtls/tinycrypt/src/pk_wrap.c
-  - path: third_party/matter_support/matter/mbedtls/tinycrypt/src/pkparse.c
-  - path: third_party/matter_support/matter/mbedtls/tinycrypt/src/pkwrite.c
-  - path: third_party/matter_support/matter/mbedtls/tinycrypt/src/platform_util.c
-  - path: third_party/matter_support/matter/mbedtls/tinycrypt/src/x509_crt.c
-  - path: third_party/matter_support/matter/mbedtls/tinycrypt/src/x509write_csr.c
-  - path: third_party/mbedtls/library/base64.c
-    condition: [matter_dic]
-  - path: third_party/mbedtls/library/debug.c
-    condition: [matter_dic]
-  - path: third_party/mbedtls/library/ecjpake.c
-    condition: [matter_dic]
-  - path: third_party/mbedtls/library/pem.c
-    condition: [matter_dic]
-  - path: third_party/mbedtls/library/rsa.c
-    condition: [matter_dic]
-  - path: third_party/mbedtls/library/rsa_internal.c
-    condition: [matter_dic]
-  - path: third_party/mbedtls/library/sha1.c
-    condition: [matter_dic]
-  - path: third_party/mbedtls/library/ssl_ciphersuites.c
-    condition: [matter_dic]
-  - path: third_party/mbedtls/library/ssl_cli.c
-    condition: [matter_dic]
-  - path: third_party/mbedtls/library/ssl_msg.c
-    condition: [matter_dic]
-  - path: third_party/mbedtls/library/ssl_srv.c
-    condition: [matter_dic]
-  - path: third_party/mbedtls/library/ssl_tls.c
-    condition: [matter_dic]
-  - path: third_party/mbedtls/library/x509.c
-    condition: [matter_dic]
+  - path: third_party/matter_support/matter/mbedtls/tinycrypt/src/tinycrypt_util.c
+
 include:
+  - path: third_party/matter_sdk/src/platform/silabs/SiWx917
+    file_list:
+      - path: siwx917-chip-mbedtls-config.h
   - path: third_party/matter_support/matter/mbedtls/tinycrypt/inc
     file_list:
       - path: tinycrypt/ecc.h
       - path: tinycrypt/ecc_dh.h
       - path: tinycrypt/ecc_dsa.h
-      - path: mbedtls/pk.h
-      - path: mbedtls/platform.h
-      - path: mbedtls/platform_util.h
-      - path: mbedtls/pk_internal.h
-      - path: mbedtls/oid.h
-      - path: mbedtls/check_config.h
-      - path: mbedtls/build_info.h
-  - path: third_party/mbedtls/library
-    file_list:
-      - path: common.h
-      - path: constant_time_internal.h
-      - path: constant_time_invasive.h
-      - path: ecp_invasive.h
-      - path: bignum_internal.h
-  - path: third_party/mbedtls/include
-    file_list:
-      - path: mbedtls/x509_csr.h
-      - path: mbedtls/x509_crt.h
-      - path: mbedtls/x509.h
-      - path: mbedtls/asn1.h
-      - path: mbedtls/bignum.h
-      - path: mbedtls/md.h
-      - path: mbedtls/ecp.h
-      - path: mbedtls/ecdsa.h
-      - path: mbedtls/sha256.h
-      - path: mbedtls/x509_crl.h
-      - path: mbedtls/ccm.h
-      - path: mbedtls/cipher.h
-      - path: mbedtls/ctr_drbg.h
-      - path: mbedtls/aes.h
-      - path: mbedtls/ecdh.h
-      - path: mbedtls/entropy.h
-      - path: mbedtls/error.h
-      - path: mbedtls/hkdf.h
-      - path: mbedtls/pkcs5.h
-      - path: mbedtls/sha1.h
-      - path: mbedtls/asn1write.h
-      - path: mbedtls/base64.h
-      - path: mbedtls/bn_mul.h
-      - path: mbedtls/ssl_internal.h
-      - path: mbedtls/ssl.h
-      - path: mbedtls/ssl_ciphersuites.h
-      - path: mbedtls/sha512.h
-      - path: mbedtls/ecjpake.h
-      - path: mbedtls/cipher_internal.h
-      - path: mbedtls/constant_time.h
-      - path: mbedtls/cmac.h
-      - path: mbedtls/threading.h
-      - path: mbedtls/hmac_drbg.h
-      - path: mbedtls/ecp_internal.h
-      - path: mbedtls/entropy_poll.h
-      - path: mbedtls/md_internal.h
-      - path: mbedtls/pem.h
-      - path: mbedtls/md2.h
-      - path: mbedtls/des.h
-      - path: mbedtls/md4.h
-      - path: mbedtls/md5.h
-      - path: mbedtls/ripemd160.h
-      - path: mbedtls/rsa.h
-  - path: third_party/matter_sdk/src/platform/silabs/SiWx917
-    file_list:
-      - path: siwx917-chip-mbedtls-config.h
+      - path: tinycrypt/tinycrypt_util.h
 define:
   - name: SL_MBEDTLS_USE_TINYCRYPT
     value: 1
@@ -159,76 +73,3 @@ define:
   # Using mbedtls_config forces the MBEDTLS_CONFIG_FILE defines to the generated header.
   - name: MBEDTLS_USER_CONFIG_FILE
     value: <siwx917-chip-mbedtls-config.h>
-
-# Temporary work around since we cannot use the si sdk mbedtls components
-template_contribution:
-  - name: mbedtls_config
-    value: MBEDTLS_MPI_MAX_SIZE 32
-  - name: mbedtls_config
-    value: MBEDTLS_NO_PLATFORM_ENTROPY
-  - name: mbedtls_config
-    value: MBEDTLS_AES_C
-  - name: mbedtls_config
-    value: MBEDTLS_ASN1_PARSE_C
-  - name: mbedtls_config
-    value: MBEDTLS_ASN1_WRITE_C
-  - name: mbedtls_config
-    value: MBEDTLS_BASE64_C
-  - name: mbedtls_config
-    value: MBEDTLS_CIPHER_C
-  - name: mbedtls_config
-    value: MBEDTLS_CMAC_C
-  - name: mbedtls_config
-    value: MBEDTLS_ECDSA_C
-  - name: mbedtls_config
-    value: MBEDTLS_ECP_C
-  - name: mbedtls_config
-    value: MBEDTLS_ECP_DP_SECP256R1_ENABLED
-  - name: mbedtls_config
-    value: MBEDTLS_MD_C
-  - name: mbedtls_config
-    value: MBEDTLS_BIGNUM_C
-  - name: mbedtls_config
-    value: MBEDTLS_OID_C
-  - name: mbedtls_config
-    value: MBEDTLS_PEM_PARSE_C
-  - name: mbedtls_config
-    value: MBEDTLS_PEM_WRITE_C
-  - name: mbedtls_config
-    value: MBEDTLS_PK_C
-  - name: mbedtls_config
-    value: MBEDTLS_PK_PARSE_C
-  - name: mbedtls_config
-    value: MBEDTLS_PK_WRITE_C
-  - name: mbedtls_config
-    value: MBEDTLS_PLATFORM_C
-  - name: mbedtls_config
-    value: MBEDTLS_PLATFORM_MEMORY
-  - name: mbedtls_config
-    value: MBEDTLS_ENTROPY_C
-  - name: mbedtls_config
-    value: MBEDTLS_ENTROPY_FORCE_SHA256
-  - name: mbedtls_config
-    value: MBEDTLS_ENTROPY_MAX_SOURCES 2
-  - name: mbedtls_config
-    value: MBEDTLS_CTR_DRBG_C
-  - name: mbedtls_config
-    value:  MBEDTLS_SHA256_C
-  - name: mbedtls_config
-    value:  MBEDTLS_SHA224_C
-  - name: mbedtls_config
-    value:  MBEDTLS_X509_USE_C
-  - name: mbedtls_config
-    value:  MBEDTLS_X509_CREATE_C
-  - name: mbedtls_config
-    value:  MBEDTLS_X509_CRT_PARSE_C
-  - name: mbedtls_config
-    value:  MBEDTLS_X509_CRT_WRITE_C
-  - name: mbedtls_config
-    value:  MBEDTLS_X509_CRL_PARSE_C
-  - name: mbedtls_config
-    value:  MBEDTLS_X509_CSR_PARSE_C
-  - name: mbedtls_config
-    value:  MBEDTLS_X509_CSR_WRITE_C
-
-

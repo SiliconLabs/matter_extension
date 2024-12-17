@@ -30,7 +30,7 @@ include:
   file_list:
   - path: Help.h
   - path: WiFi.h
-    condition: matter_wifi
+    condition: [matter_wifi]
 - path: third_party/matter_sdk/examples/platform/silabs
   file_list:
   - path: MatterShell.h
@@ -39,23 +39,21 @@ include:
   - path: ChipShellCollection.h
   - path: Globals.h
 - path: third_party/matter_sdk/examples/lock-app/silabs/include
+  condition: [matter_lock]
   file_list:
     - path: EventHandlerLibShell.h
-      condition:
-        - matter_lock
 - path: third_party/matter_sdk/examples/refrigerator-app/silabs/include
+  condition: [matter_refrigerator]
   file_list:
     - path: EventHandlerLibShell.h
-      condition:
-        - matter_refrigerator
 - path: third_party/matter_sdk/examples/platform/silabs/shell/icd
+  condition: [matter_icd]
   file_list:
     - path: ICDShellCommands.h
-      condition: [matter_icd]
 - path: third_party/matter_sdk/examples/platform/silabs/shell/tracing
+  condition: [matter_tracing]
   file_list:
     - path: TracingShellCommands.h
-      condition: [matter_tracing]
       
 source:
 - path: third_party/matter_sdk/examples/platform/silabs/MatterShell.cpp

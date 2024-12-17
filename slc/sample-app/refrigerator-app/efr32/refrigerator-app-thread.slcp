@@ -73,6 +73,10 @@ component:
     from: matter
   - id: matter_refrigerator_alarm
     from: matter
+  - id: matter_on_off
+    from: matter
+  - id: matter_mode_base
+    from: matter
   - id: matter_operational_credentials
     from: matter
   - id: matter_ota_support
@@ -123,6 +127,7 @@ include:
       - path: AppTask.h
       - path: CHIPProjectConfig.h
       - path: RefrigeratorManager.h
+      - path: refrigerator-and-temperature-controlled-cabinet-mode.h
   - path: ../../../../third_party/matter_sdk/examples/refrigerator-app/refrigerator-common/include
     file_list:
       - path: static-supported-temperature-levels.h
@@ -135,6 +140,8 @@ source:
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/refrigerator-app/silabs/src/ZclCallbacks.cpp
+    directory: src
+  - path: ../../../../third_party/matter_sdk/examples/refrigerator-app/silabs/src/refrigerator-and-temperature-controlled-cabinet-mode.cpp
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/refrigerator-app/refrigerator-common/src/static-supported-temperature-levels.cpp
     directory: src
@@ -216,3 +223,6 @@ ui_hints:
       focus: false
 post_build:
   profile: application
+  
+other_file:
+  - path: ../../../image/qr_code_img.png
