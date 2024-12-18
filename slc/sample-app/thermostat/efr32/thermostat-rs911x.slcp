@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.4.0"
+    version: "2.5.0"
 
 component:
   - id: device_init
@@ -15,10 +15,10 @@ component:
     from: matter
   - id: matter_leds
     from: matter
-    
+
   - id: matter
     from: matter
-  - id: matter_platform_efr32
+  - id: matter_platform_mg
     from: matter
   - id: matter_wifi_ble
     from: matter
@@ -33,11 +33,11 @@ component:
     from: matter
   - id: wiseconnect_sapi
     from: matter
-  - id: rs911x_ncp_extension
+  - id: rs911x_ncp
     from: matter
-    
+
   - id: matter_thermostat_app
-    from: matter   
+    from: matter
   - id: app_common
     from: matter
   - id: matter_provision_default
@@ -98,8 +98,9 @@ component:
     from: matter
   - id: matter_shell
     from: matter
-  - id: matter_default_lcd_config
-    from: matter
+  # MATTER-4299: Disable LCD for a better stability, multiplexing causing instability.
+  # - id: matter_default_lcd_config
+  #   from: matter
   - id: matter_log_uart
     from: matter
 
@@ -108,11 +109,11 @@ requires:
   - name: spidrv_instance
   - name: uartdrv_eusart
     condition:
-    - device_series_2
-# Select UART/EUART drivers based on device series
+      - device_series_2
+  # Select UART/EUART drivers based on device series
   - name: matter_drivers_series_2_wifi_rs911x
     condition:
-     - device_series_2
+      - device_series_2
 
 config_file:
   - path: ../../../../third_party/matter_sdk/examples/thermostat/thermostat-common/thermostat.zap
@@ -167,7 +168,7 @@ configuration:
     value: "21"
   - name: SL_POWER_MANAGER_CONFIG_VOLTAGE_SCALING_FAST_WAKEUP
     value: "1"
-  - {name: SL_STACK_SIZE, value: '4608'} 
+  - { name: SL_STACK_SIZE, value: "4608" }
 
 toolchain_settings:
   - option: cxx_standard
@@ -194,6 +195,12 @@ template_contribution:
   - name: memory_flash_size
     value: 0x00318000
     condition: [device_family_efr32mg26]
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_family_mgm26]
+  - name: memory_flash_size
+    value: 0x00318000
+    condition: [device_family_mgm26]
   - name: memory_ram_start
     value: 0x20000000
   - name: memory_ram_size
@@ -209,3 +216,6 @@ tag:
   - hardware:component:led:2+
 post_build:
   profile: application
+  
+other_file:
+  - path: ../../../image/qr_code_img.png

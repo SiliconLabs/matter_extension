@@ -101,7 +101,6 @@ include:
 -   path: third_party/matter_sdk/examples/platform/silabs
     file_list:
     -   path: board_config.h
-    -   path: wfx_rsi.h
     -   path: OTAConfig.h
     -   path: SoftwareFaultReports.h
     -   path: silabs_utils.h
@@ -130,6 +129,7 @@ include:
     -   path: CHIPDevicePlatformConfig.h
     -   path: SilabsConfig.h
     -   path: BLEManagerImpl.h
+    -   path: Logging.h
     -   path: CHIPPlatformConfig.h
     -   path: ConnectivityManagerImpl.h
     -   path: BlePlatformConfig.h
@@ -189,6 +189,7 @@ source:
 -   path: third_party/matter_sdk/src/platform/silabs/efr32/Efr32PsaOpaqueKeypair.cpp
 -   path: third_party/matter_sdk/src/platform/silabs/efr32/Efr32PsaOperationalKeystore.cpp
 -   path: third_party/matter_sdk/src/platform/silabs/efr32/OTAImageProcessorImpl.cpp
+    condition : [matter_ota_support]
 -   path: third_party/matter_sdk/src/platform/silabs/PlatformManagerImpl.cpp
 -   path: third_party/matter_sdk/src/platform/silabs/efr32/ThreadStackManagerImpl.cpp
 -   path: third_party/matter_sdk/src/platform/silabs/platformAbstraction/GsdkSpam.cpp

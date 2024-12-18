@@ -26,25 +26,28 @@ include:
   - path: demo-ui-bitmaps.h
   - path: lcd.h
 - path: third_party/matter_sdk/examples/window-app/silabs/include
+  condition: [matter_window]
   file_list:
   - path: LcdPainter.h
-    condition: [matter_window]
 - path: third_party/matter_sdk/examples/thermostat/silabs/include
+  condition: [matter_thermostat_app]
   file_list:
   - path: ThermostatIcons.h
-    condition: [matter_thermostat_app]
   - path: ThermostatUI.h
-    condition: [matter_thermostat_app]
 - path: third_party/matter_sdk/examples/air-quality-sensor-app/silabs/include
+  condition: [matter_air_quality_app]
   file_list:
   - path: AirQualitySensorUI.h
-    condition: [matter_air_quality_app]
 - path: examples/fan-control-app/silabs/include
+  condition: [matter_fan_control_app]
   file_list:
   - path: FanControlUI.h
-    condition: [matter_fan_control_app]
   - path: FanControlIcons.h
-    condition: [matter_fan_control_app]
+- path: third_party/matter_sdk/examples/refrigerator-app/silabs/include/
+  condition: [matter_refrigerator]
+  file_list:
+  - path: RefrigeratorUI.h
+  - path: RefrigeratorIcons.h
 
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/display/demo-ui.c

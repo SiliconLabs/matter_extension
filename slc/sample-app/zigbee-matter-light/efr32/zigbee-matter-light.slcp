@@ -7,7 +7,6 @@ description: This is the project file for a Matter (OT)+Zigbee+BLE app
 
 component:
 - id: device_init
-- id: sl_system
 - id: clock_manager
 - id: rail_mux
 # Needed to use Network Analyser
@@ -16,17 +15,16 @@ component:
   id: cli
 - id: iostream_stdio
 - id: segger_rtt
-- id: device_init_nvic
 - instance: [vcom]
   id: uartdrv_eusart
 #Zigbee Components
-- id: zigbee_basic
 - id: zigbee_ble_dmp_cli
 - id: zigbee_address_table
-- id: zigbee_security_link_keys
 - id: zigbee_application_bootloader
+- id: zigbee_security_link_keys
 - id: zigbee_source_route
 - id: zigbee_stack_diagnostics
+- id: zigbee_ipc
 - id: zigbee_gp
 - id: zigbee_zll
 - id: zigbee_zcl_framework_core
@@ -59,8 +57,7 @@ component:
 - id: zigbee_scan_dispatch
 - id: zigbee_update_tc_link_key
 - id: zigbee_debug_print
-- id: zigbee_pro_stack_rail_mux
-- id: zigbee_ipc
+- id: zigbee_pro_stack
 #Bluetooth Components
 - id: bluetooth_feature_gatt
 - id: bluetooth_feature_gatt_server
@@ -70,8 +67,8 @@ component:
 - id: bluetooth_stack
 #OpenThread Components
 - id: ot_stack_ftd
-- id: ot_rtos_wrappers_real
 #Matter Components
+- {from: matter, id: matter_platform_mg}
 - {from: matter, id: matter_groups}
 - {from: matter, id: matter_group_key_mgmt}
 - {from: matter, id: matter_descriptor}
@@ -87,6 +84,7 @@ component:
 - {from: matter, id: matter_on_off}
 - {from: matter, id: matter_scenes}
 - {from: matter, id: matter}
+- {from: matter, id: matter_ota_support}
 - {from: matter, id: matter_ota_requestor}
 - {from: matter, id: matter_software_diagnostics}
 - {from: matter, id: matter_access_control}
@@ -95,7 +93,6 @@ component:
 - {from: matter, id: matter_general_diagnostics}
 - {from: matter, id: matter_color_control}
 - {from: matter, id: matter_level_control}
-- {from: matter, id: matter_ota_support}
 - {from: matter, id: matter_user_label}
 - {from: matter, id: matter_fixed_label}
 - {from: matter, id: matter_shell}
@@ -103,6 +100,8 @@ component:
 - {from: matter, id: app_common}
 - {from: matter, id: matter_provision_default}
 - {from: matter, id: matter_log_uart}
+- {from: matter, id: matter_tracing}
+    
 
 #Matter components wrapper from simplicity_sdk
 - {from: matter, id: matter_default_lcd_config}
@@ -112,7 +111,23 @@ component:
 - {from: matter, id: matter_thread_network_diagnostics}
 - {from: matter, id: matter_thread}
 - {from: matter, id: matter_leds}
-- {from: matter, id: matter_platform_efr32}
+
+requires:
+# On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
+# Select UART/EUART drivers based on device series
+  - name: matter_drivers_series_2
+    condition: [device_series_2]
+  - name: matter_drivers_series_2
+    condition: [device_series_3]
+
+# RAIL components that enable Concurrent Listening 
+# These are disabled by default until the OTA Bootloader issue 1385197 is fixed
+# !!! WARNING: Enabling these components requires that the device is running a
+# bootloader built with BOOTLOADER_MSC_DMA_WRITE set to false !!!
+# - name: rail_util_ieee802154_fast_channel_switching
+#   condition: [device_series_2]
+# - name: rail_util_dma
+#   condition: [device_series_2]
 
 toolchain_settings:
   - option: cxx_standard
@@ -124,6 +139,10 @@ tag:
 - hardware:device:ram:192 
 
 configuration:
+# Pin conflict with the only LED(0) and SL_RAIL_UTIL_PTI_DFRAME_PIN 
+- name: SL_RAIL_UTIL_PTI_MODE
+  value: RAIL_PTI_MODE_DISABLED
+  condition: [brd1019a]
 - name: SL_BOARD_ENABLE_VCOM
   value: 1
 - condition: [iostream_eusart]
@@ -208,9 +227,6 @@ define:
   value: 40960
 - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
   value: 4092
-# Ouput logs to uart
-- name: SILABS_LOG_OUT_UART
-  value: "1"
 - name: SL_CLI_TICK_ENABLE
   value: 0
 
@@ -244,6 +260,41 @@ include:
 post_build:
   profile: application
 
+# For the linker file set the flash size as the actual size minus the following:
+# Space reserved for the bootloader (0x6000 bytes at the beginning)
+# A single page at the end reserved for the provisioning data
+template_contribution:
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_family_efr32mg24]
+  - name: memory_flash_size
+    value: 0x00178000
+    condition: [device_family_efr32mg24]
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_family_mgm24]
+  - name: memory_flash_size
+    value: 0x00178000
+    condition: [device_family_mgm24]
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_family_efr32mg26]
+  - name: memory_flash_size
+    value: 0x00318000
+    condition: [device_family_efr32mg26]
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_family_mgm26]
+  - name: memory_flash_size
+    value: 0x00318000
+    condition: [device_family_mgm26]
+  - name: memory_flash_start
+    value: 0x1008000
+    condition: [device_family_simg301]
+  - name: memory_flash_size
+    value: 0x3c7000
+    condition: [device_family_simg301]
+
 readme:
   - path: ./README.md
 other_file:
@@ -255,4 +306,4 @@ ui_hints:
 
 sdk_extension:
   - id: matter
-    version: "2.4.0"
+    version: "2.5.0"

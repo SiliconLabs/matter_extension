@@ -11,7 +11,9 @@ metadata:
 requires:
   - name: matter
   - name: bootloader_interface
-    condition: [matter_platform_efr32]
+    condition: [matter_platform_mg, device_series_2]
+  - name: bootloader_interface_s3
+    condition: [matter_platform_mg, device_series_3]
 
 provides:
   - name: matter_multi_image_ota

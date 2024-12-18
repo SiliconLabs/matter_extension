@@ -1,0 +1,39 @@
+#******************************************************************************
+# @file BUILD.gn
+# @brief BUILD.gn to build the Application Sleep Manager implementation
+#******************************************************************************
+# # License
+# <b>Copyright 2024 Silicon Laboratories Inc. www.silabs.com</b>
+#******************************************************************************
+#
+# The licensor of this software is Silicon Laboratories Inc. Your use of this
+# software is governed by the terms of Silicon Labs Master Software License
+# Agreement (MSLA) available at
+# www.silabs.com/about-us/legal/master-software-license-agreement. This
+# software is distributed to you in Source Code format and is governed by the
+# sections of the MSLA applicable to Source Code.
+#
+#*****************************************************************************/
+
+import("//build_overrides/chip.gni")
+
+config("app-sleep-manager-config") {
+  include_dirs = [ "." ]
+  defines = [ "SL_MATTER_ENABLE_APP_SLEEP_MANAGER=1" ]
+}
+
+source_set("app-sleep-manager") {
+  sources = [
+    "ApplicationSleepManager.cpp",
+    "ApplicationSleepManager.h",
+  ]
+
+  deps = [
+    "${chip_root}/src/app",
+    "${chip_root}/src/app/server:server",
+    "${chip_root}/src/lib/core",
+    "${chip_root}/src/platform/silabs/wifi:wifi-platform",
+  ]
+
+  public_configs = [ ":app-sleep-manager-config" ]
+}

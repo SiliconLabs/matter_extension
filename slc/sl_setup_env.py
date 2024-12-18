@@ -23,8 +23,8 @@ from pathlib import Path
 from sl_create_new_app import createApp
 from script.get_zap_version import get_zap_version
 
-if sys.version_info < (3, 6):
-    print("This script requires Python 3.6 or higher!")
+if sys.version_info < (3, 9):
+    print("This script requires Python 3.9 or higher!")
     sys.exit(1)
 
 # Use SILABS_MATTER_ROOT or use relative path

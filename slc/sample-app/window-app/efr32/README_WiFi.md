@@ -19,7 +19,7 @@ Silicon Labs platform.
 
 For more general information on running matter applications and pre-requisites please look at online 
 documentation for Matter available on docs.silabs.com. Follow Wi-Fi demo instructions depending on the example you are running.
-[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.4.0/matter-wifi)
+[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.5.0/matter-wifi)
 
 ## Window Covering Application User Interface
 
@@ -27,7 +27,11 @@ documentation for Matter available on docs.silabs.com. Follow Wi-Fi demo instruc
 
 The LCD on Silabs WSTK shows a QR Code. This QR Code is be scanned by the CHIP Tool app For the Rendez-vous procedure over BLE.
 
-On devices that do not have or support the LCD Display like the BRD4166A Thunderboard Sense 2, a URL can be found in the **RTT logs upon startup OR by issuing the following matter shell command:**
+![QR Code](qr_code_img.png)
+
+A URL can be found in the **RTT logs upon startup OR by pressing BTN0**
+
+**The URL can also be printed by issuing the following matter shell command:**
 
 ```shell
 matterCli> onboardingcodes ble qrcodeurl
@@ -37,8 +41,10 @@ Log output example:
 
 ```shell
 [SVR] Copy/paste the below URL in a browser to see the QR Code:
-[SVR] https://project-chip.github.io/connectedhomeip/qrcode.html?data=CH%3AI34NM%20-00%200C9SS0
+[SVR] https://project-chip.github.io/connectedhomeip/qrcode.html?data=MT%3A6FCJ142C00KA0648G00
 ```
+
+Note: This QR Code is only valid for an unprovisioned device. Provisioning may change the QR Code.
 
 **LED 0** 
 
@@ -120,7 +126,7 @@ Switch between lift and tilt
 
 ## Provision and Control
 
-You can provision and control the Matter device using the python controller, chip-tool (standalone or pre-built), Android, iOS app or the mattertool utility from the Matter Hub package provided by Silicon Labs. The pre-built chip-tool instance ships with the Matter Hub image. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.4.0/matter-thread/raspi-img)
+You can provision and control the Matter device using the python controller, chip-tool (standalone or pre-built), Android, iOS app or the mattertool utility from the Matter Hub package provided by Silicon Labs. The pre-built chip-tool instance ships with the Matter Hub image. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.5.0/matter-thread/raspi-img)
 
 
     

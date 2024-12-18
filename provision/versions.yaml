@@ -86,3 +86,11 @@
   module: 'v2_0'
   summary: |-
     - Credentials Base Address can now be set as -ca --creds_address.
+
+- version: '2.3'
+  date: '2024-11-25'
+  supports:
+    - RC_2.5.0-1.4
+  module: 'v2_0'
+  summary: |-
+    - Max argument size can now be set as -bz --buffer_size.

@@ -29,13 +29,15 @@
  ******************************************************/
 // Macro to check if malloc failed
 #define VERIFY_MALLOC_AND_RETURN(ptr)     \
-  {                                       \
+  do {                                    \
     if (ptr == NULL) {                    \
       return SL_STATUS_ALLOCATION_FAILED; \
     }                                     \
-  }
+  } while (0)
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
+
+#define IP_VERSION_6 BIT(1)
 
 /******************************************************
  *                 Global Variables
@@ -52,11 +54,11 @@ extern bool device_initialized;
  * @param[in] length  
  *   Length of the content
  * @return
- *   sl_status_t. See https://docs.silabs.com/gecko-platform/4.1/common/api/group-status for details.
+ *   sl_status_t. See https://docs.silabs.com/gecko-platform/latest/platform-common/status for details.
  ******************************************************************************/
-static sl_status_t sl_si91x_fwup(uint16_t type, uint8_t *content, uint16_t length);
+static sl_status_t sl_si91x_fwup(uint16_t type, const uint8_t *content, uint16_t length);
 
-static sl_status_t sl_si91x_fwup(uint16_t type, uint8_t *content, uint16_t length)
+static sl_status_t sl_si91x_fwup(uint16_t type, const uint8_t *content, uint16_t length)
 {
   sl_status_t status       = SL_STATUS_FAIL;
   sl_si91x_req_fwup_t fwup = { 0 };
@@ -75,10 +77,10 @@ static sl_status_t sl_si91x_fwup(uint16_t type, uint8_t *content, uint16_t lengt
 
   // Send FW update command
   status = sl_si91x_driver_send_command(RSI_WLAN_REQ_FWUP,
-                                        SI91X_WLAN_CMD_QUEUE,
+                                        SI91X_WLAN_CMD,
                                         &fwup,
                                         sizeof(sl_si91x_req_fwup_t),
-                                        SL_SI91X_WAIT_FOR_COMMAND_SUCCESS,
+                                        SL_SI91X_WAIT_FOR_RESPONSE(5000),
                                         NULL,
                                         NULL);
 
@@ -86,13 +88,13 @@ static sl_status_t sl_si91x_fwup(uint16_t type, uint8_t *content, uint16_t lengt
   return status;
 }
 
-sl_status_t sl_si91x_fwup_start(uint8_t *rps_header)
+sl_status_t sl_si91x_fwup_start(const uint8_t *rps_header)
 {
   sl_status_t status = sl_si91x_fwup(SL_FWUP_RPS_HEADER, rps_header, SL_RPS_HEADER_SIZE);
   return status;
 }
 
-sl_status_t sl_si91x_fwup_load(uint8_t *content, uint16_t length)
+sl_status_t sl_si91x_fwup_load(const uint8_t *content, uint16_t length)
 {
   sl_status_t status = sl_si91x_fwup(SL_FWUP_RPS_CONTENT, content, length);
   return status;
@@ -105,7 +107,7 @@ sl_status_t sl_si91x_fwup_abort()
 }
 
 sl_status_t sl_si91x_http_otaf(uint8_t type,
-                               uint8_t flags,
+                               uint16_t flags,
                                uint8_t *ip_address,
                                uint16_t port,
                                uint8_t *resource,
@@ -113,7 +115,7 @@ sl_status_t sl_si91x_http_otaf(uint8_t type,
                                uint8_t *extended_header,
                                uint8_t *user_name,
                                uint8_t *password,
-                               uint8_t *post_data,
+                               const uint8_t *post_data,
                                uint32_t post_data_length)
 {
   sl_status_t status                            = SL_STATUS_FAIL;
@@ -121,42 +123,41 @@ sl_status_t sl_si91x_http_otaf(uint8_t type,
   uint32_t send_size                            = 0;
   uint16_t http_length                          = 0;
   uint16_t length                               = 0;
-  uint8_t https_enable                          = 0;
+  uint16_t https_enable                         = 0;
   uint8_t packet_identifier                     = 0;
   sl_si91x_http_client_request_t *packet_buffer = NULL;
-  uint16_t offset = 0, rem_length = 0, chunk_size = 0;
+  uint16_t offset                               = 0;
+  uint16_t rem_length                           = 0;
+  uint16_t chunk_size                           = 0;
 
   if (!device_initialized) {
     return SL_STATUS_NOT_INITIALIZED;
   }
 
-  if (flags & SL_IPV6) {
-    http_client.ip_version = SL_IPV6_VERSION;
-  } else {
-    http_client.ip_version = SL_IPV4_VERSION;
-  }
+  http_client.ip_version = (flags & IP_VERSION_6) ? SL_IPV6_VERSION : SL_IPV4_VERSION;
 
   // Set https feature
-  if (flags & SL_SI91X_ENABLE_TLS) {
-    https_enable = SL_SI91X_ENABLE_TLS;
-  }
+  https_enable = (flags & SL_SI91X_ENABLE_TLS) ? SL_SI91X_ENABLE_TLS : https_enable;
 
   // Set default by NULL delimiter
   https_enable |= SL_SI91X_ENABLE_NULL_DELIMETER;
 
   //ssl versions
-  if (flags & SL_SI91X_TLS_V_1_0) {
-    https_enable |= SL_SI91X_TLS_V_1_0;
-  }
+  https_enable = (flags & SL_SI91X_TLS_V_1_0) ? (https_enable | SL_SI91X_TLS_V_1_0) : https_enable;
 
-  if (flags & SL_SI91X_TLS_V_1_1) {
-    https_enable |= SL_SI91X_TLS_V_1_1;
-  }
+  https_enable = (flags & SL_SI91X_TLS_V_1_1) ? (https_enable | SL_SI91X_TLS_V_1_1) : https_enable;
+
+  https_enable = (flags & SL_SI91X_TLS_V_1_2) ? (https_enable | SL_SI91X_TLS_V_1_2) : https_enable;
 
   // Set HTTP version 1.1 feature bit
-  if (flags & SL_SI91X_HTTP_V_1_1) {
-    https_enable |= SL_SI91X_HTTP_V_1_1;
-  }
+  https_enable = (flags & SL_SI91X_HTTP_V_1_1) ? (https_enable | SL_SI91X_HTTP_V_1_1) : https_enable;
+
+  https_enable = (flags & SL_SI91X_HTTPS_CERTIFICATE_INDEX_1) ? (https_enable | SL_SI91X_HTTPS_CERTIFICATE_INDEX_1)
+                                                              : https_enable;
+
+  https_enable = (flags & SL_SI91X_HTTPS_CERTIFICATE_INDEX_2) ? (https_enable | SL_SI91X_HTTPS_CERTIFICATE_INDEX_2)
+                                                              : https_enable;
+
   // Fill https features parameters
   http_client.https_enable = https_enable;
 
@@ -165,45 +166,72 @@ sl_status_t sl_si91x_http_otaf(uint8_t type,
   memset(http_client.buffer, 0, sizeof(http_client.buffer));
 
   // Fill username
-  length = MIN((sizeof(http_client.buffer) - 1), strlen((char *)user_name));
-  memcpy(http_client.buffer, user_name, length);
-  http_length += length + 1;
-
-  // Fill password
-  length = MIN((sizeof(http_client.buffer) - 1 - http_length), strlen((char *)password));
-  memcpy(((http_client.buffer) + http_length), password, length);
-  http_length += length + 1;
-
-  // Check for HTTP_V_1.1 and Empty host name
-  if ((flags & SL_SI91X_HTTP_V_1_1) && (strlen((char *)host_name) == 0)) {
-    host_name = ip_address;
+  if (strlen((char *)user_name) < sizeof(http_client.buffer)) {
+    length = (uint16_t)strlen((char *)user_name);
+    memcpy(http_client.buffer, user_name, length);
+    http_length += length + 1;
+  } else {
+    return status;
   }
 
+  // Fill password
+  if (strlen((char *)password) < (sizeof(http_client.buffer) - 1 - http_length)) {
+    length = (uint16_t)strlen((char *)password);
+    memcpy(((http_client.buffer) + http_length), password, length);
+    http_length += length + 1;
+  } else {
+    return status;
+  }
+
+  // Check for HTTP_V_1.1 and Empty host name
+  host_name = ((flags & SL_SI91X_HTTP_V_1_1) && (strlen((char *)host_name) == 0)) ? ip_address : host_name;
+
   // Copy  Host name
-  length = MIN((sizeof(http_client.buffer) - 1 - http_length), strlen((char *)host_name));
-  memcpy(((http_client.buffer) + http_length), host_name, length);
-  http_length += length + 1;
+  if (strlen((char *)host_name) < (sizeof(http_client.buffer) - 1 - http_length)) {
+    length = (uint16_t)strlen((char *)host_name);
+    memcpy(((http_client.buffer) + http_length), host_name, length);
+    http_length += length + 1;
+  } else {
+    return status;
+  }
 
   // Copy IP address
-  length = MIN((sizeof(http_client.buffer) - 1 - http_length), strlen((char *)ip_address));
-  memcpy(((http_client.buffer) + http_length), ip_address, length);
-  http_length += length + 1;
+  if (strlen((char *)ip_address) < (sizeof(http_client.buffer) - 1 - http_length)) {
+    length = (uint16_t)strlen((char *)ip_address);
+    memcpy(((http_client.buffer) + http_length), ip_address, length);
+    http_length += length + 1;
+  } else {
+    return status;
+  }
 
   // Copy URL resource
-  length = MIN((sizeof(http_client.buffer) - 1 - http_length), strlen((char *)resource));
-  memcpy(((http_client.buffer) + http_length), resource, length);
-  http_length += length + 1;
+  if (strlen((char *)resource) < (sizeof(http_client.buffer) - 1 - http_length)) {
+    length = (uint16_t)strlen((char *)resource);
+    memcpy(((http_client.buffer) + http_length), resource, length);
+    http_length += length + 1;
+  } else {
+    return status;
+  }
 
   // Copy Extended header
   if (extended_header != NULL) {
-    length = MIN((sizeof(http_client.buffer) - 1 - http_length), strlen((char *)extended_header));
-    memcpy(((http_client.buffer) + http_length), extended_header, length);
-    http_length += length;
+    if (strlen((char *)extended_header) < (sizeof(http_client.buffer) - 1 - http_length)) {
+      length = (uint16_t)strlen((char *)extended_header);
+      memcpy(((http_client.buffer) + http_length), extended_header, length);
+      http_length += length;
+    } else {
+      return status;
+    }
   }
+
   // Copy Httppost data
-  if (type) {
-    memcpy((http_client.buffer) + http_length + 1, post_data, post_data_length);
-    http_length += (post_data_length + 1);
+  if (post_data_length < (sizeof(http_client.buffer) - 1 - http_length)) {
+    if (type) {
+      memcpy((http_client.buffer) + http_length + 1, post_data, post_data_length);
+      http_length += (post_data_length + 1);
+    }
+  } else {
+    return status;
   }
 
   // Check if request buffer is overflowed or resource length is overflowed
@@ -217,10 +245,10 @@ sl_status_t sl_si91x_http_otaf(uint8_t type,
   rem_length = http_length;
   if (http_length <= SI91X_MAX_HTTP_CHUNK_SIZE) {
     status = sl_si91x_driver_send_command(RSI_WLAN_REQ_HTTP_OTAF,
-                                          SI91X_WLAN_CMD_QUEUE,
+                                          SI91X_WLAN_CMD,
                                           &http_client,
                                           send_size,
-                                          SL_SI91X_WAIT_FOR_RESPONSE(600000),
+                                          SL_SI91X_WAIT_FOR_OTAF_RESPONSE,
                                           NULL,
                                           NULL);
   } else {
@@ -244,10 +272,10 @@ sl_status_t sl_si91x_http_otaf(uint8_t type,
 
       status = sl_si91x_custom_driver_send_command(
         RSI_WLAN_REQ_HTTP_OTAF,
-        SI91X_WLAN_CMD_QUEUE,
+        SI91X_WLAN_CMD,
         packet_buffer,
         (sizeof(sl_si91x_http_client_request_t) - SI91X_HTTP_BUFFER_LEN + chunk_size),
-        (rem_length == chunk_size) ? SL_SI91X_WAIT_FOR_RESPONSE(600000) : SL_SI91X_WAIT_FOR_COMMAND_RESPONSE,
+        (rem_length == chunk_size) ? SL_SI91X_WAIT_FOR_OTAF_RESPONSE : SL_SI91X_WAIT_FOR_COMMAND_RESPONSE,
         NULL,
         NULL,
         packet_identifier);

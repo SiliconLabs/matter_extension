@@ -107,7 +107,7 @@ class createApp:
 
 
     def generate(self):
-        #use appropriate build flag for sample-app/workspaces
+        #use appropriate build flag for sample-app/solutions
         project_flag = "-p" if self.reference_project_file.endswith('.slcp') else "-w"
         #check for soc boards
         config_args=";wiseconnect3_sdk"  if self.silabs_board in self.SoC_boards else ""

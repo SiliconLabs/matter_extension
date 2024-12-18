@@ -15,7 +15,7 @@ if len(os.sys.argv) < 3:
     exit(1)
 else:
     reference_project_file = os.sys.argv[1]
-    # use appropriate build flag for sample-app/workspaces
+    # use appropriate build flag for sample-app/solutions
     if reference_project_file.endswith('.slcp'):
         project_flag = "-p"
         silabs_app = os.path.basename(reference_project_file)[:-5] 

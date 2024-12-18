@@ -20,13 +20,21 @@
 #include "AppConfig.h"
 #include "BaseApplication.h"
 #include <MatterConfig.h>
+#include <app/icd/server/ICDServerConfig.h>
 #include <cmsis_os2.h>
-
 #include <mbedtls/platform.h>
 
 #ifdef SL_WIFI
-#include "wfx_host_events.h"
+#include <platform/silabs/wifi/WifiInterfaceAbstraction.h>
+
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
+#include <platform/silabs/wifi/icd/WifiSleepManager.h>
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 #endif /* SL_WIFI */
+
+#if SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+#include "ApplicationSleepManager.h"
+#endif // SL_MATTER_ENABLE_APP_SLEEP_MANAGER
 
 #if PW_RPC_ENABLED
 #include "Rpc.h"
@@ -40,9 +48,12 @@
 #include "MemMonitoring.h"
 #endif
 
-#ifdef SLI_SI91X_MCU_INTERFACE
-#include "wfx_rsi.h"
-#endif /* SLI_SI91X_MCU_INTERFACE */
+#if RS911X_WIFI
+#include <platform/silabs/wifi/wiseconnect-abstraction/WiseconnectInterfaceAbstraction.h>
+#if (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
+#include <platform/silabs/SiWx917/SiWxPlatformInterface.h>
+#endif // (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
+#endif // RS911X_WIFI
 
 #include <crypto/CHIPCryptoPAL.h>
 // If building with the EFR32-provided crypto backend, we can use the
@@ -86,6 +97,12 @@ static chip::DeviceLayer::Internal::Efr32PsaOperationalKeystore gOperationalKeys
 #include "sl_power_manager.h"
 #endif
 
+#include <platform/silabs/tracing/SilabsTracingMacros.h>
+#if MATTER_TRACING_ENABLED
+#include <platform/silabs/tracing/BackendImpl.h>
+#include <tracing/registry.h>
+#endif // MATTER_TRACING_ENABLED
+
 /**********************************************************
  * Defines
  *********************************************************/
@@ -95,6 +112,7 @@ using namespace ::chip::Inet;
 using namespace ::chip::DeviceLayer;
 using namespace ::chip::Credentials;
 using namespace chip::DeviceLayer::Silabs;
+using TimeTraceOperation = chip::Tracing::Silabs::TimeTraceOperation;
 
 #if CHIP_ENABLE_OPENTHREAD
 #include <inet/EndPointStateOpenThread.h>
@@ -128,7 +146,7 @@ void UnlockOpenThreadTask(void)
 
 CHIP_ERROR SilabsMatterConfig::InitOpenThread(void)
 {
-    SILABS_LOG("Initializing OpenThread stack");
+    ChipLogProgress(DeviceLayer, "Initializing OpenThread stack");
     ReturnErrorOnFailure(ThreadStackMgr().InitThreadStack());
 
 #if CHIP_DEVICE_CONFIG_THREAD_FTD
@@ -145,7 +163,7 @@ CHIP_ERROR SilabsMatterConfig::InitOpenThread(void)
 #endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 #endif // CHIP_DEVICE_CONFIG_THREAD_FTD
 
-    SILABS_LOG("Starting OpenThread task");
+    ChipLogProgress(DeviceLayer, "Starting OpenThread task");
     return ThreadStackMgrImpl().StartThreadTask();
 }
 #endif // CHIP_ENABLE_OPENTHREAD
@@ -170,6 +188,9 @@ void ApplicationStart(void * unused)
     if (err != CHIP_NO_ERROR)
         appError(err);
 
+    SILABS_TRACE_END(TimeTraceOperation::kMatterInit);
+    SILABS_TRACE_BEGIN(TimeTraceOperation::kAppInit);
+
     gExampleDeviceInfoProvider.SetStorageDelegate(&chip::Server::GetInstance().GetPersistentStorage());
     chip::DeviceLayer::SetDeviceInfoProvider(&gExampleDeviceInfoProvider);
 
@@ -178,7 +199,7 @@ void ApplicationStart(void * unused)
     SetDeviceAttestationCredentialsProvider(&Provision::Manager::GetInstance().GetStorage());
     chip::DeviceLayer::PlatformMgr().UnlockChipStack();
 
-    SILABS_LOG("Starting App Task");
+    ChipLogProgress(DeviceLayer, "Starting App Task");
     err = AppTask::GetAppTask().StartAppTask();
     if (err != CHIP_NO_ERROR)
         appError(err);
@@ -190,21 +211,22 @@ void ApplicationStart(void * unused)
 
 void SilabsMatterConfig::AppInit()
 {
-    #if CHIP_ENABLE_OPENTHREAD && (SL_MATTER_GN_BUILD == 0)
+#if CHIP_ENABLE_OPENTHREAD && (SL_MATTER_GN_BUILD == 0)
     // SLC-FIX
     // TODO: Remove the Power Manager remove req when OT does not add an EM1 req at init
     sl_power_manager_remove_em_requirement(SL_POWER_MANAGER_EM1);
-    #endif
+#endif
 
     GetPlatform().Init();
     sMainTaskHandle = osThreadNew(ApplicationStart, nullptr, &kMainTaskAttr);
-    SILABS_LOG("Starting scheduler");
+    ChipLogProgress(DeviceLayer, "Starting scheduler");
     VerifyOrDie(sMainTaskHandle); // We can't proceed if the Main Task creation failed.
+
     GetPlatform().StartScheduler();
 
     // Should never get here.
     chip::Platform::MemoryShutdown();
-    SILABS_LOG("Start Scheduler Failed");
+    ChipLogProgress(DeviceLayer, "Start Scheduler Failed");
     appError(CHIP_ERROR_INTERNAL);
 }
 
@@ -217,9 +239,9 @@ CHIP_ERROR SilabsMatterConfig::InitMatter(const char * appName)
     // initialization.
     mbedtls_platform_set_calloc_free(CHIPPlatformMemoryCalloc, CHIPPlatformMemoryFree);
 #endif
-    SILABS_LOG("==================================================");
-    SILABS_LOG("%s starting", appName);
-    SILABS_LOG("==================================================");
+    ChipLogProgress(DeviceLayer, "==================================================");
+    ChipLogProgress(DeviceLayer, "%s starting", appName);
+    ChipLogProgress(DeviceLayer, "==================================================");
 
 #if PW_RPC_ENABLED
     chip::rpc::Init();
@@ -232,14 +254,19 @@ CHIP_ERROR SilabsMatterConfig::InitMatter(const char * appName)
     //==============================================
     // Init Matter Stack
     //==============================================
-    SILABS_LOG("Init CHIP Stack");
+    ChipLogProgress(DeviceLayer, "Init CHIP Stack");
 
 #ifdef SL_WIFI
     // Init Chip memory management before the stack
     // See comment above about OpenThread memory allocation as to why this is WIFI only here.
     ReturnErrorOnFailure(chip::Platform::MemoryInit());
     ReturnErrorOnFailure(InitWiFi());
-#endif
+
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
+    err = DeviceLayer::Silabs::WifiSleepManager::GetInstance().Init();
+    VerifyOrReturnError(err == CHIP_NO_ERROR, err);
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
+#endif // SL_WIFI
 
     ReturnErrorOnFailure(PlatformMgr().InitChipStack());
 
@@ -298,8 +325,31 @@ CHIP_ERROR SilabsMatterConfig::InitMatter(const char * appName)
 #endif
 
     initParams.appDelegate = &BaseApplication::sAppDelegate;
+
+    // [sl-only]: Configure Wi-Fi App Sleep Manager
+#if SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+    err = app::Silabs::ApplicationSleepManager::GetInstance()
+              .SetFabricTable(&Server::GetInstance().GetFabricTable())
+              .SetSubscriptionInfoProvider(app::InteractionModelEngine::GetInstance())
+              .SetWifiSleepManager(&WifiSleepManager::GetInstance())
+              .Init();
+    VerifyOrReturnError(err == CHIP_NO_ERROR, err, ChipLogError(DeviceLayer, "ApplicationSleepManager init failed"));
+
+    // Register ReadHandler::ApplicationCallback
+    app::InteractionModelEngine::GetInstance()->RegisterReadHandlerAppCallback(
+        &app::Silabs::ApplicationSleepManager::GetInstance());
+
+    // Register ICDStateObserver
+    chip::Server::GetInstance().GetICDManager().RegisterObserver(&app::Silabs::ApplicationSleepManager::GetInstance());
+#endif // SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+
     // Init Matter Server and Start Event Loop
     err = chip::Server::GetInstance().Init(initParams);
+
+#if MATTER_TRACING_ENABLED
+    static Tracing::Silabs::BackendImpl backend;
+    Tracing::Register(backend);
+#endif // MATTER_TRACING_ENABLED
 
     chip::DeviceLayer::PlatformMgr().UnlockChipStack();
 
@@ -322,17 +372,14 @@ CHIP_ERROR SilabsMatterConfig::InitWiFi(void)
     // Start wfx bus communication task.
     wfx_bus_start();
 #ifdef SL_WFX_USE_SECURE_LINK
-    wfx_securelink_task_start(); // start securelink key renegotiation task
-#endif                           // SL_WFX_USE_SECURE_LINK
-#endif                           /* WF200_WIFI */
+    // start securelink key renegotiation task
+    wfx_securelink_task_start();
+#endif // SL_WFX_USE_SECURE_LINK
+#endif // WF200_WIFI
 
-#ifdef SLI_SI91X_MCU_INTERFACE
-    sl_status_t status;
-    if ((status = wfx_wifi_rsi_init()) != SL_STATUS_OK)
-    {
-        ReturnErrorOnFailure((CHIP_ERROR) status);
-    }
-#endif // SLI_SI91X_MCU_INTERFACE
+#if (RS911X_WIFI)
+    VerifyOrReturnError(sl_matter_wifi_platform_init() == SL_STATUS_OK, CHIP_ERROR_INTERNAL);
+#endif // (RS911X_WIFI))
 
     return CHIP_NO_ERROR;
 }
@@ -344,6 +391,9 @@ CHIP_ERROR SilabsMatterConfig::InitWiFi(void)
 extern "C" void vApplicationIdleHook(void)
 {
 #if (SLI_SI91X_MCU_INTERFACE && CHIP_CONFIG_ENABLE_ICD_SERVER)
-    sl_si91x_invoke_btn_press_event();
+#ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
+    SiWxPlatformInterface::sl_si91x_btn_event_handler();
+#endif  //SL_CATALOG_SIMPLE_BUTTON_PRESENT
+    SiWxPlatformInterface::sl_si91x_uart_power_requirement_handler();
 #endif
 }

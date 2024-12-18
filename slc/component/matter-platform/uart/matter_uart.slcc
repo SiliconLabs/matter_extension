@@ -11,10 +11,11 @@ metadata:
 requires:
    - name: uartdrv_eusart
      condition:
-     - matter_platform_efr32
+     - matter_platform_mg
 
 provides:
   - name: matter_uart
+  - name: ot_uart_implemention
 
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/uart.cpp
@@ -27,16 +28,15 @@ include:
 define:
   - name: CONFIG_ENABLE_EUART
     condition:
-     - device_series_2
-     - matter_platform_efr32
+    - matter_platform_mg
   - name: EFR32MG24
     condition:
     - device_family_efr32mg24
-    - matter_platform_efr32
+    - matter_platform_mg
   - name: MGM24
     condition:
     - device_family_mgm24
-    - matter_platform_efr32
+    - matter_platform_mg
   - name: SLI_SI91X_MCU_INTR_BASED_RX_ON_UART
     value: 1
     condition: [matter_platform_siwx917]

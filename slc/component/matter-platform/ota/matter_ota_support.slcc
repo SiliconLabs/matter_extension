@@ -9,14 +9,18 @@ metadata:
     license: Zlib
 requires:
   - name: matter
+  - name: bootloader_interface_s2
+    condition: [matter_platform_mg, device_series_2]
+  - name: bootloader_interface_s3
+    condition: [matter_platform_mg, device_series_3]
   - name: bootloader_interface
-    condition: [matter_platform_efr32]
+    condition: [matter_platform_mg]
 provides:
   - name: matter_ota_support
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/OTAConfig.cpp
   - path: third_party/matter_sdk/src/platform/silabs/efr32/OTAImageProcessorImpl.cpp
-    condition: [matter_platform_efr32]
+    condition: [matter_platform_mg]
   - path: third_party/matter_sdk/src/platform/silabs/SiWx917/OTAImageProcessorImpl.cpp
     condition: [matter_platform_siwx917]
 config_file:

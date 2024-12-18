@@ -1,5 +1,6 @@
 /* See Project CHIP LICENSE file for licensing information. */
 #include <platform/logging/LogV.h>
+#include <platform/silabs/Logging.h>
 
 #include <lib/core/CHIPConfig.h>
 #include <platform/CHIPDeviceConfig.h>
@@ -51,13 +52,8 @@
 #include "uart.h"
 #endif
 
-// Enable RTT by default
-#ifndef SILABS_LOG_OUT_RTT
-#define SILABS_LOG_OUT_RTT 1
-#endif
-
 // SEGGER_RTT includes
-#if SILABS_LOG_OUT_RTT
+#if !SILABS_LOG_OUT_UART
 #include "SEGGER_RTT.h"
 #include "SEGGER_RTT_Conf.h"
 #endif
@@ -136,7 +132,7 @@ static void PrintLog(const char * msg)
         SEGGER_RTT_WriteNoLock(LOG_RTT_BUFFER_INDEX, msg, sz);
 #endif // SILABS_LOG_OUT_UART
 
-#if SILABS_LOG_OUT_RTT || PW_RPC_ENABLED
+#if !SILABS_LOG_OUT_UART || PW_RPC_ENABLED
         const char * newline = "\r\n";
         sz                   = strlen(newline);
 #if PW_RPC_ENABLED
@@ -154,7 +150,7 @@ static void PrintLog(const char * msg)
 extern "C" void silabsInitLog(void)
 {
 #if SILABS_LOG_ENABLED
-#if SILABS_LOG_OUT_RTT
+#if !SILABS_LOG_OUT_UART
 #if LOG_RTT_BUFFER_INDEX != 0
     SEGGER_RTT_ConfigUpBuffer(LOG_RTT_BUFFER_INDEX, LOG_RTT_BUFFER_NAME, sLogBuffer, LOG_RTT_BUFFER_SIZE,
                               SEGGER_RTT_MODE_NO_BLOCK_TRIM);
@@ -164,7 +160,7 @@ extern "C" void silabsInitLog(void)
 #else
     SEGGER_RTT_SetFlagsUpBuffer(LOG_RTT_BUFFER_INDEX, SEGGER_RTT_MODE_NO_BLOCK_TRIM);
 #endif
-#endif // SILABS_LOG_OUT_RTT
+#endif // !SILABS_LOG_OUT_UART
 
 #ifdef PW_RPC_ENABLED
     PigweedLogger::init();
@@ -199,6 +195,13 @@ extern "C" void silabsLog(const char * aFormat, ...)
 
     va_end(v);
 }
+
+#if SILABS_LOG_ENABLED
+bool isLogInitialized()
+{
+    return sLogInitialized;
+}
+#endif // SILABS_LOG_ENABLED
 
 namespace chip {
 namespace DeviceLayer {

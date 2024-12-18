@@ -23,6 +23,7 @@
 
 #include "LEDWidget.h"
 
+#include <app/DeferredAttributePersistenceProvider.h>
 #include <app/clusters/on-off-server/on-off-server.h>
 #include <app/server/OnboardingCodesUtil.h>
 #include <app/server/Server.h>
@@ -35,6 +36,7 @@
 #include <assert.h>
 
 #include <platform/silabs/platformAbstraction/SilabsPlatform.h>
+#include <platform/silabs/tracing/SilabsTracingMacros.h>
 
 #include <setup_payload/QRCodeSetupPayloadGenerator.h>
 #include <setup_payload/SetupPayload.h>
@@ -45,6 +47,7 @@
 
 #include "ZigbeeCallbacks.h"
 #include "sl_cmp_config.h"
+#include "sl_matter_config.h"
 
 #if (defined(SL_CATALOG_SIMPLE_LED_LED1_PRESENT) || defined(SIWX_917))
 #define LIGHT_LED 1
@@ -57,12 +60,32 @@
 
 using namespace chip;
 using namespace chip::app;
+using namespace chip::app::Clusters;
 using namespace ::chip::DeviceLayer;
 using namespace ::chip::DeviceLayer::Silabs;
 
 namespace {
 LEDWidget sLightLED;
-}
+
+// Array of attributes that will have their non-volatile storage deferred/delayed.
+// This is useful for attributes that change frequently over short periods of time, such as during transitions.
+// In this example, we defer the storage of the Level Control's CurrentLevel attribute and the Color Control's
+// CurrentHue and CurrentSaturation attributes for the LIGHT_ENDPOINT.
+DeferredAttribute gDeferredAttributeTable[] = {
+    DeferredAttribute(ConcreteAttributePath(LIGHT_ENDPOINT, LevelControl::Id, LevelControl::Attributes::CurrentLevel::Id)),
+    DeferredAttribute(ConcreteAttributePath(LIGHT_ENDPOINT, ColorControl::Id, ColorControl::Attributes::CurrentHue::Id)),
+    DeferredAttribute(ConcreteAttributePath(LIGHT_ENDPOINT, ColorControl::Id, ColorControl::Attributes::CurrentSaturation::Id))
+};
+
+// The DeferredAttributePersistenceProvider will persist the attribute value in non-volatile memory
+// once it remains constant for SL_MATTER_DEFERRED_ATTRIBUTE_STORE_DELAY_MS milliseconds.
+// For all other attributes not listed in gDeferredAttributeTable, the default GetDefaultAttributePersister is used.
+DeferredAttributePersistenceProvider
+    gDeferredAttributePersister(Server::GetInstance().GetDefaultAttributePersister(),
+                                Span<DeferredAttribute>(gDeferredAttributeTable, ArraySize(gDeferredAttributeTable)),
+                                System::Clock::Milliseconds32(SL_MATTER_DEFERRED_ATTRIBUTE_STORE_DELAY_MS));
+
+} // namespace
 
 using namespace chip::TLV;
 using namespace ::chip::DeviceLayer;
@@ -72,10 +95,20 @@ AppTask AppTask::sAppTask;
 CHIP_ERROR AppTask::Init()
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
+    app::SetAttributePersistenceProvider(&gDeferredAttributePersister);
     chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(AppTask::ButtonEventHandler);
+    char rebootLightOnKey[] = "Reboot->LightOn";
+    CharSpan rebootLighOnSpan(rebootLightOnKey);
+    SILABS_TRACE_REGISTER(rebootLighOnSpan);
 
 #ifdef DISPLAY_ENABLED
     GetLCD().Init((uint8_t *) "CMP-Lighting-App");
+#endif
+
+#ifdef SL_MATTER_ZIGBEE_CMP
+    ChipLogProgress(AppServer, "Concurrent CMP app");
+#else
+    ChipLogProgress(AppServer, "Sequential CMP app");
 #endif
 
     err = BaseApplication::Init();
@@ -96,6 +129,7 @@ CHIP_ERROR AppTask::Init()
 
     sLightLED.Init(LIGHT_LED);
     sLightLED.Set(LightMgr().IsLightOn());
+    SILABS_TRACE_INSTANT(rebootLighOnSpan);
 
 // Update the LCD with the Stored value. Show QR Code if not provisioned
 #ifdef DISPLAY_ENABLED
@@ -112,13 +146,14 @@ CHIP_ERROR AppTask::Init()
 #endif // QR_CODE_ENABLED
 #endif
 #ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
+#if defined(SL_MATTER_ZIGBEE_SEQUENTIAL) ||                                                                                        \
+    (defined(SL_MATTER_ZIGBEE_CMP) && !defined(SL_CATALOG_RAIL_UTIL_IEEE802154_FAST_CHANNEL_SWITCHING_PRESENT))
     PlatformMgr().LockChipStack();
     uint16_t nbOfMatterFabric = chip::Server::GetInstance().GetFabricTable().FabricCount();
     PlatformMgr().UnlockChipStack();
     if (nbOfMatterFabric != 0)
     {
 #ifdef SL_MATTER_ZIGBEE_CMP
-        // TODO OT GET CHANNEL
         uint8_t channel = otLinkGetChannel(DeviceLayer::ThreadStackMgrImpl().OTInstance());
         SILABS_LOG("Setting Zigbee channel to %d", channel);
         Zigbee::RequestStart(channel);
@@ -127,12 +162,13 @@ CHIP_ERROR AppTask::Init()
 #endif // SL_MATTER_ZIGBEE_CMP
     }
     else
+#endif // SL_MATTER_ZIGBEE_SEQUENTIAL || (SL_MATTER_ZIGBEE_CMP && !SL_CATALOG_RAIL_UTIL_IEEE802154_FAST_CHANNEL_SWITCHING_PRESENT)
     {
         Zigbee::RequestStart();
     }
-
 #endif // SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
 
+    BaseApplication::InitCompleteCallback(err);
     return err;
 }
 
@@ -273,7 +309,7 @@ void AppTask::UpdateClusterState(intptr_t context)
     uint8_t newValue = LightMgr().IsLightOn();
 
     // write the new on/off value
-    Protocols::InteractionModel::Status status = OnOffServer::Instance().setOnOffValue(1, newValue, false);
+    Protocols::InteractionModel::Status status = OnOffServer::Instance().setOnOffValue(LIGHT_ENDPOINT, newValue, false);
 
     if (status != Protocols::InteractionModel::Status::Success)
     {

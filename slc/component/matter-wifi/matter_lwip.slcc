@@ -12,8 +12,6 @@ metadata:
 provides:
 - name: matter_lwip
 - name: lwip
-- name: sl_si91x_internal_stack
-- name: sl_si91x_network_stack
 - name: lwip_port_freertos
 - name: sl_si91x_errno
 

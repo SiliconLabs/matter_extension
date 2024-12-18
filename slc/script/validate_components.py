@@ -88,6 +88,9 @@ def validate_upgrade_file(directory):
 def printCleansed(output):
     for item in output:
         lines = item.split('\n')
+        #Do not print logs for components without any issues.
+        if "No issues detected" in lines[-1]:
+            break
         cleanedOutput = '\n'.join(lines[2:])
         print(cleanedOutput + "\n")
 

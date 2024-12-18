@@ -26,38 +26,31 @@
 #include <platform/internal/CHIPDeviceLayerInternal.h>
 #if CHIP_DEVICE_CONFIG_ENABLE_CHIPOBLE
 
-#include <platform/internal/BLEManager.h>
-
+#include "wfx_sl_ble_init.h"
 #include <ble/Ble.h>
+#include <crypto/RandUtils.h>
 #include <lib/support/CodeUtils.h>
 #include <lib/support/logging/CHIPLogging.h>
 #include <platform/CommissionableDataProvider.h>
 #include <platform/DeviceInstanceInfoProvider.h>
+#include <platform/internal/BLEManager.h>
 
 #if CHIP_ENABLE_ADDITIONAL_DATA_ADVERTISING
 #include <setup_payload/AdditionalDataPayloadGenerator.h>
 #endif
 
-#include <crypto/RandUtils.h>
-#ifdef __cplusplus
 extern "C" {
-#endif
-#include "wfx_sl_ble_init.h"
 #if !(SLI_SI91X_MCU_INTERFACE | EXP_BOARD)
 #include <rsi_driver.h>
 #endif
 #include <rsi_utils.h>
-#ifdef __cplusplus
 }
-#endif
 
 #define BLE_MIN_CONNECTION_INTERVAL_MS 24
 #define BLE_MAX_CONNECTION_INTERVAL_MS 40
 #define BLE_SLAVE_LATENCY_MS 0
 #define BLE_TIMEOUT_MS 400
 #define BLE_SEND_INDICATION_TIMER_PERIOD_MS (5000)
-
-osSemaphoreId_t sl_rs_ble_init_sem;
 
 using namespace ::chip;
 using namespace ::chip::Ble;
@@ -239,9 +232,6 @@ void BLEManagerImpl::sl_ble_event_handling_task(void * args)
     sl_status_t status;
     SilabsBleWrapper::BleEvent_t bleEvent;
 
-    //! This semaphore is waiting for wifi module initialization.
-    osSemaphoreAcquire(sl_rs_ble_init_sem, osWaitForever);
-
     // This function initialize BLE and start BLE advertisement.
     sInstance.sl_ble_init();
 
@@ -292,8 +282,6 @@ void BLEManagerImpl::sl_ble_init()
 CHIP_ERROR BLEManagerImpl::_Init()
 {
     CHIP_ERROR err;
-
-    sl_rs_ble_init_sem = osSemaphoreNew(1, 0, NULL);
 
     sBleThread = osThreadNew(sInstance.sl_ble_event_handling_task, NULL, &kBleTaskAttr);
 
@@ -648,10 +636,7 @@ CHIP_ERROR BLEManagerImpl::ConfigureAdvertisingData(void)
         ChipLogError(DeviceLayer, "rsi_ble_set_advertise_data() failed: %ld", result);
         ExitNow();
     }
-    else
-    {
-        ChipLogError(DeviceLayer, "rsi_ble_set_advertise_data() success: %ld", result);
-    }
+
     index                 = 0;
     responseData[index++] = 0x02;                     // length
     responseData[index++] = CHIP_ADV_DATA_TYPE_FLAGS; // AD type : flags
@@ -736,7 +721,10 @@ CHIP_ERROR BLEManagerImpl::StartAdvertising(void)
 
 exit:
     // TODO: Add MapBLEError to return the correct error code
-    ChipLogError(DeviceLayer, "StartAdvertising() End error: %s", ErrorStr(err));
+    if (err != CHIP_NO_ERROR)
+    {
+        ChipLogError(DeviceLayer, "StartAdvertising() End error: %s", ErrorStr(err));
+    }
     return err;
 }
 

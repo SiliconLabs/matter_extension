@@ -105,6 +105,11 @@ class ProvisionManager:
         comm = _tools.Commander(args, conn)
         info = comm.info()
         flash_size = info.flash_size
+
+        # TODO: Figure out a way to get the accessible flash instead of the physical flash for series 3
+        if "simg3" in info.part:
+            flash_size = 0x3d0000
+
         # Collect device information
         device_num = args.get(ID.kDevice)
         if device_num.value is None:

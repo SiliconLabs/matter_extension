@@ -76,10 +76,12 @@ public:
         uint8_t speedCurrent;
         uint8_t percentCurrent;
         uint8_t speedSetting;
+        uint8_t percentSetting;
         bool isPercentCurrent = false;
         bool isSpeedCurrent = false;
         bool isSpeedSetting = false;
         bool isFanMode = false;
+        bool isPercentSetting = false;
         EndpointId endPoint;
     };
 

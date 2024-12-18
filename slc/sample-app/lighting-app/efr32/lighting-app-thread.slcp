@@ -7,14 +7,13 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.4.0"
+    version: "2.5.0"
 
 component:
   - id: device_init
   - id: sl_system
   - id: clock_manager
   - id: ot_stack_ftd
-  - id: ot_rtos_wrappers_real
   - id: matter_buttons
     from: matter
   - id: matter_leds
@@ -22,15 +21,13 @@ component:
 
   - id: matter
     from: matter
-  - id: matter_platform_efr32
+  - id: matter_platform_mg
     from: matter
   - id: matter_ble
     from: matter
   - id: matter_thread
     from: matter
   - id: rail_util_pti
-  - id: matter_ota_support
-    from: matter
   - id: matter_crypto
     from: matter
   - id: matter_shell
@@ -80,6 +77,8 @@ component:
     from: matter
   - id: matter_operational_credentials
     from: matter
+  - id: matter_ota_support
+    from: matter
   - id: matter_ota_requestor
     from: matter
   - id: matter_power_source
@@ -102,13 +101,15 @@ component:
   - id: matter_segger_rtt
     from: matter
 
-
 requires:
 # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
 # Select UART/EUART drivers based on device series
   - name: matter_drivers_series_2
     condition:
      - device_series_2
+  - name: matter_drivers_series_2
+    condition:
+    - device_series_3
 
 config_file:
   - path: ../../../../third_party/matter_sdk/examples/lighting-app/silabs/data_model/lighting-thread-app.zap
@@ -150,6 +151,10 @@ define:
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
     value: "4092"
 configuration:
+  # Pin conflict with the only LED(0) and SL_RAIL_UTIL_PTI_DFRAME_PIN 
+  - name: SL_RAIL_UTIL_PTI_MODE
+    value: RAIL_PTI_MODE_DISABLED
+    condition: [brd1019a]
   - name: SL_OPENTHREAD_ENABLE_APP_TASK
     value: 0
   - name: SL_OPENTHREAD_ENABLE_CLI_TASK
@@ -171,6 +176,7 @@ configuration:
     value: 1
     condition: [matter_thread_coap_cert_libs]
   - {name: SL_STACK_SIZE, value: '4608'}
+  - {name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE, value: '1536'}
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: 16
     
@@ -199,7 +205,19 @@ template_contribution:
   - name: memory_flash_size
     value: 0x00318000
     condition: [device_family_efr32mg26]
-
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_family_mgm26]
+  - name: memory_flash_size
+    value: 0x00318000
+    condition: [device_family_mgm26]
+  - name: memory_flash_start
+    value: 0x1008000
+    condition: [device_family_simg301]
+  - name: memory_flash_size
+    value: 0x3c7000
+    condition: [device_family_simg301]
+    
 readme:
   - path: ./README.md
 ui_hints:
@@ -208,3 +226,6 @@ ui_hints:
       focus: false
 post_build:
   profile: application
+  
+other_file:
+  - path: ../../../image/qr_code_img.png

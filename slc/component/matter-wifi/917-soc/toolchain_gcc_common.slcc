@@ -1,0 +1,64 @@
+id: toolchain_gcc_common
+label: Common Flash GCC Toolchain
+package: Matter
+description: Common Flash Toolchain support for GCC
+category: Matter-WiFi|Platform|Toolchain
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+root_path: slc/component
+provides:
+  - name: toolchain_gcc_common
+requires:
+  - name: toolchain_variant
+  - name: toolchain_variant_arm
+template_file:
+  - path: matter-wifi/917-soc/linkerfile_common.ld.jinja
+    condition: [brd4338a]
+  - path: matter-wifi/917-soc/linkerfile_common.ld.jinja
+    condition: [brd2605a]
+# TODO: Cleanup the customized linker file for brd4342a board and use the SDK linker file
+  - path: matter-wifi/917-soc/linkerfile_psram_SoC.ld.jinja
+    condition: [brd4342a]
+  - path: matter-wifi/917-soc/linkerfile_common.ld.jinja
+    condition: [brd4343a]
+  - path: matter-wifi/917-soc/linkerfile_common.ld.jinja
+    condition: [brd2708a]
+  - path: matter-wifi/917-soc/linkerfile_common.ld.jinja
+    condition: [brd2911a]
+library:
+  - system: gcc
+  - system: c
+  - system: m
+  - system: nosys
+template_contribution:
+  - name: device_common_flash_addr
+    value: 136060928
+  - name: device_common_flash_size
+    value: 2097152
+  - name: device_common_ram_addr
+    value: 1024
+  - name: device_common_ram_size
+    value: 320000
+toolchain_settings:
+  - option: linkerfile
+    value: autogen/linkerfile_common.ld
+    condition: [brd4338a]
+  - option: linkerfile
+    value: autogen/linkerfile_common.ld
+    condition: [brd2605a]
+  - option: linkerfile
+    value: autogen/linkerfile_psram_SoC.ld
+    condition: [brd4342a]
+  - option: linkerfile
+    value: autogen/linkerfile_common.ld
+    condition: [brd4343a]
+  - option: linkerfile
+    value: autogen/linkerfile_common.ld
+    condition: [brd2708a]
+  - option: linkerfile
+    value: autogen/linkerfile_common.ld
+    condition: [brd2911a]
+ui_hints:
+  visibility: never

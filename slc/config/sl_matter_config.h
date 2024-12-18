@@ -62,6 +62,12 @@
 // <i> Default: 0
 #define CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED 0
 
+// <o SL_MATTER_DEFERRED_ATTRIBUTE_STORE_DELAY_MS> Delay before the deferred attribute are stored in nvm
+// <i> Default: 2000
+#ifndef SL_MATTER_DEFERRED_ATTRIBUTE_STORE_DELAY_MS
+#define SL_MATTER_DEFERRED_ATTRIBUTE_STORE_DELAY_MS 2000
+#endif
+
 // <<< end of configuration section >>>
 
 #endif // SL_MATTER_CONFIG_H

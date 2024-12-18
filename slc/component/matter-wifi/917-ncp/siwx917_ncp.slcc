@@ -1,0 +1,79 @@
+id: siwx917_ncp
+package: Matter
+label: SiWx917 NCP Extension
+description: >
+  Adds support for the HAL and WiFi Driver layer for SiWx917 NCP devices
+category: Matter-WiFi|Platform|Drivers
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+
+provides:
+- name: siwx917_ncp
+- name: efx_ncp_custom_host_mcu
+
+recommends:
+- id: uartdrv_eusart
+  instance: [vcom]
+
+requires:
+- name: wiseconnect3_common
+- name: sl_si91x_spi_bus
+- name: device_init_dpll
+- name: spidrv_instance
+
+include:
+- path: third_party/matter_sdk/src/platform/silabs/wifi/rs911x/platform
+  file_list:
+  - path: sl_board_configuration.h
+  - path: sl_board_configuration_SiWx917.h
+  - path: sl_si91x_ncp_utility.h
+  - path: rsi_hal.h
+- path: third_party/matter_sdk/src/platform/silabs/wifi/wf200/platform
+  file_list:
+  - path: spi_multiplex.h
+- path: third_party/matter_sdk/src/platform/silabs/rs911x
+  file_list:
+  - path: ble_config.h
+  - path: rsi_ble_config.h
+  - path: wfx_sl_ble_init.h
+- path: third_party/matter_sdk/src/platform/silabs/wifi
+  file_list:
+  - path: wfx_msgs.h
+  - path: WifiInterfaceAbstraction.h
+- path: third_party/matter_sdk/src/platform/silabs/wifi/wiseconnect-abstraction
+  file_list:
+  - path: WiseconnectInterfaceAbstraction.h
+
+source:
+
+- path: third_party/matter_sdk/src/platform/silabs/wifi/WifiInterfaceAbstraction.cpp
+- path: third_party/matter_sdk/src/platform/silabs/wifi/rs911x/platform/efx32_ncp_host.c
+- path: third_party/matter_sdk/src/platform/silabs/wifi/wiseconnect-abstraction/WiseconnectInterfaceAbstraction.cpp
+- path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx/WifiInterface.cpp
+- path: third_party/matter_sdk/src/platform/silabs/wifi/rs911x/platform/sl_si91x_ncp_utility.c
+- path: third_party/matter_sdk/src/platform/silabs/rs911x/BLEManagerImpl.cpp
+- path: third_party/matter_sdk/src/platform/silabs/rs911x/wfx_sl_ble_init.cpp
+
+define:
+- name: RS911X_WIFI
+- name: EXP_BOARD
+  value: 1
+- name: CHIP_9117
+  value: 1
+- name: SL_WFX_CONFIG_SCAN
+  value: 1
+- name: SL_WFX_USE_SPI
+- name: EFX32_RS911X
+  value: 1
+- name: RSI_WLAN_ENABLE
+- name: RSI_SPI_INTERFACE
+- name: RSI_WITH_OS
+- name: SL_WIFI_COMPONENT_INCLUDED
+- name: __WEAK
+  value: "__attribute__((weak))"
+
+toolchain_settings:
+- option: gcc_compiler_option
+  value: -Wno-unused-parameter

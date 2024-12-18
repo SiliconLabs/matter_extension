@@ -26,7 +26,7 @@
 
 #include <platform/CHIPDeviceEvent.h>
 #if CHIP_DEVICE_CONFIG_ENABLE_WIFI_STATION
-#include "wfx_host_events.h"
+#include <platform/silabs/wifi/WifiInterfaceAbstraction.h>
 #endif
 
 namespace chip {
@@ -39,7 +39,7 @@ namespace DeviceEventType {
  */
 enum PublicPlatformSpecificEventTypes
 {
-    /* None currently defined */
+    // No public platform specific events
 };
 
 /**

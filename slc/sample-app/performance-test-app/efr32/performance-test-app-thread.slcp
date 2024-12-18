@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.4.0"
+    version: "2.5.0"
 
 component:
   - id: device_init
@@ -16,7 +16,6 @@ component:
   - id: matter_performance_testing
     from: matter
   - id: ot_stack_ftd
-  - id: ot_rtos_wrappers_real
   - id: matter_buttons
     from: matter
   - id: matter_leds
@@ -24,7 +23,7 @@ component:
 
   - id: matter
     from: matter
-  - id: matter_platform_efr32
+  - id: matter_platform_mg
     from: matter
   - id: matter_ble
     from: matter
@@ -102,8 +101,6 @@ component:
   - id: matter_segger_rtt
     from: matter
 
-
-
 requires:
 # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
 # Select UART/EUART drivers based on device series
@@ -169,9 +166,21 @@ configuration:
     value: 1
     condition: [matter_thread_coap_cert_libs]
   - {name: SL_STACK_SIZE, value: '4608'}
+  - {name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE, value: '1536'}
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: 16
-    
+
+ # Disable logging as it affects performance
+  - name: SL_MATTER_LOG_LEVEL
+    value: "SL_MATTER_LOG_NONE"
+  - name: SILABS_LOG_ENABLED
+    value: "0"
+  - name: HARD_FAULT_LOG_ENABLE
+    value: "0"
+  - name: OPENTHREAD_CONFIG_LOG_OUTPUT
+    value: "OT_LOG_LEVEL_NONE"
+  - name: OPENTHREAD_CONFIG_LOG_LEVEL
+    value: "OPENTHREAD_CONFIG_LOG_OUTPUT_NONE" 
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17
@@ -197,6 +206,18 @@ template_contribution:
   - name: memory_flash_size
     value: 0x00318000
     condition: [device_family_efr32mg26]
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_family_mgm26]
+  - name: memory_flash_size
+    value: 0x00318000
+    condition: [device_family_mgm26]
+  - name: memory_flash_start
+    value: 0x1008000
+    condition: [device_family_simg301]
+  - name: memory_flash_size
+    value: 0x3c7000
+    condition: [device_family_simg301]
 
 config_file:
   - path: performance-test-app-thread.zap
@@ -217,3 +238,6 @@ ui_hints:
       focus: false
 post_build:
   profile: application
+  
+other_file:
+  - path: ../../../image/qr_code_img.png

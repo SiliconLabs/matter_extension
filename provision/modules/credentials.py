@@ -107,19 +107,14 @@ class Credentials:
 
 
     def collectCertificates(self, paa_cert, paa_key, pai_cert, pai_key, dac_cert, dac_key):
-        cd_gen = dac_gen = pai_gen = False
-        if not self.generate:
-            pass
-        elif self.csr_mode:
-                dac_gen = False
-                pai_gen = (pai_cert.value is None) or (pai_key.value is None)
-        else:
-            dac_gen = (dac_cert.value is None) or (dac_key.value is None)
-            pai_gen = (pai_cert.value is None) or ((dac_gen or self.csr_mode) and (pai_key.value is None))
+        dac_gen = pai_gen = False
+        if self.generate:
+            dac_gen = (not self.csr_mode) and ((dac_cert.value is None) or (dac_key.value is None))
+            pai_gen = (pai_cert.value is None) or (dac_gen and (pai_key.value is None))
             dac_gen = dac_gen or pai_gen
 
         # Collect certificates
-        self.collectPAA(paa_cert, paa_key)
+        self.collectPAA(paa_cert, paa_key, pai_gen)
         paic_pem, paik_pem, _, _  = self.collectPAI(paa_cert, paa_key, pai_cert, pai_key, pai_gen)
         dacc_pem, dack_pem, _, _ = self.collectDAC(pai_cert, pai_key, dac_cert, dac_key, dac_gen)
 
@@ -131,26 +126,26 @@ class Credentials:
             _util.execute([ 'openssl', 'pkcs12', '-export', '' '-inkey', dack_pem, '-in', dacc_pem, '-certfile', paic_pem, '-out', out_arg, '-password', pass_arg ])
 
 
-    def collectPAA(self, paa_cert, paa_key):
-        # The PAA is never generated, either use the provided certificate or default
-        if (paa_cert.value is None) or (paa_key.value is None):
-            # Either PAA or PAA key missing, use defaults
-            if paa_cert.value is not None:
-                _util.warn("PAA certificate ignored: {}".format(paa_cert.value))
-            if paa_key.value is not None:
-                _util.warn("PAA key ignored: {}".format(paa_key.value))
-            paa_cert.set(self.paths.temp('paa_cert.pem'), None, False)
-            paa_key.set(self.paths.temp('paa_key.pem'), None, False)
-            self.cert_tool.generatePAA(paa_cert.value, paa_key.value)
-        else:
-            # Use provided PAA and PAA key
-            if paa_cert.value is None:
-                _util.fail("Missing: PAA certificate")
-            if paa_key.value is None:
-                _util.fail("Missing: PAA key")
-        # Copy into DER format (if needed)
-        self.x509Copy(paa_cert.value, 'paa_cert')
-        self.x509Copy(paa_key.value, 'paa_key', True)
+    def collectPAA(self, paa_cert, paa_key, required):
+        if required:
+            if (paa_cert.value is None) or (paa_key.value is None):
+                # Either PAA or PAA key missing, use defaults
+                if paa_cert.value is not None:
+                    _util.warn("PAA certificate ignored: {}".format(paa_cert.value))
+                if paa_key.value is not None:
+                    _util.warn("PAA key ignored: {}".format(paa_key.value))
+                paa_cert.set(self.paths.temp('paa_cert.pem'), None, False)
+                paa_key.set(self.paths.temp('paa_key.pem'), None, False)
+                self.cert_tool.generatePAA(paa_cert.value, paa_key.value)
+            else:
+                # Use provided PAA and PAA key
+                if paa_cert.value is None:
+                    _util.fail("Missing: PAA certificate")
+                if paa_key.value is None:
+                    _util.fail("Missing: PAA key")
+            # Copy into DER format (if needed)
+            self.x509Copy(paa_cert.value, 'paa_cert')
+            self.x509Copy(paa_key.value, 'paa_key', True)
 
     def collectPAI(self, paa_cert, paa_key, pai_cert, pai_key, generate):
         if generate:

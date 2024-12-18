@@ -28,8 +28,6 @@ requires:
   - name: memory_manager_pool
   - name: freertos_heap_3
 # TODO : psram components - should be removed with wiseconnect SDK support
-  - name: rsilib_dcache
-    condition: [brd4342a]
   - name: psram_core
     condition: [brd4342a]
   - name: psram_aps6404l_sqh
@@ -42,7 +40,6 @@ requires:
 
 provides:
   - name: matter_platform_siwx917
-  - name: device
   - name: wiseconnect_toolchain_gcc_override
   - name: matter_si91x_common_flash_nvm3_enabled
 

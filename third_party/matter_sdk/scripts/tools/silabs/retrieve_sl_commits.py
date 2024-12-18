@@ -1,7 +1,8 @@
 #! /usr/bin/python3
-import subprocess
 import argparse
+import subprocess
 from argparse import RawTextHelpFormatter
+
 
 def get_git_log(start_sha, end_sha, prefixes):
     try:
@@ -13,25 +14,26 @@ def get_git_log(start_sha, end_sha, prefixes):
             check=True,
             text=True
         )
-       
+
         # Split the result into lines
         log_lines = result.stdout.split('\n')
-       
+
         # Initialize a dictionary to hold commits by prefix
         commits_by_prefix = {prefix: [] for prefix in prefixes}
-       
+
         # Filter and group commits based on the prefixes
         for line in log_lines:
             for prefix in prefixes:
                 if prefix in line:
                     commits_by_prefix[prefix].append(line)
                     break
-       
+
         return commits_by_prefix
-   
+
     except subprocess.CalledProcessError as e:
         print(f"Error running git log: {e}")
         return {}
+
 
 def main():
     parser = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter, description="""
@@ -41,7 +43,7 @@ def main():
     [PREFIX] commits:
     <full_commit_sha> -- <Commit_Title>
     """,
-    epilog= """
+                                     epilog="""
     Post result developer actions:
        commits grouped under [SL-UP] shall be upstream the CSA master.
        commits grouped under [SL-ONLY] shall be cherry-picked to matter_sdk main branch.
@@ -52,7 +54,7 @@ def main():
     parser.add_argument('end_sha', type=str, help='The ending commit SHA')
 
     args = parser.parse_args()
-   
+
     start_sha = args.start_sha
     end_sha = args.end_sha
     prefixes = ["[SL-UP]", "[SL-TEMP]", "[SL-ONLY]", "[CSA-CP]"]
@@ -63,6 +65,7 @@ def main():
         for commit in commits:
             print(commit)
         print()
+
 
 if __name__ == "__main__":
     main()

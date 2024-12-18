@@ -233,3 +233,64 @@ upgrade:
           - matter_wstk_leds
         add:
           - matter_leds
+
+  - sdk:
+      id: matter
+      version: "2.5.0"
+    
+    component:
+      - trigger: siwx917_ncp_extension
+        description: Simplify and merge 917 NCP components
+        remove:
+          - siwx917_ncp_extension
+        add:
+          - siwx917_ncp
+      
+      - trigger: rs911x_ncp_extension
+        description: Simplify and merge rs911x NCP components
+        remove:
+          - rs911x_ncp_extension
+        add:
+          - rs911x_ncp
+      
+      - trigger: wf200_ncp_extension
+        description: Simplify and merge wf200 NCP components
+        remove:
+          - wf200_ncp_extension
+        add:
+          - wf200_ncp
+
+      - trigger: efx_ncp_custom_host_mcu
+        description: Remove extra NCP component in favor of platform NCP component
+        remove:
+          - efx_ncp_custom_host_mcu
+      
+      - trigger: matter_thread
+        description: remove the ot_rtos_wrappers_real component
+        remove:
+          - ot_rtos_wrappers_real
+      
+      - trigger: matter_platform_efr32
+        description: Rename matter_platform_efr32 to matter_platform_mg
+        remove: 
+          - matter_platform_efr32
+        add:
+          - matter_platform_mg
+
+    configuration:
+      - name: SL_OT_IDLE_INTERVAL
+        replacement: SL_TRANSPORT_IDLE_INTERVAL
+        description: >
+          Replacing SL_OT_IDLE_INTERVAL with SL_TRANSPORT_IDLE_INTERVAL to render the configuration transport agnostic
+
+      - name: SL_OT_ACTIVE_INTERVAL
+        replacement: SL_TRANSPORT_ACTIVE_INTERVAL
+        description: >
+          Replacing SL_OT_ACTIVE_INTERVAL with SL_TRANSPORT_ACTIVE_INTERVAL to render the configuration transport agnostic
+
+      - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+        replacement: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+        description: >
+          Updating value:
+        value:
+          "(1000)": "(1536)"

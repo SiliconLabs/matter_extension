@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.4.0"
+    version: "2.5.0"
   - id: wiseconnect3_sdk
-    version: "3.3.4"
+    version: "3.4.0"
 
 component:
 
@@ -99,8 +99,9 @@ component:
   - id: matter_default_lcd_config
     from: matter
   # ICD configurations
-  - id: matter_icd_core
-    from: matter
+  # MATTER-4257 : Disabling ICD for light-switch as Button1 is not working as expected for 917SoC Sleepy apps.
+#  - id: matter_icd_core
+#    from: matter
   - id: matter_test_event_trigger
     from: matter
   - id: matter_icd_management
@@ -108,7 +109,17 @@ component:
   - id: matter_log_uart
     from: matter
 
+  # Copy of the component to point to a different sl_net_for_lwip.c file
+  - id: network_manager
+    from: matter
+
+  # Copy of the component to remove the default lwipopts.h file
+  - id: wifi_resources
+    from: matter
+
   - id: sl_si91x_common_flash_nvm3
+    from: wiseconnect3_sdk
+  - id: sl_si91x_lwip_stack
     from: wiseconnect3_sdk
   - id: sl_si91x_wireless
     from: wiseconnect3_sdk
@@ -116,7 +127,7 @@ component:
     from: wiseconnect3_sdk
   - id: basic_network_config_manager
     from: wiseconnect3_sdk
-  - id: si917_mem_config_3
+  - id: si91x_mem_config_3
     from: wiseconnect3_sdk
   - id: sl_si91x_basic_buffers
     from: wiseconnect3_sdk
@@ -130,13 +141,9 @@ component:
     from: matter
   - id: wiseconnect3_common
     from: wiseconnect3_sdk
-  - id: wifi_resources
-    from: wiseconnect3_sdk
   - id: sl_si91x_soc_soft_reset
     from: wiseconnect3_sdk
   - id: ble
-    from: wiseconnect3_sdk
-  - id: network_manager
     from: wiseconnect3_sdk
   - id: sl_si91x_button_917
     instance: [btn0,btn1]
@@ -148,6 +155,10 @@ component:
   - id: sl_si91x_led_917
     instance: [led0, led1]
     condition: [si917_prod_board]
+    from: wiseconnect3_sdk
+  - id: sl_si91x_led_917
+    instance: [led0, led1]
+    condition: [device_is_917_module_dev_kit]
     from: wiseconnect3_sdk
   - instance: [timer0]
     from: wiseconnect3_sdk
@@ -241,3 +252,6 @@ tag:
 
 post_build:
   path: ../../../postbuild/matter_wifi_soc.slpb
+
+other_file:
+  - path: ../../../image/qr_code_img.png

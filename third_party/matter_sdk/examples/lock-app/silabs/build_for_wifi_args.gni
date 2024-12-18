@@ -16,7 +16,7 @@ import("${chip_root}/config/standalone/args.gni")
 
 silabs_sdk_target = get_label_info(":sdk", "label_no_toolchain")
 chip_enable_openthread = false
-import("${chip_root}/src/platform/silabs/wifi_args.gni")
+import("${chip_root}/src/platform/silabs/wifi/args.gni")
 
 chip_enable_ota_requestor = true
 app_data_model = "${chip_root}/examples/lock-app/silabs/data_model:silabs-lock"
@@ -30,5 +30,7 @@ sl_use_subscription_syncing = true
 
 # ICD Matter Configuration flags
 sl_idle_mode_duration_s = 600  # 10min Idle Mode Duration
-sl_active_mode_duration_ms = 10000  # 10s Active Mode Duration
-sl_active_mode_threshold_ms = 1000  # 1s Active Mode Threshold
+sl_active_mode_duration_ms = 0  # 0ms Active Mode Duration
+sl_active_mode_threshold_ms = 0  # 1s Active Mode Threshold
+
+sl_transport_idle_interval_ms = 3000  # 3s Transport Idle Interval

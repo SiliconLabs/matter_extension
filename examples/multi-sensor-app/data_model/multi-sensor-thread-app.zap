@@ -1,6 +1,6 @@
 {
   "fileFormat": 2,
-  "featureLevel": 103,
+  "featureLevel": 106,
   "creator": "zap",
   "keyValuePairs": [
     {
@@ -41,14 +41,16 @@
         "code": 22,
         "profileId": 259,
         "label": "MA-rootdevice",
-        "name": "MA-rootdevice"
+        "name": "MA-rootdevice",
+        "deviceTypeOrder": 0
       },
       "deviceTypes": [
         {
           "code": 22,
           "profileId": 259,
           "label": "MA-rootdevice",
-          "name": "MA-rootdevice"
+          "name": "MA-rootdevice",
+          "deviceTypeOrder": 0
         }
       ],
       "deviceVersions": [
@@ -804,6 +806,16 @@
           "define": "OTA_SOFTWARE_UPDATE_REQUESTOR_CLUSTER",
           "side": "server",
           "enabled": 1,
+          "commands": [
+            {
+              "name": "AnnounceOTAProvider",
+              "code": 0,
+              "mfgCode": null,
+              "source": "client",
+              "isIncoming": 1,
+              "isEnabled": 1
+            }
+          ],
           "attributes": [
             {
               "name": "DefaultOTAProviders",
@@ -4138,14 +4150,16 @@
         "code": 263,
         "profileId": 259,
         "label": "MA-occupancysensor",
-        "name": "MA-occupancysensor"
+        "name": "MA-occupancysensor",
+        "deviceTypeOrder": 0
       },
       "deviceTypes": [
         {
           "code": 263,
           "profileId": 259,
           "label": "MA-occupancysensor",
-          "name": "MA-occupancysensor"
+          "name": "MA-occupancysensor",
+          "deviceTypeOrder": 0
         }
       ],
       "deviceVersions": [
@@ -4647,14 +4661,16 @@
         "code": 770,
         "profileId": 259,
         "label": "MA-tempsensor",
-        "name": "MA-tempsensor"
+        "name": "MA-tempsensor",
+        "deviceTypeOrder": 0
       },
       "deviceTypes": [
         {
           "code": 770,
           "profileId": 259,
           "label": "MA-tempsensor",
-          "name": "MA-tempsensor"
+          "name": "MA-tempsensor",
+          "deviceTypeOrder": 0
         }
       ],
       "deviceVersions": [
@@ -5172,14 +5188,16 @@
         "code": 775,
         "profileId": 259,
         "label": "MA-humiditysensor",
-        "name": "MA-humiditysensor"
+        "name": "MA-humiditysensor",
+        "deviceTypeOrder": 0
       },
       "deviceTypes": [
         {
           "code": 775,
           "profileId": 259,
           "label": "MA-humiditysensor",
-          "name": "MA-humiditysensor"
+          "name": "MA-humiditysensor",
+          "deviceTypeOrder": 0
         }
       ],
       "deviceVersions": [

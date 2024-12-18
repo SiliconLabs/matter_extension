@@ -1,18 +1,60 @@
 id: matter_shell
-label: Matter Shell
-description: Enables the Matter Shell (CHIP Shell) functionality
 package: Matter
+label: Matter Shell
+description: >
+  Enables the Matter Shell (CHIP Shell) functionality
 category: Stack|Shell
 quality: production
 metadata:
   sbom:
     license: Zlib
+
+provides:
+- name: matter_shell
+
 requires:
 - name: matter_uart
 - name: matter_thread_cli
   condition: [matter_thread]
-provides:
-- name: matter_shell
+
+include:
+- path: third_party/matter_sdk/src/lib/shell
+  file_list:
+  - path: Engine.h
+  - path: Command.h
+  - path: Commands.h
+  - path: CommandSet.h
+  - path: streamer.h
+  - path: SubShellCommand.h
+- path: third_party/matter_sdk/src/lib/shell/commands
+  file_list:
+  - path: Help.h
+  - path: WiFi.h
+    condition: [matter_wifi]
+- path: third_party/matter_sdk/examples/platform/silabs
+  file_list:
+  - path: MatterShell.h
+- path: third_party/matter_sdk/examples/shell/shell_common/include
+  file_list:
+  - path: ChipShellCollection.h
+  - path: Globals.h
+- path: third_party/matter_sdk/examples/lock-app/silabs/include
+  condition: [matter_lock]
+  file_list:
+    - path: EventHandlerLibShell.h
+- path: third_party/matter_sdk/examples/refrigerator-app/silabs/include
+  condition: [matter_refrigerator]
+  file_list:
+    - path: EventHandlerLibShell.h
+- path: third_party/matter_sdk/examples/platform/silabs/shell/icd
+  condition: [matter_icd]
+  file_list:
+    - path: ICDShellCommands.h
+- path: third_party/matter_sdk/examples/platform/silabs/shell/tracing
+  condition: [matter_tracing]
+  file_list:
+    - path: TracingShellCommands.h
+      
 source:
 - path: third_party/matter_sdk/examples/platform/silabs/MatterShell.cpp
 - path: third_party/matter_sdk/examples/shell/shell_common/cmd_misc.cpp
@@ -46,41 +88,13 @@ source:
 - path: third_party/matter_sdk/src/lib/shell/commands/Ota.cpp
   condition: [matter_platform_siwx917]
 - path: third_party/matter_sdk/examples/lock-app/silabs/src/EventHandlerLibShell.cpp
-  condition:
-    - matter_lock
-- path: third_party/matter_sdk/examples/platform/silabs/shell/ICDShellCommands.cpp
+  condition: [matter_lock]
+- path: third_party/matter_sdk/examples/refrigerator-app/silabs/src/EventHandlerLibShell.cpp
+  condition: [matter_refrigerator]
+- path: third_party/matter_sdk/examples/platform/silabs/shell/icd/ICDShellCommands.cpp
   condition: [matter_icd]
-
-include:
-- path: third_party/matter_sdk/src/lib/shell
-  file_list:
-  - path: Engine.h
-  - path: Command.h
-  - path: Commands.h
-  - path: CommandSet.h
-  - path: streamer.h
-  - path: SubShellCommand.h
-- path: third_party/matter_sdk/src/lib/shell/commands
-  file_list:
-  - path: Help.h
-  - path: WiFi.h
-    condition: matter_wifi
-- path: third_party/matter_sdk/examples/platform/silabs
-  file_list:
-  - path: MatterShell.h
-- path: third_party/matter_sdk/examples/shell/shell_common/include
-  file_list:
-  - path: ChipShellCollection.h
-  - path: Globals.h
-- path: third_party/matter_sdk/examples/lock-app/silabs/include
-  file_list:
-    - path: EventHandlerLibShell.h
-      condition:
-        - matter_lock
-- path: third_party/matter_sdk/examples/platform/silabs/shell
-  file_list:
-    - path: ICDShellCommands.h
-      condition: [matter_icd]
+- path: third_party/matter_sdk/examples/platform/silabs/shell/tracing/TracingShellCommands.cpp
+  condition: [matter_tracing]
 
 define:
 - name: ENABLE_CHIP_SHELL
@@ -89,6 +103,7 @@ define:
   condition: [matter_thread]
 - name: SL_MATTER_CLI_ARG_PARSER
   value: 1
+
 conflicts:
-  - name: matter_low_power
-  - name: matter_no_lcd_shell
+- name: matter_low_power
+- name: matter_no_lcd_shell

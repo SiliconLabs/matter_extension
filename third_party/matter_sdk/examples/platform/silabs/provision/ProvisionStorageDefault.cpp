@@ -17,7 +17,6 @@
 #include "AttestationKey.h"
 #include "ProvisionStorage.h"
 #include <credentials/examples/DeviceAttestationCredsExample.h>
-#include <em_device.h>
 #include <lib/support/BytesToHex.h>
 #include <lib/support/CHIPMemString.h>
 #include <lib/support/CodeUtils.h>
@@ -28,6 +27,7 @@
 #include <platform/CHIPDeviceConfig.h>
 #include <platform/silabs/MigrationManager.h>
 #include <platform/silabs/SilabsConfig.h>
+#include <platform/silabs/platformAbstraction/SilabsPlatform.h>
 #include <silabs_creds.h>
 #ifndef NDEBUG
 #if defined(SL_MATTER_TEST_EVENT_TRIGGER_ENABLED) && (SL_MATTER_GN_BUILD == 0)
@@ -37,16 +37,7 @@
 #ifdef OTA_ENCRYPTION_ENABLE
 #include <platform/silabs/multi-ota/OtaTlvEncryptionKey.h>
 #endif // OTA_ENCRYPTION_ENABLE
-#ifdef SLI_SI91X_MCU_INTERFACE
-#include <sl_si91x_common_flash_intf.h>
-#else
-#ifdef _SILICON_LABS_32B_SERIES_2
-#include <em_msc.h>
-#elif defined(_SILICON_LABS_32B_SERIES_3)
-#include "sl_se_manager.h"
-#include "sl_se_manager_types.h"
-#include <sl_se_manager_extmem.h>
-#endif // _SILICON_LABS_32B_SERIES_2
+#ifndef SLI_SI91X_MCU_INTERFACE
 #include <psa/crypto.h>
 #endif
 
@@ -55,16 +46,6 @@ extern void setNvm3End(uint32_t addr);
 #elif !SL_MATTER_GN_BUILD
 #include <sl_matter_provision_config.h>
 #endif
-
-#if defined(_SILICON_LABS_32B_SERIES_3)
-// To remove any ambiguities regarding the Flash aliases, use the below macro to ignore the 8 MSB.
-#define FLASH_GENERIC_MASK 0x00FFFFFF
-#define GENERIC_ADDRESS(addr) ((addr) &FLASH_GENERIC_MASK)
-
-// Transforms any address into an address using the same alias as FLASH_BASE from the CMSIS.
-#define CMSIS_CONVERTED_ADDRESS(addr) (GENERIC_ADDRESS(addr) | FLASH_BASE)
-sl_se_command_context_t cmd_ctx;
-#endif // _SILICON_LABS_32B_SERIES_3
 
 extern uint8_t linker_nvm_end[];
 
@@ -86,47 +67,32 @@ size_t sCredentialsOffset     = 0;
 
 CHIP_ERROR ErasePage(uint32_t addr)
 {
-#ifdef SLI_SI91X_MCU_INTERFACE
-    rsi_flash_erase_sector((uint32_t *) addr);
-#elif defined(_SILICON_LABS_32B_SERIES_2)
-    MSC_ErasePage((uint32_t *) addr);
-#elif defined(_SILICON_LABS_32B_SERIES_3)
-    sl_status_t status;
-    uint32_t * data_start = NULL;
-    size_t data_size;
-
-    status = sl_se_data_region_get_location(&cmd_ctx, (void **) &data_start, &data_size);
-    VerifyOrReturnError(status == SL_STATUS_OK, CHIP_ERROR(status));
-    VerifyOrReturnError(GENERIC_ADDRESS(addr) > GENERIC_ADDRESS((uint32_t) data_start), CHIP_ERROR_INVALID_ADDRESS);
-    status = sl_se_data_region_erase(&cmd_ctx, (void *) addr, 1); // Erase one page
-    VerifyOrReturnError(status == SL_STATUS_OK, CHIP_ERROR(status));
-#endif
-    return CHIP_NO_ERROR;
-}
-
-CHIP_ERROR WritePage(uint32_t addr, const uint8_t * data, size_t size)
-{
-#ifdef SLI_SI91X_MCU_INTERFACE
-    rsi_flash_write((uint32_t *) addr, (unsigned char *) data, size);
-#elif defined(_SILICON_LABS_32B_SERIES_2)
-    MSC_WriteWord((uint32_t *) addr, data, size);
-#elif defined(_SILICON_LABS_32B_SERIES_3)
-    sl_status_t status;
-    uint32_t * data_start = NULL;
-    size_t data_size;
-
-    status = sl_se_data_region_get_location(&cmd_ctx, (void **) &data_start, &data_size);
-    VerifyOrReturnError(status == SL_STATUS_OK, CHIP_ERROR(status));
-    VerifyOrReturnError(GENERIC_ADDRESS(addr) > GENERIC_ADDRESS((uint32_t) data_start), CHIP_ERROR_INVALID_ADDRESS);
-    status = sl_se_data_region_write(&cmd_ctx, (void *) addr, data, size);
-    VerifyOrReturnError(status == SL_STATUS_OK, CHIP_ERROR(status));
-#endif
-    return CHIP_NO_ERROR;
+    return chip::DeviceLayer::Silabs::GetPlatform().FlashErasePage(addr);
 }
 
 size_t RoundNearest(size_t n, size_t multiple)
 {
     return (n % multiple) > 0 ? n + (multiple - n % multiple) : n;
+}
+
+/**
+ * Writes "size" bytes to the flash page. The data is padded with 0xff
+ * up to the nearest 32-bit boundary. The "max" argument is used to ensure
+ * that the padding won't exceed the limits of the buffer.
+ */
+CHIP_ERROR WritePage(uint32_t addr, const uint8_t * data, size_t size, size_t max)
+{
+    // The flash driver fails if the size is not a multiple of 4 (32-bits)
+    size_t size_32 = RoundNearest(size, 4);
+    // If the input data is smaller than the 32-bit size, pad the buffer with "0xff"
+    if (size_32 != size)
+    {
+        uint8_t * p = (uint8_t *) data;
+        VerifyOrReturnError(size_32 <= max, CHIP_ERROR_BUFFER_TOO_SMALL);
+        memset(p + size, 0xff, size_32 - size);
+        size = size_32;
+    }
+    return chip::DeviceLayer::Silabs::GetPlatform().FlashWritePage(addr, data, size);
 }
 
 CHIP_ERROR WriteFile(Storage & store, SilabsConfig::Key offset_key, SilabsConfig::Key size_key, const ByteSpan & value)
@@ -138,17 +104,7 @@ CHIP_ERROR WriteFile(Storage & store, SilabsConfig::Key offset_key, SilabsConfig
         ReturnErrorOnFailure(ErasePage(base_addr));
     }
 
-    memcpy(Storage::aux_buffer, value.data(), value.size());
-    if (value.size() < Storage::kArgumentSizeMax)
-    {
-        memset(Storage::aux_buffer + value.size(), 0xff, Storage::kArgumentSizeMax - value.size());
-    }
-
-    ChipLogProgress(DeviceLayer, "WriteFile, addr:0x%06x+%03u, size:%u", (unsigned) base_addr, (unsigned) sCredentialsOffset,
-                    (unsigned) value.size());
-    // ChipLogByteSpan(DeviceLayer, ByteSpan(value.data(), value.size() < kDebugLength ? value.size() : kDebugLength));
-
-    ReturnErrorOnFailure(WritePage(base_addr + sCredentialsOffset, Storage::aux_buffer, Storage::kArgumentSizeMax));
+    ReturnErrorOnFailure(WritePage(base_addr + sCredentialsOffset, value.data(), value.size(), store.GetBufferSize()));
 
     // Store file offset
     ReturnErrorOnFailure(SilabsConfig::WriteConfigValue(offset_key, (uint32_t) sCredentialsOffset));
@@ -168,7 +124,6 @@ CHIP_ERROR ReadFileByOffset(Storage & store, const char * description, uint32_t 
     ByteSpan span(address, size);
     ChipLogProgress(DeviceLayer, "%s, addr:0x%06x+%03u, size:%u", description, (unsigned) base_addr, (unsigned) offset,
                     (unsigned) size);
-    // ChipLogByteSpan(DeviceLayer, ByteSpan(span.data(), span.size() < kDebugLength ? span.size() : kDebugLength));
     return CopySpanToMutableSpan(span, value);
 }
 
@@ -203,16 +158,8 @@ CHIP_ERROR Storage::Initialize(uint32_t flash_addr, uint32_t flash_size)
     {
 #ifndef SLI_SI91X_MCU_INTERFACE
         base_addr = (flash_addr + flash_size - FLASH_PAGE_SIZE);
-
-#ifdef _SILICON_LABS_32B_SERIES_2
-        MSC_Init();
-#elif defined(_SILICON_LABS_32B_SERIES_3)
-        sl_status_t status;
-        status = sl_se_init();
-        VerifyOrReturnError(status == SL_STATUS_OK, CHIP_ERROR_INTERNAL);
-        status = sl_se_init_command_context(&cmd_ctx);
-#endif // _SILICON_LABS_32B_SERIES
 #endif // SLI_SI91X_MCU_INTERFACE
+        chip::DeviceLayer::Silabs::GetPlatform().FlashInit();
 #ifdef SL_PROVISION_GENERATOR
         setNvm3End(base_addr);
 #endif
@@ -719,12 +666,7 @@ CHIP_ERROR Storage::SetOtaTlvEncryptionKey(const ByteSpan & value)
 }
 #endif // OTA_ENCRYPTION_ENABLE
 
-/**
- * @brief Reads the test event trigger key from NVM. If the key isn't present, returns default value if defined.
- *
- * @param[out] keySpan output buffer. Must be at least large enough for 16 bytes (ken length)
- * @return CHIP_ERROR
- */
+#ifdef SL_MATTER_TEST_EVENT_TRIGGER_ENABLED
 CHIP_ERROR Storage::GetTestEventTriggerKey(MutableByteSpan & keySpan)
 {
     constexpr size_t kEnableKeyLength = 16; // Expected byte size of the EnableKey
@@ -736,7 +678,7 @@ CHIP_ERROR Storage::GetTestEventTriggerKey(MutableByteSpan & keySpan)
     err = SilabsConfig::ReadConfigValueBin(SilabsConfig::kConfigKey_Test_Event_Trigger_Key, keySpan.data(), kEnableKeyLength,
                                            keyLength);
 #ifndef NDEBUG
-#ifdef SL_MATTER_TEST_EVENT_TRIGGER_ENABLED
+#ifdef SL_MATTER_TEST_EVENT_TRIGGER_ENABLE_KEY
     if (err == CHIP_DEVICE_ERROR_CONFIG_NOT_FOUND)
     {
 
@@ -749,12 +691,13 @@ CHIP_ERROR Storage::GetTestEventTriggerKey(MutableByteSpan & keySpan)
         }
         err = CHIP_NO_ERROR;
     }
-#endif // SL_MATTER_TEST_EVENT_TRIGGER_ENABLED
+#endif // SL_MATTER_TEST_EVENT_TRIGGER_ENABLE_KEY
 #endif // NDEBUG
 
     keySpan.reduce_size(kEnableKeyLength);
     return err;
 }
+#endif // SL_MATTER_TEST_EVENT_TRIGGER_ENABLED
 
 } // namespace Provision
 

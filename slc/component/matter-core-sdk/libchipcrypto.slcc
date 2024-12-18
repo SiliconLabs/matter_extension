@@ -4,6 +4,12 @@ define:
     value: '1'
 -   name: RADIO_CONFIG_DMP_SUPPORT
     value: '1'
+-   name: CHIP_CRYPTO_KEYSTORE_RAW
+    value: '1'
+    condition: [matter_crypto_tinycrypt_siwx917]
+-   name: CHIP_CRYPTO_KEYSTORE_PSA
+    value: '1'
+    unless: [matter_crypto_tinycrypt_siwx917]
 description: libchipcrypto
 id: libchipcrypto
 include:
@@ -39,5 +45,24 @@ source:
 -   path: third_party/matter_sdk/src/crypto/PersistentStorageOperationalKeystore.cpp
 -   path: third_party/matter_sdk/src/crypto/RandUtils.cpp
 -   path: third_party/matter_sdk/src/crypto/RawKeySessionKeystore.cpp
+    condition: [matter_crypto_tinycrypt_siwx917]
+-   path: third_party/matter_sdk/src/crypto/PSAOperationalKeystore.cpp
+    unless: [matter_crypto_tinycrypt_siwx917]
+-   path: third_party/matter_sdk/src/crypto/PSASessionKeystore.cpp
+    unless: [matter_crypto_tinycrypt_siwx917]
+template_contribution:
+    - name: psa_key_slots
+      value:
+        name: psa_key_slots_matter
+        count: 30
+      condition: [wf200_ncp, psa_crypto]
+    - name: psa_key_slots
+      value:
+        name: psa_key_slots_matter
+        count: 22
+      condition:
+        - psa_crypto
+      unless:
+        - wf200_ncp
 ui_hints:
     visibility: never

@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.4.0"
+    version: "2.5.0"
 
 component:
   - id: device_init
@@ -20,12 +20,11 @@ component:
 
   - id: matter
     from: matter
-  - id: matter_platform_efr32
+  - id: matter_platform_mg
     from: matter
   - id: matter_ble
     from: matter
   - id: ot_stack_mtd
-  - id: ot_rtos_wrappers_real
   - id: matter_thread
     from: matter
   - id: rail_util_pti
@@ -192,16 +191,17 @@ configuration:
     value: 1
     condition: [matter_thread_coap_cert_libs]
   - {name: SL_STACK_SIZE, value: '4608'} 
+  - {name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE, value: '1536'}
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: 16
-
+    
 # Default ICD configurations
   - {name: SL_IDLE_MODE_DURATION_S, value: '600'}
   - {name: SL_ACTIVE_MODE_DURATION_MS, value: '0'}
   - {name: SL_ACTIVE_MODE_THRESHOLD, value: '5000'}
 
-  - {name: SL_OT_IDLE_INTERVAL, value: '90000'}
-  - {name: SL_OT_ACTIVE_INTERVAL, value: '1000'}
+  - {name: SL_TRANSPORT_IDLE_INTERVAL, value: '90000'}
+  - {name: SL_TRANSPORT_ACTIVE_INTERVAL, value: '1000'}
 
   - { name: CHIP_CONFIG_ENABLE_ICD_LIT, value: 1 }
   - { name: CHIP_CONFIG_ENABLE_ICD_CIP, value: 1 }
@@ -236,6 +236,18 @@ template_contribution:
   - name: memory_flash_size
     value: 0x00318000
     condition: [device_family_efr32mg26]
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_family_mgm26]
+  - name: memory_flash_size
+    value: 0x00318000
+    condition: [device_family_mgm26]
+  - name: memory_flash_start
+    value: 0x1008000
+    condition: [device_family_simg301]
+  - name: memory_flash_size
+    value: 0x3c7000
+    condition: [device_family_simg301]
 
 readme:
   - path: ./README.md
@@ -245,3 +257,6 @@ ui_hints:
       focus: false
 post_build:
   profile: application
+  
+other_file:
+  - path: ../../../image/qr_code_img.png

@@ -15,7 +15,11 @@
 #define SL_MATTER_ENABLE_WIFI               0
 
 // TODO: infer from OTA requestor component (split from generated matter efr32 platform component)
+#if defined(SILABS_OTA_ENABLED)
 #define SL_MATTER_ENABLE_OTA                1
+#else
+#define SL_MATTER_ENABLE_OTA                0
+#endif
 
 #if defined(SL_CATALOG_OPENTHREAD_STACK_PRESENT) || SL_OPENTHREAD_CERT_LIB
 #define CHIP_ENABLE_OPENTHREAD                  1

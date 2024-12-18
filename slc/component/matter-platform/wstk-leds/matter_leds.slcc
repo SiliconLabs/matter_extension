@@ -19,6 +19,12 @@ requires:
       - device_family_efr32mg26
   - name: simple_led_recommended_instance
     condition:
+      - device_family_mgm26
+  - name: simple_led_recommended_instance
+    condition:
+      - device_family_simg301
+  - name: simple_led_recommended_instance
+    condition:
       - brd2704a
 
 define:
@@ -34,7 +40,15 @@ define:
   - name: ENABLE_WSTK_LEDS
     value: "1"
     condition:
+      - device_family_simg301
+  - name: ENABLE_WSTK_LEDS
+    value: "1"
+    condition:
       - brd2704a
+  - name: ENABLE_WSTK_LEDS
+    value: "1"
+    condition:
+      - brd2709a
   - name: ENABLE_WSTK_LEDS
     value: "1"
     condition:
@@ -43,16 +57,32 @@ define:
     value: "1"
     condition:
       - brd4342a
+  - name: ENABLE_WSTK_LEDS
+    value: "1"
+    condition:
+      - brd4343a
+  - name: ENABLE_WSTK_LEDS
+    value: "1"
+    condition:
+      - brd4350a
+  - name: ENABLE_WSTK_LEDS
+    value: "1"
+    condition:
+      - brd4351a
+  - name: ENABLE_WSTK_LEDS
+    value: "1"
+    condition:
+      - brd2708a
+  - name: ENABLE_WSTK_LEDS
+    value: "1"
+    condition:
+      - brd2911a
 
 # This should cover all supported boards that supports RGB LEDs
   - name: SL_MATTER_RGB_LED_ENABLED
     value: "1"
     condition:
       - brd2605a
-  - name: ENABLE_WSTK_LEDS
-    value: "1"
-    condition:
-      - brd4343a
   - name: ENABLE_WSTK_LEDS
     value: "1"
     condition:

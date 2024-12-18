@@ -1,6 +1,6 @@
 # Matter Provision Advanced Configurator (AC) Adapter Pack Definition
 # NB: this adapter pack does not generate any resources, e.g. header files,
-# so it is not a true AC. Rather it is implemented as an AC to use 
+# so it is not a true AC. Rather it is implemented as an AC to use
 # Simplicity Studio's AC Adapter Pack framework functionality and support.
 
 # Is used for SetupId
@@ -47,11 +47,18 @@ environment(provisionenv:win32.x86_64) {
   STUDIO_PYTHONPATH=$(STUDIO_PYTHONPATH);$(this)/modules;$(studio.install)/developer/adapter_packs/python/ext-site-packages
 }
 
-# Function to execute Matter provision script 
-function(matter_provision) {
+# Function to execute Matter provision write command
+function(matter_provision_write) {
   env=$(provisionenv)
-  cmd=$(python) provision.py --version 1.3 --inputs ${configFile} ( --channel ${serialnum} | --channel ${ipaddress} )
+  cmd=$(python) provision.py --inputs ${configFile} ( --channel ${serialnum} | --channel ${ipaddress} )
 }
+
+# Function to execute Matter provision read command
+function(matter_provision_read) {
+  env=$(provisionenv)
+  cmd=$(python) provision.py read ${paramslist} ( --channel ${serialnum} | --channel ${ipaddress} ) [ --temp ${certsdir} ]
+}
+
 # Generation function that generates zero resources
 function(uc_generate) {
   cmd=$(python) apackGenerateNothing.py ${contentFolder} -o ${generationOutput}

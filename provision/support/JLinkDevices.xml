@@ -20,19 +20,15 @@
    <FlashBankInfo Name="M33 Flash" BaseAddr="0x08000000" MaxSize="0x180000" Loader="mgm24/Series2_bobcat.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
   </Device>
   <Device>
-   <ChipInfo Vendor="Silicon Labs" Name="Si917" Core="JLINK_CORE_CORTEX_M4" WorkRAMAddr="0x400" WorkRAMSize="0x00030000" />
+   <ChipInfo Vendor="Silicon Labs" Name="Si917" Core="JLINK_CORE_CORTEX_M4" WorkRAMAddr="0x400" WorkRAMSize="0x00030000" Aliases="si917y" />
    <FlashBankInfo Name="QSPI M4 Flash" BaseAddr="0x08202000" MaxSize="0x1ef000" Loader="si917/RS9117_SF_4MB_42bsp.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
   </Device>
   <Device>
-   <ChipInfo Vendor="Silicon Labs" Name="Si917DualFlash" Core="JLINK_CORE_CORTEX_M4" WorkRAMAddr="0x00000000" WorkRAMSize="0x00020000" />
-   <FlashBankInfo Name="QSPI M4 Flash" BaseAddr="0x08012000" MaxSize="0x00400000" Loader="si917/RS9117_SF_4MB_42bsp.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
-  </Device>
-  <Device>
-   <ChipInfo Vendor="Silicon Labs" Name="Si917Commonflash" Core="JLINK_CORE_CORTEX_M4" WorkRAMAddr="0x400" WorkRAMSize="0x00030000" />
-   <FlashBankInfo Name="QSPI M4 Flash" BaseAddr="0x081c2000" MaxSize="0x00400000" Loader="si917/RS9117_SF_4MB_42bsp.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
-  </Device>
-  <Device>
-    <ChipInfo Vendor="Silicon Labs" Name="EFR32XG26B000F3200" Core="JLINK_CORE_CORTEX_M33" WorkRAMAddr="0x20000000" WorkRAMSize="0x8000"  JLinkScriptFile="EFR32Series2/Series2.JLinkScript" Aliases="EFR32XG26BxxxF3200;EFR32MG26BxxxF3200;EFR32MG26BxxxF2048;EFR32BG26BxxxF2048;EFR32BG26BxxxF1024;EFM32PG26BxxxF2048;EFM32PG26BxxxF1024;EFM32PG26BxxxF512;EFR32MG26B410F3200IM48;EFR32MG26B510F3200IM68;EFR32MG26B420F3200IM48;EFR32MG26B510F3200IL136" />
+    <ChipInfo Vendor="Silicon Labs" Name="EFR32XG26B000F3200" Core="JLINK_CORE_CORTEX_M33" WorkRAMAddr="0x20000000" WorkRAMSize="0x8000"  JLinkScriptFile="EFR32Series2/Series2.JLinkScript" Aliases="MGM260PB32VNA;MGM260PB32VNA0;MGM260PB22VNA0;EFR32XG26BxxxF3200;EFR32MG26BxxxF3200;EFR32MG26BxxxF2048;EFR32BG26BxxxF2048;EFR32BG26BxxxF1024;EFM32PG26BxxxF2048;EFM32PG26BxxxF1024;EFM32PG26BxxxF512;EFR32MG26B410F3200IM48;EFR32MG26B510F3200IM68;EFR32MG26B420F3200IM48;EFR32MG26B510F3200IL136" />
     <FlashBankInfo Name="Main Flash" BaseAddr="0x08000000" MaxSize="0x320000" Loader="efr32mg26/EFR32XG26.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" />
+  </Device>
+  <Device>
+    <ChipInfo Vendor="Silicon Labs" Name="SIxx301" Core="JLINK_CORE_CORTEX_M33" WorkRAMAddr="0x20000000" WorkRAMSize="0x8000"  JLinkScriptFile="Devices/SiliconLabs/SIXG301/SERIES3.JLinkScript" Aliases="SIMG301;SIxx301xxxxK;SIxx301xxxxL;SIXG301XFULL;SIMG301M104LIH;SIMG301M114LIH;SIXG301114LIH;SIMG301M104LIL" />
+    <FlashBankInfo Name="QSPI Flash Code Secure" BaseAddr="0x01000000" MaxSize="0x400000" Loader="sixg3/SIXG301.elf" LoaderType="FLASH_ALGO_TYPE_OPEN" AlwaysPresent="1" />
   </Device>
 </Database>

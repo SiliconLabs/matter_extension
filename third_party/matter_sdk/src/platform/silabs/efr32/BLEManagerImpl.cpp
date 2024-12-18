@@ -674,6 +674,21 @@ void BLEManagerImpl::HandleConnectEvent(volatile sl_bt_msg_t * evt)
     PlatformMgr().ScheduleWork(DriveBLEState, 0);
 }
 
+void BLEManagerImpl::HandleConnectParams(volatile sl_bt_msg_t * evt)
+{
+    sl_bt_evt_connection_parameters_t * con_param_evt = (sl_bt_evt_connection_parameters_t *) &(evt->data);
+
+    if (con_param_evt->timeout < BLE_CONFIG_TIMEOUT)
+    {
+        ChipLogProgress(DeviceLayer, "Request to increase the connection timeout from %d to %d", con_param_evt->timeout,
+                        BLE_CONFIG_TIMEOUT);
+        sl_bt_connection_set_parameters(con_param_evt->connection, BLE_CONFIG_MIN_INTERVAL, BLE_CONFIG_MAX_INTERVAL,
+                                        BLE_CONFIG_LATENCY, BLE_CONFIG_TIMEOUT, BLE_CONFIG_MIN_CE_LENGTH, BLE_CONFIG_MAX_CE_LENGTH);
+    }
+
+    PlatformMgr().ScheduleWork(DriveBLEState, 0);
+}
+
 void BLEManagerImpl::HandleConnectionCloseEvent(volatile sl_bt_msg_t * evt)
 {
     sl_bt_evt_connection_closed_t * conn_evt = (sl_bt_evt_connection_closed_t *) &(evt->data);
@@ -990,7 +1005,8 @@ void BLEManagerImpl::BleAdvTimeoutHandler(void * arg)
 {
     if (BLEMgrImpl().mFlags.Has(Flags::kFastAdvertisingEnabled))
     {
-        ChipLogDetail(DeviceLayer, "bleAdv Timeout : Start slow advertisement");
+        // TODO : This log causes a stack overflow in Series 3, need to investigate before re-enabling
+        // ChipLogDetail(DeviceLayer, "bleAdv Timeout : Start slow advertisement");
         BLEMgrImpl().mFlags.Set(Flags::kAdvertising);
         BLEMgr().SetAdvertisingMode(BLEAdvertisingMode::kSlowAdvertising);
 #if CHIP_DEVICE_CONFIG_EXT_ADVERTISING
@@ -1001,7 +1017,8 @@ void BLEManagerImpl::BleAdvTimeoutHandler(void * arg)
 #if CHIP_DEVICE_CONFIG_EXT_ADVERTISING
     else
     {
-        ChipLogDetail(DeviceLayer, "bleAdv Timeout : Start extended advertisement");
+        // TODO : This log causes a stack overflow in Series 3, need to investigate before re-enabling
+        // ChipLogDetail(DeviceLayer, "bleAdv Timeout : Start extended advertisement");
         BLEMgrImpl().mFlags.Set(Flags::kAdvertising);
         BLEMgrImpl().mFlags.Set(Flags::kExtAdvertisingEnabled);
         BLEMgr().SetAdvertisingMode(BLEAdvertisingMode::kSlowAdvertising);
@@ -1061,11 +1078,20 @@ extern "C" void sl_bt_on_event(sl_bt_msg_t * evt)
     }
     break;
     case sl_bt_evt_connection_parameters_id: {
-        // ChipLogProgress(DeviceLayer, "Connection parameter ID received");
+        ChipLogProgress(DeviceLayer, "Connection parameter ID received - i:%d, l:%d, t:%d, sm:%d",
+                        evt->data.evt_connection_parameters.interval, evt->data.evt_connection_parameters.latency,
+                        evt->data.evt_connection_parameters.timeout, evt->data.evt_connection_parameters.security_mode);
+        chip::DeviceLayer::Internal::BLEMgrImpl().HandleConnectParams(evt);
     }
     break;
     case sl_bt_evt_connection_phy_status_id: {
-        // ChipLogProgress(DeviceLayer, "PHY update procedure is completed");
+        ChipLogProgress(DeviceLayer, "Connection phy status ID received - phy:%d", evt->data.evt_connection_phy_status.phy);
+    }
+    break;
+    case sl_bt_evt_connection_data_length_id: {
+        ChipLogProgress(DeviceLayer, "Connection data length ID received - txL:%d, txT:%d, rxL:%d, rxL:%d",
+                        evt->data.evt_connection_data_length.tx_data_len, evt->data.evt_connection_data_length.tx_time_us,
+                        evt->data.evt_connection_data_length.rx_data_len, evt->data.evt_connection_data_length.rx_time_us);
     }
     break;
     case sl_bt_evt_connection_closed_id: {

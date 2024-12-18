@@ -9,12 +9,12 @@ metadata:
     license: Zlib
 requires:
   - name: matter_lcd
-    condition: [matter_platform_efr32]
+    condition: [matter_platform_mg]
   - name: matter_lcd_917SOC
     condition: [brd4338a]
   - name: matter_libqrcode_common
   - name: matter_uart
-    condition: [matter_platform_efr32]
+    condition: [matter_platform_mg]
 toolchain_settings:
   - option: gcc_compiler_option
     value: -Wno-type-limits

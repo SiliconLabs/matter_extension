@@ -1,21 +1,36 @@
 id: matter_thread
+package: Matter
 label: Thread Network Layer
-description: Adds Thread network layer for Matter devices
-package: "Matter"
+description: >
+  Adds Thread network layer for Matter devices
 category: Matter-Thread
-ui_hints:
-  visibility: never
 quality: production
 metadata:
   sbom:
     license: Zlib
-requires:
-  - name: matter
-  - name: ot_stack
+
 provides:
-  - name: matter_thread
+- name: matter_thread
+
+requires:
+- name: matter
+- name: ot_stack
+- name: ot_platform_abstraction
+# MATTER-4415: Workaround since openthread libs assume TCP is enable and associated crypto components are present
+- name: ot_stack_tcp_stubs
+  condition: [ot_cert_libs]
+
 define:
-  - name: SL_OPENTHREAD_CERT_LIB
-    value: 1
-    condition:
-      - ot_cert_libs
+- name: SL_OPENTHREAD_CERT_LIB
+  value: 1
+  condition: [ot_cert_libs]
+# MATTER-4415: Workaround since openthread libs assume TCP is enable and associated crypto components are present
+- name: OPENTHREAD_CONFIG_TCP_ENABLE
+  value: 0
+  condition: [ot_cert_libs]
+- name: OPENTHREAD_CONFIG_DNS_CLIENT_OVER_TCP_ENABLE
+  value: 0
+  condition: [ot_cert_libs]
+
+ui_hints:
+  visibility: never

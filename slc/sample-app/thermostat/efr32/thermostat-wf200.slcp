@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.4.0"
+    version: "2.5.0"
 
 component:
   - id: device_init
@@ -18,7 +18,7 @@ component:
 
   - id: matter
     from: matter
-  - id: matter_platform_efr32
+  - id: matter_platform_mg
     from: matter
   - id: matter_ble
     from: matter
@@ -35,7 +35,7 @@ component:
     from: matter
   - id: matter_wifi
     from: matter
-  - id: wf200_ncp_extension
+  - id: wf200_ncp
     from: matter
     
   - id: matter_thermostat_app
@@ -109,7 +109,7 @@ component:
 
 # Require LCD and QR Code components only on the boards that support LCD
 requires:
-  - name: wf200_ncp_extension
+  - name: wf200_ncp
   - name: spidrv_instance
   - name: uartdrv_eusart
     condition:
@@ -203,6 +203,12 @@ template_contribution:
   - name: memory_flash_size
     value: 0x00318000
     condition: [device_family_efr32mg26]
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [device_family_mgm26]
+  - name: memory_flash_size
+    value: 0x00318000
+    condition: [device_family_mgm26]
 
 readme:
   - path: ./README_WiFi.md
@@ -215,3 +221,6 @@ tag:
   - hardware:component:led:2+
 post_build:
   profile: application
+  
+other_file:
+  - path: ../../../image/qr_code_img.png

@@ -15,6 +15,7 @@ provides:
 conflicts:
   - name: matter_crypto_tinycrypt_siwx917
 
+
 requires:
   # PSA crypto components
   - name: psa_its
@@ -61,28 +62,26 @@ requires:
   - name: sl_si91x_crypto_multithread
 
 source:
-  - path: src/crypto/CHIPCryptoPAL.h
-  - path: src/crypto/CHIPCryptoPAL.cpp
-  - path: src/crypto/CHIPCryptoPALPSA.h
-  - path: src/crypto/PersistentStorageOperationalKeystore.h
-  - path: src/crypto/PersistentStorageOperationalKeystore.cpp
-  - path: src/crypto/RandUtils.h
-  - path: src/crypto/RandUtils.cpp
-  - path: src/crypto/RawKeySessionKeystore.h
-  - path: src/crypto/RawKeySessionKeystore.cpp
-  - path: src/crypto/PSAOperationalKeystore.h
-  - path: src/crypto/PSAOperationalKeystore.cpp
-  - path: src/crypto/PSASessionKeystore.h
-  - path: src/crypto/PSASessionKeystore.cpp
-  - path: src/platform/silabs/efr32/CHIPCryptoPALPsaEfr32.cpp
+  - path: third_party/matter_sdk/src/crypto/CHIPCryptoPAL.h
+  - path: third_party/matter_sdk/src/crypto/CHIPCryptoPAL.cpp
+  - path: third_party/matter_sdk/src/crypto/CHIPCryptoPALPSA.h
+  - path: third_party/matter_sdk/src/crypto/PersistentStorageOperationalKeystore.h
+  - path: third_party/matter_sdk/src/crypto/PersistentStorageOperationalKeystore.cpp
+  - path: third_party/matter_sdk/src/crypto/RandUtils.h
+  - path: third_party/matter_sdk/src/crypto/RandUtils.cpp
+  - path: third_party/matter_sdk/src/crypto/PSAOperationalKeystore.h
+  - path: third_party/matter_sdk/src/crypto/PSAOperationalKeystore.cpp
+  - path: third_party/matter_sdk/src/crypto/PSASessionKeystore.h
+  - path: third_party/matter_sdk/src/crypto/PSASessionKeystore.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/efr32/CHIPCryptoPALPsaEfr32.cpp
 
 include:
-  - path: src/crypto
+  - path: third_party/matter_sdk/src/crypto
     file_list:
       - path: CHIPCryptoPAL.h
       - path: OperationalKeystore.h
       - path: SessionKeystore.h
-  - path: src/platform/silabs/SiWx917
+  - path: third_party/matter_sdk/src/platform/silabs/SiWx917
     file_list:
       - path: siwx917-chip-mbedtls-config.h
       - path: siwx917-chip-psa-config.h

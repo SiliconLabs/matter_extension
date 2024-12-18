@@ -103,7 +103,7 @@ if __name__ == '__main__':
     #
     # REGEX FORMAT:
     # matterExtensionVersion: '0.0.3'
-    replace_text(str(ROOT)+"third_party/matter_private/jenkins/pipeline_metadata.yml","matterExtensionVersion: '"+VERSION_REGEX_FORMAT+"'","matterExtensionVersion: '"+EXTENSION_NEW_VERSION+"'")
+    replace_text(str(ROOT)+"/third_party/matter_private/jenkins/pipeline_metadata.yml","matterExtensionVersion: '"+VERSION_REGEX_FORMAT+"'","matterExtensionVersion: '"+EXTENSION_NEW_VERSION+"'")
 
     # Update .md files in slc/ directory
     #
@@ -113,9 +113,9 @@ if __name__ == '__main__':
         readme_files = [os.path.abspath(f) for f in pathlib.Path(ROOT).glob("slc/**/*.md")]
         for file in readme_files:
 
-            replace_text(file,"https://docs.silabs.com/matter/"+VERSION_REGEX_FORMAT, "https://docs.silabs.com/matter/"+EXTENSION_NEW_VERSION)
+            replace_text(file,"https://docs.silabs.com/matter/"+VERSION_REGEX_FORMAT,"https://docs.silabs.com/matter/"+EXTENSION_NEW_VERSION)
             if FULL_VERSION:
-                replace_text(file,"https://www.silabs.com/documents/public/software/SilabsMatterPi_"+FULL_VERSION_REGEX+".zip", "https://www.silabs.com/documents/public/software/SilabsMatterPi_"+EXTENSION_NEW_VERSION+"-"+AUX_VERSION+".zip", False)
+                replace_text(file,"https://www.silabs.com/documents/public/software/SilabsMatterPi_"+FULL_VERSION_REGEX+"-extension.zip", "https://www.silabs.com/documents/public/software/SilabsMatterPi_"+EXTENSION_NEW_VERSION+"-"+AUX_VERSION+"-extension.zip", False)
 
     # Update matter_docs.xml
     #

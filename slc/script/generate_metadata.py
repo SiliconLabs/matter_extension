@@ -206,8 +206,6 @@ for brd, val in demos_map['demos'].items():
                     boardCompatibilityProp.set('key', 'core.boardCompatibility')
                     boardCompatibilityProp.set('value', brd.lower())
 
-                    print(demo_name)
-
                     imageFileProp.set('key', 'demos.imageFile')
                     if "soc" in board_type:
                         #exception for thermostat app name 
