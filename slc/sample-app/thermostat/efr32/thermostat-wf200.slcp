@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.0"
+    version: "2.5.1"
 
 component:
   - id: device_init
@@ -177,6 +177,8 @@ configuration:
     value: 1536
   - name: MATTER_WIFI_WF200
     value: "1"
+  - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS
+    value: 1
 
 toolchain_settings:
   - option: cxx_standard

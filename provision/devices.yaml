@@ -83,6 +83,8 @@ si917y:
   firmware:
     - version: "2.2"
       file: "si917y_nvm3k2.rps"
+    - version: "2.3"
+      file: "si917y_nvm3k2.rps"
 
 si917:
   alias: [ siwg917 ]
@@ -99,9 +101,11 @@ si917:
       file: "si917_nvm3k2.rps"
     - version: "2.2"
       file: "si917_nvm3k2.rps"
+    - version: "2.3"
+      file: "si917_nvm3k2.rps"
 
 simg3:
-  alias: [ sixg3 ]
+  alias: [sixg3]
   ram_addr: 0x20000000
   flash_addr: 0x1000000
   stack_size: 0x8000
@@ -109,4 +113,4 @@ simg3:
     - version: "2.2"
       file: "sixg3_psa3_nvm3k2.s37"
     - version: "2.3"
-      file: "sixg3_psa3_nvm3k2.s37"
+      file: "sixg3_psa3_nvm3k3.s37"

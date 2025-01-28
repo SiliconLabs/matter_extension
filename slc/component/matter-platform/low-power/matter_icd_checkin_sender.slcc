@@ -33,6 +33,3 @@ requires:
 documentation:
   docset: matter
   document: matter-overview-guides/matter-icd
-
-ui_hints:
-    visibility: always

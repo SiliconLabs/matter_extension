@@ -8,12 +8,6 @@ metadata:
   sbom:
     license: Zlib
 
-config_file:
-  - override:
-      component: "%extension-wiseconnect3_sdk%freertos_config"
-      file_id: freertos_config
-    path: third_party/matter_sdk/examples/platform/silabs/FreeRTOSConfig.h
-
 requires:
   - name: sl_system
   - name: matter_siwx917

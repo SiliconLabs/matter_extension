@@ -18,7 +18,7 @@ Silicon Labs platform.
 
 For more general information on running Matter applications and prerequisites see the online 
 documentation for Matter available on docs.silabs.com. Follow Wi-Fi instructions depending on the example you are running.
-[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.5.0/matter-wifi)
+[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.5.1/matter-wifi)
 
 ## OnOff Plug Example User Interface
 
@@ -84,7 +84,7 @@ After 15 minutes, the advertisement stops. In addition, this button should also 
 
 ## Provision and Control
 
-You can provision and control the Matter device using the Python controller, chip-tool standalone, Android or iOS app, or the Matter Hub provided by Silicon Labs. More information on using the Matter Hub can be found in the online [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.5.0/matter-thread/raspi-img)
+You can provision and control the Matter device using the Python controller, chip-tool standalone, Android or iOS app, or the Matter Hub provided by Silicon Labs. More information on using the Matter Hub can be found in the online [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.5.1/matter-thread/raspi-img)
 
 
     

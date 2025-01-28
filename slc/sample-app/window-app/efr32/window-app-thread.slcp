@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.0"
+    version: "2.5.1"
 
 provides:
   - name: window_app
@@ -175,7 +175,9 @@ configuration:
   - {name: SL_STACK_SIZE, value: '4608'} 
   - {name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE, value: '1536'}
   - name: CIRCULAR_QUEUE_LEN_MAX
-    value: 16 
+    value: 16
+  - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS
+    value: 1 
 
 # Default ICD configurations for window-app (SIT)
   - {name: SL_IDLE_MODE_DURATION_S, value: '600'}

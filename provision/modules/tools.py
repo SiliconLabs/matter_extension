@@ -39,8 +39,8 @@ class Commander:
         return DeviceInfo(res)
 
     def flash(self, path):
+        image_path = _util.Paths.quote(path)
         _, ext = os.path.splitext(path)
-        image_path = '"{}"'.format(path)
         if self.auto and ('si917' == self.device):
             self.execute(['manufacturing', 'erase', 'userdata'], False, True)
         if '.rps' == ext:
@@ -112,7 +112,10 @@ class CertTool:
         if os.path.exists(cd):
             os.remove(cd)
         # Generate CD
-        self.execute(['gen-cd', '-f', '1', '-V', self.vid, '-p', self.pid, '-d', '0x0016', '-c', 'ZIG20142ZB330003-24', '-l', security_level, '-i', security_info, '-n', version, '-t', '0', '-o', self.vid, '-r' , self.pid, '-C', cdc, '-K', cdk, '-O', cd ])
+        cdcq = _util.Paths.quote(cdc)
+        cdkq = _util.Paths.quote(cdk)
+        cdq = _util.Paths.quote(cd)
+        self.execute(['gen-cd', '-f', '1', '-V', self.vid, '-p', self.pid, '-d', '0x0016', '-c', 'ZIG20142ZB330003-24', '-l', security_level, '-i', security_info, '-n', version, '-t', '0', '-o', self.vid, '-r' , self.pid, '-C', cdcq, '-K', cdkq, '-O', cdq ])
 
     def generatePAA(self, paa_cert, paa_key):
         # Remove existing PAA
@@ -121,7 +124,9 @@ class CertTool:
         if os.path.exists(paa_key):
             os.remove(paa_key)
         # Generate PAA
-        self.execute(['gen-att-cert', '-t', 'a', '-l', self.lifetime, '-c', '"Matter PAA"', '-V', self.vid, '-o', paa_cert, '-O', paa_key])
+        paa_certq = _util.Paths.quote(paa_cert)
+        paa_keyq = _util.Paths.quote(paa_key)
+        self.execute(['gen-att-cert', '-t', 'a', '-l', self.lifetime, '-c', '"Matter PAA"', '-V', self.vid, '-o', paa_certq, '-O', paa_keyq])
 
     def generatePAI(self, paa_cert, paa_key, pai_cert, pai_key):
         # Remove existing PAI
@@ -130,7 +135,11 @@ class CertTool:
         if os.path.exists(pai_key):
             os.remove(pai_key)
         # Generate PAI
-        self.execute(['gen-att-cert', '-t', 'i', '-l', self.lifetime, '-c', '"Matter PAI"', '-V', self.vid, '-P', self.pid, '-C', paa_cert, '-K', paa_key, '-o', pai_cert, '-O', pai_key])
+        paa_certq = _util.Paths.quote(paa_cert)
+        paa_keyq = _util.Paths.quote(paa_key)
+        pai_certq = _util.Paths.quote(pai_cert)
+        pai_keyq = _util.Paths.quote(pai_key)
+        self.execute(['gen-att-cert', '-t', 'i', '-l', self.lifetime, '-c', '"Matter PAI"', '-V', self.vid, '-P', self.pid, '-C', paa_certq, '-K', paa_keyq, '-o', pai_certq, '-O', pai_keyq])
 
     def generateDAC(self, pai_cert, pai_key, dac_cert, dac_key, common_name = 'Matter DAC'):
         # Remove existing DAC
@@ -139,8 +148,12 @@ class CertTool:
         if os.path.exists(dac_key):
             os.remove(dac_key)
         # Generate DAC
-        cn = "\"{}\"".format(common_name)
-        self.execute(['gen-att-cert', '-t', 'd', '-l', self.lifetime, '-c', cn, '-V', self.vid, '-P', self.pid, '-C', pai_cert, '-K', pai_key, '-o', dac_cert, '-O', dac_key])
+        cnq = '"{}"'.format(common_name)
+        pai_certq = _util.Paths.quote(pai_cert)
+        pai_keyq = _util.Paths.quote(pai_key)
+        dac_certq = _util.Paths.quote(dac_cert)
+        dac_keyq = _util.Paths.quote(dac_key)
+        self.execute(['gen-att-cert', '-t', 'd', '-l', self.lifetime, '-c', cnq, '-V', self.vid, '-P', self.pid, '-C', pai_certq, '-K', pai_keyq, '-o', dac_certq, '-O', dac_keyq])
 
     def generateSerial(self):
         base_time = datetime.datetime(2000, 1, 1)
@@ -148,7 +161,7 @@ class CertTool:
         return delta.seconds
 
     def execute(self, args):
-        if self.tool is None:
+        if (self.tool is None) or (shutil.which(self.tool)) is None:
             raise ValueError("Missing Cert Tool");
         _util.execute([ self.tool ] + args)
 

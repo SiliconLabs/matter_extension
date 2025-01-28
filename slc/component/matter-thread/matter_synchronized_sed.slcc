@@ -16,8 +16,8 @@ define:
     value: 1
 
 requires:
-  - id: matter_icd_core
-  - id: matter_thread
+  - name: matter_icd_core
+  - name: matter_thread
 
 conflicts:
   - name: ot_stack_ftd

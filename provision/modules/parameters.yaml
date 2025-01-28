@@ -342,7 +342,6 @@ attestation_credentials:
     short: 'ic'
     type: 'path'
     max: 500
-    check: false
 
   - id: 0x0194
     desc: 'Product Attestation Intermediate Key'
@@ -357,7 +356,6 @@ attestation_credentials:
     short: 'dc'
     type: 'path'
     max: 500
-    check: false
 
   - id: 0x0196
     desc: 'Device Attestation Key'

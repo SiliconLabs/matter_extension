@@ -462,12 +462,6 @@ sl_status_t JoinWifiNetwork(void)
 
     if (status == SL_STATUS_OK)
     {
-#if CHIP_CONFIG_ENABLE_ICD_SERVER
-        // TODO: We need a way to identify if this was a retry or a first attempt connect to avoid removing a req that was not ours
-        //  Remove High performance request that might have been added during the retry process
-        chip::DeviceLayer::Silabs::WifiSleepManager::GetInstance().RemoveHighPerformanceRequest();
-#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
-
         WifiEvent event = WifiEvent::kStationConnect;
         sl_matter_wifi_post_event(event);
         return status;
@@ -475,13 +469,6 @@ sl_status_t JoinWifiNetwork(void)
 
     // failure only happens when the firmware returns an error
     ChipLogError(DeviceLayer, "sl_net_up failed: 0x%lx", static_cast<uint32_t>(status));
-
-    // Deactivate the network interface before activating it on the next retry.
-    if ((status == SL_STATUS_SI91X_SCAN_ISSUED_IN_ASSOCIATED_STATE) || (status == SL_STATUS_SI91X_COMMAND_GIVEN_IN_INVALID_STATE))
-    {
-        status = sl_net_down((sl_net_interface_t) SL_NET_WIFI_CLIENT_INTERFACE);
-        ChipLogProgress(DeviceLayer, "sl_net_down status 0x%lx", static_cast<uint32_t>(status));
-    }
 
     wfx_rsi.dev_state.Clear(WifiState::kStationConnecting).Clear(WifiState::kStationConnected);
 
@@ -625,9 +612,9 @@ sl_status_t show_scan_results(sl_wifi_scan_result_t * scan_result)
                                    (char *) scan_result->scan_info[idx].ssid); // +1 for null termination
 
         // if user has provided ssid, then check if the current scan result ssid matches the user provided ssid
-        if (wfx_rsi.scan_ssid != nullptr &&
-            (strncmp(wfx_rsi.scan_ssid, cur_scan_result.ssid, std::min(strlen(wfx_rsi.scan_ssid), strlen(cur_scan_result.ssid))) ==
-             0))
+        if (wfx_rsi.scan_ssid != nullptr && 
+            (strlen(wfx_rsi.scan_ssid) != strlen(cur_scan_result.ssid) || 
+             strncmp(wfx_rsi.scan_ssid, cur_scan_result.ssid, strlen(wfx_rsi.scan_ssid)) != 0))
         {
             continue;
         }

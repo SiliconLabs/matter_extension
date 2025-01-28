@@ -321,12 +321,13 @@ bool wfx_start_scan(char * ssid, void (*callback)(wfx_wifi_scan_result_t *))
     VerifyOrReturnError(wfx_rsi.scan_cb == nullptr, false);
     wfx_rsi.scan_cb = callback;
 
-    if (ssid != nullptr)
+    // if SSID is provided to scan only that SSID
+    if(ssid) 
     {
         wfx_rsi.scan_ssid_length = strnlen(ssid, std::min<size_t>(sizeof(ssid), WFX_MAX_SSID_LENGTH));
-        wfx_rsi.scan_ssid        = reinterpret_cast<char *>(chip::Platform::MemoryAlloc(wfx_rsi.scan_ssid_length));
+        wfx_rsi.scan_ssid        = reinterpret_cast<char *>(chip::Platform::MemoryAlloc(wfx_rsi.scan_ssid_length + 1));
         VerifyOrReturnError(wfx_rsi.scan_ssid != nullptr, false);
-        chip::Platform::CopyString(wfx_rsi.scan_ssid, wfx_rsi.scan_ssid_length, ssid);
+        chip::Platform::CopyString(wfx_rsi.scan_ssid, wfx_rsi.scan_ssid_length + 1, ssid);
     }
 
     WifiEvent event = WifiEvent::kScan;

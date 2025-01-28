@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.0"
+    version: "2.5.1"
 
 component:
   - id: device_init
@@ -156,10 +156,6 @@ define:
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
     value: "4092"
 configuration:
-  # Pin conflict with the only LED(0) and SL_RAIL_UTIL_PTI_DFRAME_PIN 
-  - name: SL_RAIL_UTIL_PTI_MODE
-    value: RAIL_PTI_MODE_DISABLED
-    condition: [brd1019a]
   - name: SL_OPENTHREAD_ENABLE_APP_TASK
     value: 0
   - name: SL_OPENTHREAD_ENABLE_CLI_TASK
@@ -182,7 +178,10 @@ configuration:
     condition: [matter_thread_coap_cert_libs]
   - { name: SL_STACK_SIZE, value: "4608" }
   - name: CIRCULAR_QUEUE_LEN_MAX
-    value: 16    
+    value: 16
+  - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS
+    value: 1
+    
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17
@@ -212,7 +211,9 @@ template_contribution:
     value: 0x1008000
     condition: [device_family_simg301]
   - name: memory_flash_size
-    value: 0x3c7000
+    # Total flash size is 0x391000. 0x8000 is reserved for the bootloader, leaving 0x389000.
+    # We subtract the last page for Matter certificates from the total flash.
+    value: 0x388000
     condition: [device_family_simg301]
     
 readme:

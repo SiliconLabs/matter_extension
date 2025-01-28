@@ -7,7 +7,7 @@ description: >
 
 sdk_extension:
   - id: matter
-    version: "2.5.0"
+    version: "2.5.1"
 
 component:
   - id: btl_core
@@ -19,16 +19,17 @@ component:
   - id: btl_common_storage
   - id: btl_debug
   - id: btl_gbl_compression_lzma
+  - id: clock_manager
 
 configuration:
   - name: SLOT0_ENABLE
     value: 1
   - name: SLOT0_SIZE
-    value: 1703936
+    value: 1560576
   - name: SLOT0_START
-    value: 18874368
+    value: 18841600
   - name: BTL_STORAGE_BASE_ADDRESS
-    value: 18874368
+    value: 18841600
 
 readme:
   - path: ./readme.md

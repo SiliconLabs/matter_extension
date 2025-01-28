@@ -12,5 +12,3 @@ define:
     value: "1"
 conflicts:
   - name: matter_zigbee_concurrent
-ui_hints:
-  visibility: always

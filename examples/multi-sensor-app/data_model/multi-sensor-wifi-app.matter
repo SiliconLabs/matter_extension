@@ -1914,6 +1914,19 @@ endpoint 1 {
     handle command TriggerEffect;
   }
 
+  server cluster Descriptor {
+    callback attribute deviceTypeList;
+    callback attribute serverList;
+    callback attribute clientList;
+    callback attribute partsList;
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute eventList;
+    callback attribute attributeList;
+    callback attribute featureMap;
+    callback attribute clusterRevision;
+  }
+
   server cluster OccupancySensing {
     ram      attribute occupancy;
     ram      attribute occupancySensorType;
