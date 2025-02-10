@@ -255,7 +255,6 @@ void BaseApplicationDelegate::OnCommissioningWindowClosed()
 #endif // QR_CODE_ENABLED
 #endif // DISPLAY_ENABLED
     }
-
 }
 
 void BaseApplicationDelegate::OnFabricCommitted(const FabricTable & fabricTable, FabricIndex fabricIndex)
@@ -974,6 +973,7 @@ void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
         Zigbee::RequestStart(channel);     // leave handle internally
 #elif defined(SL_MATTER_ZIGBEE_SEQUENTIAL) // Matter Zigbee sequential
         Zigbee::RequestLeave();
+        Zigbee::ZLLNotFactoryNew();
 #endif                                     // SL_MATTER_ZIGBEE_CMP
 #endif                                     // SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
     }

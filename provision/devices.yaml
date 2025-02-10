@@ -19,6 +19,10 @@ efr32mg24:
       file: "efr32mg24_psa3_nvm3k2.s37"
     - version: "2.3"
       file: "efr32mg24_psa3_nvm3k2.s37"
+    - version: "2.4"
+      file: "efr32mg24_psa3_nvm3k3.s37"
+    - version: "2.5"
+      file: "efr32mg24_ram.s37"
 
 efr32mg26:
   ram_addr: 0x20000000
@@ -35,6 +39,10 @@ efr32mg26:
       file: "efr32mg26_psa3_nvm3k2.s37"
     - version: "2.3"
       file: "efr32mg26_psa3_nvm3k2.s37"
+    - version: "2.4"
+      file: "efr32mg26_psa3_nvm3k3.s37"
+    - version: "2.5"
+      file: "efr32mg26_ram.s37"
 
 mgm24:
   ram_addr: 0x20000000
@@ -57,6 +65,10 @@ mgm24:
       file: "efr32mg24_psa3_nvm3k2.s37"
     - version: "2.3"
       file: "efr32mg24_psa3_nvm3k2.s37"
+    - version: "2.4"
+      file: "efr32mg24_psa3_nvm3k3.s37"
+    - version: "2.5"
+      file: "efr32mg24_ram.s37"
 
 mgm26:
   ram_addr: 0x20000000
@@ -72,7 +84,11 @@ mgm26:
     - version: "2.2"
       file: "efr32mg26_psa3_nvm3k2.s37"
     - version: "2.3"
-      file: "efr32mg24_psa3_nvm3k2.s37"
+      file: "efr32mg26_psa3_nvm3k2.s37"
+    - version: "2.4"
+      file: "efr32mg26_psa3_nvm3k3.s37"
+    - version: "2.5"
+      file: "efr32mg26_ram.s37"
 
 si917y:
   alias: [ siwg917y ]
@@ -85,6 +101,10 @@ si917y:
       file: "si917y_nvm3k2.rps"
     - version: "2.3"
       file: "si917y_nvm3k2.rps"
+    - version: "2.4"
+      file: "si917y_nvm3k3.rps"
+    - version: "2.5"
+      file: "si917y_nvm3k3.rps"
 
 si917:
   alias: [ siwg917 ]
@@ -103,9 +123,12 @@ si917:
       file: "si917_nvm3k2.rps"
     - version: "2.3"
       file: "si917_nvm3k2.rps"
+    - version: "2.4"
+      file: "si917_nvm3k3.rps"
+    - version: "2.5"
+      file: "si917_nvm3k3.rps"
 
-simg3:
-  alias: [sixg3]
+simg301m114:
   ram_addr: 0x20000000
   flash_addr: 0x1000000
   stack_size: 0x8000
@@ -114,3 +137,18 @@ simg3:
       file: "sixg3_psa3_nvm3k2.s37"
     - version: "2.3"
       file: "sixg3_psa3_nvm3k3.s37"
+    - version: "2.4"
+      file: "sixg3_psa3_nvm3k3.s37"
+    - version: "2.5"
+      file: "sixg3_psa3_nvm3k3.s37"
+
+# This is a distinct image for the rainier 3mb part. 
+simg301m113:
+  ram_addr: 0x20000000
+  flash_addr: 0x1000000
+  stack_size: 0x8000
+  firmware:
+    - version: "2.4"
+      file: "sixg3w_psa3_nvm3k3.s37"
+    - version: "2.5"
+      file: "sixg3w_psa3_nvm3k3.s37"

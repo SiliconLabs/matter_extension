@@ -308,32 +308,44 @@ int32_t wfx_reset_counts(void)
 
 #ifdef SL_WFX_CONFIG_SCAN
 /*******************************************************************************
- * @fn   bool wfx_start_scan(char *ssid, void (*callback)(wfx_wifi_scan_result_t *))
+ * @fn   CHIP_ERROR wfx_start_scan(chip::ByteSpan ssid, void (*callback)(wfx_wifi_scan_result_t *))
  * @brief
  *       called fuction when driver start scaning
  * @param[in]  ssid:
  * @return returns ture if successful,
  *          false otherwise
  *******************************************************************************/
-bool wfx_start_scan(char * ssid, void (*callback)(wfx_wifi_scan_result_t *))
+CHIP_ERROR wfx_start_scan(chip::ByteSpan ssid, void (*callback)(wfx_wifi_scan_result_t *))
 {
-    // check if already in progress
-    VerifyOrReturnError(wfx_rsi.scan_cb == nullptr, false);
+    // Check if a scan is already in progress
+    VerifyOrReturnError(wfx_rsi.scan_cb == nullptr, CHIP_ERROR_IN_PROGRESS);
     wfx_rsi.scan_cb = callback;
 
-    // if SSID is provided to scan only that SSID
-    if(ssid) 
+    // Validate SSID length
+    VerifyOrReturnError(ssid.size() <= WFX_MAX_SSID_LENGTH, CHIP_ERROR_BUFFER_TOO_SMALL);
+
+    // Handle scan based on whether SSID is empty or not
+    if (ssid.empty()) 
     {
-        wfx_rsi.scan_ssid_length = strnlen(ssid, std::min<size_t>(sizeof(ssid), WFX_MAX_SSID_LENGTH));
-        wfx_rsi.scan_ssid        = reinterpret_cast<char *>(chip::Platform::MemoryAlloc(wfx_rsi.scan_ssid_length + 1));
-        VerifyOrReturnError(wfx_rsi.scan_ssid != nullptr, false);
+        // Scan all networks
+        wfx_rsi.scan_ssid        = nullptr;
+        wfx_rsi.scan_ssid_length = 0;
+    } 
+    else 
+    {
+        // Allocate memory for SSID and copy data
+        wfx_rsi.scan_ssid_length = ssid.size();
+        wfx_rsi.scan_ssid = reinterpret_cast<char *>(chip::Platform::MemoryAlloc(wfx_rsi.scan_ssid_length + 1));
+        VerifyOrReturnError(wfx_rsi.scan_ssid != nullptr, CHIP_ERROR_NO_MEMORY);
+
+        // Copy the SSID with null-termination
         chip::Platform::CopyString(wfx_rsi.scan_ssid, wfx_rsi.scan_ssid_length + 1, ssid);
     }
 
     WifiEvent event = WifiEvent::kScan;
     sl_matter_wifi_post_event(event);
 
-    return true;
+    return CHIP_NO_ERROR;
 }
 
 /***************************************************************************

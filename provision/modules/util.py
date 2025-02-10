@@ -8,6 +8,7 @@ import yaml
 MARGIN = '  '
 
 class Paths:
+    MODULES_DIR = 'modules'
     TEMP_DIR = 'temp'
     SUPPORT_DIR = 'support'
     MATTER_DIR = '../third_party/matter_sdk'

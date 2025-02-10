@@ -203,55 +203,37 @@ void ButtonActionTriggered(AppEvent * aEvent)
 
 Status GetMeasuredTemperature(chip::app::DataModel::Nullable<int16_t> & value)
 {
-    DeviceLayer::PlatformMgr().LockChipStack();
     Status status = TemperatureMeasurement::Attributes::MeasuredValue::Get(kTemperatureSensorEndpoint, value);
-    DeviceLayer::PlatformMgr().UnlockChipStack();
-
     return status;
 }
 
 Status GetMaxMeasuredTemperature(chip::app::DataModel::Nullable<int16_t> & value)
 {
-    DeviceLayer::PlatformMgr().LockChipStack();
     Status status = TemperatureMeasurement::Attributes::MaxMeasuredValue::Get(kTemperatureSensorEndpoint, value);
-    DeviceLayer::PlatformMgr().UnlockChipStack();
-
     return status;
 }
 
 Status GetMinMeasuredTemperature(chip::app::DataModel::Nullable<int16_t> & value)
 {
-    DeviceLayer::PlatformMgr().LockChipStack();
     Status status = TemperatureMeasurement::Attributes::MinMeasuredValue::Get(kTemperatureSensorEndpoint, value);
-    DeviceLayer::PlatformMgr().UnlockChipStack();
-
     return status;
 }
 
 Status GetMeasuredHumidity(chip::app::DataModel::Nullable<uint16_t> & value)
 {
-    DeviceLayer::PlatformMgr().LockChipStack();
     Status status = RelativeHumidityMeasurement::Attributes::MeasuredValue::Get(kHumiditySensorEndpoint, value);
-    DeviceLayer::PlatformMgr().UnlockChipStack();
-
     return status;
 }
 
 Status GetMaxMeasuredHumidity(chip::app::DataModel::Nullable<uint16_t> & value)
 {
-    DeviceLayer::PlatformMgr().LockChipStack();
     Status status = RelativeHumidityMeasurement::Attributes::MaxMeasuredValue::Get(kHumiditySensorEndpoint, value);
-    DeviceLayer::PlatformMgr().UnlockChipStack();
-
     return status;
 }
 
 Status GetMinMeasuredHumidity(chip::app::DataModel::Nullable<uint16_t> & value)
 {
-    DeviceLayer::PlatformMgr().LockChipStack();
     Status status = RelativeHumidityMeasurement::Attributes::MinMeasuredValue::Get(kHumiditySensorEndpoint, value);
-    DeviceLayer::PlatformMgr().UnlockChipStack();
-
     return status;
 }
 

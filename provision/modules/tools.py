@@ -49,7 +49,10 @@ class Commander:
             time.sleep(1)
         else:
             self.execute(['flash' , image_path], False, True)
-            self.execute(['device', 'reset'], False, True)
+
+    def reset(self):
+        print("Reset!")
+        self.execute(['device', 'reset'], False, True)
 
 
 class DeviceInfo:

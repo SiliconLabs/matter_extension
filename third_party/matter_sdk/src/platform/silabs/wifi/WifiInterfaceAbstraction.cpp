@@ -56,10 +56,6 @@ osTimerId_t sRetryTimer;
  */
 void RetryConnectionTimerHandler(void * arg)
 {
-#if CHIP_CONFIG_ENABLE_ICD_SERVER
-    Silabs::WifiSleepManager::GetInstance().RequestHighPerformance();
-#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
-
     if (wfx_connect_to_ap() != SL_STATUS_OK)
     {
         ChipLogError(DeviceLayer, "wfx_connect_to_ap() failed.");

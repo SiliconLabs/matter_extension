@@ -202,34 +202,7 @@ configuration:
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17
-# For the linker file set the flash size as the actual size minus the following:
-# Space reserved for the bootloader (0x6000 bytes at the beginning)
-# A single page at the end reserved for the provisioning data
 template_contribution:
-  - name: memory_flash_start
-    value: 0x08006000
-    condition: [device_family_efr32mg24]
-  - name: memory_flash_size
-    value: 0x00178000
-    condition: [device_family_efr32mg24]
-  - name: memory_flash_start
-    value: 0x08006000
-    condition: [device_family_mgm24]
-  - name: memory_flash_size
-    value: 0x00178000
-    condition: [device_family_mgm24]
-  - name: memory_flash_start
-    value: 0x08006000
-    condition: [device_family_efr32mg26]
-  - name: memory_flash_size
-    value: 0x00318000
-    condition: [device_family_efr32mg26]
-  - name: memory_flash_start
-    value: 0x08006000
-    condition: [device_family_mgm26]
-  - name: memory_flash_size
-    value: 0x00318000
-    condition: [device_family_mgm26]
   - name: memory_ram_start
     value: 0x20000000
   - name: memory_ram_size

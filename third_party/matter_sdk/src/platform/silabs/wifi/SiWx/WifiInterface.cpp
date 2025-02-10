@@ -353,22 +353,27 @@ sl_status_t SetWifiConfigurations()
     sl_wifi_listen_interval_t sleep_interval = { .listen_interval =
                                                      chip::ICDConfigurationData::GetInstance().GetSlowPollingInterval().count() };
     status                                   = sl_wifi_set_listen_interval(SL_WIFI_CLIENT_INTERFACE, sleep_interval);
-    VerifyOrReturnError(status == SL_STATUS_OK, status);
+    VerifyOrReturnError(status == SL_STATUS_OK, status,
+                        ChipLogError(DeviceLayer, "sl_wifi_set_listen_interval failed: 0x%lx", status));
 
     sl_wifi_advanced_client_configuration_t client_config = { .max_retry_attempts = 5 };
     status = sl_wifi_set_advanced_client_configuration(SL_WIFI_CLIENT_INTERFACE, &client_config);
-    VerifyOrReturnError(status == SL_STATUS_OK, status);
+    VerifyOrReturnError(status == SL_STATUS_OK, status,
+                        ChipLogError(DeviceLayer, "sl_wifi_set_advanced_client_configuration failed: 0x%lx", status));
 
     // [sl-only] Required configuration for listen interval changes at runtime
     status = sl_si91x_set_join_configuration(
         SL_WIFI_CLIENT_INTERFACE, (SL_SI91X_JOIN_FEAT_LISTEN_INTERVAL_VALID | SL_SI91X_JOIN_FEAT_PS_CMD_LISTEN_INTERVAL_VALID));
     VerifyOrReturnError(status == SL_STATUS_OK, status);
-
 #endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 
-    status = sl_net_set_credential(SL_NET_DEFAULT_WIFI_CLIENT_CREDENTIAL_ID, SL_NET_WIFI_PSK, &wfx_rsi.sec.passkey[0],
-                                   wfx_rsi.sec.passkey_length);
-    VerifyOrReturnError(status == SL_STATUS_OK, status);
+    if (wfx_rsi.sec.passkey_length != 0)
+    {
+        status = sl_net_set_credential(SL_NET_DEFAULT_WIFI_CLIENT_CREDENTIAL_ID, SL_NET_WIFI_PSK, &wfx_rsi.sec.passkey[0],
+                                       wfx_rsi.sec.passkey_length);
+        VerifyOrReturnError(status == SL_STATUS_OK, status,
+                            ChipLogError(DeviceLayer, "sl_net_set_credential failed: 0x%lx", status));
+    }
 
     sl_net_wifi_client_profile_t profile = {
         .config = {
@@ -384,7 +389,7 @@ sl_status_t SetWifiConfigurations()
             .bssid = {{0}},
             .bss_type = SL_WIFI_BSS_TYPE_INFRASTRUCTURE,
             .security = security,
-            .encryption = SL_WIFI_NO_ENCRYPTION,
+            .encryption = SL_WIFI_DEFAULT_ENCRYPTION,
             .client_options = SL_WIFI_JOIN_WITH_SCAN,
             .credential_id = SL_NET_DEFAULT_WIFI_CLIENT_CREDENTIAL_ID,
         },
@@ -399,7 +404,7 @@ sl_status_t SetWifiConfigurations()
     memcpy((char *) &profile.config.ssid.value, wfx_rsi.sec.ssid, wfx_rsi.sec.ssid_length);
 
     status = sl_net_set_profile((sl_net_interface_t) SL_NET_WIFI_CLIENT_INTERFACE, SL_NET_DEFAULT_WIFI_CLIENT_PROFILE_ID, &profile);
-    VerifyOrReturnError(status == SL_STATUS_OK, status, ChipLogError(DeviceLayer, "sl_net_set_profile Failed"));
+    VerifyOrReturnError(status == SL_STATUS_OK, status, ChipLogError(DeviceLayer, "sl_net_set_profile failed: 0x%lx", status));
 
     return status;
 }
@@ -462,6 +467,10 @@ sl_status_t JoinWifiNetwork(void)
 
     if (status == SL_STATUS_OK)
     {
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
+        // Remove High performance request that might have been added during the connect/retry process
+        chip::DeviceLayer::Silabs::WifiSleepManager::GetInstance().RemoveHighPerformanceRequest();
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
         WifiEvent event = WifiEvent::kStationConnect;
         sl_matter_wifi_post_event(event);
         return status;
@@ -815,6 +824,11 @@ void ProcessEvent(WifiEvent event)
     case WifiEvent::kStationStartJoin:
         ChipLogDetail(DeviceLayer, "WifiEvent::kStationStartJoin");
 
+// To avoid IOP issues, it is recommended to enable high-performance mode before joining the network.
+// TODO: Remove this once the IOP issue related to power save mode switching is fixed in the Wi-Fi SDK.
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
+        chip::DeviceLayer::Silabs::WifiSleepManager::GetInstance().RequestHighPerformance();
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
         InitiateScan();
         JoinWifiNetwork();
         break;
