@@ -22,7 +22,7 @@ import shutil
 import argparse
 
 # Directories to exclude from copying
-exclude_root_directories = [ "matter_extension/out", "matter_extension/slc/tools"]
+exclude_root_directories = [ "matter_extension/out", "matter_extension/demos", "matter_extension/slc/tools"]
 
 exlude_submodules = ['simplicity_sdk', 'wifi_sdk', "matter_private", "third_party_hw_drivers_extension"]
 

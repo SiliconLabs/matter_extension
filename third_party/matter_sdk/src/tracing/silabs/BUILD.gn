@@ -21,5 +21,6 @@ config("tracing") {
 
 source_set("silabs_tracing") {
   public = [ "include/matter/tracing/macros_impl.h" ]
+  public_deps = [ "${chip_root}/src/tracing" ]
   public_configs = [ ":tracing" ]
 }

@@ -8,6 +8,7 @@ import yaml
 MARGIN = '  '
 
 class Paths:
+    MODULES_DIR = 'modules'
     TEMP_DIR = 'temp'
     SUPPORT_DIR = 'support'
     MATTER_DIR = '../third_party/matter_sdk'
@@ -53,6 +54,10 @@ class Paths:
             full = "{}/{}".format(base, path)
         return os.path.abspath(os.path.normpath(full))
 
+    @staticmethod
+    def quote(path):
+        s = path.strip().strip('"')
+        return '"{}"'.format(os.path.normpath(s))
 
 class File:
 

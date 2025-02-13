@@ -24,7 +24,6 @@ static_library("SilabsTracing") {
     "BackendImpl.h",
     "SilabsTracing.cpp",
     "SilabsTracing.h",
-    "SilabsTracingMacros.h",
     "SilabsTracingTypes.h",
   ]
 

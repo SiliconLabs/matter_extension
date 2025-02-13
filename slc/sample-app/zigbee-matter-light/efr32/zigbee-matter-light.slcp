@@ -121,13 +121,10 @@ requires:
     condition: [device_series_3]
 
 # RAIL components that enable Concurrent Listening 
-# These are disabled by default until the OTA Bootloader issue 1385197 is fixed
-# !!! WARNING: Enabling these components requires that the device is running a
-# bootloader built with BOOTLOADER_MSC_DMA_WRITE set to false !!!
-# - name: rail_util_ieee802154_fast_channel_switching
-#   condition: [device_series_2]
-# - name: rail_util_dma
-#   condition: [device_series_2]
+  - name: rail_util_ieee802154_fast_channel_switching
+    condition: [device_series_2]
+  - name: rail_util_dma
+    condition: [device_series_2]
 
 toolchain_settings:
   - option: cxx_standard
@@ -139,10 +136,6 @@ tag:
 - hardware:device:ram:192 
 
 configuration:
-# Pin conflict with the only LED(0) and SL_RAIL_UTIL_PTI_DFRAME_PIN 
-- name: SL_RAIL_UTIL_PTI_MODE
-  value: RAIL_PTI_MODE_DISABLED
-  condition: [brd1019a]
 - name: SL_BOARD_ENABLE_VCOM
   value: 1
 - condition: [iostream_eusart]
@@ -162,6 +155,8 @@ configuration:
   value: '1'
 - name: SL_CLI_PROMPT_STRING
   value: '"TriProtocol>"'
+- name: SL_CLI_EXAMPLE_TASK_STACK_SIZE
+  value: 600
 - name: SL_BT_CONFIG_USER_ADVERTISERS
   value: 3
 - name: SL_BT_CONFIG_MAX_CONNECTIONS
@@ -170,17 +165,12 @@ configuration:
   value: 0
 - name: SL_CLI_HELP_DESCRIPTION_ENABLED
   value: 0
-- condition: [device_series_2]
-  name: NVM3_DEFAULT_NVM_SIZE
-  value: '32768'
 - name: SL_PSA_ITS_SUPPORT_V1_DRIVER
   value: 0
 - name: SL_PSA_ITS_SUPPORT_V2_DRIVER
   value: 0
 - name: SL_PSA_ITS_SUPPORT_V3_DRIVER
   value: 1
-- name: configTIMER_TASK_PRIORITY
-  value: 53
 - name: SL_IOSTREAM_EUSART_VCOM_RX_BUFFER_SIZE
   value: 128 # Increase from default for open thread
   condition:
@@ -212,8 +202,12 @@ configuration:
   value: '"\r\n"'
 - name: SL_LEGACY_HAL_DISABLE_WATCHDOG
   value: 1
+- name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+  value: 1536
 - name: CIRCULAR_QUEUE_LEN_MAX
   value: 16
+- name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS
+  value: 1
 
 define:
 - name: OS_CFG_COMPAT_INIT
@@ -260,41 +254,6 @@ include:
 post_build:
   profile: application
 
-# For the linker file set the flash size as the actual size minus the following:
-# Space reserved for the bootloader (0x6000 bytes at the beginning)
-# A single page at the end reserved for the provisioning data
-template_contribution:
-  - name: memory_flash_start
-    value: 0x08006000
-    condition: [device_family_efr32mg24]
-  - name: memory_flash_size
-    value: 0x00178000
-    condition: [device_family_efr32mg24]
-  - name: memory_flash_start
-    value: 0x08006000
-    condition: [device_family_mgm24]
-  - name: memory_flash_size
-    value: 0x00178000
-    condition: [device_family_mgm24]
-  - name: memory_flash_start
-    value: 0x08006000
-    condition: [device_family_efr32mg26]
-  - name: memory_flash_size
-    value: 0x00318000
-    condition: [device_family_efr32mg26]
-  - name: memory_flash_start
-    value: 0x08006000
-    condition: [device_family_mgm26]
-  - name: memory_flash_size
-    value: 0x00318000
-    condition: [device_family_mgm26]
-  - name: memory_flash_start
-    value: 0x1008000
-    condition: [device_family_simg301]
-  - name: memory_flash_size
-    value: 0x3c7000
-    condition: [device_family_simg301]
-
 readme:
   - path: ./README.md
 other_file:
@@ -306,4 +265,4 @@ ui_hints:
 
 sdk_extension:
   - id: matter
-    version: "2.5.0"
+    version: "2.5.1"

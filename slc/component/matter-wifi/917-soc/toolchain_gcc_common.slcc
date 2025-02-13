@@ -14,19 +14,11 @@ requires:
   - name: toolchain_variant
   - name: toolchain_variant_arm
 template_file:
-  - path: matter-wifi/917-soc/linkerfile_common.ld.jinja
-    condition: [brd4338a]
-  - path: matter-wifi/917-soc/linkerfile_common.ld.jinja
-    condition: [brd2605a]
-# TODO: Cleanup the customized linker file for brd4342a board and use the SDK linker file
+# TODO: Cleanup the customized linker file for psram boards and use the SDK linker file
   - path: matter-wifi/917-soc/linkerfile_psram_SoC.ld.jinja
-    condition: [brd4342a]
+    condition: [psram_core]
   - path: matter-wifi/917-soc/linkerfile_common.ld.jinja
-    condition: [brd4343a]
-  - path: matter-wifi/917-soc/linkerfile_common.ld.jinja
-    condition: [brd2708a]
-  - path: matter-wifi/917-soc/linkerfile_common.ld.jinja
-    condition: [brd2911a]
+    unless: [psram_core]
 library:
   - system: gcc
   - system: c
@@ -43,22 +35,10 @@ template_contribution:
     value: 320000
 toolchain_settings:
   - option: linkerfile
-    value: autogen/linkerfile_common.ld
-    condition: [brd4338a]
-  - option: linkerfile
-    value: autogen/linkerfile_common.ld
-    condition: [brd2605a]
-  - option: linkerfile
     value: autogen/linkerfile_psram_SoC.ld
-    condition: [brd4342a]
+    condition: [psram_core]
   - option: linkerfile
     value: autogen/linkerfile_common.ld
-    condition: [brd4343a]
-  - option: linkerfile
-    value: autogen/linkerfile_common.ld
-    condition: [brd2708a]
-  - option: linkerfile
-    value: autogen/linkerfile_common.ld
-    condition: [brd2911a]
+    unless: [psram_core]
 ui_hints:
   visibility: never

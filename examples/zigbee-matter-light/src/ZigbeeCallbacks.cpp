@@ -84,6 +84,11 @@ void RequestLeave()
     sl_zigbee_leave_network(SL_ZIGBEE_LEAVE_NWK_WITH_NO_OPTION);
 }
 
+void ZLLNotFactoryNew(void)
+{
+  sl_zigbee_af_zll_unset_factory_new();
+}
+
 uint8_t GetZigbeeChannel()
 {
     return sl_zigbee_af_get_radio_channel();

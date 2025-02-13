@@ -62,3 +62,15 @@ library:
   - path: third_party/matter_support/matter/provision/lib/libProvision_efr32mg24.a
     condition:  
      - device_family_simg301
+
+template_contribution:
+# Series-3 will use common token manager. 
+# it is not yet available but need this to align with zigbee stack pulling the token manager.
+# This is done so our CMP app flash placement matches our other Matter apps on S3
+# The result is the last 2 pages of flash are reserved for token/matter_credentials
+- name: static_tokens_enable
+  value: 1
+  condition: [device_series_3]
+- name: lockbits_size
+  value: 8192
+  condition: [device_series_3]

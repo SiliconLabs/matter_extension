@@ -201,6 +201,8 @@ void BaseApplicationDelegate::OnCommissioningSessionStarted()
 
 #if SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
     WifiSleepManager::GetInstance().HandleCommissioningSessionStarted();
+    // Setting the device to high power mode during commissioning
+    WifiSleepManager::GetInstance().RequestHighPerformance();
 #endif // SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
 }
 
@@ -210,6 +212,19 @@ void BaseApplicationDelegate::OnCommissioningSessionStopped()
 
 #if SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
     WifiSleepManager::GetInstance().HandleCommissioningSessionStopped();
+    // Removing the high power mode request on session stopped
+    WifiSleepManager::GetInstance().RemoveHighPerformanceRequest();
+#endif // SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
+}
+
+void BaseApplicationDelegate::OnCommissioningSessionEstablishmentError(CHIP_ERROR err)
+{
+    isComissioningStarted = false;
+
+#if SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
+    WifiSleepManager::GetInstance().HandleCommissioningSessionStopped();
+    // Removing the high power mode request on failed commissioning
+    WifiSleepManager::GetInstance().RemoveHighPerformanceRequest();
 #endif // SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
 }
 
@@ -946,6 +961,8 @@ void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
 
     case DeviceEventType::kCommissioningComplete: {
 #if SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
+        // DUT is commissioned, removing the High Performance request
+        WifiSleepManager::GetInstance().RemoveHighPerformanceRequest();
         WifiSleepManager::GetInstance().VerifyAndTransitionToLowPowerMode(WifiSleepManager::PowerEvent::kCommissioningComplete);
 #endif // SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
 
@@ -956,6 +973,7 @@ void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
         Zigbee::RequestStart(channel);     // leave handle internally
 #elif defined(SL_MATTER_ZIGBEE_SEQUENTIAL) // Matter Zigbee sequential
         Zigbee::RequestLeave();
+        Zigbee::ZLLNotFactoryNew();
 #endif                                     // SL_MATTER_ZIGBEE_CMP
 #endif                                     // SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
     }

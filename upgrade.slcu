@@ -294,3 +294,10 @@ upgrade:
           Updating value:
         value:
           "(1000)": "(1536)"
+
+  - sdk:
+      id: matter
+      version: "2.5.1"
+    
+    configuration:     
+      - script: slc/config/scripts/upgrade_config_to_2.5.1.lua

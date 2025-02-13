@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.0"
+    version: "2.5.1"
 
 component:
   - id: device_init
@@ -169,6 +169,8 @@ configuration:
   - {name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE, value: '1536'}
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: 16
+  - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS
+    value: 1
 
  # Disable logging as it affects performance
   - name: SL_MATTER_LOG_LEVEL
@@ -184,40 +186,6 @@ configuration:
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17
-# For the linker file set the flash size as the actual size minus the following:
-# Space reserved for the bootloader (0x6000 bytes at the beginning)
-# A single page at the end reserved for the provisioning data
-template_contribution:
-  - name: memory_flash_start
-    value: 0x08006000
-    condition: [device_family_efr32mg24]
-  - name: memory_flash_size
-    value: 0x00178000
-    condition: [device_family_efr32mg24]
-  - name: memory_flash_start
-    value: 0x08006000
-    condition: [device_family_mgm24]
-  - name: memory_flash_size
-    value: 0x00178000
-    condition: [device_family_mgm24]
-  - name: memory_flash_start
-    value: 0x08006000
-    condition: [device_family_efr32mg26]
-  - name: memory_flash_size
-    value: 0x00318000
-    condition: [device_family_efr32mg26]
-  - name: memory_flash_start
-    value: 0x08006000
-    condition: [device_family_mgm26]
-  - name: memory_flash_size
-    value: 0x00318000
-    condition: [device_family_mgm26]
-  - name: memory_flash_start
-    value: 0x1008000
-    condition: [device_family_simg301]
-  - name: memory_flash_size
-    value: 0x3c7000
-    condition: [device_family_simg301]
 
 config_file:
   - path: performance-test-app-thread.zap

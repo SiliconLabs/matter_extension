@@ -160,7 +160,9 @@ CHIP_ERROR WifiSleepManager::VerifyAndTransitionToLowPowerMode(PowerEvent event)
 
     if (mIsCommissioningInProgress)
     {
-        return ConfigureDTIMBasedSleep();
+        // During commissioning, don't let the device to go to sleep
+        // This is needed to interrupt the sleep and retry to join the network
+        return CHIP_NO_ERROR;
     }
 
     // TODO: Clean this up when the Wi-Fi interface re-work is finished

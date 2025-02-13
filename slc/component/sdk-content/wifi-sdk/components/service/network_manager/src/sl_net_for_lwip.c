@@ -290,14 +290,7 @@ static void set_sta_link_up(sl_net_wifi_client_profile_t *profile)
   netif_set_ip6_autoconfig_enabled(&(wifi_client_context->netif), 1);
   // Create and set the link-local address
   netif_create_ip6_linklocal_address(&(wifi_client_context->netif), MAC_48_BIT_SET);
-  SL_DEBUG_LOG("IPv6 Address %s\n", ip6addr_ntoa(netif_ip6_addr(&(wifi_client_context->netif), 0)));
-
-  // Wait for the link-local address to up
-  while (!ip6_addr_ispreferred(netif_ip6_addr_state(&(wifi_client_context->netif), 0))) {
-    osDelay(200);
-  }
 #endif /* LWIP_IPV6 && LWIP_IPV6_AUTOCONFIG */
-
   return;
 }
 
@@ -413,12 +406,9 @@ sl_status_t sl_net_wifi_client_up(sl_net_interface_t interface, sl_net_profile_i
   profile.ip.ip.v4.netmask.bytes[3] = NETIF_IPV4_ADDRESS(addr, 3);
 #endif /* LWIP_IPV4 */
 #if LWIP_IPV6
-  for (int i = 0; i < 4; i++) {
-    profile.ip.ip.v6.link_local_address.value[i] = ntohl(wifi_client_context->netif.ip6_addr[0].addr[i]);
-    profile.ip.ip.v6.global_address.value[i]     = ntohl(wifi_client_context->netif.ip6_addr[1].addr[i]);
-    profile.ip.ip.v6.gateway.value[i]            = ntohl(wifi_client_context->netif.ip6_addr[2].addr[i]);
-  }
-#endif /* LWIP_IPV6 */
+  memcpy(&profile.ip.ip.v6.link_local_address, wifi_client_context->netif.ip6_addr, sizeof(sl_ipv6_address_t));
+#endif
+
   // Set the client profile
   status = sl_net_set_profile(SL_NET_WIFI_CLIENT_INTERFACE, profile_id, &profile);
 

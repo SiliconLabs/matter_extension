@@ -41,7 +41,12 @@ class JLinkChannel(_base.Channel):
         self.link.set_tif(interface=pylink.JLinkInterfaces.SWD)
         self.link.connect(chip_name=self.part_number, speed="auto", verbose=True)
         # print("Start...")
-        self.link.rtt_start()
+        if self.part_number.lower().startswith('simg301'):
+            # TEMP_FIX: hardcoded address where the _SEGGER_RTT symbol is located in RAM.
+            # this is where the rtt control block is located for the current sixg3_psa3_nvm3k3.s37
+            self.link.rtt_start(0x2000822c)
+        else:
+            self.link.rtt_start()
 
 
     def close(self):

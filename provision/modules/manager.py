@@ -10,26 +10,17 @@ import modules.jlink as _jlink
 import modules.channel as _chan
 import modules.bluetooth as _bt
 import modules.credentials as _creds
-from modules.parameters import Types, Formats, ID
+from modules.parameters import ID, Actions
 from abc import ABC, abstractmethod
 from enum import Enum
-
-
-class Actions:
-    kHelp   = 'help'
-    kAuto   = 'auto'
-    kRead   = 'read'
-    kWrite  = 'write'
-    kBinary = 'binary'
 
 
 class ProvisionManager:
     DEFAULT_TEMP = './temp'
 
     def __init__(self, ver) -> None:
-        prot_mod = importlib.import_module("modules.{}.protocol".format(ver.module))
+        prot_mod = importlib.import_module("{}.{}.protocol".format(_util.Paths.MODULES_DIR, ver.module))
         self.protocol = prot_mod.Protocol()
-
 
     def execute(self, paths, args):
 
@@ -65,15 +56,16 @@ class ProvisionManager:
 
         # Connection string
         conn = ConnectionArguments(args)
+        comm = _tools.Commander(args, conn)
 
         # Channel
         if Actions.kBinary == action:
             chan = None
         else:
-            chan = self.createChannel(paths, args, conn)
+            chan = self.createChannel(paths, args, conn, comm)
             # Generator Firmware
             if _chan.Channel.BLE != chan.type:
-                self.writeGeneratorFirmware(args, conn)
+                self.writeGeneratorFirmware(args, comm)
 
         # Exchange data
         self.protocol.execute(paths, args, chan)
@@ -88,27 +80,39 @@ class ProvisionManager:
 
         # Production Firmware
         if chan and (_chan.Channel.BLE != chan.type):
-            self.writeProductionFirmware(args, conn)
+            self.writeProductionFirmware(args, comm)
 
+        # Reset
+        comm.reset()
 
-    def createChannel(self, paths, args, conn):
+    def createChannel(self, paths, args, conn, comm):
         if _chan.Channel.BLE == conn.channel_type:
             # Bluetooth channel
             return _bt.BluetoothChannel(paths, args, conn.address)
         else:
             # JLink RTT: Device info required
-            self.collectDeviceInfo(paths, args, conn)
+            self.collectDeviceInfo(paths, args, conn, comm)
             return _jlink.JLinkChannel(paths, args, conn)
 
-
-    def collectDeviceInfo(self, paths, args, conn):
-        comm = _tools.Commander(args, conn)
+    def collectDeviceInfo(self, paths, args, conn, comm):
         info = comm.info()
         flash_size = info.flash_size
 
         # TODO: Figure out a way to get the accessible flash instead of the physical flash for series 3
         if "simg3" in info.part:
-            flash_size = 0x3d0000
+            # Command device info return the whole flash size but only a portion of it is available for any application
+            # Based on that Total flash size, we can determine what is the current flash size available for apps.
+            # The provision storage only reserve 1 flash page for matter credentials for all platforms
+            # S3 token manager reserve 2 pages for it. 
+            # so we preventively remove 1 page to the real flash size 
+            if (info.flash_size == 0x00400000):
+                flash_size = 0x390000 # base is 0x391000
+            elif (info.flash_size == 0x00300000):
+                flash_size = 0x2a2000 # base is 0x2a3000
+            elif (info.flash_size == 0x00200000):
+                flash_size = 0x1b3000 # base is 0x1b4000
+            else:
+                print("Unrecognized Series 3 flash size")
 
         # Collect device information
         device_num = args.get(ID.kDevice)
@@ -133,12 +137,11 @@ class ProvisionManager:
         if fw.value is None:
             fw.set(dev.firmware)
 
-
     def computeDefaults(self, paths, args):
         # Mandatory
-        if(args.int(ID.kVendorId) is None):
+        if (args.int(ID.kVendorId) is None):
             raise ValueError("Missing vendor ID")
-        if(args.int(ID.kProductId) is None):
+        if (args.int(ID.kProductId) is None):
             raise ValueError("Missing product ID")
 
         # Manufacturing Date
@@ -158,7 +161,7 @@ class ProvisionManager:
         # salt (base 64)
         salt = args.get(ID.kSpake2pSalt)
         if salt.value is None:
-            salt.set(base64.b64encode(random.randbytes(32)).decode('utf-8'))
+            salt.set(base64.b64encode(os.urandom(32)).decode('utf-8'))
             generate_verifier = True
         # iterations
         iterations = args.get(ID.kSpake2pIterations)
@@ -170,36 +173,30 @@ class ProvisionManager:
             verifier_b64 = _tools.Spake2p.generateVerifier(passcode.value, iterations.value, salt.value)
             verifier.set(verifier_b64)
 
-
     def generateIterations(self, arg):
         # Upper limit is reduced here to improve performace by default
         min_value = arg.min
         max_value = arg.min + (arg.max - arg.min) / 4
         arg.set(random.randint(min_value, max_value))
 
-
     def generatePasscode(self, arg):
         passcode = 0
         while (passcode in arg.invalid) or (passcode > arg.max):
-            passcode = int.from_bytes(random.randbytes(4), byteorder='big')
+            passcode = int.from_bytes(os.urandom(4), byteorder='big')
         arg.set(passcode)
 
+    def writeGeneratorFirmware(self, args, comm):
+        gen_fw = args.str(ID.kGeneratorFW)
+        if gen_fw is None:
+            raise ValueError("Missing Generator Firmware")
+        elif not os.path.exists(gen_fw) or not os.path.isfile(gen_fw):
+            raise ValueError("Missing Generator firmware \"{}\"".format(gen_fw))
+        comm.flash(gen_fw)
 
-    def writeGeneratorFirmware(self, args, conn):
-            comm = _tools.Commander(args, conn)
-            gen_fw = args.str(ID.kGeneratorFW)
-            if gen_fw is None:
-                raise ValueError("Missing Generator Firmware")
-            elif not os.path.exists(gen_fw) or not os.path.isfile(gen_fw):
-                raise ValueError("Missing Generator firmware \"{}\"".format(gen_fw))
-            # chan.flash(gen_fw, args.int(ID.kFlashAddress))
-            comm.flash(gen_fw)
-
-    def writeProductionFirmware(self, args, conn):
+    def writeProductionFirmware(self, args, comm):
         prod_fw = args.str(ID.kProductionFW)
         if prod_fw is not None:
             print("Writing Production Firmware...")
-            comm = _tools.Commander(args, conn)
             comm.flash(prod_fw)
 
 

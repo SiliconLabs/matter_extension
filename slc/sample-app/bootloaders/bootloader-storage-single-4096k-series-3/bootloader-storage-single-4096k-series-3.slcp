@@ -1,13 +1,13 @@
 project_name: matter-bootloader-storage-single-4096k
 package: Matter
 quality: internal
-label: Bootloader - SoC Internal Storage (single image on 4MB device)
+label: Bootloader - SoC Storage (single OTA image of size 1540kB for 4MB flash)
 description: >
   This sample configuration of the Gecko bootloader configures the bootloader to use the flash to store firmware update images. The storage configuration is set up to store a single firmware update image at a time, in a single storage slot. The storage slot is configured to start at address 0x01200000 for device with 0x01000000 flash base, and have a size of 1664 kB. This can be configured on the "Storage" tab.
 
 sdk_extension:
   - id: matter
-    version: "2.5.0"
+    version: "2.5.1"
 
 component:
   - id: btl_core
@@ -19,16 +19,17 @@ component:
   - id: btl_common_storage
   - id: btl_debug
   - id: btl_gbl_compression_lzma
+  - id: clock_manager
 
 configuration:
   - name: SLOT0_ENABLE
     value: 1
   - name: SLOT0_SIZE
-    value: 1703936
+    value: 1576960
   - name: SLOT0_START
-    value: 18874368
+    value: 18841600
   - name: BTL_STORAGE_BASE_ADDRESS
-    value: 18874368
+    value: 18841600
 
 readme:
   - path: ./readme.md

@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 struct AppEvent;
 typedef void (*EventHandler)(AppEvent *);
 
@@ -33,10 +35,12 @@ struct AppEvent
         kEventType_ResetWarning,
         kEventType_ResetCanceled,
         // Button events
-        kEventType_UpPressed,
-        kEventType_UpReleased,
-        kEventType_DownPressed,
-        kEventType_DownReleased,
+        kEventType_ActionButtonPressed,
+        kEventType_ActionButtonReleased,
+        kEventType_FunctionButtonPressed,
+        kEventType_FunctionButtonReleased,
+        kEventType_TriggerLevelControlAction,
+        kEventType_TriggerToggle,
     };
 
     uint16_t Type;

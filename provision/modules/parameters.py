@@ -4,6 +4,14 @@ import modules.util as _util
 import os
 import yaml
 
+
+class Actions:
+    kHelp = 'help'
+    kAuto = 'auto'
+    kRead = 'read'
+    kWrite = 'write'
+    kBinary = 'binary'
+
 def parseInt(i):
     return int(i, 0)
 

@@ -24,6 +24,8 @@
 
 #include "sl_status.h"
 #include <stdbool.h>
+#include <lib/core/CHIPError.h>
+#include <lib/support/Span.h>
 
 /* LwIP includes. */
 #include "lwip/ip_addr.h"
@@ -65,6 +67,8 @@
 
 // TASK and Interrupt Macros
 #define SUCCESS_STATUS (1)
+
+using namespace ::chip;
 
 enum class WifiState : uint16_t
 {
@@ -211,7 +215,7 @@ bool wfx_have_ipv4_addr(sl_wfx_interface_t);
 
 bool wfx_have_ipv6_addr(sl_wfx_interface_t);
 wifi_mode_t wfx_get_wifi_mode(void);
-bool wfx_start_scan(char * ssid, void (*scan_cb)(wfx_wifi_scan_result_t *)); /* true returned if successfully started */
+CHIP_ERROR wfx_start_scan(chip::ByteSpan ssid, void (*scan_cb)(wfx_wifi_scan_result_t *)); /* true returned if successfully started */
 void wfx_cancel_scan(void);
 
 /*
