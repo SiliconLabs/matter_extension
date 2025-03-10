@@ -127,7 +127,7 @@ extern "C" __attribute__((used)) void debugHardfault(uint32_t * sp)
  * Override default hard-fault handler
  */
 #ifndef SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
-extern "C" __attribute__((naked)) void HardFault_Handler(void)
+extern "C" __attribute__((naked)) void __WEAK HardFault_Handler(void)
 {
     __asm volatile("tst lr, #4                                    \n"
                    "ite eq                                        \n"

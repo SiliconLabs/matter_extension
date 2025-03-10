@@ -36,7 +36,7 @@ extern "C" {
 #if defined(SL_SI91X_BOARD_INIT)
 #include "rsi_board.h"
 #endif // SL_SI91X_BOARD_INIT
-#include "sl_event_handler.h"
+//#include "sl_event_handler.h"
 
 #ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
 #include "sl_si91x_button.h"
@@ -95,11 +95,11 @@ CHIP_ERROR SilabsPlatform::Init(void)
     mButtonCallback = nullptr;
 
     // TODO: Setting the highest priority for SVCall_IRQn to avoid the HardFault issue
-    NVIC_SetPriority(SVCall_IRQn, CORE_INTERRUPT_HIGHEST_PRIORITY);
+    //NVIC_SetPriority(SVCall_IRQn, CORE_INTERRUPT_HIGHEST_PRIORITY);
 
 #if (CHIP_CONFIG_ENABLE_ICD_SERVER == 0) && (SL_PROVISION_GENERATOR == 0)
     // Configuration the clock rate
-    soc_pll_config();
+    //soc_pll_config();
 #endif // !CHIP_CONFIG_ENABLE_ICD_SERVER && !SL_PROVISION_GENERATOR
 
 #if SILABS_LOG_ENABLED
