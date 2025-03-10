@@ -61,6 +61,7 @@ CHIP_ERROR DiagnosticDataProviderImpl::GetCurrentHeapFree(uint64_t & currentHeap
 
 CHIP_ERROR DiagnosticDataProviderImpl::GetCurrentHeapUsed(uint64_t & currentHeapUsed)
 {
+    //Todo : Implement this
     size_t heapUsed = 0;//sl_memory_get_used_heap_size();
     currentHeapUsed = static_cast<uint64_t>(heapUsed);
     return CHIP_NO_ERROR;
