@@ -24,6 +24,9 @@
 #include <cmsis_os2.h>
 #include <mbedtls/platform.h>
 
+#include <uart.h>
+
+
 #ifdef SL_WIFI
 #include <platform/silabs/wifi/WifiInterfaceAbstraction.h>
 
@@ -178,7 +181,8 @@ constexpr osThreadAttr_t kMainTaskAttr = { .name       = "main",
                                            .cb_size    = 0U,
                                            .stack_mem  = NULL,
                                            .stack_size = kMainTaskStackSize,
-                                           .priority   = osPriorityRealtime7 };
+                                           .priority   = osPriorityLow7 };
+                                           //.priority   = osPriorityRealtime7 };
 osThreadId_t sMainTaskHandle;
 static chip::DeviceLayer::DeviceInfoProviderImpl gExampleDeviceInfoProvider;
 
@@ -204,8 +208,8 @@ void ApplicationStart(void * unused)
     if (err != CHIP_NO_ERROR)
         appError(err);
 
-    VerifyOrDie(osThreadTerminate(sMainTaskHandle) == osOK); // Deleting the main task should never fail.
-    sMainTaskHandle = nullptr;
+    //VerifyOrDie(osThreadTerminate(sMainTaskHandle) == osOK); // Deleting the main task should never fail.
+    //sMainTaskHandle = nullptr;
 }
 } // namespace
 
@@ -217,17 +221,24 @@ void SilabsMatterConfig::AppInit()
     sl_power_manager_remove_em_requirement(SL_POWER_MANAGER_EM1);
 #endif
 
+    
+#if SILABS_LOG_ENABLED
+    silabsInitLog();
+    uartConsoleInit();
+    osDelay(100);
+#endif
     GetPlatform().Init();
     sMainTaskHandle = osThreadNew(ApplicationStart, nullptr, &kMainTaskAttr);
     ChipLogProgress(DeviceLayer, "Starting scheduler");
     VerifyOrDie(sMainTaskHandle); // We can't proceed if the Main Task creation failed.
-
-    GetPlatform().StartScheduler();
+    osThreadTerminate(sMainTaskHandle);
+    sMainTaskHandle = nullptr;
+    //GetPlatform().StartScheduler();
 
     // Should never get here.
-    chip::Platform::MemoryShutdown();
+    //chip::Platform::MemoryShutdown();
     ChipLogProgress(DeviceLayer, "Start Scheduler Failed");
-    appError(CHIP_ERROR_INTERNAL);
+    //appError(CHIP_ERROR_INTERNAL);
 }
 
 CHIP_ERROR SilabsMatterConfig::InitMatter(const char * appName)

@@ -21,12 +21,14 @@
  * Includes
  *********************************************************/
 
+//#include <cerrno>
 #include "AppConfig.h"
 #include "AppEvent.h"
 #include "AppTask.h"
 #include "OTAConfig.h"
 #include <app/server/Dnssd.h>
 #include <app/server/Server.h>
+
 
 #define APP_ACTION_BUTTON 1
 
