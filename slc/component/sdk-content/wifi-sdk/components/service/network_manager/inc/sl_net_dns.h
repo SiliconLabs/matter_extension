@@ -87,6 +87,8 @@ sl_status_t sl_net_host_get_by_name(const char *host_name,
                                     const uint32_t timeout,
                                     const sl_net_dns_resolution_ip_type_t dns_resolution_ip,
                                     sl_ip_address_t *ip_address);
+// ToDo Rename function to sl_net_dns_resolve_hostname
+#define sl_net_dns_resolve_hostname sl_net_host_get_by_name                                    
 
 /**
  * @brief
