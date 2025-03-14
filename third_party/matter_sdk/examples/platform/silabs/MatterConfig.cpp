@@ -220,16 +220,10 @@ void SilabsMatterConfig::AppInit()
     // TODO: Remove the Power Manager remove req when OT does not add an EM1 req at init
     sl_power_manager_remove_em_requirement(SL_POWER_MANAGER_EM1);
 #endif
-
-    
-#if SILABS_LOG_ENABLED
-    silabsInitLog();
-    uartConsoleInit();
-    osDelay(100);
-#endif
     GetPlatform().Init();
     sMainTaskHandle = osThreadNew(ApplicationStart, nullptr, &kMainTaskAttr);
-    ChipLogProgress(DeviceLayer, "Starting scheduler");
+    ChipLogProgress(DeviceLayer, "Starting Matter");
+    //ChipLogProgress(DeviceLayer, "Starting scheduler");
     VerifyOrDie(sMainTaskHandle); // We can't proceed if the Main Task creation failed.
     osThreadTerminate(sMainTaskHandle);
     sMainTaskHandle = nullptr;
@@ -237,7 +231,7 @@ void SilabsMatterConfig::AppInit()
 
     // Should never get here.
     //chip::Platform::MemoryShutdown();
-    ChipLogProgress(DeviceLayer, "Start Scheduler Failed");
+    //ChipLogProgress(DeviceLayer, "Start Scheduler Failed");
     //appError(CHIP_ERROR_INTERNAL);
 }
 

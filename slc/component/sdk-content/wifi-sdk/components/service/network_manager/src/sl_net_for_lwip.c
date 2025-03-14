@@ -234,17 +234,17 @@ static void set_sta_link_up(sl_net_wifi_client_profile_t *profile)
   if (SL_IP_MANAGEMENT_STATIC_IP == profile->ip.mode) {
 #if LWIP_IPV4
     ip4_addr_t ipaddr  = { 0 };
-    ip4_addr_t gateway = { 0 };
+    ip4_addr_t gateway_ip4 = { 0 };
     ip4_addr_t netmask = { 0 };
-    uint8_t *address   = &(profile->ip.ip.v4.ip_address.bytes[0]);
+    uint8_t *address_ip4   = &(profile->ip.ip.v4.ip_address.bytes[0]);
 
-    IP4_ADDR(&ipaddr, address[0], address[1], address[2], address[3]);
-    address = &(profile->ip.ip.v4.gateway.bytes[0]);
-    IP4_ADDR(&gateway, address[0], address[1], address[2], address[3]);
-    address = &(profile->ip.ip.v4.netmask.bytes[0]);
-    IP4_ADDR(&netmask, address[0], address[1], address[2], address[3]);
+    IP4_ADDR(&ipaddr, address_ip4[0], address_ip4[1], address_ip4[2], address_ip4[3]);
+    address_ip4 = &(profile->ip.ip.v4.gateway.bytes[0]);
+    IP4_ADDR(&gateway_ip4, address_ip4[0], address_ip4[1], address_ip4[2], address_ip4[3]);
+    address_ip4 = &(profile->ip.ip.v4.netmask.bytes[0]);
+    IP4_ADDR(&netmask, address_ip4[0], address_ip4[1], address_ip4[2], address_ip4[3]);
 
-    netifapi_netif_set_addr(&(wifi_client_context->netif), &ipaddr, &netmask, &gateway);
+    netifapi_netif_set_addr(&(wifi_client_context->netif), &ipaddr, &netmask, &gateway_ip4);
 #endif /* LWIP_IPV4 */
 #if LWIP_IPV6
     ip6_addr_t link_local_address = { 0 };
@@ -273,7 +273,7 @@ static void set_sta_link_up(sl_net_wifi_client_profile_t *profile)
     while (!dhcp_supplied_address(&(wifi_client_context->netif))) {
       osDelay(100);
     }
-    uint32_t addr = wifi_client_context->netif.ip_addr.addr;
+    uint32_t addr = wifi_client_context->netif.ip_addr.u_addr.ip4.addr;
     SL_DEBUG_LOG("DHCP IP: %u.%u.%u.%u\n",
                  NETIF_IPV4_ADDRESS(addr, 0),
                  NETIF_IPV4_ADDRESS(addr, 1),
@@ -387,19 +387,19 @@ sl_status_t sl_net_wifi_client_up(sl_net_interface_t interface, sl_net_profile_i
 
   set_sta_link_up(&profile);
 #if LWIP_IPV4
-  uint32_t addr                        = wifi_client_context->netif.ip_addr.addr;
+  uint32_t addr                        = wifi_client_context->netif.ip_addr.u_addr.ip4.addr;
   profile.ip.ip.v4.ip_address.bytes[0] = NETIF_IPV4_ADDRESS(addr, 0);
   profile.ip.ip.v4.ip_address.bytes[1] = NETIF_IPV4_ADDRESS(addr, 1);
   profile.ip.ip.v4.ip_address.bytes[2] = NETIF_IPV4_ADDRESS(addr, 2);
   profile.ip.ip.v4.ip_address.bytes[3] = NETIF_IPV4_ADDRESS(addr, 3);
 
-  addr                              = wifi_client_context->netif.gw.addr;
+  addr                              = wifi_client_context->netif.gw.u_addr.ip4.addr;
   profile.ip.ip.v4.gateway.bytes[0] = NETIF_IPV4_ADDRESS(addr, 0);
   profile.ip.ip.v4.gateway.bytes[1] = NETIF_IPV4_ADDRESS(addr, 1);
   profile.ip.ip.v4.gateway.bytes[2] = NETIF_IPV4_ADDRESS(addr, 2);
   profile.ip.ip.v4.gateway.bytes[3] = NETIF_IPV4_ADDRESS(addr, 3);
 
-  addr                              = wifi_client_context->netif.netmask.addr;
+  addr                              = wifi_client_context->netif.netmask.u_addr.ip4.addr;
   profile.ip.ip.v4.netmask.bytes[0] = NETIF_IPV4_ADDRESS(addr, 0);
   profile.ip.ip.v4.netmask.bytes[1] = NETIF_IPV4_ADDRESS(addr, 1);
   profile.ip.ip.v4.netmask.bytes[2] = NETIF_IPV4_ADDRESS(addr, 2);

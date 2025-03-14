@@ -41,6 +41,9 @@
 #include <lib/support/logging/CHIPLogging.h>
 #include <platform/silabs/wifi/WifiInterfaceAbstraction.h>
 #include <platform/silabs/wifi/wiseconnect-abstraction/WiseconnectInterfaceAbstraction.h>
+#if (CHIP_DEVICE_CONFIG_ENABLE_IPV4)
+#include <platform/silabs/wifi/lwip-support/dhcp_client.h>
+#endif // CHIP_DEVICE_CONFIG_ENABLE_IPV4
 
 extern "C" {
 #include "sl_si91x_driver.h"
