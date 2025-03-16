@@ -34,7 +34,11 @@
       return SL_STATUS_ALLOCATION_FAILED; \
     }                                     \
   } while (0)
-
+  
+#ifdef MIN
+#undef MIN
+#endif
+  
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 #define IP_VERSION_6 BIT(1)
