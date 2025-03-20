@@ -226,6 +226,10 @@ static void sta_netif_config(void)
   netif_set_default(&(wifi_client_context->netif));
 }
 
+static void sta_netif_config_deinit(void){
+  netif_remove(&(wifi_client_context->netif));
+}
+
 static void set_sta_link_up(sl_net_wifi_client_profile_t *profile)
 {
   netifapi_netif_set_up(&(wifi_client_context->netif));
@@ -338,6 +342,12 @@ sl_status_t sl_net_wifi_ap_down(sl_net_interface_t interface)
   return SL_STATUS_NOT_SUPPORTED;
 }
 
+sl_status_t sl_net_lwip_init(void)
+{
+  tcpip_init(NULL, NULL);
+  return SL_STATUS_OK;
+}
+
 sl_status_t sl_net_wifi_client_init(sl_net_interface_t interface,
                                     const void *configuration,
                                     void *context,
@@ -350,14 +360,15 @@ sl_status_t sl_net_wifi_client_init(sl_net_interface_t interface,
     return status;
   }
   wifi_client_context = context;
-  tcpip_init(NULL, NULL);
-  sta_netif_config();
+  // tcpip_init(NULL, NULL);
+   sta_netif_config();
   return SL_STATUS_OK;
 }
 
 sl_status_t sl_net_wifi_client_deinit(sl_net_interface_t interface)
 {
   UNUSED_PARAMETER(interface);
+  sta_netif_config_deinit();
 #if LWIP_TESTMODE
   struct sys_timeo **list_head = NULL;
 

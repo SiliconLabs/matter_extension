@@ -32,6 +32,9 @@
 #include "sl_status.h"
 #include "sl_net_types.h"
 
+/* LwIP Init */
+sl_status_t sl_net_lwip_init(void);
+
 /** 
  * \addtogroup NET_INTERFACE_FUNCTIONS Network Interface
  * 
