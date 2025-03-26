@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.1"
+    version: "2.5.2"
 
 component:
   - id: device_init
@@ -200,7 +200,7 @@ configuration:
   - { name: CHIP_CONFIG_ENABLE_ICD_UAT, value: 1 }
   - { name: CHIP_CONFIG_ENABLE_ICD_DSLS, value: 1 }
 
-  - {name: SL_IDLE_MODE_DURATION_S, value: '6'}
+  - {name: SL_IDLE_MODE_DURATION_S, value: '600'}
   - {name: SL_ACTIVE_MODE_DURATION_MS, value: '0'}
   - {name: SL_ACTIVE_MODE_THRESHOLD, value: '5000'}
 

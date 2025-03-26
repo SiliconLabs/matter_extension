@@ -182,8 +182,8 @@ protected:
     /** @brief
      * Function to be called at the end of Init to indicate that the application has completed its initialization.
      * Currently only used for tracing, might want to move logging here as well in the future
-     * @param err CHIP_NO_ERROR on success, corresponding error code on Init failure, note that Init failure leads to an app error so
-     * this is purely to have a trace logged with the error code
+     * @param err CHIP_NO_ERROR on success, corresponding error code on Init failure, note that Init failure leads to an app error
+     * so this is purely to have a trace logged with the error code
      */
     void InitCompleteCallback(CHIP_ERROR err);
 

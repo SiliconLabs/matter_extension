@@ -22,7 +22,6 @@
 #include <app/ConcreteAttributePath.h>
 #include <app/EventManagement.h>
 #include <app/GlobalAttributes.h>
-#include <app/util/att-storage.h>
 #include <app/util/endpoint-config-api.h>
 #include <lib/core/CHIPCore.h>
 #include <lib/core/TLVDebug.h>
@@ -98,7 +97,7 @@ void AttributePathExpandIteratorEmber::PrepareClusterIndexRange(const AttributeP
     }
     else
     {
-        mClusterIndex = emberAfClusterIndex(aEndpointId, aAttributePath.mClusterId, CLUSTER_MASK_SERVER);
+        mClusterIndex = emberAfClusterIndex(aEndpointId, aAttributePath.mClusterId, MATTER_CLUSTER_FLAG_SERVER);
         // If the given cluster id does not exist on the given endpoint, it will return uint8(0xFF), then endClusterIndex
         // will be 0, means we should iterate a null cluster set (skip it).
         mEndClusterIndex = static_cast<uint8_t>(mClusterIndex + 1);

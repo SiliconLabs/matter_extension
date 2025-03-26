@@ -325,17 +325,17 @@ CHIP_ERROR wfx_start_scan(chip::ByteSpan ssid, void (*callback)(wfx_wifi_scan_re
     VerifyOrReturnError(ssid.size() <= WFX_MAX_SSID_LENGTH, CHIP_ERROR_BUFFER_TOO_SMALL);
 
     // Handle scan based on whether SSID is empty or not
-    if (ssid.empty()) 
+    if (ssid.empty())
     {
         // Scan all networks
         wfx_rsi.scan_ssid        = nullptr;
         wfx_rsi.scan_ssid_length = 0;
-    } 
-    else 
+    }
+    else
     {
         // Allocate memory for SSID and copy data
         wfx_rsi.scan_ssid_length = ssid.size();
-        wfx_rsi.scan_ssid = reinterpret_cast<char *>(chip::Platform::MemoryAlloc(wfx_rsi.scan_ssid_length + 1));
+        wfx_rsi.scan_ssid        = reinterpret_cast<char *>(chip::Platform::MemoryAlloc(wfx_rsi.scan_ssid_length + 1));
         VerifyOrReturnError(wfx_rsi.scan_ssid != nullptr, CHIP_ERROR_NO_MEMORY);
 
         // Copy the SSID with null-termination

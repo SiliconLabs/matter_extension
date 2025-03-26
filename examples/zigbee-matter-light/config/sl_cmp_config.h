@@ -39,7 +39,7 @@
 
 // Default behaviour of the CMP app is concurrent multiprotocol
 #if ! defined(SL_MATTER_ZIGBEE_CMP) && ! defined(SL_MATTER_ZIGBEE_SEQUENTIAL)
-#define SL_MATTER_ZIGBEE_SEQUENTIAL       
+#define SL_MATTER_ZIGBEE_CMP       
 #endif
 
 // <h>CMP App Configuration

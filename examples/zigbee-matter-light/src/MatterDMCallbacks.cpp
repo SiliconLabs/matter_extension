@@ -29,77 +29,85 @@
 #include <lib/support/logging/CHIPLogging.h>
 
 #include "sl_component_catalog.h"
-#ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
-#include "app/framework/include/af.h"
-#include "app/framework/include/af-storage.h"
-#endif
+#include <sl-matter-attribute-storage.h>
 
 using namespace ::chip;
 using namespace ::chip::app::Clusters;
 
+#ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
+namespace {
+#include "app/framework/include/af-storage.h"
+#include "app/framework/include/af.h"
+#include <zap-config.h>
+// Attribute map between zigbee and matter.
+#if defined(GENERATED_MULTI_PROTOCOL_ATTRIBUTE_MAPPING) && defined(SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT)
+constexpr sl_zigbee_matter_af_multi_protocol_attribute_metadata_t mpAttributeMap[] = GENERATED_MULTI_PROTOCOL_ATTRIBUTE_MAPPING;
+
+constexpr size_t mpMappedAttributeCount =
+    (sizeof(mpAttributeMap) / sizeof(sl_zigbee_matter_af_multi_protocol_attribute_metadata_t));
+
+/**
+ * @brief Writes an attribute value to the Zigbee attribute storage.
+ *
+ * This function translates Matter attribute parameters to Zigbee attribute parameters, using our multiprotocol
+ * attribute map and uses the Zigbee API to perform the write operation.
+ *
+ * @param endpointId The Matter endpoint identifier.
+ * @param clusterId The Matter cluster identifier.
+ * @param attributeId The Matter attribute identifier.
+ * @param attributeValue Pointer to the attribute value to be written.
+ * @param dataType The data type of the attribute.
+ */
+void sli_matter_af_write_to_zb_attribute(chip::EndpointId endpointId, chip::ClusterId clusterId, chip::AttributeId attributeId,
+                                         uint8_t * attributeValue, EmberAfAttributeType dataType)
+{
+    for (uint8_t i = 0; i < mpMappedAttributeCount; i++)
+    {
+        if (mpAttributeMap[i].matterClusterId == (clusterId & 0xFFFF) &&
+            mpAttributeMap[i].matterMfgClusterId == (clusterId >> 16) &&
+            mpAttributeMap[i].matterAttributeId == (attributeId & 0xFFFF) &&
+            mpAttributeMap[i].matterMfgAttributeId == (attributeId >> 16))
+        {
+            // TODO handle MFG specific attributes
+            sl_zigbee_af_write_server_attribute(endpointId, mpAttributeMap[i].zigbeeClusterId, mpAttributeMap[i].zigbeeAttributeId,
+                                                attributeValue, dataType);
+            break;
+        }
+    }
+}
+#endif // defined(GENERATED_MULTI_PROTOCOL_ATTRIBUTE_MAPPING) && defined(SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT)
+} // namespace
+#endif // SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
+
 void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
                                        uint8_t * value)
 {
+    EndpointId endpointId   = attributePath.mEndpointId;
     ClusterId clusterId     = attributePath.mClusterId;
     AttributeId attributeId = attributePath.mAttributeId;
     ChipLogProgress(Zcl, "Cluster callback: " ChipLogFormatMEI, ChipLogValueMEI(clusterId));
 
-
     if (clusterId == OnOff::Id && attributeId == OnOff::Attributes::OnOff::Id)
     {
         LightMgr().InitiateAction(AppEvent::kEventType_Light, *value ? LightingManager::ON_ACTION : LightingManager::OFF_ACTION);
-    #ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
-    // Update zigbee DM
-
-    sl_zigbee_af_write_attribute(1, static_cast<uint8_t>(clusterId), static_cast<uint16_t>(attributeId), CLUSTER_MASK_SERVER, value, type);
-    #endif
     }
     else if (clusterId == LevelControl::Id)
     {
         ChipLogProgress(Zcl, "Level Control attribute ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u",
                         ChipLogValueMEI(attributeId), type, *value, size);
-
-        // WIP Apply attribute change to Light
-    #ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
-    // Update zigbee DM
-    sl_zigbee_af_write_attribute(1, static_cast<uint8_t>(clusterId), static_cast<uint16_t>(attributeId), CLUSTER_MASK_SERVER, value, type);
-    #endif
     }
     else if (clusterId == ColorControl::Id)
     {
         ChipLogProgress(Zcl, "Color Control attribute ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u",
                         ChipLogValueMEI(attributeId), type, *value, size);
-
-        // WIP Apply attribute change to Light
-    #ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
-    // Update zigbee DM
-    sl_zigbee_af_write_attribute(1, static_cast<uint8_t>(clusterId), static_cast<uint16_t>(attributeId), CLUSTER_MASK_SERVER, value, type);
-    #endif
-
     }
     else if (clusterId == Identify::Id)
     {
         ChipLogProgress(Zcl, "Identify attribute ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u",
                         ChipLogValueMEI(attributeId), type, *value, size);
     }
-}
 
-/** @brief OnOff Cluster Init
- *
- * This function is called when a specific cluster is initialized. It gives the
- * application an opportunity to take care of cluster initialization procedures.
- * It is called exactly once for each endpoint where cluster is present.
- *
- * @param endpoint   Ver.: always
- *
- * TODO Issue #3841
- * emberAfOnOffClusterInitCallback happens before the stack initialize the cluster
- * attributes to the default value.
- * The logic here expects something similar to the deprecated Plugins callback
- * emberAfPluginOnOffClusterServerPostInitCallback.
- *
- */
-void emberAfOnOffClusterInitCallback(EndpointId endpoint)
-{
-    // TODO: implement any additional Cluster Server init actions
+#if defined(GENERATED_MULTI_PROTOCOL_ATTRIBUTE_MAPPING) && defined(SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT)
+    sli_matter_af_write_to_zb_attribute(endpointId, clusterId, attributeId, value, type);
+#endif
 }

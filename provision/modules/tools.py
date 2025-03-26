@@ -51,8 +51,7 @@ class Commander:
             self.execute(['flash' , image_path], False, True)
 
     def reset(self):
-        print("Reset!")
-        self.execute(['device', 'reset'], False, True)
+        self.execute(['device', 'reset'], False, False)
 
 
 class DeviceInfo:

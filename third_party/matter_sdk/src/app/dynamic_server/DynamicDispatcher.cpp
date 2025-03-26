@@ -31,7 +31,8 @@
 #include <app/MessageDef/StatusIB.h>
 #include <app/WriteHandler.h>
 #include <app/data-model/Decode.h>
-#include <app/util/att-storage.h>
+#include <app/util/attribute-storage.h>
+#include <app/util/attribute-table.h>
 #include <app/util/endpoint-config-api.h>
 #include <lib/core/CHIPError.h>
 #include <lib/core/DataModelTypes.h>
@@ -328,7 +329,7 @@ Optional<AttributeId> emberAfGetServerAttributeIdByIndex(EndpointId endpoint, Cl
 
 uint8_t emberAfClusterIndex(EndpointId endpoint, ClusterId clusterId, EmberAfClusterMask mask)
 {
-    if (endpoint == kSupportedEndpoint && clusterId == OtaSoftwareUpdateProvider::Id && (mask & CLUSTER_MASK_SERVER))
+    if (endpoint == kSupportedEndpoint && clusterId == OtaSoftwareUpdateProvider::Id && (mask & MATTER_CLUSTER_FLAG_SERVER))
     {
         return 0;
     }
@@ -352,7 +353,7 @@ const EmberAfCluster otaProviderCluster{
     .attributes           = nullptr,
     .attributeCount       = 0,
     .clusterSize          = 0,
-    .mask                 = CLUSTER_MASK_SERVER,
+    .mask                 = MATTER_CLUSTER_FLAG_SERVER,
     .functions            = nullptr,
     .acceptedCommandList  = acceptedCommands,
     .generatedCommandList = generatedCommands,

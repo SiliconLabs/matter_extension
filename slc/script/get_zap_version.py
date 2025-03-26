@@ -51,4 +51,4 @@ def get_zap_version():
 
 if __name__ == "__main__":
     # Print the minimum zap required
-    print("The minimum zap required is", get_latest_zap())
+    print("The minimum zap required is", get_zap_version())

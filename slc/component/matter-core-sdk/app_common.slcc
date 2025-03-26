@@ -35,7 +35,6 @@ include:
     -   path: util/config.h
     -   path: util/binding-table.h
     -   path: util/af-types.h
-    -   path: util/att-storage.h
     -   path: util/im-client-callbacks.h
     -   path: util/attribute-storage.h
     -   path: util/ember-strings.h

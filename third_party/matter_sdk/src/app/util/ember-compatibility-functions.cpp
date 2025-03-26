@@ -27,7 +27,6 @@
 #include <app/RequiredPrivilege.h>
 #include <app/reporting/Engine.h>
 #include <app/reporting/reporting.h>
-#include <app/util/att-storage.h>
 #include <app/util/attribute-storage-detail.h>
 #include <app/util/attribute-storage-null-handling.h>
 #include <app/util/attribute-storage.h>
@@ -95,7 +94,7 @@ Protocols::InteractionModel::Status ServerClusterCommandExists(const ConcreteCom
         return Status::UnsupportedEndpoint;
     }
 
-    const EmberAfCluster * cluster = emberAfFindClusterInType(type, aCommandPath.mClusterId, CLUSTER_MASK_SERVER);
+    const EmberAfCluster * cluster = emberAfFindClusterInType(type, aCommandPath.mClusterId, MATTER_CLUSTER_FLAG_SERVER);
     if (cluster == nullptr)
     {
         return Status::UnsupportedCluster;
@@ -223,7 +222,7 @@ Protocols::InteractionModel::Status UnsupportedAttributeStatus(const ConcreteAtt
         return Status::UnsupportedEndpoint;
     }
 
-    const EmberAfCluster * cluster = emberAfFindClusterInType(type, aPath.mClusterId, CLUSTER_MASK_SERVER);
+    const EmberAfCluster * cluster = emberAfFindClusterInType(type, aPath.mClusterId, MATTER_CLUSTER_FLAG_SERVER);
     if (cluster == nullptr)
     {
         return Status::UnsupportedCluster;
@@ -800,7 +799,7 @@ Protocols::InteractionModel::Status CheckEventSupportStatus(const ConcreteEventP
         return Status::UnsupportedEndpoint;
     }
 
-    const EmberAfCluster * cluster = emberAfFindClusterInType(type, aPath.mClusterId, CLUSTER_MASK_SERVER);
+    const EmberAfCluster * cluster = emberAfFindClusterInType(type, aPath.mClusterId, MATTER_CLUSTER_FLAG_SERVER);
     if (cluster == nullptr)
     {
         return Status::UnsupportedCluster;

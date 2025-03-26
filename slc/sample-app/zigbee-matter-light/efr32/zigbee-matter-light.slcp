@@ -15,8 +15,6 @@ component:
   id: cli
 - id: iostream_stdio
 - id: segger_rtt
-- instance: [vcom]
-  id: uartdrv_eusart
 #Zigbee Components
 - id: zigbee_ble_dmp_cli
 - id: zigbee_address_table
@@ -101,6 +99,7 @@ component:
 - {from: matter, id: matter_provision_default}
 - {from: matter, id: matter_log_uart}
 - {from: matter, id: matter_tracing}
+- {from: matter, id: matter_zigbee_multiprotocol_common}
     
 
 #Matter components wrapper from simplicity_sdk
@@ -182,10 +181,6 @@ configuration:
   value: 5120
   condition:
     - freertos
-# Timer RTOS task priority needs to be one more than SL_BT_RTOS_LINK_LAYER_TASK_PRIORITY
-# BT uses event flags that require the timer task to be higher priority than all other RTOS tasks
-- name: configTIMER_TASK_PRIORITY
-  value: 53
 - name: LIB_MEM_CFG_HEAP_SIZE
   value: 0
 - name: SL_IOSTREAM_EUSART_VCOM_RESTRICT_ENERGY_MODE_TO_ALLOW_RECEPTION
@@ -196,8 +191,6 @@ configuration:
   value: 49 #Same as Zigbee
 - name: SL_CLI_HELP_DESCRIPTION_ENABLED
   value: 0 # Code space savings
-- name: configMAX_TASK_NAME_LEN
-  value: 30
 - name: SL_CLI_EOL_STRING
   value: '"\r\n"'
 - name: SL_LEGACY_HAL_DISABLE_WATCHDOG
@@ -265,4 +258,4 @@ ui_hints:
 
 sdk_extension:
   - id: matter
-    version: "2.5.1"
+    version: "2.5.2"

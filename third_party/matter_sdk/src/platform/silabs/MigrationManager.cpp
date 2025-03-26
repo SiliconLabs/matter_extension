@@ -128,7 +128,7 @@ void MigrateDacProvider(void)
 
 void MigrateHardwareVersion(void)
 {
-    constexpr uint32_t kOldKey_HardwareVersion  = SilabsConfigKey(SilabsConfig::kMatterConfig_KeyBase, 0x08);
+    constexpr uint32_t kOldKey_HardwareVersion = SilabsConfigKey(SilabsConfig::kMatterConfig_KeyBase, 0x08);
     MigrationManager::MigrateUint16(kOldKey_HardwareVersion, SilabsConfig::kConfigKey_HardwareVersion);
 }
 

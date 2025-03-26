@@ -26,15 +26,15 @@ conflicts:
   - name: matter_provision_flash
 
 include:
-- path: third_party/matter_sdk/src/platform/silabs/provision
+- path: third_party/matter_support/provision
   file_list:
-  - path: AttestationKey.h
-  - path: ProvisionChannel.h
-  - path: ProvisionEncoder.h
-  - path: ProvisionManager.h
-  - path: ProvisionProtocol.h
-  - path: ProvisionStorage.h
-  - path: ProvisionStorageGeneric.h
+  - path: headers/AttestationKey.h
+  - path: headers/ProvisionChannel.h
+  - path: headers/ProvisionEncoder.h
+  - path: headers/ProvisionManager.h
+  - path: headers/ProvisionProtocol.h
+  - path: headers/ProvisionStorage.h
+  - path: headers/ProvisionStorageGeneric.h
 - path: third_party/matter_sdk/examples/platform/silabs
   file_list:
   - path: SilabsTestEventTriggerDelegate.h
@@ -44,22 +44,22 @@ source:
   - path: third_party/matter_sdk/examples/platform/silabs/provision/ProvisionStorageCustom.cpp
 
 library:
-  - path: third_party/matter_support/matter/provision/lib/libProvision_efr32mg24.a
+  - path: third_party/matter_support/provision/libs/libProvision_efr32mg24.a
     condition:
       - device_family_efr32mg24
-  - path: third_party/matter_support/matter/provision/lib/libProvision_efr32mg26.a
+  - path: third_party/matter_support/provision/libs/libProvision_efr32mg26.a
     condition:
       - device_family_efr32mg26
-  - path: third_party/matter_support/matter/provision/lib/libProvision_mgm24.a
+  - path: third_party/matter_support/provision/libs/libProvision_mgm24.a
     condition:
       - device_family_mgm24
-  - path: third_party/matter_support/matter/provision/lib/libProvision_efr32mg26.a
+  - path: third_party/matter_support/provision/libs/libProvision_efr32mg26.a
     condition:
       - device_family_mgm26
-  - path: third_party/matter_support/matter/provision/lib/libProvisionPSA_si917.a
+  - path: third_party/matter_support/provision/libs/libProvisionPSA_si917.a
     condition:
       - device_family_siwg917
-  - path: third_party/matter_support/matter/provision/lib/libProvision_efr32mg24.a
+  - path: third_party/matter_support/provision/libs/libProvision_efr32mg24.a
     condition:  
      - device_family_simg301
 

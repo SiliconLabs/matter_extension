@@ -301,3 +301,21 @@ upgrade:
     
     configuration:     
       - script: slc/config/scripts/upgrade_config_to_2.5.1.lua
+  
+  - sdk:
+      id: matter
+      version: "2.5.2"
+
+    component:
+      - trigger: matter_fw_upgrade_917
+        description: matter_fw_upgrade_917 is removed since firmware component is added by default from WiFi SDK.
+        remove:
+          - matter_fw_upgrade_917
+
+      - trigger: network_manager
+        description: network_manager is removed since component is added by default from WiFi SDK.
+        remove:
+          - network_manager
+
+    configuration:
+      - script: slc/config/scripts/upgrade_config_to_2.5.2.lua

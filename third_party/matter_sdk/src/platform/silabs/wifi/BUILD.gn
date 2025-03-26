@@ -139,9 +139,7 @@ source_set("wifi-platform") {
       "${silabs_platform_dir}/wifi/SiWx/WifiInterface.cpp",
       "${silabs_platform_dir}/wifi/wiseconnect-abstraction/WiseconnectInterfaceAbstraction.cpp",
       "${silabs_platform_dir}/wifi/wiseconnect-abstraction/WiseconnectInterfaceAbstraction.h",
-
-      # Wi-Fi Config - Using the file sdk support until the wiseconnect file is fixed
-      "${sdk_support_root}/components/service/network_manager/src/sl_net_for_lwip.c",
+      "${wifi_sdk_root}/components/service/network_manager/src/sl_net_for_lwip.c",
     ]
 
     public_deps += [ "${lwip_root}:lwip" ]

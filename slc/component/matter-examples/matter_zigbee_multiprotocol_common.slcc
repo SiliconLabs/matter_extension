@@ -1,0 +1,24 @@
+category: Matter Zigbee CMP Application
+label: Matter Zigbee common
+package: Matter
+description: >
+  Provides zigbee to matter data model link for CMP applications.
+id: matter_zigbee_multiprotocol_common
+quality: production
+provides:
+  - name: matter_zigbee_multiprotocol_common
+recommends:
+  - name: matter_zigbee_concurrent
+include:
+- path: third_party/matter_sdk/examples/platform/silabs/cmp
+  file_list:
+  - path: sl-matter-attribute-storage.h
+
+source:
+- path: third_party/matter_sdk/examples/platform/silabs/cmp/sl-matter-attribute-storage.cpp
+
+template_contribution:
+  - name: component_catalog
+    value: multiprotocol_zigbee_matter_common
+ui_hints:
+  visibility: always
