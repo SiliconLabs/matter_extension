@@ -176,6 +176,8 @@ public:
      */
     static void DoProvisioningReset();
 
+    static void DoProvisioningBasicCommissioningWindow();
+
 protected:
     CHIP_ERROR Init();
 

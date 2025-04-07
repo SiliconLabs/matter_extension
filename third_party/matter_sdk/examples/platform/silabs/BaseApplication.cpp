@@ -903,6 +903,14 @@ void BaseApplication::DoProvisioningReset()
     });
 }
 
+void BaseApplication::DoProvisioningBasicCommissioningWindow(){
+    CHIP_ERROR err = Server::GetInstance().GetCommissioningWindowManager().OpenBasicCommissioningWindow();
+        if (err != CHIP_NO_ERROR)
+        {
+            ChipLogError(AppServer, "Failed to open the Basic Commissioning Window");
+        }
+}
+
 #if SILABS_OTA_ENABLED
 void BaseApplication::InitOTARequestorHandler(System::Layer * systemLayer, void * appState)
 {
