@@ -30,6 +30,7 @@
 #include <lwip/lwip_buildconfig.h>
 #endif
 
+#include "cmsis_os2.h"
 #include <stdlib.h>
 
 #if (SL_MATTER_GN_BUILD == 0)
@@ -69,18 +70,18 @@
 
 #define LWIP_SOCKET 0
 
+#define TCPIP_THREAD_PRIO osPriorityAboveNormal
+
 #ifdef DIC_ENABLE
 #define LWIP_DNS 1
 #define DNS_RAND_TXID() ((u32_t) rand())
 #define MEM_SIZE 5632
 #define MEMP_NUM_UDP_PCB (6)
 #define TCP_MSS (4 * 1152)
-#define TCPIP_THREAD_PRIO (3)
 #else
 #define LWIP_DNS 0
 #define MEMP_NUM_UDP_PCB (5)
 #define TCP_MSS (1152)
-#define TCPIP_THREAD_PRIO (2)
 #endif // DIC_ENABLE
 
 #define LWIP_FREERTOS_USE_STATIC_TCPIP_TASK 1

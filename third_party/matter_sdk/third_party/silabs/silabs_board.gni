@@ -42,6 +42,7 @@ declare_args() {
   use_wf200 = false
   use_rs9116 = false
   use_SiWx917 = false
+  use_SiWx917_module = false
 
   wifi_soc = false
 
@@ -70,7 +71,7 @@ declare_args() {
 }
 
 # TODO - This needs to be removed once multiplexing issues resolved
-if (use_SiWx917) {
+if (use_SiWx917 || use_rs9116) {
   disable_lcd = true
   show_qr_code = false
   use_external_flash = false

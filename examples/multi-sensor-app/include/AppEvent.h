@@ -20,6 +20,9 @@
 #pragma once
 
 #include <stdint.h>
+#ifdef DISPLAY_ENABLED
+#include "lcd.h"
+#endif
 
 struct AppEvent;
 typedef void (*EventHandler)(AppEvent *);
@@ -29,6 +32,7 @@ struct AppEvent
     enum AppEventTypes
     {
         kEventType_Button = 0,
+        kEventType_LCD,
         kEventType_Timer,
         kEventType_SensorAttributeUpdate,
         kEventType_OccupancyAttributeUpdate,
@@ -42,6 +46,12 @@ struct AppEvent
         {
             uint8_t Action;
         } ButtonEvent;
+#ifdef DISPLAY_ENABLED
+        struct
+        {
+            SilabsLCD::Screen_e screen;
+        } LCDEvent;
+#endif
         struct
         {
             void * Context;

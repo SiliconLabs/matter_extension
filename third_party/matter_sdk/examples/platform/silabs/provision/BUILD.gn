@@ -25,6 +25,9 @@ if (wifi_soc) {
 # Seperate import since the matter_support_root is defined in the ef32_sdk.gni / SiWx917_sdk.gni
 import("${matter_support_root}/provision/args.gni")
 source_set("storage") {
+  # SL-TEMP: CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS  is required for credentials fallback in ProvisionStorageXXX.
+  # The define is replaced by SL_MATTER_ENABLE_EXAMPLE_CREDENTIALS in matter 1.5.
+  defines = [ "CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS=1" ]
   sources = [ "ProvisionStorageCustom.cpp" ]
 
   if (use_provision_flash_storage) {

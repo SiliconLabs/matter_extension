@@ -24,4 +24,5 @@ namespace Zigbee {
     void RequestLeave(void);
     uint8_t GetZigbeeChannel(void);
     void ZLLNotFactoryNew(void);
+    void TokenFactoryReset(void);
 };

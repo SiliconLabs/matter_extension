@@ -70,7 +70,7 @@ CHIP_ERROR ConfigureDTIMBasedSleep()
  */
 CHIP_ERROR ConfigureDeepSleep()
 {
-    VerifyOrReturnError(ConfigurePowerSave(RSI_SLEEP_MODE_8, DEEP_SLEEP_WITH_RAM_RETENTION, 0) == SL_STATUS_OK, CHIP_ERROR_INTERNAL,
+    VerifyOrReturnError(ConfigurePowerSave(RSI_SLEEP_MODE_2, DEEP_SLEEP_WITH_RAM_RETENTION, 0) == SL_STATUS_OK, CHIP_ERROR_INTERNAL,
                         ChipLogError(DeviceLayer, "Failed to set Wi-FI configuration to DeepSleep."));
     return CHIP_NO_ERROR;
 }

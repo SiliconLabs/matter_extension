@@ -29,7 +29,7 @@
 #include <platform/silabs/multi-ota/OtaTlvEncryptionKey.h>
 #endif // OTA_ENCRYPTION_ENABLE
 
-#if !SL_MATTER_GN_BUILD
+#if !(SL_MATTER_GN_BUILD || defined(SL_PROVISION_GENERATOR))
 #include <sl_matter_provision_config.h>
 #endif
 

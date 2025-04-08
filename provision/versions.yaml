@@ -90,7 +90,7 @@
 - version: "2.3"
   date: "2024-11-25"
   supports:
-    - RC_2.5.0-1.4
+    - release_2.5-1.4
   module: "v2_0"
   summary: |-
     - Max argument size can now be set as -bz --buffer_size.
@@ -98,7 +98,7 @@
 - version: "2.4"
   date: "2025-01-20"
   supports:
-    - RC_2.5.1-1.4
+    - release_2.5-1.4
   module: "v2_0"
   summary: |-
     - kConfigKey_HardwareVersion = 0x87218
@@ -106,7 +106,15 @@
 - version: "2.5"
   date: "2025-01-29"
   supports:
-    - RC_2.5.1-1.4
+    - release_2.5-1.4
   module: "v2_0"
   summary: |-
     - Generator firmware now runs from RAM in EFR32
+
+- version: "2.6"
+  date: "2025-04-03"
+  supports:
+    - release_2.5-1.4
+  module: "v2_0"
+  summary: |-
+    - Generator self-reset.

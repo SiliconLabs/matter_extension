@@ -73,7 +73,6 @@ extern "C" void halPrintCrashData(uint8_t port)
 namespace Zigbee {
 void RequestStart(uint8_t channel)
 {
-
     // First 8 bits are used for Zigbee Metadata
     start_zigbee_event.data = static_cast<uint32_t>(channel << 8);
     sl_zigbee_af_event_set_active(&start_zigbee_event);
@@ -93,6 +92,12 @@ uint8_t GetZigbeeChannel()
 {
     return sl_zigbee_af_get_radio_channel();
 }
+
+void TokenFactoryReset()
+{
+    sl_zigbee_af_zll_reset_to_factory_new();
+}
+
 } // namespace Zigbee
 
 #if SL_MATTER_CMP_SECURE_ZIGBEE

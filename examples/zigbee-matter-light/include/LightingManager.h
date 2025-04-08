@@ -46,12 +46,15 @@ public:
         kState_OnCompleted,
     } State;
 
+    LightingManager() { mInitialized = false; };
+
     CHIP_ERROR Init();
     bool IsLightOn();
     void EnableAutoTurnOff(bool aOn);
     void SetAutoTurnOffDuration(uint32_t aDurationInSecs);
     bool IsActionInProgress();
     bool InitiateAction(int32_t aActor, Action_t aAction);
+    inline bool IsInitialized() { return mInitialized; }
 
     typedef void (*Callback_fn_initiated)(Action_t, int32_t aActor);
     typedef void (*Callback_fn_completed)(Action_t);
@@ -61,6 +64,7 @@ public:
 
 private:
     friend LightingManager & LightMgr(void);
+    bool mInitialized;
     State_t mState;
 
     Callback_fn_initiated mActionInitiated_CB;

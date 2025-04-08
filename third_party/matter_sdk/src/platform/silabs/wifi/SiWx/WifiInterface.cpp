@@ -112,11 +112,11 @@ sl_wifi_security_t security = SL_WIFI_SECURITY_UNKNOWN;
 
 // TODO : Temporary work-around for wifi-init failure in 917NCP ACX module board(BRD4357A). Can be removed after
 // Wiseconnect fixes region code for all ACX module boards.
-#ifdef EXP_BOARD
+#ifdef ACX_MODULE_BOARD
 #define REGION_CODE IGNORE_REGION
 #else
 #define REGION_CODE US
-#endif // EXP_BOARD
+#endif // ACX_MODULE_BOARD
 
 const sl_wifi_device_configuration_t config = {
     .boot_option = LOAD_NWP_FW,

@@ -20,6 +20,13 @@ For more general information on running matter applications and pre-requisites p
 documentation for Matter available on docs.silabs.com. Follow Wi-Fi instructions depending on the example you are running.
 [Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.5.2/matter-wifi)
 
+## Region code Setting (917 WiFi projects)
+
+In Wifi configurations, the region code can be set in this
+[file](https://github.com/SiliconLabsSoftware/matter_sdk/blob/085bd03532990e5b1f99ff4b08ebce4f4ca5edf6/src/platform/silabs/wifi/SiWx/WifiInterface.cpp#L125).
+The available region codes can be found
+[here](https://github.com/SiliconLabs/wiseconnect/blob/f675628eefa1ac4990e94146abb75dd08b522571/components/device/silabs/si91x/wireless/inc/sl_si91x_types.h#L71)
+
 ## Lock Application User Interface
 
 **LCD** 

@@ -29,7 +29,6 @@
 #include <lib/support/logging/CHIPLogging.h>
 
 #include "sl_component_catalog.h"
-#include <sl-matter-attribute-storage.h>
 
 using namespace ::chip;
 using namespace ::chip::app::Clusters;
@@ -45,6 +44,12 @@ constexpr sl_zigbee_matter_af_multi_protocol_attribute_metadata_t mpAttributeMap
 
 constexpr size_t mpMappedAttributeCount =
     (sizeof(mpAttributeMap) / sizeof(sl_zigbee_matter_af_multi_protocol_attribute_metadata_t));
+
+// SL-TEMP Until GENERATED_MULTI_PROTOCOL_ATTRIBUTE_MAPPING is reworked to optimize parsing time
+inline bool isMultiProtocolMappedMatterCluster(chip::ClusterId clusterId)
+{
+    return (clusterId == OnOff::Id || clusterId == LevelControl::Id || clusterId == ColorControl::Id);
+}
 
 /**
  * @brief Writes an attribute value to the Zigbee attribute storage.
@@ -82,9 +87,9 @@ void sli_matter_af_write_to_zb_attribute(chip::EndpointId endpointId, chip::Clus
 void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
                                        uint8_t * value)
 {
-    EndpointId endpointId   = attributePath.mEndpointId;
-    ClusterId clusterId     = attributePath.mClusterId;
-    AttributeId attributeId = attributePath.mAttributeId;
+    [[maybe_unused]] EndpointId endpointId = attributePath.mEndpointId;
+    ClusterId clusterId                    = attributePath.mClusterId;
+    AttributeId attributeId                = attributePath.mAttributeId;
     ChipLogProgress(Zcl, "Cluster callback: " ChipLogFormatMEI, ChipLogValueMEI(clusterId));
 
     if (clusterId == OnOff::Id && attributeId == OnOff::Attributes::OnOff::Id)
@@ -108,6 +113,11 @@ void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & 
     }
 
 #if defined(GENERATED_MULTI_PROTOCOL_ATTRIBUTE_MAPPING) && defined(SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT)
-    sli_matter_af_write_to_zb_attribute(endpointId, clusterId, attributeId, value, type);
+    // SL-TEMP Until GENERATED_MULTI_PROTOCOL_ATTRIBUTE_MAPPING is reworked to optimize parsing time.
+    // At boot, the attributes are already sync, no need to write them to Zigbee until init is done.
+    if (LightMgr().IsInitialized() && isMultiProtocolMappedMatterCluster(clusterId))
+    {
+        sli_matter_af_write_to_zb_attribute(endpointId, clusterId, attributeId, value, type);
+    }
 #endif
 }

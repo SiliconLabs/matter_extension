@@ -82,9 +82,6 @@ class ProvisionManager:
         if chan and (_chan.Channel.BLE != chan.type):
             self.writeProductionFirmware(args, comm)
 
-        # Reset
-        comm.reset()
-
     def createChannel(self, paths, args, conn, comm):
         if _chan.Channel.BLE == conn.channel_type:
             # Bluetooth channel
@@ -100,11 +97,11 @@ class ProvisionManager:
 
         # TODO: Figure out a way to get the accessible flash instead of the physical flash for series 3
         if "simg3" in info.part:
-            # Command device info return the whole flash size but only a portion of it is available for any application
+            # `commander device info` returns the whole flash size but only a portion of it is available for any application
             # Based on that Total flash size, we can determine what is the current flash size available for apps.
             # The provision storage only reserve 1 flash page for matter credentials for all platforms
-            # S3 token manager reserve 2 pages for it. 
-            # so we preventively remove 1 page to the real flash size 
+            # S3 token manager reserve 2 pages for it.
+            # so we preventively remove 1 page to the real flash size
             if (info.flash_size == 0x00400000):
                 flash_size = 0x390000 # base is 0x391000
             elif (info.flash_size == 0x00300000):
