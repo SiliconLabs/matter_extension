@@ -7,9 +7,9 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.1"
+    version: "2.5.2"
   - id: wiseconnect3_sdk
-    version: "3.4.1"
+    version: "3.4.2"
 
 component:
   - id: matter_leds
@@ -19,8 +19,6 @@ component:
   - id: matter_wifi_ble
     from: matter
   - id: matter_crypto_tinycrypt_siwx917
-    from: matter
-  - id: matter_fw_upgrade_917
     from: matter
 
   - id: matter_wifi
@@ -86,14 +84,12 @@ component:
     from: matter
   - id: matter_default_lcd_config
     from: matter
+  - id: matter_log_uart
+    from: matter
 
   - id: matter_air_quality_app
     from: matter
 
-
-  # Copy of the component to point to a different sl_net_for_lwip.c file
-  - id: network_manager
-    from: matter
 
   # Copy of the component to remove the default lwipopts.h file
   - id: wifi_resources

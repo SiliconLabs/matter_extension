@@ -118,7 +118,7 @@ if [ "$#" == "0" ]; then
             (default: /third_party/silabs/slc_gen/<board>/)
         sl_pre_gen_path
             Allow users to define a path to pre-generated board files
-            (default: /third_party/silabs/matter_support/matter/<family>/<board>/)
+            (default: third_party/silabs/matter_support/board-support/<family>/<board>/)
         sl_matter_version
             Use provided software version at build time
         sl_matter_version_str
@@ -139,8 +139,8 @@ if [ "$#" == "0" ]; then
         --low-power
             disables all power consuming features for the most power efficient build
             This flag is to be used with --icd
-        --wifi <wf200 | rs9116>
-            build wifi example variant for given exansion board
+        --wifi <wf200 | rs9116 | SiWx917 | SiWx917_module>
+            build wifi example variant for given expansion board
         --additional_data_advertising
             enable Addition data advertissing and rotating device ID
         --use_ot_lib
@@ -192,6 +192,8 @@ else
                     optArgs+="use_rs9116=true "
                 elif [ "$2" = "SiWx917" ]; then
                     optArgs+="use_SiWx917=true "
+                elif [ "$2" = "SiWx917_module" ]; then
+                    optArgs+="use_SiWx917=true use_SiWx917_module=true "
                 elif [ "$2" = "wf200" ]; then
                     optArgs+="use_wf200=true "
                 else
@@ -372,7 +374,7 @@ else
         fi
 
         # search bootloader directory for the respective bootloaders for the input board
-        bootloaderFiles=("$(find "$MATTER_ROOT/third_party/silabs/matter_support/matter/efr32/bootloader_binaries/" -maxdepth 1 -name "*$SILABS_BOARD*" | tr '\n' ' ')")
+        bootloaderFiles=("$(find "$MATTER_ROOT/third_party/silabs/matter_support/board-support/efr32/bootloader_binaries/" -maxdepth 1 -name "*$SILABS_BOARD*" | tr '\n' ' ')")
 
         if [ "${#bootloaderFiles[@]}" -gt 1 ]; then
             for i in "${!bootloaderFiles[@]}"; do

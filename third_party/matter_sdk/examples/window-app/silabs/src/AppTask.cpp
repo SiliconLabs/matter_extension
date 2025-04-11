@@ -52,6 +52,7 @@ CHIP_ERROR AppTask::Init()
 
 #ifdef DISPLAY_ENABLED
     GetLCD().Init((uint8_t *) "Window-App");
+    GetLCD().SetCustomUI(WindowManager::DrawUI);
 #endif
 
     err = BaseApplication::Init();
@@ -96,7 +97,9 @@ void AppTask::AppTaskMain(void * pvParameter)
     SILABS_LOG("App Task started");
 
     WindowManager::sWindow.UpdateLED();
+#ifdef DISPLAY_ENABLED
     WindowManager::sWindow.UpdateLCD();
+#endif // DISPLAY_ENABLED
 
     while (true)
     {

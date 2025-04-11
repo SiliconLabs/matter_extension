@@ -9,7 +9,7 @@ metadata:
     license: Zlib
 
 source:
-- path: third_party/matter_support/matter/si91x/support/hal/rsi_hal_mcu_m4.c
+- path: third_party/matter_support/board-support/si91x/support/hal/rsi_hal_mcu_m4.c
 
 provides:
   - name: siwx917_soc_custom_hal

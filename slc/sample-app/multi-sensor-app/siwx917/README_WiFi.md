@@ -24,7 +24,14 @@ Silicon Labs platform.
 
 For more general information on running Matter applications and prerequisites see online
 documentation for Matter available on docs.silabs.com. Follow Thread demo instructions depending on the example you are running.
-[Demo instructions for Thread](https://docs.silabs.com/matter/2.5.1/matter-thread)
+[Demo instructions for Thread](https://docs.silabs.com/matter/2.5.2/matter-thread)
+
+## Region code Setting (917 WiFi projects)
+
+In Wifi configurations, the region code can be set in this
+[file](https://github.com/SiliconLabsSoftware/matter_sdk/blob/085bd03532990e5b1f99ff4b08ebce4f4ca5edf6/src/platform/silabs/wifi/SiWx/WifiInterface.cpp#L125).
+The available region codes can be found
+[here](https://github.com/SiliconLabs/wiseconnect/blob/f675628eefa1ac4990e94146abb75dd08b522571/components/device/silabs/si91x/wireless/inc/sl_si91x_types.h#L71)
 
 ## Sensor Example User Interface
 
@@ -115,7 +122,7 @@ If LEDs are supported by the board but not enabled in a project they can be enab
 
 ## Provision and Control
 
-You can provision and control the Matter device using the python controller, chip-tool (standalone or pre-built), Android, iOS app or the mattertool utility from the Matter Hub package provided by Silicon Labs. The pre-built chip-tool instance ships with the Matter Hub image. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.5.1/matter-thread/raspi-img) 
+You can provision and control the Matter device using the python controller, chip-tool (standalone or pre-built), Android, iOS app or the mattertool utility from the Matter Hub package provided by Silicon Labs. The pre-built chip-tool instance ships with the Matter Hub image. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.5.2/matter-thread/raspi-img) 
 
 More information on using the chip-tool directly can be found here: [CHIPTool](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
 

@@ -1,0 +1,22 @@
+id: siwx917_ncp_brd4357a
+package: Matter
+label: SiWx917 NCP Component for BRD4357a
+description: >
+  Adds the config changes required for BRD4357a module board.
+category: Matter-WiFi|Platform|Drivers
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+
+provides:
+- name: siwx917_ncp_brd4357a
+
+requires:
+- name: siwx917_ncp
+
+define:
+- name: USE_BYPASS_CLOCK
+  value: "1"
+- name: ACX_MODULE_BOARD
+  value: "1"

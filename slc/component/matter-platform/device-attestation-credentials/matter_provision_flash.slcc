@@ -25,15 +25,15 @@ config_file:
     file_id: matter_provision_config
     
 include:
-- path: third_party/matter_sdk/src/platform/silabs/provision
+- path: third_party/matter_support/provision
   file_list:
-  - path: AttestationKey.h
-  - path: ProvisionChannel.h
-  - path: ProvisionEncoder.h
-  - path: ProvisionManager.h
-  - path: ProvisionProtocol.h
-  - path: ProvisionStorage.h
-  - path: ProvisionStorageGeneric.h
+  - path: headers/AttestationKey.h
+  - path: headers/ProvisionChannel.h
+  - path: headers/ProvisionEncoder.h
+  - path: headers/ProvisionManager.h
+  - path: headers/ProvisionProtocol.h
+  - path: headers/ProvisionStorage.h
+  - path: headers/ProvisionStorageGeneric.h
 - path: third_party/matter_sdk/examples/platform/silabs
   file_list:
   - path: SilabsTestEventTriggerDelegate.h
@@ -43,19 +43,19 @@ source:
   - path: third_party/matter_sdk/examples/platform/silabs/provision/ProvisionStorageCustom.cpp
 
 library:
-  - path: third_party/matter_support/matter/provision/lib/libProvisionFlash_efr32mg24.a
+  - path: third_party/matter_support/provision/libs/libProvisionFlash_efr32mg24.a
     condition:
       - device_family_efr32mg24
-  - path: third_party/matter_support/matter/provision/lib/libProvisionFlash_efr32mg26.a
+  - path: third_party/matter_support/provision/libs/libProvisionFlash_efr32mg26.a
     condition:
       - device_family_efr32mg26
-  - path: third_party/matter_support/matter/provision/lib/libProvisionFlash_mgm24.a
+  - path: third_party/matter_support/provision/libs/libProvisionFlash_mgm24.a
     condition:
       - device_family_mgm24
-  - path: third_party/matter_support/matter/provision/lib/libProvisionFlash_efr32mg26.a
+  - path: third_party/matter_support/provision/libs/libProvisionFlash_efr32mg26.a
     condition:
       - device_family_mgm26
-  - path: third_party/matter_support/matter/provision/lib/libProvision_si917.a
+  - path: third_party/matter_support/provision/libs/libProvision_si917.a
     condition:
       - device_family_siwg917
 

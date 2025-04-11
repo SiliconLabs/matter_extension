@@ -23,9 +23,9 @@
 #include <sl_cmsis_os2_common.h>
 
 #include "sl_status.h"
-#include <stdbool.h>
 #include <lib/core/CHIPError.h>
 #include <lib/support/Span.h>
+#include <stdbool.h>
 
 /* LwIP includes. */
 #include "lwip/ip_addr.h"
@@ -87,15 +87,15 @@ enum class WifiState : uint16_t
 
 enum class WifiEvent : uint8_t
 {
-    kStationConnect    = 0,
-    kStationDisconnect = 1,
-    kAPStart           = 2,
-    kAPStop            = 3,
-    kScan              = 4, /* This is used as scan result and start */
-    kStationStartJoin  = 5,
-    kStationDoDhcp     = 6,
-    kStationDhcpDone   = 7,
-    kStationDhcpPoll   = 8
+    kStationConnect     = 0,
+    kStationDisconnect  = 1,
+    kAPStart            = 2,
+    kAPStop             = 3,
+    kScan               = 4, /* This is used as scan result and start */
+    kStationStartJoin   = 5,
+    kConnectionComplete = 6,
+    kStationDhcpDone    = 7,
+    kStationDhcpPoll    = 8
 };
 
 typedef enum
@@ -118,11 +118,11 @@ typedef enum
 
 typedef struct
 {
-    char ssid[WFX_MAX_SSID_LENGTH + 1];
-    size_t ssid_length;
-    char passkey[WFX_MAX_PASSKEY_LENGTH + 1];
-    size_t passkey_length;
-    wfx_sec_t security;
+    char ssid[WFX_MAX_SSID_LENGTH + 1]       = { 0 };
+    size_t ssid_length                       = 0;
+    char passkey[WFX_MAX_PASSKEY_LENGTH + 1] = { 0 };
+    size_t passkey_length                    = 0;
+    wfx_sec_t security                       = WFX_SEC_UNSPECIFIED;
 } wfx_wifi_provision_t;
 
 typedef enum
@@ -215,7 +215,8 @@ bool wfx_have_ipv4_addr(sl_wfx_interface_t);
 
 bool wfx_have_ipv6_addr(sl_wfx_interface_t);
 wifi_mode_t wfx_get_wifi_mode(void);
-CHIP_ERROR wfx_start_scan(chip::ByteSpan ssid, void (*scan_cb)(wfx_wifi_scan_result_t *)); /* true returned if successfully started */
+CHIP_ERROR wfx_start_scan(chip::ByteSpan ssid,
+                          void (*scan_cb)(wfx_wifi_scan_result_t *)); /* true returned if successfully started */
 void wfx_cancel_scan(void);
 
 /*

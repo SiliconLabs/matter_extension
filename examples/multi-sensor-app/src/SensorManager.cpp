@@ -170,13 +170,13 @@ CHIP_ERROR Init()
 #if defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
     VerifyOrDieWithMsg(Si70xxSensor::Init() == SL_STATUS_OK, AppServer, "Failed to initialize the sensor!");
 #endif // defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
+    isInitialised = true;
 
     VerifyOrDieWithMsg(DeviceLayer::PlatformMgr().ScheduleWork([](intptr_t arg) {
         SensorActionTriggered(&chip::DeviceLayer::SystemLayer(), nullptr);
     }) == CHIP_NO_ERROR,
                        AppServer, "Failed to schedule the first SensorCallback!");
 
-    isInitialised = true;
     return CHIP_NO_ERROR;
 }
 
@@ -203,37 +203,55 @@ void ButtonActionTriggered(AppEvent * aEvent)
 
 Status GetMeasuredTemperature(chip::app::DataModel::Nullable<int16_t> & value)
 {
+    DeviceLayer::PlatformMgr().LockChipStack();
     Status status = TemperatureMeasurement::Attributes::MeasuredValue::Get(kTemperatureSensorEndpoint, value);
+    DeviceLayer::PlatformMgr().UnlockChipStack();
+
     return status;
 }
 
 Status GetMaxMeasuredTemperature(chip::app::DataModel::Nullable<int16_t> & value)
 {
+    DeviceLayer::PlatformMgr().LockChipStack();
     Status status = TemperatureMeasurement::Attributes::MaxMeasuredValue::Get(kTemperatureSensorEndpoint, value);
+    DeviceLayer::PlatformMgr().UnlockChipStack();
+
     return status;
 }
 
 Status GetMinMeasuredTemperature(chip::app::DataModel::Nullable<int16_t> & value)
 {
+    DeviceLayer::PlatformMgr().LockChipStack();
     Status status = TemperatureMeasurement::Attributes::MinMeasuredValue::Get(kTemperatureSensorEndpoint, value);
+    DeviceLayer::PlatformMgr().UnlockChipStack();
+
     return status;
 }
 
 Status GetMeasuredHumidity(chip::app::DataModel::Nullable<uint16_t> & value)
 {
+    DeviceLayer::PlatformMgr().LockChipStack();
     Status status = RelativeHumidityMeasurement::Attributes::MeasuredValue::Get(kHumiditySensorEndpoint, value);
+    DeviceLayer::PlatformMgr().UnlockChipStack();
+
     return status;
 }
 
 Status GetMaxMeasuredHumidity(chip::app::DataModel::Nullable<uint16_t> & value)
 {
+    DeviceLayer::PlatformMgr().LockChipStack();
     Status status = RelativeHumidityMeasurement::Attributes::MaxMeasuredValue::Get(kHumiditySensorEndpoint, value);
+    DeviceLayer::PlatformMgr().UnlockChipStack();
+
     return status;
 }
 
 Status GetMinMeasuredHumidity(chip::app::DataModel::Nullable<uint16_t> & value)
 {
+    DeviceLayer::PlatformMgr().LockChipStack();
     Status status = RelativeHumidityMeasurement::Attributes::MinMeasuredValue::Get(kHumiditySensorEndpoint, value);
+    DeviceLayer::PlatformMgr().UnlockChipStack();
+
     return status;
 }
 

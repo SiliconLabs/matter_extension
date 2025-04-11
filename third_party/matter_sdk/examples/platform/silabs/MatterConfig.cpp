@@ -63,9 +63,9 @@
 static chip::DeviceLayer::Internal::Efr32PsaOperationalKeystore gOperationalKeystore;
 #endif
 
-#include <ProvisionManager.h>
 #include <app/InteractionModelEngine.h>
 #include <app/TimerDelegates.h>
+#include <headers/ProvisionManager.h>
 
 #ifdef SL_MATTER_TEST_EVENT_TRIGGER_ENABLED
 #include "SilabsTestEventTriggerDelegate.h" // nogncheck
@@ -393,7 +393,7 @@ extern "C" void vApplicationIdleHook(void)
 #if (SLI_SI91X_MCU_INTERFACE && CHIP_CONFIG_ENABLE_ICD_SERVER)
 #ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
     SiWxPlatformInterface::sl_si91x_btn_event_handler();
-#endif  //SL_CATALOG_SIMPLE_BUTTON_PRESENT
+#endif // SL_CATALOG_SIMPLE_BUTTON_PRESENT
     SiWxPlatformInterface::sl_si91x_uart_power_requirement_handler();
 #endif
 }

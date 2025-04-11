@@ -28,11 +28,14 @@ include:
   - path: arch/cc.h
   - path: arch/perf.h
   - path: lwippools.h
-- path: slc/inc
+- path: slc/inc/lwip
   file_list:
-  - path: lwip/lwip_buildconfig.h
+  - path: lwip_buildconfig.h
+- path: slc/inc/wifi
+  file_list:
   - path: brd4186c.h
   - path: brd4187c.h
+  - path: sl_custom_board.h
 - path: third_party/matter_sdk/src/lwip/freertos
   file_list:
   - path: arch/sys_arch.h

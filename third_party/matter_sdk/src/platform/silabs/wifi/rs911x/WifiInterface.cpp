@@ -606,7 +606,7 @@ void HandleDHCPPolling(void)
 
 /** ResetDHCPNotificationFlags
  *  @brief Reset the flags that are used to notify the application about DHCP connectivity
- *         and emits a WifiEvent::kStationDoDhcp event to trigger DHCP polling checks. Helper function for ProcessEvent.
+ *         and emits a WifiEvent::kConnectionComplete event to trigger DHCP polling checks. Helper function for ProcessEvent.
  */
 void ResetDHCPNotificationFlags(void)
 {
@@ -618,7 +618,7 @@ void ResetDHCPNotificationFlags(void)
     hasNotifiedIPV6             = false;
     hasNotifiedWifiConnectivity = false;
 
-    outEvent = WifiEvent::kStationDoDhcp;
+    outEvent = WifiEvent::kConnectionComplete;
     sl_matter_wifi_post_event(outEvent);
 }
 
@@ -752,7 +752,7 @@ void ProcessEvent(WifiEvent event)
         sl_wifi_platform_join_network();
     }
     break;
-    case WifiEvent::kStationDoDhcp: {
+    case WifiEvent::kConnectionComplete: {
         StartDHCPTimer(WFX_RSI_DHCP_POLL_INTERVAL);
     }
     break;

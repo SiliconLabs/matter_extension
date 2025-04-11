@@ -127,18 +127,33 @@ public:
 
     static void PostEvent(const AppEvent * event);
 
-    /**
-     * @brief Overridable function used to update display on button press
-     */
-    virtual void UpdateDisplay();
-
 #ifdef DISPLAY_ENABLED
     /**
      * @brief Return LCD object
      */
     static SilabsLCD & GetLCD(void);
 
-    static void UpdateLCDStatusScreen(bool withChipStackLock = true);
+    static void UpdateLCDStatusScreen();
+
+    /**
+     * @brief Overridable function used to update display on button press
+     */
+    virtual void UpdateDisplay();
+
+    /**
+     * @brief LCD Event processing function
+     *        Update the LCD status based on the screen
+     *
+     * @param aEvent post event being processed
+     */
+    static void UpdateDisplayHandler(AppEvent * aEvent);
+
+    /**
+     * @brief Post an event to update the display screen
+     *
+     * @param screen The screen to be displayed
+     */
+    static void PostUpdateDisplayEvent(SilabsLCD::Screen_e screen);
 #endif
 
     /**
@@ -182,8 +197,8 @@ protected:
     /** @brief
      * Function to be called at the end of Init to indicate that the application has completed its initialization.
      * Currently only used for tracing, might want to move logging here as well in the future
-     * @param err CHIP_NO_ERROR on success, corresponding error code on Init failure, note that Init failure leads to an app error so
-     * this is purely to have a trace logged with the error code
+     * @param err CHIP_NO_ERROR on success, corresponding error code on Init failure, note that Init failure leads to an app error
+     * so this is purely to have a trace logged with the error code
      */
     void InitCompleteCallback(CHIP_ERROR err);
 

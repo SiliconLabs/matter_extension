@@ -60,11 +60,13 @@ def recurse_dir(file_or_dir):
             board_type = (str(os.path.basename(file_or_dir).replace('.s37', '')).replace('.rps','').split('-'))[-1]
             if board_type == "ncp":
                 board_type = "917-ncp"
+            elif board_type == "brd4357a":
+                board_type = "917-ncp-brd4357a"
             elif board_type == "soc" or board_type == "example":
                 board_type = "917-soc"
 
             if brd not in demos_map['demos'].keys():
-                demos_map['demos'][brd] = {'OpenThread': [], 'WiFi': {'917-soc': [], '917-ncp': [], 'wf200': [], 'rs911x': []}}
+                demos_map['demos'][brd] = {'OpenThread': [], 'WiFi': {'917-soc': [], '917-ncp': [], '917-ncp-brd4357a': [], 'wf200': [], 'rs911x': []}}
 
             if tech_ == 'OpenThread':
                 demos_map['demos'][brd][tech_].append(str(os.path.basename(file_or_dir).replace('.s37', '')))

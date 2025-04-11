@@ -9,11 +9,13 @@ metadata:
     license: Zlib
 provides:
   - name: matter_log_uart
+
+requires:
+  - name: matter_uart
+
 define:
   - name: SILABS_LOG_OUT_UART
     value: 1
-    condition:
-      - matter_uart
 conflicts:
   - name: matter_log_rtt
   

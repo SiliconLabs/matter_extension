@@ -21,6 +21,10 @@
 #include <lib/support/PersistentData.h>
 #include <string> // Include the necessary header for std::string
 
+#if defined(SILABS_LOG_OUT_UART) && SILABS_LOG_OUT_UART
+#include "uart.h"
+#endif
+
 #if !CONFIG_BUILD_FOR_HOST_UNIT_TEST
 #include <platform/silabs/Logging.h> // for isLogInitialized
 #endif
@@ -418,6 +422,10 @@ CHIP_ERROR SilabsTracer::TraceBufferFlushAll()
         current = current->mpNext;
     }
 
+#if defined(SILABS_LOG_OUT_UART) && SILABS_LOG_OUT_UART
+    // Force UART to flush all its queue in a blocking manner if we activated UART Logging
+    uartFlushTxQueue();
+#endif
     TraceBufferClear();
     return CHIP_NO_ERROR;
 }

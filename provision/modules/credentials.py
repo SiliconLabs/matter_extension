@@ -84,7 +84,7 @@ class Credentials:
         _util.File(self.paths.temp(Credentials.DEFAULT_HEADER_FILE)).write(header)
 
     def collectCD(self, cdc, cdk, cd):
-        cd_temp = self.paths.temp('cd.bin')
+        cd_temp = self.paths.temp('cd.der')
         if cd.value is not None:
             # Copy CD
             self.copy(cd.value, cd_temp)

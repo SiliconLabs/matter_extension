@@ -73,7 +73,6 @@ extern "C" void halPrintCrashData(uint8_t port)
 namespace Zigbee {
 void RequestStart(uint8_t channel)
 {
-
     // First 8 bits are used for Zigbee Metadata
     start_zigbee_event.data = static_cast<uint32_t>(channel << 8);
     sl_zigbee_af_event_set_active(&start_zigbee_event);
@@ -86,13 +85,19 @@ void RequestLeave()
 
 void ZLLNotFactoryNew(void)
 {
-  sl_zigbee_af_zll_unset_factory_new();
+    sl_zigbee_af_zll_unset_factory_new();
 }
 
 uint8_t GetZigbeeChannel()
 {
     return sl_zigbee_af_get_radio_channel();
 }
+
+void TokenFactoryReset()
+{
+    sl_zigbee_af_zll_reset_to_factory_new();
+}
+
 } // namespace Zigbee
 
 #if SL_MATTER_CMP_SECURE_ZIGBEE
@@ -282,54 +287,6 @@ extern "C" void sl_zigbee_af_network_creator_complete_cb(const sl_zigbee_network
     SILABS_LOG(" [ZB] af_network_creator_complete: Permitting Join");
     sl_zigbee_af_permit_join(254, NULL);
 #endif // SL_MATTER_CMP_SECURE_ZIGBEE
-}
-
-/** @brief Post Attribute Change
- *
- * This function is called by the application framework after it changes an
- * attribute value. The value passed into this callback is the value to which
- * the attribute was set by the framework.
- */
-extern "C" void sl_zigbee_af_post_attribute_change_cb(uint8_t endpoint, sl_zigbee_af_cluster_id_t clusterId,
-                                                      sl_zigbee_af_attribute_id_t attributeId, uint8_t mask,
-                                                      uint16_t manufacturerCode, uint8_t type, uint8_t size, uint8_t * value)
-{
-    if (clusterId == ZCL_ON_OFF_CLUSTER_ID && attributeId == ZCL_ON_OFF_ATTRIBUTE_ID && mask == CLUSTER_MASK_SERVER)
-    {
-        bool onOff;
-        if (sl_zigbee_af_read_server_attribute(endpoint, ZCL_ON_OFF_CLUSTER_ID, ZCL_ON_OFF_ATTRIBUTE_ID, (uint8_t *) &onOff,
-                                               sizeof(onOff)) == SL_ZIGBEE_ZCL_STATUS_SUCCESS)
-        {
-            // TODO : Glue Layer between Zigbee and Matter here
-            // JIRA : MATTER-3019
-            LightingManager::Action_t action;
-            int32_t actor;
-            action = (onOff) ? LightingManager::ON_ACTION : LightingManager::OFF_ACTION;
-            actor  = AppEvent::kEventType_Button;
-            if (LightMgr().IsLightOn() != onOff)
-            {
-                // Zigbee State doesn't Match the current light status
-                // Zigbee probably is the source of truth : update cluster
-                LightMgr().InitiateAction(actor, action);
-            }
-        }
-    }
-}
-
-/** @brief On/off Cluster Server Post Init
- *
- * Following resolution of the On/Off state at startup for this endpoint,
- * perform any additional initialization needed; e.g., synchronize hardware
- * state.
- *
- * @param endpoint Endpoint that is being initialized
- */
-extern "C" void sl_zigbee_af_on_off_cluster_server_post_init_cb(uint8_t endpoint)
-{
-    // At startup, trigger a read of the attribute and possibly a toggle of the
-    // LED to make sure they are always in sync.
-    sl_zigbee_af_post_attribute_change_cb(endpoint, ZCL_ON_OFF_CLUSTER_ID, ZCL_ON_OFF_ATTRIBUTE_ID, CLUSTER_MASK_SERVER, 0, 0, 0,
-                                          NULL);
 }
 
 /** @brief

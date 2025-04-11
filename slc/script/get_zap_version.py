@@ -13,7 +13,7 @@ from pathlib import Path
 # This string should remain empty on the main branch. Update it only when a release branch is created. 
 # Coordinate with the studio team to determine the appropriate ZAP version for the release.
 # Version string example :  "v2024.08.14-nightly"
-SIMPLICITY_STUDIO_ZAP_VERSION = "v2024.11.22-nightly"
+SIMPLICITY_STUDIO_ZAP_VERSION = "v2025.03.27"
 
 def get_zap_version():
     if SIMPLICITY_STUDIO_ZAP_VERSION:
@@ -51,4 +51,4 @@ def get_zap_version():
 
 if __name__ == "__main__":
     # Print the minimum zap required
-    print("The minimum zap required is", get_latest_zap())
+    print("The minimum zap required is", get_zap_version())

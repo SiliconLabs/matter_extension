@@ -22,7 +22,7 @@ import shutil
 import argparse
 
 # Directories to exclude from copying
-exclude_root_directories = [ "matter_extension/out", "matter_extension/demos", "matter_extension/slc/tools"]
+exclude_root_directories = [ "matter_extension/out", "matter_extension/slc/tools"]
 
 exlude_submodules = ['simplicity_sdk', 'wifi_sdk', "matter_private", "third_party_hw_drivers_extension"]
 
@@ -33,7 +33,7 @@ matter_sdk_exclude = ['third_party','zzz_generated']
 wiseconnect_wifi_bt_sdk_includes = ['sapi']
 
 # Specific includes for matter_support
-matter_support_includes = ['provision', 'mbedtls', "si91x"]
+matter_support_includes = ['provision', 'tinycrypt', "si91x"]
 
 def should_exclude(root, path):
     """
@@ -52,21 +52,22 @@ def should_exclude(root, path):
             #print(f"Excluding wiseconnect_wifi_bt_sdk path: {full_path}")
             return True
 
-    # Check for matter_support specific includes
-    if "matter_support/matter/" in full_path:
-        if not any(include in full_path for include in matter_support_includes):
-            #print(f"Excluding matter_support path: {full_path}")
-            return True
-    
-    # Exclude other matter_support directories
-    if "matter_support/" in full_path and "matter_support/matter" not in full_path:
-        #print(f"Excluding other matter_support path: {full_path}")
-        return True
-
     # Exclude submodules
     if "third_party/" in full_path:
         if any(exclude in full_path for exclude in exlude_submodules):
             #print(f"Excluding submodule path: {full_path}")
+            return True
+    
+    # Check for matter_support/board-support/ specific includes
+    if "matter_support/board-support/" in full_path:
+        if not any(include in full_path for include in matter_support_includes):
+            #print(f"Excluding matter_support path: {full_path}")
+            return True
+
+    # Check for matter_support specific includes
+    if "matter_support/" in full_path and "matter_support/board-support" not in full_path:
+        if not any(include in full_path for include in matter_support_includes):
+            #print(f"Excluding matter_support_2 path: {full_path}")
             return True
     
     # Exclude matter_sdk directories

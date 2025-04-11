@@ -150,7 +150,11 @@ CHIP_ERROR SlWiFiDriver::ConnectWiFiNetwork(const char * ssid, uint8_t ssidLen, 
 
     // Set the wifi configuration
     wfx_wifi_provision_t wifiConfig;
-    memset(&wifiConfig, 0, sizeof(wifiConfig));
+    memset(wifiConfig.ssid, 0, WFX_MAX_SSID_LENGTH);
+    wifiConfig.ssid_length = 0;
+    memset(wifiConfig.passkey, 0, WFX_MAX_PASSKEY_LENGTH);
+    wifiConfig.passkey_length = 0;
+    wifiConfig.security       = WFX_SEC_UNSPECIFIED;
 
     VerifyOrReturnError(ssidLen <= WFX_MAX_SSID_LENGTH, CHIP_ERROR_BUFFER_TOO_SMALL);
     memcpy(wifiConfig.ssid, ssid, ssidLen);
@@ -330,7 +334,7 @@ CHIP_ERROR GetConnectedNetwork(Network & network)
     VerifyOrReturnError(wfx_is_sta_connected(), CHIP_ERROR_NOT_CONNECTED);
     network.connected = true;
     uint8_t length    = strnlen(wifiConfig.ssid, DeviceLayer::Internal::kMaxWiFiSSIDLength);
-    VerifyOrReturnError(length < sizeof(network.networkID), CHIP_ERROR_BUFFER_TOO_SMALL);
+    VerifyOrReturnError(length <= sizeof(network.networkID), CHIP_ERROR_BUFFER_TOO_SMALL);
     memcpy(network.networkID, wifiConfig.ssid, length);
     network.networkIDLen = length;
 

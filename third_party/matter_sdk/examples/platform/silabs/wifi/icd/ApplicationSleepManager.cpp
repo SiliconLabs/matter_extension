@@ -53,17 +53,17 @@ CHIP_ERROR ApplicationSleepManager::Init()
 void ApplicationSleepManager::OnCommissioningWindowOpened()
 {
     mIsCommissionningWindowOpen = true;
-#if (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
+#if (defined(SLI_SI917) && SLI_SI917 == 1)
     mWifiSleepManager->VerifyAndTransitionToLowPowerMode();
-#endif // (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
+#endif // (defined(SLI_SI917) && SLI_SI917 == 1)
 }
 
 void ApplicationSleepManager::OnCommissioningWindowClosed()
 {
     mIsCommissionningWindowOpen = false;
-#if (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
+#if (defined(SLI_SI917) && SLI_SI917 == 1)
     mWifiSleepManager->VerifyAndTransitionToLowPowerMode();
-#endif // (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
+#endif // (defined(SLI_SI917) && SLI_SI917 == 1)
 }
 
 void ApplicationSleepManager::OnSubscriptionEstablished(chip::app::ReadHandler & aReadHandler)
@@ -170,19 +170,19 @@ bool ApplicationSleepManager::ProcessKeychainEdgeCase()
 void ApplicationSleepManager::OnEnterActiveMode()
 {
     mIsInActiveMode = true;
-// TEMP-fix: Added SLI_SI91X_MCU_INTERFACE to delay 917 NCP sleep till wifi-connection
-#if (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
+// TEMP-fix: Added SLI_SI917 to delay 9116 NCP sleep till wifi-connection
+#if (defined(SLI_SI917) && SLI_SI917 == 1)
     mWifiSleepManager->VerifyAndTransitionToLowPowerMode();
-#endif // (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
+#endif // (defined(SLI_SI917) && SLI_SI917 == 1)
 }
 
 void ApplicationSleepManager::OnEnterIdleMode()
 {
     mIsInActiveMode = false;
-// TEMP-fix: Added SLI_SI91X_MCU_INTERFACE to delay 917 NCP sleep till wifi-connection
-#if (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
+// TEMP-fix: Added SLI_SI917 to delay 9116 NCP sleep till wifi-connection
+#if (defined(SLI_SI917) && SLI_SI917 == 1)
     mWifiSleepManager->VerifyAndTransitionToLowPowerMode();
-#endif // (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
+#endif // (defined(SLI_SI917) && SLI_SI917 == 1)
 }
 
 void ApplicationSleepManager::OnTransitionToIdle()

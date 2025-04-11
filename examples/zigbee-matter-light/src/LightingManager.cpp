@@ -71,7 +71,7 @@ CHIP_ERROR LightingManager::Init()
     mAutoTurnOff           = false;
     mAutoTurnOffDuration   = 0;
     mOffEffectArmed        = false;
-
+    mInitialized           = true;
     return CHIP_NO_ERROR;
 }
 

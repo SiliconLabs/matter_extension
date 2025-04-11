@@ -17,7 +17,7 @@
  */
 
 #include "SilabsTestEventTriggerDelegate.h"
-#include <ProvisionManager.h>
+#include <headers/ProvisionManager.h>
 #include <lib/core/ErrorStr.h>
 
 using namespace ::chip::DeviceLayer;
@@ -32,9 +32,9 @@ bool SilabsTestEventTriggerDelegate::DoesEnableKeyMatch(const ByteSpan & enableK
     CHIP_ERROR error = Silabs::Provision::Manager::GetInstance().GetStorage().GetTestEventTriggerKey(storedEnableKeySpan);
     if (error != CHIP_NO_ERROR)
     {
-        // If we fail to read the enableKey from storage, the MutableByteSpan is not modified by the getter which leaves the span equal to a zero bytepsan (size = 0).
-        // This guarantees that we will be able to inform the stack that the test event trigger is not enabled when the stack tries
-        // to match the zero bytespan to our enableKey.
+        // If we fail to read the enableKey from storage, the MutableByteSpan is not modified by the getter which leaves the span
+        // equal to a zero bytepsan (size = 0). This guarantees that we will be able to inform the stack that the test event trigger
+        // is not enabled when the stack tries to match the zero bytespan to our enableKey.
         ChipLogError(DeviceLayer, "Failed to get test event trigger key: %s", ErrorStr(error));
     }
 

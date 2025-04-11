@@ -7,7 +7,7 @@ package: Matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.1"
+    version: "2.5.2"
 
 component:
   - id: device_init
@@ -37,6 +37,8 @@ component:
   - id: matter_gatt
     from: matter
   - id: matter_provision_default
+    from: matter  
+  - id: matter_log_uart
     from: matter
 
   - id: matter_air_quality_app
