@@ -1,43 +1,43 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: default_policy
 id: default_policy
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns
     file_list:
-    -   path: ListenIterator.h
-    -   path: ServerIPAddresses.h
-    -   path: Query.h
-    -   path: Parser.h
-    -   path: AddressPolicy_DefaultImpl.h
-    -   path: QueryReplyFilter.h
-    -   path: Logging.h
-    -   path: ResponseBuilder.h
-    -   path: ResponseSender.h
-    -   path: QueryBuilder.h
-    -   path: AddressPolicy.h
-    -   path: AddressPolicy_LibNlImpl.h
-    -   path: Server.h
-    -   path: RecordData.h
+      - path: ListenIterator.h
+      - path: ServerIPAddresses.h
+      - path: Query.h
+      - path: Parser.h
+      - path: AddressPolicy_DefaultImpl.h
+      - path: QueryReplyFilter.h
+      - path: Logging.h
+      - path: ResponseBuilder.h
+      - path: ResponseSender.h
+      - path: QueryBuilder.h
+      - path: AddressPolicy.h
+      - path: AddressPolicy_LibNlImpl.h
+      - path: Server.h
+      - path: RecordData.h
 label: default_policy
-package: Matter
+package: matter
 provides:
--   name: matter_default_policy
+  - name: matter_default_policy
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/AddressPolicy_DefaultImpl.cpp
+  - path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/AddressPolicy_DefaultImpl.cpp
 ui_hints:
-    visibility: never
+  visibility: never

@@ -1,62 +1,62 @@
 category: Matter|Core
 define:
--   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+  - name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
     value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
 description: libchipcontroller
 id: libchipcontroller
 include:
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/controller
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/controller
     file_list:
-    -   path: CHIPDeviceControllerFactory.h
-    -   path: WriteInteraction.h
-    -   path: CHIPCluster.h
-    -   path: CHIPDeviceControllerSystemState.h
-    -   path: DevicePairingDelegate.h
-    -   path: CommandSenderAllocator.h
-    -   path: CommissioningWindowOpener.h
-    -   path: ReadInteraction.h
-    -   path: InvokeInteraction.h
-    -   path: CHIPCommissionableNodeController.h
-    -   path: CHIPDeviceController.h
-    -   path: CommissionerDiscoveryController.h
-    -   path: ExamplePersistentStorage.h
-    -   path: OperationalCredentialsDelegate.h
-    -   path: CurrentFabricRemover.h
-    -   path: CommissioningDelegate.h
-    -   path: SetUpCodePairer.h
-    -   path: AbstractDnssdDiscoveryController.h
-    -   path: ExampleOperationalCredentialsIssuer.h
-    -   path: TypedCommandCallback.h
-    -   path: AutoCommissioner.h
-    -   path: DeviceDiscoveryDelegate.h
-    -   path: TypedReadCallback.h
-    -   path: CommissioneeDeviceProxy.h
+      - path: CHIPDeviceControllerFactory.h
+      - path: WriteInteraction.h
+      - path: CHIPCluster.h
+      - path: CHIPDeviceControllerSystemState.h
+      - path: DevicePairingDelegate.h
+      - path: CommandSenderAllocator.h
+      - path: CommissioningWindowOpener.h
+      - path: ReadInteraction.h
+      - path: InvokeInteraction.h
+      - path: CHIPCommissionableNodeController.h
+      - path: CHIPDeviceController.h
+      - path: CommissionerDiscoveryController.h
+      - path: ExamplePersistentStorage.h
+      - path: OperationalCredentialsDelegate.h
+      - path: CurrentFabricRemover.h
+      - path: CommissioningDelegate.h
+      - path: SetUpCodePairer.h
+      - path: AbstractDnssdDiscoveryController.h
+      - path: ExampleOperationalCredentialsIssuer.h
+      - path: TypedCommandCallback.h
+      - path: AutoCommissioner.h
+      - path: DeviceDiscoveryDelegate.h
+      - path: TypedReadCallback.h
+      - path: CommissioneeDeviceProxy.h
 label: libchipcontroller
-package: Matter
+package: matter
 provides:
--   name: matter_libchipcontroller
+  - name: matter_libchipcontroller
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/controller/AbstractDnssdDiscoveryController.cpp
--   path: third_party/matter_sdk/src/controller/AutoCommissioner.cpp
--   path: third_party/matter_sdk/src/controller/CHIPCommissionableNodeController.cpp
--   path: third_party/matter_sdk/src/controller/CHIPDeviceController.cpp
--   path: third_party/matter_sdk/src/controller/CHIPDeviceControllerFactory.cpp
--   path: third_party/matter_sdk/src/controller/CommissioneeDeviceProxy.cpp
--   path: third_party/matter_sdk/src/controller/CommissionerDiscoveryController.cpp
--   path: third_party/matter_sdk/src/controller/CommissioningDelegate.cpp
--   path: third_party/matter_sdk/src/controller/CommissioningWindowOpener.cpp
--   path: third_party/matter_sdk/src/controller/CurrentFabricRemover.cpp
--   path: third_party/matter_sdk/src/controller/ExampleOperationalCredentialsIssuer.cpp
--   path: third_party/matter_sdk/src/controller/SetUpCodePairer.cpp
+  - path: third_party/matter_sdk/src/controller/AbstractDnssdDiscoveryController.cpp
+  - path: third_party/matter_sdk/src/controller/AutoCommissioner.cpp
+  - path: third_party/matter_sdk/src/controller/CHIPCommissionableNodeController.cpp
+  - path: third_party/matter_sdk/src/controller/CHIPDeviceController.cpp
+  - path: third_party/matter_sdk/src/controller/CHIPDeviceControllerFactory.cpp
+  - path: third_party/matter_sdk/src/controller/CommissioneeDeviceProxy.cpp
+  - path: third_party/matter_sdk/src/controller/CommissionerDiscoveryController.cpp
+  - path: third_party/matter_sdk/src/controller/CommissioningDelegate.cpp
+  - path: third_party/matter_sdk/src/controller/CommissioningWindowOpener.cpp
+  - path: third_party/matter_sdk/src/controller/CurrentFabricRemover.cpp
+  - path: third_party/matter_sdk/src/controller/ExampleOperationalCredentialsIssuer.cpp
+  - path: third_party/matter_sdk/src/controller/SetUpCodePairer.cpp
 ui_hints:
-    visibility: never
+  visibility: never

@@ -1,5 +1,5 @@
 category: Matter|Examples
-package: Matter
+package: matter
 description: >
   Provides example component for a Air Quality application. This component should be 
   included in all Air Quality applications to help resolve SLC dependencies. Only applicable to Air Quality applications.

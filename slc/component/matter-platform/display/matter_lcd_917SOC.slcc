@@ -1,7 +1,7 @@
 id: matter_lcd_917SOC
 label: Matter Display for 917 SoC boards
 description: Support for liquid crystal display on matter 917 SOC boards
-package: "Matter"
+package: matter
 category: "Matter-WiFi|Platform"
 quality: production
 metadata:
@@ -20,34 +20,34 @@ conflicts:
   - name: matter_low_power
   - name: matter_no_lcd_shell
 include:
-- path: third_party/matter_sdk/examples/platform/silabs/display/
-  file_list:
-  - path: demo-ui.h
-  - path: demo-ui-bitmaps.h
-  - path: lcd.h
-- path: third_party/matter_sdk/examples/window-app/silabs/include
-  condition: [matter_window]
-  file_list:
-  - path: LcdPainter.h
-- path: third_party/matter_sdk/examples/thermostat/silabs/include
-  condition: [matter_thermostat_app]
-  file_list:
-  - path: ThermostatIcons.h
-  - path: ThermostatUI.h
-- path: third_party/matter_sdk/examples/air-quality-sensor-app/silabs/include
-  condition: [matter_air_quality_app]
-  file_list:
-  - path: AirQualitySensorUI.h
-- path: examples/fan-control-app/silabs/include
-  condition: [matter_fan_control_app]
-  file_list:
-  - path: FanControlUI.h
-  - path: FanControlIcons.h
-- path: third_party/matter_sdk/examples/refrigerator-app/silabs/include/
-  condition: [matter_refrigerator]
-  file_list:
-  - path: RefrigeratorUI.h
-  - path: RefrigeratorIcons.h
+  - path: third_party/matter_sdk/examples/platform/silabs/display/
+    file_list:
+      - path: demo-ui.h
+      - path: demo-ui-bitmaps.h
+      - path: lcd.h
+  - path: third_party/matter_sdk/examples/window-app/silabs/include
+    condition: [matter_window]
+    file_list:
+      - path: LcdPainter.h
+  - path: third_party/matter_sdk/examples/thermostat/silabs/include
+    condition: [matter_thermostat_app]
+    file_list:
+      - path: ThermostatIcons.h
+      - path: ThermostatUI.h
+  - path: third_party/matter_sdk/examples/air-quality-sensor-app/silabs/include
+    condition: [matter_air_quality_app]
+    file_list:
+      - path: AirQualitySensorUI.h
+  - path: examples/fan-control-app/silabs/include
+    condition: [matter_fan_control_app]
+    file_list:
+      - path: FanControlUI.h
+      - path: FanControlIcons.h
+  - path: third_party/matter_sdk/examples/refrigerator-app/silabs/include/
+    condition: [matter_refrigerator]
+    file_list:
+      - path: RefrigeratorUI.h
+      - path: RefrigeratorIcons.h
 
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/display/demo-ui.c

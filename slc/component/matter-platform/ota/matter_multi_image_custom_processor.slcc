@@ -1,7 +1,7 @@
 id: matter_multi_image_custom_processor
 label: OTA Multi Image Requestor Custom Processor for Testing
 description: OTA Multi Image Requestor Custom Processor for Testing
-package: "Matter"
+package: matter
 category: Stack
 quality: production
 metadata:
@@ -10,17 +10,17 @@ metadata:
 
 provides:
   - name: matter_multi_image_custom_processor
-    
+
 requires:
   - name: matter_multi_image_ota
 
 source:
   - path: third_party/matter_sdk/src/platform/silabs/multi-ota/OTACustomProcessor.cpp
 
-include: 
+include:
   - path: third_party/matter_sdk/src/platform/silabs/multi-ota
     file_list:
-    - path: OTACustomProcessor.h
+      - path: OTACustomProcessor.h
 
 define:
   - name: OTA_TEST_CUSTOM_TLVS

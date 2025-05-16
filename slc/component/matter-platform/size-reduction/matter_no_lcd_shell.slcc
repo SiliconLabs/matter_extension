@@ -1,7 +1,7 @@
 id: matter_no_lcd_shell
 label: Matter No LCD or Shell
 description: Removes LCD and Shell components and drivers. Reduces image size.
-package: Matter
+package: matter
 category: Platform|Size Reduction
 quality: production
 metadata:

@@ -40,10 +40,8 @@ namespace {
 #include <zap-config.h>
 // Attribute map between zigbee and matter.
 #if defined(GENERATED_MULTI_PROTOCOL_ATTRIBUTE_MAPPING) && defined(SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT)
-constexpr sl_zigbee_matter_af_multi_protocol_attribute_metadata_t mpAttributeMap[] = GENERATED_MULTI_PROTOCOL_ATTRIBUTE_MAPPING;
-
-constexpr size_t mpMappedAttributeCount =
-    (sizeof(mpAttributeMap) / sizeof(sl_zigbee_matter_af_multi_protocol_attribute_metadata_t));
+const sl_zigbee_matter_af_multi_protocol_cluster_metadata_t mpClusterMap[] = GENERATED_MULTI_PROTOCOL_CLUSTER_MAPPING;
+const uint8_t mappedMpClusterCount = (sizeof(mpClusterMap) / sizeof(sl_zigbee_matter_af_multi_protocol_cluster_metadata_t));
 
 // SL-TEMP Until GENERATED_MULTI_PROTOCOL_ATTRIBUTE_MAPPING is reworked to optimize parsing time
 inline bool isMultiProtocolMappedMatterCluster(chip::ClusterId clusterId)
@@ -66,17 +64,26 @@ inline bool isMultiProtocolMappedMatterCluster(chip::ClusterId clusterId)
 void sli_matter_af_write_to_zb_attribute(chip::EndpointId endpointId, chip::ClusterId clusterId, chip::AttributeId attributeId,
                                          uint8_t * attributeValue, EmberAfAttributeType dataType)
 {
-    for (uint8_t i = 0; i < mpMappedAttributeCount; i++)
+    for (uint8_t i = 0; i < mappedMpClusterCount; i++)
     {
-        if (mpAttributeMap[i].matterClusterId == (clusterId & 0xFFFF) &&
-            mpAttributeMap[i].matterMfgClusterId == (clusterId >> 16) &&
-            mpAttributeMap[i].matterAttributeId == (attributeId & 0xFFFF) &&
-            mpAttributeMap[i].matterMfgAttributeId == (attributeId >> 16))
+        if (mpClusterMap[i].matterClusterId == (clusterId & 0xFFFF) && mpClusterMap[i].matterMfgClusterId == (clusterId >> 16))
         {
-            // TODO handle MFG specific attributes
-            sl_zigbee_af_write_server_attribute(endpointId, mpAttributeMap[i].zigbeeClusterId, mpAttributeMap[i].zigbeeAttributeId,
-                                                attributeValue, dataType);
-            break;
+            const sl_zigbee_matter_af_multi_protocol_attribute_metadata_t * mpAttributeMap =
+                mpClusterMap[i].zigbeeMatterAttributeMap;
+            for (uint8_t j = 0; j < mpClusterMap[i].clusterMappedAttributeCount; j++)
+            {
+                if (mpAttributeMap[j].matterAttributeId == (attributeId & 0xFFFF) &&
+                    mpAttributeMap[j].matterMfgAttributeId == (attributeId >> 16))
+                {
+                    // TODO handle MFG specific attributes
+                    sl_zigbee_af_write_server_attribute(endpointId, mpClusterMap[i].zigbeeClusterId,
+                                                        mpAttributeMap[j].zigbeeAttributeId, attributeValue, dataType);
+                    // sl_zigbee_af_write_server_attribute_without_sync(endpointId, mpClusterMap[i].zigbeeClusterId,
+                    //                                                 mpAttributeMap[j].zigbeeAttributeId, attributeValue,
+                    //                                                 dataType);
+                    return; // we are done. we can exit early
+                }
+            }
         }
     }
 }

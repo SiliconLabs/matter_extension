@@ -1,10 +1,9 @@
-
 category: Clusters|Closures
 description: >
   Implementation of the Door Lock Server Cluster.
   The user has to enable the Door Lock Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_door_lock
-package: Matter
+package: matter
 label: Door Lock Server Cluster
 quality: production
 metadata:

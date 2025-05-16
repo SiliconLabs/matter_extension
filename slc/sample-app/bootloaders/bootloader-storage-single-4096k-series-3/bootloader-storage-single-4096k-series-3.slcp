@@ -1,5 +1,5 @@
 project_name: matter-bootloader-storage-single-4096k
-package: Matter
+package: matter
 quality: internal
 label: Bootloader - SoC Storage (single OTA image of size 1540kB for 4MB flash)
 description: >
@@ -7,18 +7,18 @@ description: >
 
 sdk_extension:
   - id: matter
-    version: "2.5.2"
+    version: "2.6.0"
 
 component:
   - id: btl_core
   - id: btl_crc
-  - id: btl_aes_sha_ecdsa
   - id: btl_internal_storage
   - id: btl_storage_slots
   - id: btl_image_parser
   - id: btl_common_storage
-  - id: btl_debug
-  - id: btl_gbl_compression_lzma
+  - id: bootloader_aes_sha_ecdsa
+  - id: bootloader_debug
+  - id: bootloader_compression_lzma
   - id: clock_manager
 
 configuration:

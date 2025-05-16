@@ -1,10 +1,9 @@
-
 category: Clusters|Media
 description: >
   Implementation of the Media Input Server Cluster.
   The user has to enable the Media Input Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_media_input
-package: Matter
+package: matter
 label: Media Input Server Cluster
 quality: production
 metadata:

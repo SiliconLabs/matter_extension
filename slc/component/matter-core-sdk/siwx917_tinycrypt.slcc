@@ -1,74 +1,74 @@
 category: Matter|Core
 define:
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: siwx917_tinycrypt
 id: siwx917_tinycrypt
 include:
--   path: .
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src/lib
--   path: third_party/matter_sdk/src/platform/silabs/SiWx917
--   path: third_party/mbedtls/library
+  - path: .
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/matter_sdk/src/platform/silabs/SiWx917
+  - path: third_party/mbedtls/library
     file_list:
-    -   path: constant_time_invasive.h
-    -   path: psa_crypto_aead.h
-    -   path: constant_time_internal.h
-    -   path: psa_crypto_se.h
-    -   path: mps_reader.h
-    -   path: mps_error.h
-    -   path: psa_crypto_storage.h
-    -   path: psa_crypto_ecp.h
-    -   path: ssl_tls13_keys.h
-    -   path: bignum_internal.h
-    -   path: psa_crypto_random_impl.h
-    -   path: psa_crypto_hash.h
-    -   path: psa_crypto_its.h
-    -   path: psa_crypto_core.h
-    -   path: psa_crypto_slot_management.h
-    -   path: common.h
-    -   path: psa_crypto_mac.h
-    -   path: psa_crypto_invasive.h
-    -   path: psa_crypto_rsa.h
-    -   path: psa_crypto_driver_wrappers.h
-    -   path: mps_common.h
-    -   path: ecp_invasive.h
-    -   path: mps_trace.h
-    -   path: check_crypto_config.h
-    -   path: psa_crypto_cipher.h
+      - path: constant_time_invasive.h
+      - path: psa_crypto_aead.h
+      - path: constant_time_internal.h
+      - path: psa_crypto_se.h
+      - path: mps_reader.h
+      - path: mps_error.h
+      - path: psa_crypto_storage.h
+      - path: psa_crypto_ecp.h
+      - path: ssl_tls13_keys.h
+      - path: bignum_internal.h
+      - path: psa_crypto_random_impl.h
+      - path: psa_crypto_hash.h
+      - path: psa_crypto_its.h
+      - path: psa_crypto_core.h
+      - path: psa_crypto_slot_management.h
+      - path: common.h
+      - path: psa_crypto_mac.h
+      - path: psa_crypto_invasive.h
+      - path: psa_crypto_rsa.h
+      - path: psa_crypto_driver_wrappers.h
+      - path: mps_common.h
+      - path: ecp_invasive.h
+      - path: mps_trace.h
+      - path: check_crypto_config.h
+      - path: psa_crypto_cipher.h
 label: siwx917_tinycrypt
-package: Matter
+package: matter
 provides:
--   name: matter_siwx917_tinycrypt
+  - name: matter_siwx917_tinycrypt
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/mbedtls/library/aes.c
--   path: third_party/mbedtls/library/asn1parse.c
--   path: third_party/mbedtls/library/asn1write.c
--   path: third_party/mbedtls/library/base64.c
--   path: third_party/mbedtls/library/bignum.c
--   path: third_party/mbedtls/library/ccm.c
--   path: third_party/mbedtls/library/cipher.c
--   path: third_party/mbedtls/library/cipher_wrap.c
--   path: third_party/mbedtls/library/constant_time.c
--   path: third_party/mbedtls/library/ctr_drbg.c
--   path: third_party/mbedtls/library/ecdh.c
--   path: third_party/mbedtls/library/ecdsa.c
--   path: third_party/mbedtls/library/ecp.c
--   path: third_party/mbedtls/library/ecp_curves.c
--   path: third_party/mbedtls/library/entropy.c
--   path: third_party/mbedtls/library/hkdf.c
--   path: third_party/mbedtls/library/hmac_drbg.c
--   path: third_party/mbedtls/library/md.c
--   path: third_party/mbedtls/library/pem.c
--   path: third_party/mbedtls/library/pkcs5.c
--   path: third_party/mbedtls/library/platform.c
--   path: third_party/mbedtls/library/sha256.c
--   path: third_party/mbedtls/library/sha512.c
--   path: third_party/mbedtls/library/version.c
--   path: third_party/mbedtls/library/x509_create.c
+  - path: third_party/mbedtls/library/aes.c
+  - path: third_party/mbedtls/library/asn1parse.c
+  - path: third_party/mbedtls/library/asn1write.c
+  - path: third_party/mbedtls/library/base64.c
+  - path: third_party/mbedtls/library/bignum.c
+  - path: third_party/mbedtls/library/ccm.c
+  - path: third_party/mbedtls/library/cipher.c
+  - path: third_party/mbedtls/library/cipher_wrap.c
+  - path: third_party/mbedtls/library/constant_time.c
+  - path: third_party/mbedtls/library/ctr_drbg.c
+  - path: third_party/mbedtls/library/ecdh.c
+  - path: third_party/mbedtls/library/ecdsa.c
+  - path: third_party/mbedtls/library/ecp.c
+  - path: third_party/mbedtls/library/ecp_curves.c
+  - path: third_party/mbedtls/library/entropy.c
+  - path: third_party/mbedtls/library/hkdf.c
+  - path: third_party/mbedtls/library/hmac_drbg.c
+  - path: third_party/mbedtls/library/md.c
+  - path: third_party/mbedtls/library/pem.c
+  - path: third_party/mbedtls/library/pkcs5.c
+  - path: third_party/mbedtls/library/platform.c
+  - path: third_party/mbedtls/library/sha256.c
+  - path: third_party/mbedtls/library/sha512.c
+  - path: third_party/mbedtls/library/version.c
+  - path: third_party/mbedtls/library/x509_create.c
 ui_hints:
-    visibility: never
+  visibility: never

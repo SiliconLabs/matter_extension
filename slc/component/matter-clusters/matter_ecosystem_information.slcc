@@ -1,10 +1,9 @@
-
 category: Clusters|General
 description: >
   Implementation of the Ecosystem Information Server Cluster.
   The user has to enable the Ecosystem Information Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_ecosystem_information
-package: Matter
+package: matter
 label: Ecosystem Information Server Cluster
 quality: production
 metadata:

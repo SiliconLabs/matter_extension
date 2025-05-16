@@ -1,123 +1,123 @@
 category: Matter|Core
 define:
--   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+  - name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
     value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: libchipdatamodel
 id: libchipdatamodel
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/app
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/app
     file_list:
-    -   path: AttributeAccessToken.h
-    -   path: AttributeValueEncoder.h
-    -   path: AttributeValueDecoder.h
-    -   path: AttributeEncodeState.h
-    -   path: AttributeReportBuilder.h
-    -   path: AttributePathExpandIterator.h
-    -   path: AttributePathExpandIterator-Ember.h
-    -   path: InteractionModelDelegatePointers.h
-    -   path: InteractionModelTimeout.h
-    -   path: SubscriptionsInfoProvider.h
-    -   path: SubscriptionResumptionStorage.h
-    -   path: AttributePersistenceProvider.h
-    -   path: EventLoggingDelegate.h
-    -   path: TimedRequest.h
-    -   path: WriteHandler.h
-    -   path: AttributePathParams.h
-    -   path: CASEClient.h
-    -   path: CommandPathParams.h
-    -   path: FailSafeContext.h
-    -   path: CASESessionManager.h
-    -   path: OperationalSessionSetup.h
-    -   path: ConcreteEventPath.h
-    -   path: AttributePathExpandIterator.h
-    -   path: TimerDelegates.h
-    -   path: ConcreteClusterPath.h
-    -   path: PendingResponseTrackerImpl.h
-    -   path: SubscriptionResumptionSessionEstablisher.h
-    -   path: CommandHandlerExchangeInterface.h
-    -   path: CommandHandlerImpl.h
-    -   path: CommandHandler.h
-    -   path: DefaultAttributePersistenceProvider.h
-    -   path: SimpleSubscriptionResumptionStorage.h
-    -   path: DeviceProxy.h
-    -   path: ChunkedWriteCallback.h
-    -   path: TimedHandler.h
-    -   path: DeferredAttributePersistenceProvider.h
-    -   path: TestEventTriggerDelegate.h
-    -   path: CommandSenderLegacyCallback.h
-    -   path: EventLogging.h
-    -   path: GlobalAttributes.h
-    -   path: CommandSender.h
-    -   path: AppConfig.h
-    -   path: CommandPathRegistry.h
-    -   path: ConcreteAttributePath.h
-    -   path: EventManagement.h
-    -   path: InteractionModelHelper.h
-    -   path: InteractionModelEngine.h
-    -   path: EventLoggingTypes.h
-    -   path: ReadClient.h
-    -   path: CommandResponseSender.h
-    -   path: StatusResponse.h
-    -   path: ReadPrepareParams.h
-    -   path: WriteClient.h
-    -   path: BufferedReadCallback.h
-    -   path: EventPathParams.h
-    -   path: CommandResponseHelper.h
-    -   path: CommandHandlerInterface.h
-    -   path: CommandHandlerInterfaceRegistry.h
-    -   path: DataVersionFilter.h
-    -   path: AttributeAccessInterfaceCache.h
-    -   path: RequiredPrivilege.h
-    -   path: PendingResponseTracker.h
-    -   path: ConcreteCommandPath.h
-    -   path: AttributeAccessInterface.h
-    -   path: SafeAttributePersistenceProvider.h
-    -   path: EventHeader.h
-    -   path: ClusterStateCache.h
-    -   path: CASEClientPool.h
-    -   path: SpecificationDefinedRevisions.h
-    -   path: OperationalSessionSetupPool.h
-    -   path: ReadHandler.h
-    -   path: OTAUserConsentCommon.h
-    -   path: AttributeAccessInterfaceRegistry.h
-    -   path: AttributeReportBuilder.cpp
-    -   path: AttributeValueEncoder.cpp
+      - path: AttributeAccessToken.h
+      - path: AttributeValueEncoder.h
+      - path: AttributeValueDecoder.h
+      - path: AttributeEncodeState.h
+      - path: AttributeReportBuilder.h
+      - path: AttributePathExpandIterator.h
+      - path: AttributePathExpandIterator-Ember.h
+      - path: InteractionModelDelegatePointers.h
+      - path: InteractionModelTimeout.h
+      - path: SubscriptionsInfoProvider.h
+      - path: SubscriptionResumptionStorage.h
+      - path: AttributePersistenceProvider.h
+      - path: EventLoggingDelegate.h
+      - path: TimedRequest.h
+      - path: WriteHandler.h
+      - path: AttributePathParams.h
+      - path: CASEClient.h
+      - path: CommandPathParams.h
+      - path: FailSafeContext.h
+      - path: CASESessionManager.h
+      - path: OperationalSessionSetup.h
+      - path: ConcreteEventPath.h
+      - path: AttributePathExpandIterator.h
+      - path: TimerDelegates.h
+      - path: ConcreteClusterPath.h
+      - path: PendingResponseTrackerImpl.h
+      - path: SubscriptionResumptionSessionEstablisher.h
+      - path: CommandHandlerExchangeInterface.h
+      - path: CommandHandlerImpl.h
+      - path: CommandHandler.h
+      - path: DefaultAttributePersistenceProvider.h
+      - path: SimpleSubscriptionResumptionStorage.h
+      - path: DeviceProxy.h
+      - path: ChunkedWriteCallback.h
+      - path: TimedHandler.h
+      - path: DeferredAttributePersistenceProvider.h
+      - path: TestEventTriggerDelegate.h
+      - path: CommandSenderLegacyCallback.h
+      - path: EventLogging.h
+      - path: GlobalAttributes.h
+      - path: CommandSender.h
+      - path: AppConfig.h
+      - path: CommandPathRegistry.h
+      - path: ConcreteAttributePath.h
+      - path: EventManagement.h
+      - path: InteractionModelHelper.h
+      - path: InteractionModelEngine.h
+      - path: EventLoggingTypes.h
+      - path: ReadClient.h
+      - path: CommandResponseSender.h
+      - path: StatusResponse.h
+      - path: ReadPrepareParams.h
+      - path: WriteClient.h
+      - path: BufferedReadCallback.h
+      - path: EventPathParams.h
+      - path: CommandResponseHelper.h
+      - path: CommandHandlerInterface.h
+      - path: CommandHandlerInterfaceRegistry.h
+      - path: DataVersionFilter.h
+      - path: AttributeAccessInterfaceCache.h
+      - path: RequiredPrivilege.h
+      - path: PendingResponseTracker.h
+      - path: ConcreteCommandPath.h
+      - path: AttributeAccessInterface.h
+      - path: SafeAttributePersistenceProvider.h
+      - path: EventHeader.h
+      - path: ClusterStateCache.h
+      - path: CASEClientPool.h
+      - path: SpecificationDefinedRevisions.h
+      - path: OperationalSessionSetupPool.h
+      - path: ReadHandler.h
+      - path: OTAUserConsentCommon.h
+      - path: AttributeAccessInterfaceRegistry.h
+      - path: AttributeReportBuilder.cpp
+      - path: AttributeValueEncoder.cpp
 label: libchipdatamodel
-package: Matter
+package: matter
 provides:
--   name: matter_libchipdatamodel
+  - name: matter_libchipdatamodel
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/app/AttributeAccessInterfaceRegistry.cpp
--   path: third_party/matter_sdk/src/app/AttributeReportBuilder.cpp
--   path: third_party/matter_sdk/src/app/AttributePathExpandIterator-Ember.cpp
--   path: third_party/matter_sdk/src/app/AttributeValueEncoder.cpp
--   path: third_party/matter_sdk/src/app/BufferedReadCallback.cpp
--   path: third_party/matter_sdk/src/app/ChunkedWriteCallback.cpp
--   path: third_party/matter_sdk/src/app/ClusterStateCache.cpp
--   path: third_party/matter_sdk/src/app/CommandHandler.cpp
--   path: third_party/matter_sdk/src/app/CommandHandlerImpl.cpp
--   path: third_party/matter_sdk/src/app/CommandHandlerInterfaceRegistry.cpp
--   path: third_party/matter_sdk/src/app/CommandResponseSender.cpp
--   path: third_party/matter_sdk/src/app/DefaultAttributePersistenceProvider.cpp
--   path: third_party/matter_sdk/src/app/DeferredAttributePersistenceProvider.cpp
--   path: third_party/matter_sdk/src/app/EventManagement.cpp
--   path: third_party/matter_sdk/src/app/FailSafeContext.cpp
--   path: third_party/matter_sdk/src/app/ReadHandler.cpp
--   path: third_party/matter_sdk/src/app/TimerDelegates.cpp
--   path: third_party/matter_sdk/src/app/WriteHandler.cpp
+  - path: third_party/matter_sdk/src/app/AttributeAccessInterfaceRegistry.cpp
+  - path: third_party/matter_sdk/src/app/AttributeReportBuilder.cpp
+  - path: third_party/matter_sdk/src/app/AttributePathExpandIterator-Ember.cpp
+  - path: third_party/matter_sdk/src/app/AttributeValueEncoder.cpp
+  - path: third_party/matter_sdk/src/app/BufferedReadCallback.cpp
+  - path: third_party/matter_sdk/src/app/ChunkedWriteCallback.cpp
+  - path: third_party/matter_sdk/src/app/ClusterStateCache.cpp
+  - path: third_party/matter_sdk/src/app/CommandHandler.cpp
+  - path: third_party/matter_sdk/src/app/CommandHandlerImpl.cpp
+  - path: third_party/matter_sdk/src/app/CommandHandlerInterfaceRegistry.cpp
+  - path: third_party/matter_sdk/src/app/CommandResponseSender.cpp
+  - path: third_party/matter_sdk/src/app/DefaultAttributePersistenceProvider.cpp
+  - path: third_party/matter_sdk/src/app/DeferredAttributePersistenceProvider.cpp
+  - path: third_party/matter_sdk/src/app/EventManagement.cpp
+  - path: third_party/matter_sdk/src/app/FailSafeContext.cpp
+  - path: third_party/matter_sdk/src/app/ReadHandler.cpp
+  - path: third_party/matter_sdk/src/app/TimerDelegates.cpp
+  - path: third_party/matter_sdk/src/app/WriteHandler.cpp
 ui_hints:
-    visibility: never
+  visibility: never

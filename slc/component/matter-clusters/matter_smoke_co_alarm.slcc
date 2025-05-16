@@ -1,10 +1,9 @@
-
 category: Clusters|Measurement
 description: >
   Implementation of the Smoke CO Alarm Server Cluster.
   The user has to enable the Smoke CO Alarm Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_smoke_co_alarm
-package: Matter
+package: matter
 label: Smoke CO Alarm Server Cluster
 quality: production
 metadata:

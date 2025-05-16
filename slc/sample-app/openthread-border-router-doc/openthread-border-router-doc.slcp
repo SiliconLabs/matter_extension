@@ -3,7 +3,7 @@ label: OpenThread Border Router Documentation
 description: >
   OpenThread Border Router Documentation
 quality: production
-package: Matter
+package: matter
 
 readme:
   - path: ./README.md

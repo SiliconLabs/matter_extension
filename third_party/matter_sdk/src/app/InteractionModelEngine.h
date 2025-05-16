@@ -233,12 +233,12 @@ public:
 
 #if CHIP_CONFIG_ENABLE_READ_CLIENT
     /**
-     *  Activate the idle subscriptions.
      *
-     *  When subscribing to ICD and liveness timeout reached, the read client will move to `InactiveICDSubscription` state and
-     * resubscription can be triggered via OnActiveModeNotification().
+     *  Notification that aPeer has sent a check-in message because aMonitoredSubject does
+     *  not have a subscription to it.
+     *
      */
-    void OnActiveModeNotification(ScopedNodeId aPeer);
+    void OnActiveModeNotification(ScopedNodeId aPeer, uint64_t aMonitoredSubject);
 
     /**
      *  Used to notify when a peer becomes LIT ICD or vice versa.
@@ -320,7 +320,7 @@ public:
     /**
      * @brief Function decrements the number of subscriptions to resume counter - mNumOfSubscriptionsToResume.
      *        This should be called after we have completed a re-subscribe attempt on a persisted subscription wether the attempt
-     *        was succesful or not.
+     *        was successful or not.
      */
     void DecrementNumSubscriptionsToResume();
 #endif // CHIP_CONFIG_PERSIST_SUBSCRIPTIONS
@@ -706,7 +706,7 @@ private:
 #endif // CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION
 #endif // CHIP_CONFIG_PERSIST_SUBSCRIPTIONS
 
-    FabricTable * mpFabricTable;
+    FabricTable * mpFabricTable = nullptr;
 
     CASESessionManager * mpCASESessionMgr = nullptr;
 

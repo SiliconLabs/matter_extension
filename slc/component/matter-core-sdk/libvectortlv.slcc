@@ -1,66 +1,66 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: libvectortlv
 id: libvectortlv
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/lib/core
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/lib/core
     file_list:
-    -   path: PeerId.h
-    -   path: CHIPVendorIdentifiers.hpp
-    -   path: GroupId.h
-    -   path: CHIPCore.h
-    -   path: TLVCommon.h
-    -   path: ScopedNodeId.h
-    -   path: ErrorStr.h
-    -   path: CASEAuthTag.h
-    -   path: CHIPEncoding.h
-    -   path: TLVWriter.h
-    -   path: Global.h
-    -   path: TLVTags.h
-    -   path: Unchecked.h
-    -   path: PasscodeId.h
-    -   path: DataModelTypes.h
-    -   path: CHIPConfig.h
-    -   path: ClusterEnums.h
-    -   path: TLVBackingStore.h
-    -   path: Optional.h
-    -   path: TLVVectorWriter.h
-    -   path: InPlace.h
-    -   path: TLVReader.h
-    -   path: CHIPError.h
-    -   path: TLVData.h
-    -   path: CHIPCallback.h
-    -   path: CHIPSafeCasts.h
-    -   path: ReferenceCounted.h
-    -   path: NodeId.h
-    -   path: CHIPKeyIds.h
-    -   path: TLVCircularBuffer.h
-    -   path: TLVTypes.h
-    -   path: TLVUpdater.h
-    -   path: OTAImageHeader.h
-    -   path: TLVDebug.h
-    -   path: TLVUtilities.h
-    -   path: CHIPPersistentStorageDelegate.h
-    -   path: TLV.h
+      - path: PeerId.h
+      - path: CHIPVendorIdentifiers.hpp
+      - path: GroupId.h
+      - path: CHIPCore.h
+      - path: TLVCommon.h
+      - path: ScopedNodeId.h
+      - path: ErrorStr.h
+      - path: CASEAuthTag.h
+      - path: CHIPEncoding.h
+      - path: TLVWriter.h
+      - path: Global.h
+      - path: TLVTags.h
+      - path: Unchecked.h
+      - path: PasscodeId.h
+      - path: DataModelTypes.h
+      - path: CHIPConfig.h
+      - path: ClusterEnums.h
+      - path: TLVBackingStore.h
+      - path: Optional.h
+      - path: TLVVectorWriter.h
+      - path: InPlace.h
+      - path: TLVReader.h
+      - path: CHIPError.h
+      - path: TLVData.h
+      - path: CHIPCallback.h
+      - path: CHIPSafeCasts.h
+      - path: ReferenceCounted.h
+      - path: NodeId.h
+      - path: CHIPKeyIds.h
+      - path: TLVCircularBuffer.h
+      - path: TLVTypes.h
+      - path: TLVUpdater.h
+      - path: OTAImageHeader.h
+      - path: TLVDebug.h
+      - path: TLVUtilities.h
+      - path: CHIPPersistentStorageDelegate.h
+      - path: TLV.h
 label: libvectortlv
-package: Matter
+package: matter
 provides:
--   name: matter_libvectortlv
+  - name: matter_libvectortlv
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/lib/core/TLVVectorWriter.cpp
+  - path: third_party/matter_sdk/src/lib/core/TLVVectorWriter.cpp
 ui_hints:
-    visibility: never
+  visibility: never

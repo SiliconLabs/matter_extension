@@ -1,36 +1,36 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: notifier
 id: notifier
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/app/icd/server
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/app/icd/server
     file_list:
-    -   path: ICDMonitoringTable.h
-    -   path: ICDCheckInSender.h
-    -   path: ICDManager.h
-    -   path: ICDConfigurationData.h
-    -   path: ICDServerConfig.h
-    -   path: ICDStateObserver.h
-    -   path: ICDNotifier.h
+      - path: ICDMonitoringTable.h
+      - path: ICDCheckInSender.h
+      - path: ICDManager.h
+      - path: ICDConfigurationData.h
+      - path: ICDServerConfig.h
+      - path: ICDStateObserver.h
+      - path: ICDNotifier.h
 label: notifier
-package: Matter
+package: matter
 provides:
--   name: matter_notifier
+  - name: matter_notifier
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/app/icd/server/ICDNotifier.cpp
+  - path: third_party/matter_sdk/src/app/icd/server/ICDNotifier.cpp
 ui_hints:
-    visibility: never
+  visibility: never

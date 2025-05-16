@@ -1,71 +1,71 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: libinetlayer_wifi
 id: libinetlayer_wifi
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/inet
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/inet
     file_list:
-    -   path: TCPEndPointImplLwIP.h
-    -   path: EndPointStateLwIP.h
-    -   path: EndpointQueueFilter.h
-    -   path: EndPointStateOpenThread.h
-    -   path: TCPEndPointImpl.h
-    -   path: IPAddress.h
-    -   path: UDPEndPointImplNetworkFramework.h
-    -   path: InetError.h
-    -   path: UDPEndPointImplOpenThread.h
-    -   path: InetInterface.h
-    -   path: UDPEndPointImpl.h
-    -   path: Inet.h
-    -   path: TCPEndPoint.h
-    -   path: InetLayer.h
-    -   path: EndPointBasis.h
-    -   path: TCPEndPointImplOpenThread.h
-    -   path: UDPEndPointImplSockets.h
-    -   path: arpa-inet-compatibility.h
-    -   path: InetInterfaceImpl.h
-    -   path: UDPEndPointImplLwIP.h
-    -   path: BasicPacketFilters.h
-    -   path: UDPEndPoint.h
-    -   path: InetConfig.h
-    -   path: IPPacketInfo.h
-    -   path: EndPointStateNetworkFramework.h
-    -   path: EndPointStateSockets.h
-    -   path: IANAConstants.h
-    -   path: InetFaultInjection.h
-    -   path: IPPrefix.h
-    -   path: ZephyrSocket.h
-    -   path: TCPEndPointImplSockets.h
-    -   path: InetArgParser.h
+      - path: TCPEndPointImplLwIP.h
+      - path: EndPointStateLwIP.h
+      - path: EndpointQueueFilter.h
+      - path: EndPointStateOpenThread.h
+      - path: TCPEndPointImpl.h
+      - path: IPAddress.h
+      - path: UDPEndPointImplNetworkFramework.h
+      - path: InetError.h
+      - path: UDPEndPointImplOpenThread.h
+      - path: InetInterface.h
+      - path: UDPEndPointImpl.h
+      - path: Inet.h
+      - path: TCPEndPoint.h
+      - path: InetLayer.h
+      - path: EndPointBasis.h
+      - path: TCPEndPointImplOpenThread.h
+      - path: UDPEndPointImplSockets.h
+      - path: arpa-inet-compatibility.h
+      - path: InetInterfaceImpl.h
+      - path: UDPEndPointImplLwIP.h
+      - path: BasicPacketFilters.h
+      - path: UDPEndPoint.h
+      - path: InetConfig.h
+      - path: IPPacketInfo.h
+      - path: EndPointStateNetworkFramework.h
+      - path: EndPointStateSockets.h
+      - path: IANAConstants.h
+      - path: InetFaultInjection.h
+      - path: IPPrefix.h
+      - path: ZephyrSocket.h
+      - path: TCPEndPointImplSockets.h
+      - path: InetArgParser.h
 label: libinetlayer_wifi
-package: Matter
+package: matter
 provides:
--   name: matter_libinetlayer_wifi
+  - name: matter_libinetlayer_wifi
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/inet/EndPointStateLwIP.cpp
--   path: third_party/matter_sdk/src/inet/IPAddress-StringFuncts.cpp
--   path: third_party/matter_sdk/src/inet/IPAddress.cpp
--   path: third_party/matter_sdk/src/inet/IPPacketInfo.cpp
--   path: third_party/matter_sdk/src/inet/IPPrefix.cpp
--   path: third_party/matter_sdk/src/inet/InetArgParser.cpp
--   path: third_party/matter_sdk/src/inet/InetError.cpp
--   path: third_party/matter_sdk/src/inet/InetInterface.cpp
--   path: third_party/matter_sdk/src/inet/InetInterfaceImplDefault.cpp
--   path: third_party/matter_sdk/src/inet/UDPEndPoint.cpp
--   path: third_party/matter_sdk/src/inet/UDPEndPointImplLwIP.cpp
+  - path: third_party/matter_sdk/src/inet/EndPointStateLwIP.cpp
+  - path: third_party/matter_sdk/src/inet/IPAddress-StringFuncts.cpp
+  - path: third_party/matter_sdk/src/inet/IPAddress.cpp
+  - path: third_party/matter_sdk/src/inet/IPPacketInfo.cpp
+  - path: third_party/matter_sdk/src/inet/IPPrefix.cpp
+  - path: third_party/matter_sdk/src/inet/InetArgParser.cpp
+  - path: third_party/matter_sdk/src/inet/InetError.cpp
+  - path: third_party/matter_sdk/src/inet/InetInterface.cpp
+  - path: third_party/matter_sdk/src/inet/InetInterfaceImplDefault.cpp
+  - path: third_party/matter_sdk/src/inet/UDPEndPoint.cpp
+  - path: third_party/matter_sdk/src/inet/UDPEndPointImplLwIP.cpp
 ui_hints:
-    visibility: never
+  visibility: never

@@ -1,10 +1,9 @@
-
 category: Clusters|General
 description: >
   Implementation of the ICD Management Server Cluster.
   The user has to enable the ICD Management Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_icd_management
-package: Matter
+package: matter
 label: ICD Management Server Cluster
 quality: production
 metadata:

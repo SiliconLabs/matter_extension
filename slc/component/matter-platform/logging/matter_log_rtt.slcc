@@ -1,7 +1,7 @@
 id: matter_log_rtt
 label: Logging to RTT
 description: Sets Log Destination to RTT
-package: "Matter"
+package: matter
 category: Platform|Utils
 quality: production
 metadata:

@@ -73,21 +73,10 @@ bool AppTask::actionButtonPressed    = false;
 bool AppTask::actionButtonSuppressed = false;
 bool AppTask::isButtonEventTriggered = false;
 
-CHIP_ERROR AppTask::Init()
+CHIP_ERROR AppTask::AppInit()
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
     chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(AppTask::ButtonEventHandler);
-
-#ifdef DISPLAY_ENABLED
-    GetLCD().Init((uint8_t *) "Light Switch");
-#endif
-
-    err = BaseApplication::Init();
-    if (err != CHIP_NO_ERROR)
-    {
-        SILABS_LOG("BaseApplication::Init() failed");
-        appError(err);
-    }
 
     err = LightSwitchMgr::GetInstance().Init(kLightSwitchEndpoint, kGenericSwitchEndpoint);
     if (err != CHIP_NO_ERROR)

@@ -1,10 +1,9 @@
-
 category: Clusters|Media
 description: >
   Implementation of the Channel Server Cluster.
   The user has to enable the Channel Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_channel
-package: Matter
+package: matter
 label: Channel Server Cluster
 quality: production
 metadata:

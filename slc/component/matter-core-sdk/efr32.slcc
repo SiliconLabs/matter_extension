@@ -1,197 +1,206 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: efr32
 id: efr32
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/examples/platform/silabs/efr32
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/matter_sdk/src/platform/silabs/efr32
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/include/platform
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/examples/platform/silabs/efr32
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/matter_sdk/src/platform/silabs/efr32
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/include/platform
     file_list:
-    -   path: RuntimeOptionsProvider.h
-    -   path: DeviceInfoProvider.h
-    -   path: ConnectivityManager.h
-    -   path: GeneralUtils.h
-    -   path: AttributeList.h
-    -   path: DiagnosticDataProvider.h
-    -   path: PlatformManager.h
-    -   path: KeyValueStoreManager.h
-    -   path: OTAImageProcessor.h
-    -   path: PersistedStorage.h
-    -   path: KvsPersistentStorageDelegate.h
-    -   path: LockTracker.h
-    -   path: CommissionableDataProvider.h
-    -   path: NetworkCommissioning.h
-    -   path: CHIPDeviceConfig.h
-    -   path: DeviceControlServer.h
-    -   path: DeviceInstanceInfoProvider.h
-    -   path: CHIPDeviceLayer.h
-    -   path: ConfigurationManager.h
-    -   path: GeneralFaults.h
-    -   path: CHIPDeviceEvent.h
-    -   path: BuildTime.h
-    -   path: NFCManager.h
-    -   path: ThreadStackManager.h
-    -   path: TestOnlyCommissionableDataProvider.h
-    -   path: CHIPDeviceError.h
--   path: third_party/matter_sdk/src/include/platform/internal
+      - path: RuntimeOptionsProvider.h
+      - path: DeviceInfoProvider.h
+      - path: ConnectivityManager.h
+      - path: GeneralUtils.h
+      - path: AttributeList.h
+      - path: DiagnosticDataProvider.h
+      - path: PlatformManager.h
+      - path: KeyValueStoreManager.h
+      - path: OTAImageProcessor.h
+      - path: PersistedStorage.h
+      - path: KvsPersistentStorageDelegate.h
+      - path: LockTracker.h
+      - path: CommissionableDataProvider.h
+      - path: NetworkCommissioning.h
+      - path: CHIPDeviceConfig.h
+      - path: DeviceControlServer.h
+      - path: DeviceInstanceInfoProvider.h
+      - path: CHIPDeviceLayer.h
+      - path: ConfigurationManager.h
+      - path: GeneralFaults.h
+      - path: CHIPDeviceEvent.h
+      - path: BuildTime.h
+      - path: NFCManager.h
+      - path: ThreadStackManager.h
+      - path: TestOnlyCommissionableDataProvider.h
+      - path: CHIPDeviceError.h
+  - path: third_party/matter_sdk/src/include/platform/internal
     file_list:
-    -   path: GenericPlatformManagerImpl.ipp
-    -   path: GenericConnectivityManagerImpl_UDP.h
-    -   path: GenericPlatformManagerImpl_POSIX.h
-    -   path: GenericConnectivityManagerImpl_NoThread.h
-    -   path: GenericConnectivityManagerImpl_WiFi.ipp
-    -   path: GenericPlatformManagerImpl_POSIX.ipp
-    -   path: GenericPlatformManagerImpl_Zephyr.ipp
-    -   path: GenericConfigurationManagerImpl.h
-    -   path: GenericPlatformManagerImpl.h
-    -   path: GenericConnectivityManagerImpl_Thread.h
-    -   path: GenericPlatformManagerImpl_FreeRTOS.h
-    -   path: BLEManager.h
-    -   path: CHIPDeviceLayerInternal.h
-    -   path: GenericConnectivityManagerImpl.h
-    -   path: GenericConnectivityManagerImpl_Thread.ipp
-    -   path: EventLogging.h
-    -   path: GenericConnectivityManagerImpl_NoBLE.h
-    -   path: GenericDeviceInstanceInfoProvider.h
-    -   path: DeviceNetworkInfo.h
-    -   path: GenericPlatformManagerImpl_Zephyr.h
-    -   path: GenericConnectivityManagerImpl_BLE.ipp
-    -   path: GenericConnectivityManagerImpl_UDP.ipp
-    -   path: GenericDeviceInstanceInfoProvider.ipp
-    -   path: GenericConfigurationManagerImpl.ipp
-    -   path: GenericConnectivityManagerImpl_NoWiFi.h
-    -   path: GenericPlatformManagerImpl_FreeRTOS.ipp
-    -   path: GenericConnectivityManagerImpl_BLE.h
-    -   path: GenericConnectivityManagerImpl_TCP.h
-    -   path: GenericConnectivityManagerImpl_WiFi.h
-    -   path: GenericConnectivityManagerImpl_TCP.ipp
--   path: third_party/matter_sdk/src/platform/logging
+      - path: GenericPlatformManagerImpl.ipp
+      - path: GenericConnectivityManagerImpl_UDP.h
+      - path: GenericPlatformManagerImpl_POSIX.h
+      - path: GenericConnectivityManagerImpl_NoThread.h
+      - path: GenericConnectivityManagerImpl_WiFi.ipp
+      - path: GenericPlatformManagerImpl_POSIX.ipp
+      - path: GenericPlatformManagerImpl_Zephyr.ipp
+      - path: GenericConfigurationManagerImpl.h
+      - path: GenericPlatformManagerImpl.h
+      - path: GenericConnectivityManagerImpl_Thread.h
+      - path: GenericPlatformManagerImpl_FreeRTOS.h
+      - path: BLEManager.h
+      - path: CHIPDeviceLayerInternal.h
+      - path: GenericConnectivityManagerImpl.h
+      - path: GenericConnectivityManagerImpl_Thread.ipp
+      - path: EventLogging.h
+      - path: GenericConnectivityManagerImpl_NoBLE.h
+      - path: GenericDeviceInstanceInfoProvider.h
+      - path: DeviceNetworkInfo.h
+      - path: GenericPlatformManagerImpl_Zephyr.h
+      - path: GenericConnectivityManagerImpl_BLE.ipp
+      - path: GenericConnectivityManagerImpl_UDP.ipp
+      - path: GenericDeviceInstanceInfoProvider.ipp
+      - path: GenericConfigurationManagerImpl.ipp
+      - path: GenericConnectivityManagerImpl_NoWiFi.h
+      - path: GenericPlatformManagerImpl_FreeRTOS.ipp
+      - path: GenericConnectivityManagerImpl_BLE.h
+      - path: GenericConnectivityManagerImpl_TCP.h
+      - path: GenericConnectivityManagerImpl_WiFi.h
+      - path: GenericConnectivityManagerImpl_TCP.ipp
+  - path: third_party/matter_sdk/src/platform/logging
     file_list:
-    -   path: LogV.h
--   path: third_party/matter_sdk/src/include/platform/internal/testing
+      - path: LogV.h
+  - path: third_party/matter_sdk/src/include/platform/internal/testing
     file_list:
-    -   path: ConfigUnitTest.h
--   path: third_party/matter_sdk/src/lib/dnssd/platform
+      - path: ConfigUnitTest.h
+  - path: third_party/matter_sdk/src/lib/dnssd/platform
     file_list:
-    -   path: DnssdBrowseDelegate.h
-    -   path: Dnssd.h
--   path: third_party/matter_sdk/src/lib/dnssd/platform
+      - path: DnssdBrowseDelegate.h
+      - path: Dnssd.h
+  - path: third_party/matter_sdk/src/lib/dnssd/platform
     file_list:
-    -   path: DnssdBrowseDelegate.h
-    -   path: Dnssd.h
--   path: third_party/matter_sdk/src/app/common
+      - path: DnssdBrowseDelegate.h
+      - path: Dnssd.h
+  - path: third_party/matter_sdk/src/app/common
     file_list:
-    -   path: CompatEnumNames.h
--   path: third_party/matter_sdk/src/lwip/silabs
+      - path: CompatEnumNames.h
+  - path: third_party/matter_sdk/src/lwip/silabs
     file_list:
-    -   path: lwipopts-wf200.h
-    -   path: lwipopts-rs911x.h
-    -   path: lwippools.h
-    -   path: lwipopts.h
--   path: third_party/matter_sdk/examples/platform/silabs
+      - path: lwipopts-wf200.h
+      - path: lwipopts-rs911x.h
+      - path: lwippools.h
+      - path: lwipopts.h
+  - path: third_party/matter_sdk/examples/platform/silabs
     file_list:
-    -   path: board_config.h
-    -   path: OTAConfig.h
-    -   path: SoftwareFaultReports.h
-    -   path: silabs_utils.h
-    -   path: MatterConfig.h
-    -   path: LEDWidget.h
-    -   path: sl_systemview_config.h
-    -   path: PigweedLogger.h
-    -   path: FreeRTOSConfig.h
-    -   path: Rpc.h
-    -   path: silabs_creds.h
-    -   path: SilabsTestEventTriggerDelegate.h
-    -   path: MemMonitoring.h
-    -   path: BaseApplication.h
--   path: third_party/matter_sdk/src/platform/silabs
+      - path: board_config.h
+      - path: OTAConfig.h
+      - path: SoftwareFaultReports.h
+      - path: silabs_utils.h
+      - path: MatterConfig.h
+      - path: LEDWidget.h
+      - path: sl_systemview_config.h
+      - path: PigweedLogger.h
+      - path: FreeRTOSConfig.h
+      - path: Rpc.h
+      - path: silabs_creds.h
+      - path: SilabsTestEventTriggerDelegate.h
+      - path: MemMonitoring.h
+      - path: BaseApplication.h
+  - path: third_party/matter_sdk/src/platform/silabs
     file_list:
-    -   path: OTAImageProcessorImpl.h
-    -   path: InetPlatformConfig.h
-    -   path: DiagnosticDataProviderImpl.h
-    -   path: ConfigurationManagerImpl.h
-    -   path: MigrationManager.h
-    -   path: PlatformManagerImpl.h
-    -   path: WarmPlatformConfig.h
-    -   path: NetworkCommissioningWiFiDriver.h
-    -   path: CHIPDevicePlatformEvent.h
-    -   path: ThreadStackManagerImpl.h
-    -   path: CHIPDevicePlatformConfig.h
-    -   path: SilabsConfig.h
-    -   path: BLEManagerImpl.h
-    -   path: Logging.h
-    -   path: CHIPPlatformConfig.h
-    -   path: ConnectivityManagerImpl.h
-    -   path: BlePlatformConfig.h
-    -   path: KeyValueStoreManagerImpl.h
-    -   path: SystemPlatformConfig.h
--   path: third_party/matter_sdk/src/platform/silabs/platformAbstraction
+      - path: OTAImageProcessorImpl.h
+      - path: InetPlatformConfig.h
+      - path: DiagnosticDataProviderImpl.h
+      - path: ConfigurationManagerImpl.h
+      - path: MigrationManager.h
+      - path: PlatformManagerImpl.h
+      - path: WarmPlatformConfig.h
+      - path: NetworkCommissioningWiFiDriver.h
+      - path: CHIPDevicePlatformEvent.h
+      - path: ThreadStackManagerImpl.h
+      - path: CHIPDevicePlatformConfig.h
+      - path: SilabsConfig.h
+      - path: BLEManagerImpl.h
+      - path: Logging.h
+      - path: CHIPPlatformConfig.h
+      - path: ConnectivityManagerImpl.h
+      - path: BlePlatformConfig.h
+      - path: KeyValueStoreManagerImpl.h
+      - path: SystemPlatformConfig.h
+  - path: third_party/matter_sdk/src/platform/silabs/platformAbstraction
     file_list:
-    -   path: SilabsPlatformBase.h
-    -   path: SilabsPlatform.h
--   path: third_party/matter_sdk/src/platform
+      - path: SilabsPlatformBase.h
+      - path: SilabsPlatform.h
+  - path: third_party/matter_sdk/src/platform
     file_list:
-    -   path: DeviceSafeQueue.h
-    -   path: GLibTypeDeleter.h
--   path: third_party/matter_sdk/src/platform/silabs/efr32
+      - path: DeviceSafeQueue.h
+      - path: GLibTypeDeleter.h
+  - path: third_party/matter_sdk/src/platform/silabs/efr32
     file_list:
-    -   path: Efr32PsaOperationalKeystore.h
-    -   path: Efr32OpaqueKeypair.h
-    -   path: efr32-psa-crypto-config.h
-    -   path: efr32-chip-mbedtls-config.h
--   path: third_party/matter_sdk/src/platform/OpenThread
+      - path: Efr32PsaOperationalKeystore.h
+      - path: Efr32OpaqueKeypair.h
+      - path: efr32-psa-crypto-config.h
+      - path: efr32-chip-mbedtls-config.h
+  - path: third_party/matter_sdk/src/platform/OpenThread
     file_list:
-    -   path: OpenThreadUtils.h
-    -   path: GenericThreadStackManagerImpl_OpenThread_LwIP.h
-    -   path: GenericNetworkCommissioningThreadDriver.h
-    -   path: GenericThreadStackManagerImpl_OpenThread.hpp
-    -   path: GenericThreadStackManagerImpl_OpenThread.h
-    -   path: OpenThreadDnssdImpl.h
--   path: third_party/matter_sdk/src/platform/FreeRTOS
+      - path: OpenThreadUtils.h
+      - path: GenericThreadStackManagerImpl_OpenThread_LwIP.h
+      - path: GenericNetworkCommissioningThreadDriver.h
+      - path: GenericThreadStackManagerImpl_OpenThread.hpp
+      - path: GenericThreadStackManagerImpl_OpenThread.h
+      - path: OpenThreadDnssdImpl.h
+  - path: third_party/matter_sdk/src/platform/FreeRTOS
     file_list:
-    -   path: SystemTimeSupport.h
-    -   path: GenericThreadStackManagerImpl_FreeRTOS.h
-    -   path: GenericThreadStackManagerImpl_FreeRTOS.hpp
+      - path: SystemTimeSupport.h
+      - path: GenericThreadStackManagerImpl_FreeRTOS.h
+      - path: GenericThreadStackManagerImpl_FreeRTOS.hpp
 label: efr32
-package: Matter
+package: matter
 provides:
--   name: matter_efr32
+  - name: matter_efr32
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/platform/FreeRTOS/SystemTimeSupport.cpp
--   path: third_party/matter_sdk/src/platform/OpenThread/DnssdImpl.cpp
--   path: third_party/matter_sdk/src/platform/OpenThread/OpenThreadDnssdImpl.cpp
--   path: third_party/matter_sdk/src/platform/OpenThread/OpenThreadUtils.cpp
--   path: third_party/matter_sdk/src/platform/SingletonConfigurationManager.cpp
--   path: third_party/matter_sdk/src/platform/silabs/CHIPMem-Platform.cpp
--   path: third_party/matter_sdk/src/platform/silabs/ConfigurationManagerImpl.cpp
--   path: third_party/matter_sdk/src/platform/silabs/DiagnosticDataProviderImpl.cpp
--   path: third_party/matter_sdk/src/platform/silabs/KeyValueStoreManagerImpl.cpp
--   path: third_party/matter_sdk/src/platform/silabs/Logging.cpp
--   path: third_party/matter_sdk/src/platform/silabs/MigrationManager.cpp
--   path: third_party/matter_sdk/src/platform/silabs/SilabsConfig.cpp
--   path: third_party/matter_sdk/src/platform/silabs/efr32/BLEManagerImpl.cpp
--   path: third_party/matter_sdk/src/platform/silabs/efr32/CHIPCryptoPALPsaEfr32.cpp
--   path: third_party/matter_sdk/src/platform/silabs/efr32/ConnectivityManagerImpl.cpp
--   path: third_party/matter_sdk/src/platform/silabs/efr32/Efr32PsaOpaqueKeypair.cpp
--   path: third_party/matter_sdk/src/platform/silabs/efr32/Efr32PsaOperationalKeystore.cpp
--   path: third_party/matter_sdk/src/platform/silabs/efr32/OTAImageProcessorImpl.cpp
-    condition : [matter_ota_support]
--   path: third_party/matter_sdk/src/platform/silabs/PlatformManagerImpl.cpp
--   path: third_party/matter_sdk/src/platform/silabs/efr32/ThreadStackManagerImpl.cpp
--   path: third_party/matter_sdk/src/platform/silabs/platformAbstraction/GsdkSpam.cpp
+  - path: third_party/matter_sdk/src/platform/FreeRTOS/SystemTimeSupport.cpp
+  - path: third_party/matter_sdk/src/platform/OpenThread/DnssdImpl.cpp
+  - path: third_party/matter_sdk/src/platform/OpenThread/OpenThreadDnssdImpl.cpp
+  - path: third_party/matter_sdk/src/platform/OpenThread/OpenThreadUtils.cpp
+  - path: third_party/matter_sdk/src/platform/SingletonConfigurationManager.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/CHIPMem-Platform.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/ConfigurationManagerImpl.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/DiagnosticDataProviderImpl.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/KeyValueStoreManagerImpl.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/Logging.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/MigrationManager.cpp
+  # We currently only need the linker file contribution to align our nvm3
+  # positioning with the generator firmware. The Common Token Manager is
+  # not used in the current implementation as it worsens NVM3 performance
+  # and is doesn't support all the features we need. If we want to change
+  # this in the future, we can add "provide: use_ctm" in the slcp file to
+  # use the sources using the Common Token Manager.
+  - path: third_party/matter_sdk/src/platform/silabs/SilabsConfig.cpp
+    unless: [use_ctm]
+  - path: third_party/matter_sdk/src/platform/silabs/SilabsConfigCTM.cpp
+    condition: [use_ctm]
+  - path: third_party/matter_sdk/src/platform/silabs/efr32/BLEManagerImpl.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/efr32/CHIPCryptoPALPsaEfr32.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/efr32/ConnectivityManagerImpl.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/efr32/Efr32PsaOpaqueKeypair.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/efr32/Efr32PsaOperationalKeystore.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/efr32/OTAImageProcessorImpl.cpp
+    condition: [matter_ota_support]
+  - path: third_party/matter_sdk/src/platform/silabs/PlatformManagerImpl.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/efr32/ThreadStackManagerImpl.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/platformAbstraction/GsdkSpam.cpp
 ui_hints:
-    visibility: never
+  visibility: never

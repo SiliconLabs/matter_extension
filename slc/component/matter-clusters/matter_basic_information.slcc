@@ -1,10 +1,9 @@
-
 category: Clusters|CHIP
 description: >
   Implementation of the Basic Information Cluster.
   The user has to enable the Basic Information Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_basic_information
-package: Matter
+package: matter
 label: Basic Information Cluster
 quality: production
 metadata:

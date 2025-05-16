@@ -2,19 +2,19 @@ id: matter_gatt
 label: GATT Configuration
 description: >
   Adds GATT Configuration for Matter.
-package: "Matter"
+package: matter
 category: Stack|Bluetooth
 quality: production
 metadata:
   sbom:
     license: Zlib
 config_file:
--   directory: btconf
+  - directory: btconf
     path: third_party/matter_sdk/examples/platform/silabs/gatt_configuration.btconf
 provides:
--   name: gatt_configuration
--   name: "bluetooth_gatt_database"
--   name: matter_gatt
+  - name: gatt_configuration
+  - name: "bluetooth_gatt_database"
+  - name: matter_gatt
 requires:
   - name: "bluetooth_gattdb_definition"
 template_contribution:

@@ -1,122 +1,122 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: messagedef
 id: messagedef
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/app/MessageDef
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/app/MessageDef
     file_list:
-    -   path: AttributePathIBs.h
-    -   path: MessageDefHelper.h
-    -   path: DataVersionFilterIBs.h
-    -   path: ListParser.h
-    -   path: InvokeResponseIB.h
-    -   path: EventFilterIB.h
-    -   path: EventPathIB.h
-    -   path: ArrayParser.h
-    -   path: ListBuilder.h
-    -   path: AttributeStatusIB.h
-    -   path: EventStatusIB.h
-    -   path: CommandPathIB.h
-    -   path: SubscribeResponseMessage.h
-    -   path: InvokeRequests.h
-    -   path: StatusIB.h
-    -   path: TimedRequestMessage.h
-    -   path: AttributeDataIB.h
-    -   path: EventFilterIBs.h
-    -   path: Parser.h
-    -   path: MessageBuilder.h
-    -   path: StatusResponseMessage.h
-    -   path: AttributeReportIB.h
-    -   path: ClusterPathIB.h
-    -   path: EventReportIB.h
-    -   path: ReportDataMessage.h
-    -   path: EventReportIBs.h
-    -   path: AttributeStatusIBs.h
-    -   path: ArrayBuilder.h
-    -   path: MessageParser.h
-    -   path: InvokeResponseIBs.h
-    -   path: AttributeDataIBs.h
-    -   path: DataVersionFilterIB.h
-    -   path: SubscribeRequestMessage.h
-    -   path: AttributeReportIBs.h
-    -   path: Builder.h
-    -   path: CommandStatusIB.h
-    -   path: EventPathIBs.h
-    -   path: InvokeResponseMessage.h
-    -   path: StructBuilder.h
-    -   path: EventDataIB.h
-    -   path: WriteRequestMessage.h
-    -   path: ReadRequestMessage.h
-    -   path: StructParser.h
-    -   path: CommandDataIB.h
-    -   path: WriteResponseMessage.h
-    -   path: AttributePathIB.h
-    -   path: InvokeRequestMessage.h
+      - path: AttributePathIBs.h
+      - path: MessageDefHelper.h
+      - path: DataVersionFilterIBs.h
+      - path: ListParser.h
+      - path: InvokeResponseIB.h
+      - path: EventFilterIB.h
+      - path: EventPathIB.h
+      - path: ArrayParser.h
+      - path: ListBuilder.h
+      - path: AttributeStatusIB.h
+      - path: EventStatusIB.h
+      - path: CommandPathIB.h
+      - path: SubscribeResponseMessage.h
+      - path: InvokeRequests.h
+      - path: StatusIB.h
+      - path: TimedRequestMessage.h
+      - path: AttributeDataIB.h
+      - path: EventFilterIBs.h
+      - path: Parser.h
+      - path: MessageBuilder.h
+      - path: StatusResponseMessage.h
+      - path: AttributeReportIB.h
+      - path: ClusterPathIB.h
+      - path: EventReportIB.h
+      - path: ReportDataMessage.h
+      - path: EventReportIBs.h
+      - path: AttributeStatusIBs.h
+      - path: ArrayBuilder.h
+      - path: MessageParser.h
+      - path: InvokeResponseIBs.h
+      - path: AttributeDataIBs.h
+      - path: DataVersionFilterIB.h
+      - path: SubscribeRequestMessage.h
+      - path: AttributeReportIBs.h
+      - path: Builder.h
+      - path: CommandStatusIB.h
+      - path: EventPathIBs.h
+      - path: InvokeResponseMessage.h
+      - path: StructBuilder.h
+      - path: EventDataIB.h
+      - path: WriteRequestMessage.h
+      - path: ReadRequestMessage.h
+      - path: StructParser.h
+      - path: CommandDataIB.h
+      - path: WriteResponseMessage.h
+      - path: AttributePathIB.h
+      - path: InvokeRequestMessage.h
 label: messagedef
-package: Matter
+package: matter
 provides:
--   name: matter_messagedef
+  - name: matter_messagedef
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/app/MessageDef/ArrayBuilder.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/ArrayParser.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/AttributeDataIB.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/AttributeDataIBs.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/AttributePathIB.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/AttributePathIBs.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/AttributeReportIB.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/AttributeReportIBs.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/AttributeStatusIB.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/AttributeStatusIBs.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/Builder.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/ClusterPathIB.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/CommandDataIB.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/CommandPathIB.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/CommandStatusIB.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/DataVersionFilterIB.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/DataVersionFilterIBs.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/EventDataIB.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/EventFilterIB.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/EventFilterIBs.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/EventPathIB.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/EventPathIBs.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/EventReportIB.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/EventReportIBs.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/EventStatusIB.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/InvokeRequestMessage.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/InvokeRequests.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/InvokeResponseIB.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/InvokeResponseIBs.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/InvokeResponseMessage.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/ListBuilder.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/ListParser.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/MessageBuilder.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/MessageDefHelper.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/MessageParser.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/Parser.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/ReadRequestMessage.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/ReportDataMessage.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/StatusIB.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/StatusResponseMessage.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/StructBuilder.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/StructParser.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/SubscribeRequestMessage.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/SubscribeResponseMessage.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/TimedRequestMessage.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/WriteRequestMessage.cpp
--   path: third_party/matter_sdk/src/app/MessageDef/WriteResponseMessage.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/ArrayBuilder.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/ArrayParser.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/AttributeDataIB.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/AttributeDataIBs.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/AttributePathIB.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/AttributePathIBs.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/AttributeReportIB.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/AttributeReportIBs.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/AttributeStatusIB.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/AttributeStatusIBs.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/Builder.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/ClusterPathIB.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/CommandDataIB.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/CommandPathIB.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/CommandStatusIB.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/DataVersionFilterIB.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/DataVersionFilterIBs.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/EventDataIB.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/EventFilterIB.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/EventFilterIBs.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/EventPathIB.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/EventPathIBs.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/EventReportIB.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/EventReportIBs.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/EventStatusIB.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/InvokeRequestMessage.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/InvokeRequests.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/InvokeResponseIB.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/InvokeResponseIBs.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/InvokeResponseMessage.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/ListBuilder.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/ListParser.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/MessageBuilder.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/MessageDefHelper.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/MessageParser.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/Parser.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/ReadRequestMessage.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/ReportDataMessage.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/StatusIB.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/StatusResponseMessage.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/StructBuilder.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/StructParser.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/SubscribeRequestMessage.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/SubscribeResponseMessage.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/TimedRequestMessage.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/WriteRequestMessage.cpp
+  - path: third_party/matter_sdk/src/app/MessageDef/WriteResponseMessage.cpp
 ui_hints:
-    visibility: never
+  visibility: never

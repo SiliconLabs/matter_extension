@@ -78,10 +78,9 @@ CHIP_ERROR OnOffPlugManager::Init()
     return CHIP_NO_ERROR;
 }
 
-void OnOffPlugManager::SetCallbacks(Callback_fn_initiated aActionInitiated_CB, Callback_fn_completed aActionCompleted_CB)
+void OnOffPlugManager::SetCallbacks(Callback_fn_action aAction_CB)
 {
-    mActionInitiated_CB = aActionInitiated_CB;
-    mActionCompleted_CB = aActionCompleted_CB;
+    mAction_CB = aAction_CB;
 }
 
 bool OnOffPlugManager::IsPlugOn()
@@ -128,9 +127,10 @@ bool OnOffPlugManager::InitiateAction(int32_t aActor, Action_t aAction)
     if (action_initiated)
     {
         mIsOn = aAction;
-        if (mActionCompleted_CB)
+
+        if (mAction_CB)
         {
-            mActionCompleted_CB(aAction);
+            mAction_CB(aAction, aActor);
         }
 
         if (mAutoTurnOff && mIsOn == ON_ACTION)
@@ -141,11 +141,6 @@ bool OnOffPlugManager::InitiateAction(int32_t aActor, Action_t aAction)
             mAutoTurnOffTimerArmed = true;
 
             SILABS_LOG("Auto Turn off enabled. Will be triggered in %u seconds", mAutoTurnOffDuration);
-        }
-
-        if (mActionInitiated_CB)
-        {
-            mActionInitiated_CB(aAction, aActor);
         }
     }
 

@@ -1,10 +1,9 @@
-
 category: Clusters|Media
 description: >
   Implementation of the Content Launcher Server Cluster.
   The user has to enable the Content Launcher Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_content_launch
-package: Matter
+package: matter
 label: Content Launcher Server Cluster
 quality: production
 metadata:

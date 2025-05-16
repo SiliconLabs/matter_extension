@@ -1,10 +1,9 @@
-
 category: Clusters|CHIP
 description: >
   Implementation of the Switch Server Cluster.
   The user has to enable the Switch Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_switch
-package: Matter
+package: matter
 label: Switch Server Cluster
 quality: production
 metadata:

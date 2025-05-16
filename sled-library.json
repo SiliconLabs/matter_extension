@@ -1,0 +1,5 @@
+{
+    "__comment":"This file tells sled not to attempt to build the matter provision libraries",
+    "patterns":["third_party/matter_support/provision/libs/.*"],
+    "builder":"none" 
+}

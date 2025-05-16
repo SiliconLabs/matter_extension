@@ -1,5 +1,5 @@
 id: matter_sleep_manager
-package: Matter
+package: matter
 label: Sleep Manager for Matter WiFi
 description: >
   Sleep Manager manages the sleep states of the Wi-Fi radio
@@ -10,22 +10,22 @@ metadata:
     license: MSLA
 
 provides:
-- name: matter_sleep_manager
+  - name: matter_sleep_manager
 
 include:
-- path: third_party/matter_sdk/src/platform/silabs/wifi/icd
-  file_list:
-  - path: WifiSleepManager.h
-- path: third_party/matter_sdk/examples/platform/silabs/wifi/icd
-  file_list:
-  - path: ApplicationSleepManager.h
+  - path: third_party/matter_sdk/src/platform/silabs/wifi/icd
+    file_list:
+      - path: WifiSleepManager.h
+  - path: third_party/matter_sdk/examples/platform/silabs/wifi/icd
+    file_list:
+      - path: ApplicationSleepManager.h
 
 source:
-- path: third_party/matter_sdk/src/platform/silabs/wifi/icd/WifiSleepManager.cpp
-- path: third_party/matter_sdk/examples/platform/silabs/wifi/icd/ApplicationSleepManager.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/wifi/icd/WifiSleepManager.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/wifi/icd/ApplicationSleepManager.cpp
 
 define:
-- name: SL_MATTER_ENABLE_APP_SLEEP_MANAGER
-  value: 1
-- name: CHIP_CONFIG_ICD_OBSERVERS_POOL_SIZE
-  value: 3
+  - name: SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+    value: 1
+  - name: CHIP_CONFIG_ICD_OBSERVERS_POOL_SIZE
+    value: 3

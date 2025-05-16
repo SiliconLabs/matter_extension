@@ -1,5 +1,5 @@
 id: matter_minimal_mdns
-package: Matter
+package: matter
 description: >
   matter_minimal_mdns for wifi
 label: Matter Minimal mDNS
@@ -11,11 +11,11 @@ metadata:
 provides:
   - name: matter_minimal_mdns
 define:
--   name: CHIP_MINMDNS_USE_EPHEMERAL_UNICAST_PORT
+  - name: CHIP_MINMDNS_USE_EPHEMERAL_UNICAST_PORT
     value: 0
--   name: CHIP_MINMDNS_HIGH_VERBOSITY
+  - name: CHIP_MINMDNS_HIGH_VERBOSITY
     value: 0
--   name: CHIP_MINMDNS_DEFAULT_POLICY
+  - name: CHIP_MINMDNS_DEFAULT_POLICY
     value: 1
 requires:
   - name: matter_core
@@ -26,7 +26,7 @@ requires:
 include:
   - path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns
 source:
--   path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/Parser.cpp
--   path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/RecordData.cpp
--   path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/ResponseSender.cpp
--   path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/Server.cpp
+  - path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/Parser.cpp
+  - path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/RecordData.cpp
+  - path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/ResponseSender.cpp
+  - path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/Server.cpp

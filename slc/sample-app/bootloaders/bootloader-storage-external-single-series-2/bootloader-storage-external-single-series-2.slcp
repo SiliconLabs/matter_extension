@@ -1,5 +1,5 @@
 project_name: matter-bootloader-storage-external-single
-package: Matter
+package: matter
 quality: production
 label: Bootloader - SoC SPI Flash Storage (single image with slot size of 1024k)
 description: >
@@ -7,8 +7,8 @@ description: >
 
 sdk_extension:
   - id: matter
-    version: "2.5.2"
-    
+    version: "2.6.0"
+
 component:
   - id: bootloader_core
   - id: bootloader_crc
@@ -23,8 +23,7 @@ component:
   - id: bootloader_compression_lzma
   - id: psa_crypto_config
   - id: matter_syscall_stubs
-    from: matter 
-
+    from: matter
 
 configuration:
   - name: BTL_STORAGE_BASE_ADDRESS

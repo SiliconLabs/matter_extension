@@ -1,10 +1,9 @@
-
 category: Clusters|Appliances
 description: >
   Implementation of the Microwave Oven Control Server Cluster.
   The user has to enable the Microwave Oven Control Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_microwave_oven_control
-package: Matter
+package: matter
 label: Microwave Oven Control Server Cluster
 quality: production
 metadata:

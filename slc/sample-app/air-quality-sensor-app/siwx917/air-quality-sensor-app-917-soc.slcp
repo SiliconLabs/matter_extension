@@ -3,13 +3,13 @@ label: Matter Air Quality Sensor
 description: >
   Matter Air Quality Sensor App.
 quality: production
-package: Matter
+package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.2"
+    version: "2.6.0"
   - id: wiseconnect3_sdk
-    version: "3.4.2"
+    version: "3.5.0"
 
 component:
   - id: matter_leds
@@ -71,7 +71,6 @@ component:
     from: matter
   - id: segger_rtt
 
-  
   - id: matter_ota_requestor
     from: matter
   - id: matter_ota_support
@@ -89,7 +88,6 @@ component:
 
   - id: matter_air_quality_app
     from: matter
-
 
   # Copy of the component to remove the default lwipopts.h file
   - id: wifi_resources
@@ -124,7 +122,7 @@ component:
   - id: ble
     from: wiseconnect3_sdk
   - id: sl_si91x_button_917
-    instance: [btn0,btn1]
+    instance: [btn0, btn1]
     from: wiseconnect3_sdk
   - id: sl_si91x_led_917
     instance: [led0]
@@ -143,8 +141,9 @@ component:
     id: ulp_timers_instance
 
 configuration:
-  - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
-  
+  - name: SL_ULPUART_DMA_CONFIG_ENABLE
+    value: "0"
+
 config_file:
   - path: ../../../../third_party/matter_sdk/examples/air-quality-sensor-app/air-quality-sensor-common/air-quality-sensor-app.zap
     directory: common
@@ -168,7 +167,7 @@ include:
       - path: relative-humidity-sensor-manager.h
       - path: temperature-sensor-manager.h
     directory: include
-    
+
 source:
   - path: ../../../../third_party/matter_sdk/examples/air-quality-sensor-app/silabs/src/AppTask.cpp
     directory: src
@@ -195,13 +194,13 @@ define:
     value: "4092"
   - name: SI917_SOC
     value: 1
-    
+
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17
   - option: nano_c_libs
     value: enabled
-    
+
 template_contribution:
   - name: memory_flash_start
     value: 0x081C2000

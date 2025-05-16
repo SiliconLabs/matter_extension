@@ -1,7 +1,7 @@
 id: matter_crypto
 label: Matter MbedTLS Crypto Integration
 description: Adds MbedTLS Crypto configurations required for Matter functionality
-package: "Matter"
+package: matter
 category: Platform|Security
 quality: production
 metadata:

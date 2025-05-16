@@ -1,39 +1,39 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: core
 id: core
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/core
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/core
     file_list:
-    -   path: DnsHeader.h
-    -   path: RecordWriter.h
-    -   path: QName.h
-    -   path: BytesRange.h
-    -   path: FlatAllocatedQName.h
-    -   path: Constants.h
-    -   path: HeapQName.h
-    -   path: QNameString.h
+      - path: DnsHeader.h
+      - path: RecordWriter.h
+      - path: QName.h
+      - path: BytesRange.h
+      - path: FlatAllocatedQName.h
+      - path: Constants.h
+      - path: HeapQName.h
+      - path: QNameString.h
 label: core
-package: Matter
+package: matter
 provides:
--   name: matter_core
+  - name: matter_core
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/core/QName.cpp
--   path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/core/QNameString.cpp
--   path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/core/RecordWriter.cpp
+  - path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/core/QName.cpp
+  - path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/core/QNameString.cpp
+  - path: third_party/matter_sdk/src/lib/dnssd/minimal_mdns/core/RecordWriter.cpp
 ui_hints:
-    visibility: never
+  visibility: never

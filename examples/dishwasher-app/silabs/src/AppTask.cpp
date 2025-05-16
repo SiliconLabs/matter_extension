@@ -22,11 +22,11 @@
 #include "AppEvent.h"
 #include "operational-state-delegate-impl.h"
 
+#include <app-common/zap-generated/attribute-type.h>
+#include <app-common/zap-generated/ids/Attributes.h>
 #include <app/server/OnboardingCodesUtil.h>
 #include <app/server/Server.h>
 #include <app/util/attribute-storage.h>
-#include <app-common/zap-generated/ids/Attributes.h>
-#include <app-common/zap-generated/attribute-type.h>
 
 #include <assert.h>
 
@@ -52,21 +52,10 @@ using namespace ::chip::DeviceLayer;
 
 AppTask AppTask::sAppTask;
 
-CHIP_ERROR AppTask::Init()
+CHIP_ERROR AppTask::AppInit()
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
     chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(AppTask::ButtonEventHandler);
-
-#ifdef DISPLAY_ENABLED
-    GetLCD().Init((uint8_t *) "Dishwasher-App");
-#endif
-
-    err = BaseApplication::Init();
-    if (err != CHIP_NO_ERROR)
-    {
-        SILABS_LOG("BaseApplication::Init() failed");
-        appError(err);
-    }
 
     err = DishwasherMgr().Init();
     if (err != CHIP_NO_ERROR)
@@ -179,7 +168,7 @@ void AppTask::ActionInitiated(OperationalStateEnum action)
     }
     else
     {
-        SILABS_LOG("Action error"); 
+        SILABS_LOG("Action error");
         action = OperationalStateEnum::kError;
     }
 
@@ -193,7 +182,7 @@ void AppTask::ActionInitiated(OperationalStateEnum action)
     else
     {
         DishwasherMgr().UpdateOperationState(action);
-    } 
+    }
 }
 
 void AppTask::ActionCompleted()

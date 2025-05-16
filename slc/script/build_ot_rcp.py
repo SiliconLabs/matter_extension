@@ -30,6 +30,7 @@ boards = [
     "BRD4350A",
     "BRD4351A",
     "BRD1019A", # series-3
+    "BRD4407A",
 ]
 
 def build_with_sisdk_slc(sdk_path):

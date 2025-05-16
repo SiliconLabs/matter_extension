@@ -2,33 +2,31 @@ category: Matter|Core
 description: data_model_provider
 id: data_model_provider
 include:
--   path: third_party/matter_sdk/src/app/data-model-provider
+  - path: third_party/matter_sdk/src/app/data-model-provider
     file_list:
-    -   path: ActionContext.h
-    -   path: ActionReturnStatus.h
-    -   path: Context.h
-    -   path: EventsGenerator.h
-    -   path: MetadataTypes.h
-    -   path: OperationTypes.h
-    -   path: Provider.h
-    -   path: ProviderChangeListener.h
--   path: third_party/matter_sdk/src/app/codegen-data-model-provider
+      - path: ActionContext.h
+      - path: ActionReturnStatus.h
+      - path: Context.h
+      - path: EventsGenerator.h
+      - path: MetadataTypes.h
+      - path: OperationTypes.h
+      - path: Provider.h
+      - path: ProviderChangeListener.h
+  - path: third_party/matter_sdk/src/app/codegen-data-model-provider
     file_list:
-    -   path: Instance.h
-
+      - path: Instance.h
 
 label: data_model_provider
-package: Matter
+package: matter
 provides:
--   name: matter_data_model_provider
+  - name: matter_data_model_provider
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/app/data-model-provider/ActionReturnStatus.cpp
--   path: third_party/matter_sdk/src/app/data-model-provider/MetadataTypes.cpp
-
+  - path: third_party/matter_sdk/src/app/data-model-provider/ActionReturnStatus.cpp
+  - path: third_party/matter_sdk/src/app/data-model-provider/MetadataTypes.cpp
 
 ui_hints:
-    visibility: never
+  visibility: never

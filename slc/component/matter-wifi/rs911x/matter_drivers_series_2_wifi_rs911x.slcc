@@ -1,5 +1,5 @@
 id: matter_drivers_series_2_wifi_rs911x
-package: Matter
+package: matter
 label: Matter UART selection for Series 2 boards (RS911x)
 description: >
   Matter UART selection for Series 2 boards
@@ -22,4 +22,4 @@ recommends:
 requires:
   - name: device_init_dpll
     condition:
-     - device_series_2
+      - device_series_2

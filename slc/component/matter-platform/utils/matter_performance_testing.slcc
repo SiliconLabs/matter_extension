@@ -1,7 +1,7 @@
 id: matter_performance_testing
 label: Performance Testing Utilities and CLI
 description: Matter performance testing utilities and CLI. The component enables the "perf ping" and "perf mx" Matter Shell commands 
-package: "Matter"
+package: matter
 category: Platform|Utils
 quality: production
 metadata:
@@ -16,6 +16,6 @@ source:
 include:
   - path: silabs_utils
     file_list:
-    - path: performance_test_commands.h
+      - path: performance_test_commands.h
 define:
   - name: PERFORMANCE_TEST_ENABLED

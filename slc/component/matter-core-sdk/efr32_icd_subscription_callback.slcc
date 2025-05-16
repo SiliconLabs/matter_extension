@@ -1,46 +1,46 @@
 category: Matter|Core
 define:
--   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+  - name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
     value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
--   name: CHIP_CONFIG_USE_ICD_SUBSCRIPTION_CALLBACKS
-    value: '1'
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
+  - name: CHIP_CONFIG_USE_ICD_SUBSCRIPTION_CALLBACKS
+    value: "1"
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
 description: efr32_icd_subscription_callback
 id: efr32_icd_subscription_callback
 include:
--   path: third_party/matter_sdk/examples/platform/silabs/efr32
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/matter_sdk/src/platform/silabs/efr32
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/examples/platform/silabs/efr32
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/matter_sdk/src/platform/silabs/efr32
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/examples/platform/silabs
     file_list:
-    -   path: SilabsDeviceDataProvider.h
-    -   path: board_config.h
-    -   path: OTAConfig.h
-    -   path: SoftwareFaultReports.h
-    -   path: silabs_utils.h
-    -   path: MatterConfig.h
-    -   path: LEDWidget.h
-    -   path: PigweedLogger.h
-    -   path: FreeRTOSConfig.h
-    -   path: Rpc.h
-    -   path: silabs_creds.h
-    -   path: SilabsTestEventTriggerDelegate.h
-    -   path: MemMonitoring.h
-    -   path: BaseApplication.h
+      - path: SilabsDeviceDataProvider.h
+      - path: board_config.h
+      - path: OTAConfig.h
+      - path: SoftwareFaultReports.h
+      - path: silabs_utils.h
+      - path: MatterConfig.h
+      - path: LEDWidget.h
+      - path: PigweedLogger.h
+      - path: FreeRTOSConfig.h
+      - path: Rpc.h
+      - path: silabs_creds.h
+      - path: SilabsTestEventTriggerDelegate.h
+      - path: MemMonitoring.h
+      - path: BaseApplication.h
 label: efr32_icd_subscription_callback
-package: Matter
+package: matter
 provides:
--   name: matter_efr32_icd_subscription_callback
+  - name: matter_efr32_icd_subscription_callback
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/examples/platform/silabs/ICDSubscriptionCallback.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/ICDSubscriptionCallback.cpp
 ui_hints:
-    visibility: never
+  visibility: never

@@ -3,13 +3,13 @@ label: Matter WiFi multi-sensor
 description: >
   Matter Multi Sensor App For WiFi
 quality: production
-package: Matter
+package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.2"
+    version: "2.6.0"
   - id: wiseconnect3_sdk
-    version: "3.4.2"
+    version: "3.5.0"
 
 component:
   - id: matter_leds
@@ -73,7 +73,7 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  - id: segger_rtt 
+  - id: segger_rtt
 
   - id: matter_ota_requestor
     from: matter
@@ -96,7 +96,7 @@ component:
 
   - id: sl_si91x_common_flash_nvm3
     from: wiseconnect3_sdk
-  - id: sl_si91x_lwip_stack    
+  - id: sl_si91x_lwip_stack
     from: wiseconnect3_sdk
   - id: sl_si91x_wireless
     from: wiseconnect3_sdk
@@ -123,7 +123,7 @@ component:
   - id: ble
     from: wiseconnect3_sdk
   - id: sl_si91x_button_917
-    instance: [btn0,btn1]
+    instance: [btn0, btn1]
     from: wiseconnect3_sdk
   - id: sl_si91x_led_917
     instance: [led0]
@@ -160,7 +160,7 @@ include:
       - path: SensorManager.h
       - path: SensorsUI.h
         condition:
-        - matter_lcd_917SOC
+          - matter_lcd_917SOC
       - path: CHIPProjectConfig.h
     directory: include
 
@@ -172,7 +172,7 @@ source:
   - path: ../../../../examples/multi-sensor-app/src/SensorsUI.cpp
     directory: src
     condition:
-    - matter_lcd_917SOC
+      - matter_lcd_917SOC
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
   - path: ../../../../examples/multi-sensor-app/src/DataModelCallbacks.cpp
@@ -194,10 +194,13 @@ define:
     value: 1
 
 configuration:
-  - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
-  - {name: CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED, value: '1'}
-  - {name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION, value: '0'}
-  
+  - name: SL_ULPUART_DMA_CONFIG_ENABLE
+    value: "0"
+  - name: CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED
+    value: "1"
+  - name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION
+    value: "0"
+
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17

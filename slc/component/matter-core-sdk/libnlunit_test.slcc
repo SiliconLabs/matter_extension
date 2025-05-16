@@ -3,20 +3,20 @@ define: []
 description: libnlunit_test
 id: libnlunit_test
 include:
--   path: third_party/nlunit-test/repo/src
--   path: third_party/nlunit-test/repo/src
+  - path: third_party/nlunit-test/repo/src
+  - path: third_party/nlunit-test/repo/src
     file_list:
-    -   path: nlunit-test.h
-    -   path: nltest.h
+      - path: nlunit-test.h
+      - path: nltest.h
 label: libnlunit_test
-package: Matter
+package: matter
 provides:
--   name: matter_libnlunit_test
+  - name: matter_libnlunit_test
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/nlunit-test/repo/src/nlunit-test.c
+  - path: third_party/nlunit-test/repo/src/nlunit-test.c
 ui_hints:
-    visibility: never
+  visibility: never

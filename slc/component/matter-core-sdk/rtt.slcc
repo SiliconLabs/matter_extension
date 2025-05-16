@@ -3,19 +3,19 @@ define: []
 description: rtt
 id: rtt
 include:
--   path: third_party/jlink/segger_rtt/RTT
+  - path: third_party/jlink/segger_rtt/RTT
     file_list:
-    -   path: SEGGER_RTT_Conf.h
-    -   path: SEGGER_RTT.h
+      - path: SEGGER_RTT_Conf.h
+      - path: SEGGER_RTT.h
 label: rtt
-package: Matter
+package: matter
 provides:
--   name: matter_rtt
+  - name: matter_rtt
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/jlink/segger_rtt/RTT/SEGGER_RTT.c
+  - path: third_party/jlink/segger_rtt/RTT/SEGGER_RTT.c
 ui_hints:
-    visibility: never
+  visibility: never

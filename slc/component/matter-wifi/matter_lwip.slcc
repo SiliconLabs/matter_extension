@@ -1,6 +1,6 @@
 # Re-work this component to implement proper matter_sdk source code and/or SiSDK/WiFi SDK components
 id: matter_lwip
-package: Matter
+package: matter
 description: >
   matter lwip for wifi
 label: Matter LwIP
@@ -10,41 +10,41 @@ metadata:
   sbom:
     license: Zlib
 provides:
-- name: matter_lwip
-- name: lwip
-- name: lwip_port_freertos
-- name: sl_si91x_errno
+  - name: matter_lwip
+  - name: lwip
+  - name: lwip_port_freertos
+  - name: sl_si91x_errno
 
 requires:
-- name: lwip_api
-- name: lwip_netif_ethernet
+  - name: lwip_api
+  - name: lwip_netif_ethernet
 
 include:
-- path: third_party/matter_sdk/src/lwip/silabs
-  file_list:
-  - path: lwipopts.h
-  - path: lwipopts-wf200.h
-  - path: lwipopts-rs911x.h
-  - path: arch/cc.h
-  - path: arch/perf.h
-  - path: lwippools.h
-- path: slc/inc/lwip
-  file_list:
-  - path: lwip_buildconfig.h
-- path: slc/inc/wifi
-  file_list:
-  - path: brd4186c.h
-  - path: brd4187c.h
-  - path: sl_custom_board.h
-- path: third_party/matter_sdk/src/lwip/freertos
-  file_list:
-  - path: arch/sys_arch.h
+  - path: third_party/matter_sdk/src/lwip/silabs
+    file_list:
+      - path: lwipopts.h
+      - path: lwipopts-wf200.h
+      - path: lwipopts-rs911x.h
+      - path: arch/cc.h
+      - path: arch/perf.h
+      - path: lwippools.h
+  - path: slc/inc/lwip
+    file_list:
+      - path: lwip_buildconfig.h
+  - path: slc/inc/wifi
+    file_list:
+      - path: brd4186c.h
+      - path: brd4187c.h
+      - path: sl_custom_board.h
+  - path: third_party/matter_sdk/src/lwip/freertos
+    file_list:
+      - path: arch/sys_arch.h
 
 source:
-- path: third_party/matter_sdk/src/lwip/freertos/sys_arch.c
+  - path: third_party/matter_sdk/src/lwip/freertos/sys_arch.c
 
 define:
-- name: LWIP_NETIF_API
-  value: 1
-- name: LWIP_IPV6
-  value: 1
+  - name: LWIP_NETIF_API
+    value: 1
+  - name: LWIP_IPV6
+    value: 1

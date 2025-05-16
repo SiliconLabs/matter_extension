@@ -3,17 +3,21 @@ label: Matter Light
 description: >
   Matter Lighting App
 quality: production
-package: Matter
+package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.2"
+    version: "2.6.0"
 
 component:
   - id: device_init
-  - id: sl_system
+  - id: sl_main
   - id: clock_manager
   - id: ot_stack_ftd
+  - id: common_token_manager_dynamic
+    condition: [device_series_3]
+  - id: common_token_manager
+    condition: [device_series_3]
   - id: matter_buttons
     from: matter
   - id: matter_leds
@@ -102,14 +106,14 @@ component:
     from: matter
 
 requires:
-# On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
-# Select UART/EUART drivers based on device series
+  # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
+  # Select UART/EUART drivers based on device series
   - name: matter_drivers_series_2
     condition:
-     - device_series_2
+      - device_series_2
   - name: matter_drivers_series_2
     condition:
-    - device_series_3
+      - device_series_3
 
 config_file:
   - path: ../../../../third_party/matter_sdk/examples/lighting-app/silabs/data_model/lighting-thread-app.zap
@@ -151,6 +155,9 @@ define:
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
     value: "4092"
 configuration:
+  - name: SL_TOKEN_MANAGER_STATIC_SECURE_TOKEN_SIZE
+    value: 8192
+    condition: [device_series_3]
   - name: SL_OPENTHREAD_ENABLE_APP_TASK
     value: 0
   - name: SL_OPENTHREAD_ENABLE_CLI_TASK
@@ -171,17 +178,19 @@ configuration:
   - name: OPENTHREAD_CONFIG_COAP_SECURE_API_ENABLE
     value: 1
     condition: [matter_thread_coap_cert_libs]
-  - {name: SL_STACK_SIZE, value: '4608'}
-  - {name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE, value: '1536'}
+  - name: SL_STACK_SIZE
+    value: "4608"
+  - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+    value: "1536"
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: 16
   - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS
     value: 1
-    
+
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17
-    
+
 readme:
   - path: ./README.md
 ui_hints:
@@ -190,6 +199,6 @@ ui_hints:
       focus: false
 post_build:
   profile: application
-  
+
 other_file:
   - path: ../../../image/qr_code_img.png

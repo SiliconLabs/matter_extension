@@ -3,16 +3,15 @@ label: Matter Light Switch
 description: >
   Matter Light Switch App
 quality: production
-package: Matter
+package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.2"
+    version: "2.6.0"
   - id: wiseconnect3_sdk
-    version: "3.4.2"
+    version: "3.5.0"
 
 component:
-
   - id: matter_leds
     from: matter
   - id: matter
@@ -24,9 +23,9 @@ component:
 
   - id: matter_wifi
     from: matter
-    
+
   - id: matter_light_switch
-    from: matter     
+    from: matter
   - id: app_common
     from: matter
   - id: matter_provision_flash
@@ -85,7 +84,6 @@ component:
     from: matter
   - id: segger_rtt
 
-
   - id: toolchain_gcc_common
     from: matter
   - id: matter_ota_requestor
@@ -98,8 +96,8 @@ component:
     from: matter
   # ICD configurations
   # MATTER-4257 : Disabling ICD for light-switch as Button1 is not working as expected for 917SoC Sleepy apps.
-#  - id: matter_icd_core
-#    from: matter
+  #  - id: matter_icd_core
+  #    from: matter
   - id: matter_test_event_trigger
     from: matter
   - id: matter_icd_management
@@ -140,7 +138,7 @@ component:
   - id: ble
     from: wiseconnect3_sdk
   - id: sl_si91x_button_917
-    instance: [btn0,btn1]
+    instance: [btn0, btn1]
     from: wiseconnect3_sdk
   - id: sl_si91x_led_917
     instance: [led0]
@@ -206,16 +204,31 @@ define:
     value: "4092"
   - name: SI917_SOC
     value: "1"
-  
-configuration:
-  - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
-  # Default ICD configurations
-  - {name: SL_IDLE_MODE_DURATION_S, value: '600'}
-  - {name: SL_ACTIVE_MODE_DURATION_MS, value: '0'}
-  - {name: SL_ACTIVE_MODE_THRESHOLD, value: '0'}
 
-  - {name: CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED, value: '1'}
-  - {name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION, value: '0'}
+configuration:
+  - name: SL_ULPUART_DMA_CONFIG_ENABLE
+    value: "0"
+  # Default ICD configurations
+  - name: SL_IDLE_MODE_DURATION_S
+    value: "600"
+  - name: SL_ACTIVE_MODE_DURATION_MS
+    value: "0"
+  - name: SL_ACTIVE_MODE_THRESHOLD
+    value: "0"
+
+  - name: CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED
+    value: "1"
+  - name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION
+    value: "0"
+
+  # Wakeup configurations
+  - name: SL_ENABLE_GPIO_WAKEUP_SOURCE
+    value: "1"
+    condition: [matter_icd_core]
+
+  - name: ENABLE_NPSS_GPIO_2
+    value: "1"
+    condition: [matter_icd_core]
 
 toolchain_settings:
   - option: cxx_standard

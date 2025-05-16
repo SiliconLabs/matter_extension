@@ -1,6 +1,6 @@
 id: matter_buttons
 label: WSTK Button Support
-package: Matter
+package: matter
 description: WSTK Button Support for Matter applications
 category: Platform
 quality: production
@@ -10,10 +10,13 @@ metadata:
 provides:
   - name: matter_buttons
 requires:
-# Every board that uses buttons
+  # Every board that uses buttons
   - name: simple_button_recommended_instance
     condition:
-    - brd1019a
+      - brd4407a
+  - name: simple_button_recommended_instance
+    condition:
+      - brd1019a
   - name: simple_button_recommended_instance
     condition:
       - brd4116a

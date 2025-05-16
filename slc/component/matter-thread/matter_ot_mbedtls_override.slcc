@@ -1,7 +1,7 @@
 id: matter_ot_mbedtls_override
 label: OT mbedtls override
 description: Replaces ot_mbedtls component (not needed)
-package: "Matter"
+package: matter
 category: Matter-Thread
 quality: production
 metadata:

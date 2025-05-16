@@ -1,35 +1,35 @@
 category: Matter|Core
 define:
--   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+  - name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
     value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: address_resolve
 id: address_resolve
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/lib/address_resolve
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/lib/address_resolve
     file_list:
-    -   path: TracingStructs.h
-    -   path: AddressResolve_DefaultImpl.h
-    -   path: AddressResolve.h
+      - path: TracingStructs.h
+      - path: AddressResolve_DefaultImpl.h
+      - path: AddressResolve.h
 label: address_resolve
-package: Matter
+package: matter
 provides:
--   name: matter_address_resolve
+  - name: matter_address_resolve
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/lib/address_resolve/AddressResolve.cpp
--   path: third_party/matter_sdk/src/lib/address_resolve/AddressResolve_DefaultImpl.cpp
+  - path: third_party/matter_sdk/src/lib/address_resolve/AddressResolve.cpp
+  - path: third_party/matter_sdk/src/lib/address_resolve/AddressResolve_DefaultImpl.cpp
 ui_hints:
-    visibility: never
+  visibility: never

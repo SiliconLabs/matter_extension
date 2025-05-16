@@ -1,10 +1,9 @@
-
 category: Clusters|General
 description: >
   Implementation of the Mode Base Server Cluster.
   The user has to enable the Mode Base Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_mode_base
-package: Matter
+package: matter
 label: Mode Base Server Cluster
 quality: production
 metadata:

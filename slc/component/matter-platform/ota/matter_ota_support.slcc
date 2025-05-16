@@ -1,7 +1,7 @@
 id: matter_ota_support
 label: OTA Requestor
 description: OTA Requestor functionality for Matter
-package: "Matter"
+package: matter
 category: Stack
 quality: production
 metadata:

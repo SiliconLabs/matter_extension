@@ -3,13 +3,13 @@ label: Matter Refrigerator
 description: >
   Matter Refrigerator App
 quality: production
-package: Matter
+package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.2"
+    version: "2.6.0"
   - id: wiseconnect3_sdk
-    version: "3.4.2"
+    version: "3.5.0"
 
 component:
   - id: matter_leds
@@ -149,7 +149,8 @@ component:
     from: wiseconnect3_sdk
 
 configuration:
-  - { name: SL_ULPUART_DMA_CONFIG_ENABLE, value: "0" }
+  - name: SL_ULPUART_DMA_CONFIG_ENABLE
+    value: "0"
 
 config_file:
   - path: ../../../../third_party/matter_sdk/examples/refrigerator-app/silabs/data_model/refrigerator-wifi-app.zap

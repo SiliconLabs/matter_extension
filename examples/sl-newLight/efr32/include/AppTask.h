@@ -64,5 +64,10 @@ private:
     static void LightControlEventHandler(AppEvent * aEvent);
     static void UpdateClusterState(intptr_t context);
     static void ButtonHandler(AppEvent * aEvent);
-    CHIP_ERROR Init();
+    /**
+     * @brief Override of BaseApplication::AppInit() virtual method, called by BaseApplication::Init()
+     *
+     * @return CHIP_ERROR
+     */
+    CHIP_ERROR AppInit() override;
 };

@@ -22,11 +22,11 @@
 #include "sl_cmp_config.h"
 // ---- Lighting Example App Config ----
 
-#define APP_TASK_NAME "Lit"
+#define APP_TASK_NAME "CMP-Light"
 #ifdef SL_MATTER_ZIGBEE_CMP
-#define BLE_DEV_NAME "SL CMP Light Conc"
+#define BLE_DEV_NAME "SL-" APP_TASK_NAME "-Conc"
 #else
-#define BLE_DEV_NAME "SL CMP Light Seq"
+#define BLE_DEV_NAME "SL-" APP_TASK_NAME "-Seq"
 #endif
 
 // Must match with Matter Light endpoint

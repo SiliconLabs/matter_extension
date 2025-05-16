@@ -1,5 +1,5 @@
 id: wiseconnect_sapi
-package: wiseconnect
+package: matter
 label: Wiseconnect Sapi
 description: >
   WiSeConnect sapi component

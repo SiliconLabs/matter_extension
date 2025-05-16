@@ -1,5 +1,5 @@
 category: Matter|Examples
-package: Matter
+package: matter
 description: >
   Provides example component for a Dishwasher application. This component should be 
   included in all Dishwasher applications to help resolve SLC dependencies. Only applicable to Dishwasher applications.

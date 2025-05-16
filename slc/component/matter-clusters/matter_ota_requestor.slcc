@@ -1,10 +1,9 @@
-
 category: Clusters|CHIP
 description: >
   Implementation of the OTA Software Update Requestor Cluster.
   The user has to enable the OTA Software Update Requestor Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_ota_requestor
-package: Matter
+package: matter
 label: OTA Software Update Requestor Cluster
 quality: production
 metadata:

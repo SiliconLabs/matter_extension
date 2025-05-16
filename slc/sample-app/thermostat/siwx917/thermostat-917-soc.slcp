@@ -3,13 +3,13 @@ label: Matter Thermostat
 description: >
   Matter Thermostat
 quality: production
-package: Matter
+package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.2"
+    version: "2.6.0"
   - id: wiseconnect3_sdk
-    version: "3.4.2"
+    version: "3.5.0"
 
 component:
   - id: matter_leds
@@ -27,7 +27,7 @@ component:
     from: matter
 
   - id: matter_thermostat_app
-    from: matter   
+    from: matter
   - id: app_common
     from: matter
   - id: matter_provision_flash
@@ -91,7 +91,6 @@ component:
     from: matter
   - id: matter_log_uart
     from: matter
-    
 
   # Copy of the component to remove the default lwipopts.h file
   - id: wifi_resources
@@ -101,8 +100,8 @@ component:
   - id: matter_configuration_over_swo
     from: matter
   - id: segger_rtt
-#  - id: i2cspm
-#    instance: [sensor]
+  #  - id: i2cspm
+  #    instance: [sensor]
   - id: sl_si91x_lwip_stack
     from: wiseconnect3_sdk
   - id: sl_si91x_common_flash_nvm3
@@ -132,7 +131,7 @@ component:
   - id: ble
     from: wiseconnect3_sdk
   - id: sl_si91x_button_917
-    instance: [btn0,btn1]
+    instance: [btn0, btn1]
     from: wiseconnect3_sdk
   - id: sl_si91x_led_917
     instance: [led0]
@@ -151,7 +150,8 @@ component:
     id: ulp_timers_instance
 
 configuration:
-  - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
+  - name: SL_ULPUART_DMA_CONFIG_ENABLE
+    value: "0"
 
 config_file:
   - path: ../../../../third_party/matter_sdk/examples/thermostat/thermostat-common/thermostat.zap
@@ -171,7 +171,7 @@ include:
       - path: TemperatureManager.h
       - path: CHIPProjectConfig.h
     directory: include
-    
+
 source:
   - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/AppTask.cpp
     directory: src

@@ -3,21 +3,22 @@ label: Matter Lock WiFi
 description: >
   Matter Lock App For WiFi
 quality: production
-package: Matter
+package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.2"
+    version: "2.6.0"
   - id: wiseconnect3_sdk
-    version: "3.4.2"
+    version: "3.5.0"
 
 component:
   - id: device_init
+  - id: sl_main
   - id: matter_buttons
     from: matter
   - id: matter_leds
     from: matter
-    
+
   - id: matter
     from: matter
   - id: matter_platform_mg
@@ -37,7 +38,7 @@ component:
   - id: matter_gatt_additional_advertising
     from: matter
   - id: matter_lock
-    from: matter   
+    from: matter
   - id: app_common
     from: matter
   - id: matter_provision_default
@@ -109,7 +110,6 @@ component:
   - id: matter_log_uart
     from: matter
 
-
   # Copy of the component to remove the default lwipopts.h file
   - id: wifi_resources
     from: matter
@@ -132,7 +132,6 @@ component:
 #requires:
 #  - name: matter_default_lcd_config
 
-     
 config_file:
   - path: ../../../../third_party/matter_sdk/examples/lock-app/silabs/data_model/lock-app.zap
     directory: common
@@ -160,7 +159,7 @@ source:
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/lock-app/silabs/src/ZclCallbacks.cpp
     directory: src
-    
+
 define:
   - name: CHIP_CRYPTO_PLATFORM
     value: "1"
@@ -183,19 +182,27 @@ configuration:
     value: "21"
   - name: SL_POWER_MANAGER_CONFIG_VOLTAGE_SCALING_FAST_WAKEUP
     value: "1"
-  - {name: SL_STACK_SIZE, value: '4608'} 
-  - {name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE, value: '1536'}
-# Default ICD configurations
-  - {name: SL_IDLE_MODE_DURATION_S, value: '600'}
-  - {name: SL_ACTIVE_MODE_DURATION_MS, value: '0'}
-  - {name: SL_ACTIVE_MODE_THRESHOLD, value: '0'}
-  - {name: SL_TRANSPORT_IDLE_INTERVAL, value: '3000'}
+  - name: SL_STACK_SIZE
+    value: "4608"
+  - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+    value: "1536"
+  # Default ICD configurations
+  - name: SL_IDLE_MODE_DURATION_S
+    value: "600"
+  - name: SL_ACTIVE_MODE_DURATION_MS
+    value: "0"
+  - name: SL_ACTIVE_MODE_THRESHOLD
+    value: "0"
+  - name: SL_TRANSPORT_IDLE_INTERVAL
+    value: "3000"
 
-  - {name: CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED, value: '1'}
-  - {name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION, value: '0'}
+  - name: CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED
+    value: "1"
+  - name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION
+    value: "0"
   - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS
     value: 1
-  
+
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17
@@ -216,6 +223,6 @@ tag:
   - hardware:component:led:2+
 post_build:
   profile: application
-  
+
 other_file:
   - path: ../../../image/qr_code_img.png

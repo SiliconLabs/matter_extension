@@ -1,5 +1,5 @@
 id: siwx917_common
-package: Matter
+package: matter
 label: siwx917_common
 description: siwx917_common
 category: Matter|Core
@@ -9,58 +9,57 @@ metadata:
     license: "Apache 2.0"
 
 provides:
-- name: matter_siwx917_common
+  - name: matter_siwx917_common
 
 include:
-- path: .
-- path: third_party/matter_sdk/examples/common/QRCode/repo/c
-- path: third_party/matter_sdk/examples/platform/silabs
-- path: third_party/matter_sdk/examples/providers
-- path: third_party/matter_sdk/src
-- path: third_party/matter_sdk/src/include
-- path: third_party/matter_sdk/src/lib
-- path: third_party/matter_sdk/src/platform/silabs/wifi
-- path: third_party/nlassert/include
-- path: third_party/nlio/include
-- path: third_party/matter_sdk/examples/platform/silabs
-  file_list:
-  - path: board_config.h
-  - path: OTAConfig.h
-  - path: SoftwareFaultReports.h
-  - path: silabs_utils.h
-  - path: MatterConfig.h
-  - path: LEDWidget.h
-  - path: sl_systemview_config.h
-  - path: PigweedLogger.h
-  - path: FreeRTOSConfig.h
-  - path: Rpc.h
-  - path: silabs_creds.h
-  - path: SilabsTestEventTriggerDelegate.h
-  - path: MemMonitoring.h
-  - path: BaseApplication.h
-- path: third_party/matter_sdk/src/platform/silabs/SiWx917
-  file_list:
-  - path: SiWxPlatformInterface.h
-
+  - path: .
+  - path: third_party/matter_sdk/examples/common/QRCode/repo/c
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/examples/providers
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/matter_sdk/src/platform/silabs/wifi
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/examples/platform/silabs
+    file_list:
+      - path: board_config.h
+      - path: OTAConfig.h
+      - path: SoftwareFaultReports.h
+      - path: silabs_utils.h
+      - path: MatterConfig.h
+      - path: LEDWidget.h
+      - path: sl_systemview_config.h
+      - path: PigweedLogger.h
+      - path: FreeRTOSConfig.h
+      - path: Rpc.h
+      - path: silabs_creds.h
+      - path: SilabsTestEventTriggerDelegate.h
+      - path: MemMonitoring.h
+      - path: BaseApplication.h
+  - path: third_party/matter_sdk/src/platform/silabs/SiWx917
+    file_list:
+      - path: SiWxPlatformInterface.h
 
 source:
-- path: third_party/matter_sdk/examples/platform/silabs/BaseApplication.cpp
-- path: third_party/matter_sdk/examples/platform/silabs/LEDWidget.cpp
-- path: third_party/matter_sdk/examples/platform/silabs/MatterConfig.cpp
-- path: third_party/matter_sdk/examples/platform/silabs/OTAConfig.cpp
-- path: third_party/matter_sdk/examples/platform/silabs/SoftwareFaultReports.cpp
-- path: third_party/matter_sdk/examples/platform/silabs/silabs_utils.cpp
-- path: third_party/matter_sdk/examples/platform/silabs/syscalls_stubs.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/BaseApplication.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/LEDWidget.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/MatterConfig.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/OTAConfig.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/SoftwareFaultReports.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/silabs_utils.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/syscalls_stubs.cpp
 
 define:
-- name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
-  value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
-- name: CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS
-  value: '1'
-- name: CHIP_HAVE_CONFIG_H
-  value: '1'
-- name: RADIO_CONFIG_DMP_SUPPORT
-  value: '1'
+  - name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+    value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
+  - name: CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS
+    value: "1"
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 
 ui_hints:
   visibility: never

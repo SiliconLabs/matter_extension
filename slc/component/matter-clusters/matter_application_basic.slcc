@@ -1,10 +1,9 @@
-
 category: Clusters|Media
 description: >
   Implementation of the Application Basic Server Cluster.
   The user has to enable the Application Basic Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_application_basic
-package: Matter
+package: matter
 label: Application Basic Server Cluster
 quality: production
 metadata:

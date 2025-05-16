@@ -1,10 +1,9 @@
-
 category: Clusters|General
 description: >
   Implementation of the Software Diagnostics Server Cluster.
   The user has to enable the Software Diagnostics Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_software_diagnostics
-package: Matter
+package: matter
 label: Software Diagnostics Server Cluster
 quality: production
 metadata:

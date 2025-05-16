@@ -1,7 +1,7 @@
 id: matter_provision_flash
 label: Flash Attestation Certificate provisioning configuration
 description: Flash Configuration of the Attestation Certificate provisioning. Set ENABLE_EXAMPLE_CREDENTIALS in this component's configuration to select certificate provisioning options.
-package: "Matter"
+package: matter
 category: Platform|Security
 quality: production
 metadata:
@@ -23,20 +23,20 @@ conflicts:
 config_file:
   - path: slc/config/sl_matter_provision_config.h
     file_id: matter_provision_config
-    
+
 include:
-- path: third_party/matter_support/provision
-  file_list:
-  - path: headers/AttestationKey.h
-  - path: headers/ProvisionChannel.h
-  - path: headers/ProvisionEncoder.h
-  - path: headers/ProvisionManager.h
-  - path: headers/ProvisionProtocol.h
-  - path: headers/ProvisionStorage.h
-  - path: headers/ProvisionStorageGeneric.h
-- path: third_party/matter_sdk/examples/platform/silabs
-  file_list:
-  - path: SilabsTestEventTriggerDelegate.h
+  - path: third_party/matter_support/provision
+    file_list:
+      - path: headers/AttestationKey.h
+      - path: headers/ProvisionChannel.h
+      - path: headers/ProvisionEncoder.h
+      - path: headers/ProvisionManager.h
+      - path: headers/ProvisionProtocol.h
+      - path: headers/ProvisionStorage.h
+      - path: headers/ProvisionStorageGeneric.h
+  - path: third_party/matter_sdk/examples/platform/silabs
+    file_list:
+      - path: SilabsTestEventTriggerDelegate.h
 
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/provision/ProvisionStorageFlash.cpp
@@ -60,13 +60,13 @@ library:
       - device_family_siwg917
 
 template_contribution:
-# Series-3 will use common token manager. 
-# It is not yet available but we need this to align with zigbee stack pulling the token manager.
-# This is done so our CMP app flash placement matches our other Matter apps on S3
-# The result is the last 2 pages of flash are reserved for token/matter_credentials
-- name: static_tokens_enable
-  value: 1
-  condition: [device_series_3]
-- name: lockbits_size
-  value: 8192
-  condition: [device_series_3]
+  # Series-3 will use common token manager.
+  # It is not yet available but we need this to align with zigbee stack pulling the token manager.
+  # This is done so our CMP app flash placement matches our other Matter apps on S3
+  # The result is the last 2 pages of flash are reserved for token/matter_credentials
+  - name: static_tokens_enable
+    value: 1
+    condition: [device_series_3]
+  - name: lockbits_size
+    value: 8192
+    condition: [device_series_3]

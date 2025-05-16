@@ -301,7 +301,34 @@ CHIP_ERROR BaseApplication::StartAppTask(osThreadFunc_t taskFunction)
 
 CHIP_ERROR BaseApplication::Init()
 {
+    CHIP_ERROR err = BaseInit();
+    if (err != CHIP_NO_ERROR)
+    {
+        SILABS_LOG("BaseInit() failed");
+        appError(err);
+        return err;
+    }
+
+    err = AppInit();
+    if (err != CHIP_NO_ERROR)
+    {
+        SILABS_LOG("AppInit() failed");
+        appError(err);
+        return err;
+    }
+
+    SILABS_TRACE_END_ERROR(TimeTraceOperation::kAppInit, err);
+    SILABS_TRACE_END_ERROR(TimeTraceOperation::kBootup, err);
+    return err;
+}
+
+CHIP_ERROR BaseApplication::BaseInit()
+{
     CHIP_ERROR err = CHIP_NO_ERROR;
+
+#ifdef DISPLAY_ENABLED
+    GetLCD().Init((uint8_t *) APP_TASK_NAME);
+#endif
 
 #ifdef SL_WIFI
     /*
@@ -379,12 +406,6 @@ CHIP_ERROR BaseApplication::Init()
 
     err = chip::Server::GetInstance().GetFabricTable().AddFabricDelegate(&sAppDelegate);
     return err;
-}
-
-void BaseApplication::InitCompleteCallback(CHIP_ERROR err)
-{
-    SILABS_TRACE_END(TimeTraceOperation::kAppInit);
-    SILABS_TRACE_END(TimeTraceOperation::kBootup);
 }
 
 void BaseApplication::FunctionTimerEventHandler(void * timerCbArg)

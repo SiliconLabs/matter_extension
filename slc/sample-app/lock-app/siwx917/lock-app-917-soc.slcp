@@ -3,13 +3,13 @@ label: Matter Lock WiFi
 description: >
   Matter Lock App For WiFi
 quality: production
-package: Matter
+package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.2"
+    version: "2.6.0"
   - id: wiseconnect3_sdk
-    version: "3.4.2"
+    version: "3.5.0"
 
 component:
   - id: matter_leds
@@ -78,7 +78,7 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  - id: segger_rtt 
+  - id: segger_rtt
 
   - id: matter_ota_requestor
     from: matter
@@ -107,7 +107,7 @@ component:
 
   - id: sl_si91x_common_flash_nvm3
     from: wiseconnect3_sdk
-  - id: sl_si91x_lwip_stack    
+  - id: sl_si91x_lwip_stack
     from: wiseconnect3_sdk
   - id: sl_si91x_wireless
     from: wiseconnect3_sdk
@@ -134,7 +134,7 @@ component:
   - id: ble
     from: wiseconnect3_sdk
   - id: sl_si91x_button_917
-    instance: [btn0,btn1]
+    instance: [btn0, btn1]
     from: wiseconnect3_sdk
   - id: sl_si91x_led_917
     instance: [led0]
@@ -198,16 +198,31 @@ define:
     value: 1
 
 configuration:
-  - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
-# Default ICD configurations
-  - {name: SL_IDLE_MODE_DURATION_S, value: '600'}
-  - {name: SL_ACTIVE_MODE_DURATION_MS, value: '0'}
-  - {name: SL_ACTIVE_MODE_THRESHOLD, value: '0'}
-  - {name: SL_TRANSPORT_IDLE_INTERVAL, value: '3000'}
+  - name: SL_ULPUART_DMA_CONFIG_ENABLE
+    value: "0"
+  # Default ICD configurations
+  - name: SL_IDLE_MODE_DURATION_S
+    value: "600"
+  - name: SL_ACTIVE_MODE_DURATION_MS
+    value: "0"
+  - name: SL_ACTIVE_MODE_THRESHOLD
+    value: "0"
+  - name: SL_TRANSPORT_IDLE_INTERVAL
+    value: "3000"
 
-  - {name: CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED, value: '1'}
-  - {name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION, value: '0'}
-  
+  - name: CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED
+    value: "1"
+  - name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION
+    value: "0"
+
+  # Wakeup configurations
+  - name: SL_ENABLE_GPIO_WAKEUP_SOURCE
+    value: "1"
+    condition: [matter_icd_core]
+  - name: ENABLE_NPSS_GPIO_2
+    value: "1"
+    condition: [matter_icd_core]
+
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17

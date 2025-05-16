@@ -325,11 +325,12 @@ sl_status_t SetWifiConfigurations()
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
     // [sl-only] Set the listen interval to the slow polling interval during association
-    sl_wifi_listen_interval_t sleep_interval = { .listen_interval =
-                                                     chip::ICDConfigurationData::GetInstance().GetSlowPollingInterval().count() };
-    status                                   = sl_wifi_set_listen_interval(SL_WIFI_CLIENT_INTERFACE, sleep_interval);
+    sl_wifi_listen_interval_v2_t sleep_interval = {
+        .listen_interval = chip::ICDConfigurationData::GetInstance().GetSlowPollingInterval().count()
+    };
+    status = sl_wifi_set_listen_interval_v2(SL_WIFI_CLIENT_INTERFACE, sleep_interval);
     VerifyOrReturnError(status == SL_STATUS_OK, status,
-                        ChipLogError(DeviceLayer, "sl_wifi_set_listen_interval failed: 0x%lx", status));
+                        ChipLogError(DeviceLayer, "sl_wifi_set_listen_interval_v2 failed: 0x%lx", status));
 
     // This is be triggered on the disconnect use case, providing the amount of TA tries
     // Setting the TA retry to 1 and giving the control to the M4 for improved power efficiency
@@ -858,15 +859,14 @@ sl_status_t ConfigurePowerSave(rsi_power_save_profile_mode_t sl_si91x_ble_state,
     VerifyOrReturnError(error == RSI_SUCCESS, SL_STATUS_FAIL,
                         ChipLogError(DeviceLayer, "rsi_bt_power_save_profile failed: %ld", error));
 
-    sl_wifi_performance_profile_t wifi_profile = { .profile = sl_si91x_wifi_state,
-                                                   // TODO: Performance profile fails if not alligned with DTIM
-                                                   .dtim_aligned_type = SL_SI91X_ALIGN_WITH_DTIM_BEACON,
-                                                   // TODO: Different types need to be fixe in the Wi-Fi SDK
-                                                   .listen_interval = static_cast<uint16_t>(listenInterval) };
+    sl_wifi_performance_profile_v2_t wifi_profile = { .profile = sl_si91x_wifi_state,
+                                                      // TODO: Performance profile fails if not alligned with DTIM
+                                                      .dtim_aligned_type = SL_SI91X_ALIGN_WITH_DTIM_BEACON,
+                                                      .listen_interval   = listenInterval };
 
-    sl_status_t status = sl_wifi_set_performance_profile(&wifi_profile);
+    sl_status_t status = sl_wifi_set_performance_profile_v2(&wifi_profile);
     VerifyOrReturnError(status == SL_STATUS_OK, status,
-                        ChipLogError(DeviceLayer, "sl_wifi_set_performance_profile failed: 0x%lx", status));
+                        ChipLogError(DeviceLayer, "sl_wifi_set_performance_profile_v2 failed: 0x%lx", status));
 
     return status;
 }

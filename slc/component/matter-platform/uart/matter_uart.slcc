@@ -1,7 +1,7 @@
 id: matter_uart
 label: Matter UART
 description: Enables sources and defines for UART as used by Matter components
-package: "Matter"
+package: matter
 category: Platform|UART
 quality: production
 metadata:
@@ -9,34 +9,34 @@ metadata:
     license: Zlib
 
 requires:
-   - name: uartdrv_eusart
-     condition:
-     - matter_platform_mg
+  - name: uartdrv_eusart
+    condition:
+      - matter_platform_mg
 
 provides:
   - name: matter_uart
-  - name: ot_uart_implemention
+  - name: ot_uart_implementation
 
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/uart.cpp
-  
+
 include:
-- path: third_party/matter_sdk/examples/platform/silabs
-  file_list:
-  - path: uart.h
-  
+  - path: third_party/matter_sdk/examples/platform/silabs
+    file_list:
+      - path: uart.h
+
 define:
   - name: CONFIG_ENABLE_EUART
     condition:
-    - matter_platform_mg
+      - matter_platform_mg
   - name: EFR32MG24
     condition:
-    - device_family_efr32mg24
-    - matter_platform_mg
+      - device_family_efr32mg24
+      - matter_platform_mg
   - name: MGM24
     condition:
-    - device_family_mgm24
-    - matter_platform_mg
+      - device_family_mgm24
+      - matter_platform_mg
   - name: SLI_SI91X_MCU_INTR_BASED_RX_ON_UART
     value: 1
     condition: [matter_platform_siwx917]

@@ -92,31 +92,19 @@ using namespace ::chip::DeviceLayer;
 
 AppTask AppTask::sAppTask;
 
-CHIP_ERROR AppTask::Init()
+CHIP_ERROR AppTask::AppInit()
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
-    app::SetAttributePersistenceProvider(&gDeferredAttributePersister);
     chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(AppTask::ButtonEventHandler);
     char rebootLightOnKey[] = "Reboot->LightOn";
     CharSpan rebootLighOnSpan(rebootLightOnKey);
     SILABS_TRACE_REGISTER(rebootLighOnSpan);
-
-#ifdef DISPLAY_ENABLED
-    GetLCD().Init((uint8_t *) "CMP-Lighting-App");
-#endif
 
 #ifdef SL_MATTER_ZIGBEE_CMP
     ChipLogProgress(AppServer, "Concurrent CMP app");
 #else
     ChipLogProgress(AppServer, "Sequential CMP app");
 #endif
-
-    err = BaseApplication::Init();
-    if (err != CHIP_NO_ERROR)
-    {
-        SILABS_LOG("BaseApplication::Init() failed");
-        appError(err);
-    }
 
     err = LightMgr().Init();
     if (err != CHIP_NO_ERROR)
@@ -167,8 +155,6 @@ CHIP_ERROR AppTask::Init()
         Zigbee::RequestStart();
     }
 #endif // SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
-
-    BaseApplication::InitCompleteCallback(err);
     return err;
 }
 
@@ -181,6 +167,10 @@ void AppTask::AppTaskMain(void * pvParameter)
 {
     AppEvent event;
     osMessageQueueId_t sAppEventQueue = *(static_cast<osMessageQueueId_t *>(pvParameter));
+
+    // Initialization that needs to happen before the BaseInit is called here as the BaseApplication::Init() will call
+    // the AppInit() after BaseInit.
+    app::SetAttributePersistenceProvider(&gDeferredAttributePersister);
 
     CHIP_ERROR err = sAppTask.Init();
     if (err != CHIP_NO_ERROR)

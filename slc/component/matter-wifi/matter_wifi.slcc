@@ -1,5 +1,5 @@
 id: matter_wifi
-package: Matter
+package: matter
 description: >
   matter wifi
 label: Matter WiFi
@@ -8,7 +8,7 @@ quality: production
 metadata:
   sbom:
     license: Zlib
-define: 
+define:
   - name: SL_WIFI
     value: 1
   - name: SL_HEAP_SIZE

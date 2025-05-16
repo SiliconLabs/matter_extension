@@ -58,20 +58,10 @@ constexpr uint8_t kOccupancyLedId = 0;
 
 AppTask AppTask::sAppTask;
 
-CHIP_ERROR AppTask::Init()
+CHIP_ERROR AppTask::AppInit()
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
     GetPlatform().SetButtonsCb(AppTask::ButtonEventHandler);
-#ifdef DISPLAY_ENABLED
-    GetLCD().Init((uint8_t *) SENSOR_NAME);
-#endif
-
-    err = BaseApplication::Init();
-    if (err != CHIP_NO_ERROR)
-    {
-        ChipLogError(AppServer, "BaseApplication::Init() failed");
-        appError(err);
-    }
 
     sOccupancyLed.Init(kOccupancyLedId);
     sOccupancyLed.Set(false);

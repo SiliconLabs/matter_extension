@@ -55,7 +55,12 @@ public:
 private:
     friend AppTask & GetAppTask(void);
 
-    CHIP_ERROR Init();
+    /**
+     * @brief Override of BaseApplication::AppInit() virtual method, called by BaseApplication::Init()
+     *
+     * @return CHIP_ERROR
+     */
+    CHIP_ERROR AppInit() override;
     static AppTask sAppTask;
     /**
      * @brief PB0 Button event processing function

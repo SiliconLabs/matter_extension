@@ -3,18 +3,18 @@ label: Matter Window App
 description: >
   Matter window-app
 quality: production
-package: Matter
+package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.2"
+    version: "2.6.0"
 
 provides:
   - name: window_app
 
 component:
   - id: device_init
-  - id: sl_system
+  - id: sl_main
   - id: clock_manager
   - id: matter_buttons
     from: matter
@@ -41,7 +41,7 @@ component:
     from: matter
 
   - id: matter_window
-    from: matter   
+    from: matter
   - id: app_common
     from: matter
 
@@ -105,13 +105,13 @@ component:
     from: matter
   - id: matter_log_uart
     from: matter
-    
+
 requires:
-# On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
-# Select UART/EUART drivers based on device series
+  # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
+  # Select UART/EUART drivers based on device series
   - name: matter_drivers_series_2
     condition:
-     - device_series_2
+      - device_series_2
 
 config_file:
   - path: ../../../../third_party/matter_sdk/examples/window-app/common/window-app.zap
@@ -124,11 +124,11 @@ config_file:
 include:
   - path: ../../../../third_party/matter_sdk/examples/window-app/silabs/include
     file_list:
-    - path: AppConfig.h
-    - path: CHIPProjectConfig.h
-    - path: WindowManager.h
-    - path: AppTask.h
-    - path: AppEvent.h
+      - path: AppConfig.h
+      - path: CHIPProjectConfig.h
+      - path: WindowManager.h
+      - path: AppTask.h
+      - path: AppEvent.h
     directory: include
 
 source:
@@ -172,23 +172,32 @@ configuration:
     value: 1
     condition: [matter_thread_coap_cert_libs]
 
-  - {name: SL_STACK_SIZE, value: '4608'} 
-  - {name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE, value: '1536'}
+  - name: SL_STACK_SIZE
+    value: "4608"
+  - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+    value: "1536"
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: 16
   - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS
-    value: 1 
+    value: 1
 
-# Default ICD configurations for window-app (SIT)
-  - {name: SL_IDLE_MODE_DURATION_S, value: '600'}
-  - {name: SL_ACTIVE_MODE_DURATION_MS, value: '0'}
-  - {name: SL_ACTIVE_MODE_THRESHOLD, value: '0'}
-  
-  - {name: SL_TRANSPORT_IDLE_INTERVAL, value: '5000'}
-  - {name: SL_TRANSPORT_ACTIVE_INTERVAL, value: '500'}
-  
-  - {name: CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED, value: '1'}
-  - {name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION, value: '0'}
+  # Default ICD configurations for window-app (SIT)
+  - name: SL_IDLE_MODE_DURATION_S
+    value: "600"
+  - name: SL_ACTIVE_MODE_DURATION_MS
+    value: "0"
+  - name: SL_ACTIVE_MODE_THRESHOLD
+    value: "0"
+
+  - name: SL_TRANSPORT_IDLE_INTERVAL
+    value: "5000"
+  - name: SL_TRANSPORT_ACTIVE_INTERVAL
+    value: "500"
+
+  - name: CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED
+    value: "1"
+  - name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION
+    value: "0"
 
 toolchain_settings:
   - option: cxx_standard
@@ -202,6 +211,6 @@ ui_hints:
       focus: false
 post_build:
   profile: application
-  
+
 other_file:
   - path: ../../../image/qr_code_img.png

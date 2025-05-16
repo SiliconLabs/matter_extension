@@ -1,7 +1,7 @@
 id: matter_platform_siwx917
 label: Platform for SiWx917
 description: SiWx917 platform support for Matter
-package: "Matter"
+package: matter
 category: "Matter-WiFi|Platform"
 quality: production
 metadata:
@@ -14,21 +14,20 @@ requires:
   - name: matter_siwx917_common
   - name: sl_si91x_trng
   - name: siwx917_soc_custom_hal
-  - name: device_init_nvic
   - name: si91x_debug
   - name: sl_system_init
   - name: nvm3_default
   - name: memory_manager
   - name: memory_manager_pool
-  - name: freertos_heap_3
-# TODO : psram components - should be removed with wiseconnect SDK support
+  - name: freertos_heap_4
+  # TODO : psram components - should be removed with wiseconnect SDK support
   - name: psram_core
     condition: [brd4342a]
   - name: psram_aps6404l_sqh
     condition: [brd4342a]
   - name: device_needs_ram_execution
     condition: [brd4342a]
-# Configure a text segment in the PSRAM region for boards with PSRAM support
+  # Configure a text segment in the PSRAM region for boards with PSRAM support
   - name: siwx917_text_segment_in_psram
     condition: [brd4342a]
 
@@ -38,17 +37,17 @@ provides:
   - name: matter_si91x_common_flash_nvm3_enabled
 
 include:
-- path: third_party/matter_sdk/examples/platform/silabs
-  file_list:
-  - path: PigweedLogger.h
-  - path: Rpc.h
-  - path: silabs_utils.h
-  - path: LEDWidget.h
-  - path: MatterConfig.h
-  - path: OTAConfig.h
-  - path: MemMonitoring.h
-  - path: BaseApplication.h
-  - path: SoftwareFaultReports.h
+  - path: third_party/matter_sdk/examples/platform/silabs
+    file_list:
+      - path: PigweedLogger.h
+      - path: Rpc.h
+      - path: silabs_utils.h
+      - path: LEDWidget.h
+      - path: MatterConfig.h
+      - path: OTAConfig.h
+      - path: MemMonitoring.h
+      - path: BaseApplication.h
+      - path: SoftwareFaultReports.h
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/BaseApplication.cpp
   - path: third_party/matter_sdk/examples/platform/silabs/silabs_utils.cpp

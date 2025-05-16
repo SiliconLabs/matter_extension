@@ -1,10 +1,9 @@
-
 category: Clusters|General
 description: >
   Implementation of the Access Control Server Cluster.
   The user has to enable the Access Control Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_access_control
-package: Matter
+package: matter
 label: Access Control Server Cluster
 quality: production
 metadata:

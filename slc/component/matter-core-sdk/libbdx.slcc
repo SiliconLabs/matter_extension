@@ -1,48 +1,48 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: libbdx
 id: libbdx
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/protocols/bdx
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/protocols/bdx
     file_list:
-    -   path: BdxTransferProxy.h
-    -   path: BdxUri.h
-    -   path: BdxTransferDiagnosticLogPool.h
-    -   path: TransferFacilitator.h
-    -   path: BdxTransferProxyDiagnosticLog.h
-    -   path: BdxTransferDiagnosticLog.h
-    -   path: DiagnosticLogs.h
-    -   path: BdxTransferServer.h
-    -   path: BdxTransferServerDelegate.h
-    -   path: BdxTransferSession.h
-    -   path: BdxMessages.h
-    -   path: StatusCode.h
+      - path: BdxTransferProxy.h
+      - path: BdxUri.h
+      - path: BdxTransferDiagnosticLogPool.h
+      - path: TransferFacilitator.h
+      - path: BdxTransferProxyDiagnosticLog.h
+      - path: BdxTransferDiagnosticLog.h
+      - path: DiagnosticLogs.h
+      - path: BdxTransferServer.h
+      - path: BdxTransferServerDelegate.h
+      - path: BdxTransferSession.h
+      - path: BdxMessages.h
+      - path: StatusCode.h
 label: libbdx
-package: Matter
+package: matter
 provides:
--   name: matter_libbdx
+  - name: matter_libbdx
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/protocols/bdx/BdxMessages.cpp
--   path: third_party/matter_sdk/src/protocols/bdx/BdxTransferDiagnosticLog.cpp
--   path: third_party/matter_sdk/src/protocols/bdx/BdxTransferProxyDiagnosticLog.cpp
--   path: third_party/matter_sdk/src/protocols/bdx/BdxTransferServer.cpp
--   path: third_party/matter_sdk/src/protocols/bdx/BdxTransferSession.cpp
--   path: third_party/matter_sdk/src/protocols/bdx/BdxUri.cpp
--   path: third_party/matter_sdk/src/protocols/bdx/StatusCode.cpp
--   path: third_party/matter_sdk/src/protocols/bdx/TransferFacilitator.cpp
+  - path: third_party/matter_sdk/src/protocols/bdx/BdxMessages.cpp
+  - path: third_party/matter_sdk/src/protocols/bdx/BdxTransferDiagnosticLog.cpp
+  - path: third_party/matter_sdk/src/protocols/bdx/BdxTransferProxyDiagnosticLog.cpp
+  - path: third_party/matter_sdk/src/protocols/bdx/BdxTransferServer.cpp
+  - path: third_party/matter_sdk/src/protocols/bdx/BdxTransferSession.cpp
+  - path: third_party/matter_sdk/src/protocols/bdx/BdxUri.cpp
+  - path: third_party/matter_sdk/src/protocols/bdx/StatusCode.cpp
+  - path: third_party/matter_sdk/src/protocols/bdx/TransferFacilitator.cpp
 ui_hints:
-    visibility: never
+  visibility: never

@@ -1,37 +1,37 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: librawtransport
 id: librawtransport
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/transport/raw
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/transport/raw
     file_list:
-    -   path: BLE.h
-    -   path: PeerAddress.h
-    -   path: Tuple.h
-    -   path: MessageHeader.h
-    -   path: UDP.h
-    -   path: Base.h
+      - path: BLE.h
+      - path: PeerAddress.h
+      - path: Tuple.h
+      - path: MessageHeader.h
+      - path: UDP.h
+      - path: Base.h
 label: librawtransport
-package: Matter
+package: matter
 provides:
--   name: matter_librawtransport
+  - name: matter_librawtransport
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/transport/raw/BLE.cpp
--   path: third_party/matter_sdk/src/transport/raw/MessageHeader.cpp
--   path: third_party/matter_sdk/src/transport/raw/UDP.cpp
+  - path: third_party/matter_sdk/src/transport/raw/BLE.cpp
+  - path: third_party/matter_sdk/src/transport/raw/MessageHeader.cpp
+  - path: third_party/matter_sdk/src/transport/raw/UDP.cpp
 ui_hints:
-    visibility: never
+  visibility: never

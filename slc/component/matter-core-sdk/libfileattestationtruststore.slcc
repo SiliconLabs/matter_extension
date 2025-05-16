@@ -1,35 +1,35 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: libfileattestationtruststore
 id: libfileattestationtruststore
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/credentials/attestation_verifier
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/credentials/attestation_verifier
     file_list:
-    -   path: DefaultDeviceAttestationVerifier.h
-    -   path: DacOnlyPartialAttestationVerifier.h
-    -   path: DeviceAttestationDelegate.h
-    -   path: FileAttestationTrustStore.h
-    -   path: TestPAAStore.h
-    -   path: DeviceAttestationVerifier.h
+      - path: DefaultDeviceAttestationVerifier.h
+      - path: DacOnlyPartialAttestationVerifier.h
+      - path: DeviceAttestationDelegate.h
+      - path: FileAttestationTrustStore.h
+      - path: TestPAAStore.h
+      - path: DeviceAttestationVerifier.h
 label: libfileattestationtruststore
-package: Matter
+package: matter
 provides:
--   name: matter_libfileattestationtruststore
+  - name: matter_libfileattestationtruststore
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/credentials/attestation_verifier/FileAttestationTrustStore.cpp
+  - path: third_party/matter_sdk/src/credentials/attestation_verifier/FileAttestationTrustStore.cpp
 ui_hints:
-    visibility: never
+  visibility: never

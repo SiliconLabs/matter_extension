@@ -261,7 +261,7 @@ TEST_F(TestSilabsTracing, TestBootupSequence)
     // Simulate Silabs Init
     SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSilabsInit);
     gMockClock.AdvanceMonotonic(150_ms64);
-
+    gMockClock.SetMonotonic(0_ms64); // Resetting to 0 since reboot should reset the monotonic clock
     SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kBootup);
     // Simulate Silabs Init
     SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSilabsInit);
@@ -572,6 +572,7 @@ TEST_F(TestSilabsTracing, TestOTA)
     EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
 
     // Simulate Bootup steps after OTA failure
+    gMockClock.SetMonotonic(0_ms64); // Resetting to 0 since reboot should reset the monotonic clock
     SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kBootup);
     gMockClock.AdvanceMonotonic(200_ms64);
     SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kBootup);
@@ -626,6 +627,7 @@ TEST_F(TestSilabsTracing, TestLogs)
     SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kOTA);
 
     // Simulate Bootup steps
+    gMockClock.SetMonotonic(0_ms64); // Resetting to 0 since reboot should reset the monotonic clock
     SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kBootup);
     gMockClock.AdvanceMonotonic(200_ms64);
     SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kBootup);
@@ -674,7 +676,7 @@ TEST_F(TestSilabsTracing, TestLogs)
     span = MutableCharSpan(logBuffer);
     EXPECT_EQ(SilabsTracer::Instance().GetTraceByOperation(to_underlying(TimeTraceOperation::kBootup), span), CHIP_NO_ERROR);
     const char * expectedBootupLogFormat =
-        "TimeTracker - Type: End, Operation: Bootup, Status: 0x0, Start: 00:00:00.100, End: 00:00:00.300, Duration: 00:00:00.200";
+        "TimeTracker - Type: End, Operation: Bootup, Status: 0x0, Start: 00:00:00.000, End: 00:00:00.200, Duration: 00:00:00.200";
     EXPECT_STREQ(span.data(), expectedBootupLogFormat);
 
     // Test buffer too small behavior

@@ -45,17 +45,15 @@ public:
     void SetAutoTurnOffDuration(uint32_t aDurationInSecs);
     bool InitiateAction(int32_t aActor, Action_t aAction);
 
-    typedef void (*Callback_fn_initiated)(Action_t, int32_t aActor);
-    typedef void (*Callback_fn_completed)(Action_t);
-    void SetCallbacks(Callback_fn_initiated aActionInitiated_CB, Callback_fn_completed aActionCompleted_CB);
+    typedef void (*Callback_fn_action)(Action_t, int32_t aActor);
+    void SetCallbacks(Callback_fn_action aAction_CB);
 
     static void OnTriggerOffWithEffect(OnOffEffect * effect);
 
 private:
     friend OnOffPlugManager & PlugMgr(void);
 
-    Callback_fn_initiated mActionInitiated_CB;
-    Callback_fn_completed mActionCompleted_CB;
+    Callback_fn_action mAction_CB;
 
     bool mIsOn;
     bool mAutoTurnOff;

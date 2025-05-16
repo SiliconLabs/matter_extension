@@ -31,10 +31,10 @@
 #include "DishwasherManager.h"
 #include "FreeRTOS.h"
 #include "timers.h" // provides FreeRTOS timer support
-#include <ble/BLEEndPoint.h>
 #include <app/clusters/operational-state-server/operational-state-server.h>
-#include <lib/core/ClusterEnums.h>
+#include <ble/BLEEndPoint.h>
 #include <lib/core/CHIPError.h>
+#include <lib/core/ClusterEnums.h>
 #include <platform/CHIPDeviceLayer.h>
 
 /**********************************************************
@@ -84,11 +84,11 @@ public:
 private:
     static AppTask sAppTask;
     /**
-     * @brief AppTask initialisation function
+     * @brief Override of BaseApplication::AppInit() virtual method, called by BaseApplication::Init()
      *
      * @return CHIP_ERROR
      */
-    CHIP_ERROR Init();
+    CHIP_ERROR AppInit() override;
 
     /**
      * @brief PB0 Button event processing function
@@ -104,7 +104,7 @@ private:
      *        Function triggers a switch action sent to the CHIP task
      *
      * @param aEvent button event being processed
-    */
+     */
     static void DishwasherActionEventHandler(AppEvent * aEvent);
 
     static void ActionInitiated(OperationalStateEnum action);

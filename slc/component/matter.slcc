@@ -1,7 +1,7 @@
 id: matter
 label: Matter Core Components
 description: Bundles all necessary core Matter components
-package: "Matter"
+package: matter
 category: Stack
 quality: production
 metadata:
@@ -14,11 +14,11 @@ config_file:
       file_id: freertos_config
   - path: slc/config/sl_matter_config.h
     file_id: matter_config
-# ICD configuration is needed by the core SDK (ICD end device or not)
+  # ICD configuration is needed by the core SDK (ICD end device or not)
   - path: slc/inc/app/icd/server/ICDServerBuildConfig.h
     file_id: matter_icd_server_build_config
     directory: app/icd/server
-# Tracing configuration is needed by the core SDK regardless of tracing enablement
+  # Tracing configuration is needed by the core SDK regardless of tracing enablement
   - path: slc/inc/matter/tracing/build_config.h
     file_id: build_config
     directory: matter/tracing
@@ -47,20 +47,20 @@ toolchain_settings:
 provides:
   - name: matter
 define:
-  - name: SL_MATTER_GN_BUILD 
+  - name: SL_MATTER_GN_BUILD
     value: 0
-    
+
 include:
-- path: third_party/matter_sdk
-# This should be removed in the next matter_sdk update
-- path: third_party/matter_sdk/src/app/icd/server
-  file_list:
-  -   path: ICDCheckInBackOffStrategy.h
-  -   path: ICDMonitoringTable.h
+  - path: third_party/matter_sdk
+  # This should be removed in the next matter_sdk update
+  - path: third_party/matter_sdk/src/app/icd/server
+    file_list:
+      - path: ICDCheckInBackOffStrategy.h
+      - path: ICDMonitoringTable.h
 requires:
   - name: cpp_support
 
-# Matter over Thread and Matter over Wifi uses these separate components per networking protocol
+  # Matter over Thread and Matter over Wifi uses these separate components per networking protocol
 
   - name: matter_dnssd
     condition: [matter_thread]
@@ -69,7 +69,7 @@ requires:
 
   - name: matter_libinetlayer
     condition: [matter_thread]
-  - name: matter_thread_network_diagnostics  
+  - name: matter_thread_network_diagnostics
     condition: [matter_thread]
   - name: matter_libinetlayer_wifi
     condition: [matter_wifi]
