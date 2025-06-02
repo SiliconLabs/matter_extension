@@ -149,6 +149,7 @@ include:
       - path: Efr32OpaqueKeypair.h
       - path: efr32-psa-crypto-config.h
       - path: efr32-chip-mbedtls-config.h
+      - path: BLEChannel.h
   - path: third_party/matter_sdk/src/platform/OpenThread
     file_list:
       - path: OpenThreadUtils.h

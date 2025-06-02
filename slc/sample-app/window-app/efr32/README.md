@@ -1,7 +1,7 @@
 # Matter EFR32 Window Covering Example
 
 The EFR32 window-covering example provides a baseline demonstration of a Window
-Covering device, built using Matter and the Silicon Labs Gecko SDK. It can be
+Covering device, built using Matter and the Silicon Labs simplicity SDK. It can be
 controlled by a Matter controller over an Openthread network.
 
 The EFR32 device can be commissioned over Bluetooth Low Energy where the device

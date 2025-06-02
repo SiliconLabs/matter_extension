@@ -17,7 +17,8 @@ requires:
   - name: bluetooth_feature_connection
   - name: bluetooth_feature_connection_role_peripheral
   - name: matter_gatt
-
+recommends:
+  - name: matter_gatt_static
 provides:
   - name: matter_ble
 template_contribution:

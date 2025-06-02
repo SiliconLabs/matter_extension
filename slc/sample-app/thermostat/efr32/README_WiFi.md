@@ -1,7 +1,7 @@
 # Matter EFR32 Thermostat Example
 
 The EFR32 Thermostat example provides a baseline demonstration of a thermostat
-device, built using Matter and the Silicon Labs Gecko SDK. It can be controlled
+device, built using Matter and the Silicon Labs simplicity SDK. It can be controlled
 by a Matter controller over Wifi network.
 
 The EFR32 device can be commissioned over Bluetooth Low Energy where the device

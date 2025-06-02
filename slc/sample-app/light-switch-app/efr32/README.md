@@ -1,7 +1,7 @@
 # Matter EFR32 Light Switch Example
 
 The EFR32 light switch example provides a baseline demonstration of a on-off
-light switch device, built using Matter and the Silicon Labs Gecko SDK. It can
+light switch device, built using Matter and the Silicon Labs simplicity SDK. It can
 be controlled by a Matter controller over an Openthread network.
 
 This example showcases how a Light Switch device would operate as a Long Idle Time ICD.

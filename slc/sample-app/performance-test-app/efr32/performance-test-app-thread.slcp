@@ -36,7 +36,7 @@ component:
     from: matter
   - id: matter_shell
     from: matter
-  - id: matter_gatt
+  - id: matter_gatt_static
     from: matter
   - id: matter_provision_default
     from: matter

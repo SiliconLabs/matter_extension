@@ -3,7 +3,7 @@ package: matter
 quality: production
 label: Bootloader - SoC Internal Storage (single image on 512kB device)
 description: >
-  This sample configuration of the Gecko bootloader configures the bootloader to use the internal main flash to store firmware update images. The storage configuration is set up to store a single firmware update image at a time, in a single storage slot. The storage slot is configured to start at address 0x44000 (or 0x8044000 for device with 0x8000000 flash base), and have a size of 192 kB. This can be configured on the "Storage" tab. This bootloader is compatible with Matter sample examples running on a Series 2 device.
+  This sample configuration of the simplicity bootloader configures the bootloader to use the internal main flash to store firmware update images. The storage configuration is set up to store a single firmware update image at a time, in a single storage slot. The storage slot is configured to start at address 0x44000 (or 0x8044000 for device with 0x8000000 flash base), and have a size of 192 kB. This can be configured on the "Storage" tab. This bootloader is compatible with Matter sample examples running on a Series 2 device.
 
 sdk_extension:
   - id: matter

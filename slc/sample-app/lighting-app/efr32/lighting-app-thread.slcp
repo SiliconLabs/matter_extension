@@ -36,7 +36,7 @@ component:
     from: matter
   - id: matter_shell
     from: matter
-  - id: matter_gatt
+  - id: matter_gatt_static
     from: matter
   - id: matter_provision_default
     from: matter
@@ -155,6 +155,9 @@ define:
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
     value: "4092"
 configuration:
+  - name: SL_BT_CONFIG_USER_ADVERTISERS
+    value: 2
+    condition: [matter_ble_side_channel]
   - name: SL_TOKEN_MANAGER_STATIC_SECURE_TOKEN_SIZE
     value: 8192
     condition: [device_series_3]

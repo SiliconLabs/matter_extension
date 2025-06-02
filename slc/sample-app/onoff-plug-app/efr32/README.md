@@ -1,7 +1,7 @@
 # Matter EFR32 OnOff Plug Example
 
 The EFR32 OnOff Plug example provides a baseline demonstration of an OnOff Plug control
-device, built using Matter and the Silicon Labs Gecko SDK. It can be controlled
+device, built using Matter and the Silicon Labs simplicity SDK. It can be controlled
 by a Matter controller over an OpenThread network.
 
 The EFR32 device can be commissioned over Bluetooth Low Energy (BLE) where the device

@@ -15,8 +15,10 @@ requires:
   - name: matter_multi_image_ota
 
 source:
-  - path: third_party/matter_sdk/src/platform/silabs/multi-ota/OtaTlvEncryptionKey.cpp
-
+  - path: third_party/matter_sdk/src/platform/silabs/multi-ota/OtaTlvEncryptionKeyPSA.cpp
+    condition: [matter_platform_mg]
+  - path: third_party/matter_sdk/src/platform/silabs/multi-ota/OtaTlvEncryptionKeyMbed.cpp
+    condition: [matter_platform_siwx917]
 include:
   - path: third_party/matter_sdk/src/platform/silabs/multi-ota
     file_list:

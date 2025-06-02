@@ -10,14 +10,21 @@
 #define CHIP_SYSTEM_CONFIG_USE_DISPATCH             0
 #ifndef SL_WIFI
 #define CHIP_SYSTEM_CONFIG_USE_LWIP                 0
+#define CHIP_SYSTEM_CONFIG_USE_SOCKETS              0
 #define CHIP_SYSTEM_CONFIG_USE_OPEN_THREAD_ENDPOINT 1
 #else
+#if SL_WIFI_USE_SOCKETS
+#define CHIP_SYSTEM_CONFIG_USE_LWIP                 0
+#define CHIP_SYSTEM_CONFIG_USE_SOCKETS              1
+#else
 #define CHIP_SYSTEM_CONFIG_USE_LWIP                 1
+#define CHIP_SYSTEM_CONFIG_USE_SOCKETS              0
+#endif // SL_WIFI_USE_SOCKETS
 #define CHIP_SYSTEM_CONFIG_USE_OPEN_THREAD_ENDPOINT 0
 #endif  // SL_WIFI
-#define CHIP_SYSTEM_CONFIG_USE_SOCKETS              0
 #define CHIP_SYSTEM_CONFIG_USE_NETWORK_FRAMEWORK    0
 #define CHIP_SYSTEM_CONFIG_POSIX_LOCKING            0
+#define CHIP_SYSTEM_CONFIG_USE_FREERTOS_SOCKETS     (CHIP_SYSTEM_CONFIG_USE_SOCKETS)
 #define CHIP_SYSTEM_CONFIG_FREERTOS_LOCKING         1
 #define CHIP_SYSTEM_CONFIG_MBED_LOCKING             0
 #define CHIP_SYSTEM_CONFIG_NO_LOCKING               0
@@ -30,11 +37,15 @@
 #define HAVE_ICMP6_FILTER                           1
 #define CONFIG_HAVE_VCBPRINTF                       0
 #define CONFIG_HAVE_VSNPRINTF_EX                    0
-#define HAVE_SYS_SOCKET_H                           0
+#define HAVE_SYS_SOCKET_H                           (CHIP_SYSTEM_CONFIG_USE_SOCKETS)
 #define CHIP_PROJECT_CONFIG_INCLUDE                 <CHIPProjectConfig.h>
 #define CHIP_PLATFORM_CONFIG_INCLUDE                <platform/silabs/CHIPPlatformConfig.h>
 #define SYSTEM_PROJECT_CONFIG_INCLUDE               <CHIPProjectConfig.h>
 #define SYSTEM_PLATFORM_CONFIG_INCLUDE              <platform/silabs/SystemPlatformConfig.h>
+#if SL_WIFI_USE_SOCKETS
+#define CHIP_SYSTEM_LAYER_IMPL_CONFIG_FILE          <system/SystemLayerImplFreeRTOSSockets.h>
+#else
 #define CHIP_SYSTEM_LAYER_IMPL_CONFIG_FILE          <system/SystemLayerImplFreeRTOS.h>
+#endif
 
 #endif  // SYSTEM_SYSTEMBUILDCONFIG_H_

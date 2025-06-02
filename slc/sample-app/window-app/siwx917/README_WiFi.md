@@ -1,7 +1,7 @@
 # Matter SiWx917 SoC Window Covering Example
 
 The SiWx917 SoC window-covering example provides a baseline demonstration of a Window
-Covering device, built using Matter and the Silicon Labs Gecko SDK. It can be
+Covering device, built using Matter and the Silicon Labs simplicity SDK. It can be
 controlled by a Matter controller over Wifi network.
 
 The SiWx917 SoC device can be commissioned over Bluetooth Low Energy where the device

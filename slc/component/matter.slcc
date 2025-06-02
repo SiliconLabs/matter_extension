@@ -62,10 +62,8 @@ requires:
 
   # Matter over Thread and Matter over Wifi uses these separate components per networking protocol
 
-  - name: matter_dnssd
+  - name: matter_dnssd_platform
     condition: [matter_thread]
-  - name: matter_dnssd_wifi
-    condition: [matter_wifi]
 
   - name: matter_libinetlayer
     condition: [matter_thread]

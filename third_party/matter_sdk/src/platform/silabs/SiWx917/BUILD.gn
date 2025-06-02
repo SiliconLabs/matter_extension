@@ -14,10 +14,9 @@
 
 import("//build_overrides/chip.gni")
 
-import("${chip_root}/src/platform/device.gni")
-
 import("${chip_root}/build/chip/buildconfig_header.gni")
 import("${chip_root}/src/crypto/crypto.gni")
+import("${chip_root}/src/platform/device.gni")
 import("${chip_root}/src/platform/silabs/wifi/args.gni")
 import("${chip_root}/third_party/silabs/SiWx917_sdk.gni")
 import("${chip_root}/third_party/silabs/silabs_board.gni")
@@ -65,9 +64,6 @@ static_library("SiWx917") {
     "${silabs_platform_dir}/SilabsConfig.cpp",
     "${silabs_platform_dir}/SilabsConfig.h",
     "${silabs_platform_dir}/SystemPlatformConfig.h",
-    "${silabs_platform_dir}/platformAbstraction/SilabsPlatform.h",
-    "${silabs_platform_dir}/platformAbstraction/SilabsPlatformBase.h",
-    "${silabs_platform_dir}/platformAbstraction/WiseMcuSpam.cpp",
     "../../FreeRTOS/SystemTimeSupport.cpp",
     "../../SingletonConfigurationManager.cpp",
     "../rs911x/BLEManagerImpl.cpp",
@@ -77,21 +73,47 @@ static_library("SiWx917") {
     "SiWxPlatformInterface.h",
   ]
 
-  if (chip_enable_ota_requestor) {
-    sources += [
-      "${silabs_platform_dir}/OTAImageProcessorImpl.h",
-      "OTAImageProcessorImpl.cpp",
-    ]
-  }
-
   public_deps = [
     "${chip_root}/src/app/icd/server:icd-server-config",
     "${chip_root}/src/platform:platform_base",
+    "${silabs_platform_dir}/platformAbstraction:wisemcu",
   ]
   deps = [
     "${chip_root}/src/platform/logging:headers",
     "${sl_provision_root}:headers",
   ]
+
+  if (chip_enable_multi_ota_requestor) {
+    if (chip_enable_multi_ota_encryption) {
+      sources += [
+        "${silabs_platform_dir}/multi-ota/OtaTlvEncryptionKey.cpp",
+        "${silabs_platform_dir}/multi-ota/OtaTlvEncryptionKey.h",
+      ]
+    }
+
+    if (chip_enable_ota_custom_tlv_testing) {
+      sources += [
+        "${silabs_platform_dir}/multi-ota/OTACustomProcessor.cpp",
+        "${silabs_platform_dir}/multi-ota/OTACustomProcessor.h",
+      ]
+    }
+    sources += [
+      "${silabs_platform_dir}/multi-ota/OTAFactoryDataProcessor.cpp",
+      "${silabs_platform_dir}/multi-ota/OTAFactoryDataProcessor.h",
+      "${silabs_platform_dir}/multi-ota/OTAHooks.cpp",
+      "${silabs_platform_dir}/multi-ota/OTAMultiImageProcessorImpl.cpp",
+      "${silabs_platform_dir}/multi-ota/OTAMultiImageProcessorImpl.h",
+      "${silabs_platform_dir}/multi-ota/OTATlvProcessor.cpp",
+      "${silabs_platform_dir}/multi-ota/OTATlvProcessor.h",
+      "${silabs_platform_dir}/multi-ota/SiWx917/OTAWiFiFirmwareProcessor.cpp",
+      "${silabs_platform_dir}/multi-ota/SiWx917/OTAWiFiFirmwareProcessor.h",
+    ]
+  } else if (chip_enable_ota_requestor) {
+    sources += [
+      "${silabs_platform_dir}/OTAImageProcessorImpl.h",
+      "OTAImageProcessorImpl.cpp",
+    ]
+  }
 
   # Add platform crypto implementation
   if (chip_crypto == "platform") {

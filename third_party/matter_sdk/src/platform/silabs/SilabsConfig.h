@@ -229,6 +229,16 @@ public:
     static CHIP_ERROR WriteConfigValue(Key key, uint16_t val);
     static CHIP_ERROR WriteConfigValue(Key key, uint32_t val);
     static CHIP_ERROR WriteConfigValue(Key key, uint64_t val);
+    /** @brief WriteConfigValueStr
+     *  Write a string to the NVM3 storage. This function can be called without providing the length of the string.
+     *  In that case, the length is calculated using strlen() function. Note, this is unsafe as it can lead to buffer
+     *  overflow if the string is not null terminated. We need to support this since the Matter unit test expect
+     *  our API to successfully be able to write a string without providing the length, however we recommend to always
+     *  provide the length of the string.
+     *  @param key The NVM3 key to write the string to.
+     *  @param str The string to write.
+     *  @param strLen The length of the string to write. If 0, the length is calculated using strlen() if the string is not null.
+     */
     static CHIP_ERROR WriteConfigValueStr(Key key, const char * str, size_t strLen = 0);
     static CHIP_ERROR WriteConfigValueBin(Key key, const uint8_t * data, size_t dataLen);
     static CHIP_ERROR WriteConfigValueCounter(uint8_t counterIdx, uint32_t val);

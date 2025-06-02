@@ -17,7 +17,6 @@ component:
   - id: iostream_stdio
   - id: segger_rtt
   #Zigbee Components
-  - id: zigbee_ble_dmp_cli
   - id: zigbee_address_table
   - id: zigbee_application_bootloader
   - id: zigbee_security_link_keys
@@ -103,6 +102,7 @@ component:
   - { from: matter, id: matter_log_uart }
   - { from: matter, id: matter_tracing }
   - { from: matter, id: matter_zigbee_multiprotocol_common }
+  - { from: matter, id: matter_ble_side_channel}
 
   #Matter components wrapper from simplicity_sdk
   - { from: matter, id: matter_default_lcd_config }
@@ -159,7 +159,12 @@ configuration:
   - name: SL_CLI_PROMPT_STRING
     value: '"TriProtocol>"'
   - name: SL_BT_CONFIG_USER_ADVERTISERS
+    value: 2
+    condition: [matter_ble_side_channel]
+    unless: [matter_ble_dmp_test]
+  - name: SL_BT_CONFIG_USER_ADVERTISERS
     value: 3
+    condition: [matter_ble_dmp_test]
   - name: SL_BT_CONFIG_MAX_CONNECTIONS
     value: 4
   - name: LIB_MEM_CFG_HEAP_SIZE
@@ -199,6 +204,10 @@ configuration:
     value: 1
   - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
     value: 1536
+  - name: SL_BT_RTOS_LINK_LAYER_TASK_STACK_SIZE
+    value: 1088
+    condition:
+      - device_series_2
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: 16
   - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS
@@ -236,16 +245,18 @@ define:
   - name: SL_CLI_TICK_ENABLE
     value: 0
 
+
 config_file:
   - path: ../../../../examples/zigbee-matter-light/config/sl_cmp_config.h
   - path: ../../../../examples/zigbee-matter-light/config/zcl/zcl_config.zap
     file_id: zap_config
     directory: common
-  - override:
-      component: gatt_configuration
-      file_id: gatt_configuration_file_id
-    path: ../../../../third_party/matter_sdk/examples/platform/silabs/gatt_configuration.btconf
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/gatt_configuration.btconf
     directory: btconf
+    unless: [matter_ble_dmp_test, matter_gatt_static]
+  - path: ../../../../examples/zigbee-matter-light/config/btconf/gatt_configuration.btconf
+    directory: btconf
+    condition: [matter_ble_dmp_test]
 
 source:
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp

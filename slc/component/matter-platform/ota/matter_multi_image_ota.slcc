@@ -24,7 +24,12 @@ source:
   - path: third_party/matter_sdk/src/platform/silabs/multi-ota/OTAFactoryDataProcessor.cpp
   - path: third_party/matter_sdk/src/platform/silabs/multi-ota/OTATlvProcessor.cpp
   - path: third_party/matter_sdk/src/platform/silabs/multi-ota/OTAFirmwareProcessor.cpp
+    condition: [matter_platform_mg]
   - path: third_party/matter_sdk/src/platform/silabs/multi-ota/OTAHooks.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/multi-ota/SiWx917/OTAWiFiFirmwareProcessor.cpp
+    condition: [siwx917_ncp]
+  - path: third_party/matter_sdk/src/platform/silabs/multi-ota/SiWx917/OTAWiFiFirmwareProcessor.cpp
+    condition: [matter_platform_siwx917]
 
 include:
   - path: third_party/matter_sdk/src/platform/silabs/multi-ota
@@ -33,6 +38,13 @@ include:
       - path: OTAFactoryDataProcessor.h
       - path: OTATlvProcessor.h
       - path: OTAFirmwareProcessor.h
+        condition: [matter_platform_mg]
+  - path: third_party/matter_sdk/src/platform/silabs/multi-ota/SiWx917
+    file_list:
+      - path: OTAWiFiFirmwareProcessor.h
+        condition: [siwx917_ncp]
+      - path: OTAWiFiFirmwareProcessor.h
+        condition: [matter_platform_siwx917]
 
 config_file:
   - path: slc/config/sl_matter_ota_config.h

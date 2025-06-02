@@ -1,0 +1,22 @@
+id: matter_stack_monitoring
+label: Monitor Stack
+description: Prints stack usage to console
+package: matter
+category: Platform|Utils
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+provides:
+  - name: matter_stack_monitoring
+include:
+  - path: third_party/matter_sdk/examples/platform/silabs/
+    file_list:
+      - path: MemMonitoring.h
+source:
+  - path: third_party/matter_sdk/examples/platform/silabs/MemMonitoring.cpp
+requires:
+  - name: cmsis_rtos2_headers
+define:
+  - name: HEAP_MONITORING
+

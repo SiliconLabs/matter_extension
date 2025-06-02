@@ -7,6 +7,11 @@ quality: production
 metadata:
   sbom:
     license: Zlib
+config_file:
+  - path: third_party/matter_sdk/src/lwip/silabs/lwipopts.h
+    override:
+      component: "%extension-wiseconnect3_sdk%wifi_resources"
+      file_id: lwipopts
 
 requires:
   - name: sl_system

@@ -1,0 +1,40 @@
+# Re-work this component to implement proper matter_sdk source code and/or SiSDK/WiFi SDK components
+id: matter_sockets
+package: matter
+description: >
+  Matter FreeRTOS Sockets stack for Wi-Fi 917 devices leveraging BSD-style TCP/IP communication protocols.
+label: Matter FreeRTOS Sockets Implementation
+category: Matter-WiFi|Sockets
+quality: experimental
+metadata:
+  sbom:
+    license: Zlib
+provides:
+  - name: matter_sockets
+requires:
+  - name: mdns
+  - name: bsd_socket
+  - name: sl_si91x_asynchronous_socket
+  - name: matter_dnssd_platform
+include:
+  - path: third_party/matter_support/sockets
+    file_list:
+      - path: ifaddrs.h
+      - path: net/if.h
+      - path: netinet/in.h
+      - path: sys/ioctl.h
+      - path: sys/sockets.h
+source:
+  - path: third_party/matter_sdk/src/platform/silabs/wifi/DnssdImpl.cpp
+define:
+  - name: _STRUCT_TIMESPEC
+    value: 1
+  - name: configUSE_POSIX_ERRNO
+    value: 1
+  - name: SLI_SI91X_ENABLE_IPV6
+    value: 1
+  - name: SL_WIFI_USE_SOCKETS
+    value: 1
+
+conflicts:
+  - name: matter_lwip

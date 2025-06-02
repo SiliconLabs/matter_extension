@@ -48,6 +48,9 @@ source:
   - path: third_party/matter_sdk/src/system/SystemError.cpp
   - path: third_party/matter_sdk/src/system/SystemLayer.cpp
   - path: third_party/matter_sdk/src/system/SystemLayerImplFreeRTOS.cpp
+    unless: [matter_sockets]
+  - path: third_party/matter_sdk/src/system/SystemLayerImplFreeRTOSSockets.cpp
+    condition: [matter_sockets]
   - path: third_party/matter_sdk/src/system/SystemMutex.cpp
   - path: third_party/matter_sdk/src/system/SystemPacketBuffer.cpp
   - path: third_party/matter_sdk/src/system/SystemStats.cpp

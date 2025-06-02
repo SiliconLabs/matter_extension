@@ -1,0 +1,23 @@
+id: matter_gatt_dynamic
+label: GATT Configuration with MATTERoBLE and Dynamic GATT
+description: >
+  Adds GATT Configuration required for Matter to commission over ble and allow for modifying
+  the GATT database at runtime.
+package: matter
+category: Stack|Bluetooth
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+provides:
+-   name: gatt_configuration
+-   name: matter_gatt
+-   name: matter_gatt_dynamic
+requires:
+  - name: bluetooth_gattdb_definition
+  - name: bluetooth_feature_dynamic_gattdb
+conflicts:
+-   name: matter_gatt_static
+template_contribution:
+  - name: component_catalog
+    value: gatt_configuration

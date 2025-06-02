@@ -18,6 +18,9 @@ provides:
 requires:
   - name: lwip_api
   - name: lwip_netif_ethernet
+  - name: matter_dnssd_minimal
+  - name: sl_si91x_lwip_stack
+    condition: [sl_si91x_wireless]
 
 include:
   - path: third_party/matter_sdk/src/lwip/silabs
@@ -31,11 +34,6 @@ include:
   - path: slc/inc/lwip
     file_list:
       - path: lwip_buildconfig.h
-  - path: slc/inc/wifi
-    file_list:
-      - path: brd4186c.h
-      - path: brd4187c.h
-      - path: sl_custom_board.h
   - path: third_party/matter_sdk/src/lwip/freertos
     file_list:
       - path: arch/sys_arch.h
@@ -48,3 +46,6 @@ define:
     value: 1
   - name: LWIP_IPV6
     value: 1
+
+conflicts:
+  - name: matter_sockets

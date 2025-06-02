@@ -23,5 +23,4 @@ config_file:
 provides:
   - name: matter_wifi
 requires:
-  - name: matter_lwip
   - name: matter_minimal_mdns
