@@ -75,7 +75,7 @@
 
 #include <inet/InetInterface.h>
 
-#define NL_INET_IPV6_ADDR_LEN_IN_BYTES (16)
+#define NL_INET_IPV6_ADDR_LEN_IN_BYTES        (16)
 #define NL_INET_IPV6_MCAST_GROUP_LEN_IN_BYTES (14)
 
 namespace chip {
@@ -84,14 +84,13 @@ namespace Inet {
 /**
  * Internet protocol address family
  */
-enum class IPAddressType : uint8_t
-{
+enum class IPAddressType : uint8_t {
     kUnknown = 0, ///< Not used.
 #if INET_CONFIG_ENABLE_IPV4
     kIPv4 = 1, ///< Internet protocol version 4.
-#endif         // INET_CONFIG_ENABLE_IPV4
+#endif // INET_CONFIG_ENABLE_IPV4
     kIPv6 = 2, ///< Internet protocol version 6.
-    kAny  = 3  ///< The unspecified internet address (independent of protocol version).
+    kAny = 3 ///< The unspecified internet address (independent of protocol version).
 };
 
 /**
@@ -100,8 +99,7 @@ enum class IPAddressType : uint8_t
  *  Values of the \c IPv6MulticastFlag type are used to call the <tt>IPAddress::MakeIPv6Multicast()</tt> methods.
  *  They indicate the type of IPv6 multicast address to create. These numbers are registered by IETF with IANA.
  */
-enum class IPv6MulticastFlag : uint8_t
-{
+enum class IPv6MulticastFlag : uint8_t {
     /** The multicast address is (1) transient (i.e., dynamically-assigned) rather than (0) well-known (i.e, IANA-assigned). */
     kTransient = 0x01,
 
@@ -119,8 +117,7 @@ using IPv6MulticastFlags = BitFlags<IPv6MulticastFlag>;
  * It can also be used when calling an API that accepts a sockaddr, to simplify
  * the type-punning needed.
  */
-union SockAddr
-{
+union SockAddr {
     sockaddr any;
     sockaddr_in in;
     sockaddr_in6 in6;
@@ -133,8 +130,7 @@ union SockAddr
  * an existing sockaddr pointer, and reintepret it as a
  * pointer-to-SockAddrWithoutStorage).
  */
-union SockAddrWithoutStorage
-{
+union SockAddrWithoutStorage {
     sockaddr any;
     sockaddr_in in;
     sockaddr_in6 in6;
@@ -149,8 +145,7 @@ union SockAddrWithoutStorage
  *  protocol addresses (independent of protocol version).
  *
  */
-class DLL_EXPORT IPAddress
-{
+class DLL_EXPORT IPAddress {
 public:
     /**
      * Maximum length of the string representation of an IP address, including a terminating NUL.
@@ -172,22 +167,22 @@ public:
     IPAddress() = default;
 
 #if CHIP_SYSTEM_CONFIG_USE_LWIP && !CHIP_SYSTEM_CONFIG_USE_OPEN_THREAD_ENDPOINT
-    explicit IPAddress(const ip6_addr_t & ipv6Addr);
+    explicit IPAddress(const ip6_addr_t& ipv6Addr);
 #if INET_CONFIG_ENABLE_IPV4 || LWIP_IPV4
-    explicit IPAddress(const ip4_addr_t & ipv4Addr);
-    explicit IPAddress(const ip_addr_t & addr);
+    explicit IPAddress(const ip4_addr_t& ipv4Addr);
+    explicit IPAddress(const ip_addr_t& addr);
 #endif // INET_CONFIG_ENABLE_IPV4
 #endif // CHIP_SYSTEM_CONFIG_USE_LWIP
 
 #if CHIP_SYSTEM_CONFIG_USE_SOCKETS || CHIP_SYSTEM_CONFIG_USE_NETWORK_FRAMEWORK
-    explicit IPAddress(const struct in6_addr & ipv6Addr);
+    explicit IPAddress(const struct in6_addr& ipv6Addr);
 #if INET_CONFIG_ENABLE_IPV4
-    explicit IPAddress(const struct in_addr & ipv4Addr);
+    explicit IPAddress(const struct in_addr& ipv4Addr);
 #endif // INET_CONFIG_ENABLE_IPV4
 #endif // CHIP_SYSTEM_CONFIG_USE_SOCKETS || CHIP_SYSTEM_CONFIG_USE_NETWORK_FRAMEWORK
 
 #if CHIP_SYSTEM_CONFIG_USE_OPEN_THREAD_ENDPOINT
-    explicit IPAddress(const otIp6Address & ipv6Addr);
+    explicit IPAddress(const otIp6Address& ipv6Addr);
 #endif
 
     /**
@@ -339,7 +334,7 @@ public:
      * @retval true  If equivalent to \c other
      * @retval false Otherwise
      */
-    bool operator==(const IPAddress & other) const;
+    bool operator==(const IPAddress& other) const;
 
     /**
      * @brief   Compare this IP address with another for inequivalence.
@@ -349,7 +344,7 @@ public:
      * @retval true  If equivalent to \c other
      * @retval false Otherwise
      */
-    bool operator!=(const IPAddress & other) const;
+    bool operator!=(const IPAddress& other) const;
 
     /**
      * @brief   Emit the IP address in conventional text presentation format.
@@ -368,15 +363,14 @@ public:
      *
      * @return  The argument \c buf if no formatting error, or zero otherwise.
      */
-    char * ToString(char * buf, uint32_t bufSize) const;
+    char* ToString(char* buf, uint32_t bufSize) const;
 
     /**
      * A version of ToString that writes to a literal and deduces how much space
      * it as to work with.
      */
     template <uint32_t N>
-    inline char * ToString(char (&buf)[N]) const
-    {
+    inline char* ToString(char (&buf)[N]) const {
         return ToString(buf, N);
     }
 
@@ -394,7 +388,7 @@ public:
      * @retval true  The presentation format is valid
      * @retval false Otherwise
      */
-    static bool FromString(const char * str, IPAddress & output);
+    static bool FromString(const char* str, IPAddress& output);
 
     /**
      * @brief   Scan the IP address from its conventional presentation text.
@@ -411,7 +405,7 @@ public:
      * @retval true  The presentation format is valid
      * @retval false Otherwise
      */
-    static bool FromString(const char * str, size_t strLen, IPAddress & output);
+    static bool FromString(const char* str, size_t strLen, IPAddress& output);
 
     /**
      * @brief
@@ -426,7 +420,7 @@ public:
      * @retval true  The presentation format is valid
      * @retval false Otherwise
      */
-    static bool FromString(const char * str, IPAddress & addrOutput, class InterfaceId & ifaceOutput);
+    static bool FromString(const char* str, IPAddress& addrOutput, class InterfaceId& ifaceOutput);
 
     /**
      * @brief   Emit the IP address in standard network representation.
@@ -439,7 +433,7 @@ public:
      *  addresses are encoded according to section 2.5.5.2 "IPv4-Mapped
      *  IPv6 Address".
      */
-    void WriteAddress(uint8_t *& p) const;
+    void WriteAddress(uint8_t*& p) const;
 
     /**
      * @brief   Emit the IP address in standard network representation.
@@ -451,7 +445,7 @@ public:
      *  Use <tt>ReadAddress(uint8_t *&p, IPAddress &output)</tt> to decode
      *  the IP address at \c p to the object \c output.
      */
-    static void ReadAddress(const uint8_t *& p, IPAddress & output);
+    static void ReadAddress(const uint8_t*& p, IPAddress& output);
 
     /**
      * @brief   Test whether address is IPv4 compatible.
@@ -545,7 +539,7 @@ public:
      * If the requested addressType is IPAddressType::kAny, extracts the IP address as an LwIP ip_addr_t structure.
      * Otherwise, returns INET_ERROR_WRONG_ADDRESS_TYPE if the requested addressType does not match the IP address.
      */
-    CHIP_ERROR ToLwIPAddr(IPAddressType addressType, ip_addr_t & outAddress) const;
+    CHIP_ERROR ToLwIPAddr(IPAddressType addressType, ip_addr_t& outAddress) const;
 
     /**
      * @brief   Convert the INET layer address type to its underlying LwIP type.
@@ -575,21 +569,26 @@ public:
     /**
      * Get the IP address from a SockAddr.
      */
-    static CHIP_ERROR GetIPAddressFromSockAddr(const SockAddrWithoutStorage & sockaddr, IPAddress & outIPAddress);
-    static CHIP_ERROR GetIPAddressFromSockAddr(const sockaddr & sockaddr, IPAddress & outIPAddress)
-    {
-        return GetIPAddressFromSockAddr(reinterpret_cast<const SockAddrWithoutStorage &>(sockaddr), outIPAddress);
+    static CHIP_ERROR
+        GetIPAddressFromSockAddr(const SockAddrWithoutStorage& sockaddr, IPAddress& outIPAddress);
+    static CHIP_ERROR GetIPAddressFromSockAddr(const sockaddr& sockaddr, IPAddress& outIPAddress) {
+        return GetIPAddressFromSockAddr(
+            reinterpret_cast<const SockAddrWithoutStorage&>(sockaddr), outIPAddress);
     }
-    static IPAddress FromSockAddr(const sockaddr_in6 & sockaddr) { return IPAddress(sockaddr.sin6_addr); }
+    static IPAddress FromSockAddr(const sockaddr_in6& sockaddr) {
+        return IPAddress(sockaddr.sin6_addr);
+    }
 #if INET_CONFIG_ENABLE_IPV4
-    static IPAddress FromSockAddr(const sockaddr_in & sockaddr) { return IPAddress(sockaddr.sin_addr); }
+    static IPAddress FromSockAddr(const sockaddr_in& sockaddr) {
+        return IPAddress(sockaddr.sin_addr);
+    }
 #endif // INET_CONFIG_ENABLE_IPV4
 
 #endif // CHIP_SYSTEM_CONFIG_USE_SOCKETS || CHIP_SYSTEM_USE_NETWORK_FRAMEWORK
 
 #if CHIP_SYSTEM_CONFIG_USE_OPEN_THREAD_ENDPOINT
     otIp6Address ToIPv6() const;
-    static IPAddress FromOtAddr(const otIp6Address & address);
+    static IPAddress FromOtAddr(const otIp6Address& address);
 #endif // CHIP_SYSTEM_CONFIG_USE_OPEN_THREAD_ENDPOINT
 
     /**
@@ -627,8 +626,10 @@ public:
      *
      * @return  The constructed IP address.
      */
-    static IPAddress MakeIPv6Multicast(IPv6MulticastFlags aFlags, uint8_t aScope,
-                                       const uint8_t aGroupId[NL_INET_IPV6_MCAST_GROUP_LEN_IN_BYTES]);
+    static IPAddress MakeIPv6Multicast(
+        IPv6MulticastFlags aFlags,
+        uint8_t aScope,
+        const uint8_t aGroupId[NL_INET_IPV6_MCAST_GROUP_LEN_IN_BYTES]);
 
     /**
      * @brief   Construct an IPv6 multicast address from its parts.
@@ -641,7 +642,8 @@ public:
      *
      * @return  The constructed IP address.
      */
-    static IPAddress MakeIPv6Multicast(IPv6MulticastFlags aFlags, uint8_t aScope, uint32_t aGroupId);
+    static IPAddress
+        MakeIPv6Multicast(IPv6MulticastFlags aFlags, uint8_t aScope, uint32_t aGroupId);
 
     /**
      * @brief   Construct a well-known IPv6 multicast address from its parts.
@@ -666,8 +668,10 @@ public:
      *
      * @return  The constructed IP address.
      */
-    static IPAddress MakeIPv6TransientMulticast(IPv6MulticastFlags aFlags, uint8_t aScope,
-                                                const uint8_t aGroupId[NL_INET_IPV6_MCAST_GROUP_LEN_IN_BYTES]);
+    static IPAddress MakeIPv6TransientMulticast(
+        IPv6MulticastFlags aFlags,
+        uint8_t aScope,
+        const uint8_t aGroupId[NL_INET_IPV6_MCAST_GROUP_LEN_IN_BYTES]);
 
     /**
      * @brief   Construct a transient, prefix IPv6 multicast address from its parts.
@@ -681,7 +685,11 @@ public:
      *
      * @return  The constructed IP address.
      */
-    static IPAddress MakeIPv6PrefixMulticast(uint8_t aScope, uint8_t aPrefixLength, const uint64_t & aPrefix, uint32_t aGroupId);
+    static IPAddress MakeIPv6PrefixMulticast(
+        uint8_t aScope,
+        uint8_t aPrefixLength,
+        const uint64_t& aPrefix,
+        uint32_t aGroupId);
 
     /**
      * @brief   Construct an IPv4 broadcast address.

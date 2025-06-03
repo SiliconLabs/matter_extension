@@ -14,6 +14,15 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
+
+/*
+ * Modified by Flipper Devices Inc.
+ * List of changes:
+ *   - commented out lwIP includes
+ *   - commented out lwIP declarations
+ *   - removed WifiEvent::kStationDhcpPoll
+ */
+
 #pragma once
 
 #include <app/icd/server/ICDServerConfig.h>
@@ -28,10 +37,10 @@
 #include <lib/support/Span.h>
 
 /* LwIP includes. */
-#include "lwip/ip_addr.h"
-#include "lwip/netif.h"
-#include "lwip/netifapi.h"
-#include "lwip/tcpip.h"
+// #include "lwip/ip_addr.h"
+// #include "lwip/netif.h"
+// #include "lwip/netifapi.h"
+// #include "lwip/tcpip.h"
 
 #if (SLI_SI91X_MCU_INTERFACE | EXP_BOARD)
 #include "rsi_common_apis.h"
@@ -92,10 +101,7 @@ enum class WifiEvent : uint8_t
     kAPStart           = 2,
     kAPStop            = 3,
     kScan              = 4, /* This is used as scan result and start */
-    kStationStartJoin  = 5,
-    kStationDoDhcp     = 6,
-    kStationDhcpDone   = 7,
-    kStationDhcpPoll   = 8
+    kStationStartJoin  = 5
 };
 
 typedef enum
@@ -226,10 +232,10 @@ void wfx_connected_notify(int32_t status, sl_wfx_mac_address_t * ap);
 void wfx_disconnected_notify(int32_t status);
 
 /* Implemented for LWIP */
-void wfx_lwip_set_sta_link_up(void);
-void wfx_lwip_set_sta_link_down(void);
-void sl_matter_lwip_start(void);
-struct netif * wfx_get_netif(sl_wfx_interface_t interface);
+// void wfx_lwip_set_sta_link_up(void);
+// void wfx_lwip_set_sta_link_down(void);
+// void sl_matter_lwip_start(void);
+// struct netif * wfx_get_netif(sl_wfx_interface_t interface);
 
 #if CHIP_DEVICE_CONFIG_ENABLE_IPV4
 void wfx_dhcp_got_ipv4(uint32_t);

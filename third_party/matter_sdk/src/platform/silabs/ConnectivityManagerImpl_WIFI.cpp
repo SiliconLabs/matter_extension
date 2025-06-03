@@ -24,10 +24,10 @@
 #include <platform/internal/BLEManager.h>
 #include <platform/silabs/NetworkCommissioningWiFiDriver.h>
 
-#include <lwip/dns.h>
-#include <lwip/ip_addr.h>
-#include <lwip/nd6.h>
-#include <lwip/netif.h>
+// #include <lwip/dns.h>
+// #include <lwip/ip_addr.h>
+// #include <lwip/nd6.h>
+// #include <lwip/netif.h>
 
 #include <platform/internal/GenericConnectivityManagerImpl_UDP.ipp>
 
