@@ -132,8 +132,7 @@ const sl_wifi_device_configuration_t sl_wifi_config = {
                  SL_SI91X_FEAT_ULP_GPIO_BASED_HANDSHAKE | SL_SI91X_FEAT_DEV_TO_HOST_ULP_GPIO_1),
             .tcp_ip_feature_bit_map =
                 (SL_SI91X_TCP_IP_FEAT_DHCPV4_CLIENT | SL_SI91X_TCP_IP_FEAT_EXTENSION_VALID |
-                 SL_SI91X_TCP_IP_FEAT_DNS_CLIENT | SL_SI91X_TCP_IP_FEAT_SSL |
-                 SL_SI91X_TCP_IP_FEAT_DHCPV6_CLIENT | SL_SI91X_TCP_IP_FEAT_IPV6),
+                 SL_SI91X_TCP_IP_FEAT_DNS_CLIENT | SL_SI91X_TCP_IP_FEAT_SSL | SL_SI91X_TCP_IP_FEAT_IPV6),
             .custom_feature_bit_map =
                 (SL_SI91X_CUSTOM_FEAT_EXTENTION_VALID | SL_SI91X_CUSTOM_FEAT_SOC_CLK_CONFIG_120MHZ),
             .ext_custom_feature_bit_map =
@@ -194,6 +193,8 @@ const sl_wifi_device_configuration_t sl_wifi_config = {
 };
 
 WfxRsi_t wfx_rsi;
+
+void NotifyConnectivity(void);
 
 namespace {
 
@@ -481,7 +482,6 @@ sl_status_t SetWifiConfigurations()
     {
         status = sl_net_set_credential(SL_NET_DEFAULT_WIFI_CLIENT_CREDENTIAL_ID, SL_NET_WIFI_PSK, &wfx_rsi.sec.passkey[0],
                                        wfx_rsi.sec.passkey_length);
-        // status = sl_net_set_credential(SL_NET_DEFAULT_WIFI_CLIENT_CREDENTIAL_ID, SL_NET_WIFI_PSK, "susamogus", 9);
         VerifyOrReturnError(status == SL_STATUS_OK, status,
                             ChipLogError(DeviceLayer, "sl_net_set_credential failed: 0x%lx", status));
     }
@@ -491,33 +491,49 @@ sl_status_t SetWifiConfigurations()
             .ssid = {
                 //static cast because the types dont match
                 .length = static_cast<uint8_t>(wfx_rsi.sec.ssid_length),
-                // .length = 4,
             },
             .channel = {
                 .channel = SL_WIFI_AUTO_CHANNEL,
                 .band = SL_WIFI_AUTO_BAND,
-                .bandwidth = SL_WIFI_AUTO_BANDWIDTH
+                .bandwidth = SL_WIFI_AUTO_BANDWIDTH,
             },
             .bssid = {{0}},
             .bss_type = SL_WIFI_BSS_TYPE_INFRASTRUCTURE,
-            // .security = security,
-            .security = SL_WIFI_WPA_WPA2_MIXED,
+            .security = security,
             .encryption = SL_WIFI_DEFAULT_ENCRYPTION,
             .client_options = SL_WIFI_JOIN_WITH_SCAN,
-            // .client_options = SL_WIFI_NO_JOIN_OPTION,
             .credential_id = SL_NET_DEFAULT_WIFI_CLIENT_CREDENTIAL_ID,
         },
         .ip = {
-            .mode = SL_IP_MANAGEMENT_DHCP,
-            // .mode = SL_IP_MANAGEMENT_LINK_LOCAL,
-            .type = SL_IPV6,
+            .mode = SL_IP_MANAGEMENT_STATIC_IP,
+            .type = SL_IPV6_LINK_LOCAL,
             .host_name = "busybar",
-            .ip = {{{0}}},
-        }
+            .ip = {
+                .v6 = {
+                    .link_local_address = {.bytes = {
+                        0xfe, 0x80,  0x00, 0x00,
+                        0x00, 0x00,  0x00, 0x00,
+                        0x8e, 0x8b,  0x48, 0xff,
+                        0xfe, 0x33,  0xe7, 0x88,
+                    }},
+                    .global_address = {.bytes = {
+                        0xfe, 0x80,  0x00, 0x00,
+                        0x00, 0x00,  0x00, 0x00,
+                        0x8e, 0x8b,  0x48, 0xff,
+                        0xfe, 0x33,  0xe7, 0x88,
+                    }},
+                    .gateway = {.bytes = {
+                        0xfe, 0x80,  0x00, 0x00,
+                        0x00, 0x00,  0x00, 0x00,
+                        0x00, 0x00,  0x00, 0x00,
+                        0x00, 0x00,  0x00, 0x01,
+                    }},
+                },
+            },
+        },
     };
     // TODO: memcpy for now since the types dont match
     memcpy((char *) &profile.config.ssid.value, wfx_rsi.sec.ssid, wfx_rsi.sec.ssid_length);
-    // memcpy(profile.config.ssid.value, "psi3", 4);
 
     status = sl_net_set_profile((sl_net_interface_t) SL_NET_WIFI_CLIENT_INTERFACE, SL_NET_DEFAULT_WIFI_CLIENT_PROFILE_ID, &profile);
     VerifyOrReturnError(status == SL_STATUS_OK, status, ChipLogError(DeviceLayer, "sl_net_set_profile failed: 0x%lx", status));
@@ -564,6 +580,7 @@ sl_status_t JoinCallback(sl_wifi_event_t event, char * result, uint32_t resultLe
     wfx_rsi.join_retries = 0;
     return status;
 }
+
 sl_status_t JoinWifiNetwork(void)
 {
     VerifyOrReturnError(!wfx_rsi.dev_state.HasAny(WifiState::kStationConnecting, WifiState::kStationConnected),
@@ -589,6 +606,11 @@ sl_status_t JoinWifiNetwork(void)
 #endif // CHIP_CONFIG_ENABLE_ICD_SERVER
         WifiEvent event = WifiEvent::kStationConnect;
         sl_matter_wifi_post_event(event);
+
+        wfx_ipv6_notify(GET_IPV6_SUCCESS);
+        hasNotifiedIPV6 = true;
+        NotifyConnectivity();
+
         return status;
     }
 
@@ -604,8 +626,6 @@ sl_status_t JoinWifiNetwork(void)
 }
 
 } // namespace
-
-void NotifyConnectivity(void);
 
 static sl_status_t sl_matter_wifi_event_handler(sl_net_event_t event, sl_status_t status, void *data, uint32_t data_length) {
     ChipLogDetail(DeviceLayer, "net event=0x%x status=0x%lx data=%p data_len=%u", event, status, data, data_length);
