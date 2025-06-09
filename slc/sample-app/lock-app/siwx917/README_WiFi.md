@@ -52,37 +52,15 @@ Log output example:
 
 Note: This QR Code is only valid for an unprovisioned device. Provisioning may change the QR Code.
 
-**LED 0** 
-
-Shows the overall state of the device and its connectivity. The following states are possible:
-
--   _Short Flash On (50 ms on/950 ms off)_ ; The device is in the unprovisioned (unpaired) state and is waiting for a commissioning application to connect.
-
--   _Rapid Even Flashing_ ; (100 ms on/100 ms off)_ &mdash; The device is in the unprovisioned state and a commissioning application is connected through Bluetooth LE.
-
--   _Short Flash Off_ ; (950ms on/50ms off)_ &mdash; The device is fully provisioned, but does not yet have full service connectivity.
-
--   _Solid On_ ; The device is fully provisioned and has full service connectivity.
-
-**LED 1** 
-
-Simulates the Lock The following states are possible:
-
--   _Solid On_ ; Bolt is unlocked
--   _Blinking_ ; Bolt is moving to the desired state
--   _Off_ ; Bolt is locked
-
 **Push Button 0**
 
 -   _Press and Release_ : Start, or restart, BLE advertisement in fast mode. It will advertise in this mode
 for 30 seconds. The device will then switch to a slower interval advertisement.
 After 15 minutes, the advertisement stops. In addition, this button should also print the QR Code URL to the RTT logs.
 
--   _Pressed and hold for 6 s_ : Initiates the factory reset of the device. Releasing the button within the 6-second window cancels the factory reset procedure. **LEDs** blink in unison when the factory reset procedure is initiated.
+-   _Pressed and hold for 6 s_ : Initiates the factory reset of the device. Releasing the button within the 6-second window cancels the factory reset procedure.
 
-**Push Button 1** 
-
-- Toggles the bolt state On/Off
+Note: The Lock app is ICD enabled, and as a result, the **LEDs** and **Push Button 1** are non-functional because they are not connected to any UULP pins on the WPK.
 
 ## Provision and Control
 
@@ -96,47 +74,47 @@ Here is some CHIPTool examples:
 
 Pairing with chip-tool:
 ```shell
-chip-tool pairing ble-wifi 1122 $SSID $PSK 20202021 3840
+chip-tool pairing ble-wifi <Node-ID> $SSID $PSK 20202021 3840
 ```
 
 Set a user:
 ```shell
 ./out/chip-tool doorlock set-user OperationType UserIndex UserName UserUniqueId UserStatus UserType CredentialRule node-id/group-id
 
-./out/chip-tool doorlock set-user 0 1 "mike" 5 1 0 0 1 1 --timedInteractionTimeoutMs 1000
+./out/chip-tool doorlock set-user 0 1 "mike" 5 1 0 0 <Node-ID> 1 --timedInteractionTimeoutMs 1000
 ```
 
 Set a credential:
 ```shell
 ./out/chip-tool doorlock set-credential OperationType Credential CredentialData UserIndex UserStatus UserType node-id/group-id
 
-./out/chip-tool doorlock set-credential 0 '{ "credentialType": 1, "credentialIndex": 1 }' "123456" 1 null null 1 1 --timedInteractionTimeoutMs 1000
+./out/chip-tool doorlock set-credential 0 '{ "credentialType": 1, "credentialIndex": 1 }' "123456" 1 null null <Node-ID> 1 --timedInteractionTimeoutMs 1000
 ```
 
 Changing a credential:
 ```shell
 ./out/chip-tool doorlock set-credential OperationType Credential CredentialData UserIndex UserStatus UserType node-id/group-id
 
-./out/chip-tool doorlock set-credential 2 '{ "credentialType": 1, "credentialIndex": 1 }' "123457" 1 null null 1 1 --timedInteractionTimeoutMs 1000
+./out/chip-tool doorlock set-credential 2 '{ "credentialType": 1, "credentialIndex": 1 }' "123457" 1 null null <Node-ID> 1 --timedInteractionTimeoutMs 1000
 ```
 
 Get a user:
 ```shell
 ./out/chip-tool doorlock get-user UserIndex node-id/group-id
 
-./out/chip-tool doorlock get-user 1 1 1
+./out/chip-tool doorlock get-user 1 <Node-ID> 1
 ```
 
 Unlock door:
 ```shell
 ./out/chip-tool doorlock unlock-door node-id/group-id
 
-./out/chip-tool doorlock unlock-door 1 1 --timedInteractionTimeoutMs 2000
+./out/chip-tool doorlock unlock-door <Node-ID> 1 --timedInteractionTimeoutMs 1000
 ```
 
 Lock door:
 ```shell
 ./out/chip-tool doorlock lock-door node-id/group-id
 
-./out/chip-tool doorlock lock-door 1 1 --timedInteractionTimeoutMs 2000
+./out/chip-tool doorlock lock-door <Node-ID> 1 --timedInteractionTimeoutMs 1000
 ```

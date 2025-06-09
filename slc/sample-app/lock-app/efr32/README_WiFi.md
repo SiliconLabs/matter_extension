@@ -108,47 +108,47 @@ Here is some CHIPTool examples:
 
 Pairing with chip-tool:
 ```shell
-chip-tool pairing ble-wifi 1122 $SSID $PSK 20202021 3840
+chip-tool pairing ble-wifi <Node-ID> $SSID $PSK 20202021 3840
 ```
 
 Set a user:
 ```shell
 ./out/chip-tool doorlock set-user OperationType UserIndex UserName UserUniqueId UserStatus UserType CredentialRule node-id/group-id
 
-./out/chip-tool doorlock set-user 0 1 "mike" 5 1 0 0 1 1 --timedInteractionTimeoutMs 1000
+./out/chip-tool doorlock set-user 0 1 "mike" 5 1 0 0 <Node-ID> 1 --timedInteractionTimeoutMs 1000
 ```
 
 Set a credential:
 ```shell
 ./out/chip-tool doorlock set-credential OperationType Credential CredentialData UserIndex UserStatus UserType node-id/group-id
 
-./out/chip-tool doorlock set-credential 0 '{ "credentialType": 1, "credentialIndex": 1 }' "123456" 1 null null 1 1 --timedInteractionTimeoutMs 1000
+./out/chip-tool doorlock set-credential 0 '{ "credentialType": 1, "credentialIndex": 1 }' "123456" 1 null null <Node-ID> 1 --timedInteractionTimeoutMs 1000
 ```
 
 Changing a credential:
 ```shell
 ./out/chip-tool doorlock set-credential OperationType Credential CredentialData UserIndex UserStatus UserType node-id/group-id
 
-./out/chip-tool doorlock set-credential 2 '{ "credentialType": 1, "credentialIndex": 1 }' "123457" 1 null null 1 1 --timedInteractionTimeoutMs 1000
+./out/chip-tool doorlock set-credential 2 '{ "credentialType": 1, "credentialIndex": 1 }' "123457" 1 null null <Node-ID> 1 --timedInteractionTimeoutMs 1000
 ```
 
 Get a user:
 ```shell
 ./out/chip-tool doorlock get-user UserIndex node-id/group-id
 
-./out/chip-tool doorlock get-user 1 1 1
+./out/chip-tool doorlock get-user 1 <Node-ID> 1
 ```
 
 Unlock door:
 ```shell
 ./out/chip-tool doorlock unlock-door node-id/group-id
 
-./out/chip-tool doorlock unlock-door 1 1
+./out/chip-tool doorlock unlock-door <Node-ID> 1 --timedInteractionTimeoutMs 1000
 ```
 
 Lock door:
 ```shell
 ./out/chip-tool doorlock lock-door node-id/group-id
 
-./out/chip-tool doorlock lock-door 1 1
+./out/chip-tool doorlock lock-door <Node-ID> 1 --timedInteractionTimeoutMs 1000
 ```

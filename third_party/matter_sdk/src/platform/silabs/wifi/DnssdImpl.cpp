@@ -32,7 +32,7 @@ CHIP_ERROR ChipDnssdInit(DnssdAsyncReturnCallback initCallback, DnssdAsyncReturn
     sl_mac_address_t mac_addr;
     char macString[20]; // 12 hex digits + ".local." + null terminator
     sl_status_t status = sl_wifi_get_mac_address(SL_WIFI_CLIENT_INTERFACE, &mac_addr);
-    VerifyOrReturnError(status == SL_STATUS_OK, CHIP_ERROR_INTERNAL);
+    VerifyOrReturnError(status == SL_STATUS_OK, MATTER_PLATFORM_ERROR(status));
 
     snprintf(macString, sizeof(macString), "%02X%02X%02X%02X%02X%02X.local.", mac_addr.octet[0], mac_addr.octet[1],
              mac_addr.octet[2], mac_addr.octet[3], mac_addr.octet[4], mac_addr.octet[5]);
@@ -40,7 +40,7 @@ CHIP_ERROR ChipDnssdInit(DnssdAsyncReturnCallback initCallback, DnssdAsyncReturn
     sl_mdns_configuration_t config = { .protocol = SL_MDNS_PROTO_UDP, .type = SL_IPV6_VERSION };
     strcpy(config.host_name, macString);
     status = sl_mdns_init(&sMdnsInstance, &config, nullptr);
-    VerifyOrReturnError(status == SL_STATUS_OK, CHIP_ERROR_INTERNAL);
+    VerifyOrReturnError(status == SL_STATUS_OK, MATTER_PLATFORM_ERROR(status));
     if (status != SL_STATUS_OK)
     {
         ChipLogError(DeviceLayer, "Failed to initialize mDNS: 0x%lx", status);
@@ -48,10 +48,10 @@ CHIP_ERROR ChipDnssdInit(DnssdAsyncReturnCallback initCallback, DnssdAsyncReturn
         {
             errorCallback(context, CHIP_ERROR_INTERNAL);
         }
-        return CHIP_ERROR_INTERNAL;
+        return MATTER_PLATFORM_ERROR(status);
     }
     status = sl_mdns_add_interface(&sMdnsInstance, SL_NET_WIFI_CLIENT_INTERFACE);
-    VerifyOrReturnError(status == SL_STATUS_OK, CHIP_ERROR_INTERNAL);
+    VerifyOrReturnError(status == SL_STATUS_OK, MATTER_PLATFORM_ERROR(status));
 
     if (initCallback)
     {
@@ -110,7 +110,7 @@ CHIP_ERROR ChipDnssdPublishService(const DnssdService * service, DnssdPublishCal
     free(const_cast<char *>(mdnsService.instance_name));
     free(const_cast<char *>(mdnsService.service_type));
     free(const_cast<char *>(mdnsService.service_message));
-    return ((status == SL_STATUS_OK) ? CHIP_NO_ERROR : CHIP_ERROR_INTERNAL);
+    return ((status == SL_STATUS_OK) ? CHIP_NO_ERROR : MATTER_PLATFORM_ERROR(status));
 }
 
 CHIP_ERROR ChipDnssdRemoveServices()

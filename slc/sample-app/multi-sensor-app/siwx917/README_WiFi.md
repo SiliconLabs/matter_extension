@@ -129,21 +129,21 @@ More information on using the chip-tool directly can be found here: [CHIPTool](h
 Here is an example with the chip-tool:
 
 ```shell
-./chip-tool pairing ble-wifi 1122 $SSID $PSK 20202021 3840
+./chip-tool pairing ble-wifi <Node-ID> $SSID $PSK 20202021 3840
 ```
 
 ### Sensor Commands
 
 ```shell
-./chip-tool occupancysensing read occupancy 1122 1
+./chip-tool occupancysensing read occupancy <Node-ID> 1
 ```
 
 Operate on DUT to change the occupancy status by pressing BTN1 and read the occupancy using the above command again.
 
 ```shell
-./chip-tool temperaturemeasurement read measured-value 1122 2
+./chip-tool temperaturemeasurement read measured-value <Node-ID> 2
 ```
 
 ```shell
-./chip-tool relativehumiditymeasurement read measured-value 1122 2
+./chip-tool relativehumiditymeasurement read measured-value <Node-ID> 2
 ```

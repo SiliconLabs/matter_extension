@@ -265,8 +265,6 @@ source:
     directory: src
   - path: ../../../../examples/zigbee-matter-light/src/MatterDMCallbacks.cpp
     directory: src
-  - path: ../../../../examples/zigbee-matter-light/src/ZigbeeCallbacks.cpp
-    directory: src
   - path: ../../../../examples/zigbee-matter-light/src/LightingManager.cpp
     directory: src
 
@@ -278,7 +276,6 @@ include:
       - path: AppTask.h
       - path: CHIPProjectConfig.h
       - path: LightingManager.h
-      - path: ZigbeeCallbacks.h
     directory: include
 post_build:
   profile: application

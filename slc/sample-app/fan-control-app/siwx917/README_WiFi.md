@@ -95,9 +95,9 @@ More information on using the chip-tool directly can be found here: [CHIPTool](h
 Here is an example with the CHIPTool:
 
 ```shell
-chip-tool pairing ble-wifi 1122 $SSID $PSK 20202021 3840
+chip-tool pairing ble-wifi <Node-ID> $SSID $PSK 20202021 3840
 
-chip-tool fancontrol write fan-mode 1 1122 1
+chip-tool fancontrol write fan-mode 1 <Node-ID> 1
 
-chip-tool fancontrol read fan-mode 1122 1
+chip-tool fancontrol read fan-mode <Node-ID> 1
 ```

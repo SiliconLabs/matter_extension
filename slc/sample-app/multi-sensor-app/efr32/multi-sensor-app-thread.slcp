@@ -97,6 +97,8 @@ component:
     condition: [hardware_board_has_si70xx]
   - id: matter_log_uart
     from: matter
+  - id: matter_multi_sensor_app
+    from: matter
 
   # ICD configurations
   - id: matter_icd_core

@@ -21,6 +21,7 @@ component:
   - id: bootloader_spi_controller_driver
   - id: bootloader_debug
   - id: bootloader_compression_lzma
+  - id: bootloader_gbl_compression_lz4
   - id: psa_crypto_config
   - id: matter_syscall_stubs
     from: matter

@@ -98,7 +98,7 @@ More information on using the chip-tool directly can be found here: [chip-tool](
 Here is an example with the chip-tool:
 
 ```shell
-chip-tool pairing ble-wifi 1122 $SSID $PSK 20202021 3840
+chip-tool pairing ble-wifi <Node-ID> $SSID $PSK 20202021 3840
 
-chip-tool onoff on 1 1
+chip-tool onoff on <Node-ID> 1
 ```

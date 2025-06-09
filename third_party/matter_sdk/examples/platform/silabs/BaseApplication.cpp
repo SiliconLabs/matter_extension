@@ -431,7 +431,7 @@ CHIP_ERROR BaseApplication::BaseInit()
     return err;
 }
 
-void BaseApplication::InitCompleteCallback(CHIP_ERROR err)
+void BaseApplication::InitCompleteCallback([[maybe_unused]] CHIP_ERROR err)
 {
     // A stub for backward compatibility
 }
@@ -939,9 +939,6 @@ void BaseApplication::ScheduleFactoryReset()
         PlatformMgr().HandleServerShuttingDown(); // HandleServerShuttingDown calls OnShutdown() which is only implemented for the
                                                   // basic information cluster it seems. And triggers and Event flush, which is not
                                                   // relevant when there are no fabrics left
-#ifdef SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
-        Zigbee::TokenFactoryReset();
-#endif
         ConfigurationMgr().InitiateFactoryReset();
     });
 }

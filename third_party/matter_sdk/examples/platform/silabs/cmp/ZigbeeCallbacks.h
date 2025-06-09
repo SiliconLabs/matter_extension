@@ -1,5 +1,5 @@
-/***************************************************************************//**
- * @file ZigbeeCallbacks.cpp
+/*****************************************************************************
+ * @file ZigbeeCallbacks.h
  * @brief Callbacks implementation and application specific code.
  *******************************************************************************
  * # License
@@ -15,14 +15,13 @@
  *
  ******************************************************************************/
 
-
 #pragma once
 
 // Small wrapper for Zigbee critical api
 namespace Zigbee {
-    void RequestStart(uint8_t channel=0);
-    void RequestLeave(void);
-    uint8_t GetZigbeeChannel(void);
-    void ZLLNotFactoryNew(void);
-    void TokenFactoryReset(void);
-};
+void RequestStart(uint8_t channel = 0);
+void RequestLeave(void);
+uint8_t GetZigbeeChannel(void);
+void ZLLNotFactoryNew(void);
+void TokenFactoryReset(void);
+}; // namespace Zigbee

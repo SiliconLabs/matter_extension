@@ -12,10 +12,13 @@ recommends:
 include:
   - path: third_party/matter_sdk/examples/platform/silabs/cmp
     file_list:
+      - path: MultiProtocolDataModelHelper.h
       - path: sl-matter-attribute-storage.h
+      - path: ZigbeeCallbacks.h
 
 source:
-  - path: third_party/matter_sdk/examples/platform/silabs/cmp/sl-matter-attribute-storage.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/cmp/MultiProtocolDataModelHelper.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/cmp/ZigbeeCallbacks.cpp
 
 template_contribution:
   - name: component_catalog

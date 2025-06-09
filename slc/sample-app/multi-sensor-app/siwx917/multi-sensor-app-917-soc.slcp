@@ -91,6 +91,12 @@ component:
     from: matter
   - id: matter_lwip
     from: matter
+  - id: matter_icd_core
+    from: matter
+  - id: matter_icd_management
+    from: matter
+  - id: matter_multi_sensor_app
+    from: matter
 
   - id: wifi_resources
     from: wiseconnect3_sdk
@@ -198,6 +204,14 @@ configuration:
     value: "1"
   - name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION
     value: "0"
+  - name: SL_IDLE_MODE_DURATION_S
+    value: "600"
+  - name: SL_ACTIVE_MODE_DURATION_MS
+    value: "0"
+  - name: SL_ACTIVE_MODE_THRESHOLD
+    value: "0"
+  - name: SL_TRANSPORT_IDLE_INTERVAL
+    value: "3000"
 
 toolchain_settings:
   - option: cxx_standard

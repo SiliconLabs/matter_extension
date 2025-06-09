@@ -72,26 +72,12 @@ define:
   - name: RS911X_WIFI
   - name: SL_SI91x_DUAL_INTERRUPTS_ERRATA
   - name: NVM3_LOCK_OVERRIDE
+  - name: SL_WLAN_EVENT_THREAD_PRIORITY
+    value: osPriorityRealtime6
+  - name: SL_WLAN_COMMAND_ENGINE_THREAD_PRIORITY
+    value: osPriorityRealtime5
 toolchain_settings:
   - option: gcc_linker_option
     value: "-Wl,--wrap=MemoryAlloc"
     # Wrap these in case internal newlib call them (e.g. strdup will)
     # directly call _malloc_r)
-
-  # flags for the SiWx917
-  - option: gcc_compiler_option
-    value: -Wno-empty-body
-  - option: gcc_compiler_option
-    value: -Wno-cpp
-  - option: gcc_compiler_option
-    value: -Wno-missing-braces
-  - option: gcc_compiler_option
-    value: -Wno-sign-compare
-  - option: gcc_compiler_option
-    value: -Wno-error
-  - option: gcc_compiler_option
-    value: -Wno-unused-variable
-  - option: gcc_compiler_option
-    value: -Wno-unused-function
-  - option: gcc_compiler_option
-    value: -Wno-unused-parameter

@@ -72,7 +72,6 @@ private:
     CHIP_ERROR UpdateValue(uint8_t tag, ByteSpan & newValue);
 
     OTAFactoryPayload mPayload;
-    OTADataAccumulator mAccumulator;
     uint8_t * mFactoryData = nullptr;
 
 protected:

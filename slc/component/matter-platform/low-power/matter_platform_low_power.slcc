@@ -1,5 +1,5 @@
 id: matter_platform_low_power
-label: Lower Power Mode
+label: Low Power Mode
 description: >
   Dictates exclusion of files to enable low-power mode. This component removes
   Matter Shell, Matter CLI, QR Code, and LCD.
@@ -18,5 +18,5 @@ conflicts:
   - name: matter_qr_code
   - name: matter_lcd
   - name: matter_lcd_917SOC
-  - name: matter_uart
   - name: matter_log_uart
+  - name: matter_uart

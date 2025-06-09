@@ -92,7 +92,7 @@ CHIP_ERROR OTAWiFiFirmwareProcessor::ProcessInternal(ByteSpan & block)
         // Send RPS content
         status = sl_si91x_fwup_load(block.data(), block.size());
         // When TA received all the blocks it will return SL_STATUS_SI91X_FW_UPDATE_DONE status
-        VerifyOrReturnError(status == SL_STATUS_OK || status == SL_STATUS_SI91X_FW_UPDATE_DONE, CHIP_ERROR_INTERNAL,
+        VerifyOrReturnError(status == SL_STATUS_OK || status == SL_STATUS_SI91X_FW_UPDATE_DONE, MATTER_PLATFORM_ERROR(status),
                             ChipLogError(SoftwareUpdate, "sl_si91x_fwup_load() failed  0x%lx", static_cast<uint32_t>(status)));
     }
     return CHIP_NO_ERROR;
