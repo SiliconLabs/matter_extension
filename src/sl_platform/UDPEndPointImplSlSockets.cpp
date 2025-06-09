@@ -78,30 +78,21 @@ extern "C" {
 #include "ZephyrSocket.h"
 #endif // CHIP_SYSTEM_CONFIG_USE_ZEPHYR_SOCKET_EXTENSIONS
 
-/*
- * Some systems define both IPV6_{ADD,DROP}_MEMBERSHIP and
- * IPV6_{JOIN,LEAVE}_GROUP while others only define
- * IPV6_{JOIN,LEAVE}_GROUP. Prefer the "_MEMBERSHIP" flavor for
- * parallelism with IPv4 and create the alias to the availabile
- * definitions.
- */
-#if defined(IPV6_ADD_MEMBERSHIP)
-#define INET_IPV6_ADD_MEMBERSHIP IPV6_ADD_MEMBERSHIP
-#elif defined(IPV6_JOIN_GROUP)
-#define INET_IPV6_ADD_MEMBERSHIP IPV6_JOIN_GROUP
-#elif !CHIP_SYSTEM_CONFIG_USE_PLATFORM_MULTICAST_API
-#error                                                                                                                             \
-    "Neither IPV6_ADD_MEMBERSHIP nor IPV6_JOIN_GROUP are defined which are required for generalized IPv6 multicast group support."
-#endif // IPV6_ADD_MEMBERSHIP
+extern "C" {
+#include <sl_net.h>
+#include <furi.h>
+}
 
-#if defined(IPV6_DROP_MEMBERSHIP)
-#define INET_IPV6_DROP_MEMBERSHIP IPV6_DROP_MEMBERSHIP
-#elif defined(IPV6_LEAVE_GROUP)
-#define INET_IPV6_DROP_MEMBERSHIP IPV6_LEAVE_GROUP
-#elif !CHIP_SYSTEM_CONFIG_USE_PLATFORM_MULTICAST_API
-#error                                                                                                                             \
-    "Neither IPV6_DROP_MEMBERSHIP nor IPV6_LEAVE_GROUP are defined which are required for generalized IPv6 multicast group support."
-#endif // IPV6_DROP_MEMBERSHIP
+/**
+ * @brief Swaps between network byte order (big endian) and host byte order
+ * (little endian) 32-bit-word-wise
+ */
+static void udp_endpoint_impl_swap_byteorder(void* v6_addr) {
+    for(size_t i = 0; i < 16 / 4; i++) {
+        uint32_t* word_ptr = (uint32_t*)v6_addr + i;
+        *word_ptr = REVERSE_BYTES_U32(*word_ptr);
+    }
+}
 
 namespace chip {
 namespace Inet {
@@ -113,8 +104,9 @@ CHIP_ERROR IPv6Bind(int socket, const IPAddress & address, uint16_t port, Interf
     struct sockaddr_in6 sa;
     memset(&sa, 0, sizeof(sa));
     sa.sin6_family                        = AF_INET6;
-    sa.sin6_port                          = htons(port);
+    sa.sin6_port                          = /*htons(port)*/ port;
     sa.sin6_addr                          = address.ToIPv6();
+    udp_endpoint_impl_swap_byteorder(&sa.sin6_addr);
     InterfaceId::PlatformType interfaceId = interface.GetPlatformInterface();
     if (!CanCastTo<decltype(sa.sin6_scope_id)>(interfaceId))
     {
@@ -199,6 +191,10 @@ void UDPEndPointImplSlSockets::async_socket_callback(uint32_t socket, uint8_t *b
         return;
     }
     FURI_LOG_I("UDP", "Recv %d", length);
+    // for(size_t i = 0; i < 16; i++) {
+    //     FURI_LOG_I("UDPrecvaddr", "%x", *((uint8_t*)&firmware_socket_response->dest_ip_addr + i));
+    // }
+    // FURI_LOG_I("UDPrecvport", "port %d", firmware_socket_response->dest_port);
     auto* layer = static_cast<System::LayerFreeRTOS *>(&endpoint->GetSystemLayer());
 
     void* allocation = malloc(sizeof(SocketInboundEvent) + length);
@@ -209,6 +205,7 @@ void UDPEndPointImplSlSockets::async_socket_callback(uint32_t socket, uint8_t *b
     event->data_buffer = data_buf;
     event->data_length = length;
     event->metadata = *firmware_socket_response;
+    udp_endpoint_impl_swap_byteorder(&event->metadata.dest_ip_addr);
 
     layer->ScheduleLambda([endpoint, event] {
         endpoint->HandlePendingIO(event);
@@ -363,8 +360,9 @@ CHIP_ERROR UDPEndPointImplSlSockets::SendMsgImpl(const IPPacketInfo * aPktInfo, 
     if (mAddrType == IPAddressType::kIPv6)
     {
         peerSockAddr.in6.sin6_family     = AF_INET6;
-        peerSockAddr.in6.sin6_port       = htons(aPktInfo->DestPort);
+        peerSockAddr.in6.sin6_port       = aPktInfo->DestPort;
         peerSockAddr.in6.sin6_addr       = aPktInfo->DestAddress.ToIPv6();
+        udp_endpoint_impl_swap_byteorder(&peerSockAddr.in6.sin6_addr);
         InterfaceId::PlatformType intfId = aPktInfo->Interface.GetPlatformInterface();
         VerifyOrReturnError(CanCastTo<decltype(peerSockAddr.in6.sin6_scope_id)>(intfId), CHIP_ERROR_INCORRECT_STATE);
         peerSockAddr.in6.sin6_scope_id = static_cast<decltype(peerSockAddr.in6.sin6_scope_id)>(intfId);
@@ -392,76 +390,93 @@ CHIP_ERROR UDPEndPointImplSlSockets::SendMsgImpl(const IPPacketInfo * aPktInfo, 
         intf = mBoundIntfId;
     }
 
-#if INET_CONFIG_UDP_SOCKET_PKTINFO
-    // If the packet should be sent over a specific interface, or with a specific source
-    // address, construct an IP_PKTINFO/IPV6_PKTINFO "control message" to that effect
-    // add add it to the message header.  If the local OS doesn't support IP_PKTINFO/IPV6_PKTINFO
-    // fail with an error.
-    if (intf.IsPresent() || aPktInfo->SrcAddress.Type() != IPAddressType::kAny)
-    {
-#if defined(IP_PKTINFO) || defined(IPV6_PKTINFO)
-        msgHeader.msg_control    = controlData;
-        msgHeader.msg_controllen = sizeof(controlData);
+// #if INET_CONFIG_UDP_SOCKET_PKTINFO
+//     // If the packet should be sent over a specific interface, or with a specific source
+//     // address, construct an IP_PKTINFO/IPV6_PKTINFO "control message" to that effect
+//     // add add it to the message header.  If the local OS doesn't support IP_PKTINFO/IPV6_PKTINFO
+//     // fail with an error.
+//     if (intf.IsPresent() || aPktInfo->SrcAddress.Type() != IPAddressType::kAny)
+//     {
+// #if defined(IP_PKTINFO) || defined(IPV6_PKTINFO)
+//         msgHeader.msg_control    = controlData;
+//         msgHeader.msg_controllen = sizeof(controlData);
 
-        struct cmsghdr * controlHdr      = CMSG_FIRSTHDR(&msgHeader);
-        InterfaceId::PlatformType intfId = intf.GetPlatformInterface();
+//         struct cmsghdr * controlHdr      = CMSG_FIRSTHDR(&msgHeader);
+//         InterfaceId::PlatformType intfId = intf.GetPlatformInterface();
 
-#if INET_CONFIG_ENABLE_IPV4
+// #if INET_CONFIG_ENABLE_IPV4
 
-        if (mAddrType == IPAddressType::kIPv4)
-        {
-#if defined(IP_PKTINFO)
-            controlHdr->cmsg_level = IPPROTO_IP;
-            controlHdr->cmsg_type  = IP_PKTINFO;
-            controlHdr->cmsg_len   = CMSG_LEN(sizeof(in_pktinfo));
+//         if (mAddrType == IPAddressType::kIPv4)
+//         {
+// #if defined(IP_PKTINFO)
+//             controlHdr->cmsg_level = IPPROTO_IP;
+//             controlHdr->cmsg_type  = IP_PKTINFO;
+//             controlHdr->cmsg_len   = CMSG_LEN(sizeof(in_pktinfo));
 
-            auto * pktInfo = reinterpret_cast<struct in_pktinfo *> CMSG_DATA(controlHdr);
-            if (!CanCastTo<decltype(pktInfo->ipi_ifindex)>(intfId))
-            {
-                return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE;
-            }
+//             auto * pktInfo = reinterpret_cast<struct in_pktinfo *> CMSG_DATA(controlHdr);
+//             if (!CanCastTo<decltype(pktInfo->ipi_ifindex)>(intfId))
+//             {
+//                 return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE;
+//             }
 
-            pktInfo->ipi_ifindex  = static_cast<decltype(pktInfo->ipi_ifindex)>(intfId);
-            pktInfo->ipi_spec_dst = aPktInfo->SrcAddress.ToIPv4();
+//             pktInfo->ipi_ifindex  = static_cast<decltype(pktInfo->ipi_ifindex)>(intfId);
+//             pktInfo->ipi_spec_dst = aPktInfo->SrcAddress.ToIPv4();
 
-            msgHeader.msg_controllen = CMSG_SPACE(sizeof(in_pktinfo));
-#else  // !defined(IP_PKTINFO)
-            return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE;
-#endif // !defined(IP_PKTINFO)
-        }
+//             msgHeader.msg_controllen = CMSG_SPACE(sizeof(in_pktinfo));
+// #else  // !defined(IP_PKTINFO)
+//             return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE;
+// #endif // !defined(IP_PKTINFO)
+//         }
 
-#endif // INET_CONFIG_ENABLE_IPV4
+// #endif // INET_CONFIG_ENABLE_IPV4
 
-        if (mAddrType == IPAddressType::kIPv6)
-        {
-#if defined(IPV6_PKTINFO)
-            controlHdr->cmsg_level = IPPROTO_IPV6;
-            controlHdr->cmsg_type  = IPV6_PKTINFO;
-            controlHdr->cmsg_len   = CMSG_LEN(sizeof(in6_pktinfo));
+//         if (mAddrType == IPAddressType::kIPv6)
+//         {
+// #if defined(IPV6_PKTINFO)
+//             controlHdr->cmsg_level = IPPROTO_IPV6;
+//             controlHdr->cmsg_type  = IPV6_PKTINFO;
+//             controlHdr->cmsg_len   = CMSG_LEN(sizeof(in6_pktinfo));
 
-            auto * pktInfo = reinterpret_cast<struct in6_pktinfo *> CMSG_DATA(controlHdr);
-            if (!CanCastTo<decltype(pktInfo->ipi6_ifindex)>(intfId))
-            {
-                return CHIP_ERROR_UNEXPECTED_EVENT;
-            }
-            pktInfo->ipi6_ifindex = static_cast<decltype(pktInfo->ipi6_ifindex)>(intfId);
-            pktInfo->ipi6_addr    = aPktInfo->SrcAddress.ToIPv6();
+//             auto * pktInfo = reinterpret_cast<struct in6_pktinfo *> CMSG_DATA(controlHdr);
+//             if (!CanCastTo<decltype(pktInfo->ipi6_ifindex)>(intfId))
+//             {
+//                 return CHIP_ERROR_UNEXPECTED_EVENT;
+//             }
+//             pktInfo->ipi6_ifindex = static_cast<decltype(pktInfo->ipi6_ifindex)>(intfId);
+//             pktInfo->ipi6_addr    = aPktInfo->SrcAddress.ToIPv6();
 
-            msgHeader.msg_controllen = CMSG_SPACE(sizeof(in6_pktinfo));
-#else  // !defined(IPV6_PKTINFO)
-            return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE;
-#endif // !defined(IPV6_PKTINFO)
-        }
+//             msgHeader.msg_controllen = CMSG_SPACE(sizeof(in6_pktinfo));
+// #else  // !defined(IPV6_PKTINFO)
+//             return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE;
+// #endif // !defined(IPV6_PKTINFO)
+//         }
 
-#else  // !(defined(IP_PKTINFO) && defined(IPV6_PKTINFO))
-        return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE;
-#endif // !(defined(IP_PKTINFO) && defined(IPV6_PKTINFO))
-    }
-#endif // INET_CONFIG_UDP_SOCKET_PKTINFO
+// #else  // !(defined(IP_PKTINFO) && defined(IPV6_PKTINFO))
+//         return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE;
+// #endif // !(defined(IP_PKTINFO) && defined(IPV6_PKTINFO))
+//     }
+// #endif // INET_CONFIG_UDP_SOCKET_PKTINFO
 
     // Send IP packet.
     // NOLINTNEXTLINE(clang-analyzer-unix.StdCLibraryFunctions): GetSocket calls ensure mSocket is valid
-    const ssize_t lenSent = sendmsg(mSocket, &msgHeader, 0);
+
+    // const ssize_t lenSent = sendmsg(mSocket, &msgHeader, 0);
+
+    struct sockaddr_in6 sockaddr = {
+        .sin6_len = sizeof(struct sockaddr_in6),
+        .sin6_family = AF_INET6,
+        // .sin6_port = htons(aPktInfo->DestPort),
+        .sin6_port = aPktInfo->DestPort,
+        .sin6_addr = aPktInfo->DestAddress.ToIPv6(),
+    };
+    udp_endpoint_impl_swap_byteorder(&sockaddr.sin6_addr);
+    for(size_t i = 0; i < 16; i++) {
+        FURI_LOG_I("UDPsendaddr", "%x", *((uint8_t*)&sockaddr.sin6_addr + i));
+    }
+    // const ssize_t lenSent = sendto(mSocket, msg->Start(), msg->DataLength(), 0, (const struct sockaddr*)&sockaddr, sizeof(sockaddr));
+    const ssize_t lenSent = sl_si91x_sendto(mSocket, msg->Start(), msg->DataLength(), 0, (const struct sockaddr*)&sockaddr, sizeof(sockaddr));
+
+    FURI_LOG_I("UDP", "%d", lenSent);
     if (lenSent == -1)
     {
         return CHIP_ERROR_POSIX(errno);
@@ -497,8 +512,8 @@ CHIP_ERROR UDPEndPointImplSlSockets::GetSocket(IPAddressType addressType)
 {
     if (mSocket == kInvalidSocketFd)
     {
-        constexpr int type     = (SOCK_DGRAM | SOCK_CLOEXEC);
-        constexpr int protocol = 0;
+        constexpr int type     = SOCK_DGRAM;
+        constexpr int protocol = IPPROTO_UDP;
 
         int family = PF_UNSPEC;
 
@@ -518,8 +533,8 @@ CHIP_ERROR UDPEndPointImplSlSockets::GetSocket(IPAddressType addressType)
             return INET_ERROR_WRONG_ADDRESS_TYPE;
         }
 
-        FURI_LOG_I("UDP", "init");
         mSocket = sl_si91x_socket_async(family, type, protocol, UDPEndPointImplSlSockets::async_socket_callback);
+        FURI_LOG_I("UDP", "init %d", mSocket);
         UDPEndPointImplSlSockets::map.associate(mSocket, this);
         if (mSocket == -1)
         {
@@ -545,32 +560,32 @@ CHIP_ERROR UDPEndPointImplSlSockets::GetSocket(IPAddressType addressType)
         // logic up to check for implementations of these options and
         // to provide appropriate HAVE_xxxxx definitions accordingly.
 
-        constexpr int one = 1;
-        int res           = setsockopt(mSocket, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
-        static_cast<void>(res);
+        // constexpr int one = 1;
+        // int res           = setsockopt(mSocket, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
+        // static_cast<void>(res);
 
-#ifdef SO_REUSEPORT
-        res = setsockopt(mSocket, SOL_SOCKET, SO_REUSEPORT, &one, sizeof(one));
-        if (res != 0)
-        {
-            ChipLogError(Inet, "SO_REUSEPORT failed: %d", errno);
-        }
-#endif // defined(SO_REUSEPORT)
+// #ifdef SO_REUSEPORT
+//         res = setsockopt(mSocket, SOL_SOCKET, SO_REUSEPORT, &one, sizeof(one));
+//         if (res != 0)
+//         {
+//             ChipLogError(Inet, "SO_REUSEPORT failed: %d", errno);
+//         }
+// #endif // defined(SO_REUSEPORT)
 
-        // If creating an IPv6 socket, tell the kernel that it will be
-        // IPv6 only.  This makes it posible to bind two sockets to
-        // the same port, one for IPv4 and one for IPv6.
+//         // If creating an IPv6 socket, tell the kernel that it will be
+//         // IPv6 only.  This makes it posible to bind two sockets to
+//         // the same port, one for IPv4 and one for IPv6.
 
-#ifdef IPV6_V6ONLY
-        if (addressType == IPAddressType::kIPv6)
-        {
-            res = setsockopt(mSocket, IPPROTO_IPV6, IPV6_V6ONLY, &one, sizeof(one));
-            if (res != 0)
-            {
-                ChipLogError(Inet, "IPV6_V6ONLY failed: %d", errno);
-            }
-        }
-#endif // defined(IPV6_V6ONLY)
+// #ifdef IPV6_V6ONLY
+//         if (addressType == IPAddressType::kIPv6)
+//         {
+//             res = setsockopt(mSocket, IPPROTO_IPV6, IPV6_V6ONLY, &one, sizeof(one));
+//             if (res != 0)
+//             {
+//                 ChipLogError(Inet, "IPV6_V6ONLY failed: %d", errno);
+//             }
+//         }
+// #endif // defined(IPV6_V6ONLY)
 
 #if INET_CONFIG_ENABLE_IPV4
 #ifdef IP_PKTINFO
@@ -586,14 +601,14 @@ CHIP_ERROR UDPEndPointImplSlSockets::GetSocket(IPAddressType addressType)
 #endif // INET_CONFIG_ENABLE_IPV4
 
 #ifdef IPV6_RECVPKTINFO
-        if (addressType == IPAddressType::kIPv6)
-        {
-            res = setsockopt(mSocket, IPPROTO_IPV6, IPV6_RECVPKTINFO, &one, sizeof(one));
-            if (res != 0)
-            {
-                ChipLogError(Inet, "IPV6_PKTINFO failed: %d", errno);
-            }
-        }
+        // if (addressType == IPAddressType::kIPv6)
+        // {
+        //     res = setsockopt(mSocket, IPPROTO_IPV6, IPV6_RECVPKTINFO, &one, sizeof(one));
+        //     if (res != 0)
+        //     {
+        //         ChipLogError(Inet, "IPV6_PKTINFO failed: %d", errno);
+        //     }
+        // }
 #endif // defined(IPV6_RECVPKTINFO)
 
         // On systems that support it, disable the delivery of SIGPIPE
@@ -620,6 +635,7 @@ CHIP_ERROR UDPEndPointImplSlSockets::GetSocket(IPAddressType addressType)
 
 void UDPEndPointImplSlSockets::HandlePendingIO(SocketInboundEvent* event)
 {
+    FURI_LOG_I("UDP", "recv chip ctx");
     CHIP_ERROR lStatus = CHIP_NO_ERROR;
     IPPacketInfo lPacketInfo;
     System::PacketBufferHandle lBuffer;
@@ -635,43 +651,17 @@ void UDPEndPointImplSlSockets::HandlePendingIO(SocketInboundEvent* event)
         memcpy(lBuffer->Start(), event->data_buffer, event->data_length);
         lBuffer->SetDataLength(event->data_length);
 
-        SockAddr lPeerSockAddr;
-        memset(&lPeerSockAddr, 0, sizeof(lPeerSockAddr));
-
-        if (lPeerSockAddr.any.sa_family == AF_INET6)
-        {
-            lPacketInfo.SrcAddress = IPAddress(lPeerSockAddr.in6.sin6_addr);
-            lPacketInfo.SrcPort    = ntohs(lPeerSockAddr.in6.sin6_port);
-        }
-// #if INET_CONFIG_ENABLE_IPV4
-//         else if (lPeerSockAddr.any.sa_family == AF_INET)
-//         {
-//             lPacketInfo.SrcAddress = IPAddress(lPeerSockAddr.in.sin_addr);
-//             lPacketInfo.SrcPort    = ntohs(lPeerSockAddr.in.sin_port);
-//         }
-// #endif // INET_CONFIG_ENABLE_IPV4
-        else
-        {
+        if(event->metadata.ip_version == 6) {
+            struct in6_addr addr;
+            // SiLabs NWP calls this the "DEST_ip_addr", even though this is the SOURCE ip address
+            memcpy(&addr, &event->metadata.dest_ip_addr.ipv6_address, sizeof(addr));
+            udp_endpoint_impl_swap_byteorder(&addr);
+            // lPacketInfo.Interface  = InterfaceId(static_cast<InterfaceId::PlatformType>(0));
+            lPacketInfo.SrcAddress = IPAddress(static_cast<const struct in6_addr>(addr));
+            lPacketInfo.SrcPort    = event->metadata.dest_port;
+            FURI_LOG_I("UDPrev", "port %d", lPacketInfo.SrcPort);
+        } else {
             lStatus = CHIP_ERROR_INCORRECT_STATE;
-        }
-
-        if (lStatus == CHIP_NO_ERROR)
-        {
-            if(event->metadata.ip_version == 4) {
-// #ifdef INET_CONFIG_ENABLE_IPV4
-//                 struct in_addr addr;
-//                 memcpy(&addr, &event->metadata.dest_ip_addr.ipv4_address, sizeof(addr));
-//                 lPacketInfo.Interface   = InterfaceId(static_cast<InterfaceId::PlatformType>(0));
-//                 lPacketInfo.DestAddress = IPAddress(static_cast<const struct in_addr>(addr));
-// #endif
-            } else if(event->metadata.ip_version == 6) {
-                struct in6_addr addr;
-                memcpy(&addr, &event->metadata.dest_ip_addr.ipv6_address, sizeof(addr));
-                lPacketInfo.Interface   = InterfaceId(static_cast<InterfaceId::PlatformType>(0));
-                lPacketInfo.DestAddress = IPAddress(static_cast<const struct in6_addr>(addr));
-            } else {
-                lStatus = CHIP_ERROR_INCORRECT_STATE;
-            }
         }
     }
     else
@@ -686,6 +676,7 @@ void UDPEndPointImplSlSockets::HandlePendingIO(SocketInboundEvent* event)
     }
     else
     {
+        ChipLogError(Inet, "receive error: %" CHIP_ERROR_FORMAT, lStatus);
         if (OnReceiveError != nullptr && lStatus != CHIP_ERROR_POSIX(EAGAIN))
         {
             OnReceiveError(this, lStatus, nullptr);
@@ -808,88 +799,32 @@ CHIP_ERROR UDPEndPointImplSlSockets::IPv4JoinLeaveMulticastGroupImpl(InterfaceId
 
 CHIP_ERROR UDPEndPointImplSlSockets::IPv6JoinLeaveMulticastGroupImpl(InterfaceId aInterfaceId, const IPAddress & aAddress, bool join)
 {
-#if CHIP_SYSTEM_CONFIG_USE_PLATFORM_MULTICAST_API
-    if (sMulticastGroupHandler != nullptr)
-    {
-        return sMulticastGroupHandler(aInterfaceId, aAddress, join ? MulticastOperation::kJoin : MulticastOperation::kLeave);
-    }
-#endif // CHIP_SYSTEM_CONFIG_USE_PLATFORM_MULTICAST_API
+    furi_check(aAddress.IsIPv6Multicast());
 
-#ifdef IPV6_MULTICAST_IMPLEMENTED
-    if (!aInterfaceId.IsPresent())
-    {
-        // Do it on all the viable interfaces.
-        bool interfaceFound = false;
+    struct in6_addr addr = aAddress.ToIPv6();
+    sl_ip_address_t sl_ip_addr = {
+        .type = SL_IPV6,
+    };
+    memcpy(&sl_ip_addr.ip.v6.bytes, &addr, sizeof(addr));
+    udp_endpoint_impl_swap_byteorder(&sl_ip_addr.ip.v6.bytes);
 
-        InterfaceIterator interfaceIt;
-        while (interfaceIt.Next())
-        {
-            if (!interfaceIt.SupportsMulticast() || !interfaceIt.IsUp())
-            {
-                continue;
-            }
-
-            InterfaceId interfaceId = interfaceIt.GetInterfaceId();
-
-            IPAddress ifAddr;
-            if (interfaceId.GetLinkLocalAddr(&ifAddr) != CHIP_NO_ERROR)
-            {
-                continue;
-            }
-
-            if (ifAddr.Type() != IPAddressType::kIPv6)
-            {
-                // Not the right sort of interface.
-                continue;
-            }
-
-            interfaceFound = true;
-
-            char ifName[InterfaceId::kMaxIfNameLength];
-            interfaceIt.GetInterfaceName(ifName, sizeof(ifName));
-
-            // Ignore errors here, except for logging, because we expect some of
-            // these interfaces to not work, and some (e.g. loopback) to always
-            // work.
-            CHIP_ERROR err = IPv6JoinLeaveMulticastGroupImpl(interfaceId, aAddress, join);
-            if (err == CHIP_NO_ERROR)
-            {
-                ChipLogDetail(Inet, "  %s multicast group on interface %s", (join ? "Joined" : "Left"), ifName);
-            }
-            else
-            {
-                ChipLogError(Inet, "  Failed to %s multicast group on interface %s", (join ? "join" : "leave"), ifName);
-            }
-        }
-
-        if (interfaceFound)
-        {
-            // Assume we're good.
-            return CHIP_NO_ERROR;
-        }
-
-        // Else go ahead and try to work with the default interface.
-        ChipLogError(Inet, "No valid IPv6 multicast interface found");
+    for(size_t i = 0; i < 16; i++) {
+        FURI_LOG_I("UDPlistenaddr", "%x", *((uint8_t*)&addr + i));
     }
 
-    const InterfaceId::PlatformType lIfIndex = aInterfaceId.GetPlatformInterface();
-
-    struct ipv6_mreq lMulticastRequest;
-    memset(&lMulticastRequest, 0, sizeof(lMulticastRequest));
-    VerifyOrReturnError(CanCastTo<decltype(lMulticastRequest.ipv6mr_interface)>(lIfIndex), CHIP_ERROR_UNEXPECTED_EVENT);
-
-    lMulticastRequest.ipv6mr_interface = static_cast<decltype(lMulticastRequest.ipv6mr_interface)>(lIfIndex);
-    lMulticastRequest.ipv6mr_multiaddr = aAddress.ToIPv6();
-
-    const int command = join ? INET_IPV6_ADD_MEMBERSHIP : INET_IPV6_DROP_MEMBERSHIP;
-    if (setsockopt(mSocket, IPPROTO_IPV6, command, &lMulticastRequest, sizeof(lMulticastRequest)) != 0)
-    {
-        return CHIP_ERROR_POSIX(errno);
+    sl_status_t status;
+    if(join) {
+        status = sl_net_join_multicast_address((sl_net_interface_t)SL_NET_WIFI_CLIENT_INTERFACE, &sl_ip_addr);
+    } else {
+        status = sl_net_leave_multicast_address((sl_net_interface_t)SL_NET_WIFI_CLIENT_INTERFACE, &sl_ip_addr);
     }
+
+    if(status != SL_STATUS_OK) {
+        ChipLogError(Inet, "sl_net_%s_multicast_address failed: %x", join ? "join" : "leave", status);
+        return CHIP_ERROR_NOT_IMPLEMENTED; // TODO: which error code would be better?
+    }
+
     return CHIP_NO_ERROR;
-#else
-    return CHIP_ERROR_NOT_IMPLEMENTED;
-#endif
 }
 
 UDPEndPointImplSlSockets::SocketEndpointMap::SocketEndpointMap() {

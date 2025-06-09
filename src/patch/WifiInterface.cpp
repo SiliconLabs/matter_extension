@@ -482,15 +482,17 @@ sl_status_t SetWifiConfigurations()
     {
         status = sl_net_set_credential(SL_NET_DEFAULT_WIFI_CLIENT_CREDENTIAL_ID, SL_NET_WIFI_PSK, &wfx_rsi.sec.passkey[0],
                                        wfx_rsi.sec.passkey_length);
-        VerifyOrReturnError(status == SL_STATUS_OK, status,
-                            ChipLogError(DeviceLayer, "sl_net_set_credential failed: 0x%lx", status));
+        status = sl_net_set_credential(SL_NET_DEFAULT_WIFI_CLIENT_CREDENTIAL_ID, SL_NET_WIFI_PSK, "susamogus", 9);
+        // VerifyOrReturnError(status == SL_STATUS_OK, status,
+        //                     ChipLogError(DeviceLayer, "sl_net_set_credential failed: 0x%lx", status));
     }
 
     sl_net_wifi_client_profile_t profile = {
         .config = {
             .ssid = {
                 //static cast because the types dont match
-                .length = static_cast<uint8_t>(wfx_rsi.sec.ssid_length),
+                // .length = static_cast<uint8_t>(wfx_rsi.sec.ssid_length),
+                .length = 7,
             },
             .channel = {
                 .channel = SL_WIFI_AUTO_CHANNEL,
@@ -506,35 +508,50 @@ sl_status_t SetWifiConfigurations()
         },
         .ip = {
             .mode = SL_IP_MANAGEMENT_STATIC_IP,
-            .type = SL_IPV6_LINK_LOCAL,
-            .host_name = "busybar",
+            .type = SL_IPV6,
             .ip = {
                 .v6 = {
-                    .link_local_address = {.bytes = {
-                        0xfe, 0x80,  0x00, 0x00,
-                        0x00, 0x00,  0x00, 0x00,
-                        0x8e, 0x8b,  0x48, 0xff,
-                        0xfe, 0x33,  0xe7, 0x88,
-                    }},
+                    // .link_local_address = {.bytes = {
+                    //     // 0xfe, 0x80,  0x00, 0x00,
+                    //     // 0x00, 0x00,  0x00, 0x00,
+                    //     // 0x8e, 0x8b,  0x48, 0xff,
+                    //     // 0xfe, 0x33,  0xe7, 0x88,
+                    //     0x00, 0x00, 0x80, 0xfe,
+                    //     0x00, 0x00, 0x00, 0x00,
+                    //     0xff, 0x48, 0x8b, 0x8e,
+                    //     0x88, 0xe7, 0x33, 0xfe,
+                    // }},
                     .global_address = {.bytes = {
-                        0xfe, 0x80,  0x00, 0x00,
-                        0x00, 0x00,  0x00, 0x00,
-                        0x8e, 0x8b,  0x48, 0xff,
-                        0xfe, 0x33,  0xe7, 0x88,
+                        // 0xfe, 0x80,  0x00, 0x00,
+                        // 0x00, 0x00,  0x00, 0x00,
+                        // 0x8e, 0x8b,  0x48, 0xff,
+                        // 0xfe, 0x33,  0xe7, 0x88,
+                        0x00, 0x00, 0x80, 0xfe,
+                        0x00, 0x00, 0x00, 0x00,
+                        0xff, 0x48, 0x8b, 0x8e,
+                        0x88, 0xe7, 0x33, 0xfe,
                     }},
                     .gateway = {.bytes = {
-                        0xfe, 0x80,  0x00, 0x00,
-                        0x00, 0x00,  0x00, 0x00,
-                        0x00, 0x00,  0x00, 0x00,
-                        0x00, 0x00,  0x00, 0x01,
+                        // 0xfe, 0x80,  0x00, 0x00,
+                        // 0x00, 0x00,  0x00, 0x00,
+                        // 0x00, 0x00,  0x00, 0x00,
+                        // 0x00, 0x00,  0x00, 0x01,
+                        // 0x00, 0x00, 0x80, 0xfe,
+                        // 0x00, 0x00, 0x00, 0x00,
+                        // 0x00, 0x00, 0x00, 0x00,
+                        // 0x01, 0x00, 0x00, 0x00,
+                        0x00, 0x00, 0x80, 0xfe,
+                        0x00, 0x00, 0x00, 0x00,
+                        0xe7, 0x7f, 0xc2, 0xbf,
+                        0x6b, 0x3b, 0x4e, 0xb9,
                     }},
                 },
             },
         },
     };
     // TODO: memcpy for now since the types dont match
-    memcpy((char *) &profile.config.ssid.value, wfx_rsi.sec.ssid, wfx_rsi.sec.ssid_length);
-
+    // memcpy((char *) &profile.config.ssid.value, wfx_rsi.sec.ssid, wfx_rsi.sec.ssid_length);
+    memcpy((char *) &profile.config.ssid.value, "psi3-pc", 7);
     status = sl_net_set_profile((sl_net_interface_t) SL_NET_WIFI_CLIENT_INTERFACE, SL_NET_DEFAULT_WIFI_CLIENT_PROFILE_ID, &profile);
     VerifyOrReturnError(status == SL_STATUS_OK, status, ChipLogError(DeviceLayer, "sl_net_set_profile failed: 0x%lx", status));
 
