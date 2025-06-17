@@ -1,25 +1,25 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: liblogging_stdio
 id: liblogging_stdio
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
 label: liblogging_stdio
-package: Matter
+package: matter
 provides:
--   name: matter_liblogging_stdio
+  - name: matter_liblogging_stdio
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/platform/logging/impl/stdio/Logging.cpp
+  - path: third_party/matter_sdk/src/platform/logging/impl/stdio/Logging.cpp
 ui_hints:
-    visibility: never
+  visibility: never

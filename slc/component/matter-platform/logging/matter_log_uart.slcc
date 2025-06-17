@@ -1,7 +1,7 @@
 id: matter_log_uart
 label: Logging to UART
 description: Sets Log Destination to UART
-package: "Matter"
+package: matter
 category: Platform|Utils
 quality: production
 metadata:
@@ -18,4 +18,3 @@ define:
     value: 1
 conflicts:
   - name: matter_log_rtt
-  

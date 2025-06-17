@@ -1,6 +1,6 @@
 id: toolchain_gcc_common
 label: Common Flash GCC Toolchain
-package: Matter
+package: matter
 description: Common Flash Toolchain support for GCC
 category: Matter-WiFi|Platform|Toolchain
 quality: production
@@ -14,7 +14,7 @@ requires:
   - name: toolchain_variant
   - name: toolchain_variant_arm
 template_file:
-# TODO: Cleanup the customized linker file for psram boards and use the SDK linker file
+  # TODO: Cleanup the customized linker file for psram boards and use the SDK linker file
   - path: matter-wifi/917-soc/linkerfile_psram_SoC.ld.jinja
     condition: [psram_core]
   - path: matter-wifi/917-soc/linkerfile_common.ld.jinja

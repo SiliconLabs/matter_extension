@@ -51,7 +51,6 @@ class AppTask : public BaseApplication
 {
 
 public:
-
     AppTask() = default;
 
     static AppTask & GetAppTask() { return sAppTask; }
@@ -78,18 +77,17 @@ public:
 private:
     static AppTask sAppTask;
 
-    static void ActionInitiated(OnOffPlugManager::Action_t aAction, int32_t aActor);
-    static void ActionCompleted(OnOffPlugManager::Action_t aAction);
+    static void ActionCallback(OnOffPlugManager::Action_t aAction, int32_t aActor);
     static void OnOffActionEventHandler(AppEvent * aEvent);
 
     static void UpdateClusterState(intptr_t context);
 
     /**
-     * @brief AppTask initialisation function
+     * @brief Override of BaseApplication::AppInit() virtual method, called by BaseApplication::Init()
      *
      * @return CHIP_ERROR
      */
-    CHIP_ERROR Init();
+    CHIP_ERROR AppInit() override;
 
     static void TimerEventHandler(TimerHandle_t xTimer);
 };

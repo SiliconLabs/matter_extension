@@ -30,6 +30,9 @@ config("icd-shell-config") {
 config("tracing-shell-config") {
   include_dirs = [ "./tracing/" ]
 }
+config("ble-shell-config") {
+  include_dirs = [ "./ble/" ]
+}
 
 source_set("icd") {
   sources = [
@@ -49,6 +52,17 @@ source_set("tracing") {
   ]
 
   public_configs = [ ":tracing-shell-config" ]
+
+  deps = [ "${shell_dependency_path}:matter-shell" ]
+}
+
+source_set("ble") {
+  sources = [
+    "./ble/BLEShellCommands.cpp",
+    "./ble/BLEShellCommands.h",
+  ]
+
+  public_configs = [ ":ble-shell-config" ]
 
   deps = [ "${shell_dependency_path}:matter-shell" ]
 }

@@ -25,7 +25,7 @@
 
 #define APP_TASK_NAME "Sensor"
 
-#define BLE_DEV_NAME "SiLabs-Sensor"
+#define BLE_DEV_NAME "SL-" APP_TASK_NAME
 
 #define SENSOR_NAME "Sensor-App"
 

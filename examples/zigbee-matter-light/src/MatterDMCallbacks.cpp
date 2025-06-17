@@ -23,6 +23,7 @@
 #include "AppConfig.h"
 #include "LightingManager.h"
 
+#include <MultiProtocolDataModelHelper.h>
 #include <app-common/zap-generated/ids/Attributes.h>
 #include <app-common/zap-generated/ids/Clusters.h>
 #include <app/ConcreteAttributePath.h>
@@ -32,57 +33,6 @@
 
 using namespace ::chip;
 using namespace ::chip::app::Clusters;
-
-#ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
-namespace {
-#include "app/framework/include/af-storage.h"
-#include "app/framework/include/af.h"
-#include <zap-config.h>
-// Attribute map between zigbee and matter.
-#if defined(GENERATED_MULTI_PROTOCOL_ATTRIBUTE_MAPPING) && defined(SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT)
-constexpr sl_zigbee_matter_af_multi_protocol_attribute_metadata_t mpAttributeMap[] = GENERATED_MULTI_PROTOCOL_ATTRIBUTE_MAPPING;
-
-constexpr size_t mpMappedAttributeCount =
-    (sizeof(mpAttributeMap) / sizeof(sl_zigbee_matter_af_multi_protocol_attribute_metadata_t));
-
-// SL-TEMP Until GENERATED_MULTI_PROTOCOL_ATTRIBUTE_MAPPING is reworked to optimize parsing time
-inline bool isMultiProtocolMappedMatterCluster(chip::ClusterId clusterId)
-{
-    return (clusterId == OnOff::Id || clusterId == LevelControl::Id || clusterId == ColorControl::Id);
-}
-
-/**
- * @brief Writes an attribute value to the Zigbee attribute storage.
- *
- * This function translates Matter attribute parameters to Zigbee attribute parameters, using our multiprotocol
- * attribute map and uses the Zigbee API to perform the write operation.
- *
- * @param endpointId The Matter endpoint identifier.
- * @param clusterId The Matter cluster identifier.
- * @param attributeId The Matter attribute identifier.
- * @param attributeValue Pointer to the attribute value to be written.
- * @param dataType The data type of the attribute.
- */
-void sli_matter_af_write_to_zb_attribute(chip::EndpointId endpointId, chip::ClusterId clusterId, chip::AttributeId attributeId,
-                                         uint8_t * attributeValue, EmberAfAttributeType dataType)
-{
-    for (uint8_t i = 0; i < mpMappedAttributeCount; i++)
-    {
-        if (mpAttributeMap[i].matterClusterId == (clusterId & 0xFFFF) &&
-            mpAttributeMap[i].matterMfgClusterId == (clusterId >> 16) &&
-            mpAttributeMap[i].matterAttributeId == (attributeId & 0xFFFF) &&
-            mpAttributeMap[i].matterMfgAttributeId == (attributeId >> 16))
-        {
-            // TODO handle MFG specific attributes
-            sl_zigbee_af_write_server_attribute(endpointId, mpAttributeMap[i].zigbeeClusterId, mpAttributeMap[i].zigbeeAttributeId,
-                                                attributeValue, dataType);
-            break;
-        }
-    }
-}
-#endif // defined(GENERATED_MULTI_PROTOCOL_ATTRIBUTE_MAPPING) && defined(SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT)
-} // namespace
-#endif // SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
 
 void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
                                        uint8_t * value)
@@ -113,11 +63,6 @@ void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & 
     }
 
 #if defined(GENERATED_MULTI_PROTOCOL_ATTRIBUTE_MAPPING) && defined(SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT)
-    // SL-TEMP Until GENERATED_MULTI_PROTOCOL_ATTRIBUTE_MAPPING is reworked to optimize parsing time.
-    // At boot, the attributes are already sync, no need to write them to Zigbee until init is done.
-    if (LightMgr().IsInitialized() && isMultiProtocolMappedMatterCluster(clusterId))
-    {
-        sli_matter_af_write_to_zb_attribute(endpointId, clusterId, attributeId, value, type);
-    }
+    MultiProtocolDataModel::WriteMatterAttributeValueToZigbee(endpointId, clusterId, attributeId, value, type);
 #endif
 }

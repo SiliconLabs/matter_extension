@@ -3,15 +3,15 @@ label: Performance Test Application
 description: >
   Matter Performance Test Application
 quality: internal
-package: Matter
+package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.2"
+    version: "2.6.0"
 
 component:
   - id: device_init
-  - id: sl_system
+  - id: sl_main
   - id: clock_manager
   - id: matter_performance_testing
     from: matter
@@ -36,15 +36,15 @@ component:
     from: matter
   - id: matter_shell
     from: matter
-  - id: matter_gatt
+  - id: matter_gatt_static
     from: matter
   - id: matter_provision_default
     from: matter
   - id: matter_log_uart
     from: matter
 
-#  - id: matter_lighting
-#    from: matter
+  #  - id: matter_lighting
+  #    from: matter
   - id: app_common
     from: matter
   - id: matter_access_control
@@ -102,12 +102,11 @@ component:
     from: matter
 
 requires:
-# On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
-# Select UART/EUART drivers based on device series
+  # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
+  # Select UART/EUART drivers based on device series
   - name: matter_drivers_series_2
     condition:
-     - device_series_2
-
+      - device_series_2
 
 include:
   - path: ../../../../third_party/matter_sdk/examples/lighting-app/silabs/include
@@ -165,14 +164,16 @@ configuration:
   - name: OPENTHREAD_CONFIG_COAP_SECURE_API_ENABLE
     value: 1
     condition: [matter_thread_coap_cert_libs]
-  - {name: SL_STACK_SIZE, value: '4608'}
-  - {name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE, value: '1536'}
+  - name: SL_STACK_SIZE
+    value: "4608"
+  - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+    value: "1536"
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: 16
   - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS
     value: 1
 
- # Disable logging as it affects performance
+  # Disable logging as it affects performance
   - name: SL_MATTER_LOG_LEVEL
     value: "SL_MATTER_LOG_NONE"
   - name: SILABS_LOG_ENABLED
@@ -182,7 +183,7 @@ configuration:
   - name: OPENTHREAD_CONFIG_LOG_OUTPUT
     value: "OT_LOG_LEVEL_NONE"
   - name: OPENTHREAD_CONFIG_LOG_LEVEL
-    value: "OPENTHREAD_CONFIG_LOG_OUTPUT_NONE" 
+    value: "OPENTHREAD_CONFIG_LOG_OUTPUT_NONE"
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17
@@ -206,6 +207,6 @@ ui_hints:
       focus: false
 post_build:
   profile: application
-  
+
 other_file:
   - path: ../../../image/qr_code_img.png

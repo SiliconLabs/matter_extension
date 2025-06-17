@@ -1,13 +1,13 @@
 project_name: matter-bootloader-storage-internal-single
-package: Matter
+package: matter
 quality: production
 label: Bootloader - SoC Internal Storage (single image on 512kB device)
 description: >
-  This sample configuration of the Gecko bootloader configures the bootloader to use the internal main flash to store firmware update images. The storage configuration is set up to store a single firmware update image at a time, in a single storage slot. The storage slot is configured to start at address 0x44000 (or 0x8044000 for device with 0x8000000 flash base), and have a size of 192 kB. This can be configured on the "Storage" tab. This bootloader is compatible with Matter sample examples running on a Series 2 device.
+  This sample configuration of the simplicity bootloader configures the bootloader to use the internal main flash to store firmware update images. The storage configuration is set up to store a single firmware update image at a time, in a single storage slot. The storage slot is configured to start at address 0x44000 (or 0x8044000 for device with 0x8000000 flash base), and have a size of 192 kB. This can be configured on the "Storage" tab. This bootloader is compatible with Matter sample examples running on a Series 2 device.
 
 sdk_extension:
   - id: matter
-    version: "2.5.2"
+    version: "2.6.0"
 
 component:
   - id: bootloader_core
@@ -20,6 +20,7 @@ component:
   - id: bootloader_token_management
   - id: bootloader_debug
   - id: bootloader_compression_lzma
+  - id: bootloader_gbl_compression_lz4
   - id: psa_crypto_config
   - id: matter_syscall_stubs
     from: matter
@@ -29,29 +30,29 @@ configuration:
     value: 1
   - name: SLOT0_SIZE
     value: 557056
-    unless: [device_sdid_225] 
-  ## device_sdid_200 ##
+    unless: [device_sdid_225]
+  ## device_sdid_200  xG21 ##
   - name: BTL_STORAGE_BASE_ADDRESS
     value: 278528
     condition: [device_sdid_200]
   - name: SLOT0_START
     value: 278528
     condition: [device_sdid_200]
-  ## device_sdid_205 ##
+  ## device_sdid_205  xG22 ##
   - name: BTL_STORAGE_BASE_ADDRESS
     value: 278528
     condition: [device_sdid_205]
   - name: SLOT0_START
     value: 278528
     condition: [device_sdid_205]
-  ## device_sdid_210 ##
+  ## device_sdid_210  xG23 ##
   - name: BTL_STORAGE_BASE_ADDRESS
     value: 134496256
     condition: [device_sdid_210]
   - name: SLOT0_START
     value: 134496256
     condition: [device_sdid_210]
-  ## device_sdid_215 ##
+  ## device_sdid_215  xG24 ##
   - name: BTL_STORAGE_BASE_ADDRESS
     value: 135176192
     condition: [device_sdid_215]
@@ -61,31 +62,31 @@ configuration:
   - name: BOOTLOADER_MSC_DMA_CHANNEL
     value: 4
     condition: [device_sdid_215]
-  ## device_sdid_220 ##
+  ## device_sdid_220  xG25 ##
   - name: BTL_STORAGE_BASE_ADDRESS
     value: 134496256
     condition: [device_sdid_220]
   - name: SLOT0_START
     value: 134496256
     condition: [device_sdid_220]
-  ## device_sdid_225 ##
+  ## device_sdid_225  xG26 ##
   - name: BTL_STORAGE_BASE_ADDRESS
-    value: 135364608
+    value: 135847936
     condition: [device_sdid_225]
   - name: SLOT0_START
-    value: 135692288
+    value: 135847936
     condition: [device_sdid_225]
   - name: SLOT0_SIZE
-    value: 860160
+    value: 1589248
     condition: [device_sdid_225]
-  ## device_sdid_230 ##
+  ## device_sdid_230  xG27 ##
   - name: BTL_STORAGE_BASE_ADDRESS
     value: 134496256
     condition: [device_sdid_230]
   - name: SLOT0_START
     value: 134496256
     condition: [device_sdid_230]
-# Workaround until the bootloader DMA issue is fixed
+  # Workaround until the bootloader DMA issue is fixed
   - name: BOOTLOADER_MSC_DMA_WRITE
     value: 0
 

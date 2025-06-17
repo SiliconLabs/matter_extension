@@ -3,13 +3,13 @@ label: Matter Dishwasher
 description: >
   Matter Dishwasher App
 quality: production
-package: Matter
+package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.2"
+    version: "2.6.0"
   - id: wiseconnect3_sdk
-    version: "3.4.2"
+    version: "3.5.0"
 
 component:
   - id: matter_leds
@@ -72,7 +72,7 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
-  - id: segger_rtt 
+  - id: segger_rtt
   - id: matter_ota_requestor
     from: matter
   - id: toolchain_gcc_common
@@ -87,14 +87,13 @@ component:
     from: matter
   - id: matter_log_uart
     from: matter
-
-  # Copy of the component to remove the default lwipopts.h file
-  - id: wifi_resources
+  - id: matter_lwip
     from: matter
 
-  - id: sl_si91x_common_flash_nvm3
+
+  - id: wifi_resources
     from: wiseconnect3_sdk
-  - id: sl_si91x_lwip_stack
+  - id: sl_si91x_common_flash_nvm3
     from: wiseconnect3_sdk
   - id: sl_si91x_wireless
     from: wiseconnect3_sdk
@@ -121,7 +120,7 @@ component:
   - id: sl_si91x_soc_soft_reset
     from: wiseconnect3_sdk
   - id: sl_si91x_button_917
-    instance: [btn0,btn1]
+    instance: [btn0, btn1]
     from: wiseconnect3_sdk
   - id: sl_si91x_led_917
     instance: [led0]
@@ -140,7 +139,8 @@ component:
     id: ulp_timers_instance
 
 configuration:
-  - {name: SL_ULPUART_DMA_CONFIG_ENABLE, value: '0'}
+  - name: SL_ULPUART_DMA_CONFIG_ENABLE
+    value: "0"
 
 config_file:
   - path: ../../../../examples/dishwasher-app/silabs/data_model/dishwasher-wifi-app.zap
@@ -186,14 +186,14 @@ define:
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
     value: "4092"
   - name: SI917_SOC
-    value: 1 
+    value: 1
 
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17
   - option: nano_c_libs
     value: enabled
-    
+
 template_contribution:
   - name: memory_flash_start
     value: 0x081C2000

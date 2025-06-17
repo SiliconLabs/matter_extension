@@ -36,7 +36,7 @@ extern "C" {
 #endif
 
 // <<< sl:start pin_tool >>>
-// <ulp_ssi signal=MOSI_,SCK_,CS0_> SL_MEMLCD
+// <ulp_ssi signal=MOSI_,SCK_,CS1_> SL_MEMLCD
 // $[ULP_SSI_SL_MEMLCD]
 #ifndef SL_MEMLCD_PERIPHERAL
 #define SL_MEMLCD_PERIPHERAL ULP_SSI
@@ -64,15 +64,15 @@ extern "C" {
 #define SL_MEMLCD_SCK_LOC 7
 #endif
 
-// ULP_SSI CS0_ on ULP_GPIO_10/GPIO_74
-#ifndef SL_MEMLCD_CS0__PORT
-#define SL_MEMLCD_CS0__PORT ULP
+// ULP_SSI CS1_ on ULP_GPIO_4/GPIO_68
+#ifndef SL_MEMLCD_CS1__PORT
+#define SL_MEMLCD_CS1__PORT ULP
 #endif
-#ifndef SL_MEMLCD_CS0__PIN
-#define SL_MEMLCD_CS0__PIN 10
+#ifndef SL_MEMLCD_CS1__PIN
+#define SL_MEMLCD_CS1__PIN 4
 #endif
-#ifndef SL_MEMLCD_CS0_LOC
-#define SL_MEMLCD_CS0_LOC 9
+#ifndef SL_MEMLCD_CS1_LOC
+#define SL_MEMLCD_CS1_LOC 10
 #endif
 // [ULP_SSI_SL_MEMLCD]$
 // <<< sl:end pin_tool >>>
@@ -93,10 +93,10 @@ extern "C" {
 // <gpio> SL_MEMLCD_DISP_EXT_COMIN
 // $[GPIO_SL_MEMLCD_DISP_EXT_COMIN]
 #ifndef SL_MEMLCD_DISP_EXT_COMIN_PORT
-#define SL_MEMLCD_DISP_EXT_COMIN_PORT UULP_VBAT
+#define SL_MEMLCD_DISP_EXT_COMIN_PORT ULP
 #endif
 #ifndef SL_MEMLCD_DISP_EXT_COMIN_PIN
-#define SL_MEMLCD_DISP_EXT_COMIN_PIN 3
+#define SL_MEMLCD_DISP_EXT_COMIN_PIN 5
 #endif
 // [GPIO_SL_MEMLCD_DISP_EXT_COMIN]$
 // <<< sl:end pin_tool >>>

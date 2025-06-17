@@ -1,0 +1,11 @@
+category: Matter|Examples
+package: matter
+description: >
+  Provides example component for a Multi-Sensor application. This component should be 
+  included in all Multi-Sensor applications to help resolve SLC dependencies. Only applicable to Multi-Sensor applications.
+id: matter_multi_sensor_app
+quality: production
+provides:
+  - name: matter_multi_sensor_app
+ui_hints:
+  visibility: never

@@ -1,7 +1,7 @@
 id: matter_qr_code
 label: Matter QR Code Display
 description: Enables showing the QR Code on the LCD
-package: "Matter"
+package: matter
 category: Platform|Display
 quality: production
 metadata:

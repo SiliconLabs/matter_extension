@@ -1,46 +1,46 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: libsecurechanneltypes
 id: libsecurechanneltypes
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/protocols/secure_channel
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/protocols/secure_channel
     file_list:
-    -   path: UnsolicitedStatusHandler.h
-    -   path: StatusReport.h
-    -   path: CASEDestinationId.h
-    -   path: MessageCounterManager.h
-    -   path: Constants.h
-    -   path: PASESession.h
-    -   path: SessionEstablishmentExchangeDispatch.h
-    -   path: SessionEstablishmentDelegate.h
-    -   path: CASESession.h
-    -   path: CheckinMessage.h
-    -   path: DefaultSessionResumptionStorage.h
-    -   path: CASEServer.h
-    -   path: PairingSession.h
-    -   path: CheckInCounter.h
-    -   path: SessionResumptionStorage.h
-    -   path: SimpleSessionResumptionStorage.h
-    -   path: RendezvousParameters.h
+      - path: UnsolicitedStatusHandler.h
+      - path: StatusReport.h
+      - path: CASEDestinationId.h
+      - path: MessageCounterManager.h
+      - path: Constants.h
+      - path: PASESession.h
+      - path: SessionEstablishmentExchangeDispatch.h
+      - path: SessionEstablishmentDelegate.h
+      - path: CASESession.h
+      - path: CheckinMessage.h
+      - path: DefaultSessionResumptionStorage.h
+      - path: CASEServer.h
+      - path: PairingSession.h
+      - path: CheckInCounter.h
+      - path: SessionResumptionStorage.h
+      - path: SimpleSessionResumptionStorage.h
+      - path: RendezvousParameters.h
 label: libsecurechanneltypes
-package: Matter
+package: matter
 provides:
--   name: matter_libsecurechanneltypes
+  - name: matter_libsecurechanneltypes
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/protocols/secure_channel/StatusReport.cpp
+  - path: third_party/matter_sdk/src/protocols/secure_channel/StatusReport.cpp
 ui_hints:
-    visibility: never
+  visibility: never

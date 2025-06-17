@@ -83,6 +83,19 @@ void OnSoftwareFaultEventHandler(const char * faultRecordString)
 } // namespace DeviceLayer
 } // namespace chip
 
+// This method is already implemented in the Zigbee stack and is required by the Zigbee
+#ifndef SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
+extern "C" void halInternalAssertFailed(const char * filename, int linenumber)
+{
+#if SILABS_LOG_ENABLED
+    char faultMessage[kMaxFaultStringLen] = { 0 };
+    snprintf(faultMessage, sizeof faultMessage, "Assert failed: %s:%d", filename, linenumber);
+    ChipLogError(NotSpecified, "%s", faultMessage);
+#endif
+    configASSERT((volatile void *) NULL);
+}
+#endif
+
 #if HARD_FAULT_LOG_ENABLE
 /**
  * Log register contents to UART when a hard fault occurs.

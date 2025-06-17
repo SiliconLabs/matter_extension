@@ -62,9 +62,6 @@ static_library("efr32") {
     "${silabs_platform_dir}/SilabsConfig.cpp",
     "${silabs_platform_dir}/SilabsConfig.h",
     "${silabs_platform_dir}/SystemPlatformConfig.h",
-    "${silabs_platform_dir}/platformAbstraction/GsdkSpam.cpp",
-    "${silabs_platform_dir}/platformAbstraction/SilabsPlatform.h",
-    "${silabs_platform_dir}/platformAbstraction/SilabsPlatformBase.h",
     "../../FreeRTOS/SystemTimeSupport.cpp",
     "../../SingletonConfigurationManager.cpp",
   ]
@@ -77,14 +74,25 @@ static_library("efr32") {
       "../rs911x/wfx_sl_ble_init.h",
     ]
   } else {
-    sources += [ "BLEManagerImpl.cpp" ]
+    sources += [
+      "BLEChannel.h",
+      "BLEChannelImpl.cpp",
+      "BLEChannelImpl.h",
+      "BLEManagerImpl.cpp",
+    ]
   }
+
+  public_deps = [
+    "${chip_root}/src/platform:platform_base",
+    "${chip_root}/src/platform/logging:headers",
+    "${silabs_platform_dir}/platformAbstraction:gsdk",
+  ]
 
   if (chip_enable_multi_ota_requestor) {
     if (chip_enable_multi_ota_encryption) {
       sources += [
-        "${silabs_platform_dir}/multi-ota/OtaTlvEncryptionKey.cpp",
         "${silabs_platform_dir}/multi-ota/OtaTlvEncryptionKey.h",
+        "${silabs_platform_dir}/multi-ota/OtaTlvEncryptionKeyPSA.cpp",
       ]
     }
 
@@ -105,17 +113,18 @@ static_library("efr32") {
       "${silabs_platform_dir}/multi-ota/OTATlvProcessor.cpp",
       "${silabs_platform_dir}/multi-ota/OTATlvProcessor.h",
     ]
+    if (chip_enable_wifi && use_SiWx917) {
+      sources += [
+        "${silabs_platform_dir}/multi-ota/SiWx917/OTAWiFiFirmwareProcessor.cpp",
+        "${silabs_platform_dir}/multi-ota/SiWx917/OTAWiFiFirmwareProcessor.h",
+      ]
+    }
   } else if (chip_enable_ota_requestor) {
     sources += [
       "${silabs_platform_dir}/OTAImageProcessorImpl.h",
       "OTAImageProcessorImpl.cpp",
     ]
   }
-
-  public_deps = [
-    "${chip_root}/src/platform:platform_base",
-    "${chip_root}/src/platform/logging:headers",
-  ]
 
   deps = [
     "${chip_root}/src/tracing/silabs:silabs_tracing",

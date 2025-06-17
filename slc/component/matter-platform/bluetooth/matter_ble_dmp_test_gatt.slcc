@@ -1,0 +1,25 @@
+id: matter_ble_dmp_test
+package: matter
+label: GATT Configuration with MATTERoBLE and DMP Light
+description: >
+  Adds GATT Configuration required for Matter to commission over ble and adds the DMP Light
+  service to the GATT database.
+category: Stack|Bluetooth
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+provides:
+-   name: matter_ble_dmp_test
+requires:
+-   name: bluetooth_feature_connection_role_central
+-   name: bluetooth_feature_legacy_scanner
+-   name: zigbee_ble_event_handler
+-   name: zigbee_ble_dmp_cli
+template_contribution:
+  - name: component_catalog
+    value: gatt_configuration
+  - name: component_catalog
+    value: matter_ble_dmp_test
+ui_hints:
+  visibility: always

@@ -1,7 +1,7 @@
 id: matter_platform_mg
 label: Platform for xMGx series
 description: xMGx platform support for Matter. (currently Series 2 and 3)
-package: Matter
+package: matter
 category: Platform
 quality: production
 metadata:
@@ -9,32 +9,33 @@ metadata:
     license: Zlib
 
 provides:
-- name: matter_platform_mg
+  - name: matter_platform_mg
 include:
-- path: third_party/matter_sdk/examples/platform/silabs
-  file_list:
-  - path: PigweedLogger.h
-  - path: Rpc.h
-  - path: silabs_utils.h
-  - path: LEDWidget.h
-  - path: MatterConfig.h
-  - path: OTAConfig.h
-  - path: MemMonitoring.h
-  - path: BaseApplication.h
-  - path: SoftwareFaultReports.h
+  - path: third_party/matter_sdk/examples/platform/silabs
+    file_list:
+      - path: PigweedLogger.h
+      - path: Rpc.h
+      - path: silabs_utils.h
+      - path: LEDWidget.h
+      - path: MatterConfig.h
+      - path: OTAConfig.h
+      - path: MemMonitoring.h
+      - path: BaseApplication.h
+      - path: SoftwareFaultReports.h
 
 source:
-- path: third_party/matter_sdk/examples/platform/silabs/BaseApplication.cpp
-- path: third_party/matter_sdk/examples/platform/silabs/silabs_utils.cpp
-- path: third_party/matter_sdk/examples/platform/silabs/MatterConfig.cpp
-- path: third_party/matter_sdk/examples/platform/silabs/SoftwareFaultReports.cpp
-- path: third_party/matter_sdk/examples/platform/silabs/LEDWidget.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/BaseApplication.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/silabs_utils.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/MatterConfig.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/SoftwareFaultReports.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/LEDWidget.cpp
 
 toolchain_settings:
-- option: gcc_linker_option
-  value: -Wl,--wrap=MemoryAlloc
-    # Wrap these in case internal newlib call them (e.g. strdup will)
-    # directly call _malloc_r)
+  - option: gcc_linker_option
+    value:
+      -Wl,--wrap=MemoryAlloc
+      # Wrap these in case internal newlib call them (e.g. strdup will)
+      # directly call _malloc_r)
 
 requires:
   - name: matter_efr32
@@ -43,7 +44,6 @@ requires:
     condition: [matter_wifi]
   - name: power_manager
     condition: [matter_wifi]
-  - name: sl_system
   - name: freertos
   - name: sleeptimer
   - name: dmadrv
@@ -53,8 +53,8 @@ requires:
   - name: component_catalog
   - name: rail_lib_multiprotocol
   - name: rail_util_pti
-  - name: freertos_heap_3    
-# components required for series 2
+  - name: freertos_heap_3
+  # components required for series 2
   - name: gpiointerrupt
     condition: [device_series_2]
   - name: emlib

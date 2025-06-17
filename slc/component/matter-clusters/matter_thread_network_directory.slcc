@@ -1,10 +1,9 @@
-
 category: Clusters|Network Infrastructure
 description: >
   Implementation of the Thread Network Directory Server Cluster.
   The user has to enable the Thread Network Directory Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_thread_network_directory
-package: Matter
+package: matter
 label: Thread Network Directory Server Cluster
 quality: production
 metadata:

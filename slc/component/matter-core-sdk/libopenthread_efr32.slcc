@@ -1,36 +1,36 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: OPENTHREAD_CORE_CONFIG_PLATFORM_CHECK_FILE
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: OPENTHREAD_CORE_CONFIG_PLATFORM_CHECK_FILE
     value: \openthread-core-efr32-config-check.h\""
--   name: OPENTHREAD_PROJECT_CORE_CONFIG_FILE
+  - name: OPENTHREAD_PROJECT_CORE_CONFIG_FILE
     value: \OpenThreadConfig.h\""
--   name: PACKAGE_NAME
+  - name: PACKAGE_NAME
     value: \OPENTHREAD\""
--   name: PACKAGE_VERSION
+  - name: PACKAGE_VERSION
     value: \1.0.0\""
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: libopenthread_efr32
 id: libopenthread_efr32
 include:
--   path: third_party/matter_sdk/examples/platform/efr32
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/examples/platform/silabs/efr32
--   path: third_party/matter_sdk/examples/platform/silabs/efr32/project_include
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/matter_sdk/src/platform/silabs/efr32
+  - path: third_party/matter_sdk/examples/platform/efr32
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/examples/platform/silabs/efr32
+  - path: third_party/matter_sdk/examples/platform/silabs/efr32/project_include
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/matter_sdk/src/platform/silabs/efr32
 label: libopenthread_efr32
-package: Matter
+package: matter
 provides:
--   name: matter_libopenthread_efr32
+  - name: matter_libopenthread_efr32
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source: []
 ui_hints:
-    visibility: never
+  visibility: never

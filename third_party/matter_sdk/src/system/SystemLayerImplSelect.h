@@ -87,10 +87,10 @@ public:
     void HandleEvents() override;
     void EventLoopEnds() override {}
 
-#if !CHIP_SYSTEM_CONFIG_USE_DISPATCH
+#if !(CHIP_SYSTEM_CONFIG_USE_DISPATCH || CHIP_SYSTEM_CONFIG_USE_FREERTOS_SOCKETS)
     void AddLoopHandler(EventLoopHandler & handler) override;
     void RemoveLoopHandler(EventLoopHandler & handler) override;
-#endif // !CHIP_SYSTEM_CONFIG_USE_DISPATCH
+#endif // !(CHIP_SYSTEM_CONFIG_USE_DISPATCH || CHIP_SYSTEM_CONFIG_USE_FREERTOS_SOCKETS)
 
 #if CHIP_SYSTEM_CONFIG_USE_DISPATCH
     void SetDispatchQueue(dispatch_queue_t dispatchQueue) override { mDispatchQueue = dispatchQueue; };

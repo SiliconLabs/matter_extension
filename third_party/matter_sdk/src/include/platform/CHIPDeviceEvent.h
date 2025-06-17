@@ -255,6 +255,11 @@ enum PublicEventTypes
      * Signals that secure session is established.
      */
     kSecureSessionEstablished,
+
+    /**
+     * Signals that socket select operation to be started.
+     */
+    kSocketSelectStart,
 };
 
 /**
@@ -439,6 +444,16 @@ struct ChipDeviceEvent final
                 ConnectivityChange Result;
             } ViaThread;
         } ServiceConnectivityChange;
+#if CHIP_SYSTEM_CONFIG_USE_FREERTOS_SOCKETS
+        // TODO: check why linux is failing due to fd_set
+        struct
+        {
+            int FD;
+            fd_set ReadSet;
+            fd_set WriteSet;
+            fd_set ErrorSet;
+        } SocketSelectStart;
+#endif // CHIP_SYSTEM_CONFIG_USE_FREERTOS_SOCKETS
         struct
         {
             ConnectivityChange Result;
@@ -534,6 +549,7 @@ struct ChipDeviceEvent final
             FabricIndex fabricIndex;
             bool addNocCommandHasBeenInvoked;
             bool updateNocCommandHasBeenInvoked;
+            bool updateTermsAndConditionsHasBeenInvoked;
         } FailSafeTimerExpired;
 
         struct

@@ -2,7 +2,7 @@ id: matter_crypto_tinycrypt_siwx917
 label: Matter MbedTLS Integration
 description: >
   mbedtls and Tinycrypt for SiWx917 SoC
-package: "Matter"
+package: matter
 category: "Matter-WiFi|Platform|Tinycrypt"
 quality: production
 metadata:

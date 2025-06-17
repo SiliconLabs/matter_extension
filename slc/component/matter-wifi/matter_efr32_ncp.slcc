@@ -1,5 +1,5 @@
 id: matter_efr32_ncp
-package: Matter
+package: matter
 label: Src Platform EFR32 Components
 description: >
   EFR32 based Wifi Interfaces for NCPs
@@ -11,6 +11,13 @@ metadata:
 
 provides:
   - name: matter_efr32_ncp
+
+include:
+  - path: slc/inc/wifi
+    file_list:
+      - path: brd4186c.h
+      - path: brd4187c.h
+      - path: sl_custom_board.h
 
 define:
   - name: CORTEXM3_EFM32_MICRO

@@ -1,7 +1,7 @@
 id: enable_synchronized_sed
 label: Matter Synchronized SED
 description: SSED Specific configurations
-package: "Matter"
+package: matter
 category: Matter-Thread
 quality: experimental
 metadata:

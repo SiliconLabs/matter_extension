@@ -1,5 +1,5 @@
 id: matter_memory_monitoring
-package: "Matter"
+package: matter
 category: Platform
 description: Component to enable memory monitoring
 label: Memory Monitoring

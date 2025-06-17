@@ -1,10 +1,9 @@
-
 category: Clusters|Media
 description: >
   Implementation of the Target Navigator Server Cluster.
   The user has to enable the Target Navigator Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_target_navigator
-package: Matter
+package: matter
 label: Target Navigator Server Cluster
 quality: production
 metadata:

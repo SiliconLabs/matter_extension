@@ -1,10 +1,9 @@
-
 category: Clusters|Energy Management
 description: >
   Implementation of the Device Energy Management Server Cluster.
   The user has to enable the Device Energy Management Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_device_energy_management
-package: Matter
+package: matter
 label: Device Energy Management Server Cluster
 quality: production
 metadata:

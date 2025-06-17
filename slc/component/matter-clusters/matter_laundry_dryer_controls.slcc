@@ -1,10 +1,9 @@
-
 category: Clusters|Appliances
 description: >
   Implementation of the Laundry Dryer Controls Server Cluster.
   The user has to enable the Laundry Dryer Controls Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_laundry_dryer_controls
-package: Matter
+package: matter
 label: Laundry Dryer Controls Server Cluster
 quality: production
 metadata:

@@ -62,21 +62,10 @@ using namespace ::chip::DeviceLayer;
 
 AppTask AppTask::sAppTask;
 
-CHIP_ERROR AppTask::Init()
+CHIP_ERROR AppTask::AppInit()
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
     chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(AppTask::ButtonEventHandler);
-
-#ifdef DISPLAY_ENABLED
-    GetLCD().Init((uint8_t *) "onoffPlug-App");
-#endif
-
-    err = BaseApplication::Init();
-    if (err != CHIP_NO_ERROR)
-    {
-        SILABS_LOG("BaseApplication::Init() failed");
-        appError(err);
-    }
 
     err = PlugMgr().Init();
     if (err != CHIP_NO_ERROR)
@@ -85,7 +74,7 @@ CHIP_ERROR AppTask::Init()
         appError(err);
     }
 
-    PlugMgr().SetCallbacks(ActionInitiated, ActionCompleted);
+    PlugMgr().SetCallbacks(ActionCallback);
 
     sOnOffLED.Init(ONOFF_LED);
     sOnOffLED.Set(PlugMgr().IsPlugOn());
@@ -186,7 +175,7 @@ void AppTask::ButtonEventHandler(uint8_t button, uint8_t btnAction)
     }
 }
 
-void AppTask::ActionInitiated(OnOffPlugManager::Action_t aAction, int32_t aActor)
+void AppTask::ActionCallback(OnOffPlugManager::Action_t aAction, int32_t aActor)
 {
     // Action initiated, update the light led
     bool lightOn = aAction == OnOffPlugManager::ON_ACTION;
@@ -198,15 +187,6 @@ void AppTask::ActionInitiated(OnOffPlugManager::Action_t aAction, int32_t aActor
     sAppTask.GetLCD().WriteDemoUI(lightOn);
 #endif
 
-    if (aActor == AppEvent::kEventType_Button)
-    {
-        sAppTask.mSyncClusterToButtonAction = true;
-    }
-}
-
-void AppTask::ActionCompleted(OnOffPlugManager::Action_t aAction)
-{
-    // action has been completed on the outlet
     if (aAction == OnOffPlugManager::ON_ACTION)
     {
         SILABS_LOG("Outlet ON")
@@ -216,11 +196,11 @@ void AppTask::ActionCompleted(OnOffPlugManager::Action_t aAction)
         SILABS_LOG("Outlet OFF")
     }
 
-    if (sAppTask.mSyncClusterToButtonAction)
+    if (aActor == AppEvent::kEventType_Button)
     {
         chip::DeviceLayer::PlatformMgr().ScheduleWork(UpdateClusterState, reinterpret_cast<intptr_t>(nullptr));
-        sAppTask.mSyncClusterToButtonAction = false;
     }
+
 }
 
 void AppTask::UpdateClusterState(intptr_t context)

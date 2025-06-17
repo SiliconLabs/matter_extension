@@ -1,0 +1,27 @@
+id: matter_ble_side_channel
+package: matter
+label: matter_ble_side_channel
+description: >
+    Enables ble side channel POC in Matter Apps
+category: Matter|Core
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+
+provides:
+-   name: matter_ble_side_channel
+include:
+-   path: third_party/matter_sdk/src/platform/silabs/efr32/
+    file_list:
+        - path:   BLEChannelImpl.h
+source:
+-   path: third_party/matter_sdk/src/platform/silabs/efr32/BLEChannelImpl.cpp
+requires:
+-   name: matter_gatt_dynamic
+define:
+-   name: SL_BLE_SIDE_CHANNEL_ENABLED
+    value: '1'
+
+ui_hints:
+    visibility: never

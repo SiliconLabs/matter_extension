@@ -32,6 +32,7 @@
 
 #include "sl_status.h"
 
+#include "sl_si91x_driver_gpio.h"
 
 
 #include "sl_si91x_power_manager_wakeup_source_config.h"
@@ -39,6 +40,7 @@
 
 sl_status_t sl_si91x_power_manager_wakeup_init(void);
 
+sl_status_t sli_si91x_power_manager_gpio_init(void);
 
 
 #endif // SL_SI91X_POWER_MANAGER_WAKEUP_HANDLER_H

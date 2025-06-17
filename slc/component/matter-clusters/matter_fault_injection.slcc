@@ -1,10 +1,9 @@
-
 category: Clusters|CHIP
 description: >
   Implementation of the Fault Injection Server Cluster.
   The user has to enable the Fault Injection Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_fault_injection
-package: Matter
+package: matter
 label: Fault Injection Server Cluster
 quality: production
 metadata:

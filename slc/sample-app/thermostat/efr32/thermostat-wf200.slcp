@@ -3,14 +3,15 @@ label: Matter Thermostat
 description: >
   Matter Thermostat For WiFi
 quality: production
-package: Matter
+package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.2"
+    version: "2.6.0"
 
 component:
   - id: device_init
+  - id: sl_main
   - id: matter_buttons
     from: matter
   - id: matter_leds
@@ -26,7 +27,7 @@ component:
     from: matter
   - id: matter_crypto
     from: matter
-  - id: matter_gatt
+  - id: matter_gatt_static
     from: matter
   - id: matter_provision_default
     from: matter
@@ -37,9 +38,9 @@ component:
     from: matter
   - id: wf200_ncp
     from: matter
-    
+
   - id: matter_thermostat_app
-    from: matter   
+    from: matter
   - id: app_common
     from: matter
   - id: matter_test_event_trigger
@@ -95,7 +96,7 @@ component:
     from: matter
   - id: matter_wifi_network_diagnostics
     from: matter
-# Override configuration for JTAG use
+  # Override configuration for JTAG use
   - id: matter_configuration_over_swo
     from: matter
   - id: matter_segger_rtt
@@ -113,11 +114,11 @@ requires:
   - name: spidrv_instance
   - name: uartdrv_eusart
     condition:
-    - device_series_2
-# Select UART/EUART drivers based on device series
+      - device_series_2
+  # Select UART/EUART drivers based on device series
   - name: matter_drivers_series_2_wifi_wf200
     condition:
-     - device_series_2
+      - device_series_2
 
 config_file:
   - path: ../../../../third_party/matter_sdk/examples/thermostat/thermostat-common/thermostat.zap
@@ -137,7 +138,6 @@ include:
       - path: TemperatureManager.h
       - path: CHIPProjectConfig.h
     directory: include
-
 
 source:
   - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/AppTask.cpp
@@ -172,7 +172,8 @@ configuration:
     value: "1"
   - name: SL_POWER_MANAGER_CONFIG_VOLTAGE_SCALING_FAST_WAKEUP
     value: "1"
-  - {name: SL_STACK_SIZE, value: '4608'}
+  - name: SL_STACK_SIZE
+    value: "4608"
   - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
     value: 1536
   - name: MATTER_WIFI_WF200
@@ -195,6 +196,6 @@ tag:
   - hardware:component:led:2+
 post_build:
   profile: application
-  
+
 other_file:
   - path: ../../../image/qr_code_img.png

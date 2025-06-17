@@ -1,124 +1,124 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: libsupportlayer
 id: libsupportlayer
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/lib/support/logging
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/lib/support/logging
     file_list:
-    -   path: BinaryLogging.h
-    -   path: CHIPLogging.h
-    -   path: Constants.h
-    -   path: TextOnlyLogging.h
--   path: third_party/matter_sdk/src/lib/support
+      - path: BinaryLogging.h
+      - path: CHIPLogging.h
+      - path: Constants.h
+      - path: TextOnlyLogging.h
+  - path: third_party/matter_sdk/src/lib/support
     file_list:
-    -   path: StringSplitter.h
-    -   path: PersistentStorageAudit.h
-    -   path: CHIPPlatformMemory.h
-    -   path: SafeString.h
-    -   path: ScopedBuffer.h
-    -   path: IntrusiveList.h
-    -   path: Pool.h
-    -   path: CHIPMemString.h
-    -   path: BufferReader.h
-    -   path: TestPersistentStorageDelegate.h
-    -   path: JniTypeWrappers.h
-    -   path: Base64.h
-    -   path: UnitTestUtils.h
-    -   path: SetupDiscriminator.h
-    -   path: CHIPJNIError.h
-    -   path: TypeTraits.h
-    -   path: CHIPCounter.h
-    -   path: EnforceFormat.h
-    -   path: IniEscaping.h
-    -   path: CHIPFaultInjection.h
-    -   path: StateMachine.h
-    -   path: PrivateHeap.h
-    -   path: BitMask.h
-    -   path: Scoped.h
-    -   path: UnitTest.h
-    -   path: LinkedList.h
-    -   path: SafeInt.h
-    -   path: TimeUtils.h
-    -   path: CHIPMem.h
-    -   path: static_support_smart_ptr.h
-    -   path: BufferWriter.h
-    -   path: CommonPersistentData.h
-    -   path: CodeUtils.h
-    -   path: ObjectDump.h
-    -   path: Compiler.h
-    -   path: JniReferences.h
-    -   path: DefaultStorageKeyAllocator.h
-    -   path: FunctionTraits.h
-    -   path: BytesToHex.h
-    -   path: TestGroupData.h
-    -   path: LambdaBridge.h
-    -   path: PersistedCounter.h
-    -   path: Fold.h
-    -   path: ReferenceCountedHandle.h
-    -   path: LifetimePersistedCounter.h
-    -   path: Span.h
-    -   path: Defer.h
-    -   path: StringBuilder.h
-    -   path: ObjectLifeCycle.h
-    -   path: CHIPArgParser.hpp
-    -   path: SortUtils.h
-    -   path: ZclString.h
-    -   path: PersistentStorageMacros.h
-    -   path: VerificationMacrosNoLogging.h
-    -   path: CommonIterator.h
-    -   path: Iterators.h
-    -   path: PersistentData.h
-    -   path: SafePointerCast.h
-    -   path: FixedBufferAllocator.h
-    -   path: DLLUtil.h
-    -   path: BytesCircularBuffer.h
-    -   path: utf8.h
-    -   path: BitFlags.h
-    -   path: FibonacciUtils.h
-    -   path: ThreadOperationalDataset.h
-    -   path: Variant.h
-    -   path: PoolWrapper.h
--   path: third_party/matter_sdk/src/lib/support/verhoeff
+      - path: StringSplitter.h
+      - path: PersistentStorageAudit.h
+      - path: CHIPPlatformMemory.h
+      - path: SafeString.h
+      - path: ScopedBuffer.h
+      - path: IntrusiveList.h
+      - path: Pool.h
+      - path: CHIPMemString.h
+      - path: BufferReader.h
+      - path: TestPersistentStorageDelegate.h
+      - path: JniTypeWrappers.h
+      - path: Base64.h
+      - path: UnitTestUtils.h
+      - path: SetupDiscriminator.h
+      - path: CHIPJNIError.h
+      - path: TypeTraits.h
+      - path: CHIPCounter.h
+      - path: EnforceFormat.h
+      - path: IniEscaping.h
+      - path: CHIPFaultInjection.h
+      - path: StateMachine.h
+      - path: PrivateHeap.h
+      - path: BitMask.h
+      - path: Scoped.h
+      - path: UnitTest.h
+      - path: LinkedList.h
+      - path: SafeInt.h
+      - path: TimeUtils.h
+      - path: CHIPMem.h
+      - path: static_support_smart_ptr.h
+      - path: BufferWriter.h
+      - path: CommonPersistentData.h
+      - path: CodeUtils.h
+      - path: ObjectDump.h
+      - path: Compiler.h
+      - path: JniReferences.h
+      - path: DefaultStorageKeyAllocator.h
+      - path: FunctionTraits.h
+      - path: BytesToHex.h
+      - path: TestGroupData.h
+      - path: LambdaBridge.h
+      - path: PersistedCounter.h
+      - path: Fold.h
+      - path: ReferenceCountedHandle.h
+      - path: LifetimePersistedCounter.h
+      - path: Span.h
+      - path: Defer.h
+      - path: StringBuilder.h
+      - path: ObjectLifeCycle.h
+      - path: CHIPArgParser.hpp
+      - path: SortUtils.h
+      - path: ZclString.h
+      - path: PersistentStorageMacros.h
+      - path: VerificationMacrosNoLogging.h
+      - path: CommonIterator.h
+      - path: Iterators.h
+      - path: PersistentData.h
+      - path: SafePointerCast.h
+      - path: FixedBufferAllocator.h
+      - path: DLLUtil.h
+      - path: BytesCircularBuffer.h
+      - path: utf8.h
+      - path: BitFlags.h
+      - path: FibonacciUtils.h
+      - path: ThreadOperationalDataset.h
+      - path: Variant.h
+      - path: PoolWrapper.h
+  - path: third_party/matter_sdk/src/lib/support/verhoeff
     file_list:
-    -   path: Verhoeff.h
+      - path: Verhoeff.h
 label: libsupportlayer
-package: Matter
+package: matter
 provides:
--   name: matter_libsupportlayer
+  - name: matter_libsupportlayer
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/lib/support/Base64.cpp
--   path: third_party/matter_sdk/src/lib/support/BufferReader.cpp
--   path: third_party/matter_sdk/src/lib/support/BufferWriter.cpp
--   path: third_party/matter_sdk/src/lib/support/BytesCircularBuffer.cpp
--   path: third_party/matter_sdk/src/lib/support/BytesToHex.cpp
--   path: third_party/matter_sdk/src/lib/support/CHIPArgParser.cpp
--   path: third_party/matter_sdk/src/lib/support/FibonacciUtils.cpp
--   path: third_party/matter_sdk/src/lib/support/FixedBufferAllocator.cpp
--   path: third_party/matter_sdk/src/lib/support/IniEscaping.cpp
--   path: third_party/matter_sdk/src/lib/support/PersistentStorageAudit.cpp
--   path: third_party/matter_sdk/src/lib/support/Pool.cpp
--   path: third_party/matter_sdk/src/lib/support/PrivateHeap.cpp
--   path: third_party/matter_sdk/src/lib/support/StringBuilder.cpp
--   path: third_party/matter_sdk/src/lib/support/ThreadOperationalDataset.cpp
--   path: third_party/matter_sdk/src/lib/support/TimeUtils.cpp
--   path: third_party/matter_sdk/src/lib/support/ZclString.cpp
--   path: third_party/matter_sdk/src/lib/support/logging/BinaryLogging.cpp
--   path: third_party/matter_sdk/src/lib/support/utf8.cpp
--   path: third_party/matter_sdk/src/lib/support/verhoeff/Verhoeff.cpp
--   path: third_party/matter_sdk/src/lib/support/verhoeff/Verhoeff10.cpp
+  - path: third_party/matter_sdk/src/lib/support/Base64.cpp
+  - path: third_party/matter_sdk/src/lib/support/BufferReader.cpp
+  - path: third_party/matter_sdk/src/lib/support/BufferWriter.cpp
+  - path: third_party/matter_sdk/src/lib/support/BytesCircularBuffer.cpp
+  - path: third_party/matter_sdk/src/lib/support/BytesToHex.cpp
+  - path: third_party/matter_sdk/src/lib/support/CHIPArgParser.cpp
+  - path: third_party/matter_sdk/src/lib/support/FibonacciUtils.cpp
+  - path: third_party/matter_sdk/src/lib/support/FixedBufferAllocator.cpp
+  - path: third_party/matter_sdk/src/lib/support/IniEscaping.cpp
+  - path: third_party/matter_sdk/src/lib/support/PersistentStorageAudit.cpp
+  - path: third_party/matter_sdk/src/lib/support/Pool.cpp
+  - path: third_party/matter_sdk/src/lib/support/PrivateHeap.cpp
+  - path: third_party/matter_sdk/src/lib/support/StringBuilder.cpp
+  - path: third_party/matter_sdk/src/lib/support/ThreadOperationalDataset.cpp
+  - path: third_party/matter_sdk/src/lib/support/TimeUtils.cpp
+  - path: third_party/matter_sdk/src/lib/support/ZclString.cpp
+  - path: third_party/matter_sdk/src/lib/support/logging/BinaryLogging.cpp
+  - path: third_party/matter_sdk/src/lib/support/utf8.cpp
+  - path: third_party/matter_sdk/src/lib/support/verhoeff/Verhoeff.cpp
+  - path: third_party/matter_sdk/src/lib/support/verhoeff/Verhoeff10.cpp
 ui_hints:
-    visibility: never
+  visibility: never

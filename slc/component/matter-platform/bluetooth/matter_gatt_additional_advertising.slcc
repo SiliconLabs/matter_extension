@@ -2,16 +2,16 @@ id: matter_gatt_additional_advertising
 label: GATT Additional Advertising
 description: >
   GATT Additional Advertising Configurations for Matter.
-package: "Matter"
+package: matter
 category: Stack|Bluetooth
 quality: production
 metadata:
   sbom:
     license: Zlib
-define: 
+define:
   - name: CHIP_ENABLE_ROTATING_DEVICE_ID
   - name: CHIP_ENABLE_ADDITIONAL_DATA_ADVERTISING
 requires:
--   name: matter_additional_data_payload
+  - name: matter_additional_data_payload
 provides:
--   name: matter_gatt_additional_advertising
+  - name: matter_gatt_additional_advertising

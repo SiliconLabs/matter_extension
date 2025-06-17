@@ -1,6 +1,6 @@
 category: Multi-Protocol Application
 label: Matter Zigbee Sequential
-package: Matter
+package: matter
 description: >
   Provides example component for a sequential zigbee and matter application.
 id: matter_zigbee_sequential

@@ -148,7 +148,7 @@ component_dir = os.path.join(root, "slc", "component", "matter-clusters")
 
 
 for clustercomponentname in sorted(cluster_data.keys()):
-    filedata = [""]
+    filedata = []
     clustername = cluster_data[clustercomponentname]["clustername"]
     try:
         # Special cases for filename differences
@@ -221,7 +221,7 @@ for clustercomponentname in sorted(cluster_data.keys()):
     id_str = "matter_" + clustername
     id = "id: {}".format(id_str)
     filedata.append(id)
-    filedata.append("package: Matter")
+    filedata.append("package: matter")
     
     label_str = "label: {}".format(label)
     filedata.append(label_str)

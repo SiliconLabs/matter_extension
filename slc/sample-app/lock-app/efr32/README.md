@@ -1,7 +1,7 @@
 # CHIP EFR32 Lock Example
 
 The EFR32 lock example provides a baseline demonstration of a door lock control
-device, built using Matter and the Silicon Labs Gecko SDK. It can be controlled by
+device, built using Matter and the Silicon Labs simplicity SDK. It can be controlled by
 a Matter controller over Openthread network.
     
 The EFR32 device can be commissioned over Bluetooth Low Energy where the device
@@ -19,7 +19,7 @@ out-of-the-box and therefore has the matter_icd_management component enabled.**
 
 For more general information on running matter applications and pre-requisites please look at online 
 documentation for Matter available on docs.silabs.com. Follow Thread demo instructions depending on the example you are running.
-[Demo instructions for Thread](https://docs.silabs.com/matter/2.5.2/matter-thread)
+[Demo instructions for Thread](https://docs.silabs.com/matter/2.6.0/matter-thread)
 
 ## Lock Application User Interface
 
@@ -104,7 +104,7 @@ If LEDs are supported by the board but not enabled in a project they can be enab
 
 ## Provision and Control
 
-You can provision and control the Matter device using the python controller, chip-tool (standalone or pre-built), Android, iOS app or the mattertool utility from the Matter Hub package provided by Silicon Labs. The pre-built chip-tool instance ships with the Matter Hub image. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.5.2/matter-thread/raspi-img)
+You can provision and control the Matter device using the python controller, chip-tool (standalone or pre-built), Android, iOS app or the mattertool utility from the Matter Hub package provided by Silicon Labs. The pre-built chip-tool instance ships with the Matter Hub image. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.6.0/matter-thread/raspi-img)
 
 
     

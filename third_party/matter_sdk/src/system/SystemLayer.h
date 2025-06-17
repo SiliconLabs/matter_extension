@@ -338,7 +338,7 @@ public:
     virtual void HandleEvents()    = 0;
     virtual void EventLoopEnds()   = 0;
 
-#if !CHIP_SYSTEM_CONFIG_USE_DISPATCH
+#if !(CHIP_SYSTEM_CONFIG_USE_DISPATCH || CHIP_SYSTEM_CONFIG_USE_FREERTOS_SOCKETS)
     virtual void AddLoopHandler(EventLoopHandler & handler)    = 0;
     virtual void RemoveLoopHandler(EventLoopHandler & handler) = 0;
 #endif // !CHIP_SYSTEM_CONFIG_USE_DISPATCH

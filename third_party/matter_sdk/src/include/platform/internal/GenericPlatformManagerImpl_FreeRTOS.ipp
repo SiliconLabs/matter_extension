@@ -217,7 +217,7 @@ void GenericPlatformManagerImpl_FreeRTOS<ImplClass>::_RunEventLoop(void)
 
                 // Call into the system layer to dispatch the callback functions for all timers
                 // that have expired.
-                err = static_cast<System::LayerImplFreeRTOS &>(DeviceLayer::SystemLayer()).HandlePlatformTimer();
+                err = static_cast<System::LayerImpl &>(DeviceLayer::SystemLayer()).HandlePlatformTimer();
                 if (err != CHIP_NO_ERROR)
                 {
                     ChipLogError(DeviceLayer, "Error handling CHIP timers: %" CHIP_ERROR_FORMAT, err.Format());

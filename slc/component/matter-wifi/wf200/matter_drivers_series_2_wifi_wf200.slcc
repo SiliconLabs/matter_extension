@@ -2,7 +2,7 @@ id: matter_drivers_series_2_wifi_wf200
 label: Matter UART selection for Series 2 boards (WF200)
 description: >
   Matter UART selection for Series 2 boards
-package: "Matter"
+package: matter
 category: "Matter-WiFi|Platform|Drivers"
 quality: production
 metadata:
@@ -20,9 +20,9 @@ recommends:
 requires:
   - name: device_init_dpll
     condition:
-     - device_series_2
+      - device_series_2
   - name: mx25_flash_shutdown_usart
     condition:
-    - device_series_2
+      - device_series_2
   - name: power_manager_no_deepsleep
     condition: [device_series_2, matter_lcd]

@@ -41,7 +41,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.lighting-app.efr32.lighting-app-thread.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/lighting-app/efr32/lighting-app-thread.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4116a brd4117a brd4118a brd4186c brd4187c brd4316a brd4317a brd4318a brd4337a brd2601b brd2608a brd2703a brd4350a brd4351a brd2709a brd2704a brd1019a brd4319a:0.0.0.A00 com.silabs.board.none "/>
+    <properties key="boardCompatibility" value="brd4116a brd4117a brd4118a brd4186c brd4187c brd4316a brd4317a brd4318a brd4337a brd2601b brd2608a brd2703a brd4350a brd4351a brd2709a brd2704a brd1019a brd4319a:0.0.0.A00 brd4407a com.silabs.board.none "/>
     <properties key="partCompatibility" value=".*efr32mg24.* .*efr32mg26.* .*mgm24.* .*simg301.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1078,7 +1078,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.zigbee-matter-light.efr32.zigbee-matter-light.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/zigbee-matter-light/efr32/zigbee-matter-light.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/zigbee-matter-light/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4116a brd4117a brd4118a brd4187c brd2608a brd1019a com.silabs.board.none "/>
+    <properties key="boardCompatibility" value="brd4116a brd4117a brd4118a brd4187c brd2608a brd1019a brd4407a com.silabs.board.none "/>
     <properties key="partCompatibility" value=".*efr32mg24.* .*efr32mg26.* .*mgm24.* .*simg301.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1197,7 +1197,7 @@
     <properties key="solutionReferenceId" value="slc.solutions.zigbee-matter-light.series-3.zigbee-matter-light-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/solutions/zigbee-matter-light/series-3/zigbee-matter-light-bootloader.slcw"/>
     <properties key="readmeFiles" value="slc/sample-app/zigbee-matter-light/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd1019a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd1019a brd4407a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*simg301.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1214,7 +1214,7 @@
     <properties key="solutionReferenceId" value="slc.solutions.lighting-app.series-3.lighting-app-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/solutions/lighting-app/series-3/lighting-app-thread-bootloader.slcw"/>
     <properties key="readmeFiles" value="slc/sample-app/lighting-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd1019a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd1019a brd4407a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*simg301.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1231,7 +1231,7 @@
     <properties key="solutionReferenceId" value="slc.sample-app.bootloaders.bootloader-storage-single-4096k-series-3.bootloader-storage-single-4096k-series-3.slcp"/>
     <properties key="projectFilePaths" value="slc/sample-app/bootloaders/bootloader-storage-single-4096k-series-3/bootloader-storage-single-4096k-series-3.slcp"/>
     <properties key="readmeFiles" value="slc/sample-app/bootloaders/bootloader-storage-single-4096k-series-3/readme.md"/>
-    <properties key="boardCompatibility" value="brd1019a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd1019a brd4407a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*simg301.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>

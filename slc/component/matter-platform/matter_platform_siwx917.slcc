@@ -1,12 +1,17 @@
 id: matter_platform_siwx917
 label: Platform for SiWx917
 description: SiWx917 platform support for Matter
-package: "Matter"
+package: matter
 category: "Matter-WiFi|Platform"
 quality: production
 metadata:
   sbom:
     license: Zlib
+config_file:
+  - path: third_party/matter_sdk/src/lwip/silabs/lwipopts.h
+    override:
+      component: "%extension-wiseconnect3_sdk%wifi_resources"
+      file_id: lwipopts
 
 requires:
   - name: sl_system
@@ -14,21 +19,20 @@ requires:
   - name: matter_siwx917_common
   - name: sl_si91x_trng
   - name: siwx917_soc_custom_hal
-  - name: device_init_nvic
   - name: si91x_debug
   - name: sl_system_init
   - name: nvm3_default
   - name: memory_manager
   - name: memory_manager_pool
-  - name: freertos_heap_3
-# TODO : psram components - should be removed with wiseconnect SDK support
+  - name: freertos_heap_4
+  # TODO : psram components - should be removed with wiseconnect SDK support
   - name: psram_core
     condition: [brd4342a]
   - name: psram_aps6404l_sqh
     condition: [brd4342a]
   - name: device_needs_ram_execution
     condition: [brd4342a]
-# Configure a text segment in the PSRAM region for boards with PSRAM support
+  # Configure a text segment in the PSRAM region for boards with PSRAM support
   - name: siwx917_text_segment_in_psram
     condition: [brd4342a]
 
@@ -38,17 +42,17 @@ provides:
   - name: matter_si91x_common_flash_nvm3_enabled
 
 include:
-- path: third_party/matter_sdk/examples/platform/silabs
-  file_list:
-  - path: PigweedLogger.h
-  - path: Rpc.h
-  - path: silabs_utils.h
-  - path: LEDWidget.h
-  - path: MatterConfig.h
-  - path: OTAConfig.h
-  - path: MemMonitoring.h
-  - path: BaseApplication.h
-  - path: SoftwareFaultReports.h
+  - path: third_party/matter_sdk/examples/platform/silabs
+    file_list:
+      - path: PigweedLogger.h
+      - path: Rpc.h
+      - path: silabs_utils.h
+      - path: LEDWidget.h
+      - path: MatterConfig.h
+      - path: OTAConfig.h
+      - path: MemMonitoring.h
+      - path: BaseApplication.h
+      - path: SoftwareFaultReports.h
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/BaseApplication.cpp
   - path: third_party/matter_sdk/examples/platform/silabs/silabs_utils.cpp
@@ -68,26 +72,12 @@ define:
   - name: RS911X_WIFI
   - name: SL_SI91x_DUAL_INTERRUPTS_ERRATA
   - name: NVM3_LOCK_OVERRIDE
+  - name: SL_WLAN_EVENT_THREAD_PRIORITY
+    value: osPriorityRealtime6
+  - name: SL_WLAN_COMMAND_ENGINE_THREAD_PRIORITY
+    value: osPriorityRealtime5
 toolchain_settings:
   - option: gcc_linker_option
     value: "-Wl,--wrap=MemoryAlloc"
     # Wrap these in case internal newlib call them (e.g. strdup will)
     # directly call _malloc_r)
-
-  # flags for the SiWx917
-  - option: gcc_compiler_option
-    value: -Wno-empty-body
-  - option: gcc_compiler_option
-    value: -Wno-cpp
-  - option: gcc_compiler_option
-    value: -Wno-missing-braces
-  - option: gcc_compiler_option
-    value: -Wno-sign-compare
-  - option: gcc_compiler_option
-    value: -Wno-error
-  - option: gcc_compiler_option
-    value: -Wno-unused-variable
-  - option: gcc_compiler_option
-    value: -Wno-unused-function
-  - option: gcc_compiler_option
-    value: -Wno-unused-parameter

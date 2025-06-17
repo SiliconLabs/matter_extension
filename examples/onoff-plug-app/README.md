@@ -29,7 +29,7 @@ An example showing the use of MATTER on the Silicon Labs EFR32 MG24.
 ## Introduction
 
 The EFR32 onoff-plug example provides a baseline demonstration of a Plug/outlet
-control device, built using Matter and the Silicon Labs gecko SDK. It can be
+control device, built using Matter and the Silicon Labs simplicity SDK. It can be
 controlled by a Matter controller over Openthread network..
 
 The EFR32 device can be commissioned over Bluetooth Low Energy where the device

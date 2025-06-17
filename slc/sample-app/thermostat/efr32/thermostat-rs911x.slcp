@@ -3,14 +3,15 @@ label: Matter Thermostat
 description: >
   Matter Thermostat For WiFi
 quality: production
-package: Matter
+package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.2"
+    version: "2.6.0"
 
 component:
   - id: device_init
+  - id: sl_main
   - id: matter_buttons
     from: matter
   - id: matter_leds
@@ -168,7 +169,8 @@ configuration:
     value: "21"
   - name: SL_POWER_MANAGER_CONFIG_VOLTAGE_SCALING_FAST_WAKEUP
     value: "1"
-  - { name: SL_STACK_SIZE, value: "4608" }
+  - name: SL_STACK_SIZE
+    value: "4608"
   - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS
     value: 1
 
@@ -191,6 +193,6 @@ tag:
   - hardware:component:led:2+
 post_build:
   profile: application
-  
+
 other_file:
   - path: ../../../image/qr_code_img.png

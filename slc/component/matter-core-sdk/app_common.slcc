@@ -1,75 +1,75 @@
 category: Matter|Core
 define:
--   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+  - name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
     value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: app_common
 id: app_common
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/app/reporting
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/app/reporting
     file_list:
-    -   path: ReportSchedulerImpl.h
-    -   path: Engine.h
-    -   path: SynchronizedReportSchedulerImpl.h
-    -   path: reporting.h
-    -   path: Read-Checked.h
-    -   path: ReportScheduler.h
--   path: third_party/matter_sdk/src/app
+      - path: ReportSchedulerImpl.h
+      - path: Engine.h
+      - path: SynchronizedReportSchedulerImpl.h
+      - path: reporting.h
+      - path: Read-Checked.h
+      - path: ReportScheduler.h
+  - path: third_party/matter_sdk/src/app
     file_list:
-    -   path: util/attribute-table.h
-    -   path: util/attribute-table-detail.h
-    -   path: util/attribute-storage-detail.h
-    -   path: util/ember-io-storage.h
-    -   path: util/ember-global-attribute-access-interface.h
-    -   path: util/endpoint-config-api.h
-    -   path: util/DataModelHandler.h
-    -   path: util/config.h
-    -   path: util/binding-table.h
-    -   path: util/af-types.h
-    -   path: util/im-client-callbacks.h
-    -   path: util/attribute-storage.h
-    -   path: util/ember-strings.h
-    -   path: util/types_stub.h
-    -   path: util/util.h
-    -   path: util/attribute-metadata.h
-    -   path: util/endpoint-config-defines.h
-    -   path: util/privilege-storage.h
-    -   path: util/MatterCallbacks.h
-    -   path: util/basic-types.h
-    -   path: util/ember-compatibility-functions.h
-    -   path: util/attribute-storage-null-handling.h
-    -   path: util/odd-sized-integers.h
-    -   path: util/generic-callbacks.h
-    -   path: util/IMClusterCommandHandler.h
--   path: third_party/matter_sdk/src/app/ember_coupling
+      - path: util/attribute-table.h
+      - path: util/attribute-table-detail.h
+      - path: util/attribute-storage-detail.h
+      - path: util/ember-io-storage.h
+      - path: util/ember-global-attribute-access-interface.h
+      - path: util/endpoint-config-api.h
+      - path: util/DataModelHandler.h
+      - path: util/config.h
+      - path: util/binding-table.h
+      - path: util/af-types.h
+      - path: util/im-client-callbacks.h
+      - path: util/attribute-storage.h
+      - path: util/ember-strings.h
+      - path: util/types_stub.h
+      - path: util/util.h
+      - path: util/attribute-metadata.h
+      - path: util/endpoint-config-defines.h
+      - path: util/privilege-storage.h
+      - path: util/MatterCallbacks.h
+      - path: util/basic-types.h
+      - path: util/ember-compatibility-functions.h
+      - path: util/attribute-storage-null-handling.h
+      - path: util/odd-sized-integers.h
+      - path: util/generic-callbacks.h
+      - path: util/IMClusterCommandHandler.h
+  - path: third_party/matter_sdk/src/app/ember_coupling
     file_list:
-    -   path: EventPathValidity.mixin.h
+      - path: EventPathValidity.mixin.h
 label: app_common
-package: Matter
+package: matter
 provides:
--   name: matter_app_common
+  - name: matter_app_common
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/app/reporting/reporting.cpp
--   path: third_party/matter_sdk/src/app/util/DataModelHandler.cpp
--   path: third_party/matter_sdk/src/app/util/attribute-storage.cpp
--   path: third_party/matter_sdk/src/app/util/attribute-table.cpp
--   path: third_party/matter_sdk/src/app/util/binding-table.cpp
--   path: third_party/matter_sdk/src/app/util/ember-compatibility-functions.cpp
--   path: third_party/matter_sdk/src/app/util/generic-callback-stubs.cpp
--   path: third_party/matter_sdk/src/app/util/privilege-storage.cpp
--   path: third_party/matter_sdk/src/app/util/util.cpp
+  - path: third_party/matter_sdk/src/app/reporting/reporting.cpp
+  - path: third_party/matter_sdk/src/app/util/DataModelHandler.cpp
+  - path: third_party/matter_sdk/src/app/util/attribute-storage.cpp
+  - path: third_party/matter_sdk/src/app/util/attribute-table.cpp
+  - path: third_party/matter_sdk/src/app/util/binding-table.cpp
+  - path: third_party/matter_sdk/src/app/util/ember-compatibility-functions.cpp
+  - path: third_party/matter_sdk/src/app/util/generic-callback-stubs.cpp
+  - path: third_party/matter_sdk/src/app/util/privilege-storage.cpp
+  - path: third_party/matter_sdk/src/app/util/util.cpp
 ui_hints:
-    visibility: never
+  visibility: never

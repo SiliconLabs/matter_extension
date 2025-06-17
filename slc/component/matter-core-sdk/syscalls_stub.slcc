@@ -3,19 +3,19 @@ define: []
 description: syscalls_stub
 id: syscalls_stub
 include:
--   path: third_party/matter_sdk/src/platform
+  - path: third_party/matter_sdk/src/platform
     file_list:
-    -   path: DeviceSafeQueue.h
-    -   path: GLibTypeDeleter.h
+      - path: DeviceSafeQueue.h
+      - path: GLibTypeDeleter.h
 label: syscalls_stub
-package: Matter
+package: matter
 provides:
--   name: matter_syscalls_stub
+  - name: matter_syscalls_stub
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/platform/SyscallStubs.cpp
+  - path: third_party/matter_sdk/src/platform/SyscallStubs.cpp
 ui_hints:
-    visibility: never
+  visibility: never

@@ -2,7 +2,7 @@ id: matter_crypto_psa_siwx917
 label: Matter MbedTLS and PSA Integration
 description: >
   mbedTLS and PSA for SiWx917 SoC
-package: "Matter"
+package: matter
 category: "Matter-WiFi|Platform|PSA"
 quality: production
 metadata:
@@ -14,7 +14,6 @@ provides:
 
 conflicts:
   - name: matter_crypto_tinycrypt_siwx917
-
 
 requires:
   # PSA crypto components

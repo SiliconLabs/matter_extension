@@ -27,7 +27,12 @@
 #include "sl_se_manager_types.h"
 #include <sl_se_manager_extmem.h>
 #endif // _SILICON_LABS_32B_SERIES_2
+
+// SL-TEMP: GN cannot use sl_main until it supports sisdk 2025.6 Use sl_system
+// Also use sl_system for projects upgraded to 2025.6, identified by the presence of SL_CATALOG_CUSTOM_MAIN_PRESENT
+#if (SL_MATTER_GN_BUILD == 1) || defined(SL_CATALOG_CUSTOM_MAIN_PRESENT)
 #include "sl_system_kernel.h"
+#endif
 
 #ifdef ENABLE_WSTK_LEDS
 extern "C" {
@@ -225,7 +230,11 @@ CHIP_ERROR SilabsPlatform::ToggleLed(uint8_t led)
 
 void SilabsPlatform::StartScheduler()
 {
+// SL-TEMP: GN cannot use sl_main until it supports sisdk 2025.6 Use sl_system
+// Also use sl_system for projects upgraded to 2025.6, identified by the presence of SL_CATALOG_CUSTOM_MAIN_PRESENT
+#if (SL_MATTER_GN_BUILD == 1) || defined(SL_CATALOG_CUSTOM_MAIN_PRESENT)
     sl_system_kernel_start();
+#endif
 }
 
 #ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT

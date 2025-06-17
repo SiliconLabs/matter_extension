@@ -24,7 +24,7 @@ Silicon Labs platform.
 
 For more general information on running Matter applications and prerequisites see online
 documentation for Matter available on docs.silabs.com. Follow Thread demo instructions depending on the example you are running.
-[Demo instructions for Thread](https://docs.silabs.com/matter/2.5.2/matter-thread)
+[Demo instructions for Thread](https://docs.silabs.com/matter/2.6.0/matter-thread)
 
 ## Region code Setting (917 WiFi projects)
 
@@ -122,28 +122,28 @@ If LEDs are supported by the board but not enabled in a project they can be enab
 
 ## Provision and Control
 
-You can provision and control the Matter device using the python controller, chip-tool (standalone or pre-built), Android, iOS app or the mattertool utility from the Matter Hub package provided by Silicon Labs. The pre-built chip-tool instance ships with the Matter Hub image. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.5.2/matter-thread/raspi-img) 
+You can provision and control the Matter device using the python controller, chip-tool (standalone or pre-built), Android, iOS app or the mattertool utility from the Matter Hub package provided by Silicon Labs. The pre-built chip-tool instance ships with the Matter Hub image. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.6.0/matter-thread/raspi-img) 
 
 More information on using the chip-tool directly can be found here: [CHIPTool](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
 
 Here is an example with the chip-tool:
 
 ```shell
-./chip-tool pairing ble-wifi 1122 $SSID $PSK 20202021 3840
+./chip-tool pairing ble-wifi <Node-ID> $SSID $PSK 20202021 3840
 ```
 
 ### Sensor Commands
 
 ```shell
-./chip-tool occupancysensing read occupancy 1122 1
+./chip-tool occupancysensing read occupancy <Node-ID> 1
 ```
 
 Operate on DUT to change the occupancy status by pressing BTN1 and read the occupancy using the above command again.
 
 ```shell
-./chip-tool temperaturemeasurement read measured-value 1122 2
+./chip-tool temperaturemeasurement read measured-value <Node-ID> 2
 ```
 
 ```shell
-./chip-tool relativehumiditymeasurement read measured-value 1122 2
+./chip-tool relativehumiditymeasurement read measured-value <Node-ID> 2
 ```

@@ -21,11 +21,11 @@
 
 #include "silabs_utils.h"
 
-#define BLE_DEV_NAME "SiLabs-OnOffPlug"
-
 // ---- Onoff-plug Example App Config ----
 
-#define APP_TASK_NAME "Plug"
+#define APP_TASK_NAME "OnOffPlug"
+
+#define BLE_DEV_NAME "SL-" APP_TASK_NAME
 
 // Time it takes in ms for the simulated actuator to move from one
 // state to another.

@@ -10,4 +10,3 @@ project:
     output: matter-bootloader
 post_build:
   path: ../../../postbuild/ws_default_application_bootloader.slpb
-  

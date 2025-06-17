@@ -1,10 +1,9 @@
-
 category: Clusters|General
 description: >
   Implementation of the Mode Select Server Cluster.
   The user has to enable the Mode Select Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_mode_select
-package: Matter
+package: matter
 label: Mode Select Server Cluster
 quality: production
 metadata:

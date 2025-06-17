@@ -1,37 +1,37 @@
 category: Matter|Core
 define:
--   name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
+  - name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
     value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: trace_handlers
 id: trace_handlers
 include:
--   path: third_party/matter_sdk/examples/common/tracing
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/examples/common/tracing
+  - path: third_party/matter_sdk/examples/common/tracing
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/examples/common/tracing
     file_list:
-    -   path: TracingCommandLineArgument.h
-    -   path: TraceDecoderOptions.h
-    -   path: TraceDecoderArgumentParser.h
-    -   path: TraceHandlers.h
-    -   path: TraceDecoder.h
+      - path: TracingCommandLineArgument.h
+      - path: TraceDecoderOptions.h
+      - path: TraceDecoderArgumentParser.h
+      - path: TraceHandlers.h
+      - path: TraceDecoder.h
 label: trace_handlers
-package: Matter
+package: matter
 provides:
--   name: matter_trace_handlers
+  - name: matter_trace_handlers
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/examples/common/tracing/TraceHandlers.cpp
+  - path: third_party/matter_sdk/examples/common/tracing/TraceHandlers.cpp
 ui_hints:
-    visibility: never
+  visibility: never

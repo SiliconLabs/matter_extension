@@ -1,42 +1,42 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: additional_data_payload
 id: additional_data_payload
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/setup_payload
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/setup_payload
     file_list:
-    -   path: Base38Encode.h
-    -   path: Base38Decode.h
-    -   path: AdditionalDataPayloadParser.h
-    -   path: QRCodeSetupPayloadGenerator.h
-    -   path: AdditionalDataPayloadGenerator.h
-    -   path: SetupPayload.h
-    -   path: SetupPayloadHelper.h
-    -   path: Base38.h
-    -   path: ManualSetupPayloadParser.h
-    -   path: QRCodeSetupPayloadParser.h
-    -   path: ManualSetupPayloadGenerator.h
-    -   path: AdditionalDataPayload.h
+      - path: Base38Encode.h
+      - path: Base38Decode.h
+      - path: AdditionalDataPayloadParser.h
+      - path: QRCodeSetupPayloadGenerator.h
+      - path: AdditionalDataPayloadGenerator.h
+      - path: SetupPayload.h
+      - path: SetupPayloadHelper.h
+      - path: Base38.h
+      - path: ManualSetupPayloadParser.h
+      - path: QRCodeSetupPayloadParser.h
+      - path: ManualSetupPayloadGenerator.h
+      - path: AdditionalDataPayload.h
 label: additional_data_payload
-package: Matter
+package: matter
 provides:
--   name: matter_additional_data_payload
+  - name: matter_additional_data_payload
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/setup_payload/AdditionalDataPayloadGenerator.cpp
--   path: third_party/matter_sdk/src/setup_payload/AdditionalDataPayloadParser.cpp
+  - path: third_party/matter_sdk/src/setup_payload/AdditionalDataPayloadGenerator.cpp
+  - path: third_party/matter_sdk/src/setup_payload/AdditionalDataPayloadParser.cpp
 ui_hints:
-    visibility: never
+  visibility: never

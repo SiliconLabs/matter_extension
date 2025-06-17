@@ -1,46 +1,46 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: libblelayer
 id: libblelayer
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/ble
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/ble
     file_list:
-    -   path: BLEEndPoint.h
-    -   path: Ble.h
-    -   path: BleRole.h
-    -   path: BleConnectionDelegate.h
-    -   path: BleUUID.h
-    -   path: CHIPBleServiceData.h
-    -   path: BleError.h
-    -   path: BtpEngine.h
-    -   path: BlePlatformDelegate.h
-    -   path: BleConfig.h
-    -   path: BleLayerDelegate.h
-    -   path: BleApplicationDelegate.h
-    -   path: BleLayer.h
+      - path: BLEEndPoint.h
+      - path: Ble.h
+      - path: BleRole.h
+      - path: BleConnectionDelegate.h
+      - path: BleUUID.h
+      - path: CHIPBleServiceData.h
+      - path: BleError.h
+      - path: BtpEngine.h
+      - path: BlePlatformDelegate.h
+      - path: BleConfig.h
+      - path: BleLayerDelegate.h
+      - path: BleApplicationDelegate.h
+      - path: BleLayer.h
 label: libblelayer
-package: Matter
+package: matter
 provides:
--   name: matter_libblelayer
+  - name: matter_libblelayer
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/ble/BLEEndPoint.cpp
--   path: third_party/matter_sdk/src/ble/BleError.cpp
--   path: third_party/matter_sdk/src/ble/BleLayer.cpp
--   path: third_party/matter_sdk/src/ble/BleUUID.cpp
--   path: third_party/matter_sdk/src/ble/BtpEngine.cpp
+  - path: third_party/matter_sdk/src/ble/BLEEndPoint.cpp
+  - path: third_party/matter_sdk/src/ble/BleError.cpp
+  - path: third_party/matter_sdk/src/ble/BleLayer.cpp
+  - path: third_party/matter_sdk/src/ble/BleUUID.cpp
+  - path: third_party/matter_sdk/src/ble/BtpEngine.cpp
 ui_hints:
-    visibility: never
+  visibility: never

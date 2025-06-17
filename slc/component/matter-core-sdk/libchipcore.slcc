@@ -1,75 +1,75 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: libchipcore
 id: libchipcore
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/lib/core
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/lib/core
     file_list:
-    -   path: PeerId.h
-    -   path: CHIPVendorIdentifiers.hpp
-    -   path: GroupId.h
-    -   path: CHIPCore.h
-    -   path: TLVCommon.h
-    -   path: ScopedNodeId.h
-    -   path: ErrorStr.h
-    -   path: CASEAuthTag.h
-    -   path: CHIPEncoding.h
-    -   path: TLVWriter.h
-    -   path: Global.h
-    -   path: GroupedCallbackList.h
-    -   path: TLVTags.h
-    -   path: Unchecked.h
-    -   path: PasscodeId.h
-    -   path: DataModelTypes.h
-    -   path: CHIPConfig.h
-    -   path: ClusterEnums.h
-    -   path: TLVBackingStore.h
-    -   path: Optional.h
-    -   path: TLVVectorWriter.h
-    -   path: InPlace.h
-    -   path: TLVReader.h
-    -   path: CHIPError.h
-    -   path: TLVData.h
-    -   path: CHIPCallback.h
-    -   path: CHIPSafeCasts.h
-    -   path: ReferenceCounted.h
-    -   path: NodeId.h
-    -   path: CHIPKeyIds.h
-    -   path: TLVCircularBuffer.h
-    -   path: TLVTypes.h
-    -   path: TLVUpdater.h
-    -   path: OTAImageHeader.h
-    -   path: TLVDebug.h
-    -   path: TLVUtilities.h
-    -   path: CHIPPersistentStorageDelegate.h
-    -   path: TLV.h
+      - path: PeerId.h
+      - path: CHIPVendorIdentifiers.hpp
+      - path: GroupId.h
+      - path: CHIPCore.h
+      - path: TLVCommon.h
+      - path: ScopedNodeId.h
+      - path: ErrorStr.h
+      - path: CASEAuthTag.h
+      - path: CHIPEncoding.h
+      - path: TLVWriter.h
+      - path: Global.h
+      - path: GroupedCallbackList.h
+      - path: TLVTags.h
+      - path: Unchecked.h
+      - path: PasscodeId.h
+      - path: DataModelTypes.h
+      - path: CHIPConfig.h
+      - path: ClusterEnums.h
+      - path: TLVBackingStore.h
+      - path: Optional.h
+      - path: TLVVectorWriter.h
+      - path: InPlace.h
+      - path: TLVReader.h
+      - path: CHIPError.h
+      - path: TLVData.h
+      - path: CHIPCallback.h
+      - path: CHIPSafeCasts.h
+      - path: ReferenceCounted.h
+      - path: NodeId.h
+      - path: CHIPKeyIds.h
+      - path: TLVCircularBuffer.h
+      - path: TLVTypes.h
+      - path: TLVUpdater.h
+      - path: OTAImageHeader.h
+      - path: TLVDebug.h
+      - path: TLVUtilities.h
+      - path: CHIPPersistentStorageDelegate.h
+      - path: TLV.h
 label: libchipcore
-package: Matter
+package: matter
 provides:
--   name: matter_libchipcore
+  - name: matter_libchipcore
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/lib/core/CHIPKeyIds.cpp
--   path: third_party/matter_sdk/src/lib/core/OTAImageHeader.cpp
--   path: third_party/matter_sdk/src/lib/core/TLVCircularBuffer.cpp
--   path: third_party/matter_sdk/src/lib/core/TLVDebug.cpp
--   path: third_party/matter_sdk/src/lib/core/TLVReader.cpp
--   path: third_party/matter_sdk/src/lib/core/TLVTags.cpp
--   path: third_party/matter_sdk/src/lib/core/TLVUpdater.cpp
--   path: third_party/matter_sdk/src/lib/core/TLVUtilities.cpp
--   path: third_party/matter_sdk/src/lib/core/TLVWriter.cpp
+  - path: third_party/matter_sdk/src/lib/core/CHIPKeyIds.cpp
+  - path: third_party/matter_sdk/src/lib/core/OTAImageHeader.cpp
+  - path: third_party/matter_sdk/src/lib/core/TLVCircularBuffer.cpp
+  - path: third_party/matter_sdk/src/lib/core/TLVDebug.cpp
+  - path: third_party/matter_sdk/src/lib/core/TLVReader.cpp
+  - path: third_party/matter_sdk/src/lib/core/TLVTags.cpp
+  - path: third_party/matter_sdk/src/lib/core/TLVUpdater.cpp
+  - path: third_party/matter_sdk/src/lib/core/TLVUtilities.cpp
+  - path: third_party/matter_sdk/src/lib/core/TLVWriter.cpp
 ui_hints:
-    visibility: never
+  visibility: never

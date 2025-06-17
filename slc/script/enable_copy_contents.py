@@ -467,11 +467,11 @@ def update_components():
     for dict in header_map:
         for inc_root, headers_list in dict.items():
             if 'third_party/silabs/simplicity_sdk' in inc_root:
-                # Not going to parse gecko sdk headers right ?
+                # Not going to parse simplicity sdk headers right ?
                 # should already be handle by slc natively
                 continue
             if 'third_party/jsoncpp' in inc_root:
-                # Not going to parse gecko sdk headers right ?
+                # Not going to parse simplicity sdk headers right ?
                 # should already be handle by slc natively
                 continue
 

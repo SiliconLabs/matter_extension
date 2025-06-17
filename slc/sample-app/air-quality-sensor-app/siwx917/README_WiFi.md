@@ -1,7 +1,7 @@
 # Matter SiWx917 SoC Air Quality Sensor Example
 
 The SiWx917 SoC Air Quality Sensor example provides a baseline demonstration of a Air Quality Sensor
-device, built using Matter and the Silicon Labs Gecko SDK. It can be controlled
+device, built using Matter and the Silicon Labs simplicity SDK. It can be controlled
 by a Matter controller over Wifi network.
 
 The SiWx917 device can be commissioned over Bluetooth Low Energy where the device
@@ -18,7 +18,7 @@ Silicon Labs platform.
 
 For more general information on running matter applications and pre-requisites please look at online 
 documentation for Matter available on docs.silabs.com. Follow Wi-Fi instructions depending on the example you are running.
-[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.5.2/matter-wifi)
+[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.6.0/matter-wifi)
 
 ## Region code Setting (917 WiFi projects)
 
@@ -91,7 +91,7 @@ After 15 minutes, the advertisement stops. In addition, this button should also 
 
 ## Provision and Control
 
-You can provision and control the Matter device using the python controller, chip-tool (standalone or pre-built), Android, iOS app or the mattertool utility from the Matter Hub package provided by Silicon Labs. The pre-built chip-tool instance ships with the Matter Hub image. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.5.2/matter-thread/raspi-img) 
+You can provision and control the Matter device using the python controller, chip-tool (standalone or pre-built), Android, iOS app or the mattertool utility from the Matter Hub package provided by Silicon Labs. The pre-built chip-tool instance ships with the Matter Hub image. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.6.0/matter-thread/raspi-img) 
 
 
     
@@ -101,7 +101,7 @@ More information on using the chip-tool directly can be found here: [CHIPTool](h
 Here is an example with the CHIPTool:
 
 ```shell
-chip-tool pairing ble-wifi 1122 $SSID $PSK 20202021 3840
+chip-tool pairing ble-wifi <Node-ID> $SSID $PSK 20202021 3840
 
-chip-tool onoff on 1 1
+chip-tool onoff on <Node-ID> 1
 ```

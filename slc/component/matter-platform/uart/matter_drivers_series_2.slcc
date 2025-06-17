@@ -2,7 +2,7 @@ id: matter_drivers_series_2
 label: Matter UART and Clock for Series 2 Boards
 description: >
   Matter UART and clock selection for Series 2 boards
-package: "Matter"
+package: matter
 category: Platform|Drivers
 quality: production
 metadata:
@@ -18,4 +18,4 @@ recommends:
 requires:
   - name: device_init_dpll
     condition:
-     - device_series_2
+      - device_series_2

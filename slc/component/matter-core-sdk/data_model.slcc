@@ -1,43 +1,43 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: data_model
 id: data_model
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/app
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/app
     file_list:
-    -   path: data-model/EncodableToTLV.h
-    -   path: data-model/FabricScoped.h
-    -   path: data-model/Nullable.h
-    -   path: data-model/ListLargeSystemExtensions.h
-    -   path: data-model/PreEncodedValue.h
-    -   path: data-model/List.h
-    -   path: data-model/BasicTypes.h
-    -   path: data-model/FabricScopedPreEncodedValue.h
-    -   path: data-model/WrappedStructEncoder.h
-    -   path: data-model/DecodableList.h
-    -   path: data-model/Encode.h
-    -   path: data-model/Decode.h
-    -   path: data-model/NullObject.h
+      - path: data-model/EncodableToTLV.h
+      - path: data-model/FabricScoped.h
+      - path: data-model/Nullable.h
+      - path: data-model/ListLargeSystemExtensions.h
+      - path: data-model/PreEncodedValue.h
+      - path: data-model/List.h
+      - path: data-model/BasicTypes.h
+      - path: data-model/FabricScopedPreEncodedValue.h
+      - path: data-model/WrappedStructEncoder.h
+      - path: data-model/DecodableList.h
+      - path: data-model/Encode.h
+      - path: data-model/Decode.h
+      - path: data-model/NullObject.h
 label: data_model
-package: Matter
+package: matter
 provides:
--   name: matter_data_model
+  - name: matter_data_model
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/app/data-model/FabricScopedPreEncodedValue.cpp
--   path: third_party/matter_sdk/src/app/data-model/PreEncodedValue.cpp
+  - path: third_party/matter_sdk/src/app/data-model/FabricScopedPreEncodedValue.cpp
+  - path: third_party/matter_sdk/src/app/data-model/PreEncodedValue.cpp
 ui_hints:
-    visibility: never
+  visibility: never

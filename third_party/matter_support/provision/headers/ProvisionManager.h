@@ -26,25 +26,27 @@ namespace DeviceLayer {
 namespace Silabs {
 namespace Provision {
 
-class Manager {
+class Manager
+{
 public:
-  CHIP_ERROR Init();
-  bool Step();
-  bool IsProvisionRequired();
-  CHIP_ERROR SetProvisionRequired(bool required);
-  Storage &GetStorage() { return mStore; }
-  static Manager &GetInstance();
+    CHIP_ERROR Init();
+    bool Step();
+    bool IsProvisionRequired();
+    CHIP_ERROR SetProvisionRequired(bool required);
+    Storage & GetStorage() { return mStore; }
+    static Manager & GetInstance();
 
 private:
-  bool ProcessCommand(ByteSpan &request, MutableByteSpan &response);
+    bool ProcessCommand(ByteSpan & request, MutableByteSpan & response);
 
-  Storage mStore;
-  Channel mChannel;
+    Storage mStore;
+    Channel mChannel;
 #ifdef SILABS_PROVISION_PROTOCOL_V1
-  Protocol1 mProtocol1;
+    Protocol1 mProtocol1;
 #endif
-  Protocol2 mProtocol2;
-  bool mProvisionRequested = true;
+    Protocol2 mProtocol2;
+    bool mProvisionRequested = true;
+    bool mResetPending       = false;
 };
 
 } // namespace Provision

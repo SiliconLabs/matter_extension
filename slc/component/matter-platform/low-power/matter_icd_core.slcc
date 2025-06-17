@@ -1,5 +1,5 @@
 id: matter_icd_core
-package: Matter
+package: matter
 label: ICD Server Configuration
 description: >
   Support for configuration of ICD power management on all Silabs Matter devices.
@@ -11,44 +11,48 @@ metadata:
     license: Zlib
 
 provides:
-- name: matter_icd_core
-- name: matter_icd
+  - name: matter_icd_core
+  - name: matter_icd
 
 requires:
-- name: matter_icd_management
-- name: ot_stack_mtd
-  condition: [matter_thread]
-- name: sl_power_manager
-  condition: [matter_platform_siwx917]
-- name: matter_sleep_manager
-  condition: [matter_wifi]
+  - name: matter_icd_management
+  - name: ot_stack_mtd
+    condition: [matter_thread]
+  - name: sl_power_manager
+    condition: [matter_platform_siwx917]
+  - name: matter_sleep_manager
+    condition: [matter_wifi]
+  - name: wakeup_source_config
+    condition: [matter_platform_siwx917]
+  - name: gpio_npss_component
+    condition: [matter_platform_siwx917]
 
 conflicts:
-- name: ot_stack_ftd
+  - name: ot_stack_ftd
 
 recommends:
-- id: ot_stack_mtd
-  condition:
-  - matter_thread
+  - id: ot_stack_mtd
+    condition:
+      - matter_thread
 
 config_file:
-- path: slc/config/sl_matter_icd_config.h
-  file_id: matter_icd_config
+  - path: slc/config/sl_matter_icd_config.h
+    file_id: matter_icd_config
 
 validation_helper:
-- path: slc/config/scripts/icd_server_validation.lua
+  - path: slc/config/scripts/icd_server_validation.lua
 
 define:
-- name: CHIP_CONFIG_ENABLE_ICD_SERVER
-  value: 1
-- name: SL_ICD_ENABLED
-  value: 1
-- name: SL_SI91X_NPSS_GPIO_BTN_HANDLER
-  value: 1
-  condition: [matter_platform_siwx917]
-# TODO : Enable this macro for PSRAM power save application, need to cleanup
-- name: SLI_SI91X_MCU_ENABLE_PSRAM_FEATURE
-  condition: [brd4342a]
+  - name: CHIP_CONFIG_ENABLE_ICD_SERVER
+    value: 1
+  - name: SL_ICD_ENABLED
+    value: 1
+  - name: SL_SI91X_NPSS_GPIO_BTN_HANDLER
+    value: 1
+    condition: [matter_platform_siwx917]
+  # TODO : Enable this macro for PSRAM power save application, need to cleanup
+  - name: SLI_SI91X_MCU_ENABLE_PSRAM_FEATURE
+    condition: [brd4342a]
 
 documentation:
   docset: matter

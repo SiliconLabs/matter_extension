@@ -598,7 +598,8 @@ static void sl_wfx_disconnect_callback(uint8_t * mac, uint16_t reason)
  *****************************************************************************/
 static void sl_wfx_start_ap_callback(uint32_t status)
 {
-    VerifyOrReturnLogError(status == AP_START_SUCCESS, CHIP_ERROR_INTERNAL);
+    VerifyOrReturnLogError(status == AP_START_SUCCESS, MATTER_PLATFORM_ERROR(status),
+                           ChipLogError(DeviceLayer, "Failed to start AP: %ld", status));
     sl_wfx_context->state =
         static_cast<sl_wfx_state_t>(static_cast<int>(sl_wfx_context->state) | static_cast<int>(SL_WFX_AP_INTERFACE_UP));
     xEventGroupSetBits(sl_wfx_event_group, SL_WFX_START_AP);

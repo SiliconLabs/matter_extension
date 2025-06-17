@@ -21,6 +21,19 @@
 #include <lib/support/PersistentData.h>
 #include <string> // Include the necessary header for std::string
 
+#if defined(SL_RAIL_LIB_MULTIPROTOCOL_SUPPORT) && SL_RAIL_LIB_MULTIPROTOCOL_SUPPORT
+#include <rail.h>
+// RAIL_GetTime() returns time in usec
+#define SILABS_GET_TIME() System::Clock::Milliseconds32(RAIL_GetTime() / 1000)
+#define SILABS_GET_DURATION(tracker)                                                                                               \
+    (tracker.mEndTime < tracker.mStartTime)                                                                                        \
+        ? (tracker.mEndTime + System::Clock::Milliseconds32((UINT32_MAX / 1000)) - tracker.mStartTime)                             \
+        : tracker.mEndTime - tracker.mStartTime
+#else
+#define SILABS_GET_TIME() System::SystemClock().GetMonotonicTimestamp()
+#define SILABS_GET_DURATION(tracker) tracker.mEndTime - tracker.mStartTime
+#endif
+
 #if defined(SILABS_LOG_OUT_UART) && SILABS_LOG_OUT_UART
 #include "uart.h"
 #endif
@@ -258,8 +271,16 @@ CHIP_ERROR SilabsTracer::StartWatermarksStorage(PersistentStorageDelegate * stor
 CHIP_ERROR SilabsTracer::TimeTraceBegin(TimeTraceOperation aOperation)
 {
     // Log the start time of the operation
-    auto & tracker     = mLatestTimeTrackers[to_underlying(aOperation)];
-    tracker.mStartTime = System::SystemClock().GetMonotonicTimestamp();
+    auto & tracker = mLatestTimeTrackers[to_underlying(aOperation)];
+    // Corner case since no hardware clock is available at this point
+    if (aOperation == TimeTraceOperation::kBootup || aOperation == TimeTraceOperation::kSilabsInit)
+    {
+        tracker.mStartTime = System::Clock::Milliseconds32(0);
+    }
+    else
+    {
+        tracker.mStartTime = SILABS_GET_TIME();
+    }
     tracker.mOperation = to_underlying(aOperation);
     tracker.mType      = OperationType::kBegin;
     tracker.mError     = CHIP_NO_ERROR;
@@ -273,14 +294,14 @@ CHIP_ERROR SilabsTracer::TimeTraceBegin(TimeTraceOperation aOperation)
 CHIP_ERROR SilabsTracer::TimeTraceEnd(TimeTraceOperation aOperation, CHIP_ERROR error)
 {
     auto & tracker   = mLatestTimeTrackers[to_underlying(aOperation)];
-    tracker.mEndTime = System::SystemClock().GetMonotonicTimestamp();
+    tracker.mEndTime = SILABS_GET_TIME();
     tracker.mType    = OperationType::kEnd;
     tracker.mError   = error;
 
     if (error == CHIP_NO_ERROR)
     {
         // Calculate the duration and update the time tracker
-        auto duration = tracker.mEndTime - tracker.mStartTime;
+        auto duration = SILABS_GET_DURATION(tracker);
 
         auto & watermark = mWatermarks[to_underlying(aOperation)];
         watermark.mSuccessfullCount++;
@@ -310,7 +331,7 @@ CHIP_ERROR SilabsTracer::TimeTraceEnd(TimeTraceOperation aOperation, CHIP_ERROR 
 CHIP_ERROR SilabsTracer::TimeTraceInstant(TimeTraceOperation aOperation, CHIP_ERROR error)
 {
     TimeTracker tracker;
-    tracker.mStartTime = System::SystemClock().GetMonotonicTimestamp();
+    tracker.mStartTime = SILABS_GET_TIME();
     tracker.mEndTime   = tracker.mStartTime;
     tracker.mOperation = to_underlying(aOperation);
     tracker.mType      = OperationType::kInstant;
@@ -326,7 +347,7 @@ CHIP_ERROR SilabsTracer::TimeTraceInstant(CharSpan & aOperationKey, CHIP_ERROR e
     ReturnErrorOnFailure(FindAppOperationIndex(aOperationKey, index));
 
     TimeTracker tracker;
-    tracker.mStartTime = System::SystemClock().GetMonotonicTimestamp();
+    tracker.mStartTime = SILABS_GET_TIME();
     tracker.mEndTime   = tracker.mStartTime;
     tracker.mOperation = to_underlying(TimeTraceOperation::kNumTraces) + index;
     tracker.mType      = OperationType::kInstant;
@@ -362,7 +383,7 @@ CHIP_ERROR SilabsTracer::OutputTrace(const TimeTracker & tracker)
         // Save a tracker with TimeTraceOperation::kNumTraces and CHIP_ERROR_BUFFER_TOO_SMALL to indicate that the
         // buffer is full
         TimeTracker resourceExhaustedTracker = tracker;
-        resourceExhaustedTracker.mStartTime  = System::SystemClock().GetMonotonicTimestamp();
+        resourceExhaustedTracker.mStartTime  = SILABS_GET_TIME();
         resourceExhaustedTracker.mEndTime    = resourceExhaustedTracker.mStartTime;
         resourceExhaustedTracker.mOperation  = to_underlying(TimeTraceOperation::kBufferFull);
         resourceExhaustedTracker.mType       = OperationType::kInstant;

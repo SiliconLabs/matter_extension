@@ -988,14 +988,19 @@ void InteractionModelEngine::OnResponseTimeout(Messaging::ExchangeContext * ec)
 }
 
 #if CHIP_CONFIG_ENABLE_READ_CLIENT
-void InteractionModelEngine::OnActiveModeNotification(ScopedNodeId aPeer)
+void InteractionModelEngine::OnActiveModeNotification(ScopedNodeId aPeer, uint64_t aMonitoredSubject)
 {
     for (ReadClient * pListItem = mpActiveReadClientList; pListItem != nullptr;)
     {
         auto pNextItem = pListItem->GetNextClient();
         // It is possible that pListItem is destroyed by the app in OnActiveModeNotification.
         // Get the next item before invoking `OnActiveModeNotification`.
-        if (ScopedNodeId(pListItem->GetPeerNodeId(), pListItem->GetFabricIndex()) == aPeer)
+        CATValues cats;
+
+        mpFabricTable->FetchCATs(pListItem->GetFabricIndex(), cats);
+        if (ScopedNodeId(pListItem->GetPeerNodeId(), pListItem->GetFabricIndex()) == aPeer &&
+            (cats.CheckSubjectAgainstCATs(aMonitoredSubject) ||
+             aMonitoredSubject == mpFabricTable->FindFabricWithIndex(pListItem->GetFabricIndex())->GetNodeId()))
         {
             pListItem->OnActiveModeNotification();
         }
@@ -1887,12 +1892,20 @@ void InteractionModelEngine::OnFabricRemoved(const FabricTable & fabricTable, Fa
     });
 
 #if CHIP_CONFIG_ENABLE_READ_CLIENT
-    for (auto * readClient = mpActiveReadClientList; readClient != nullptr; readClient = readClient->GetNextClient())
+    for (auto * readClient = mpActiveReadClientList; readClient != nullptr;)
     {
+        // ReadClient::Close may delete the read client so that readClient->GetNextClient() will be use-after-free.
+        // We need save readClient as nextReadClient before closing.
         if (readClient->GetFabricIndex() == fabricIndex)
         {
             ChipLogProgress(InteractionModel, "Fabric removed, deleting obsolete read client with FabricIndex: %u", fabricIndex);
+            auto * nextReadClient = readClient->GetNextClient();
             readClient->Close(CHIP_ERROR_IM_FABRIC_DELETED, false);
+            readClient = nextReadClient;
+        }
+        else
+        {
+            readClient = readClient->GetNextClient();
         }
     }
 #endif // CHIP_CONFIG_ENABLE_READ_CLIENT

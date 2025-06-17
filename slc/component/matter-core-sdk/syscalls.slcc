@@ -4,14 +4,14 @@ description: syscalls
 id: syscalls
 include: []
 label: syscalls
-package: Matter
+package: matter
 provides:
--   name: matter_syscalls
+  - name: matter_syscalls
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/jlink/segger_rtt/Syscalls/SEGGER_RTT_Syscalls_GCC.c
+  - path: third_party/jlink/segger_rtt/Syscalls/SEGGER_RTT_Syscalls_GCC.c
 ui_hints:
-    visibility: never
+  visibility: never

@@ -28,10 +28,12 @@
 #include <stdbool.h>
 
 /* LwIP includes. */
+#ifndef SLI_SI91X_OFFLOAD_NETWORK_STACK
 #include "lwip/ip_addr.h"
 #include "lwip/netif.h"
 #include "lwip/netifapi.h"
 #include "lwip/tcpip.h"
+#endif
 
 #if (SLI_SI91X_MCU_INTERFACE | EXP_BOARD)
 #include "rsi_common_apis.h"
@@ -95,7 +97,7 @@ enum class WifiEvent : uint8_t
     kStationStartJoin   = 5,
     kConnectionComplete = 6,
     kStationDhcpDone    = 7,
-    kStationDhcpPoll    = 8
+    kStationDhcpPoll    = 8,
 };
 
 typedef enum

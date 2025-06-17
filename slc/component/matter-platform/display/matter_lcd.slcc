@@ -1,7 +1,7 @@
 id: matter_lcd
 label: Matter Display
 description: Support for liquid crystal display on matter devboards
-package: "Matter"
+package: matter
 category: Platform|Display
 quality: production
 metadata:
@@ -10,11 +10,11 @@ metadata:
 requires:
   - name: matter
   - name: matter_platform_mg
-    condition :
-    - device_series_2
+    condition:
+      - device_series_2
   - name: matter_platform_mg
     condition:
-    - device_series_3
+      - device_series_3
   - name: matter_uart
   - name: glib
 provides:
@@ -23,29 +23,29 @@ conflicts:
   - name: matter_low_power
   - name: matter_no_lcd_shell
 include:
-- path: third_party/matter_sdk/examples/platform/silabs/display/
-  file_list:
-  - path: demo-ui.h
-  - path: demo-ui-bitmaps.h
-  - path: lcd.h
-- path: third_party/matter_sdk/examples/window-app/silabs/include
-  condition: [matter_window]
-  file_list:
-  - path: LcdPainter.h
-- path: third_party/matter_sdk/examples/thermostat/silabs/include
-  condition: [matter_thermostat_app]
-  file_list:
-  - path: ThermostatIcons.h
-  - path: ThermostatUI.h
-- path: third_party/matter_sdk/examples/air-quality-sensor-app/silabs/include
-  condition: [matter_air_quality_app]
-  file_list:
-  - path: AirQualitySensorUI.h
-- path: third_party/matter_sdk/examples/refrigerator-app/silabs/include/
-  condition: [matter_refrigerator]
-  file_list:
-  - path: RefrigeratorUI.h
-  - path: RefrigeratorIcons.h
+  - path: third_party/matter_sdk/examples/platform/silabs/display/
+    file_list:
+      - path: demo-ui.h
+      - path: demo-ui-bitmaps.h
+      - path: lcd.h
+  - path: third_party/matter_sdk/examples/window-app/silabs/include
+    condition: [matter_window]
+    file_list:
+      - path: LcdPainter.h
+  - path: third_party/matter_sdk/examples/thermostat/silabs/include
+    condition: [matter_thermostat_app]
+    file_list:
+      - path: ThermostatIcons.h
+      - path: ThermostatUI.h
+  - path: third_party/matter_sdk/examples/air-quality-sensor-app/silabs/include
+    condition: [matter_air_quality_app]
+    file_list:
+      - path: AirQualitySensorUI.h
+  - path: third_party/matter_sdk/examples/refrigerator-app/silabs/include/
+    condition: [matter_refrigerator]
+    file_list:
+      - path: RefrigeratorUI.h
+      - path: RefrigeratorIcons.h
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/display/demo-ui.c
   - path: third_party/matter_sdk/examples/platform/silabs/display/lcd.cpp

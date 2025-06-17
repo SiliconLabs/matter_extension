@@ -67,22 +67,14 @@ using namespace chip::app::Clusters;
 AppTask AppTask::sAppTask;
 
 
-CHIP_ERROR AppTask::Init()
+CHIP_ERROR AppTask::AppInit()
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
     chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(AppTask::ButtonEventHandler);
 
 #ifdef DISPLAY_ENABLED
-    GetLCD().Init((uint8_t *) "Fan-App");
     GetLCD().SetCustomUI(FanControlUI::DrawUI);
 #endif
-
-    err = BaseApplication::Init();
-    if (err != CHIP_NO_ERROR)
-    {
-        ChipLogError(AppServer, "BaseApplication::Init() failed");
-        appError(err);
-    }
 
     err = FanControlMgr().Init();
     if (err != CHIP_NO_ERROR)

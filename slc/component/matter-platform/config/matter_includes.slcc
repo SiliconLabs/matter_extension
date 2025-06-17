@@ -2,7 +2,7 @@ category: Matter|Stack
 description: Includes core configuration settings for Matter applications
 id: matter_includes
 label: Stack
-package: Matter
+package: matter
 provides:
   - name: matter_includes
 quality: production
@@ -12,28 +12,28 @@ metadata:
 include:
   - path: slc/inc
     file_list:
-    - path: access/AccessBuildConfig.h
-    - path: core/CHIPBuildConfig.h
-    - path: asn1/ASN1OID.h
-    - path: ble/BleBuildConfig.h
-    - path: crypto/CryptoBuildConfig.h
-    - path: inet/InetBuildConfig.h
-    - path: lwip/lwip_buildconfig.h
-    - path: matter/tracing/build_config.h
-    - path: openthread/platform/openthread-system.h
-    - path: platform/CHIPDeviceBuildConfig.h
-    - path: setup_payload/CHIPAdditionalDataPayloadBuildConfig.h
-    - path: system/SystemBuildConfig.h
-    - path: CHIPVersion.h
-    - path: FirmwareBuildTime.h
+      - path: access/AccessBuildConfig.h
+      - path: core/CHIPBuildConfig.h
+      - path: asn1/ASN1OID.h
+      - path: ble/BleBuildConfig.h
+      - path: crypto/CryptoBuildConfig.h
+      - path: inet/InetBuildConfig.h
+      - path: lwip/lwip_buildconfig.h
+      - path: matter/tracing/build_config.h
+      - path: openthread/platform/openthread-system.h
+      - path: platform/CHIPDeviceBuildConfig.h
+      - path: setup_payload/CHIPAdditionalDataPayloadBuildConfig.h
+      - path: system/SystemBuildConfig.h
+      - path: CHIPVersion.h
+      - path: FirmwareBuildTime.h
   - path: third_party/matter_sdk/src/app/icd/server
     file_list:
-    - path: ICDServerConfig.h
-    - path: ICDStateObserver.h
+      - path: ICDServerConfig.h
+      - path: ICDStateObserver.h
 
 config_file:
   - path: slc/inc/app/AppBuildConfig.h
     file_id: matter_app_build_config
     directory: app
 ui_hints:
-    visibility: never
+  visibility: never

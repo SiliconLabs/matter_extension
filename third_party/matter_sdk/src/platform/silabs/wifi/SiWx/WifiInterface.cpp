@@ -57,7 +57,9 @@ extern "C" {
 
 #include <sl_net.h>
 #include <sl_net_constants.h>
+#if SLI_SI91X_LWIP_HOSTED_NETWORK_STACK
 #include <sl_net_for_lwip.h>
+#endif // SLI_SI91X_LWIP_HOSTED_NETWORK_STACK
 #include <sl_net_wifi_types.h>
 }
 
@@ -87,19 +89,15 @@ WfxRsi_t wfx_rsi;
 namespace {
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
-
 constexpr uint32_t kTimeToFullBeaconReception = 5000; // 5 seconds
-
-#if SLI_SI91X_MCU_INTERFACE
-// TODO: should be removed once we are getting the press interrupt for button 0 with sleep
-bool btn0_pressed = false;
-#ifdef ENABLE_CHIP_SHELL
-bool ps_requirement_added = false;
-#endif // ENABLE_CHIP_SHELL
-#endif // SLI_SI91X_MCU_INTERFACE
-#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
+#endif                                                // CHIP_CONFIG_ENABLE_ICD_SERVER
 
 bool hasNotifiedWifiConnectivity = false;
+
+#if SLI_SI91X_OFFLOAD_NETWORK_STACK
+// Placeholder for IPv6 global address and gateway
+constexpr uint32_t kIPv6GlobalAddressPlaceholder = 0xffffffff;
+#endif // SLI_SI91X_OFFLOAD_NETWORK_STACK
 
 wfx_wifi_scan_ext_t temp_reset;
 
@@ -107,7 +105,9 @@ osSemaphoreId_t sScanCompleteSemaphore;
 osSemaphoreId_t sScanInProgressSemaphore;
 osMessageQueueId_t sWifiEventQueue = nullptr;
 
+#if SLI_SI91X_LWIP_HOSTED_NETWORK_STACK
 sl_net_wifi_lwip_context_t wifi_client_context;
+#endif // SLI_SI91X_LWIP_HOSTED_NETWORK_STACK
 sl_wifi_security_t security = SL_WIFI_SECURITY_UNKNOWN;
 
 // TODO : Temporary work-around for wifi-init failure in 917NCP ACX module board(BRD4357A). Can be removed after
@@ -123,22 +123,28 @@ const sl_wifi_device_configuration_t config = {
     .mac_address = NULL,
     .band        = SL_SI91X_WIFI_BAND_2_4GHZ,
     .region_code = REGION_CODE,
-    .boot_config = { .oper_mode = SL_SI91X_CLIENT_MODE,
-                     .coex_mode = SL_SI91X_WLAN_BLE_MODE,
-                     .feature_bit_map =
-#ifdef SLI_SI91X_MCU_INTERFACE
-                         (SL_SI91X_FEAT_SECURITY_OPEN | SL_SI91X_FEAT_WPS_DISABLE),
-#else
-                         (SL_SI91X_FEAT_SECURITY_OPEN | SL_SI91X_FEAT_AGGREGATION | SL_SI91X_FEAT_ULP_GPIO_BASED_HANDSHAKE |
-                          SL_SI91X_FEAT_DEV_TO_HOST_ULP_GPIO_1),
+    .boot_config = { .oper_mode       = SL_SI91X_CLIENT_MODE,
+                     .coex_mode       = SL_SI91X_WLAN_BLE_MODE,
+                     .feature_bit_map = (SL_SI91X_FEAT_SECURITY_OPEN
+#if SLI_SI91X_OFFLOAD_NETWORK_STACK
+                                         // matter only enabled bit to bind before connection
+                                         // TODO: remove this once it is enabled in the firmware
+                                         | BIT(18)
+#endif // SLI_SI91X_OFFLOAD_NETWORK_STACK
+#ifndef SLI_SI91X_MCU_INTERFACE
+                                         // configurations for the NCP mode only
+                                         | SL_SI91X_FEAT_ULP_GPIO_BASED_HANDSHAKE | SL_SI91X_FEAT_DEV_TO_HOST_ULP_GPIO_1 |
+                                         SL_SI91X_FEAT_AGGREGATION
 #endif
-                     .tcp_ip_feature_bit_map = (SL_SI91X_TCP_IP_FEAT_DHCPV4_CLIENT | SL_SI91X_TCP_IP_FEAT_DNS_CLIENT |
-                                                SL_SI91X_TCP_IP_FEAT_SSL | SL_SI91X_TCP_IP_FEAT_BYPASS
-#ifdef ipv6_FEATURE_REQUIRED
-                                                | SL_SI91X_TCP_IP_FEAT_DHCPV6_CLIENT | SL_SI91X_TCP_IP_FEAT_IPV6
+                                         ),
+                     .tcp_ip_feature_bit_map = (
+#if SLI_SI91X_OFFLOAD_NETWORK_STACK
+                         SL_SI91X_TCP_IP_FEAT_DHCPV6_CLIENT | SL_SI91X_TCP_IP_FEAT_IPV6 | SL_SI91X_TCP_IP_FEAT_MDNSD
+#elif SLI_SI91X_LWIP_HOSTED_NETWORK_STACK
+                         SL_SI91X_TCP_IP_FEAT_BYPASS
 #endif
-                                                | SL_SI91X_TCP_IP_FEAT_ICMP | SL_SI91X_TCP_IP_FEAT_EXTENSION_VALID),
-                     .custom_feature_bit_map     = (SL_SI91X_CUSTOM_FEAT_EXTENTION_VALID | RSI_CUSTOM_FEATURE_BIT_MAP),
+                         | SL_SI91X_TCP_IP_FEAT_ICMP | SL_SI91X_TCP_IP_FEAT_EXTENSION_VALID),
+                     .custom_feature_bit_map     = (SL_SI91X_CUSTOM_FEAT_EXTENTION_VALID),
                      .ext_custom_feature_bit_map = (RSI_EXT_CUSTOM_FEATURE_BIT_MAP | (SL_SI91X_EXT_FEAT_BT_CUSTOM_FEAT_ENABLE)
 #if (defined A2DP_POWER_SAVE_ENABLE)
                                                     | SL_SI91X_EXT_FEAT_XTAL_CLK_ENABLE(2)
@@ -149,12 +155,13 @@ const sl_wifi_device_configuration_t config = {
                                             | SL_SI91X_BT_ATT_OVER_CLASSIC_ACL /* to support att over classic acl link */
 #endif
                                             ),
-#ifdef RSI_PROCESS_MAX_RX_DATA
                      .ext_tcp_ip_feature_bit_map =
-                         (RSI_EXT_TCPIP_FEATURE_BITMAP | SL_SI91X_CONFIG_FEAT_EXTENTION_VALID | SL_SI91X_EXT_TCP_MAX_RECV_LENGTH),
-#else
-                     .ext_tcp_ip_feature_bit_map = (RSI_EXT_TCPIP_FEATURE_BITMAP | SL_SI91X_CONFIG_FEAT_EXTENTION_VALID),
-#endif
+                         (SL_SI91X_CONFIG_FEAT_EXTENTION_VALID
+#if SLI_SI91X_OFFLOAD_NETWORK_STACK
+                          // selecting on 5 sockets; max 10
+                          | SL_SI91X_EXT_TCP_IP_WAIT_FOR_SOCKET_CLOSE | SL_SI91X_EXT_TCP_IP_TOTAL_SELECTS(5)
+#endif // SLI_SI91X_OFFLOAD_NETWORK_STACK
+                              ),
                      //! ENABLE_BLE_PROTOCOL in bt_feature_bit_map
                      .ble_feature_bit_map =
                          ((SL_SI91X_BLE_MAX_NBR_PERIPHERALS(RSI_BLE_MAX_NBR_PERIPHERALS) |
@@ -186,7 +193,8 @@ const sl_wifi_device_configuration_t config = {
                                                  | SL_SI91X_BLE_GATT_INIT
 #endif
                                                  ),
-                     .config_feature_bit_map = (SL_SI91X_FEAT_SLEEP_GPIO_SEL_BITMAP | RSI_CONFIG_FEATURE_BITMAP) }
+
+                     .config_feature_bit_map = SL_SI91X_FEAT_SLEEP_GPIO_SEL_BITMAP }
 };
 
 constexpr int8_t kAdvScanThreshold           = -40;
@@ -325,11 +333,12 @@ sl_status_t SetWifiConfigurations()
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
     // [sl-only] Set the listen interval to the slow polling interval during association
-    sl_wifi_listen_interval_t sleep_interval = { .listen_interval =
-                                                     chip::ICDConfigurationData::GetInstance().GetSlowPollingInterval().count() };
-    status                                   = sl_wifi_set_listen_interval(SL_WIFI_CLIENT_INTERFACE, sleep_interval);
+    sl_wifi_listen_interval_v2_t sleep_interval = {
+        .listen_interval = chip::ICDConfigurationData::GetInstance().GetSlowPollingInterval().count()
+    };
+    status = sl_wifi_set_listen_interval_v2(SL_WIFI_CLIENT_INTERFACE, sleep_interval);
     VerifyOrReturnError(status == SL_STATUS_OK, status,
-                        ChipLogError(DeviceLayer, "sl_wifi_set_listen_interval failed: 0x%lx", status));
+                        ChipLogError(DeviceLayer, "sl_wifi_set_listen_interval_v2 failed: 0x%lx", status));
 
     // This is be triggered on the disconnect use case, providing the amount of TA tries
     // Setting the TA retry to 1 and giving the control to the M4 for improved power efficiency
@@ -372,12 +381,29 @@ sl_status_t SetWifiConfigurations()
             .credential_id = SL_NET_DEFAULT_WIFI_CLIENT_CREDENTIAL_ID,
         },
         .ip = {
+#if SLI_SI91X_LWIP_HOSTED_NETWORK_STACK
             .mode = SL_IP_MANAGEMENT_DHCP,
+#else
+            .mode = SL_IP_MANAGEMENT_STATIC_IP,
+#endif // SLI_SI91X_LWIP_HOSTED_NETWORK_STACK
             .type = SL_IPV6,
             .host_name = NULL,
             .ip = {{{0}}},
         }
     };
+
+#if SLI_SI91X_OFFLOAD_NETWORK_STACK
+    // Assign IPv6 global address explicitly
+    // TODO: remove this once getting link local only is fixed from wifi sdk
+    profile.ip.ip.v6.global_address.value[0] = kIPv6GlobalAddressPlaceholder;
+    profile.ip.ip.v6.global_address.value[1] = kIPv6GlobalAddressPlaceholder;
+    profile.ip.ip.v6.global_address.value[2] = kIPv6GlobalAddressPlaceholder;
+    profile.ip.ip.v6.global_address.value[3] = kIPv6GlobalAddressPlaceholder;
+    profile.ip.ip.v6.gateway.value[0]        = kIPv6GlobalAddressPlaceholder;
+    profile.ip.ip.v6.gateway.value[1]        = kIPv6GlobalAddressPlaceholder;
+    profile.ip.ip.v6.gateway.value[2]        = kIPv6GlobalAddressPlaceholder;
+    profile.ip.ip.v6.gateway.value[3]        = kIPv6GlobalAddressPlaceholder;
+#endif
     // TODO: memcpy for now since the types dont match
     memcpy((char *) &profile.config.ssid.value, wfx_rsi.sec.ssid, wfx_rsi.sec.ssid_length);
 
@@ -449,6 +475,7 @@ sl_status_t JoinWifiNetwork(void)
         // Remove High performance request that might have been added during the connect/retry process
         chip::DeviceLayer::Silabs::WifiSleepManager::GetInstance().RemoveHighPerformanceRequest();
 #endif // CHIP_CONFIG_ENABLE_ICD_SERVER
+
         WifiEvent event = WifiEvent::kStationConnect;
         sl_matter_wifi_post_event(event);
         return status;
@@ -475,8 +502,11 @@ sl_status_t JoinWifiNetwork(void)
 sl_status_t sl_matter_wifi_platform_init(void)
 {
     sl_status_t status = SL_STATUS_OK;
-
+#if SLI_SI91X_LWIP_HOSTED_NETWORK_STACK
     status = sl_net_init((sl_net_interface_t) SL_NET_WIFI_CLIENT_INTERFACE, &config, &wifi_client_context, nullptr);
+#else
+    status = sl_net_init((sl_net_interface_t) SL_NET_WIFI_CLIENT_INTERFACE, &config, nullptr, nullptr);
+#endif // SLI_SI91X_LWIP_HOSTED_NETWORK_STACK
     VerifyOrReturnError(status == SL_STATUS_OK, status, ChipLogError(DeviceLayer, "sl_net_init failed: %lx", status));
 
     // Create Sempaphore for scan completion
@@ -645,14 +675,16 @@ void NotifyConnectivity(void)
 /// @brief Processing function responsible for notifying the upper layers of a succesful connection attempt.
 void NotifySuccessfulConnection(void)
 {
+#if SLI_SI91X_LWIP_HOSTED_NETWORK_STACK
     struct netif * sta_netif = &wifi_client_context.netif;
     VerifyOrReturn(sta_netif != nullptr, ChipLogError(DeviceLayer, "HandleDHCPPolling: failed to get STA netif"));
-#if (CHIP_DEVICE_CONFIG_ENABLE_IPV4)
-    wfx_dhcp_got_ipv4((uint32_t) sta_netif->ip_addr.u_addr.ip4.addr);
-#endif /* CHIP_DEVICE_CONFIG_ENABLE_IPV4 */
     char addrStr[chip::Inet::IPAddress::kMaxStringLength] = { 0 };
     VerifyOrReturn(ip6addr_ntoa_r(netif_ip6_addr(sta_netif, 0), addrStr, sizeof(addrStr)) != nullptr);
     ChipLogProgress(DeviceLayer, "SLAAC OK: linklocal addr: %s", addrStr);
+#endif // SLI_SI91X_LWIP_HOSTED_NETWORK_STACK
+#if (CHIP_DEVICE_CONFIG_ENABLE_IPV4)
+    wfx_dhcp_got_ipv4((uint32_t) sta_netif->ip_addr.u_addr.ip4.addr);
+#endif /* CHIP_DEVICE_CONFIG_ENABLE_IPV4 */
     wfx_ipv6_notify(GET_IPV6_SUCCESS);
     NotifyConnectivity();
 }
@@ -858,15 +890,14 @@ sl_status_t ConfigurePowerSave(rsi_power_save_profile_mode_t sl_si91x_ble_state,
     VerifyOrReturnError(error == RSI_SUCCESS, SL_STATUS_FAIL,
                         ChipLogError(DeviceLayer, "rsi_bt_power_save_profile failed: %ld", error));
 
-    sl_wifi_performance_profile_t wifi_profile = { .profile = sl_si91x_wifi_state,
-                                                   // TODO: Performance profile fails if not alligned with DTIM
-                                                   .dtim_aligned_type = SL_SI91X_ALIGN_WITH_DTIM_BEACON,
-                                                   // TODO: Different types need to be fixe in the Wi-Fi SDK
-                                                   .listen_interval = static_cast<uint16_t>(listenInterval) };
+    sl_wifi_performance_profile_v2_t wifi_profile = { .profile = sl_si91x_wifi_state,
+                                                      // TODO: Performance profile fails if not alligned with DTIM
+                                                      .dtim_aligned_type = SL_SI91X_ALIGN_WITH_DTIM_BEACON,
+                                                      .listen_interval   = listenInterval };
 
-    sl_status_t status = sl_wifi_set_performance_profile(&wifi_profile);
+    sl_status_t status = sl_wifi_set_performance_profile_v2(&wifi_profile);
     VerifyOrReturnError(status == SL_STATUS_OK, status,
-                        ChipLogError(DeviceLayer, "sl_wifi_set_performance_profile failed: 0x%lx", status));
+                        ChipLogError(DeviceLayer, "sl_wifi_set_performance_profile_v2 failed: 0x%lx", status));
 
     return status;
 }

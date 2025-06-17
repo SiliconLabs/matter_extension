@@ -3,19 +3,20 @@ label: Matter Lock WiFi
 description: >
   Matter Lock App For WiFi
 quality: production
-package: Matter
+package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.5.2"
+    version: "2.6.0"
 
 component:
   - id: device_init
+  - id: sl_main
   - id: matter_buttons
     from: matter
   - id: matter_leds
     from: matter
-    
+
   - id: matter
     from: matter
   - id: matter_platform_mg
@@ -26,7 +27,7 @@ component:
     from: matter
   - id: matter_crypto
     from: matter
-  - id: matter_gatt
+  - id: matter_gatt_static
     from: matter
   - id: matter_provision_default
     from: matter
@@ -41,9 +42,9 @@ component:
     from: matter
   - id: matter_icd_management
     from: matter
-    
+
   - id: matter_lock
-    from: matter   
+    from: matter
   - id: app_common
     from: matter
   - id: matter_access_control
@@ -104,7 +105,7 @@ component:
   - id: matter_log_uart
     from: matter
 
-# Disable due to size increase of ICD functionality    
+# Disable due to size increase of ICD functionality
 #  - id: matter_default_lcd_config
 #    from: matter
 
@@ -114,12 +115,12 @@ requires:
   - name: spidrv_instance
   - name: uartdrv_eusart
     condition:
-    - device_series_2
-# Select UART/EUART drivers based on device series
+      - device_series_2
+  # Select UART/EUART drivers based on device series
   - name: matter_drivers_series_2_wifi_wf200
     condition:
-     - device_series_2
-     
+      - device_series_2
+
 config_file:
   - path: ../../../../third_party/matter_sdk/examples/lock-app/silabs/data_model/lock-app.zap
     directory: common
@@ -177,7 +178,8 @@ configuration:
     value: "1"
   - name: SL_POWER_MANAGER_CONFIG_VOLTAGE_SCALING_FAST_WAKEUP
     value: "1"
-  - {name: SL_STACK_SIZE, value: '4608'} 
+  - name: SL_STACK_SIZE,
+    value: "4608"
   - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
     value: 1536
   - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS
@@ -198,6 +200,6 @@ tag:
   - hardware:component:led:2+
 post_build:
   profile: application
-  
+
 other_file:
   - path: ../../../image/qr_code_img.png

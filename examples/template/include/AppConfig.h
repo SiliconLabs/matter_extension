@@ -21,11 +21,11 @@
 
 #include "silabs_utils.h"
 
-#define BLE_DEV_NAME "SL-Template"
-
 // ---- Template Example App Config ----
 
-#define APP_TASK_NAME "TEMPLATE"
+#define APP_TASK_NAME "Template"
+
+#define BLE_DEV_NAME "SL-" APP_TASK_NAME
 
 // Time it takes in ms for the simulated actuator to move from one
 // state to another.

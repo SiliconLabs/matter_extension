@@ -1,10 +1,9 @@
-
 category: Clusters|General
 description: >
   Implementation of the Administrator Commissioning Server Cluster.
   The user has to enable the Administrator Commissioning Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_administrator_commissioning
-package: Matter
+package: matter
 label: Administrator Commissioning Server Cluster
 quality: production
 metadata:

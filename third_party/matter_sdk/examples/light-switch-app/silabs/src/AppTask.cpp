@@ -73,21 +73,10 @@ bool AppTask::actionButtonPressed    = false;
 bool AppTask::actionButtonSuppressed = false;
 bool AppTask::isButtonEventTriggered = false;
 
-CHIP_ERROR AppTask::Init()
+CHIP_ERROR AppTask::AppInit()
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
     chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(AppTask::ButtonEventHandler);
-
-#ifdef DISPLAY_ENABLED
-    GetLCD().Init((uint8_t *) "Light Switch");
-#endif
-
-    err = BaseApplication::Init();
-    if (err != CHIP_NO_ERROR)
-    {
-        SILABS_LOG("BaseApplication::Init() failed");
-        appError(err);
-    }
 
     err = LightSwitchMgr::GetInstance().Init(kLightSwitchEndpoint, kGenericSwitchEndpoint);
     if (err != CHIP_NO_ERROR)
@@ -104,10 +93,11 @@ CHIP_ERROR AppTask::Init()
 void AppTask::Timer::Start()
 {
     // Starts or restarts the function timer
-    if (osTimerStart(mHandler, pdMS_TO_TICKS(LONG_PRESS_TIMEOUT_MS)) != osOK)
+    osStatus_t status = osTimerStart(mHandler, pdMS_TO_TICKS(LONG_PRESS_TIMEOUT_MS));
+    if (status != osOK)
     {
-        SILABS_LOG("Timer start() failed");
-        appError(CHIP_ERROR_INTERNAL);
+        SILABS_LOG("Timer start() failed with error code : %ld", status);
+        appError(APP_ERROR_START_TIMER_FAILED);
     }
 
     mIsActive = true;
@@ -156,7 +146,7 @@ AppTask::Timer::Timer(uint32_t timeoutInMs, Callback callback, void * context) :
     if (mHandler == NULL)
     {
         SILABS_LOG("Timer create failed");
-        appError(CHIP_ERROR_INTERNAL);
+        appError(APP_ERROR_CREATE_TIMER_FAILED);
     }
 }
 
@@ -171,10 +161,11 @@ AppTask::Timer::~Timer()
 
 void AppTask::Timer::Stop()
 {
+    // Abort on osError (-1) as it indicates an unspecified failure with no clear recovery path.
     if (osTimerStop(mHandler) == osError)
     {
         SILABS_LOG("Timer stop() failed");
-        appError(CHIP_ERROR_INTERNAL);
+        appError(APP_ERROR_STOP_TIMER_FAILED);
     }
     mIsActive = false;
 }

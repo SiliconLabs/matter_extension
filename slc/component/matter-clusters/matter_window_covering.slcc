@@ -1,10 +1,9 @@
-
 category: Clusters|Closures
 description: >
   Implementation of the Window Covering Server Cluster.
   The user has to enable the Window Covering Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_window_covering
-package: Matter
+package: matter
 label: Window Covering Server Cluster
 quality: production
 metadata:

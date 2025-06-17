@@ -29,30 +29,25 @@ namespace Provision {
 
 static constexpr uint32_t kCreds_KeyId_Default = 2; //(PSA_KEY_ID_USER_MIN + 1);
 
-class AttestationKey {
+class AttestationKey
+{
 public:
-  AttestationKey(uint32_t id = 0) {
-    mId = (id > 0) ? id : kCreds_KeyId_Default;
-  }
-  ~AttestationKey() = default;
+    AttestationKey(uint32_t id = 0) { mId = (id > 0) ? id : kCreds_KeyId_Default; }
+    ~AttestationKey() = default;
 
-  uint32_t GetId() { return mId; }
-  CHIP_ERROR Import(const uint8_t *asn1, size_t size);
-  CHIP_ERROR Export(uint8_t *asn1, size_t max, size_t &size);
-  CHIP_ERROR GenerateCSR(uint16_t vid, uint16_t pid, const CharSpan &cn,
-                         MutableCharSpan &csr);
-  CHIP_ERROR SignMessage(const ByteSpan &message, MutableByteSpan &out_span);
+    uint32_t GetId() { return mId; }
+    CHIP_ERROR Import(const uint8_t * asn1, size_t size);
+    CHIP_ERROR Export(uint8_t * asn1, size_t max, size_t & size);
+    CHIP_ERROR GenerateCSR(uint16_t vid, uint16_t pid, const CharSpan & cn, MutableCharSpan & csr);
+    CHIP_ERROR SignMessage(const ByteSpan & message, MutableByteSpan & out_span);
 
 #if (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE)
-  static CHIP_ERROR Unwrap(const uint8_t *asn1, size_t size,
-                           MutableByteSpan &private_key);
-  static CHIP_ERROR SignMessageWithKey(const uint8_t *private_key,
-                                       const ByteSpan &message,
-                                       MutableByteSpan &out_span);
+    static CHIP_ERROR Unwrap(const uint8_t * asn1, size_t size, MutableByteSpan & private_key);
+    static CHIP_ERROR SignMessageWithKey(const uint8_t * private_key, const ByteSpan & message, MutableByteSpan & out_span);
 #endif // SLI_SI91X_MCU_INTERFACE
 
 protected:
-  uint32_t mId = 0;
+    uint32_t mId = 0;
 };
 
 } // namespace Provision

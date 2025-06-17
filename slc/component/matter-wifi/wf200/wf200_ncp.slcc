@@ -1,5 +1,5 @@
 id: wf200_ncp
-package: Matter
+package: matter
 label: WF200 NCP Extension
 description: >
   Adds support for the HAL and WiFi Driver layer for WF200 NCP devices
@@ -64,11 +64,11 @@ include:
       - path: sl_wfx_board.h
       - path: sl_wfx_host.h
       - path: sl_wfx_task.h
-      - path: spi_multiplex.h   
+      - path: spi_multiplex.h
   - path: third_party/matter_sdk/src/platform/silabs/wifi
     file_list:
-    - path: WifiInterfaceAbstraction.h
-    - path: wfx_msgs.h
+      - path: WifiInterfaceAbstraction.h
+      - path: wfx_msgs.h
 
 source:
   - path: third_party/matter_sdk/src/platform/silabs/wifi/wf200/platform/efr_spi.c

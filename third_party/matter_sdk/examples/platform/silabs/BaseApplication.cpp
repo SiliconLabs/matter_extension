@@ -45,6 +45,15 @@
 #endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 
 #include <app/server/OnboardingCodesUtil.h>
+
+#if defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
+#include <platform/internal/BLEManager.h>
+#include <platform/silabs/efr32/BLEChannelImpl.h>
+#ifdef ENABLE_CHIP_SHELL
+#include <BLEShellCommands.h>
+#endif // ENABLE_CHIP_SHELL
+#endif // defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
+
 #include <app/util/attribute-storage.h>
 #include <assert.h>
 #include <headers/ProvisionManager.h>
@@ -125,6 +134,9 @@ using namespace ::chip::DeviceLayer;
 using namespace ::chip::DeviceLayer::Silabs;
 
 using TimeTraceOperation = chip::Tracing::Silabs::TimeTraceOperation;
+#if defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
+using BLEChannelImpl = chip::DeviceLayer::Internal::BLEChannelImpl;
+#endif // defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
 namespace {
 
 /**********************************************************
@@ -187,6 +199,10 @@ Identify gIdentify = {
 };
 
 #endif // MATTER_DM_PLUGIN_IDENTIFY_SERVER
+
+#if defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
+BLEChannelImpl sBleSideChannel;
+#endif // defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
 
 } // namespace
 
@@ -301,7 +317,34 @@ CHIP_ERROR BaseApplication::StartAppTask(osThreadFunc_t taskFunction)
 
 CHIP_ERROR BaseApplication::Init()
 {
+    CHIP_ERROR err = BaseInit();
+    if (err != CHIP_NO_ERROR)
+    {
+        SILABS_LOG("BaseInit() failed");
+        appError(err);
+        return err;
+    }
+
+    err = AppInit();
+    if (err != CHIP_NO_ERROR)
+    {
+        SILABS_LOG("AppInit() failed");
+        appError(err);
+        return err;
+    }
+
+    SILABS_TRACE_END_ERROR(TimeTraceOperation::kAppInit, err);
+    SILABS_TRACE_END_ERROR(TimeTraceOperation::kBootup, err);
+    return err;
+}
+
+CHIP_ERROR BaseApplication::BaseInit()
+{
     CHIP_ERROR err = CHIP_NO_ERROR;
+
+#ifdef DISPLAY_ENABLED
+    GetLCD().Init((uint8_t *) APP_TASK_NAME);
+#endif
 
 #ifdef SL_WIFI
     /*
@@ -363,6 +406,9 @@ CHIP_ERROR BaseApplication::Init()
 #if MATTER_TRACING_ENABLED
     TracingCommands::RegisterCommands();
 #endif // MATTER_TRACING_ENABLED
+#if defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
+    BLEShellCommands::RegisterCommands();
+#endif // defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
 #endif // ENABLE_CHIP_SHELL
 
 #ifdef PERFORMANCE_TEST_ENABLED
@@ -376,15 +422,18 @@ CHIP_ERROR BaseApplication::Init()
 #if CHIP_ENABLE_OPENTHREAD
     BaseApplication::sIsProvisioned = ConnectivityMgr().IsThreadProvisioned();
 #endif
+#if defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
+    ReturnErrorOnFailure(sBleSideChannel.Init());
+    DeviceLayer::Internal::BLEMgrImpl().InjectSideChannel(&sBleSideChannel);
+#endif
 
     err = chip::Server::GetInstance().GetFabricTable().AddFabricDelegate(&sAppDelegate);
     return err;
 }
 
-void BaseApplication::InitCompleteCallback(CHIP_ERROR err)
+void BaseApplication::InitCompleteCallback([[maybe_unused]] CHIP_ERROR err)
 {
-    SILABS_TRACE_END(TimeTraceOperation::kAppInit);
-    SILABS_TRACE_END(TimeTraceOperation::kBootup);
+    // A stub for backward compatibility
 }
 
 void BaseApplication::FunctionTimerEventHandler(void * timerCbArg)
@@ -890,9 +939,6 @@ void BaseApplication::ScheduleFactoryReset()
         PlatformMgr().HandleServerShuttingDown(); // HandleServerShuttingDown calls OnShutdown() which is only implemented for the
                                                   // basic information cluster it seems. And triggers and Event flush, which is not
                                                   // relevant when there are no fabrics left
-#ifdef SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
-        Zigbee::TokenFactoryReset();
-#endif
         ConfigurationMgr().InitiateFactoryReset();
     });
 }
@@ -900,10 +946,16 @@ void BaseApplication::ScheduleFactoryReset()
 void BaseApplication::DoProvisioningReset()
 {
     PlatformMgr().ScheduleWork([](intptr_t) {
+        // Force the KeyMap update to make sure nvm3 is updated before anything happens.
+        // If the device reboots before the timer update happens, "shadow" keys are left in nvm3 causing a reduction of the
+        // overall available nvm3 - similar to a memory leak.
+        // FactoryResetThreadStack forces a reboot which was causing a memory loss.
+        chip::DeviceLayer::PersistedStorage::KeyValueStoreMgrImpl().ForceKeyMapSave();
+
 #if CHIP_DEVICE_CONFIG_ENABLE_THREAD
         ConfigurationManagerImpl::GetDefaultInstance().ClearThreadStack();
         ThreadStackMgrImpl().FactoryResetThreadStack();
-        ThreadStackMgr().InitThreadStack();
+        // Triggers a reboot - nothing gets executed after this
 #endif // CHIP_DEVICE_CONFIG_ENABLE_THREAD
 
 #if CHIP_DEVICE_CONFIG_ENABLE_WIFI_STATION

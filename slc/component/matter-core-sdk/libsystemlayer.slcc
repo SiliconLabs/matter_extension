@@ -1,58 +1,61 @@
 category: Matter|Core
 define:
--   name: CHIP_HAVE_CONFIG_H
-    value: '1'
--   name: RADIO_CONFIG_DMP_SUPPORT
-    value: '1'
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: RADIO_CONFIG_DMP_SUPPORT
+    value: "1"
 description: libsystemlayer
 id: libsystemlayer
 include:
--   path: third_party/matter_sdk/examples/platform/silabs
--   path: third_party/matter_sdk/src
--   path: third_party/matter_sdk/src/include
--   path: third_party/matter_sdk/src/lib
--   path: third_party/nlassert/include
--   path: third_party/nlio/include
--   path: third_party/matter_sdk/src/system
+  - path: third_party/matter_sdk/examples/platform/silabs
+  - path: third_party/matter_sdk/src
+  - path: third_party/matter_sdk/src/include
+  - path: third_party/matter_sdk/src/lib
+  - path: third_party/nlassert/include
+  - path: third_party/nlio/include
+  - path: third_party/matter_sdk/src/system
     file_list:
-    -   path: SystemFaultInjection.h
-    -   path: TimeSource.h
-    -   path: SystemTimer.h
-    -   path: TLVPacketBufferBackingStore.h
-    -   path: SystemStats.h
-    -   path: SystemClock.h
-    -   path: SystemAlignSize.h
-    -   path: SystemLayerImpl.h
-    -   path: SystemConfig.h
-    -   path: SystemMutex.h
-    -   path: SocketEvents.h
-    -   path: SystemEvent.h
-    -   path: WakeEvent.h
-    -   path: SystemLayerImplFreeRTOS.h
-    -   path: SystemError.h
-    -   path: SystemPacketBuffer.h
-    -   path: PlatformEventSupport.h
-    -   path: SystemLayerImplSelect.h
-    -   path: SystemLayer.h
-    -   path: SystemPacketBufferInternal.h
+      - path: SystemFaultInjection.h
+      - path: TimeSource.h
+      - path: SystemTimer.h
+      - path: TLVPacketBufferBackingStore.h
+      - path: SystemStats.h
+      - path: SystemClock.h
+      - path: SystemAlignSize.h
+      - path: SystemLayerImpl.h
+      - path: SystemConfig.h
+      - path: SystemMutex.h
+      - path: SocketEvents.h
+      - path: SystemEvent.h
+      - path: WakeEvent.h
+      - path: SystemLayerImplFreeRTOS.h
+      - path: SystemError.h
+      - path: SystemPacketBuffer.h
+      - path: PlatformEventSupport.h
+      - path: SystemLayerImplSelect.h
+      - path: SystemLayer.h
+      - path: SystemPacketBufferInternal.h
 label: libsystemlayer
-package: Matter
+package: matter
 provides:
--   name: matter_libsystemlayer
+  - name: matter_libsystemlayer
 quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
 source:
--   path: third_party/matter_sdk/src/system/SystemClock.cpp
--   path: third_party/matter_sdk/src/system/SystemError.cpp
--   path: third_party/matter_sdk/src/system/SystemLayer.cpp
--   path: third_party/matter_sdk/src/system/SystemLayerImplFreeRTOS.cpp
--   path: third_party/matter_sdk/src/system/SystemMutex.cpp
--   path: third_party/matter_sdk/src/system/SystemPacketBuffer.cpp
--   path: third_party/matter_sdk/src/system/SystemStats.cpp
--   path: third_party/matter_sdk/src/system/SystemTimer.cpp
--   path: third_party/matter_sdk/src/system/TLVPacketBufferBackingStore.cpp
--   path: third_party/matter_sdk/src/system/WakeEvent.cpp
+  - path: third_party/matter_sdk/src/system/SystemClock.cpp
+  - path: third_party/matter_sdk/src/system/SystemError.cpp
+  - path: third_party/matter_sdk/src/system/SystemLayer.cpp
+  - path: third_party/matter_sdk/src/system/SystemLayerImplFreeRTOS.cpp
+    unless: [matter_sockets]
+  - path: third_party/matter_sdk/src/system/SystemLayerImplFreeRTOSSockets.cpp
+    condition: [matter_sockets]
+  - path: third_party/matter_sdk/src/system/SystemMutex.cpp
+  - path: third_party/matter_sdk/src/system/SystemPacketBuffer.cpp
+  - path: third_party/matter_sdk/src/system/SystemStats.cpp
+  - path: third_party/matter_sdk/src/system/SystemTimer.cpp
+  - path: third_party/matter_sdk/src/system/TLVPacketBufferBackingStore.cpp
+  - path: third_party/matter_sdk/src/system/WakeEvent.cpp
 ui_hints:
-    visibility: never
+  visibility: never

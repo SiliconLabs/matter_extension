@@ -1,7 +1,7 @@
 # TODO Remove this component once proper SDK components are implemented
 id: "matter_segger_rtt"
 label: "Matter Segger RTT"
-package: "Matter"
+package: matter
 description: "Matter-specific version of the platform's Segger RTT component"
 category: Platform|Utils
 quality: production

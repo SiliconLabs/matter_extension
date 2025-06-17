@@ -1,10 +1,9 @@
-
 category: Clusters|Measurement
 description: >
   Implementation of the Electrical Power Measurement Server Cluster.
   The user has to enable the Electrical Power Measurement Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_electrical_power_measurement
-package: Matter
+package: matter
 label: Electrical Power Measurement Server Cluster
 quality: production
 metadata:

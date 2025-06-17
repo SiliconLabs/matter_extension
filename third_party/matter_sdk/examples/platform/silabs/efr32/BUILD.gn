@@ -224,6 +224,9 @@ source_set("efr32-common") {
     if (matter_enable_tracing_support) {
       public_deps += [ "${silabs_common_plat_dir}/shell:tracing" ]
     }
+    if (sl_enable_ble_side_channel) {
+      deps += [ "${silabs_common_plat_dir}/shell:ble" ]
+    }
   }
 
   public_deps += [
