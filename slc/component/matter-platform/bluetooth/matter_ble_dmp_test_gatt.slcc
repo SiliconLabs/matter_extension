@@ -12,6 +12,7 @@ metadata:
 provides:
 -   name: matter_ble_dmp_test
 requires:
+-   name: bluetooth_feature_connection_role_central
 -   name: bluetooth_feature_legacy_scanner
 -   name: zigbee_ble_event_handler
 -   name: zigbee_ble_dmp_cli
@@ -21,4 +22,4 @@ template_contribution:
   - name: component_catalog
     value: matter_ble_dmp_test
 ui_hints:
-  visibility: always
+  visibility: basic

@@ -56,12 +56,12 @@ if platform == "win32":
     __platform = "windows"
     #urls for all the tools
     arm_toolchain_url = "https://developer.arm.com/-/media/Files/downloads/gnu/12.2.rel1/binrel/arm-gnu-toolchain-12.2.rel1-mingw-w64-i686-arm-none-eabi.zip?rev=709f3f15b2ee4763b186c10153ee6ca9&hash=8C0761A17A1E4861B96DDB604C177F5B"
-    java_url = "https://corretto.aws/downloads/resources/17.0.8.8.1/amazon-corretto-17.0.8.8.1-windows-x64-jdk.zip"
+    java_url = "https://corretto.aws/downloads/resources/21.0.7.6.1/amazon-corretto-21.0.7.6.1-windows-x64-jdk.zip"
 
     #environment paths for tools
     commander_path = os.path.join(tools_folder_path,"SimplicityCommander-Windows")
     os_name_commander = "Commander_win32"
-    java_path = os.path.join(silabs_chip_root, "slc","tools","jdk17.0.8_8")
+    java_path = os.path.join(silabs_chip_root, "slc","tools","jdk21.0.7_6")
     arm_gcc_dir = os.path.join(tools_folder_path,"gcc")
     arm_gcc_download_dir = os.path.join( tools_folder_path, "arm-gnu-toolchain-12.2.rel1-mingw-w64-i686-arm-none-eabi" )
     ninja_path = os.path.join(tools_folder_path,"ninja","ninja.exe")
@@ -70,13 +70,13 @@ elif platform == "darwin":
     __platform = "mac"
     #urls for all the tools
     arm_toolchain_url = "https://developer.arm.com/-/media/Files/downloads/gnu/12.2.rel1/binrel/arm-gnu-toolchain-12.2.rel1-darwin-arm64-arm-none-eabi.tar.xz?rev=41f9ad86e18d43cf9999c4bada07f7df&hash=C458A8BF74CBA545BDCA38B7FB40AAF5"
-    java_url = "https://corretto.aws/downloads/resources/17.0.8.8.1/amazon-corretto-17.0.8.8.1-macosx-x64.tar.gz"
-    
+    java_url = "https://corretto.aws/downloads/resources/21.0.7.6.1/amazon-corretto-21.0.7.6.1-macosx-x64.tar.gz"    
+
     #environment paths for tools
     commander_path = os.path.join(tools_folder_path,"SimplicityCommander-Mac")
     os_name_commander = "Commander_osx"
     commander_app_path = os.path.join(commander_path,"Commander.app","Contents","MacOS")
-    java_path = os.path.join(silabs_chip_root, "slc","tools","amazon-corretto-17.jdk")
+    java_path = os.path.join(silabs_chip_root, "slc","tools","amazon-corretto-21.jdk")
     arm_gcc_dir = os.path.join(tools_folder_path,"arm-gnu-toolchain-12.2.rel1-darwin-arm64-arm-none-eabi")
     ninja_path = os.path.join(tools_folder_path,"ninja","ninja")
 elif platform =="linux":
@@ -84,12 +84,12 @@ elif platform =="linux":
     __platform = platform
     #urls for all the tools
     arm_toolchain_url = "https://developer.arm.com/-/media/Files/downloads/gnu/12.2.rel1/binrel/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz?rev=7bd049b7a3034e64885fa1a71c12f91d&hash=732D909FA8F68C0E1D0D17D08E057619"
-    java_url = "https://corretto.aws/downloads/resources/17.0.8.8.1/amazon-corretto-17.0.8.8.1-linux-x64.tar.gz"
+    java_url = "https://corretto.aws/downloads/resources/21.0.7.6.1/amazon-corretto-21.0.7.6.1-linux-x64.tar.gz"
     
     #environment paths for tools
     commander_path = os.path.join(tools_folder_path,"SimplicityCommander-Linux")
     os_name_commander = "Commander_linux_x86_64"
-    java_path = os.path.join(silabs_chip_root, "slc","tools","amazon-corretto-17.0.8.8.1-linux-x64")
+    java_path = os.path.join(silabs_chip_root, "slc","tools","amazon-corretto-21.0.7.6.1-linux-x64")
     commander_app_path = os.path.join(commander_path,"commander")
     arm_gcc_dir = os.path.join(tools_folder_path,"arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi")
     ninja_path = os.path.join(tools_folder_path,"ninja","ninja")

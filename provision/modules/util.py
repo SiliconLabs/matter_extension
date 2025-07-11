@@ -1,11 +1,13 @@
-import subprocess
-import traceback
-import sys
-import os
 import json
+import os
+import subprocess
+import sys
+import traceback
+
 import yaml
 
 MARGIN = '  '
+
 
 class Paths:
     MODULES_DIR = 'modules'
@@ -24,28 +26,29 @@ class Paths:
     def setTemp(self, temp):
         self.temp_dir = temp
 
-    def base(self, path = None):
+    def base(self, path=None):
         return self.normalize(self.base_dir, path)
 
-    def current(self, path = None):
+    def current(self, path=None):
         return self.normalize(self.current_dir, path)
 
-    def root(self, path = None):
+    def root(self, path=None):
         return self.normalize(self.root_dir, path)
 
-    def support(self, path = None):
+    def support(self, path=None):
         return self.normalize(self.support_dir, path)
 
-    def matter(self, path = None):
+    def matter(self, path=None):
         return self.normalize(self.matter_dir, path)
 
-    def temp(self, path = None):
+    def temp(self, path=None):
         return self.normalize(self.temp_dir, path)
 
-    def normalize(self, base, path = None):
+    def normalize(self, base, path=None):
         if os.path.isfile(base):
             base = os.path.dirname(base)
-        if not base: base = '.'
+        if not base:
+            base = '.'
         if (path is None) or ('' == path) or ('.' == path):
             full = base
         elif os.path.isabs(path):
@@ -56,8 +59,9 @@ class Paths:
 
     @staticmethod
     def quote(path):
-        s = path.strip().strip('"')
+        s = path and path.strip().strip('"') or ''
         return '"{}"'.format(os.path.normpath(s))
+
 
 class File:
 
@@ -72,10 +76,12 @@ class File:
         with open(self.path, 'w') as f:
             f.write(data)
 
+
 class BinaryFile(File):
 
     def read(self):
-        if self.path is None: return bytes()
+        if self.path is None:
+            return bytes()
         with open(self.path, 'rb') as f:
             return bytes(f.read())
 
@@ -84,10 +90,11 @@ class BinaryFile(File):
             data = bytes()
         elif isinstance(x, str):
             data = str(x).encode('utf-8')
-        else: # isinstance(x, bytes) or isinstance(x, bytearray):
+        else:  # isinstance(x, bytes) or isinstance(x, bytearray):
             data = x
         with open(self.path, 'wb') as f:
             f.write(data)
+
 
 class JsonFile(File):
 
@@ -98,6 +105,7 @@ class JsonFile(File):
     def write(self, data):
         with open(self.path, 'w') as f:
             json.dump(data, f, indent=4)
+
 
 class YamlFile(File):
 
@@ -110,9 +118,9 @@ class YamlFile(File):
             yaml.dump(data, f)
 
 
-def execute(args, output = False, check = True, env = None, retry = 1):
+def execute(args, output=False, check=True, env=None, retry=1, dir=None):
     sys.stdout.reconfigure(encoding='utf-8')
-    args = [ str(x) for x in args ]
+    args = [str(x) for x in args]
     cmd = ' '.join(args)
     print("{}> {}\n".format(MARGIN, cmd))
     if env is None:
@@ -128,16 +136,18 @@ def execute(args, output = False, check = True, env = None, retry = 1):
     else:
         while retry > 0:
             retry = retry - 1
-            complete = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT, shell=True, env=env)
-            if (0 == complete.returncode): return 0
-            if check and (0 == retry):
-                fail("Command failed with code {}".format(complete.returncode))
-            else:
-                warn("Command failed with code {}. Retrying...".format(complete.returncode))
+            complete = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT, shell=True, env=env, cwd=dir)
+            if (0 == complete.returncode):
+                return 0
+            if check:
+                if (0 == retry):
+                    fail("Command failed with code {}".format(complete.returncode))
+                else:
+                    warn("Command failed with code {}. Retrying...".format(complete.returncode))
         return complete.returncode
 
 
-def fail(message, paths = None):
+def fail(message, paths=None):
     sys.stdout.reconfigure(encoding='utf-8')
     if paths is not None:
         print()
@@ -154,6 +164,7 @@ def fail(message, paths = None):
 
 def warn(message):
     print("(!) {}\n".format(message))
+
 
 def roundNearest(n, multiple):
     if n % multiple:

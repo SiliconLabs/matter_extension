@@ -291,4 +291,4 @@ ui_hints:
 
 sdk_extension:
   - id: matter
-    version: "2.6.0"
+    version: "2.6.1"

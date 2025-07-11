@@ -1,6 +1,6 @@
-import modules.util as _util
 import modules.tools as _tools
-from modules.parameters import Types, Formats, ID
+import modules.util as _util
+from modules.parameters import ID, Formats, Types
 
 
 class Exporter(object):
@@ -40,6 +40,7 @@ class Exporter(object):
         self.put(ID.kHwVersionStr)
         self.put(ID.kManufacturingDate)
         self.put(ID.kPersistentUniqueId)
+        self.put(ID.kSwVersionStr)
         self.put(ID.kDiscriminator)
         self.put(ID.kSpake2pIterations)
         self.put(ID.kSpake2pSalt)
@@ -86,32 +87,38 @@ class Exporter(object):
         elif Types.BINARY == a.type:
             if Formats.PATH == a.format:
                 path = a.str()
-                if path is None: _util.fail("Missing path for \"{}\"".format(a.name))
+                if path is None:
+                    _util.fail("Missing path for \"{}\"".format(a.name))
                 self.addBinary(a, _util.BinaryFile(path).read())
             elif Formats.STRING == a.format:
                 s = a.str()
-                self.addBinary(a, (s is not None) and s.encode('utf-8') or None)
+                self.addBinary(a, (s is not None)
+                               and s.encode('utf-8') or None)
             else:
                 self.addBinary(a, a.value)
         else:
-            _util.fail("Export: Unsupported type {} for \"{}\"".format(a.type, a.name))
+            _util.fail(
+                "Export: Unsupported type {} for \"{}\"".format(a.type, a.name))
 
     def validateInt(self, a):
         i = a.int()
         r = a.range()
         # print("  {}? {}; {}".format(a.name, i, r))
         if (r is not None) and (i is not None) and (i not in r):
-            _util.fail("Invalid value for \"{}\": {} [{}, {}]".format(a.name, i, r[0], r[-1]))
+            _util.fail("Invalid value for \"{}\": {} [{}, {}]".format(
+                a.name, i, r[0], r[-1]))
 
     def addBinary(self, a, b):
-        if b is None: b = bytes()
+        if b is None:
+            b = bytes()
         r = a.range()
         if r is None:
             _util.fail("Missing bounds for \"{}\"".format(a.name))
         sz = len(b)
         mx = r[-1]
         if (r is not None) and (sz not in r):
-            _util.fail("Invalid size for \"{}\": {} > {}".format(a.name, sz, mx))
+            _util.fail(
+                "Invalid size for \"{}\": {} > {}".format(a.name, sz, mx))
         self.encodeBinary(a, b, mx)
 
     def encodeInt8u(self, a):
@@ -131,8 +138,9 @@ class Exporter(object):
     @staticmethod
     def extractKey(path):
         TAG = 'HEX DUMP'
-        ps = subprocess.Popen(('openssl', 'asn1parse', '-inform', 'der', '-in', path), stdout=subprocess.PIPE)
+        ps = subprocess.Popen(
+            ('openssl', 'asn1parse', '-inform', 'der', '-in', path), stdout=subprocess.PIPE)
         out = subprocess.check_output(('grep', TAG), stdin=ps.stdout)
         line = out.decode(sys.stdout.encoding).strip()
-        off = line.find(TAG) + len(TAG) + 2 # [HEX DUMP]:xxxx...
+        off = line.find(TAG) + len(TAG) + 2  # [HEX DUMP]:xxxx...
         return bytes.fromhex(line[off:])

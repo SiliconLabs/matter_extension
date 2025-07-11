@@ -10,7 +10,7 @@ Matter defines three interfaces to access the provisioned data during runtime:
 * [DeviceInstanceInfoProvider](../third_party/matter_sdk/src/include/platform/DeviceInstanceInfoProvider.h)
 * [CommissionableDataProvider](../third_party/matter_sdk/src/include/platform/CommissionableDataProvider.h)
 * [DeviceAttestationCredentialsProvider](../third_party/matter_sdk/src/credentials/DeviceAttestationCredsProvider.h)
-In Silicon Labs devices, all three interfaces are implemented by the [ProvisionStorage](../third_party/matter_sdk/src/platform/silabs/provision/ProvisionStorage.h).
+In Silicon Labs devices, all three interfaces are implemented by the [ProvisionStorage](../third_party/matter_support/provision/headers/ProvisionStorage.h).
 
 The provisioning script on this folder now supersedes the following tools:
 * [Credentials Example](https://github.com/SiliconLabs/matter/tree/release_1.1.0-1.1/silabs_examples/credentials)
@@ -52,13 +52,11 @@ The GFW performs the following tasks:
 * Stores the Attestation Data on the main flash (CD, PAI, DAC)
 * Stores the size and offsets used to store the Attestation Data, along with the KeyId used to store the private-key.
 
-The main source code of the GFW is located under `./generator`, while the board support is located under `./support`.
 Pre-compiled images for the supported chips can be found in `./images`.
 Backwards-compatibility script files are stored under `./modules/vX_Y` where X.Y matches the targeted version.
 
 The directory structure is as follows:
 - provision
-    - generator
     - images
     - modules
         - v1_0
@@ -255,7 +253,7 @@ Or, as part of an input file:
 }
 ```
 
-On the firmware side, custom parameters are sent to the [Custom Provision Storage](examples/platform/silabs/provision/ProvisionStorageCustom.cpp).
+On the firmware side, custom parameters are sent to the [Custom Provision Storage](../third_party/matter_sdk/examples/platform/silabs/provision/ProvisionStorageCustom.cpp).
 A sample implementation is provided, but it must be replaced with a class that matches with parameters defined in the YAML descriptor.
 
 
@@ -381,7 +379,7 @@ chip-cert gen-att-cert -t d -l 3660 -c "Matter DAC" -V 0xfff1 -P 0x8005 -C ./tem
 
 By default, `provision.py` uses the Matter Test PAA [Chip-Test-PAA-NoVID-Cert.der](../third_party/matter_sdk/credentials/test/attestation/Chip-Test-PAA-NoVID-Cert.der) and
 its key [Chip-Test-PAA-NoVID-Key.der](../third_party/matter_sdk/credentials/test/attestation/Chip-Test-PAA-NoVID-Key.der), which are recognized by
-[chip-tool](../third_party/matter_sdk/examples/chip-tool). So when using `chip-tool`, no `--paa-trust-store-path` argument is required.
+[chip-tool](../third_party/matter_sdk/examples/chip-tool/README.md). So when using `chip-tool`, no `--paa-trust-store-path` argument is required.
 
 ### Example
 

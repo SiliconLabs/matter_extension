@@ -12,13 +12,32 @@ def pipeline()
             // ************************************************************************************
             //  Clone Matter repo, checkout corresponding branch, checkout matter_private submodule
             // ************************************************************************************           
-            checkout scm: [$class                            : 'GitSCM',
+            def scmVars = checkout scm: [$class              : 'GitSCM',
                             branches                         : scm.branches,
                             browser                          : [$class: 'Stash', repoUrl: 'https://stash.silabs.com/projects/WMN_TOOLS/repos/matter_extension/'],
                             doGenerateSubmoduleConfigurations: scm.doGenerateSubmoduleConfigurations,
                             extensions                       : [[$class: 'ScmName', name: 'matter_extension']],
                             userRemoteConfigs                : scm.userRemoteConfigs]   
         
+        
+        def previousCommit = scmVars.GIT_PREVIOUS_COMMIT
+        def currentCommit = scmVars.GIT_COMMIT
+
+        echo "Previous commit: ${previousCommit}"
+        echo "Current Commit: ${currentCommit}"
+
+        // Only check for new commit if build is triggered by pollSCM
+        if (currentBuild.getBuildCauses('hudson.triggers.SCMTrigger$SCMTriggerCause').size() > 0) {
+            if (previousCommit == currentCommit) {
+                echo "No changes in matter_extension. Exiting."
+                isNewCommitDetected = false
+                return
+            } else {
+                echo "Changes detected in matter_extension. Proceeding."
+                isNewCommitDetected = true
+            }
+        }
+           
             sh """
                 git submodule update --init  --checkout third_party/matter_private
             """

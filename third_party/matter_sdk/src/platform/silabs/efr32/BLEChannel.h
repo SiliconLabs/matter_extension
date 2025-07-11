@@ -85,21 +85,44 @@ public:
     virtual CHIP_ERROR StartAdvertising(void) = 0;
     virtual CHIP_ERROR StopAdvertising(void)  = 0;
 
-    virtual void AddConnection(uint8_t connectionHandle, uint8_t bondingHandle)       = 0;
-    virtual bool RemoveConnection(uint8_t connectionHandle)                           = 0;
-    virtual void HandleReadRequest(volatile sl_bt_msg_t * evt, ByteSpan data)         = 0;
-    virtual void HandleWriteRequest(volatile sl_bt_msg_t * evt, MutableByteSpan data) = 0;
+    /** @brief NotifyCharacteristic
+     * Notify a characteristic identified by its handle. This function is used to send a notification to the client
+     * subscribed to the characteristic.
+     * @param characteristicHandle The handle of the characteristic to notify.
+     * @return CHIP_NO_ERROR on success, or an error code if the notification could not be sent.
+     */
+    virtual CHIP_ERROR NotifyCharacteristic(uint16_t characteristicHandle) = 0;
+    /** @brief IndicateCharacteristic
+     * Indicate a characteristic identified by its handle. This function is used to send an indication to the client
+     * subscribed to the characteristic.
+     * @param characteristicHandle The handle of the characteristic to indicate.
+     * @return CHIP_NO_ERROR on success, or an error code if the indication could not be sent.
+     */
+    virtual CHIP_ERROR IndicateCharacteristic(uint16_t characteristicHandle) = 0;
+    virtual void HandleIndicationTimeout(volatile sl_bt_msg_t * evt)         = 0;
+    virtual void HandleIndicationConfirmation(volatile sl_bt_msg_t * evt)    = 0;
+
+    virtual void AddConnection(uint8_t connectionHandle, uint8_t bondingHandle) = 0;
+    virtual bool RemoveConnection(uint8_t connectionHandle)                     = 0;
+    virtual void HandleReadRequest(volatile sl_bt_msg_t * evt)                  = 0;
+    virtual void HandleWriteRequest(volatile sl_bt_msg_t * evt)                 = 0;
 
     /** @brief CanHandleEvent
-     *  Determine if the side channel can handle a BLE event. This only gets called if the
-     *  targetted event is not supported by MATTERoBLE as the side channel supports every
-     *  event that MATTERoBLE does.
+     *  Determine if the side channel can handle a BLE event.
      *
      * @param event uint32_t Header of sl_bt_msg_t event type
      * @return true if the event can be handled, false otherwise.
      */
     virtual bool CanHandleEvent(uint32_t event) { return false; }
 
+    /** @brief ParseEvent
+     *  Take the appropriate action based on the event received from the BLE stack.
+     *  Note: this method is currently not implemented as the parsing is currently handled
+     *  by the BLEManagerImpl class.
+     *  TODO: Convert ChipoBLE to BLEChannel and implement this method in the derived class.
+     *
+     * @param evt The event to parse.
+     */
     virtual void ParseEvent(volatile sl_bt_msg_t * evt) {}
 
     /** @brief CCCD Write Handler
@@ -109,13 +132,12 @@ public:
      *  whether the request requires a new subscription.
      *
      * @param evt The event containing the CCCD write request.
-     * @param isNewSubscription A boolean indicating whether the request requires a new subscription.
      *
      *
      * @return CHIP_ERROR_INCORRECT_STATE if a request is received when the connection is not allocated or a request is received
      *        for a different connection handle. CHIP_NO_ERROR if the request is handled successfully.
      */
-    virtual CHIP_ERROR HandleCCCDWriteRequest(volatile sl_bt_msg_t * evt, bool & isNewSubscription) = 0;
+    virtual CHIP_ERROR HandleCCCDWriteRequest(volatile sl_bt_msg_t * evt) = 0;
 
     virtual void UpdateMtu(volatile sl_bt_msg_t * evt) = 0;
 
@@ -123,8 +145,8 @@ public:
     // GAP
     virtual CHIP_ERROR GeneratAdvertisingData(uint8_t discoverMove, uint8_t connectMode, const Optional<uint16_t> & maxEvents) = 0;
     virtual CHIP_ERROR SetAdvertisingParams(uint32_t intervalMin, uint32_t intervalMax, uint16_t duration,
-                                            const Optional<uint16_t> & maxEvents, const Optional<uint8_t> & channelMap);
-    virtual CHIP_ERROR OpenConnection(bd_addr address, uint8_t addrType) = 0;
+                                            const Optional<uint16_t> & maxEvents, const Optional<uint8_t> & channelMap)        = 0;
+    virtual CHIP_ERROR OpenConnection(bd_addr address, uint8_t addrType)                                                       = 0;
 
     /** @brief SetConnectionParams
      *
@@ -161,23 +183,31 @@ public:
     virtual CHIP_ERROR SetAdvHandle(uint8_t handle) = 0;
 
     // GATT (All these methods need some event handling to be done in sl_bt_on_event)
-    virtual CHIP_ERROR DiscoverServices()                                                           = 0;
-    virtual CHIP_ERROR DiscoverCharacteristics(uint32_t serviceHandle)                              = 0;
-    virtual CHIP_ERROR SetCharacteristicNotification(uint8_t characteristicHandle, uint8_t flags)   = 0;
-    virtual CHIP_ERROR SetCharacteristicValue(uint8_t characteristicHandle, const ByteSpan & value) = 0;
+    virtual CHIP_ERROR DiscoverRemoteServices()                                                            = 0;
+    virtual CHIP_ERROR DiscoverRemoteCharacteristics(uint32_t serviceHandle)                               = 0;
+    virtual CHIP_ERROR SetRemoteCharacteristicNotification(uint16_t characteristicHandle, uint8_t flags)   = 0;
+    virtual CHIP_ERROR SetRemoteCharacteristicValue(uint16_t characteristicHandle, const ByteSpan & value) = 0;
     // CLI methods END
 
     // Getters
     uint8_t GetAdvHandle(void) const { return mAdvHandle; }
     uint8_t GetConnectionHandle(void) const { return mConnectionState.connectionHandle; }
     uint8_t GetBondingHandle(void) const { return mConnectionState.bondingHandle; }
+    uint16_t GetTXCharHandle(void) const { return mSideTxChar.handle; }
+    uint16_t GetRXCharHandle(void) const { return mSideRxChar.handle; }
     bd_addr GetRandomizedAddr(void) const { return mConnectionState.address; }
     BLEConState GetConnectionState() const { return mConnectionState; }
 
 protected:
     enum class Flags : uint16_t
     {
-        kAdvertising = 0x0001, // Todo : See about flags for connection, subscription, etc.
+        kAdvertising = 0x0001, // Todo : Mode BLEManager flags here when converting ChipOBLE to BLEChannel
+    };
+
+    struct Characteristic
+    {
+        uint16_t handle;
+        MutableByteSpan buffer;
     };
 
     BLEConState mConnectionState;
@@ -185,7 +215,7 @@ protected:
 
     // Advertising parameters
     // TODO: Default values should be set in a configuration file for the side channel
-    uint8_t mAdvHandle           = 0xff;
+    uint8_t mAdvHandle           = kInvalidAdvertisingHandle;
     uint32_t mAdvIntervalMin     = 0;
     uint32_t mAdvIntervalMax     = 0;
     uint16_t mAdvDuration        = 0;
@@ -194,8 +224,8 @@ protected:
     uint8_t mAdvDiscoverableMode = 0;
 
     uint16_t mSideServiceHandle = 0;
-    uint16_t mSideRxCharHandle  = 0;
-    uint16_t mSideTxCharHandle  = 0;
+    Characteristic mSideRxChar;
+    Characteristic mSideTxChar;
 };
 
 } // namespace Internal

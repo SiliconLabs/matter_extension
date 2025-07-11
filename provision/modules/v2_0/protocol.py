@@ -1,22 +1,24 @@
-import os
 import hashlib
+import os
 from enum import Enum
-import modules.util as _util
+
 import modules.manager as _base
 import modules.signing_server as _pki
-from modules.parameters import Types, Formats, ID
+import modules.util as _util
+from modules.parameters import ID, Formats, Types
+
 from .encoding import *
 from .exporter import *
 
 
 class Protocol(_base.ProvisionProtocol):
-    kVersion        = 2
+    kVersion = 2
     # Flags
-    kResponseFlag   = 0x80
+    kResponseFlag = 0x80
     # Limits
     kMaxPackageSize = 128
-    kHeaderSize     = 5 # Version(1) + Command(1) + Count(1) + Size(2)
-    kChecksumSize   = 2
+    kHeaderSize = 5  # Version(1) + Command(1) + Count(1) + Size(2)
+    kChecksumSize = 2
 
     def __init__(self) -> None:
         super().__init__()
@@ -68,7 +70,7 @@ class Protocol(_base.ProvisionProtocol):
             raise ValueError("Missing PAI key file")
         # DAC
         dac_path = paths.temp('dac_cert.der')
-        args.set(ID.kDacCert, dac_path)
+        args.set(ID.kDacCert, dac_path, validate=False)
         # CSR
         cmd = CsrCommand(paths, args)
         cmd.execute(chan)
@@ -79,14 +81,14 @@ class Protocol(_base.ProvisionProtocol):
 
 
 class Command:
-    NONE    = 0
-    INIT    = 1
-    FINISH  = 2
-    WRITE   = 3
-    READ    = 4
-    CSR     = 5
+    NONE = 0
+    INIT = 1
+    FINISH = 2
+    WRITE = 3
+    READ = 4
+    CSR = 5
 
-    def __init__(self, paths, args, cid, name, send_values = True):
+    def __init__(self, paths, args, cid, name, send_values=True):
         self.paths = paths
         self.args = args
         self.id = cid
@@ -97,7 +99,7 @@ class Command:
         self.send_values = send_values
         self.incoming = Context()
 
-    def add(self, a, include_nulls = False, feedback = False):
+    def add(self, a, include_nulls=False, feedback=False):
         if include_nulls or (a.value is not None):
             self.out_list.append(a)
         if feedback:
@@ -107,9 +109,9 @@ class Command:
         for k, g in self.args.custom.items():
             for k, a in g.items():
                 if a.is_user_input and not a.hidden:
-                    self.put(k, False) # No nulls, no feedback
+                    self.put(k, False)  # No nulls, no feedback
 
-    def put(self, k, include_nulls = False, feedback = False):
+    def put(self, k, include_nulls=False, feedback=False):
         a = self.args.get(k)
         return self.add(a, include_nulls, feedback or a.feedback)
 
@@ -172,7 +174,8 @@ class Command:
             pack_count = (pack_count + 1) % 0xff
 
     def sendPackage(self, chan, counter, payload):
-        if payload is None: payload = bytearray()
+        if payload is None:
+            payload = bytearray()
         # Encode header
         pack = Buffer(Protocol.kMaxPackageSize)
         pack.addInt8u(Protocol.kVersion)
@@ -251,7 +254,7 @@ class Command:
         self.in_list.append(arg)
 
     def printIncoming(self):
-        incoming_count = len(self.in_list);
+        incoming_count = len(self.in_list)
         if incoming_count > 0:
             print("Incoming({}):".format(incoming_count))
             for a in self.in_list:
@@ -290,18 +293,20 @@ class CsrCommand(Command):
 
 class WriteCommand(Command):
 
-    def __init__(self, paths, args, feedback_list = []):
+    def __init__(self, paths, args, feedback_list=[]):
         super().__init__(paths, args, Command.WRITE, "Write")
         # Well-known arguments
         for n, g in args.groups.items():
-            if 'options' == n: continue
+            if 'options' == n:
+                continue
             for k, a in g.items():
                 if a.is_user_input:
                     # No nulls, no feedback
                     self.add(a)
         # Custom arguments
         self.addCustom()
-        if len(self.out_list) < 1: raise ValueError("Nothing to write.")
+        if len(self.out_list) < 1:
+            raise ValueError("Nothing to write.")
 
 
 class AutoCommand(Command):
@@ -320,6 +325,7 @@ class AutoCommand(Command):
         ID.kHwVersionStr,
         ID.kManufacturingDate,
         ID.kPersistentUniqueId,
+        ID.kSwVersionStr,
         # Commissionable Data
         ID.kDiscriminator,
         ID.kSpake2pPasscode,
@@ -333,7 +339,9 @@ class AutoCommand(Command):
         ID.kFirmwareInfo,
         ID.kDacCert,
         ID.kPaiCert,
-        ID.kCertification
+        ID.kCertification,
+        # Test
+        ID.kTestEventTriggerKey
     ]
 
     INCOMING = [
@@ -356,7 +364,8 @@ class AutoCommand(Command):
             self.put(ID.kDacKey, True, False)
         # Custom arguments
         self.addCustom()
-        if len(self.out_list) < 1: raise ValueError("Nothing to write.")
+        if len(self.out_list) < 1:
+            raise ValueError("Nothing to write.")
 
 
 class ReadCommand(Command):
@@ -365,12 +374,15 @@ class ReadCommand(Command):
         super().__init__(paths, args, Command.READ, 'Read', False)
 
         arg_list = args.findList(names)
-        if len(arg_list) < 1: raise ValueError("Nothing to read.")
+        if len(arg_list) < 1:
+            raise ValueError("Nothing to read.")
         for i, a in arg_list.items():
-            if Formats.PATH != a.format: a.set(None)
+            if Formats.PATH != a.format:
+                a.set(None)
             # Add both out_list and in_map
             self.add(a, True, True)
-        if len(self.in_map) < 1: raise ValueError("Nothing to read.")
+        if len(self.in_map) < 1:
+            raise ValueError("Nothing to read.")
 
 
 class FinishCommand(Command):

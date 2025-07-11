@@ -744,10 +744,7 @@ void BLEManagerImpl::HandleReadEvent(volatile sl_bt_msg_t * evt)
     {
         // Side channel read request
         ChipLogProgress(DeviceLayer, "Char Read Req, char : %d", evt->data.evt_gatt_server_user_read_request.characteristic);
-
-        char dataBuff[] = "You are reading the Si-Channel TX characteristic";
-        ByteSpan dataSpan((const uint8_t *) dataBuff, sizeof(dataBuff));
-        mBleSideChannel->HandleReadRequest(evt, dataSpan);
+        mBleSideChannel->HandleReadRequest(evt);
     }
 }
 #endif // defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
@@ -917,14 +914,7 @@ void BLEManagerImpl::HandleWriteEvent(volatile sl_bt_msg_t * evt)
     else
     {
         VerifyOrReturn(mBleSideChannel != nullptr);
-
-        uint8_t dataBuff[255] = { 0 };
-        MutableByteSpan dataSpan(dataBuff);
-        mBleSideChannel->HandleWriteRequest(evt, dataSpan);
-
-        // Buffered (&Deleted) the following data:
-        ChipLogProgress(DeviceLayer, "Buffered (&Deleted) the following data:");
-        ChipLogByteSpan(DeviceLayer, dataSpan);
+        mBleSideChannel->HandleWriteRequest(evt);
     }
 }
 
@@ -981,8 +971,7 @@ void BLEManagerImpl::HandleTXCharCCCDWrite(volatile sl_bt_msg_t * evt)
     else
     {
         VerifyOrReturn(mBleSideChannel != nullptr);
-        bool isNewSubscription = false;
-        err                    = mBleSideChannel->HandleCCCDWriteRequest(evt, isNewSubscription);
+        err = mBleSideChannel->HandleCCCDWriteRequest(evt);
     }
 
     LogErrorOnFailure(err);
@@ -1327,7 +1316,15 @@ void BLEManagerImpl::ParseEvent(volatile sl_bt_msg_t * evt)
 
         if (sl_bt_gatt_server_confirmation == StatusFlags)
         {
-            HandleTxConfirmationEvent(evt->data.evt_gatt_server_characteristic_status.connection);
+            if (isMATTERoBLECharacteristic(evt->data.evt_gatt_server_characteristic_status.characteristic))
+            {
+                HandleTxConfirmationEvent(evt->data.evt_gatt_server_characteristic_status.connection);
+            }
+            else if (mBleSideChannel != nullptr &&
+                     mBleSideChannel->GetConnectionHandle() == evt->data.evt_gatt_server_characteristic_status.connection)
+            {
+                mBleSideChannel->HandleIndicationConfirmation(evt);
+            }
         }
         else
         {
@@ -1358,6 +1355,14 @@ void BLEManagerImpl::ParseEvent(volatile sl_bt_msg_t * evt)
     }
     break;
 
+    case sl_bt_evt_gatt_server_indication_timeout_id: {
+        // Only handled by the Side Channel
+        if (mBleSideChannel != nullptr)
+        {
+            mBleSideChannel->HandleIndicationTimeout(evt);
+        }
+        break;
+    }
     default: {
         ChipLogProgress(DeviceLayer, "evt_UNKNOWN id = %08" PRIx32, SL_BT_MSG_ID(evt->header));
         break;

@@ -1,18 +1,19 @@
+import base64
+import datetime
+import importlib
 import os
 import random
-import base64
-import importlib
-import datetime
-import modules.util as _util
-import modules.tools as _tools
-import modules.device as _dev
-import modules.jlink as _jlink
-import modules.channel as _chan
-import modules.bluetooth as _bt
-import modules.credentials as _creds
-from modules.parameters import ID, Actions
 from abc import ABC, abstractmethod
 from enum import Enum
+
+import modules.bluetooth as _bt
+import modules.channel as _chan
+import modules.credentials as _creds
+import modules.device as _dev
+import modules.jlink as _jlink
+import modules.tools as _tools
+import modules.util as _util
+from modules.parameters import ID, Actions
 
 
 class ProvisionManager:
@@ -88,51 +89,32 @@ class ProvisionManager:
             return _bt.BluetoothChannel(paths, args, conn.address)
         else:
             # JLink RTT: Device info required
-            self.collectDeviceInfo(paths, args, conn, comm)
-            return _jlink.JLinkChannel(paths, args, conn)
+            dev = self.collectDeviceInfo(paths, args, conn, comm)
+            return _jlink.JLinkChannel(paths, args, conn, dev)
 
     def collectDeviceInfo(self, paths, args, conn, comm):
+        # Read part_number and flash_size from commander
         info = comm.info()
-        flash_size = info.flash_size
-
-        # TODO: Figure out a way to get the accessible flash instead of the physical flash for series 3
-        if "simg3" in info.part:
-            # `commander device info` returns the whole flash size but only a portion of it is available for any application
-            # Based on that Total flash size, we can determine what is the current flash size available for apps.
-            # The provision storage only reserve 1 flash page for matter credentials for all platforms
-            # S3 token manager reserve 2 pages for it.
-            # so we preventively remove 1 page to the real flash size
-            if (info.flash_size == 0x00400000):
-                flash_size = 0x390000 # base is 0x391000
-            elif (info.flash_size == 0x00300000):
-                flash_size = 0x2a2000 # base is 0x2a3000
-            elif (info.flash_size == 0x00200000):
-                flash_size = 0x1b3000 # base is 0x1b4000
-            else:
-                print("Unrecognized Series 3 flash size")
-
-        # Collect device information
+        # Get the "device" argument
         device_num = args.get(ID.kDevice)
-        if device_num.value is None:
-            # Auto-detect part number
-            device_num.set(info.part)
-
         # Read device configuration
-        dev = _dev.Device(paths, args, device_num.str(), flash_size)
-        if dev.override:
-            # User configuration part number
-            device_num.set(dev.label)
+        dev = _dev.Device(paths, args, device_num.str() or info.part)
+        # Use commander's part_number, unless override is true
+        device_num.set(dev.override and dev.label or info.part)
+        # Use configuration part number
+        if dev.flash_size is None:
+            # Flash size not configured, read from commander
+            dev.flash_size = info.flash_size
         print("Device: {}\n".format(dev))
         # Flash address
-        fa = args.get(ID.kFlashAddress)
-        fa.set(dev.flash_addr)
+        args.get(ID.kFlashAddress).set(dev.flash_addr)
         # Flash size
-        fs = args.get(ID.kFlashSize)
-        fs.set(dev.flash_size)
+        args.get(ID.kFlashSize).set(dev.flash_size)
         # Firmware
         fw = args.get(ID.kGeneratorFW)
         if fw.value is None:
             fw.set(dev.firmware)
+        return dev
 
     def computeDefaults(self, paths, args):
         # Mandatory
@@ -178,7 +160,7 @@ class ProvisionManager:
 
     def generatePasscode(self, arg):
         passcode = 0
-        while (passcode in arg.invalid) or (passcode > arg.max):
+        while (passcode in arg.invalid) or (passcode < arg.min) or (passcode > arg.max):
             passcode = int.from_bytes(os.urandom(4), byteorder='big')
         arg.set(passcode)
 

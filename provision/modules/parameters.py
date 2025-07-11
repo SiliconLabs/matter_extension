@@ -1,7 +1,8 @@
-from enum import Enum
-from abc import ABC, abstractmethod
-import modules.util as _util
 import os
+from abc import ABC, abstractmethod
+from enum import Enum
+
+import modules.util as _util
 import yaml
 
 
@@ -12,41 +13,57 @@ class Actions:
     kWrite = 'write'
     kBinary = 'binary'
 
+
 def parseInt(i):
     return int(i, 0)
+
 
 def parseHex(x):
     return bytes.fromhex(x.removeprefix('0x'))
 
+
 class Types(Enum):
-    BINARY  = 0x00
-    INT8U   = 0x01
-    INT16U  = 0x02
-    INT32U  = 0x03
-    INT64U  = 0x04
-    FLOAT   = 0x05
-    STRING  = 0x08
-    INT8S   = 0x09
-    INT16S  = 0x0a
-    INT32S  = 0x0b
-    INT64S  = 0x0c
-    FLOATS  = 0x0d
+    BINARY = 0x00
+    INT8U = 0x01
+    INT16U = 0x02
+    INT32U = 0x03
+    INT64U = 0x04
+    FLOAT = 0x05
+    STRING = 0x08
+    INT8S = 0x09
+    INT16S = 0x0a
+    INT32S = 0x0b
+    INT64S = 0x0c
+    FLOATS = 0x0d
 
     @staticmethod
     def string(t):
-        if Types.BINARY == t: return 'binary'
-        if Types.STRING == t: return 'string'
-        if Types.INT8U == t:  return 'int8u'
-        if Types.INT8S == t:  return 'int8s'
-        if Types.INT16U == t: return 'int16u'
-        if Types.INT16S == t: return 'int16s'
-        if Types.INT32U == t: return 'int32u'
-        if Types.INT32S == t: return 'int32s'
-        if Types.INT64U == t: return 'int64u'
-        if Types.INT64S == t: return 'int64s'
-        if Types.INT64U == t: return 'float(u)'
-        if Types.INT64S == t: return 'float(s)'
+        if Types.BINARY == t:
+            return 'binary'
+        if Types.STRING == t:
+            return 'string'
+        if Types.INT8U == t:
+            return 'int8u'
+        if Types.INT8S == t:
+            return 'int8s'
+        if Types.INT16U == t:
+            return 'int16u'
+        if Types.INT16S == t:
+            return 'int16s'
+        if Types.INT32U == t:
+            return 'int32u'
+        if Types.INT32S == t:
+            return 'int32s'
+        if Types.INT64U == t:
+            return 'int64u'
+        if Types.INT64S == t:
+            return 'int64s'
+        if Types.INT64U == t:
+            return 'float(u)'
+        if Types.INT64S == t:
+            return 'float(s)'
         return '?'
+
 
 class Formats(Enum):
     NONE = 0
@@ -58,86 +75,97 @@ class Formats(Enum):
 
     @staticmethod
     def string(t):
-        if Formats.NONE == t: return None
-        if Formats.DECIMAL == t: return 'dec'
-        if Formats.BOOL == t: return 'bool'
-        if Formats.HEX == t:  return 'hex'
-        if Formats.STRING == t:  return 'string'
-        if Formats.PATH == t: return 'path'
+        if Formats.NONE == t:
+            return None
+        if Formats.DECIMAL == t:
+            return 'dec'
+        if Formats.BOOL == t:
+            return 'bool'
+        if Formats.HEX == t:
+            return 'hex'
+        if Formats.STRING == t:
+            return 'string'
+        if Formats.PATH == t:
+            return 'path'
         return '?'
+
 
 class ID:
     kNone = 0
     # Internal
-    kFlashAddress       = 0x0101
-    kFlashSize          = 0x0102
-    kFlashPageSize      = 0x0103
-    kCredsAddress       = 0x0104
-    kCsrFile            = 0x0105
+    kFlashAddress = 0x0101
+    kFlashSize = 0x0102
+    kFlashPageSize = 0x0103
+    kCredsAddress = 0x0104
+    kCsrFile = 0x0105
 
     # Options
-    kVersion            = 0x0111
-    kAction             = 0x0112
-    kExtra              = 0x0113
-    kStop               = 0x0114
-    kParamsPath         = 0x0121
-    kInputsPath         = 0x0122
-    kOutputPath         = 0x0123
-    kTemporaryDir       = 0x0124
-    kDevice             = 0x0131
-    kChannel            = 0x0132
-    kGenerateCreds      = 0x0133
-    kCsrMode            = 0x0134
-    kGeneratorFW        = 0x0135
-    kProductionFW       = 0x0136
-    kCertToolPath       = 0x0137
-    kPylinkLib          = 0x013a
-    kBufferSize         = 0x013b
+    kVersion = 0x0111
+    kAction = 0x0112
+    kExtra = 0x0113
+    kStop = 0x0114
+    kParamsPath = 0x0121
+    kInputsPath = 0x0122
+    kOutputPath = 0x0123
+    kTemporaryDir = 0x0124
+    kDevice = 0x0131
+    kChannel = 0x0132
+    kGenerateCreds = 0x0133
+    kCsrMode = 0x0134
+    kGeneratorFW = 0x0135
+    kProductionFW = 0x0136
+    kCertToolPath = 0x0137
+    kPylinkLib = 0x013a
+    kBufferSize = 0x013b
     # Instance Info
-    kSerialNumber       = 0x0141
-    kVendorId           = 0x0142
-    kVendorName         = 0x0143
-    kProductId          = 0x0144
-    kProductName        = 0x0145
-    kProductLabel       = 0x0146
-    kProductUrl         = 0x0147
-    kPartNumber         = 0x0148
-    kHwVersion          = 0x0151
-    kHwVersionStr       = 0x0152
-    kManufacturingDate  = 0x0153
+    kSerialNumber = 0x0141
+    kVendorId = 0x0142
+    kVendorName = 0x0143
+    kProductId = 0x0144
+    kProductName = 0x0145
+    kProductLabel = 0x0146
+    kProductUrl = 0x0147
+    kPartNumber = 0x0148
+    kHwVersion = 0x0151
+    kHwVersionStr = 0x0152
+    kManufacturingDate = 0x0153
     # Note: Must be different to the Basic Information cluster's UniqueId
     kPersistentUniqueId = 0x0154
+    kSwVersionStr = 0x0155
 
     # Commissionable Data
-    kDiscriminator      = 0x0161
-    kSpake2pPasscode    = 0x0162
-    kSpake2pIterations  = 0x0163
-    kSpake2pSalt        = 0x0164
-    kSpake2pVerifier    = 0x0165
-    kSetupPayload       = 0x0166
-    kCommissioningFlow  = 0x0167
-    kRendezvousFlags    = 0x0168
+    kDiscriminator = 0x0161
+    kSpake2pPasscode = 0x0162
+    kSpake2pIterations = 0x0163
+    kSpake2pSalt = 0x0164
+    kSpake2pVerifier = 0x0165
+    kSetupPayload = 0x0166
+    kCommissioningFlow = 0x0167
+    kRendezvousFlags = 0x0168
 
     # Attestation Credentials
-    kFirmwareInfo       = 0x0181
-    kCertification      = 0x0182
-    kCdCert             = 0x0183
-    kCdKey              = 0x0184
-    kPaaCert            = 0x0191
-    kPaaKey             = 0x0192
-    kPaiCert            = 0x0193
-    kPaiKey             = 0x0194
-    kDacCert            = 0x0195
-    kDacKey             = 0x0196
-    kKeyId              = 0x0197
-    kKeyPass            = 0x0198
-    kPKCS12             = 0x0199
-    kCommonName         = 0x01a1
-    kOtaKey             = 0x01a2
+    kFirmwareInfo = 0x0181
+    kCertification = 0x0182
+    kCdCert = 0x0183
+    kCdKey = 0x0184
+    kPaaCert = 0x0191
+    kPaaKey = 0x0192
+    kPaiCert = 0x0193
+    kPaiKey = 0x0194
+    kDacCert = 0x0195
+    kDacKey = 0x0196
+    kKeyId = 0x0197
+    kKeyPass = 0x0198
+    kPKCS12 = 0x0199
+    kCommonName = 0x01a1
+    kOtaKey = 0x01a2
+
+    # Testing
+    kTestEventTriggerKey = 0x01b1
 
 
 class Parameter:
-    kKnownFlag     = 0x1000
+    kKnownFlag = 0x1000
 
     def __init__(self, y) -> None:
         self.id = None
@@ -165,17 +193,28 @@ class Parameter:
         return "{} {:20} {:4} {:20} '{}'{}".format(ids, name, short, long, self.desc, rng)
 
     def parse(self, y):
-        if 'id' in y:       self.id = y['id']
-        if 'desc' in y:     self.desc = y['desc']
-        if 'name' in y:     self.name = self.long = y['name']
-        if 'long' in y:     self.long = y['long']
-        if 'short' in y:    self.short = y['short']
-        if 'check' in y:    self.check = y['check']
-        if 'hidden' in y:   self.hidden = y['hidden']
-        if 'fixed' in y:    self.fixed = y['fixed']
-        if 'feedback' in y:    self.feedback = y['feedback']
-        if 'default' in y:  self.default = y['default']
-        if 'invalid' in y:  self.invalid = y['invalid']
+        if 'id' in y:
+            self.id = y['id']
+        if 'desc' in y:
+            self.desc = y['desc']
+        if 'name' in y:
+            self.name = self.long = y['name']
+        if 'long' in y:
+            self.long = y['long']
+        if 'short' in y:
+            self.short = y['short']
+        if 'check' in y:
+            self.check = y['check']
+        if 'hidden' in y:
+            self.hidden = y['hidden']
+        if 'fixed' in y:
+            self.fixed = y['fixed']
+        if 'feedback' in y:
+            self.feedback = y['feedback']
+        if 'default' in y:
+            self.default = y['default']
+        if 'invalid' in y:
+            self.invalid = y['invalid']
         typ = ('type' in y) and y['type'] or None
         fmt = ('format' in y) and y['format'] or None
         default_max = None
@@ -225,29 +264,46 @@ class Parameter:
             self.max = y['max']
         elif self.max is None:
             self.max = default_max
-        if self.type is None: raise ValueError("Invalid \"{}\" type: \"{}\"".format(self.name, typ))
+        if self.type is None:
+            raise ValueError("Invalid \"{}\" type: \"{}\"".format(self.name, typ))
         return self
 
     def copy(self, p):
-        if p.id is not None:        self.id = p.id
-        if p.desc is not None:      self.desc = p.desc
-        if p.name is not None:      self.name = p.name
-        if p.long is not None:      self.long = p.long
-        if p.short is not None:     self.short = p.short
-        if p.check is not None:     self.check = p.check
-        if p.hidden is not None:    self.hidden = p.hidden
-        if p.fixed is not None:     self.fixed = p.fixed
-        if p.default is not None:   self.default = p.default
-        if p.min is not None:       self.min = p.min
-        if p.max is not None:       self.max = p.max
-        if p.invalid is not None:   self.invalid = p.invalid
-        if p.type is not None:      self.type = p.type
-        if p.format is not None:    self.format = p.format
-        if p.feedback is not None:  self.feedback = p.feedback
+        if p.id is not None:
+            self.id = p.id
+        if p.desc is not None:
+            self.desc = p.desc
+        if p.name is not None:
+            self.name = p.name
+        if p.long is not None:
+            self.long = p.long
+        if p.short is not None:
+            self.short = p.short
+        if p.check is not None:
+            self.check = p.check
+        if p.hidden is not None:
+            self.hidden = p.hidden
+        if p.fixed is not None:
+            self.fixed = p.fixed
+        if p.default is not None:
+            self.default = p.default
+        if p.min is not None:
+            self.min = p.min
+        if p.max is not None:
+            self.max = p.max
+        if p.invalid is not None:
+            self.invalid = p.invalid
+        if p.type is not None:
+            self.type = p.type
+        if p.format is not None:
+            self.format = p.format
+        if p.feedback is not None:
+            self.feedback = p.feedback
 
     @staticmethod
-    def tag(self, y, x, default_value = None):
-        if x in y: return y[x]
+    def tag(self, y, x, default_value=None):
+        if x in y:
+            return y[x]
         return default_value
 
     def range(self):
@@ -259,7 +315,7 @@ class ParameterList:
 
     PARAMS_FILENAME = 'parameters.yaml'
 
-    def __init__(self, paths, custom_path = None) -> None:
+    def __init__(self, paths, custom_path=None) -> None:
         self.paths = paths
         self.names = {}
         self.longs = {}
@@ -271,7 +327,7 @@ class ParameterList:
         # Custom parameters
         self.load(custom_path, True)
 
-    def load(self, filename, custom = False):
+    def load(self, filename, custom=False):
         if (filename is None) and custom:
             if os.path.exists(ParameterList.PARAMS_FILENAME):
                 # Use default custom parameters
@@ -287,7 +343,8 @@ class ParameterList:
         for g, gy in y.items():
             group = (g in self.groups) and self.groups[g] or {}
             for py in gy:
-                if not 'id' in py: raise ValueError("Missing parameter ID in \"{}\"".format(filename))
+                if not 'id' in py:
+                    raise ValueError("Missing parameter ID in \"{}\"".format(filename))
                 p = self.add(py['id'], py)
                 group[p.id] = p
             self.groups[g] = group
@@ -313,7 +370,7 @@ class ParameterList:
             return self.ids[k]
         raise ValueError("Unknown parameter 0x{:02x}".format(k))
 
-    def find(self, name, use_long = False):
+    def find(self, name, use_long=False):
         if use_long:
             if name in self.longs:
                 return self.longs[name]
@@ -332,10 +389,12 @@ class ParameterList:
 
     def help(self):
         for n, g in self.groups.items():
-            if 'internal' == n: continue
+            if 'internal' == n:
+                continue
             print("* {}:".format(n))
             for i, p in g.items():
-                if p.hidden: continue
+                if p.hidden:
+                    continue
                 short = "-{}".format(p.short)
                 long = "--{}".format(p.long)
                 param = "{}{:3} {}".format(_util.MARGIN, short, long)

@@ -1,13 +1,15 @@
-import os
-import sys
-import json
 import argparse
 import importlib
-import modules.versions as _ver
+import json
+import os
+import sys
+from abc import ABC, abstractmethod
+
 import modules.formatter as _format
 import modules.util as _util
-from abc import ABC, abstractmethod
-from modules.parameters import ID, Types, Formats, Parameter, ParameterList, Actions
+import modules.versions as _ver
+from modules.parameters import (ID, Actions, Formats, Parameter, ParameterList,
+                                Types)
 
 
 class Argument(Parameter):
@@ -36,7 +38,7 @@ class Argument(Parameter):
         elif Formats.STRING == self.format:
             if isinstance(self.value, str):
                 value = "\"{}\"".format(self.value)
-            elif(isinstance(self.value, bytes)):
+            elif (isinstance(self.value, bytes)):
                 try:
                     value = "{}".format(self.value.decode())
                 except:
@@ -45,7 +47,7 @@ class Argument(Parameter):
             value = "{}".format(self.value)
         return "{}: {}".format(name, value)
 
-    ## Loads the argument value directy from the command line
+    # Loads the argument value directy from the command line
     # @return The argument itself with updated value
     def load(self):
         short = "-{}".format(self.short)
@@ -60,11 +62,12 @@ class Argument(Parameter):
                 x = a[len(short):]
                 if x[0].isnumeric():
                     values.append(x)
-        if len(values) > 1: raise ValueError("Multiple version arguments: {}".format(values))
+        if len(values) > 1:
+            raise ValueError("Multiple version arguments: {}".format(values))
         self.value = (1 == len(values)) and values[0] or None
         return self
 
-    def set(self, v, default_value = None, validate = True):
+    def set(self, v, default_value=None, validate=True):
         if v is None:
             v = default_value
         if validate:
@@ -73,22 +76,25 @@ class Argument(Parameter):
             self.value = v
 
     def hex(self):
-        if self.value is None: return None
+        if self.value is None:
+            return None
         return hex(self.value)
 
     def int(self):
-        if self.value is None: return None
+        if self.value is None:
+            return None
         return int(self.value)
 
     def bool(self):
-        if self.value is None: return None
+        if self.value is None:
+            return None
         return bool(self.value)
 
     def str(self):
         if self.value is None:
             return None
         elif Types.BINARY == self.type:
-            if(isinstance(self.value, bytearray)):
+            if (isinstance(self.value, bytearray)):
                 if Formats.STRING == self.format:
                     try:
                         return self.value.decode()
@@ -100,8 +106,10 @@ class Argument(Parameter):
         return str(self.value)
 
     def _validate(self, x):
-        if x is None: return None
-        if not self.check: return x
+        if x is None:
+            return None
+        if not self.check:
+            return x
         h = (x is not None) and (x.__hash__) or None
         if (self.invalid is not None) and (h is not None) and (x in self.invalid):
             raise ValueError("Invalid \"{}\" value: {}".format(self.name, x))
@@ -161,7 +169,8 @@ class Argument(Parameter):
         if self.parent.readMode():
             # Read mode, create output path if needed
             dir = os.path.dirname(s)
-            if not os.path.isdir(dir): os.makedirs(dir)
+            if not os.path.isdir(dir):
+                os.makedirs(dir)
         elif not os.path.exists(s):
             # Write mode, the input path must exist
             raise ValueError("Invalid \"{}\" path: {}".format(self.name, s))
@@ -191,8 +200,8 @@ class ArgumentList(ParameterList):
     def create(self, y):
         return Argument(self, self.paths, y)
 
-    def set(self, k, v, default_value = None):
-        self.get(k).set(v, default_value)
+    def set(self, k, v, default_value=None, validate=True):
+        self.get(k).set(v, default_value, validate)
 
     def value(self, k):
         return self.get(k).value
@@ -233,7 +242,7 @@ class ArgumentList(ParameterList):
         # print("VERSION: {} (file), {} (command-line)".format(file_ver.tag, cmd_ver.tag))
         return cmd_ver
 
-    def compileFileInputs(self, versions, inputs_path, is_user_input = False):
+    def compileFileInputs(self, versions, inputs_path, is_user_input=False):
         # Process inputs file. Get file version
         formatter = _format.Formatter(self, is_user_input)
         file_ver = versions.find(formatter.parseVersion(inputs_path))
@@ -284,11 +293,11 @@ class ArgumentList(ParameterList):
 
         return vars(parser.parse_args())
 
-    ## Write the compiled inputs into a file
-    def export(self, path = None):
+    # Write the compiled inputs into a file
+    def export(self, path=None):
         self.formatter.exportAll(path or self.str(ID.kOutputPath) or ArgumentList.DEFAULT_OUTPUT_PATH)
 
-    ## Return true if action=='read', false otherwise
+    # Return true if action=='read', false otherwise
     def readMode(self) -> bool:
         action = (ID.kAction in self.ids) and self.ids[ID.kAction]
         return (Actions.kRead == action.str())
