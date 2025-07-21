@@ -25,4 +25,4 @@ include:
       - path: OtaTlvEncryptionKey.h
 
 define:
-  - name: OTA_ENCRYPTION_ENABLE
+  - name: SL_MATTER_ENABLE_OTA_ENCRYPTION

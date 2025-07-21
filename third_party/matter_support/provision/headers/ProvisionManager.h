@@ -16,9 +16,9 @@
  */
 #pragma once
 
-#include "ProvisionChannel.h"
-#include "ProvisionProtocol.h"
-#include "ProvisionStorage.h"
+#include <headers/ProvisionChannel.h>
+#include <headers/ProvisionProtocol.h>
+#include <headers/ProvisionStorage.h>
 #include <lib/core/CHIPError.h>
 
 namespace chip {
@@ -41,7 +41,7 @@ private:
 
     Storage mStore;
     Channel mChannel;
-#ifdef SILABS_PROVISION_PROTOCOL_V1
+#if defined(SILABS_PROVISION_PROTOCOL_V1) && SILABS_PROVISION_PROTOCOL_V1
     Protocol1 mProtocol1;
 #endif
     Protocol2 mProtocol2;

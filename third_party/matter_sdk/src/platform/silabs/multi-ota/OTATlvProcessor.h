@@ -152,9 +152,19 @@ public:
     void SetWasSelected(bool selected) { mWasSelected = selected; }
     bool WasSelected() { return mWasSelected; }
     bool IsValidTag(OTAProcessorTag tag);
+    bool IsLastBlock() const { return mLastBlock; }
 
-#ifdef OTA_ENCRYPTION_ENABLE
+#ifdef SL_MATTER_ENABLE_OTA_ENCRYPTION
     CHIP_ERROR vOtaProcessInternalEncryption(MutableByteSpan & block);
+    /**
+     * @brief Remove padding from the given block.
+     * This is necessary to remove any padding that might have been added during encryption.
+     *
+     * @param block The block of data to remove padding from.
+     * @return CHIP_NO_ERROR on success, or an error code if padding removal fails.
+     * @note The method assumes the block is padded using PKCS7 padding.
+     */
+    CHIP_ERROR RemovePadding(MutableByteSpan & block);
 #endif
 
 protected:
@@ -188,7 +198,7 @@ protected:
     bool IsError(CHIP_ERROR & status);
     virtual uint32_t GetAccumulatorLength() const { return sizeof(Descriptor); }
 
-#ifdef OTA_ENCRYPTION_ENABLE
+#ifdef SL_MATTER_ENABLE_OTA_ENCRYPTION
     /*ota decryption*/
     uint32_t mIVOffset = 0;
     /* Expected byte size of the OTAEncryptionKeyLength */
@@ -199,8 +209,9 @@ protected:
     uint32_t mProcessedLength                    = 0;
     bool mWasSelected                            = false;
     ProcessDescriptor mCallbackProcessDescriptor = nullptr;
+    bool mDescriptorProcessed                    = false;
+    bool mLastBlock                              = false;
     OTADataAccumulator mAccumulator;
-    bool mDescriptorProcessed = false;
 };
 
 } // namespace chip

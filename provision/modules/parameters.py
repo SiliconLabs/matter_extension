@@ -117,6 +117,7 @@ class ID:
     kCertToolPath = 0x0137
     kPylinkLib = 0x013a
     kBufferSize = 0x013b
+    kReset = 0x013c
     # Instance Info
     kSerialNumber = 0x0141
     kVendorId = 0x0142

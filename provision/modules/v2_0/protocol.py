@@ -325,7 +325,6 @@ class AutoCommand(Command):
         ID.kHwVersionStr,
         ID.kManufacturingDate,
         ID.kPersistentUniqueId,
-        ID.kSwVersionStr,
         # Commissionable Data
         ID.kDiscriminator,
         ID.kSpake2pPasscode,
@@ -340,7 +339,10 @@ class AutoCommand(Command):
         ID.kDacCert,
         ID.kPaiCert,
         ID.kCertification,
-        # Test
+    ]
+    # Used for backwards compatibility
+    OUTGOING_OPTIONAL = [
+        ID.kSwVersionStr,
         ID.kTestEventTriggerKey
     ]
 
@@ -358,6 +360,10 @@ class AutoCommand(Command):
         for k in AutoCommand.OUTGOING:
             # Include nulls, feedback if incoming
             self.put(k, True, k in AutoCommand.INCOMING)
+        # New well-known arguments. Allow nulls for backwards compatibility
+        for k in AutoCommand.OUTGOING_OPTIONAL:
+            # Don't include nulls, feedback if incoming
+            self.put(k, False, k in AutoCommand.INCOMING)
         # DAC key is required if CSR is not used
         if not self.args.bool(ID.kCsrMode):
             # Include even if null, no feedback

@@ -29,13 +29,13 @@
 #include <platform/silabs/platformAbstraction/SilabsPlatform.h>
 #include <silabs_creds.h>
 #ifndef NDEBUG
-#if defined(SL_MATTER_TEST_EVENT_TRIGGER_ENABLED) && (SL_MATTER_GN_BUILD == 0)
+#if defined(SL_MATTER_TEST_EVENT_TRIGGER_ENABLED) && SL_MATTER_TEST_EVENT_TRIGGER_ENABLED && (SL_MATTER_GN_BUILD == 0)
 #include <sl_matter_test_event_trigger_config.h>
 #endif // defined(SL_MATTER_TEST_EVENT_TRIGGER_ENABLED) && (SL_MATTER_GN_BUILD == 0)
 #endif // NDEBUG
-#ifdef OTA_ENCRYPTION_ENABLE
+#if defined(SL_MATTER_ENABLE_OTA_ENCRYPTION) && SL_MATTER_ENABLE_OTA_ENCRYPTION
 #include <platform/silabs/multi-ota/OtaTlvEncryptionKey.h>
-#endif // OTA_ENCRYPTION_ENABLE
+#endif // SL_MATTER_ENABLE_OTA_ENCRYPTION
 #ifndef SLI_SI91X_MCU_INTERFACE
 #include <psa/crypto.h>
 #endif
@@ -76,22 +76,28 @@ size_t RoundNearest(size_t n, size_t multiple)
 
 /**
  * Writes "size" bytes to the flash page. The data is padded with 0xff
- * up to the nearest 32-bit boundary. The "max" argument is used to ensure
- * that the padding won't exceed the limits of the buffer.
+ * up to the nearest 32-bit boundary.
  */
-CHIP_ERROR WritePage(uint32_t addr, const uint8_t * data, size_t size, size_t max)
+CHIP_ERROR WritePage(uint32_t addr, const uint8_t * data, size_t size)
 {
     // The flash driver fails if the size is not a multiple of 4 (32-bits)
     size_t size_32 = RoundNearest(size, 4);
-    // If the input data is smaller than the 32-bit size, pad the buffer with "0xff"
-    if (size_32 != size)
+    if (size_32 == size)
     {
-        uint8_t * p = (uint8_t *) data;
-        VerifyOrReturnError(size_32 <= max, CHIP_ERROR_BUFFER_TOO_SMALL);
-        memset(p + size, 0xff, size_32 - size);
-        size = size_32;
+        // The given data is already aligned to 32-bit
+        return chip::DeviceLayer::Silabs::GetPlatform().FlashWritePage(addr, data, size);
     }
-    return chip::DeviceLayer::Silabs::GetPlatform().FlashWritePage(addr, data, size);
+    else
+    {
+        // Create a temporary buffer, and pad it with "0xff"
+        uint8_t * p = static_cast<uint8_t *>(Platform::MemoryAlloc(size_32));
+        VerifyOrReturnError(p != nullptr, CHIP_ERROR_INTERNAL);
+        memcpy(p, data, size);
+        memset(p + size, 0xff, size_32 - size);
+        CHIP_ERROR err = chip::DeviceLayer::Silabs::GetPlatform().FlashWritePage(addr, p, size_32);
+        Platform::MemoryFree(p);
+        return err;
+    }
 }
 
 CHIP_ERROR WriteFile(Storage & store, SilabsConfig::Key offset_key, SilabsConfig::Key size_key, const ByteSpan & value)
@@ -103,7 +109,7 @@ CHIP_ERROR WriteFile(Storage & store, SilabsConfig::Key offset_key, SilabsConfig
         ReturnErrorOnFailure(ErasePage(base_addr));
     }
 
-    ReturnErrorOnFailure(WritePage(base_addr + sCredentialsOffset, value.data(), value.size(), store.GetBufferSize()));
+    ReturnErrorOnFailure(WritePage(base_addr + sCredentialsOffset, value.data(), value.size()));
 
     // Store file offset
     ReturnErrorOnFailure(SilabsConfig::WriteConfigValue(offset_key, (uint32_t) sCredentialsOffset));
@@ -359,6 +365,28 @@ CHIP_ERROR Storage::GetPersistentUniqueId(uint8_t * value, size_t max, size_t & 
     return SilabsConfig::ReadConfigValueBin(SilabsConfig::kConfigKey_PersistentUniqueId, value, max, size);
 }
 
+CHIP_ERROR Storage::SetSoftwareVersionString(const char * value, size_t len)
+{
+    return SilabsConfig::WriteConfigValueStr(SilabsConfig::kConfigKey_SoftwareVersionString, value, len);
+}
+
+CHIP_ERROR Storage::GetSoftwareVersionString(char * value, size_t max)
+{
+    size_t hw_version_len = 0; // Without counting null-terminator
+
+    CHIP_ERROR err = SilabsConfig::ReadConfigValueStr(SilabsConfig::kConfigKey_SoftwareVersionString, value, max, hw_version_len);
+#if defined(CHIP_DEVICE_CONFIG_DEVICE_SOFTWARE_VERSION_STRING)
+    if (CHIP_DEVICE_ERROR_CONFIG_NOT_FOUND == err)
+    {
+        VerifyOrReturnError(value != nullptr, CHIP_ERROR_NO_MEMORY);
+        VerifyOrReturnError(max > strlen(CHIP_DEVICE_CONFIG_DEVICE_SOFTWARE_VERSION_STRING), CHIP_ERROR_BUFFER_TOO_SMALL);
+        Platform::CopyString(value, max, CHIP_DEVICE_CONFIG_DEVICE_SOFTWARE_VERSION_STRING);
+        err = CHIP_NO_ERROR;
+    }
+#endif
+    return err;
+}
+
 //
 // CommissionableDataProvider
 //
@@ -467,7 +495,7 @@ CHIP_ERROR Storage::GetCertificationDeclaration(MutableByteSpan & value)
         err = ReadFileByOffset(*this, "GetDeviceAttestationCert", SL_CREDENTIALS_CD_OFFSET, SL_CREDENTIALS_CD_SIZE, value);
     }
 #endif
-#ifdef CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS
+#ifdef SL_MATTER_ENABLE_EXAMPLE_CREDENTIALS
     if (CHIP_ERROR_NOT_FOUND == err)
     {
         // Example CD
@@ -495,7 +523,7 @@ CHIP_ERROR Storage::GetProductAttestationIntermediateCert(MutableByteSpan & valu
         err = ReadFileByOffset(*this, "GetDeviceAttestationCert", SL_CREDENTIALS_PAI_OFFSET, SL_CREDENTIALS_PAI_SIZE, value);
     }
 #endif
-#ifdef CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS
+#ifdef SL_MATTER_ENABLE_EXAMPLE_CREDENTIALS
     if (CHIP_ERROR_NOT_FOUND == err)
     {
         // Example PAI
@@ -523,7 +551,7 @@ CHIP_ERROR Storage::GetDeviceAttestationCert(MutableByteSpan & value)
         err = ReadFileByOffset(*this, "GetDeviceAttestationCert", SL_CREDENTIALS_DAC_OFFSET, SL_CREDENTIALS_DAC_SIZE, value);
     }
 #endif
-#ifdef CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS
+#ifdef SL_MATTER_ENABLE_EXAMPLE_CREDENTIALS
     if (CHIP_ERROR_NOT_FOUND == err)
     {
         // Example DAC
@@ -562,7 +590,7 @@ CHIP_ERROR Storage::SignWithDeviceAttestationKey(const ByteSpan & message, Mutab
     }
     else
     {
-#ifdef CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS
+#ifdef SL_MATTER_ENABLE_EXAMPLE_CREDENTIALS
         // Example DAC key
         return Examples::GetExampleDACProvider()->SignWithDeviceAttestationKey(message, signature);
 #else
@@ -598,7 +626,7 @@ CHIP_ERROR Storage::SignWithDeviceAttestationKey(const ByteSpan & message, Mutab
         AttestationKey key(kid);
         err = key.SignMessage(message, signature);
     }
-#ifdef CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS
+#ifdef SL_MATTER_ENABLE_EXAMPLE_CREDENTIALS
     else
     {
         // Example DAC key
@@ -656,7 +684,7 @@ CHIP_ERROR Storage::GetProvisionRequest(bool & value)
     return SilabsConfig::ReadConfigValue(SilabsConfig::kConfigKey_Provision_Request, value);
 }
 
-#if OTA_ENCRYPTION_ENABLE
+#if defined(SL_MATTER_ENABLE_OTA_ENCRYPTION) && SL_MATTER_ENABLE_OTA_ENCRYPTION
 CHIP_ERROR Storage::SetOtaTlvEncryptionKey(const ByteSpan & value)
 {
 #if defined(SL_MBEDTLS_USE_TINYCRYPT)
@@ -698,9 +726,38 @@ CHIP_ERROR Storage::DecryptUsingOtaTlvEncryptionKey(MutableByteSpan & block, uin
     return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE;
 #endif // SL_MBEDTLS_USE_TINYCRYPT
 }
-#endif // OTA_ENCRYPTION_ENABLE
+#else
+CHIP_ERROR Storage::SetOtaTlvEncryptionKey(const ByteSpan & value)
+{
+    return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE;
+}
 
-#ifdef SL_MATTER_TEST_EVENT_TRIGGER_ENABLED
+CHIP_ERROR Storage::GetOtaTlvEncryptionKeyId(uint32_t & keyId)
+{
+    return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE;
+}
+
+CHIP_ERROR Storage::DecryptUsingOtaTlvEncryptionKey(MutableByteSpan & block, uint32_t & ivOffset)
+{
+    return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE;
+}
+#endif // SL_MATTER_ENABLE_OTA_ENCRYPTION
+
+#if defined(SL_MATTER_TEST_EVENT_TRIGGER_ENABLED) && SL_MATTER_TEST_EVENT_TRIGGER_ENABLED
+CHIP_ERROR Storage::SetTestEventTriggerKey(const ByteSpan & value)
+{
+    constexpr size_t kEnableKeyLength = 16; // Expected byte size of the EnableKey
+
+    // Verify that the provided key has the correct length
+    VerifyOrReturnError(value.size() == kEnableKeyLength, CHIP_ERROR_INVALID_ARGUMENT);
+
+    // Write the key to the configuration storage
+    ReturnErrorOnFailure(
+        SilabsConfig::WriteConfigValueBin(SilabsConfig::kConfigKey_Test_Event_Trigger_Key, value.data(), value.size()));
+
+    return CHIP_NO_ERROR;
+}
+
 CHIP_ERROR Storage::GetTestEventTriggerKey(MutableByteSpan & keySpan)
 {
     constexpr size_t kEnableKeyLength = 16; // Expected byte size of the EnableKey
@@ -732,6 +789,18 @@ CHIP_ERROR Storage::GetTestEventTriggerKey(MutableByteSpan & keySpan)
     keySpan.reduce_size(kEnableKeyLength);
     return err;
 }
+
+#else // SL_MATTER_TEST_EVENT_TRIGGER_ENABLED
+
+CHIP_ERROR Storage::SetTestEventTriggerKey(const ByteSpan & value)
+{
+    return CHIP_ERROR_NOT_IMPLEMENTED;
+}
+CHIP_ERROR Storage::GetTestEventTriggerKey(MutableByteSpan & keySpan)
+{
+    return CHIP_ERROR_NOT_IMPLEMENTED;
+}
+
 #endif // SL_MATTER_TEST_EVENT_TRIGGER_ENABLED
 
 } // namespace Provision

@@ -134,3 +134,4 @@
   module: "v2_0"
   summary: |-
       - OIDs are now used in the CSR Subject for VID and PID
+      - Reset option added.

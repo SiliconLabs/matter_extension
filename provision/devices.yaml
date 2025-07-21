@@ -172,22 +172,27 @@ simg301l:
     # base is 0x391000 (4096kb(Physical) - 192kb(SE) - 4kb(btl AxIP) - 62 * 4kb(App Aixp) = 3652kb, = 0x391000 - 1 page = 0x390000)
     flash_size: 0x390000
     stack_size: 0x8000
-    rtt_addr: 0x20008d10
     firmware:
         - version: "2.2"
           file: "sixg3_psa3_nvm3k2.s37"
         - version: "2.3"
           file: "sixg3_psa3_nvm3k3.s37"
+          rtt_addr: 0x2000822c
         - version: "2.4"
           file: "sixg3_psa3_nvm3k3.s37"
+          rtt_addr: 0x2000822c
         - version: "2.5"
           file: "sixg3_psa3_nvm3k3.s37"
+          rtt_addr: 0x2000822c
         - version: "2.6"
           file: "sixg3_psa3_nvm3k3.s37"
+          rtt_addr: 0x2000822c
         - version: "2.7"
           file: "sixg3_psa3_nvm3k3.s37"
+          rtt_addr: 0x2000822c
         - version: "2.8"
           file: "sixg3l_csr_oids.s37"
+          rtt_addr: 0x20008d10
 
 # w implies 3mb part.
 simg301w:
@@ -197,18 +202,22 @@ simg301w:
     # base is 0x2a3000 (3072kb(Physical) - 192kb(SE) - 4kb(btl AxIP) - 44 * 4kb(App Aixp) = 2700kb, = 0x2a3000 - 1 page = 0x2a2000)
     flash_size: 0x2a2000
     stack_size: 0x8000
-    rtt_addr: 0x20008d10
     firmware:
         - version: "2.4"
           file: "sixg3w_psa3_nvm3k3.s37"
+          rtt_addr: 0x2000822c
         - version: "2.5"
           file: "sixg3w_psa3_nvm3k3.s37"
+          rtt_addr: 0x2000822c
         - version: "2.6"
           file: "sixg3w_psa3_nvm3k3.s37"
+          rtt_addr: 0x2000822c
         - version: "2.7"
           file: "sixg3w_psa3_nvm3k3.s37"
+          rtt_addr: 0x2000822c
         - version: "2.8"
           file: "sixg3w_csr_oids.s37"
+          rtt_addr: 0x20008d10
 
 # k implies 2mb part.
 simg301k:
@@ -218,15 +227,16 @@ simg301k:
     # base is 0x1ac000 (2048kb(Physical) - 192kb(SE) - 4kb(btl AxIP) - 35 * 4kb(App Aixp) = 1712kb, = 0x1ac000 - 1 page = 0x1ab000)
     flash_size: 0x1ab000
     stack_size: 0x8000
-    # Address of the RTT control block in the SIMG301M114KIH
-    rtt_addr: 0x20008d10
     firmware:
         - version: "2.6"
           file: "sixg3k_psa3_nvm3k3.s37"
+          rtt_addr: 0x200088ac
         - version: "2.7"
           file: "sixg3k_psa3_nvm3k3.s37"
+          rtt_addr: 0x200088ac
         - version: "2.8"
           file: "sixg3k_csr_oids.s37"
+          rtt_addr: 0x20008d10 # RTT control block in the SIMG301M114KIH
 
 # x is currently used for 8mb parts, however there are x parts of every size so this is temporary (x means external flash).
 simg301x:
@@ -236,12 +246,13 @@ simg301x:
     # base is 0x761000 (8192kb(Physical) - 192kb(SE) - 4kb(btl AxIP) - 110 * 4kb(App Aixp) = 7556kb, = 0x761000 - 1 page = 0x760000)
     flash_size: 0x760000
     stack_size: 0x8000
-    # Address of the RTT control block in the SIMG301M114X
-    rtt_addr: 0x20008d10
     firmware:
         - version: "2.6"
           file: "sixg3x8m_psa3_nvm3k3.s37"
+          rtt_addr: 0x200088ac
         - version: "2.7"
           file: "sixg3x8m_psa3_nvm3k3.s37"
+          rtt_addr: 0x200088ac
         - version: "2.8"
           file: "sixg3x_csr_oids.s37"
+          rtt_addr: 0x20008d10 # RTT control block in the SIMG301M114X

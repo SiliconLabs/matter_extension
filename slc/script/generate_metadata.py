@@ -112,6 +112,16 @@ for brd, val in demos_map['demos'].items():
 
                 demo_name = demo_name.strip()
                 demo_name_ = ' '.join(elem.capitalize() for elem in demo_name_.split())
+
+                # logic for demo_name_ generation for zigbee matter light variants 
+                zigbee_matter_light_variant = ""
+                if demo_name =="zigbee matter light":
+                    if "sequential" in demo_:
+                        zigbee_matter_light_variant = " Sequential"
+                    elif "concurrent" in demo_:
+                        zigbee_matter_light_variant = " Concurrent"
+                    demo_name_ = "Zigbee Matter Light" + zigbee_matter_light_variant
+
                 demo = ET.SubElement(demos, 'demo')
                 blurbProp = ET.SubElement(demo, 'property')
                 partCompatibilityProp = ET.SubElement(demo, 'property')
@@ -142,14 +152,34 @@ for brd, val in demos_map['demos'].items():
 
                 readmeFileProp.set('key', 'core.readmeFiles')
 
+                # append special cases for README path generation here 
+                special_readme_dir_cases = {
+                    "thermostat", "zigbee-matter-light"
+                }
+                
+                demo_name_dir = demo_name.replace(" ", "-")
+                if demo_name_dir in special_readme_dir_cases:
+                    readme_dir = demo_name_dir
+                else:
+                    readme_dir = '-'.join([demo_name_dir, 'app'])
+
                 readmeFileProp.set(
-                    'value',  os.path.join("slc","sample-app", '-'.join([demo_name.replace(" ", "-"), 'app']) if demo_name != 'thermostat' else demo_name, "efr32","README.md"))
+                    'value',  os.path.join("slc","sample-app", readme_dir, "efr32","README.md"))
 
                 filtersProp.set('key', 'filters')
                 filtersProp.set('value', "Type|SoC Project\\ Difficulty|Advanced Wireless\\ Technology|Matter")
 
                 qualityProp.set('key', 'core.quality')
-                qualityProp.set('value', "PRODUCTION")
+
+                # add series 3 boards here
+                # used to set quality to EVALUATION for all series 3 boards
+                series_3_boards = {
+                    "brd1019a", "brd2719a", "brd4407a", "brd4408a"
+                }
+                if brd.lower() in series_3_boards:
+                    qualityProp.set('value', "EVALUATION")
+                else:
+                    qualityProp.set('value', "PRODUCTION")
                 description.text = "".join("This is a Matter " + demo_name_ +
                                         " Application over Thread for " + brd.upper())
 

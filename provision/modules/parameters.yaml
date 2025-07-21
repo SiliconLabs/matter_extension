@@ -140,6 +140,12 @@ options:
       short: "bz"
       type: "int16u"
 
+    - id: 0x013c
+      desc: "Force reset"
+      name: "reset"
+      short: "rs"
+      type: "flag"
+
 instance_info:
     - id: 0x0141
       desc: "Serial Number"

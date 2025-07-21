@@ -46,11 +46,11 @@ class Device:
         self.flash_addr = self._int(info, 'flash_addr')
         self.flash_size = self._int(info, 'flash_size', None)
         self.stack_size = self._int(info, 'stack_size')
-        self.rtt_addr = self._int(info, 'rtt_addr', None)
 
         # Search for a firmware for the given version, if needed
         if self.firmware is None:
             image = None
+            rtt_addr = None
             version_len = len(version)
             for y in self._list(info, 'firmware'):
                 v = self._str(y, 'version')
@@ -59,10 +59,12 @@ class Device:
                     break
                 if version == prefix:
                     image = self._str(y, 'file')
+                    rtt_addr = self._int(y, 'rtt_addr', None)
             if image is None:
                 _util.fail("Missing firmware for \"{}\" in version \"{}\"".format(part_num, version))
 
             self.firmware = paths.base("images/{}".format(image))
+            self.rtt_addr = rtt_addr
 
     def match(self, pn, id, y):
         if pn.startswith(id.lower()):

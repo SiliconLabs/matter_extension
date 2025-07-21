@@ -72,11 +72,11 @@ struct Buffer
     /** Reset the pointers to initial position. Zero write, zero read. */
     void Clear() { this->in = this->out = this->begin; }
     /** @return Total size allocated for the buffer. */
-    size_t Limit() { return (this->end > this->begin) ? (this->end - this->begin) : 0; }
+    size_t Limit() { return static_cast<size_t>((this->end > this->begin) ? (this->end - this->begin) : 0); }
     /** @return Number of bytes written. */
-    size_t Size() { return (this->in > this->begin) ? (this->in - this->begin) : 0; }
+    size_t Size() { return static_cast<size_t>((this->in > this->begin) ? (this->in - this->begin) : 0); }
     /** @return Number of bytes read. */
-    size_t Offset() { return (this->out > this->begin) ? (this->out - this->begin) : 0; }
+    size_t Offset() { return static_cast<size_t>((this->out > this->begin) ? (this->out - this->begin) : 0); }
     /** @return Number of bytes available for reading. */
     size_t Left() { return this->Size() - this->Offset(); }
     /** @return Number of bytes available for writing. */
@@ -104,7 +104,7 @@ struct Buffer
 //------------------------------------------------------------------------------
 // Version 1
 //------------------------------------------------------------------------------
-#ifdef SILABS_PROVISION_PROTOCOL_V1
+#if defined(SILABS_PROVISION_PROTOCOL_V1) && SILABS_PROVISION_PROTOCOL_V1
 
 namespace Version1 {
 
