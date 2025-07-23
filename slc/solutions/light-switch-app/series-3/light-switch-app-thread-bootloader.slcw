@@ -1,0 +1,14 @@
+label: light-switch-app-thread-bootloader
+quality: production
+description:
+  Matter solution containing both a Matter bootloader and Light Switch
+  over Thread Example on Series 3.
+project:
+  - path: ../../../sample-app/light-switch-app/efr32/light-switch-app-thread.slcp
+    id: application
+    output: light-switch-app-thread
+  - path: ../../../sample-app/bootloaders/bootloader-storage-single-4096k-series-3/bootloader-storage-single-4096k-series-3.slcp
+    id: bootloader
+    output: matter-bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

@@ -1,9 +1,10 @@
 import os
 import shutil
 import subprocess
-import modules.util as _util
+
 import modules.tools as _tools
-from modules.parameters import Types, Formats, ID
+import modules.util as _util
+from modules.parameters import ID, Formats, Types
 
 
 class Credentials:
@@ -52,8 +53,10 @@ class Credentials:
         cd = self.args.get(ID.kCertification)
         pai_cert = self.args.get(ID.kPaiCert)
         dac_cert = self.args.get(ID.kDacCert)
-        if (pai_cert.str() is None) or (not os.path.isfile(pai_cert.str())): _util.fail("Missing PAI")
-        if (dac_cert.str() is None) or (not os.path.isfile(dac_cert.str())): _util.fail("Missing DAC")
+        if (pai_cert.str() is None) or (not os.path.isfile(pai_cert.str())):
+            _util.fail("Missing PAI")
+        if (dac_cert.str() is None) or (not os.path.isfile(dac_cert.str())):
+            _util.fail("Missing DAC")
         # Calculate offsets
         dac_stats = os.stat(dac_cert.str())
         pai_stats = os.stat(pai_cert.str())
@@ -67,9 +70,9 @@ class Credentials:
             end_offset = _util.roundNearest(cd_offset + cd_stats.st_size, 1024)
         else:
             # print("Using new credentials format\n")
-            pai_offset =  0x0200
-            dac_offset  = 0x0000
-            cd_offset =   0x0400
+            pai_offset = 0x0200
+            dac_offset = 0x0000
+            cd_offset = 0x0400
 
         # Generate header
         header = _util.File(self.paths.base(Credentials.DEFAULT_HEADER_TEMPLATE)).read()
@@ -105,13 +108,13 @@ class Credentials:
     def collectCertificates(self, paa_cert, paa_key, pai_cert, pai_key, dac_cert, dac_key):
         dac_gen = pai_gen = False
         if self.generate:
-            dac_gen = (not self.csr_mode) and ((dac_cert.value is None) or (dac_key.value is None))
+            dac_gen = (dac_cert.value is None) or (dac_key.value is None)
             pai_gen = (pai_cert.value is None) or (dac_gen and (pai_key.value is None))
-            dac_gen = dac_gen or pai_gen
+            dac_gen = (not self.csr_mode) and (dac_gen or pai_gen)
 
         # Collect certificates
         self.collectPAA(paa_cert, paa_key, pai_gen)
-        paic_pem, paik_pem, _, _  = self.collectPAI(paa_cert, paa_key, pai_cert, pai_key, pai_gen)
+        paic_pem, paik_pem, _, _ = self.collectPAI(paa_cert, paa_key, pai_cert, pai_key, pai_gen)
         dacc_pem, dack_pem, _, _ = self.collectDAC(pai_cert, pai_key, dac_cert, dac_key, dac_gen)
 
         # Generate PKCS#12 file
@@ -121,8 +124,9 @@ class Credentials:
             dack_pemq = _util.Paths.quote(dack_pem)
             dacc_pemq = _util.Paths.quote(dacc_pem)
             paic_pemq = _util.Paths.quote(paic_pem)
-            out_arg =  _util.Paths.quote(self.paths.temp(Credentials.PKCS_GENERATED))
-            _util.execute([ 'openssl', 'pkcs12', '-export', '' '-inkey', dack_pemq, '-in', dacc_pemq, '-certfile', paic_pemq, '-out', out_arg, '-password', pass_arg ])
+            out_arg = _util.Paths.quote(self.paths.temp(Credentials.PKCS_GENERATED))
+            _util.execute(['openssl', 'pkcs12', '-export', '' '-inkey', dack_pemq, '-in', dacc_pemq,
+                          '-certfile', paic_pemq, '-out', out_arg, '-password', pass_arg])
 
     def collectPAA(self, paa_cert, paa_key, required):
         if required:
@@ -223,7 +227,7 @@ class Credentials:
         subprocess.check_output(('openssl', 'ec', '-outform', 'der', '-out', dack_temp), stdin=ps.stdout)
 
         # Extract certificates from PKCS#12
-        out = _util.execute([ 'openssl', 'pkcs12', '-nodes', '-nokeys', '-in', pkcs12_quoted, '-passin', password_arg ], True, True)
+        out = _util.execute(['openssl', 'pkcs12', '-nodes', '-nokeys', '-in', pkcs12_quoted, '-passin', password_arg], True, True)
 
         # Parse certificates
         certs = self.parsePKCSCerts(out.decode("utf-8"))
@@ -241,7 +245,7 @@ class Credentials:
         if (not os.path.exists(dest)) or (not os.path.samefile(src, dest)):
             shutil.copy(src, dest)
 
-    def x509Copy(self, in_path, out_name, is_key = False):
+    def x509Copy(self, in_path, out_name, is_key=False):
         if in_path is None:
             _util.fail("Missing X509 path: {}".format(out_name))
         (in_dir, in_base) = os.path.split(in_path)
@@ -250,7 +254,7 @@ class Credentials:
         self.copy(in_path, out_path)
         return self.x509Translate(out_path, is_key)
 
-    def x509Translate(self, in_path, is_key = False):
+    def x509Translate(self, in_path, is_key=False):
         (in_base, in_ext) = os.path.splitext(in_path)
         in_ext = in_ext.strip('.')
         if 'der' == in_ext:
@@ -280,9 +284,9 @@ class Credentials:
         while offset < size:
             b = certs.find(BEGIN, offset)
             if b < 0:
-                break;
+                break
             e = certs.find(END, b)
-            assert(e > 0)
+            assert (e > 0)
             e += len(END)
             cert_list.append(certs[b:e])
             offset = e + 1

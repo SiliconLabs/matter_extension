@@ -13,10 +13,22 @@ requires:
   # Every board that uses buttons
   - name: simple_button_recommended_instance
     condition:
+      - brd2719a
+  - name: simple_button_recommended_instance
+    condition:
+      - brd4408a
+  - name: simple_button_recommended_instance
+    condition:
       - brd4407a
   - name: simple_button_recommended_instance
     condition:
       - brd1019a
+  - name: simple_button_recommended_instance
+    condition:
+      - brd4120a
+  - name: simple_button_recommended_instance
+    condition:
+      - brd4121a    
   - name: simple_button_recommended_instance
     condition:
       - brd4116a

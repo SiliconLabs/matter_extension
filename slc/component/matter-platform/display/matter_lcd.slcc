@@ -46,6 +46,10 @@ include:
     file_list:
       - path: RefrigeratorUI.h
       - path: RefrigeratorIcons.h
+  - path: examples/multi-sensor-app/include
+    condition: [matter_multi_sensor_app]
+    file_list:
+      - path: SensorsUI.h
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/display/demo-ui.c
   - path: third_party/matter_sdk/examples/platform/silabs/display/lcd.cpp
@@ -58,5 +62,8 @@ source:
   - path: third_party/matter_sdk/examples/air-quality-sensor-app/silabs/src/AirQualitySensorUI.cpp
     condition:
       - matter_air_quality_app
+  - path: examples/multi-sensor-app/src/SensorsUI.cpp
+    condition:
+      - matter_multi_sensor_app
 define:
   - name: DISPLAY_ENABLED

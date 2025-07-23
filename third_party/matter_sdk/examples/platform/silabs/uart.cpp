@@ -150,7 +150,7 @@ typedef struct
 } Fifo_t;
 
 // uart transmit
-#if SILABS_LOG_OUT_UART
+#if SILABS_LOG_OUT_UART && !defined(SIMG301M113WIH)
 #define UART_MAX_QUEUE_SIZE 125
 #else
 #if (_SILICON_LABS_32B_SERIES < 3)
@@ -591,6 +591,8 @@ void uartSendBytes(UartTxStruct_t & bufferStruct)
 
 /**
  * @brief Flush the UART TX queue in a blocking manner.
+ *   UART logs are non blocking, so we need to flush the queue here otherwise the logs will not get logged in case of a hard
+ *   fault as they rely on the UART task to send the logs.
  */
 void uartFlushTxQueue(void)
 {

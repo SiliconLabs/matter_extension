@@ -16,8 +16,9 @@
  */
 #pragma once
 
-#include "ProvisionStorageGeneric.h"
 #include <credentials/DeviceAttestationCredsProvider.h>
+#include <headers/ProvisionStorageGeneric.h>
+#include <headers/ProvisionedDataProvider.h>
 #include <platform/CommissionableDataProvider.h>
 #include <platform/DeviceInstanceInfoProvider.h>
 
@@ -75,6 +76,7 @@ enum ID : uint16_t
     kHwVersionStr       = 0x0152,
     kManufacturingDate  = 0x0153,
     kPersistentUniqueId = 0x0154,
+    kSwVersionStr       = 0x0155,
     // Commissionable Data,
     kDiscriminator     = 0x0161,
     kSpake2pPasscode   = 0x0162,
@@ -100,6 +102,8 @@ enum ID : uint16_t
     kPKCS12              = 0x0199,
     kCommonName          = 0x01a1,
     kOtaTlvEncryptionKey = 0x01a2,
+    // Testing
+    kTestEventTriggerKey = 0x01b1,
 };
 
 } // namespace Parameters
@@ -132,7 +136,8 @@ constexpr size_t kPaddingFieldLengthInBits              = 4;
 struct Storage : public GenericStorage,
                  public chip::DeviceLayer::DeviceInstanceInfoProvider,
                  public chip::DeviceLayer::CommissionableDataProvider,
-                 public chip::Credentials::DeviceAttestationCredentialsProvider
+                 public chip::Credentials::DeviceAttestationCredentialsProvider,
+                 public ProvisionedDataProvider
 {
     static constexpr size_t kArgumentSizeMax             = 512;
     static constexpr size_t kVersionLengthMax            = 16;
@@ -145,6 +150,7 @@ struct Storage : public GenericStorage,
     static constexpr size_t kHardwareVersionStrLengthMax = 32;
     static constexpr size_t kManufacturingDateLengthMax  = 11; // yyyy-mm-dd + \0
     static constexpr size_t kPersistentUniqueIdMaxLength = 16;
+    static constexpr size_t kSoftwareVersionStrLengthMax = 32;
     static constexpr size_t kSpake2pVerifierB64LengthMax = BASE64_ENCODED_LEN(chip::Crypto::kSpake2p_VerifierSerialized_Length) + 1;
     static constexpr size_t kSpake2pSaltB64LengthMax     = BASE64_ENCODED_LEN(chip::Crypto::kSpake2p_Max_PBKDF_Salt_Length) + 1;
     static constexpr size_t kFirmwareInfoSizeMax         = 32;
@@ -188,44 +194,56 @@ public:
     // DeviceInstanceInfoProvider
     //
 
-    CHIP_ERROR GetSerialNumber(char * value, size_t max);
-    CHIP_ERROR GetVendorId(uint16_t & value);
-    CHIP_ERROR GetVendorName(char * value, size_t max);
-    CHIP_ERROR GetProductId(uint16_t & productId);
-    CHIP_ERROR GetProductName(char * value, size_t max);
-    CHIP_ERROR GetProductLabel(char * value, size_t max);
-    CHIP_ERROR GetProductURL(char * value, size_t max);
-    CHIP_ERROR GetPartNumber(char * value, size_t max);
-    CHIP_ERROR GetHardwareVersion(uint16_t & value);
-    CHIP_ERROR GetHardwareVersionString(char * value, size_t max);
-    CHIP_ERROR GetManufacturingDate(uint16_t & year, uint8_t & month, uint8_t & day);
-    CHIP_ERROR GetRotatingDeviceIdUniqueId(MutableByteSpan & value);
+    CHIP_ERROR GetSerialNumber(char * value, size_t max) override;
+    CHIP_ERROR GetVendorId(uint16_t & value) override;
+    CHIP_ERROR GetVendorName(char * value, size_t max) override;
+    CHIP_ERROR GetProductId(uint16_t & productId) override;
+    CHIP_ERROR GetProductName(char * value, size_t max) override;
+    CHIP_ERROR GetProductLabel(char * value, size_t max) override;
+    CHIP_ERROR GetProductURL(char * value, size_t max) override;
+    CHIP_ERROR GetPartNumber(char * value, size_t max) override;
+    CHIP_ERROR GetHardwareVersion(uint16_t & value) override;
+    CHIP_ERROR GetHardwareVersionString(char * value, size_t max) override;
+    CHIP_ERROR GetManufacturingDate(uint16_t & year, uint8_t & month, uint8_t & day) override;
+    CHIP_ERROR GetRotatingDeviceIdUniqueId(MutableByteSpan & value) override;
+    CHIP_ERROR GetSoftwareVersionString(char * value, size_t max);
 
     //
     // CommissionableDataProvider
     //
 
-    CHIP_ERROR GetSetupDiscriminator(uint16_t & value);
-    CHIP_ERROR GetSpake2pIterationCount(uint32_t & value);
-    CHIP_ERROR GetSetupPasscode(uint32_t & value);
-    CHIP_ERROR GetSpake2pSalt(MutableByteSpan & value);
-    CHIP_ERROR GetSpake2pVerifier(MutableByteSpan & value, size_t & size);
+    CHIP_ERROR GetSetupDiscriminator(uint16_t & value) override;
+    CHIP_ERROR GetSpake2pIterationCount(uint32_t & value) override;
+    CHIP_ERROR GetSetupPasscode(uint32_t & value) override;
+    CHIP_ERROR GetSpake2pSalt(MutableByteSpan & value) override;
+    CHIP_ERROR GetSpake2pVerifier(MutableByteSpan & value, size_t & size) override;
 
     //
     // DeviceAttestationCredentialsProvider
     //
 
-    CHIP_ERROR GetFirmwareInformation(MutableByteSpan & value);
-    CHIP_ERROR GetCertificationDeclaration(MutableByteSpan & value);
-    CHIP_ERROR GetProductAttestationIntermediateCert(MutableByteSpan & value);
-    CHIP_ERROR GetDeviceAttestationCert(MutableByteSpan & value);
+    CHIP_ERROR GetFirmwareInformation(MutableByteSpan & value) override;
+    CHIP_ERROR GetCertificationDeclaration(MutableByteSpan & value) override;
+    CHIP_ERROR GetProductAttestationIntermediateCert(MutableByteSpan & value) override;
+    CHIP_ERROR GetDeviceAttestationCert(MutableByteSpan & value) override;
+    CHIP_ERROR SignWithDeviceAttestationKey(const ByteSpan & message, MutableByteSpan & signature) override;
     CHIP_ERROR GetDeviceAttestationCSR(uint16_t vid, uint16_t pid, const CharSpan & cn, MutableCharSpan & csr);
-    CHIP_ERROR SignWithDeviceAttestationKey(const ByteSpan & message, MutableByteSpan & signature);
 
     CHIP_ERROR SetCertificationDeclaration(const ByteSpan & value);
     CHIP_ERROR SetProductAttestationIntermediateCert(const ByteSpan & value);
     CHIP_ERROR SetDeviceAttestationCert(const ByteSpan & value);
     CHIP_ERROR SetDeviceAttestationKey(const ByteSpan & value);
+
+    //
+    // ProvisionedDataProvider
+    //
+
+    CHIP_ERROR SetTestEventTriggerKey(const ByteSpan & value);
+    CHIP_ERROR GetTestEventTriggerKey(MutableByteSpan & keySpan) override;
+
+    CHIP_ERROR DecryptUsingOtaTlvEncryptionKey(MutableByteSpan & block, uint32_t & mIVOffset);
+    CHIP_ERROR GetOtaTlvEncryptionKeyId(uint32_t & value) override;
+
     //
     // Other
     //
@@ -235,13 +253,8 @@ public:
     CHIP_ERROR GetSetupPayload(chip::MutableCharSpan & value);
     CHIP_ERROR SetProvisionRequest(bool value);
     CHIP_ERROR GetProvisionRequest(bool & value);
-    CHIP_ERROR GetTestEventTriggerKey(MutableByteSpan & keySpan);
     void SetBufferSize(size_t size) { mBufferSize = size > 0 ? size : kArgumentSizeMax; }
     size_t GetBufferSize() { return mBufferSize; }
-#if OTA_ENCRYPTION_ENABLE
-    CHIP_ERROR GetOtaTlvEncryptionKeyId(uint32_t & value);
-    CHIP_ERROR DecryptUsingOtaTlvEncryptionKey(MutableByteSpan & block, uint32_t & mIVOffset);
-#endif // OTA_ENCRYPTION_ENABLE
 
 private:
     // Generic Interface
@@ -263,15 +276,16 @@ private:
     CHIP_ERROR SetHardwareVersionString(const char * value, size_t len);
     CHIP_ERROR SetManufacturingDate(const char * value, size_t len);
     CHIP_ERROR GetManufacturingDate(uint8_t * value, size_t max, size_t & size);
+    CHIP_ERROR SetSoftwareVersionString(const char * value, size_t len);
     // PersistentUniqueId is used to generate the RotatingUniqueId
     // This PersistentUniqueId SHALL NOT be the same as the UniqueID attribute
     // exposed in the Basic Information cluster.
     CHIP_ERROR SetPersistentUniqueId(const uint8_t * value, size_t size);
     CHIP_ERROR GetPersistentUniqueId(uint8_t * value, size_t max, size_t & size);
     // CommissionableDataProvider
-    CHIP_ERROR SetSetupDiscriminator(uint16_t value);
+    CHIP_ERROR SetSetupDiscriminator(uint16_t value) override;
     CHIP_ERROR SetSpake2pIterationCount(uint32_t value);
-    CHIP_ERROR SetSetupPasscode(uint32_t value);
+    CHIP_ERROR SetSetupPasscode(uint32_t value) override;
     CHIP_ERROR SetSpake2pSalt(const char * value, size_t size);
     CHIP_ERROR GetSpake2pSalt(char * value, size_t max, size_t & size);
     CHIP_ERROR SetSpake2pVerifier(const char * value, size_t size);
@@ -284,9 +298,8 @@ private:
     CHIP_ERROR GetProvisionVersion(char * value, size_t max, size_t & size);
     CHIP_ERROR SetSetupPayload(const uint8_t * value, size_t size);
     CHIP_ERROR GetSetupPayload(uint8_t * value, size_t max, size_t & size);
-#if OTA_ENCRYPTION_ENABLE
+
     CHIP_ERROR SetOtaTlvEncryptionKey(const ByteSpan & value);
-#endif // OTA_ENCRYPTION_ENABLE
 
     uint16_t mVendorId               = 0;
     uint16_t mProductId              = 0;

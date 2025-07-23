@@ -7,9 +7,9 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.0"
+    version: "2.6.1"
   - id: wiseconnect3_sdk
-    version: "3.5.0"
+    version: "3.5.1"
 
 component:
   - id: matter_leds
@@ -162,9 +162,6 @@ include:
       - path: AppEvent.h
       - path: AppTask.h
       - path: SensorManager.h
-      - path: SensorsUI.h
-        condition:
-          - matter_lcd_917SOC
       - path: CHIPProjectConfig.h
     directory: include
 
@@ -173,10 +170,6 @@ source:
     directory: src
   - path: ../../../../examples/multi-sensor-app/src/SensorManager.cpp
     directory: src
-  - path: ../../../../examples/multi-sensor-app/src/SensorsUI.cpp
-    directory: src
-    condition:
-      - matter_lcd_917SOC
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
   - path: ../../../../examples/multi-sensor-app/src/DataModelCallbacks.cpp

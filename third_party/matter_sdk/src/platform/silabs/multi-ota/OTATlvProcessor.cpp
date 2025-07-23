@@ -24,7 +24,7 @@
 #include <headers/ProvisionStorage.h>
 #include <platform/silabs/multi-ota/OTAMultiImageProcessorImpl.h>
 #include <platform/silabs/multi-ota/OTATlvProcessor.h>
-#if OTA_ENCRYPTION_ENABLE
+#if SL_MATTER_ENABLE_OTA_ENCRYPTION
 #include <platform/silabs/multi-ota/OtaTlvEncryptionKey.h>
 #endif
 
@@ -37,7 +37,7 @@ CHIP_ERROR OTATlvProcessor::Init()
 {
     VerifyOrReturnError(mCallbackProcessDescriptor != nullptr, CHIP_OTA_PROCESSOR_CB_NOT_REGISTERED);
     mAccumulator.Init(GetAccumulatorLength());
-#ifdef OTA_ENCRYPTION_ENABLE
+#ifdef SL_MATTER_ENABLE_OTA_ENCRYPTION
     mUnalignmentNum = 0;
 #endif
     return CHIP_NO_ERROR;
@@ -48,7 +48,7 @@ CHIP_ERROR OTATlvProcessor::Clear()
     OTATlvProcessor::ClearInternal();
     mAccumulator.Clear();
     mDescriptorProcessed = false;
-#ifdef OTA_ENCRYPTION_ENABLE
+#ifdef SL_MATTER_ENABLE_OTA_ENCRYPTION
     mUnalignmentNum = 0;
 #endif
     return CHIP_NO_ERROR;
@@ -59,7 +59,10 @@ CHIP_ERROR OTATlvProcessor::Process(ByteSpan & block)
     CHIP_ERROR status     = CHIP_NO_ERROR;
     uint32_t bytes        = chip::min(mLength - mProcessedLength, static_cast<uint32_t>(block.size()));
     ByteSpan relevantData = block.SubSpan(0, bytes);
-
+    if (mProcessedLength + bytes >= mLength)
+    {
+        mLastBlock = true;
+    }
     status = ProcessInternal(relevantData);
     if (!IsError(status))
     {
@@ -86,7 +89,8 @@ void OTATlvProcessor::ClearInternal()
     mLength          = 0;
     mProcessedLength = 0;
     mWasSelected     = false;
-#if OTA_ENCRYPTION_ENABLE
+    mLastBlock       = false;
+#if SL_MATTER_ENABLE_OTA_ENCRYPTION
     mIVOffset = 0;
 #endif
 }
@@ -133,7 +137,7 @@ CHIP_ERROR OTADataAccumulator::Accumulate(ByteSpan & block)
     return CHIP_NO_ERROR;
 }
 
-#if OTA_ENCRYPTION_ENABLE
+#if SL_MATTER_ENABLE_OTA_ENCRYPTION
 CHIP_ERROR OTATlvProcessor::vOtaProcessInternalEncryption(MutableByteSpan & block)
 {
 #if defined(SL_MBEDTLS_USE_TINYCRYPT)
@@ -148,5 +152,34 @@ CHIP_ERROR OTATlvProcessor::vOtaProcessInternalEncryption(MutableByteSpan & bloc
 
     return CHIP_NO_ERROR;
 }
-#endif // OTA_ENCRYPTION_ENABLE
+
+CHIP_ERROR OTATlvProcessor::RemovePadding(MutableByteSpan & block)
+{
+    if (block.size() == 0)
+    {
+        ChipLogError(DeviceLayer, "Block size is zero, cannot unpad");
+        return CHIP_ERROR_INVALID_ARGUMENT;
+    }
+
+    uint8_t padLength = block.data()[block.size() - 1];
+    if (padLength == 0 || padLength > block.size())
+    {
+        ChipLogError(DeviceLayer, "Invalid PKCS7 padding");
+        return CHIP_ERROR_INVALID_ARGUMENT;
+    }
+
+    // Verify padding bytes
+    for (size_t i = 0; i < padLength; ++i)
+    {
+        if (block.data()[block.size() - 1 - i] != padLength)
+        {
+            ChipLogError(DeviceLayer, "PKCS7 padding verification failed");
+            return CHIP_ERROR_INVALID_ARGUMENT;
+        }
+    }
+
+    block.reduce_size(block.size() - padLength);
+    return CHIP_NO_ERROR;
+}
+#endif // SL_MATTER_ENABLE_OTA_ENCRYPTION
 } // namespace chip

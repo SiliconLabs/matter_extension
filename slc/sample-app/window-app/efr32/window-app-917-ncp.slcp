@@ -7,9 +7,9 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.0"
+    version: "2.6.1"
   - id: wiseconnect3_sdk
-    version: "3.5.0"
+    version: "3.5.1"
 
 provides:
   - name: window_app

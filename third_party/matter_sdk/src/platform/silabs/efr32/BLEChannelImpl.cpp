@@ -27,16 +27,25 @@ namespace Internal {
 
 namespace {
 
-// Side Channel UUIDS
-const uint8_t kSideServiceUUID[16] = { 0x01, 0x00, 0x00, 0xEE, 0xFF, 0xC0, 0x00, 0x80,
-                                       0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-const uuid_128 kRxUUID = { .data = { 0x01, 0x00, 0x00, 0xEE, 0xFF, 0xC0, 0xAD, 0xDE, 0xEF, 0xBE, 0xAD, 0xDE, 0x00, 0xEE, 0xFF,
-                                     0xC0 } };
-const uuid_128 kTxUUID = { .data = { 0x02, 0x00, 0x00, 0xEE, 0xFF, 0xC0, 0xAD, 0xDE, 0xEF, 0xBE, 0xAD, 0xDE, 0x00, 0xEE, 0xFF,
-                                     0xC0 } };
+inline constexpr uint8_t kAdvertisingFlagStaticRandomAddress = 1;
+inline constexpr uint8_t kAttErrorCodeNoError                = 0;
+inline constexpr uint8_t kAttErrorCodeInvalidHandle          = 0x01;
+inline constexpr uint8_t kAttErrorApplicationError           = 0x80;
+// For ble transmit, the size be smaller than  SL_BGAPI_MAX_PAYLOAD_SIZE - SL_BGAPI_MSG_HEADER_LEN : 256 - 5 = (251)
+// For sl_bt_gattdb_add_uuid128_characteristic, the size must be smaller than 255 - 30, so we pick a value below those thresholds.
+inline constexpr uint8_t kCharacteristicBufferSize = 220;
+inline constexpr uint8_t kIndicateTimeout          = 30;
 
-uint8_t InitialValueRX[16] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
-uint8_t InitialValueTX[16] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+// Side Channel UUIDS
+constexpr uint8_t kSideServiceUUID[16] = { 0x01, 0x00, 0x00, 0xEE, 0xFF, 0xC0, 0x00, 0x80,
+                                           0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+constexpr uuid_128 kRxUUID = { .data = { 0x01, 0x00, 0x00, 0xEE, 0xFF, 0xC0, 0xAD, 0xDE, 0xEF, 0xBE, 0xAD, 0xDE, 0x00, 0xEE, 0xFF,
+                                         0xC0 } };
+constexpr uuid_128 kTxUUID = { .data = { 0x02, 0x00, 0x00, 0xEE, 0xFF, 0xC0, 0xAD, 0xDE, 0xEF, 0xBE, 0xAD, 0xDE, 0x00, 0xEE, 0xFF,
+                                         0xC0 } };
+
+uint8_t sRxValueBuffer[kCharacteristicBufferSize] = {};
+uint8_t sTxValueBuffer[kCharacteristicBufferSize] = {};
 
 CHIP_ERROR MapBLEError(int bleErr)
 {
@@ -57,6 +66,19 @@ CHIP_ERROR MapBLEError(int bleErr)
     }
 }
 
+uint8_t MapCHIPError(CHIP_ERROR err)
+{
+    switch (err.AsInteger())
+    {
+    case CHIP_NO_ERROR.AsInteger():
+        return kAttErrorCodeNoError;
+    case CHIP_ERROR_INVALID_ARGUMENT.AsInteger():
+        return kAttErrorCodeInvalidHandle;
+    default:
+        return kAttErrorApplicationError;
+    }
+}
+
 } // namespace
 
 CHIP_ERROR BLEChannelImpl::Init()
@@ -72,33 +94,36 @@ CHIP_ERROR BLEChannelImpl::Init()
     VerifyOrReturnError(ret == SL_STATUS_OK, MapBLEError(ret));
 
     // Add RX characteristic
-    ret = sl_bt_gattdb_add_uuid128_characteristic(session, mSideServiceHandle,
-                                                  SL_BT_GATTDB_CHARACTERISTIC_READ | SL_BT_GATTDB_CHARACTERISTIC_WRITE,
-                                                  0, // No security
-                                                  0, // No flags
-                                                  kRxUUID, sl_bt_gattdb_variable_length_value,
-                                                  255, // Max length
-                                                  sizeof(InitialValueRX), InitialValueRX, &mSideRxCharHandle);
+    mSideRxChar.buffer = MutableByteSpan(sRxValueBuffer, sizeof(sRxValueBuffer));
+    ret                = sl_bt_gattdb_add_uuid128_characteristic(session, mSideServiceHandle,
+                                                                 SL_BT_GATTDB_CHARACTERISTIC_READ | SL_BT_GATTDB_CHARACTERISTIC_WRITE,
+                                                                 0, // No security
+                                                                 0, // No flags
+                                                                 kRxUUID, sl_bt_gattdb_variable_length_value,
+                                                                 kCharacteristicBufferSize, // Max length
+                                                                 kCharacteristicBufferSize, mSideRxChar.buffer.data(), &mSideRxChar.handle);
     VerifyOrReturnError(ret == SL_STATUS_OK, MapBLEError(ret));
 
-    ret = sl_bt_gattdb_add_uuid128_characteristic(session, mSideServiceHandle,
-                                                  SL_BT_GATTDB_CHARACTERISTIC_READ | SL_BT_GATTDB_CHARACTERISTIC_WRITE |
-                                                      SL_BT_GATTDB_CHARACTERISTIC_WRITE_NO_RESPONSE |
-                                                      SL_BT_GATTDB_CHARACTERISTIC_INDICATE,
-                                                  0, // No security
-                                                  0, // No flags
-                                                  kTxUUID, sl_bt_gattdb_variable_length_value,
-                                                  255, // Max length
-                                                  sizeof(InitialValueTX), InitialValueTX, &mSideTxCharHandle);
+    // Add TX characteristic
+    mSideTxChar.buffer = MutableByteSpan(sTxValueBuffer, sizeof(sTxValueBuffer));
+    ret                = sl_bt_gattdb_add_uuid128_characteristic(session, mSideServiceHandle,
+                                                                 SL_BT_GATTDB_CHARACTERISTIC_READ | SL_BT_GATTDB_CHARACTERISTIC_WRITE |
+                                                                     SL_BT_GATTDB_CHARACTERISTIC_WRITE_NO_RESPONSE |
+                                                                     SL_BT_GATTDB_CHARACTERISTIC_NOTIFY | SL_BT_GATTDB_CHARACTERISTIC_INDICATE,
+                                                                 0, // No security
+                                                                 0, // No flags
+                                                                 kTxUUID, sl_bt_gattdb_variable_length_value,
+                                                                 kCharacteristicBufferSize, // Max length
+                                                                 kCharacteristicBufferSize, mSideTxChar.buffer.data(), &mSideTxChar.handle);
     VerifyOrReturnError(ret == SL_STATUS_OK, MapBLEError(ret));
 
     ret = sl_bt_gattdb_start_service(session, mSideServiceHandle);
     VerifyOrReturnError(ret == SL_STATUS_OK, MapBLEError(ret));
 
-    ret = sl_bt_gattdb_start_characteristic(session, mSideRxCharHandle);
+    ret = sl_bt_gattdb_start_characteristic(session, mSideRxChar.handle);
     VerifyOrReturnError(ret == SL_STATUS_OK, MapBLEError(ret));
 
-    ret = sl_bt_gattdb_start_characteristic(session, mSideTxCharHandle);
+    ret = sl_bt_gattdb_start_characteristic(session, mSideTxChar.handle);
     VerifyOrReturnError(ret == SL_STATUS_OK, MapBLEError(ret));
 
     ret = sl_bt_gattdb_commit(session);
@@ -116,7 +141,6 @@ CHIP_ERROR BLEChannelImpl::ConfigureAdvertising(const AdvConfigStruct & config)
         ret = sl_bt_advertiser_create_set(&mAdvHandle);
         VerifyOrReturnLogError(ret == SL_STATUS_OK, MapBLEError(ret));
 
-        // TODO: Check if we need to randomize the address
         uint64_t random = Crypto::GetRandU64();
         memcpy(&mConnectionState.address, &random, sizeof(mConnectionState.address));
 
@@ -151,8 +175,6 @@ CHIP_ERROR BLEChannelImpl::ConfigureAdvertising(const AdvConfigStruct & config)
 
 CHIP_ERROR BLEChannelImpl::StartAdvertising(void)
 {
-    // TODO: Check for handling max connection per handle vs globally
-
     // If already advertising, stop it, before changing values
     if (mFlags.Has(Flags::kAdvertising))
     {
@@ -164,7 +186,7 @@ CHIP_ERROR BLEChannelImpl::StartAdvertising(void)
     ret = sl_bt_advertiser_set_timing(mAdvHandle, mAdvIntervalMin, mAdvIntervalMax, mAdvDuration, mAdvMaxEvents);
     VerifyOrReturnLogError(ret == SL_STATUS_OK, MapBLEError(ret));
 
-    ret = sl_bt_advertiser_configure(mAdvHandle, 1); // TODO : Figure out this magic 1 in the sl_bt_advertiser_flags
+    ret = sl_bt_advertiser_configure(mAdvHandle, kAdvertisingFlagStaticRandomAddress);
     VerifyOrReturnLogError(ret == SL_STATUS_OK, MapBLEError(ret));
 
     // Start advertising
@@ -184,8 +206,6 @@ CHIP_ERROR BLEChannelImpl::StopAdvertising(void)
         sl_status_t ret = SL_STATUS_OK;
 
         mFlags.Clear(Flags::kAdvertising);
-        // TODO: Confirm the fast vs slow advertising concept from a channel perspective vs from CHIPoBLE perspective
-        // mFlags.Set(Flags::kFastAdvertisingEnabled, true);
 
         ret = sl_bt_advertiser_stop(mAdvHandle);
         sl_bt_advertiser_clear_random_address(mAdvHandle);
@@ -197,9 +217,43 @@ CHIP_ERROR BLEChannelImpl::StopAdvertising(void)
     return CHIP_NO_ERROR;
 }
 
+CHIP_ERROR BLEChannelImpl::NotifyCharacteristic(uint16_t characteristicHandle)
+{
+    MutableByteSpan dataSpan;
+    ReturnErrorOnFailure(GetCharacteristicValue(characteristicHandle, dataSpan));
+    sl_status_t ret = sl_bt_gatt_server_send_notification(mConnectionState.connectionHandle, characteristicHandle, dataSpan.size(),
+                                                          dataSpan.data());
+    return MapBLEError(ret);
+}
+
+CHIP_ERROR BLEChannelImpl::IndicateCharacteristic(uint16_t characteristicHandle)
+{
+    MutableByteSpan dataSpan;
+    ReturnErrorOnFailure(GetCharacteristicValue(characteristicHandle, dataSpan));
+    sl_status_t ret = sl_bt_gatt_server_send_indication(mConnectionState.connectionHandle, characteristicHandle, dataSpan.size(),
+                                                        dataSpan.data());
+    return MapBLEError(ret);
+}
+void BLEChannelImpl::HandleIndicationTimeout(volatile sl_bt_msg_t * evt)
+{
+    sl_bt_evt_gatt_server_indication_timeout_t * indicationTimeout =
+        (sl_bt_evt_gatt_server_indication_timeout_t *) &(evt->data.evt_gatt_server_indication_timeout);
+
+    VerifyOrReturn(indicationTimeout->connection == mConnectionState.connectionHandle);
+    ChipLogProgress(DeviceLayer, "Indication timeout for connection: %d", indicationTimeout->connection);
+}
+void BLEChannelImpl::HandleIndicationConfirmation(volatile sl_bt_msg_t * evt)
+{
+    sl_bt_evt_gatt_server_characteristic_status_t * indicationConfirmation =
+        (sl_bt_evt_gatt_server_characteristic_status_t *) &(evt->data.evt_gatt_server_characteristic_status);
+
+    VerifyOrReturn(indicationConfirmation->connection == mConnectionState.connectionHandle);
+    ChipLogProgress(DeviceLayer, "Indication confirmation for connection: %d characteristic: %d",
+                    indicationConfirmation->connection, indicationConfirmation->characteristic);
+}
+
 void BLEChannelImpl::AddConnection(uint8_t connectionHandle, uint8_t bondingHandle)
 {
-    // TODO: Verify if we want to allow multiple connections at once, this is tied to the Endpoint usage as well
     // We currently only support one connection at a time on our side channel
     VerifyOrReturn(!mConnectionState.allocated, ChipLogError(DeviceLayer, "Connection already exists"));
 
@@ -217,87 +271,110 @@ bool BLEChannelImpl::RemoveConnection(uint8_t connectionHandle)
     return true;
 }
 
-void BLEChannelImpl::HandleReadRequest(volatile sl_bt_msg_t * evt, ByteSpan data)
+void BLEChannelImpl::HandleReadRequest(volatile sl_bt_msg_t * evt)
 {
-    uint16_t sent_length; // TODO: Confirm how to leverage this or use a nullptr instead
+    uint16_t sent_length;
 
-    // Add logic to handle received data
     sl_bt_evt_gatt_server_user_read_request_t * readReq =
         (sl_bt_evt_gatt_server_user_read_request_t *) &(evt->data.evt_gatt_server_user_read_request);
 
-    // TODO: define uint8_t error logic for app error for BLE response
-    ChipLogProgress(DeviceLayer, "Handling Read Request for characteristic: %d", readReq->characteristic);
-    sl_status_t ret = sl_bt_gatt_server_send_user_read_response(readReq->connection, readReq->characteristic, 0, data.size(),
-                                                                data.data(), &sent_length);
-
-    ChipLogProgress(DeviceLayer, "Sent %d of the %d bytes requested", sent_length, data.size());
-
-    if (ret != SL_STATUS_OK)
+    MutableByteSpan dataSpan;
+    CHIP_ERROR err = GetCharacteristicValue(readReq->characteristic, dataSpan);
+    if (err != CHIP_NO_ERROR)
     {
-        ChipLogDetail(DeviceLayer, "Failed to send read response, err:%ld", ret);
+        ChipLogError(DeviceLayer, "Failed to get characteristic value, err: %s", ErrorStr(err));
+        sl_bt_gatt_server_send_user_read_response(readReq->connection, readReq->characteristic, MapCHIPError(err), 0, nullptr,
+                                                  &sent_length);
+    }
+    else
+    {
+        ChipLogProgress(DeviceLayer, "Handling Read Request for characteristic: %d", readReq->characteristic);
+        sl_status_t ret = sl_bt_gatt_server_send_user_read_response(
+            readReq->connection, readReq->characteristic, kAttErrorCodeNoError, dataSpan.size(), dataSpan.data(), &sent_length);
+        ChipLogProgress(DeviceLayer, "Sent %d of the %d bytes requested", sent_length, dataSpan.size());
+
+        if (ret != SL_STATUS_OK)
+        {
+            ChipLogDetail(DeviceLayer, "Failed to send read response, err:%ld", ret);
+        }
     }
 }
 
-void BLEChannelImpl::HandleWriteRequest(volatile sl_bt_msg_t * evt, MutableByteSpan data)
+void BLEChannelImpl::HandleWriteRequest(volatile sl_bt_msg_t * evt)
 {
     sl_bt_evt_gatt_server_user_write_request_t * writeReq =
         (sl_bt_evt_gatt_server_user_write_request_t *) &(evt->data.evt_gatt_server_user_write_request);
     ChipLogProgress(DeviceLayer, "Handling Write Request for characteristic: %d", writeReq->characteristic);
-    // TODO: Review what characteristic we want to offer as default, for now we just copy the data to a buffer
 
-    VerifyOrReturn(data.size() >= writeReq->value.len, ChipLogError(DeviceLayer, "Buffer too small for write request"));
-    memcpy(data.data(), writeReq->value.data, writeReq->value.len);
+    MutableByteSpan dataSpan;
+    CHIP_ERROR err = SetCharacteristicValue(writeReq->characteristic, ByteSpan(writeReq->value.data, writeReq->value.len));
+    if (err != CHIP_NO_ERROR)
+    {
+        ChipLogError(DeviceLayer, "Failed to set characteristic value, err: %s", ErrorStr(err));
+        sl_bt_gatt_server_send_user_write_response(writeReq->connection, writeReq->characteristic, MapCHIPError(err));
+        return;
+    }
 
     ChipLogProgress(DeviceLayer, "Received Write Request for characteristic: %d, data size: %d", writeReq->characteristic,
                     writeReq->value.len);
     // Log the data received
-    ChipLogByteSpan(DeviceLayer, data);
+    ChipLogByteSpan(DeviceLayer, dataSpan);
 
-    // TODO: define uint8_t error logic for app error for BLE response
-    sl_status_t ret = sl_bt_gatt_server_send_user_write_response(writeReq->connection, writeReq->characteristic, 0);
+    sl_status_t ret =
+        sl_bt_gatt_server_send_user_write_response(writeReq->connection, writeReq->characteristic, kAttErrorCodeNoError);
     if (ret != SL_STATUS_OK)
     {
         ChipLogDetail(DeviceLayer, "Failed to send write response, err:%ld", ret);
     }
 }
 
-CHIP_ERROR BLEChannelImpl::HandleCCCDWriteRequest(volatile sl_bt_msg_t * evt, bool & isNewSubscription)
+bool BLEChannelImpl::CanHandleEvent(uint32_t event)
+{
+    // Check if the event is one that this channel can handle
+    return (event == sl_bt_evt_gatt_server_indication_timeout_id);
+}
+
+CHIP_ERROR BLEChannelImpl::HandleCCCDWriteRequest(volatile sl_bt_msg_t * evt)
 {
     ChipLogProgress(DeviceLayer, "Handling CCCD Write");
 
     sl_bt_evt_gatt_server_characteristic_status_t * CCCDWriteReq =
         (sl_bt_evt_gatt_server_characteristic_status_t *) &(evt->data.evt_gatt_server_characteristic_status);
 
-    bool isIndicationEnabled = false;
-    isNewSubscription        = false;
-
     VerifyOrReturnLogError(mConnectionState.allocated, CHIP_ERROR_INCORRECT_STATE);
     VerifyOrReturnLogError(mConnectionState.connectionHandle == CCCDWriteReq->connection, CHIP_ERROR_INCORRECT_STATE);
 
-    isIndicationEnabled = (CCCDWriteReq->client_config_flags == sl_bt_gatt_indication);
-
-    if (isIndicationEnabled)
+    switch (CCCDWriteReq->client_config_flags)
     {
-        if (mConnectionState.subscribed)
-        {
-            isNewSubscription = false; // Already subscribed
-        }
-        else
-        {
-            mConnectionState.subscribed = 1;
-            ChipLogProgress(DeviceLayer, "CHIPoBLE Subscribe received for characteristic: %d", CCCDWriteReq->characteristic);
-            isNewSubscription = true;
-        }
+    case sl_bt_gatt_disable:
+        // Handle indication/notification disable
+        ChipLogProgress(DeviceLayer, "Side Channel Indication/Notification disabled for characteristic: %d",
+                        CCCDWriteReq->characteristic); // Log the TX Char handle value
+        break;
+    case sl_bt_gatt_indication: {
+        // Handle indication enable
+        ChipLogProgress(DeviceLayer, "Side Channel Indication enabled for characteristic: %d", CCCDWriteReq->characteristic);
+        MutableByteSpan dataSpan;
+        ReturnErrorOnFailure(GetCharacteristicValue(CCCDWriteReq->characteristic, dataSpan));
+        sl_status_t ret = sl_bt_gatt_server_send_indication(mConnectionState.connectionHandle, CCCDWriteReq->characteristic,
+                                                            dataSpan.size(), dataSpan.data());
+        return MapBLEError(ret);
     }
-    else
-    {
-        mConnectionState.subscribed = 0;
-        ChipLogProgress(DeviceLayer, "CHIPoBLE Unsubscribe received for characteristic: %d", CCCDWriteReq->characteristic);
-        isNewSubscription = false;
+    case sl_bt_gatt_notification: {
+        // Handle notification enable
+        ChipLogProgress(DeviceLayer, "Side Channel Notification enabled for characteristic: %d", CCCDWriteReq->characteristic);
+        MutableByteSpan dataSpan;
+        ReturnErrorOnFailure(GetCharacteristicValue(CCCDWriteReq->characteristic, dataSpan));
+        sl_status_t ret = sl_bt_gatt_server_send_notification(mConnectionState.connectionHandle, CCCDWriteReq->characteristic,
+                                                              dataSpan.size(), dataSpan.data());
+        return MapBLEError(ret);
     }
-
-    // TODO: Leverage Endpoint to send event or implement a timer + callback here
-    ChipLogProgress(DeviceLayer, "Note: This is not implemented yet");
+    default:
+        // Handle unknown flags
+        ChipLogError(DeviceLayer, "Unknown client config flags: %d for characteristic: %d", CCCDWriteReq->client_config_flags,
+                     CCCDWriteReq->characteristic);
+        return CHIP_ERROR_INVALID_ARGUMENT;
+    }
 
     return CHIP_NO_ERROR;
 }
@@ -338,10 +415,9 @@ CHIP_ERROR BLEChannelImpl::OpenConnection(bd_addr address, uint8_t addrType)
     }
 
     sl_status_t ret = sl_bt_connection_open(address, addrType, sl_bt_gap_1m_phy, &mConnectionState.connectionHandle);
-
-    // TODO: Confirm this generates a connection event and the AddConnection gets called so that the connection state is updated
     return MapBLEError(ret);
 }
+
 CHIP_ERROR BLEChannelImpl::SetConnectionParams(const Optional<uint8_t> & connectionHandle, uint32_t intervalMin,
                                                uint32_t intervalMax, uint16_t latency, uint16_t timeout)
 {
@@ -381,7 +457,6 @@ CHIP_ERROR BLEChannelImpl::SetAdvertisingParams(uint32_t intervalMin, uint32_t i
 CHIP_ERROR BLEChannelImpl::CloseConnection()
 {
     sl_status_t ret = sl_bt_connection_close(mConnectionState.connectionHandle);
-    // Todo: Confirm this generates a disconnect event and the RemoveConnection gets called
     return MapBLEError(ret);
 }
 
@@ -408,31 +483,76 @@ CHIP_ERROR BLEChannelImpl::SetAdvHandle(uint8_t handle)
     return MapBLEError(ret);
 }
 
-CHIP_ERROR BLEChannelImpl::DiscoverServices()
+CHIP_ERROR BLEChannelImpl::DiscoverRemoteServices()
 {
     sl_status_t ret = sl_bt_gatt_discover_primary_services(mConnectionState.connectionHandle);
     VerifyOrReturnError(ret == SL_STATUS_OK, MapBLEError(ret));
     return CHIP_NO_ERROR;
 }
-CHIP_ERROR BLEChannelImpl::DiscoverCharacteristics(uint32_t serviceHandle)
+
+CHIP_ERROR BLEChannelImpl::DiscoverRemoteCharacteristics(uint32_t serviceHandle)
 {
     sl_status_t ret = sl_bt_gatt_discover_characteristics(mConnectionState.connectionHandle, serviceHandle);
     VerifyOrReturnError(ret == SL_STATUS_OK, MapBLEError(ret));
     return CHIP_NO_ERROR;
 }
 
-CHIP_ERROR BLEChannelImpl::SetCharacteristicNotification(uint8_t characteristicHandle, uint8_t flags)
+CHIP_ERROR BLEChannelImpl::SetRemoteCharacteristicNotification(uint16_t characteristicHandle, uint8_t flags)
 {
     sl_status_t ret = sl_bt_gatt_set_characteristic_notification(mConnectionState.connectionHandle, characteristicHandle, flags);
     VerifyOrReturnError(ret == SL_STATUS_OK, MapBLEError(ret));
     return CHIP_NO_ERROR;
 }
 
-CHIP_ERROR BLEChannelImpl::SetCharacteristicValue(uint8_t characteristicHandle, const ByteSpan & value)
+CHIP_ERROR BLEChannelImpl::SetRemoteCharacteristicValue(uint16_t characteristicHandle, const ByteSpan & value)
 {
     sl_status_t ret =
         sl_bt_gatt_write_characteristic_value(mConnectionState.connectionHandle, characteristicHandle, value.size(), value.data());
     VerifyOrReturnError(ret == SL_STATUS_OK, MapBLEError(ret));
+    return CHIP_NO_ERROR;
+}
+
+// Side Channel methods
+CHIP_ERROR BLEChannelImpl::GetCharacteristicValue(uint16_t charHandle, MutableByteSpan & dataSpan)
+{
+    if (charHandle == mSideRxChar.handle)
+    {
+        dataSpan = mSideRxChar.buffer;
+    }
+    else if (charHandle == mSideTxChar.handle)
+    {
+        dataSpan = mSideTxChar.buffer;
+    }
+    else
+    {
+        ChipLogError(DeviceLayer, "Unknown characteristic handle: %d", charHandle);
+        return CHIP_ERROR_INVALID_ARGUMENT;
+    }
+    return CHIP_NO_ERROR;
+}
+
+CHIP_ERROR BLEChannelImpl::SetCharacteristicValue(uint16_t charHandle, const ByteSpan & value)
+{
+    if (charHandle == mSideRxChar.handle)
+    {
+        VerifyOrReturnError(value.size() <= kCharacteristicBufferSize, CHIP_ERROR_BUFFER_TOO_SMALL,
+                            ChipLogError(DeviceLayer, "Value size exceeds RX characteristic buffer size"));
+
+        mSideRxChar.buffer = MutableByteSpan(sRxValueBuffer, sizeof(sRxValueBuffer));
+        CopySpanToMutableSpan(value, mSideRxChar.buffer);
+    }
+    else if (charHandle == mSideTxChar.handle)
+    {
+        VerifyOrReturnError(value.size() <= kCharacteristicBufferSize, CHIP_ERROR_BUFFER_TOO_SMALL,
+                            ChipLogError(DeviceLayer, "Value size exceeds TX characteristic buffer size"));
+        mSideTxChar.buffer = MutableByteSpan(sTxValueBuffer, sizeof(sTxValueBuffer));
+        CopySpanToMutableSpan(value, mSideTxChar.buffer);
+    }
+    else
+    {
+        ChipLogError(DeviceLayer, "Unknown characteristic handle: %d", charHandle);
+        return CHIP_ERROR_INVALID_ARGUMENT;
+    }
     return CHIP_NO_ERROR;
 }
 

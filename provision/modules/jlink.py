@@ -1,8 +1,11 @@
-from modules.parameters import Types, Formats, ID
+import re
+import time
+
 import modules.channel as _base
 import modules.util as _util
 import pylink
-import time
+from modules.parameters import ID, Formats, Types
+
 # https://pylink.readthedocs.io/en/latest/installation.html
 # pip install pylink-square
 
@@ -10,8 +13,9 @@ import time
 class JLinkChannel(_base.Channel):
     DEFAULT_PORT = 19020
 
-    def __init__(self, paths, args, conn) -> None:
+    def __init__(self, paths, args, conn, dev) -> None:
         super().__init__(_base.Channel.RTT)
+        self.device = dev
         self.ip_addr = conn.ip_addr
         self.port = conn.port or JLinkChannel.DEFAULT_PORT
         self.serial_num = conn.serial_num
@@ -20,10 +24,9 @@ class JLinkChannel(_base.Channel):
         if lib_path is None:
             self.link = pylink.JLink()
         else:
-            self.link=pylink.JLink(lib=pylink.library.Library(dllpath=lib_path))
+            self.link = pylink.JLink(lib=pylink.library.Library(dllpath=lib_path))
         self.link.disable_dialog_boxes()
         self.support_dir = paths.support()
-
 
     def open(self):
         if self.serial_num:
@@ -40,20 +43,16 @@ class JLinkChannel(_base.Channel):
         self.link.exec_command("JLinkDevicesXMLPath {}/".format(self.support_dir))
         self.link.set_tif(interface=pylink.JLinkInterfaces.SWD)
         self.link.connect(chip_name=self.part_number, speed="auto", verbose=True)
-        # print("Start...")
-        if self.part_number.lower().startswith('simg301'):
-            # TEMP_FIX: hardcoded address where the _SEGGER_RTT symbol is located in RAM.
-            # this is where the rtt control block is located for the current sixg3_psa3_nvm3k3.s37
-            self.link.rtt_start(0x2000822c)
-        else:
+        # Use custom RTT control block address, if configured
+        if self.device.rtt_addr is None:
             self.link.rtt_start()
-
+        else:
+            self.link.rtt_start(self.device.rtt_addr)
 
     def close(self):
         print("* Connection closed.\n")
         self.link.rtt_stop()
         self.link.close()
-
 
     def write(self, data):
         # print("Send({})...".format(len(data)))
@@ -73,11 +72,9 @@ class JLinkChannel(_base.Channel):
         # print("RECEIVED({}): {}".format(len(data), data))
         return bytes(data)
 
-
-    def reset(self, do_halt = False):
+    def reset(self, do_halt=False):
         print("{}> reset {}\n".format(_util.MARGIN, do_halt and 'HALT' or ''))
         self.link.reset(halt=do_halt)
-
 
     def flash(self, firmware_path, address):
         print("{}> flash(0x{:08x}) {}\n".format(_util.MARGIN, address, firmware_path))

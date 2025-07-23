@@ -17,8 +17,8 @@
  */
 
 #include "MemMonitoring.h"
-
 #include "AppConfig.h"
+#include "sl_memory_manager.h"
 #include <cmsis_os2.h>
 #include <platform/CHIPDeviceLayer.h>
 #include <sl_cmsis_os2_common.h>
@@ -43,6 +43,17 @@ size_t nbAllocSuccess        = 0;
 size_t nbFreeSuccess         = 0;
 size_t largestBlockAllocated = 0;
 
+void DisplayMemoryUsage()
+{
+    uint32_t totalHeap     = static_cast<uint32_t>(sl_memory_get_total_heap_size());
+    uint32_t usedHeap      = static_cast<uint32_t>(sl_memory_get_used_heap_size());
+    uint32_t highWatermark = static_cast<uint32_t>(sl_memory_get_heap_high_watermark());
+
+    SILABS_LOG("Total Heap Size           %lu B", totalHeap);
+    SILABS_LOG("Used Heap Size            %lu B", usedHeap);
+    SILABS_LOG("Heap High  Watermark      %lu B", highWatermark);
+}
+
 void MemMonitoring::StartMonitor()
 {
     sMonitorThreadHandle = osThreadNew(MonitorTask, nullptr, &kMonitorTaskAttr);
@@ -58,6 +69,7 @@ void MemMonitoring::MonitorTask(void * pvParameter)
 
     while (true)
     {
+        DisplayMemoryUsage();
 
         SILABS_LOG("=============================");
         SILABS_LOG(" ");
@@ -78,6 +90,9 @@ void MemMonitoring::MonitorTask(void * pvParameter)
         }
 
         SILABS_LOG(" ");
+        DisplayMemoryUsage();
+        SILABS_LOG(" ");
+
         SILABS_LOG("=============================");
         // run loop every 5 seconds
         osDelay(osKernelGetTickFreq() * 5);

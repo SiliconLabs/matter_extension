@@ -16,8 +16,8 @@
  */
 #pragma once
 
-#include "ProvisionEncoder.h"
-#include "ProvisionStorage.h"
+#include <headers/ProvisionEncoder.h>
+#include <headers/ProvisionStorage.h>
 #include <lib/support/Span.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -44,7 +44,7 @@ public:
 //------------------------------------------------------------------------------
 // Version 1
 //------------------------------------------------------------------------------
-#ifdef SILABS_PROVISION_PROTOCOL_V1
+#if defined(SILABS_PROVISION_PROTOCOL_V1) && SILABS_PROVISION_PROTOCOL_V1
 
 class Protocol1 : public Protocol
 {

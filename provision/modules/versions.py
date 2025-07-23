@@ -1,7 +1,8 @@
-import modules.util as _util
-import modules.arguments as _args
 import importlib
 import os
+
+import modules.arguments as _args
+import modules.util as _util
 
 
 class Version:
@@ -33,18 +34,19 @@ class Version:
 
 class VersionManager:
 
-    DEFAULT = Version({ 'version': '2.6', 'module': 'v2_0', 'date': '2025-04-03', 'summary': 'Default'})
+    DEFAULT = Version({'version': '2.8', 'module': 'v2_0', 'date': '2025-04-23', 'summary': 'Default'})
 
     def __init__(self, paths) -> None:
         self.paths = paths
-        self.versions = [ VersionManager.DEFAULT ]
+        self.versions = [VersionManager.DEFAULT]
         filename = paths.base('versions.yaml')
         if os.path.exists(filename):
             for y in _util.YamlFile(filename).read():
                 self.versions.append(Version(y))
 
-    def find(self, ver = None) -> Version:
-        if ver is None: return VersionManager.DEFAULT
+    def find(self, ver=None) -> Version:
+        if ver is None:
+            return VersionManager.DEFAULT
         v = None
         count = len(self.versions)
         # Order versions by tag

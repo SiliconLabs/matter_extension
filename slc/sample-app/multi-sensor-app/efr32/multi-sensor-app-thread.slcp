@@ -7,12 +7,16 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.0"
+    version: "2.6.1"
 
 component:
   - id: device_init
   - id: sl_main
   - id: clock_manager
+  - id: common_token_manager_dynamic
+    condition: [device_series_3]
+  - id: common_token_manager
+    condition: [device_series_3]
   - id: matter_buttons
     from: matter
   - id: matter_leds
@@ -118,7 +122,10 @@ requires:
   - name: matter_drivers_series_2
     condition:
       - device_series_2
-
+  - name: matter_drivers_series_2
+    condition:
+      - device_series_3
+      
 config_file:
   - path: ../../../../examples/multi-sensor-app/config/sl_matter_sensor_config.h
     file_id: matter_sensor_config
@@ -138,9 +145,6 @@ include:
       - path: AppEvent.h
       - path: AppTask.h
       - path: SensorManager.h
-      - path: SensorsUI.h
-        condition:
-          - matter_lcd
       - path: CHIPProjectConfig.h
     directory: include
 
@@ -149,10 +153,6 @@ source:
     directory: src
   - path: ../../../../examples/multi-sensor-app/src/SensorManager.cpp
     directory: src
-  - path: ../../../../examples/multi-sensor-app/src/SensorsUI.cpp
-    directory: src
-    condition:
-      - matter_lcd
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
   - path: ../../../../examples/multi-sensor-app/src/DataModelCallbacks.cpp
@@ -169,6 +169,12 @@ define:
     value: "4092"
 
 configuration:
+  - name: SL_BT_CONFIG_USER_ADVERTISERS
+    value: 2
+    condition: [matter_ble_side_channel]
+  - name: SL_TOKEN_MANAGER_STATIC_SECURE_TOKEN_SIZE
+    value: 8192
+    condition: [device_series_3]
   - name: SL_OPENTHREAD_ENABLE_APP_TASK
     value: 0
   - name: SL_OPENTHREAD_ENABLE_CLI_TASK

@@ -7,12 +7,16 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.0"
+    version: "2.6.1"
 
 component:
   - id: device_init
   - id: sl_main
   - id: clock_manager
+  - id: common_token_manager_dynamic
+    condition: [device_series_3]
+  - id: common_token_manager
+    condition: [device_series_3]
   - id: matter_buttons
     from: matter
   - id: matter_leds
@@ -114,6 +118,9 @@ requires:
   - name: matter_drivers_series_2
     condition:
       - device_series_2
+  - name: matter_drivers_series_2
+    condition:
+      - device_series_3
 
 config_file:
   - path: ../../../../third_party/matter_sdk/examples/lock-app/silabs/data_model/lock-app.zap
@@ -155,6 +162,12 @@ define:
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
     value: "4092"
 configuration:
+  - name: SL_BT_CONFIG_USER_ADVERTISERS
+    value: 2
+    condition: [matter_ble_side_channel]
+  - name: SL_TOKEN_MANAGER_STATIC_SECURE_TOKEN_SIZE
+    value: 8192
+    condition: [device_series_3]
   - name: SL_OPENTHREAD_ENABLE_APP_TASK
     value: 0
   - name: SL_OPENTHREAD_ENABLE_CLI_TASK

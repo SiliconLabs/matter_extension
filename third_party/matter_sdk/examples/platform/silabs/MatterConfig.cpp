@@ -210,6 +210,9 @@ void ApplicationStart(void * unused)
 void SilabsMatterConfig::AppInit()
 {
     GetPlatform().Init();
+#ifdef HEAP_MONITORING
+    DisplayMemoryUsage();
+#endif
     sMainTaskHandle = osThreadNew(ApplicationStart, nullptr, &kMainTaskAttr);
     ChipLogProgress(DeviceLayer, "Starting scheduler");
     VerifyOrDie(sMainTaskHandle); // We can't proceed if the Main Task creation failed.

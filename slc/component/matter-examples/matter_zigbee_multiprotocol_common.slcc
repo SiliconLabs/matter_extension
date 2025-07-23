@@ -8,7 +8,7 @@ quality: production
 provides:
   - name: matter_zigbee_multiprotocol_common
 recommends:
-  - name: matter_zigbee_concurrent
+  - id: matter_zigbee_concurrent
 include:
   - path: third_party/matter_sdk/examples/platform/silabs/cmp
     file_list:
@@ -24,4 +24,4 @@ template_contribution:
   - name: component_catalog
     value: multiprotocol_zigbee_matter_common
 ui_hints:
-  visibility: always
+  visibility: basic

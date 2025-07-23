@@ -1,26 +1,29 @@
-import os
-import time
-import shutil
-import datetime
 import base64
+import datetime
 import hashlib
+import os
+import shutil
 import struct
-from ecdsa.curves import NIST256p
+import time
+
 import modules.util as _util
+from ecdsa.curves import NIST256p
 from modules.parameters import ID
 
 
 class Commander:
 
     def __init__(self, args, conn):
-        self.device = args.str(ID.kDevice)
+        # The "device" argument's value may be reconfigured later
+        self.device = args.get(ID.kDevice)
         self.auto = ('auto' == args.str(ID.kAction))
         self.conn = conn
 
-    def execute(self, args, output = True, check = True):
+    def execute(self, args, output=True, check=True):
         args.insert(0, 'commander')
-        if self.device is not None:
-            args.extend(['--device', self.device])
+        dev = self.device.str()
+        if dev is not None:
+            args.extend(['--device', dev])
         if self.conn is None:
             pass
         elif self.conn.serial_num:
@@ -31,11 +34,12 @@ class Commander:
             else:
                 args.extend(['--ip', self.conn.ip_addr])
         cmd = ' '.join(args)
-        return _util.execute(args, output, check, retry = 2)
+        return _util.execute(args, output, check, retry=2)
 
     def info(self):
         res = self.execute(['device', 'info'], True, False)
-        if res is None: _util.fail("Cannot retrieve device info")
+        if res is None:
+            _util.fail("Cannot retrieve device info")
         return DeviceInfo(res)
 
     def flash(self, path):
@@ -48,7 +52,7 @@ class Commander:
             # Si917 needs time to start
             time.sleep(1)
         else:
-            self.execute(['flash' , image_path], False, True)
+            self.execute(['flash', image_path], False, True)
 
     def reset(self):
         self.execute(['device', 'reset'], False, False)
@@ -57,7 +61,8 @@ class Commander:
 class DeviceInfo:
 
     def __init__(self, text):
-        if text is None: _util.fail("Missing device info")
+        if text is None:
+            _util.fail("Missing device info")
         d = self.parseLines(text.decode('utf-8').splitlines())
         self.part = self.parseField(d, 'Part Number')
         self.uid = self.parseField(d, 'Unique ID')
@@ -74,13 +79,14 @@ class DeviceInfo:
                 m[pair[0].strip()] = pair[1].strip().lower()
         return m
 
-    def parseField(self, d, tag, default_value = '?'):
-        v =  tag in d and d[tag] or default_value
+    def parseField(self, d, tag, default_value='?'):
+        v = tag in d and d[tag] or default_value
         return isinstance(v, str) and v.lower() or v
 
     def parseSize(self, d, tag):
         text = self.parseField(d, tag, '0')
-        if text is None: return 0
+        if text is None:
+            return 0
         parts = text.split()
         value = int(parts[0])
         multiplier = 1
@@ -89,7 +95,7 @@ class DeviceInfo:
         return value * multiplier
 
     def __str__(self):
-        text =  "{}+ part: '{}'\n".format(_util.MARGIN, self.part)
+        text = "{}+ part: '{}'\n".format(_util.MARGIN, self.part)
         text += "{}+ family: '{}'\n".format(_util.MARGIN, self.family)
         text += "{}+ version: '{}'\n".format(_util.MARGIN, self.version)
         text += "{}+ revision: '{}'\n".format(_util.MARGIN, self.revision)
@@ -117,7 +123,8 @@ class CertTool:
         cdcq = _util.Paths.quote(cdc)
         cdkq = _util.Paths.quote(cdk)
         cdq = _util.Paths.quote(cd)
-        self.execute(['gen-cd', '-f', '1', '-V', self.vid, '-p', self.pid, '-d', '0x0016', '-c', 'ZIG20142ZB330003-24', '-l', security_level, '-i', security_info, '-n', version, '-t', '0', '-o', self.vid, '-r' , self.pid, '-C', cdcq, '-K', cdkq, '-O', cdq ])
+        self.execute(['gen-cd', '-f', '1', '-V', self.vid, '-p', self.pid, '-d', '0x0016', '-c', 'ZIG20142ZB330003-24', '-l', security_level,
+                     '-i', security_info, '-n', version, '-t', '0', '-o', self.vid, '-r', self.pid, '-C', cdcq, '-K', cdkq, '-O', cdq])
 
     def generatePAA(self, paa_cert, paa_key):
         # Remove existing PAA
@@ -128,7 +135,8 @@ class CertTool:
         # Generate PAA
         paa_certq = _util.Paths.quote(paa_cert)
         paa_keyq = _util.Paths.quote(paa_key)
-        self.execute(['gen-att-cert', '-t', 'a', '-l', self.lifetime, '-c', '"Matter PAA"', '-V', self.vid, '-o', paa_certq, '-O', paa_keyq])
+        self.execute(['gen-att-cert', '-t', 'a', '-l', self.lifetime, '-c',
+                     '"Matter PAA"', '-V', self.vid, '-o', paa_certq, '-O', paa_keyq])
 
     def generatePAI(self, paa_cert, paa_key, pai_cert, pai_key):
         # Remove existing PAI
@@ -141,9 +149,10 @@ class CertTool:
         paa_keyq = _util.Paths.quote(paa_key)
         pai_certq = _util.Paths.quote(pai_cert)
         pai_keyq = _util.Paths.quote(pai_key)
-        self.execute(['gen-att-cert', '-t', 'i', '-l', self.lifetime, '-c', '"Matter PAI"', '-V', self.vid, '-P', self.pid, '-C', paa_certq, '-K', paa_keyq, '-o', pai_certq, '-O', pai_keyq])
+        self.execute(['gen-att-cert', '-t', 'i', '-l', self.lifetime, '-c', '"Matter PAI"', '-V', self.vid,
+                     '-P', self.pid, '-C', paa_certq, '-K', paa_keyq, '-o', pai_certq, '-O', pai_keyq])
 
-    def generateDAC(self, pai_cert, pai_key, dac_cert, dac_key, common_name = 'Matter DAC'):
+    def generateDAC(self, pai_cert, pai_key, dac_cert, dac_key, common_name='Matter DAC'):
         # Remove existing DAC
         if os.path.exists(dac_cert):
             os.remove(dac_cert)
@@ -155,7 +164,8 @@ class CertTool:
         pai_keyq = _util.Paths.quote(pai_key)
         dac_certq = _util.Paths.quote(dac_cert)
         dac_keyq = _util.Paths.quote(dac_key)
-        self.execute(['gen-att-cert', '-t', 'd', '-l', self.lifetime, '-c', cnq, '-V', self.vid, '-P', self.pid, '-C', pai_certq, '-K', pai_keyq, '-o', dac_certq, '-O', dac_keyq])
+        self.execute(['gen-att-cert', '-t', 'd', '-l', self.lifetime, '-c', cnq, '-V', self.vid, '-P',
+                     self.pid, '-C', pai_certq, '-K', pai_keyq, '-o', dac_certq, '-O', dac_keyq])
 
     def generateSerial(self):
         base_time = datetime.datetime(2000, 1, 1)
@@ -164,12 +174,13 @@ class CertTool:
 
     def execute(self, args):
         if (self.tool is None) or (shutil.which(self.tool)) is None:
-            raise ValueError("Missing Cert Tool");
-        _util.execute([ self.tool ] + args)
+            raise ValueError("Missing Cert Tool")
+        _util.execute([self.tool] + args)
+
 
 class Spake2p:
     INVALID_PASSCODES = [00000000, 11111111, 22222222, 33333333, 44444444,
-                            55555555, 66666666, 77777777, 88888888, 99999999, 12345678, 87654321]
+                         55555555, 66666666, 77777777, 88888888, 99999999, 12345678, 87654321]
     kSaltMin = 16
     kSaltMax = 32
     kIterationsMin = 1000
@@ -180,9 +191,12 @@ class Spake2p:
 
     @staticmethod
     def generateVerifier(passcode, iterations, salt_b64):
-        if(passcode is None): _util.fail("Missing SPAKE2+ passcode")
-        if(iterations is None): _util.fail("Missing SPAKE2+ iteration count")
-        if(salt_b64 is None): _util.fail("Missing SPAKE2+ salt")
+        if (passcode is None):
+            _util.fail("Missing SPAKE2+ passcode")
+        if (iterations is None):
+            _util.fail("Missing SPAKE2+ iteration count")
+        if (salt_b64 is None):
+            _util.fail("Missing SPAKE2+ salt")
 
         salt = base64.b64decode(salt_b64)
         salt_length = len(salt)
@@ -216,22 +230,28 @@ class QrCode(object):
     def generateBits(args):
         # Vendor ID
         vendor_id = args.int(ID.kVendorId)
-        if vendor_id is None: _util.fail("Missing verndor_id")
+        if vendor_id is None:
+            _util.fail("Missing verndor_id")
         # Product ID
         product_id = args.int(ID.kProductId)
-        if product_id is None: _util.fail("Missing product_id")
+        if product_id is None:
+            _util.fail("Missing product_id")
         # Commissioning Flow
         commissioning_flow = args.int(ID.kCommissioningFlow)
-        if commissioning_flow is None: _util.fail("Missing commissioning_flow")
+        if commissioning_flow is None:
+            _util.fail("Missing commissioning_flow")
         # Rendezvous Flags
         rendezvous_flags = args.int(ID.kRendezvousFlags)
-        if rendezvous_flags is None: _util.fail("Missing rendezvous_flags")
+        if rendezvous_flags is None:
+            _util.fail("Missing rendezvous_flags")
         # Discriminator
         discriminator = args.int(ID.kDiscriminator)
-        if discriminator is None: _util.fail("Missing discriminator")
+        if discriminator is None:
+            _util.fail("Missing discriminator")
         # SPAKE2+ passcode
         spake2p_passcode = args.int(ID.kSpake2pPasscode)
-        if spake2p_passcode is None: _util.fail("Missing SPAKE2+ passcode")
+        if spake2p_passcode is None:
+            _util.fail("Missing SPAKE2+ passcode")
         # Total payload size (in bits)
         total_payload_data_bits = (QrCode.kVersionFieldLengthInBits +
                                    QrCode.kVendorIDFieldLengthInBits +
@@ -258,8 +278,8 @@ class QrCode(object):
 
         return bytes(bits)
 
-
     # Populates numberOfBits starting from LSB of input into bits, which is assumed to be zero-initialized
+
     @staticmethod
     def writeBits(bits, offset, input, bit_size, total_payload_bits):
         if ((offset + bit_size) > total_payload_bits):

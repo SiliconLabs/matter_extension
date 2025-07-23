@@ -114,7 +114,7 @@ static size_t AddTimeStampAndPrefixStr(char * logBuffer, const char * prefix, si
 }
 
 /**
- * Print a log message to RTT
+ * Print a log message
  */
 static void PrintLog(const char * msg)
 {
@@ -145,7 +145,7 @@ static void PrintLog(const char * msg)
 #endif // SILABS_LOG_ENABLED
 
 /**
- * Initialize Segger RTT for logging
+ * Initialize logging
  */
 extern "C" void silabsInitLog(void)
 {

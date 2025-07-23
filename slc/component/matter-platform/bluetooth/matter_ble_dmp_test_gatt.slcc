@@ -22,4 +22,4 @@ template_contribution:
   - name: component_catalog
     value: matter_ble_dmp_test
 ui_hints:
-  visibility: always
+  visibility: basic
