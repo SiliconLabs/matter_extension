@@ -1,13 +1,14 @@
 project_name: matter-bootloader-storage-single-4096k
 package: matter
-quality: internal
+quality: production
 label: Bootloader - SoC Storage (single OTA image of size 1540kB for 4MB flash)
 description: >
   This sample configuration of the simplicity bootloader configures the bootloader to use the flash to store firmware update images. The storage configuration is set up to store a single firmware update image at a time, in a single storage slot. The storage slot is configured to start at address 0x01200000 for device with 0x01000000 flash base, and have a size of 1664 kB. This can be configured on the "Storage" tab.
 
 sdk_extension:
   - id: matter
-    version: "2.6.1"
+    version: "2.6.2"
+    vendor: silabs
 
 component:
   - id: btl_core

@@ -37,6 +37,7 @@
 #ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
 #include "sl_simple_button_instances.h"
 #endif // SL_CATALOG_SIMPLE_BUTTON_PRESENT
+#include <app/util/persistence/DeferredAttributePersistenceProvider.h>
 
 /**********************************************************
  * Defines
@@ -84,6 +85,7 @@ public:
 
 private:
     static AppTask sAppTask;
+    chip::app::DeferredAttributePersistenceProvider * pDeferredAttributePersister = nullptr;
 
     static void ActionInitiated(LightingManager::Action_t aAction, int32_t aActor);
     static void ActionCompleted(LightingManager::Action_t aAction);

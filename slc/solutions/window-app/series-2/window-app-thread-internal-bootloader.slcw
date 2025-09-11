@@ -1,5 +1,6 @@
 label: window-app-thread-internal-bootloader
 quality: production
+package: matter
 description: Matter solution containing both a Matter bootloader and Window over Thread Example
 project:
   - path: ../../../sample-app/window-app/efr32/window-app-thread.slcp

@@ -84,65 +84,192 @@
             "output": "access.h"
         },
         {
-            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/attribute-type.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/attribute-type.h.zapt",
             "name": "ZCL attribute-type header",
             "output": "app-common/zap-generated/attribute-type.h"
         },
         {
-            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/callback.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/callback.h.zapt",
             "name": "ZCL callback header",
             "output": "app-common/zap-generated/callback.h"
         },
         {
-            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/attributes/Accessors.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/attributes/Accessors.h.zapt",
             "name": "Attributes Accessors header",
             "output": "app-common/zap-generated/attributes/Accessors.h"
         },
         {
-            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/attributes/Accessors-src.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/attributes/Accessors.cpp.zapt",
             "name": "Attributes Accessors",
             "output": "attributes/Accessors.cpp"
         },
         {
-            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/ids/Attributes.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/ids/Attributes.h.zapt",
             "name": "Attributes Ids header",
             "output": "app-common/zap-generated/ids/Attributes.h"
         },
         {
-            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/ids/Clusters.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/ids/Clusters.h.zapt",
             "name": "Clusters Ids header",
             "output": "app-common/zap-generated/ids/Clusters.h"
         },
         {
-            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/ids/Commands.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/ids/Commands.h.zapt",
             "name": "Commands Ids header",
             "output": "app-common/zap-generated/ids/Commands.h"
         },
         {
-            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/ids/Events.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/ids/Events.h.zapt",
             "name": "Events Ids header",
             "output": "app-common/zap-generated/ids/Events.h"
         },
         {
-            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/cluster-objects.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/cluster-objects.h.zapt",
             "name": "Cluster objects header for Interaction Model",
             "output": "app-common/zap-generated/cluster-objects.h"
         },
         {
-            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/cluster-objects-src.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/cluster-objects.cpp.zapt",
             "name": "Cluster objects source for Interaction Model",
             "output": "cluster-objects.cpp"
         },
         {
-            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/cluster-enums.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/cluster-enums.h.zapt",
             "name": "Enum and bitmap header for clusters",
             "output": "app-common/zap-generated/cluster-enums.h"
         },
         {
-            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/cluster-enums-check.zapt",
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/cluster-enums-check.h.zapt",
             "name": "Enum and bitmap method check header for clusters",
             "output": "app-common/zap-generated/cluster-enums-check.h"
+        },
+        {
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/clusters-shared-Enums.h.zapt",
+            "name": "Shared enumerations header",
+            "output": "clusters/shared/Enums.h"
+        },
+        {
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/clusters-shared-Enums-Check.h.zapt",
+            "name": "Shared enumeration check header",
+            "output": "clusters/shared/EnumsCheck.h"
+        },
+        {
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/clusters-shared-Structs.h.zapt",
+            "name": "Shared/global structures",
+            "output": "clusters/shared/Structs.h"
+        },
+        {
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/clusters-shared-Structs.ipp.zapt",
+            "name": "Shared/global structures",
+            "output": "clusters/shared/Structs.ipp"
+        },
+        {
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/clusters-shared-Attributes.h.zapt",
+            "name": "Shared/global structures",
+            "output": "clusters/shared/Attributes.h"
+        },
+        {
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/clusters-shared-Global-Ids.h.zapt",
+            "name": "Shared global ids",
+            "output": "clusters/shared/GlobalIds.h"
+        },
+        {
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/clusters-Attributes.h.zapt",
+            "name": "Cluster-specific attribute declarations",
+            "iterator": "availableCluster",
+            "output": "clusters/{name:touppercamelcase}/Attributes.h"
+        },
+        {
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/clusters-Events.h.zapt",
+            "name": "Cluster-specific event declarations",
+            "iterator": "availableCluster",
+            "output": "clusters/{name:touppercamelcase}/Events.h"
+        },
+        {
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/clusters-Events.ipp.zapt",
+            "name": "Cluster-specific event implementations",
+            "iterator": "availableCluster",
+            "output": "clusters/{name:touppercamelcase}/Events.ipp"
+        },
+        {
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/clusters-Structs.h.zapt",
+            "name": "Cluster-specific structure declarations",
+            "iterator": "availableCluster",
+            "output": "clusters/{name:touppercamelcase}/Structs.h"
+        },
+        {
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/clusters-Structs.ipp.zapt",
+            "name": "Cluster-specific structure implementations",
+            "iterator": "availableCluster",
+            "output": "clusters/{name:touppercamelcase}/Structs.ipp"
+        },
+        {
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/clusters-Attributes.ipp.zapt",
+            "name": "Cluster-specific attributes implementations",
+            "iterator": "availableCluster",
+            "output": "clusters/{name:touppercamelcase}/Attributes.ipp"
+        },
+        {
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/clusters-Commands.h.zapt",
+            "name": "Cluster-specific command declarations",
+            "iterator": "availableCluster",
+            "output": "clusters/{name:touppercamelcase}/Commands.h"
+        },
+        {
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/clusters-Commands.ipp.zapt",
+            "name": "Cluster-specific command implementations",
+            "iterator": "availableCluster",
+            "output": "clusters/{name:touppercamelcase}/Commands.ipp"
+        },
+        {
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/clusters-Enums.h.zapt",
+            "name": "Cluster-specific enumerations header",
+            "iterator": "availableCluster",
+            "output": "clusters/{name:touppercamelcase}/Enums.h"
+        },
+        {
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/clusters-Enums-Check.h.zapt",
+            "name": "Cluster-specific enumerations header",
+            "iterator": "availableCluster",
+            "output": "clusters/{name:touppercamelcase}/EnumsCheck.h"
+        },
+        {
+            "path": "templates/app/slc_compatibility/attribute-ids.zapt",
+            "name": "Attributes Ids header",
+            "iterator": "availableCluster",
+            "output": "clusters/{name:touppercamelcase}/AttributeIds.h"
+        },
+        {
+            "path": "templates/app/slc_compatibility/cluster-id.zapt",
+            "name": "Attributes Ids header",
+            "iterator": "availableCluster",
+            "output": "clusters/{name:touppercamelcase}/ClusterId.h"
+        },
+        {
+            "path": "templates/app/slc_compatibility/event-ids.zapt",
+            "name": "Attributes Ids header",
+            "iterator": "availableCluster",
+            "output": "clusters/{name:touppercamelcase}/EventIds.h"
+        },
+        {
+            "path": "templates/app/slc_compatibility/command-ids.zapt",
+            "name": "Attributes Ids header",
+            "iterator": "availableCluster",
+            "output": "clusters/{name:touppercamelcase}/CommandIds.h"
+        },
+        {
+            "path": "templates/app/slc_compatibility/ids.zapt",
+            "name": "Attributes Ids header",
+            "iterator": "availableCluster",
+            "output": "clusters/{name:touppercamelcase}/Ids.h"
+        },
+        {
+            "path": "templates/app/slc_compatibility/metadata.zapt",
+            "name": "Cluster Metadata",
+            "iterator": "availableCluster",
+            "output": "clusters/{name:touppercamelcase}/Metadata.h"
         }
+
     ],
     "zcl": {
         "cluster": {

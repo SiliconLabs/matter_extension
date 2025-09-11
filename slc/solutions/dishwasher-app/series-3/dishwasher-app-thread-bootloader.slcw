@@ -1,5 +1,6 @@
 label: dishwasher-app-thread-bootloader
 quality: production
+package: matter
 description: Matter solution containing both a Matter bootloader and Dishwasher over Thread Example on Series 3.
 project:
   - path: ../../../sample-app/dishwasher-app/efr32/dishwasher-app-thread.slcp

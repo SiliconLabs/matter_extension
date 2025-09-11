@@ -1,5 +1,6 @@
 label: lock-app-wf200-bootloader
 quality: production
+package: matter
 description: Matter solution containing both a Matter bootloader and Lock over WiFi Example
 project:
   - path: ../../../sample-app/lock-app/efr32/lock-app-wf200.slcp

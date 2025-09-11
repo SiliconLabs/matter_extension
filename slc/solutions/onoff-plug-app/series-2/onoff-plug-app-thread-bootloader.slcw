@@ -1,5 +1,6 @@
 label: onoff-plug-app-thread-bootloader
 quality: production
+package: matter
 description: Matter solution containing both a Matter bootloader and On/Off Plug over Thread Example
 project:
   - path: ../../../sample-app/onoff-plug-app/efr32/onoff-plug-app-thread.slcp

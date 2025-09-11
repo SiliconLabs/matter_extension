@@ -1,0 +1,38 @@
+# TODO: Remove once zap issue is fixed
+category: Matter|Stack
+description: Includes PM25 Zap configuration for Matter applications
+id: matter_zap_include
+label: Stack
+package: matter
+provides:
+  - name: matter_zap_include
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+include:
+  - path: slc/component/sdk-content/zap
+  - path: slc/component/sdk-content/zap/app/static-cluster-config
+    file_list:
+    - path: SoftwareDiagnostics.h
+    - path: AdministratorCommissioning.h
+  - path: slc/component/sdk-content/zap/clusters/Pm25ConcentrationMeasurement
+    file_list:
+    - path: AttributeIds.h
+    - path: Attributes.h
+    - path: ClusterId.h
+    - path: CommandIds.h
+    - path: Commands.h
+    - path: Enums.h
+    - path: EnumsCheck.h
+    - path: EventIds.h
+    - path: Events.h
+    - path: Ids.h
+    - path: Structs.h
+source:
+  - path: slc/component/sdk-content/zap/clusters/Pm25ConcentrationMeasurement/Attributes.ipp
+  - path: slc/component/sdk-content/zap/clusters/Pm25ConcentrationMeasurement/Commands.ipp
+  - path: slc/component/sdk-content/zap/clusters/Pm25ConcentrationMeasurement/Events.ipp
+  - path: slc/component/sdk-content/zap/clusters/Pm25ConcentrationMeasurement/Structs.ipp
+ui_hints:
+    visibility: never

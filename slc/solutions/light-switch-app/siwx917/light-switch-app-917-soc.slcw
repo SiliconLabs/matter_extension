@@ -1,5 +1,6 @@
 label: light-switch-app-917-soc
 quality: production
+package: matter
 description: Matter solution containing for Light Switch App over WiFi
 project:
   - path: ../../../sample-app/light-switch-app/siwx917/light-switch-app-917-soc.slcp

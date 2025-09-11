@@ -1,5 +1,6 @@
 label: lighting-app-thread-internal-bootloader
 quality: production
+package: matter
 description: Matter solution containing both a Matter bootloader and Lighting over Thread Example
 project:
   - path: ../../../sample-app/lighting-app/efr32/lighting-app-thread.slcp

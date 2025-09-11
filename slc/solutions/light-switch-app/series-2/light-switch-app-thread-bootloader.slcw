@@ -1,5 +1,6 @@
 label: light-switch-app-thread-bootloader
 quality: production
+package: matter
 description:
   Matter solution containing both a Matter bootloader and Light Switch
   over Thread Example

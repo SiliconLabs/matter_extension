@@ -13,7 +13,6 @@ provides:
 
 include:
   - path: .
-  - path: third_party/matter_sdk/examples/common/QRCode/repo/c
   - path: third_party/matter_sdk/examples/platform/silabs
   - path: third_party/matter_sdk/examples/providers
   - path: third_party/matter_sdk/src
@@ -35,7 +34,6 @@ include:
       - path: FreeRTOSConfig.h
       - path: Rpc.h
       - path: silabs_creds.h
-      - path: SilabsTestEventTriggerDelegate.h
       - path: MemMonitoring.h
       - path: BaseApplication.h
   - path: third_party/matter_sdk/src/platform/silabs/SiWx917
@@ -54,8 +52,6 @@ source:
 define:
   - name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER
     value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
-  - name: CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS
-    value: "1"
   - name: CHIP_HAVE_CONFIG_H
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT

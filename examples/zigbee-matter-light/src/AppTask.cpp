@@ -23,10 +23,11 @@
 
 #include "LEDWidget.h"
 
-#include <app/DeferredAttributePersistenceProvider.h>
 #include <app/clusters/on-off-server/on-off-server.h>
-#include <app/server/OnboardingCodesUtil.h>
 #include <app/server/Server.h>
+#include <app/util/persistence/DefaultAttributePersistenceProvider.h>
+#include <app/util/persistence/DeferredAttributePersistenceProvider.h>
+#include <setup_payload/OnboardingCodesUtil.h>
 
 #include <assert.h>
 
@@ -72,14 +73,6 @@ DeferredAttribute gDeferredAttributeTable[] = {
     DeferredAttribute(ConcreteAttributePath(LIGHT_ENDPOINT, ColorControl::Id, ColorControl::Attributes::CurrentHue::Id)),
     DeferredAttribute(ConcreteAttributePath(LIGHT_ENDPOINT, ColorControl::Id, ColorControl::Attributes::CurrentSaturation::Id))
 };
-
-// The DeferredAttributePersistenceProvider will persist the attribute value in non-volatile memory
-// once it remains constant for SL_MATTER_DEFERRED_ATTRIBUTE_STORE_DELAY_MS milliseconds.
-// For all other attributes not listed in gDeferredAttributeTable, the default GetDefaultAttributePersister is used.
-DeferredAttributePersistenceProvider
-    gDeferredAttributePersister(Server::GetInstance().GetDefaultAttributePersister(),
-                                Span<DeferredAttribute>(gDeferredAttributeTable, ArraySize(gDeferredAttributeTable)),
-                                System::Clock::Milliseconds32(SL_MATTER_DEFERRED_ATTRIBUTE_STORE_DELAY_MS));
 
 } // namespace
 
@@ -167,7 +160,23 @@ void AppTask::AppTaskMain(void * pvParameter)
 
     // Initialization that needs to happen before the BaseInit is called here as the BaseApplication::Init() will call
     // the AppInit() after BaseInit.
-    app::SetAttributePersistenceProvider(&gDeferredAttributePersister);
+
+    // Retrieve the existing AttributePersistenceProvider, which should already be created and initialized.
+    // This provider is typically set up by the CodegenDataModelProviderInstance constructor,
+    // which is called in InitMatter within MatterConfig.cpp.
+    // We use this as the base provider for deferred attribute persistence.
+    AttributePersistenceProvider * attributePersistence = GetAttributePersistenceProvider();
+    VerifyOrDie(attributePersistence != nullptr);
+
+    //  The DeferredAttributePersistenceProvider will persist the attribute value in non-volatile memory
+    //  once it remains constant for SL_MATTER_DEFERRED_ATTRIBUTE_STORE_DELAY_MS milliseconds.
+    //  For all other attributes not listed in gDeferredAttributeTable, the default PersistenceProvider is used.
+    sAppTask.pDeferredAttributePersister = new DeferredAttributePersistenceProvider(
+        *attributePersistence, Span<DeferredAttribute>(gDeferredAttributeTable, MATTER_ARRAY_SIZE(gDeferredAttributeTable)),
+        System::Clock::Milliseconds32(SL_MATTER_DEFERRED_ATTRIBUTE_STORE_DELAY_MS));
+    VerifyOrDie(sAppTask.pDeferredAttributePersister != nullptr);
+
+    app::SetAttributePersistenceProvider(sAppTask.pDeferredAttributePersister);
 
     CHIP_ERROR err = sAppTask.Init();
     if (err != CHIP_NO_ERROR)

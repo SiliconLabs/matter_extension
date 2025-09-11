@@ -19,7 +19,6 @@ define:
 description: libopenthread_spinel_rcp
 id: libopenthread_spinel_rcp
 include:
-  - path: third_party/matter_sdk/examples/platform/efr32
   - path: third_party/matter_sdk/examples/platform/silabs
   - path: third_party/matter_sdk/src
   - path: third_party/matter_sdk/src/include

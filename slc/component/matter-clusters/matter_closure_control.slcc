@@ -1,0 +1,27 @@
+category: Clusters|General
+description: >
+  Implementation of the Closure Control Server Cluster.
+  The user has to enable the Closure Control Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_closure_control
+package: matter
+label: Closure Control Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_closure_control
+source:
+  - path: third_party/matter_sdk/src/app/clusters/closure-control-server/closure-control-cluster-logic.cpp
+  - path: third_party/matter_sdk/src/app/clusters/closure-control-server/closure-control-server.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/closure-control-server
+    file_list:
+      - path: closure-control-cluster-delegate.h
+      - path: closure-control-cluster-logic.h
+      - path: closure-control-cluster-matter-context.h
+      - path: closure-control-cluster-objects.h
+      - path: closure-control-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_closure_control

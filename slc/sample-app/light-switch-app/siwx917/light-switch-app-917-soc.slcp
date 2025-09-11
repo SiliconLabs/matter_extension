@@ -7,9 +7,10 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.1"
+    version: "2.6.2"
+    vendor: silabs
   - id: wiseconnect3_sdk
-    version: "3.5.1"
+    version: "3.5.2"
 
 component:
   - id: matter_leds
@@ -106,6 +107,9 @@ component:
     from: matter
   - id: matter_lwip
     from: matter
+  # TODO: Remove this in the SiSDK 25Q4 release, where the LwIP fix will be included in the SiSDK.
+  - id: sl_si91x_lwip_stack
+    from: wiseconnect3_sdk
 
   - id: wifi_resources
     from: wiseconnect3_sdk

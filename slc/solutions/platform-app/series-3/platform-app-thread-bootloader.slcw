@@ -1,0 +1,13 @@
+label: platform-app-thread-bootloader
+quality: production
+package: matter
+description: Matter workspace container both a Matter bootloader and Platform Thread App on Series 3
+project:
+  - path: ../../../sample-app/platform-app/efr32/platform-app-thread.slcp
+    id: application
+    output: platform-app-thread
+  - path: ../../../sample-app/bootloaders/bootloader-storage-single-4096k-series-3/bootloader-storage-single-4096k-series-3.slcp
+    id: bootloader
+    output: matter-bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

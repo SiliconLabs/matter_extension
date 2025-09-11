@@ -107,7 +107,7 @@ void RegisterCommands()
     };
     static const Shell::Command sBleCmds = { &BLECommandHandler, "ble-side", "Dispatch Silicon Labs BLE Side Channel commands" };
 
-    sShellBLESubCommands.RegisterCommands(sBLESubCommands, ArraySize(sBLESubCommands));
+    sShellBLESubCommands.RegisterCommands(sBLESubCommands, MATTER_ARRAY_SIZE(sBLESubCommands));
     Engine::Root().RegisterCommands(&sBleCmds, 1);
 }
 

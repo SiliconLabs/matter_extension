@@ -24,6 +24,8 @@ namespace chip {
 namespace DeviceLayer {
 namespace Silabs {
 
+void DisplayMemoryUsage();
+
 class MemMonitoring
 {
 public:

@@ -21,10 +21,11 @@
 #include <platform/silabs/OTAImageProcessorImpl.h>
 #include <platform/silabs/SilabsConfig.h>
 #include <platform/silabs/platformAbstraction/SilabsPlatform.h>
+#include <platform/silabs/wifi/WifiInterface.h>
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
-#include <platform/silabs/wifi/icd/WifiSleepManager.h>
-#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
+#include <platform/silabs/wifi/icd/WifiSleepManager.h> // nogncheck
+#endif                                                 // CHIP_CONFIG_ENABLE_ICD_SERVER
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,7 +44,9 @@ extern "C" {
 uint8_t flag = RPS_HEADER;
 static chip::OTAImageProcessorImpl gImageProcessor;
 
+using namespace chip::DeviceLayer;
 using namespace chip::DeviceLayer::Silabs;
+using namespace chip::DeviceLayer::Internal;
 
 namespace chip {
 
@@ -56,7 +59,7 @@ uint8_t OTAImageProcessorImpl::writeBuffer[kAlignmentBytes] __attribute__((align
 
 CHIP_ERROR OTAImageProcessorImpl::Init(OTADownloader * downloader)
 {
-    ReturnErrorCodeIf(downloader == nullptr, CHIP_ERROR_INVALID_ARGUMENT);
+    VerifyOrReturnError(downloader != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
 
     gImageProcessor.SetOTADownloader(downloader);
 
@@ -65,24 +68,24 @@ CHIP_ERROR OTAImageProcessorImpl::Init(OTADownloader * downloader)
 
 CHIP_ERROR OTAImageProcessorImpl::PrepareDownload()
 {
-    DeviceLayer::PlatformMgr().ScheduleWork(HandlePrepareDownload, reinterpret_cast<intptr_t>(this));
+    PlatformMgr().ScheduleWork(HandlePrepareDownload, reinterpret_cast<intptr_t>(this));
     return CHIP_NO_ERROR;
 }
 
 CHIP_ERROR OTAImageProcessorImpl::Finalize()
 {
-    DeviceLayer::PlatformMgr().ScheduleWork(HandleFinalize, reinterpret_cast<intptr_t>(this));
+    PlatformMgr().ScheduleWork(HandleFinalize, reinterpret_cast<intptr_t>(this));
     return CHIP_NO_ERROR;
 }
 CHIP_ERROR OTAImageProcessorImpl::Apply()
 {
-    DeviceLayer::PlatformMgr().ScheduleWork(HandleApply, reinterpret_cast<intptr_t>(this));
+    PlatformMgr().ScheduleWork(HandleApply, reinterpret_cast<intptr_t>(this));
     return CHIP_NO_ERROR;
 }
 
 CHIP_ERROR OTAImageProcessorImpl::Abort()
 {
-    DeviceLayer::PlatformMgr().ScheduleWork(HandleAbort, reinterpret_cast<intptr_t>(this));
+    PlatformMgr().ScheduleWork(HandleAbort, reinterpret_cast<intptr_t>(this));
     return CHIP_NO_ERROR;
 }
 
@@ -100,7 +103,7 @@ CHIP_ERROR OTAImageProcessorImpl::ProcessBlock(ByteSpan & block)
         ChipLogError(SoftwareUpdate, "Cannot set block data: %" CHIP_ERROR_FORMAT, err.Format());
     }
 
-    DeviceLayer::PlatformMgr().ScheduleWork(HandleProcessBlock, reinterpret_cast<intptr_t>(this));
+    PlatformMgr().ScheduleWork(HandleProcessBlock, reinterpret_cast<intptr_t>(this));
     return CHIP_NO_ERROR;
 }
 
@@ -126,7 +129,7 @@ CHIP_ERROR OTAImageProcessorImpl::ConfirmCurrentImage()
 
     uint32_t currentVersion;
     uint32_t targetVersion = requestor->GetTargetVersion();
-    ReturnErrorOnFailure(DeviceLayer::ConfigurationMgr().GetSoftwareVersion(currentVersion));
+    ReturnErrorOnFailure(ConfigurationMgr().GetSoftwareVersion(currentVersion));
     if (currentVersion != targetVersion)
     {
         ChipLogError(SoftwareUpdate, "Current software version = %" PRIu32 ", expected software version = %" PRIu32, currentVersion,
@@ -163,8 +166,8 @@ void OTAImageProcessorImpl::HandlePrepareDownload(intptr_t context)
     imageProcessor->mHeaderParser.Init();
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
-    // Setting the device is in high performace - no-sleepy mode during OTA tranfer
-    DeviceLayer::Silabs::WifiSleepManager::GetInstance().RequestHighPerformance();
+    // Setting the device in high performance - no-sleep mode during OTA tranfer
+    WifiSleepManager::GetInstance().RequestHighPerformanceWithTransition();
 #endif /* CHIP_CONFIG_ENABLE_ICD_SERVER*/
 
     imageProcessor->mDownloader->OnPreparedForDownload(CHIP_NO_ERROR);
@@ -201,9 +204,9 @@ void OTAImageProcessorImpl::HandleFinalize(intptr_t context)
     }
     imageProcessor->ReleaseBlock();
 
-#if (CHIP_CONFIG_ENABLE_ICD_SERVER)
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
     // Setting the device back to power save mode when transfer is completed successfully
-    DeviceLayer::Silabs::WifiSleepManager::GetInstance().RemoveHighPerformanceRequest();
+    WifiSleepManager::GetInstance().RemoveHighPerformanceRequest();
 #endif /* CHIP_CONFIG_ENABLE_ICD_SERVER*/
 
     ChipLogProgress(SoftwareUpdate, "OTA image downloaded successfully");
@@ -214,13 +217,13 @@ void OTAImageProcessorImpl::HandleApply(intptr_t context)
     ChipLogProgress(SoftwareUpdate, "OTAImageProcessorImpl::HandleApply()");
 
     // Force KVS to store pending keys such as data from StoreCurrentUpdateInfo()
-    chip::DeviceLayer::PersistedStorage::KeyValueStoreMgrImpl().ForceKeyMapSave();
+    PersistedStorage::KeyValueStoreMgrImpl().ForceKeyMapSave();
 
     ChipLogProgress(SoftwareUpdate, "OTA image downloaded successfully in HandleApply");
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
     // Setting the device is in high performace - no-sleepy mode before soft reset as soft reset is not happening in sleep mode
-    DeviceLayer::Silabs::WifiSleepManager::GetInstance().RequestHighPerformance();
+    WifiSleepManager::GetInstance().RequestHighPerformanceWithTransition();
 #endif /* CHIP_CONFIG_ENABLE_ICD_SERVER*/
 
     if (mReset)
@@ -228,7 +231,8 @@ void OTAImageProcessorImpl::HandleApply(intptr_t context)
         ChipLogProgress(SoftwareUpdate, "M4 Firmware update complete");
         // send system reset request to reset the MCU and upgrade the m4 image
         ChipLogProgress(SoftwareUpdate, "SoC Soft Reset initiated!");
-        // Reboots the device
+        // Write that we are rebooting after a software update and reboot the device
+        SilabsConfig::WriteConfigValue(SilabsConfig::kConfigKey_MatterUpdateReboot, true);
         GetPlatform().SoftwareReset();
     }
 }
@@ -243,7 +247,7 @@ void OTAImageProcessorImpl::HandleAbort(intptr_t context)
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
     // Setting the device back to power save mode when transfer is aborted in the middle
-    DeviceLayer::Silabs::WifiSleepManager::GetInstance().RemoveHighPerformanceRequest();
+    WifiSleepManager::GetInstance().RemoveHighPerformanceRequest();
 #endif /* CHIP_CONFIG_ENABLE_ICD_SERVER*/
 
     // Not clearing the image storage area as it is done during each write
@@ -328,7 +332,7 @@ CHIP_ERROR OTAImageProcessorImpl::ProcessHeader(ByteSpan & block)
         CHIP_ERROR error = mHeaderParser.AccumulateAndDecode(block, header);
 
         // Needs more data to decode the header
-        ReturnErrorCodeIf(error == CHIP_ERROR_BUFFER_TOO_SMALL, CHIP_NO_ERROR);
+        VerifyOrReturnError(error != CHIP_ERROR_BUFFER_TOO_SMALL, CHIP_NO_ERROR);
         ReturnErrorOnFailure(error);
 
         // SL TODO -- store version somewhere

@@ -20,6 +20,7 @@ include:
     file_list:
       - path: dhcp_client.h
       - path: ethernetif.h
+      - path: lwip_netif.h
 
 source:
   - path: third_party/matter_sdk/src/platform/silabs/wifi/lwip-support/ethernetif.cpp

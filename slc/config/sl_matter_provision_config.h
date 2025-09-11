@@ -10,7 +10,7 @@
 // <<< end of configuration section >>> 
 
 #if ENABLE_EXAMPLE_CREDENTIALS
-    #define CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS 1
+    #define SL_MATTER_ENABLE_EXAMPLE_CREDENTIALS 1
 #endif
 
 #endif // SL_MATTER_PROVISION_H

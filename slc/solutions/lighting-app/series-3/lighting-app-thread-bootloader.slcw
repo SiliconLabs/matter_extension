@@ -1,5 +1,6 @@
 label: lighting-app-thread-bootloader
 quality: production
+package: matter
 description: Matter workspace container both a Matter bootloader and Lighting over Thread Example on Series 3
 project:
   - path: ../../../sample-app/lighting-app/efr32/lighting-app-thread.slcp

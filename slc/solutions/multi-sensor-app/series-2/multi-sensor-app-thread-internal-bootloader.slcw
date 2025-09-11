@@ -1,5 +1,6 @@
 label: multi-sensor-app-thread-internal-bootloader
 quality: production
+package: matter
 description: Matter solution containing both a Matter bootloader and Sensor over Thread Example
 project:
   - path: ../../../sample-app/multi-sensor-app/efr32/multi-sensor-app-thread.slcp

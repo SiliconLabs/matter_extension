@@ -17,6 +17,7 @@ component:
   - id: iostream_stdio
   - id: segger_rtt
   #Zigbee Components
+  - id: zigbee_ble_dmp_cli
   - id: zigbee_address_table
   - id: zigbee_application_bootloader
   - id: zigbee_security_link_keys
@@ -73,7 +74,6 @@ component:
   - { from: matter, id: matter_group_key_mgmt }
   - { from: matter, id: matter_descriptor }
   - { from: matter, id: matter_localization_configuration }
-  - { from: matter, id: matter_diagnostic_logs }
   - { from: matter, id: matter_crypto }
   - { from: matter, id: matter_basic_information }
   - { from: matter, id: matter_lighting }
@@ -102,6 +102,7 @@ component:
   - { from: matter, id: matter_log_uart }
   - { from: matter, id: matter_tracing }
   - { from: matter, id: matter_zigbee_multiprotocol_common }
+  - {from: matter, id: matter_unit_localization}
   - { from: matter, id: matter_ble_side_channel}
 
   #Matter components wrapper from simplicity_sdk
@@ -291,4 +292,5 @@ ui_hints:
 
 sdk_extension:
   - id: matter
-    version: "2.6.1"
+    version: "2.6.2"
+    vendor: silabs

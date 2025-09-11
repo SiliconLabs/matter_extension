@@ -33,8 +33,8 @@
 #include <app-common/zap-generated/ids/Clusters.h>
 #include <app/clusters/occupancy-sensor-server/occupancy-hal.h>
 #include <app/clusters/occupancy-sensor-server/occupancy-sensor-server.h>
+#include <cmsis_os2.h>
 #include <platform/silabs/platformAbstraction/SilabsPlatform.h>
-#include <sl_cmsis_os2_common.h>
 
 #if defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
 #include <Si70xxSensor.h>

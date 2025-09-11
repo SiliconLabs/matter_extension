@@ -12,6 +12,12 @@
     ]
   },
   {
+    "clusterCode": "actions-server",
+    "value": [
+      "%extension-matter%matter_actions"
+    ]
+  },
+  {
     "clusterCode": "administrator commissioning-server",
     "value": [
       "%extension-matter%matter_administrator_commissioning"
@@ -66,9 +72,39 @@
     ]
   },
   {
+    "clusterCode": "camera av settings user level management-server",
+    "value": [
+      "%extension-matter%matter_camera_av_settings_user_level_management"
+    ]
+  },
+  {
+    "clusterCode": "camera av stream management-server",
+    "value": [
+      "%extension-matter%matter_camera_av_stream_management"
+    ]
+  },
+  {
     "clusterCode": "channel-server",
     "value": [
       "%extension-matter%matter_channel"
+    ]
+  },
+  {
+    "clusterCode": "chime-server",
+    "value": [
+      "%extension-matter%matter_chime"
+    ]
+  },
+  {
+    "clusterCode": "closure control-server",
+    "value": [
+      "%extension-matter%matter_closure_control"
+    ]
+  },
+  {
+    "clusterCode": "closure dimension-server",
+    "value": [
+      "%extension-matter%matter_closure_dimension"
     ]
   },
   {
@@ -81,6 +117,12 @@
     "clusterCode": "commissioner control-server",
     "value": [
       "%extension-matter%matter_commissioner_control"
+    ]
+  },
+  {
+    "clusterCode": "commodity price-server",
+    "value": [
+      "%extension-matter%matter_commodity_price"
     ]
   },
   {
@@ -147,6 +189,12 @@
     "clusterCode": "electrical energy measurement-server",
     "value": [
       "%extension-matter%matter_electrical_energy_measurement"
+    ]
+  },
+  {
+    "clusterCode": "electrical grid conditions-server",
+    "value": [
+      "%extension-matter%matter_electrical_grid_conditions"
     ]
   },
   {
@@ -228,6 +276,18 @@
     ]
   },
   {
+    "clusterCode": "joint fabric administrator-server",
+    "value": [
+      "%extension-matter%matter_joint_fabric_administrator"
+    ]
+  },
+  {
+    "clusterCode": "joint fabric datastore-server",
+    "value": [
+      "%extension-matter%matter_joint_fabric_datastore"
+    ]
+  },
+  {
     "clusterCode": "keypad input-server",
     "value": [
       "%extension-matter%matter_keypad_input"
@@ -279,6 +339,12 @@
     "clusterCode": "messages-server",
     "value": [
       "%extension-matter%matter_messages"
+    ]
+  },
+  {
+    "clusterCode": "meter identification-server",
+    "value": [
+      "%extension-matter%matter_meter_identification"
     ]
   },
   {
@@ -414,6 +480,12 @@
     ]
   },
   {
+    "clusterCode": "soil measurement-server",
+    "value": [
+      "%extension-matter%matter_soil_measurement"
+    ]
+  },
+  {
     "clusterCode": "switch-server",
     "value": [
       "%extension-matter%matter_switch"
@@ -435,6 +507,12 @@
     "clusterCode": "unit testing-server",
     "value": [
       "%extension-matter%matter_test_cluster"
+    ]
+  },
+  {
+    "clusterCode": "testing-server",
+    "value": [
+      "%extension-matter%matter_testing"
     ]
   },
   {
@@ -486,6 +564,12 @@
     ]
   },
   {
+    "clusterCode": "unit localization-server",
+    "value": [
+      "%extension-matter%matter_unit_localization"
+    ]
+  },
+  {
     "clusterCode": "user label-server",
     "value": [
       "%extension-matter%matter_user_label"
@@ -507,6 +591,18 @@
     "clusterCode": "water heater management-server",
     "value": [
       "%extension-matter%matter_water_heater_management"
+    ]
+  },
+  {
+    "clusterCode": "webrtc transport provider-server",
+    "value": [
+      "%extension-matter%matter_webrtc_transport_provider"
+    ]
+  },
+  {
+    "clusterCode": "webrtc transport requestor-server",
+    "value": [
+      "%extension-matter%matter_webrtc_transport_requestor"
     ]
   },
   {

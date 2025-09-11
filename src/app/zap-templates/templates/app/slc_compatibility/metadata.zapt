@@ -1,0 +1,62 @@
+{{> header}}
+
+#pragma once
+
+#include <app/data-model-provider/MetadataTypes.h>
+#include <lib/core/DataModelTypes.h>
+
+#include <cstdint>
+
+#include <clusters/{{asUpperCamelCase name}}/Ids.h>
+
+namespace chip {
+namespace app {
+namespace Clusters {
+namespace {{asUpperCamelCase name}} {
+
+{{#global_attribute_default code="0xFFFD"}}
+{{#if defaultValue}}
+inline constexpr uint32_t kRevision = {{defaultValue}};
+{{else}}
+inline constexpr uint32_t kRevision = 1;
+{{/if}}
+{{/global_attribute_default}}
+
+namespace Attributes {
+{{#zcl_attributes_server}}
+{{#if clusterRef}}
+namespace {{asUpperCamelCase label}}{
+inline constexpr DataModel::AttributeEntry kMetadataEntry(
+    {{asUpperCamelCase label}}::Id,
+    BitFlags<DataModel::AttributeQualityFlags>(
+        {{~#if mustUseTimedWrite}}DataModel::AttributeQualityFlags::kTimed{{~#if isArray}},{{/if}}{{/if}}{{~#if isArray}}DataModel::AttributeQualityFlags::kListAttribute{{/if}}),
+    Access::Privilege::k{{asUpperCamelCase (chip_get_access_role entity="attribute" op="read" default="view")}},
+    {{#if isWritableAttribute}}
+    Access::Privilege::k{{asUpperCamelCase (chip_get_access_role entity="attribute" op="write" default="operate")}}
+    {{else}}
+    std::nullopt
+    {{/if}}
+);
+} // namespace {{asUpperCamelCase label}}
+{{/if}}
+{{/zcl_attributes_server}}
+
+} // namespace Attributes
+
+namespace Commands {
+{{#zcl_commands_source_client}}
+namespace {{asUpperCamelCase name}} {
+inline constexpr DataModel::AcceptedCommandEntry kMetadataEntry(
+    {{asUpperCamelCase name}}::Id,
+    BitFlags<DataModel::CommandQualityFlags>(
+        {{~#if isFabricScoped}}DataModel::CommandQualityFlags::kFabricScoped{{~#if mustUseTimedInvoke}},{{/if}}{{/if}}{{~#if mustUseTimedInvoke}}DataModel::CommandQualityFlags::kTimed{{/if}}),
+    Access::Privilege::k{{asUpperCamelCase (chip_get_access_role entity="command" op="invoke" default="operate")}}
+);
+} // namespace {{asUpperCamelCase name}}
+{{/zcl_commands_source_client}}
+
+} // namespace Commands
+} // namespace {{asUpperCamelCase name}}
+} // namespace Clusters
+} // namespace app
+} // namespace chip

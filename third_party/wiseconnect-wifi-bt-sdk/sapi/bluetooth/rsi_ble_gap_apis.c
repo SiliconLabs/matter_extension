@@ -1700,7 +1700,7 @@ void BT_LE_ADPacketExtract(uint8_t *remote_name, uint8_t *pbuf, uint8_t buf_len)
   SL_PRINTF(SL_RSI_BLE_AD_PACKET_EXTRACT, BLE, LOG_INFO);
   uint8_t adv_len;
   uint8_t adv_type;
-  uint8_t ix;
+  uint16_t ix;
   uint8_t name_len;
 
   ix = 0;
@@ -1884,7 +1884,7 @@ int32_t rsi_ble_set_prop_protocol_ble_bandedge_tx_power(uint8_t protocol, int8_t
                                 &prop_protocol_ble_bandedge_tx_power,
                                 NULL);
 }
-/** @addtogroup BT-LOW-ENERGY5
+/** @addtogroup BT-LOW-ENERGY1
 * @{
 */
 

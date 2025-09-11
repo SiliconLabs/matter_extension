@@ -20,6 +20,7 @@ config("platform_abstraction_includes") {
 
 source_set("common") {
   sources = [
+    "${chip_root}/src/platform/silabs/platformAbstraction/SilabsPlatform.cpp",
     "${chip_root}/src/platform/silabs/platformAbstraction/SilabsPlatform.h",
     "${chip_root}/src/platform/silabs/platformAbstraction/SilabsPlatformBase.h",
   ]

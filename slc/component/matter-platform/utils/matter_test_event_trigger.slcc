@@ -12,10 +12,10 @@ provides:
   - name: matter_test_event_trigger
 
 source:
-  - path: third_party/matter_sdk/examples/platform/silabs/SilabsTestEventTriggerDelegate.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/test-event-trigger/SilabsTestEventTriggerDelegate.cpp
 
 include:
-  - path: third_party/matter_sdk/examples/platform/silabs/
+  - path: third_party/matter_sdk/examples/platform/silabs/test-event-trigger
     file_list:
       - path: SilabsTestEventTriggerDelegate.h
   - path: third_party/matter_sdk/src/app

@@ -389,7 +389,7 @@ void RegisterPerfTestCommands()
 
     static const shell_command_t sPerfTestCommand = { &PerfTestCommandHandler, "perf",
                                                     "Performance Testing commands. Usage: perf <subcommand>" };
-    sShellPerfTestSubCommands.RegisterCommands(sPerfTestSubCommands, ArraySize(sPerfTestSubCommands));
+    sShellPerfTestSubCommands.RegisterCommands(sPerfTestSubCommands, MATTER_ARRAY_SIZE(sPerfTestSubCommands));
 
     Engine::Root().RegisterCommands(&sPerfTestCommand, 1);
 }

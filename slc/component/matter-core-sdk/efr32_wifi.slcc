@@ -44,7 +44,6 @@ include:
       - path: GeneralFaults.h
       - path: CHIPDeviceEvent.h
       - path: BuildTime.h
-      - path: NFCManager.h
       - path: ThreadStackManager.h
       - path: TestOnlyCommissionableDataProvider.h
       - path: CHIPDeviceError.h
@@ -52,11 +51,11 @@ include:
     file_list:
       - path: GenericPlatformManagerImpl.ipp
       - path: GenericConnectivityManagerImpl_UDP.h
+      - path: GenericPlatformManagerImpl_CMSISOS.h
+      - path: GenericPlatformManagerImpl_CMSISOS.ipp
       - path: GenericPlatformManagerImpl_POSIX.h
       - path: GenericConnectivityManagerImpl_NoThread.h
       - path: GenericConnectivityManagerImpl_WiFi.ipp
-      - path: GenericPlatformManagerImpl_POSIX.ipp
-      - path: GenericPlatformManagerImpl_Zephyr.ipp
       - path: GenericConfigurationManagerImpl.h
       - path: GenericPlatformManagerImpl.h
       - path: GenericConnectivityManagerImpl_Thread.h
@@ -80,6 +79,7 @@ include:
       - path: GenericConnectivityManagerImpl_TCP.h
       - path: GenericConnectivityManagerImpl_WiFi.h
       - path: GenericConnectivityManagerImpl_TCP.ipp
+      - path: NFCCommissioningManager.h
   - path: third_party/matter_sdk/src/platform/logging
     file_list:
       - path: LogV.h
@@ -112,9 +112,11 @@ include:
       - path: FreeRTOSConfig.h
       - path: Rpc.h
       - path: silabs_creds.h
-      - path: SilabsTestEventTriggerDelegate.h
       - path: MemMonitoring.h
       - path: BaseApplication.h
+  - path: third_party/matter_sdk/src/app/common
+    file_list:
+      - path: CompatEnumNames.h
   - path: third_party/matter_sdk/src/platform/silabs/platformAbstraction
     file_list:
       - path: SilabsPlatformBase.h
@@ -175,7 +177,7 @@ source:
   - path: third_party/matter_sdk/src/platform/silabs/efr32/OTAImageProcessorImpl.cpp
   - path: third_party/matter_sdk/src/platform/silabs/PlatformManagerImpl.cpp
   - path: third_party/matter_sdk/src/platform/silabs/platformAbstraction/GsdkSpam.cpp
-
+  - path: third_party/matter_sdk/src/platform/silabs/platformAbstraction/SilabsPlatform.cpp
 define:
   - name: CHIP_HAVE_CONFIG_H
     value: "1"

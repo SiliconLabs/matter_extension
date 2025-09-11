@@ -450,7 +450,7 @@
     <properties key="solutionReferenceId" value="slc.solutions.refrigerator-app.series-2.refrigerator-app-thread-bootloader.slcw"/>
     <properties key="projectFilePaths" value="slc/solutions/refrigerator-app/series-2/refrigerator-app-thread-bootloader.slcw"/>
     <properties key="readmeFiles" value="slc/sample-app/refrigerator-app/efr32/README.md"/>
-    <properties key="boardCompatibility" value="brd4116a brd4117a brd4118a brd4120a brd4121a brd4186c brd4187c brd4316a brd4317a brd4318a brd4337a brd2601b brd2608a brd2703a brd2704a brd4319a com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd4116a brd4117a brd4118a brd4120a brd4121a brd4186c brd4187c brd4316a brd4317a brd4318a brd2601b brd2608a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*efr32mg24.* .*efr32mg26.* .*mgm24.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -460,6 +460,23 @@
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.sample-app.bootloaders.bootloader-storage-external-single-series-2.bootloader-storage-external-single-series-2.slcp slc.sample-app.refrigerator-app.efr32.refrigerator-app-thread.slcp"/>
   </descriptors>
+  <descriptors name="MatterRefrigeratorOverThreadSolution" label="Matter - SoC Refrigerator over Thread with internal Bootloader"
+              description="This project builds a Matter Refrigerator and Matter Internal Bootloader that can be developed inside Simplicity Studio">
+  <properties key="namespace" value="template.solution.uc"/>
+  <properties key="keywords" value="Matter"/>
+  <properties key="solutionReferenceId" value="slc.solutions.refrigerator-app.series-2.refrigerator-app-thread-internal-bootloader.slcw"/>
+  <properties key="projectFilePaths" value="slc/solutions/refrigerator-app/series-2/refrigerator-app-thread-internal-bootloader.slcw"/>
+  <properties key="readmeFiles" value="slc/sample-app/refrigerator-app/efr32/README.md"/>
+  <properties key="boardCompatibility" value="brd4337a brd2703a brd2704a brd4319a:0.0.0.A00 brd4350a brd4351a brd2709a com.silabs.board.none"/>
+  <properties key="partCompatibility" value=".*mgm24.* .*efr32mg24.* .*efr32mg26.* .*mgm26.* "/>
+  <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+  <properties key="toolchainCompatibility" value="gcc"/>
+  <properties key="category" value="Matter Application"/>
+  <properties key="quality" value="PRODUCTION"/>
+  <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+  <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
+  <properties key="solutionProjects" value="slc.sample-app.bootloaders.bootloader-storage-internal-single-series-2.bootloader-storage-internal-single-series-2.slcp slc.sample-app.refrigerator-app.efr32.refrigerator-app-thread.slcp"/>
+</descriptors>
     <descriptors name="MatterRefrigeratorOverThreadSolution" label="Matter - SoC Refrigerator over Thread with internal Bootloader"
                description="This project builds a Matter Refrigerator and Matter External Bootloader that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.solution.uc"/>

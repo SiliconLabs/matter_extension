@@ -32,6 +32,7 @@ include:
       - path: CHIPCryptoPALPSA.h
       - path: PersistentStorageOperationalKeystore.h
       - path: PSASessionKeystore.h
+      - path: PSAKeyAllocator.h
 label: libchipcrypto
 package: matter
 provides:

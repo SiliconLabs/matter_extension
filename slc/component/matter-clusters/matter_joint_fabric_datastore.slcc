@@ -1,0 +1,18 @@
+category: Clusters|General
+description: >
+  Implementation of the Joint Fabric Datastore Server Cluster.
+  The user has to enable the Joint Fabric Datastore Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_joint_fabric_datastore
+package: matter
+label: Joint Fabric Datastore Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_joint_fabric_datastore
+source:
+  - path: third_party/matter_sdk/src/app/clusters/joint-fabric-datastore-server/joint-fabric-datastore-server.cpp
+template_contribution:
+  - name: component_catalog
+    value: matter_joint_fabric_datastore

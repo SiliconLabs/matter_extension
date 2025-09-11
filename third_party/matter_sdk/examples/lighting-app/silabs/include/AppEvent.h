@@ -18,6 +18,9 @@
  */
 
 #pragma once
+#if (defined(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
+#include "RGBLEDWidget.h"
+#endif //(defined(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
 
 #ifdef DISPLAY_ENABLED
 #include "lcd.h"
@@ -59,7 +62,16 @@ struct AppEvent
         {
             uint8_t Action;
             int32_t Actor;
+            uint8_t Value;
         } LightEvent;
+#if (defined(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
+        struct
+        {
+            uint8_t Action;
+            int32_t Actor;
+            RGBLEDWidget::ColorData_t Value;
+        } LightControlEvent;
+#endif // (defined(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
     };
 
     EventHandler Handler;

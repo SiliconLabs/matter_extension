@@ -160,12 +160,12 @@ private:
     /**
      * @brief Processes the Apple Keychain edge case.
      *
-     * Apple, when commissioning, adds two fabric to the device. One for Apple Home and one for the Appley Keychain.
-     * Apple Home is the active fabric which is used to communication with the device. The associated fabric also has the active
-     * subcription. Applye Keychain fabric acts as a safety and doesn't have an active fabric with the device. As such, we need an
-     * alternate method to check if the device can go to LI based sleep.
+     * Apple iphone/ipad, when commissioning, adds two fabric to the device. One for Apple Home or Google Home and one for the
+     * Appley Keychain. Apple Home or Google Home is the active fabric which is used to communication with the device. The
+     * associated fabric also has the active subcription. Applye Keychain fabric acts as a safety and doesn't have an active fabric
+     * with the device. As such, we need an alternate method to check if the device can go to LI based sleep
      *
-     * This method checks if there is any fabric with the Apple Home vendor ID that
+     * This method checks if there is any fabric with the Apple Home or Google Home vendor ID that
      * has at least one active subscription. If such a fabric is found, it allows
      * the device to go to LI based sleep.
      *

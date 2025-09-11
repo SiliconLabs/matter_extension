@@ -1,0 +1,22 @@
+category: Clusters|General
+description: >
+  Implementation of the Testing Cluster.
+  The user has to enable the Testing Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_testing
+package: matter
+label: Testing Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_testing
+source:
+  - path: third_party/matter_sdk/src/app/clusters/testing/AttributeTesting.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/testing
+    file_list:
+      - path: AttributeTesting.h
+template_contribution:
+  - name: component_catalog
+    value: matter_testing

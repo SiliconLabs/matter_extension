@@ -7,7 +7,8 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.1"
+    version: "2.6.2"
+    vendor: silabs
 
 component:
   - id: device_init
@@ -88,6 +89,8 @@ component:
   - id: matter_time_format_localization
     from: matter
   - id: matter_user_label
+    from: matter
+  - id: matter_unit_localization
     from: matter
   - id: matter_wifi_network_diagnostics
     from: matter

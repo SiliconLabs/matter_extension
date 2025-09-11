@@ -7,7 +7,8 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.1"
+    version: "2.6.2"
+    vendor: silabs
 
 component:
   - id: device_init
@@ -80,8 +81,6 @@ component:
   - id: matter_ota_requestor
     from: matter
   - id: matter_network_commissioning
-    from: matter
-  - id: matter_diagnostic_logs
     from: matter
   - id: matter_switch
     from: matter

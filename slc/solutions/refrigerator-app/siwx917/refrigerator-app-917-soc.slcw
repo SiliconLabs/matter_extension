@@ -1,5 +1,6 @@
 label: refrigerator-app-917-soc
 quality: production
+package: matter
 description: Matter workspace container for Refrigerator App over WiFi
 project:
   - path: ../../../sample-app/refrigerator-app/siwx917/refrigerator-app-917-soc.slcp

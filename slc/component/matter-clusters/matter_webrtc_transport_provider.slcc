@@ -1,0 +1,22 @@
+category: Clusters|General
+description: >
+  Implementation of the Webrtc Transport Provider Server Cluster.
+  The user has to enable the Webrtc Transport Provider Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_webrtc_transport_provider
+package: matter
+label: Webrtc Transport Provider Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_webrtc_transport_provider
+source:
+  - path: third_party/matter_sdk/src/app/clusters/webrtc-transport-provider-server/webrtc-transport-provider-server.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/webrtc-transport-provider-server
+    file_list:
+      - path: webrtc-transport-provider-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_webrtc_transport_provider

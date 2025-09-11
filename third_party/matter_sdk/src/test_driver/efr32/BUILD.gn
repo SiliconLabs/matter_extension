@@ -55,11 +55,17 @@ efr32_sdk("sdk") {
     "${examples_common_plat_dir}",
   ]
 
-  defines = [
-    "PW_RPC_ENABLED",
+  defines = [ "PW_RPC_ENABLED" ]
+}
 
-    # Thread is built but test driver do not have the NETWORK_COMMISSIONING cluster or zap config.
-    "_NO_GENERIC_THREAD_NETWORK_COMMISSIONING_DRIVER_",
+config("efr32_ldflags") {
+  _ldscript =
+      "${chip_root}/examples/platform/silabs/ldscripts/${silabs_family}.ld"
+
+  ldflags = [
+    "-T" + rebase_path(_ldscript, root_build_dir),
+    "-Wl,--no-warn-rwx-segment",
+    "-fno-lto",
   ]
 }
 

@@ -12,13 +12,16 @@ metadata:
 provides:
   - name: matter_ota_provider
 source:
+  - path: third_party/matter_sdk/src/app/clusters/ota-provider/CodegenIntegration.cpp
+  - path: third_party/matter_sdk/src/app/clusters/ota-provider/ota-provider-cluster.cpp
   - path: third_party/matter_sdk/src/app/clusters/ota-provider/ota-provider.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/ota-provider
     file_list:
+      - path: CodegenIntegration.h
       - path: DefaultOTAProviderUserConsent.h
+      - path: ota-provider-cluster.h
       - path: ota-provider-delegate.h
-      - path: ota-provider.h
       - path: OTAProviderUserConsentDelegate.h
 template_contribution:
   - name: component_catalog

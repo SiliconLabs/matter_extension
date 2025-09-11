@@ -1,5 +1,6 @@
 label: window-app-917-ncp-bootloader
 quality: production
+package: matter
 description: Matter solution containing both a Matter bootloader and Window over WiFi Example
 project:
   - path: ../../../sample-app/window-app/efr32/window-app-917-ncp.slcp

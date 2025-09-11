@@ -1,0 +1,85 @@
+# Copyright (c) 2020 Project CHIP Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import("//build_overrides/chip.gni")
+import("${chip_root}/src/platform/silabs/wifi/args.gni")
+
+config("silabs_matterAws_config") {
+  include_dirs = [
+    "${chip_root}/third_party/silabs/mqtt/stack",
+    "${chip_root}/third_party/silabs/mqtt/mqtt_transport_interface/include",
+    "${chip_root}/examples/platform/silabs/matter_aws/matter_aws_interface/include",
+  ]
+}
+
+source_set("silabs-matter-aws") {
+  sources = [
+    "${chip_root}/examples/platform/silabs/matter_aws/matter_aws_interface/src/MatterAws.cpp",
+    "${chip_root}/examples/platform/silabs/matter_aws/matter_aws_interface/src/MatterAwsControl.cpp",
+    "${chip_root}/examples/platform/silabs/matter_aws/matter_aws_interface/src/MatterAwsNvmCert.cpp",
+    "${chip_root}/third_party/silabs/mqtt/mqtt_transport_interface/src/MQTT_transport.c",
+    "${chip_root}/third_party/silabs/mqtt/mqtt_transport_interface/src/altcp.c",
+    "${chip_root}/third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_alloc.c",
+    "${chip_root}/third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_tcp.c",
+    "${chip_root}/third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls.c",
+    "${chip_root}/third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls_mem.c",
+  ]
+
+  public_deps = [
+    "${chip_root}/src/inet",
+    "${chip_root}/src/lwip",
+    app_data_model,
+  ]
+
+  public_configs = [ ":silabs_matterAws_config" ]
+}
+
+config("silabs_aws_sdk_ota_config") {
+  include_dirs = [
+    "${chip_root}/third_party/silabs/mqtt/stack",
+    "${chip_root}/third_party/silabs/mqtt/mqtt_transport_interface/include",
+    "${chip_root}/examples/platform/silabs/matter_aws/matter_aws_interface/include",
+    "${chip_root}/third_party/silabs/aws_ota_sdk/demos/ota/ota_demo_core_mqtt",
+    "${chip_root}/third_party/silabs/aws_ota_sdk/demos/ota/common/include",
+    "${chip_root}/third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/include",
+    "${chip_root}/third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/portable/os",
+    "${chip_root}/third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/dependency/3rdparty/tinycbor/src",
+    "${chip_root}/third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/dependency/coreJSON/source/include",
+  ]
+}
+
+source_set("silabs-matter-aws-sdk-ota") {
+  sources = [
+    "${chip_root}/third_party/silabs/aws_ota_sdk/demos/ota/common/src/mqtt_subscription_manager.c",
+    "${chip_root}/third_party/silabs/aws_ota_sdk/demos/ota/common/src/pal.c",
+    "${chip_root}/third_party/silabs/aws_ota_sdk/demos/ota/ota_demo_core_mqtt/ota.c",
+    "${chip_root}/third_party/silabs/aws_ota_sdk/demos/ota/ota_demo_core_mqtt/ota_demo_core_mqtt.c",
+    "${chip_root}/third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/dependency/3rdparty/tinycbor/src/cborencoder.c",
+    "${chip_root}/third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/dependency/3rdparty/tinycbor/src/cborencoder_close_container_checked.c",
+    "${chip_root}/third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/dependency/3rdparty/tinycbor/src/cborparser.c",
+    "${chip_root}/third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/dependency/coreJSON/source/core_json.c",
+    "${chip_root}/third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/ota_base64.c",
+    "${chip_root}/third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/ota_cbor.c",
+    "${chip_root}/third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/ota_interface.c",
+    "${chip_root}/third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/ota_mqtt.c",
+    "${chip_root}/third_party/silabs/aws_ota_sdk/ota-for-aws-iot-embedded-sdk/source/portable/os/ota_os_freertos.c",
+  ]
+
+  public_deps = [
+    "${chip_root}/src/inet",
+    "${chip_root}/src/lwip",
+    app_data_model,
+  ]
+  public_configs = [ ":silabs_aws_sdk_ota_config" ]
+}

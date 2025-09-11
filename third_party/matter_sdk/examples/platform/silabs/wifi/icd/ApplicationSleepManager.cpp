@@ -23,6 +23,8 @@ namespace chip {
 namespace app {
 namespace Silabs {
 
+using chip::DeviceLayer::Silabs::WifiSleepManager;
+
 namespace {
 
 enum class SpecialCaseVendorID : uint16_t
@@ -53,23 +55,23 @@ CHIP_ERROR ApplicationSleepManager::Init()
 void ApplicationSleepManager::OnCommissioningWindowOpened()
 {
     mIsCommissionningWindowOpen = true;
-    mWifiSleepManager->VerifyAndTransitionToLowPowerMode();
+    mWifiSleepManager->VerifyAndTransitionToLowPowerMode(WifiSleepManager::PowerEvent::kGenericEvent);
 }
 
 void ApplicationSleepManager::OnCommissioningWindowClosed()
 {
     mIsCommissionningWindowOpen = false;
-    mWifiSleepManager->VerifyAndTransitionToLowPowerMode();
+    mWifiSleepManager->VerifyAndTransitionToLowPowerMode(WifiSleepManager::PowerEvent::kGenericEvent);
 }
 
 void ApplicationSleepManager::OnSubscriptionEstablished(chip::app::ReadHandler & aReadHandler)
 {
-    mWifiSleepManager->VerifyAndTransitionToLowPowerMode();
+    mWifiSleepManager->VerifyAndTransitionToLowPowerMode(WifiSleepManager::PowerEvent::kGenericEvent);
 }
 
 void ApplicationSleepManager::OnSubscriptionTerminated(chip::app::ReadHandler & aReadHandler)
 {
-    mWifiSleepManager->VerifyAndTransitionToLowPowerMode();
+    mWifiSleepManager->VerifyAndTransitionToLowPowerMode(WifiSleepManager::PowerEvent::kGenericEvent);
 }
 
 CHIP_ERROR ApplicationSleepManager::OnSubscriptionRequested(chip::app::ReadHandler & aReadHandler,
@@ -81,12 +83,12 @@ CHIP_ERROR ApplicationSleepManager::OnSubscriptionRequested(chip::app::ReadHandl
 
 void ApplicationSleepManager::OnFabricRemoved(const chip::FabricTable & fabricTable, chip::FabricIndex fabricIndex)
 {
-    mWifiSleepManager->VerifyAndTransitionToLowPowerMode();
+    mWifiSleepManager->VerifyAndTransitionToLowPowerMode(WifiSleepManager::PowerEvent::kGenericEvent);
 }
 
 void ApplicationSleepManager::OnFabricCommitted(const chip::FabricTable & fabricTable, chip::FabricIndex fabricIndex)
 {
-    mWifiSleepManager->VerifyAndTransitionToLowPowerMode();
+    mWifiSleepManager->VerifyAndTransitionToLowPowerMode(WifiSleepManager::PowerEvent::kGenericEvent);
 }
 
 bool ApplicationSleepManager::CanGoToLIBasedSleep()
@@ -148,14 +150,16 @@ bool ApplicationSleepManager::ProcessSpecialVendorIDCase(chip::VendorId vendorId
 
 bool ApplicationSleepManager::ProcessKeychainEdgeCase()
 {
-    bool hasValidException = false;
+    bool hasValidException = true; // Default to true if no VendorId::Apple fabric is found
 
     for (auto it = mFabricTable->begin(); it != mFabricTable->end(); ++it)
     {
-        if ((it->GetVendorId() == chip::VendorId::Apple) &&
-            mSubscriptionsInfoProvider->FabricHasAtLeastOneActiveSubscription(it->GetFabricIndex()))
+        if (it->GetVendorId() == chip::VendorId::Apple)
         {
-            hasValidException = true;
+            if (!mSubscriptionsInfoProvider->FabricHasAtLeastOneActiveSubscription(it->GetFabricIndex()))
+            {
+                hasValidException = false; // Found an Apple fabric, but no active subscription
+            }
             break;
         }
     }
@@ -166,13 +170,13 @@ bool ApplicationSleepManager::ProcessKeychainEdgeCase()
 void ApplicationSleepManager::OnEnterActiveMode()
 {
     mIsInActiveMode = true;
-    mWifiSleepManager->VerifyAndTransitionToLowPowerMode();
+    mWifiSleepManager->VerifyAndTransitionToLowPowerMode(WifiSleepManager::PowerEvent::kGenericEvent);
 }
 
 void ApplicationSleepManager::OnEnterIdleMode()
 {
     mIsInActiveMode = false;
-    mWifiSleepManager->VerifyAndTransitionToLowPowerMode();
+    mWifiSleepManager->VerifyAndTransitionToLowPowerMode(WifiSleepManager::PowerEvent::kGenericEvent);
 }
 
 void ApplicationSleepManager::OnTransitionToIdle()

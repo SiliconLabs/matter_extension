@@ -21,7 +21,6 @@ define:
 description: libopenthread_radio
 id: libopenthread_radio
 include:
-  - path: third_party/matter_sdk/examples/platform/efr32
   - path: third_party/matter_sdk/examples/platform/silabs
   - path: third_party/matter_sdk/src
   - path: third_party/matter_sdk/src/include

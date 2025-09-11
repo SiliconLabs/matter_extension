@@ -1,0 +1,8 @@
+{{> header}}
+
+#pragma once
+
+#include <clusters/{{asUpperCamelCase name}}/AttributeIds.h>
+#include <clusters/{{asUpperCamelCase name}}/ClusterId.h>
+#include <clusters/{{asUpperCamelCase name}}/CommandIds.h>
+#include <clusters/{{asUpperCamelCase name}}/EventIds.h>

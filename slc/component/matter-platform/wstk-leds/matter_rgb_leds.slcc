@@ -1,0 +1,20 @@
+id: matter_rgb_leds
+label: matter LED Support
+package: matter
+description: RGB LED Support for Matter applications
+category: Platform
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+provides:
+  - name: matter_rgb_leds
+include:
+  - path: third_party/matter_sdk/examples/platform/silabs/rgb_led
+    file_list:
+    - path: RGBLEDWidget.h
+source:
+  - path: third_party/matter_sdk/examples/platform/silabs/rgb_led/RGBLEDWidget.cpp
+define:
+  - name: SL_MATTER_RGB_LED_ENABLED
+    value: "1"

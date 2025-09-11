@@ -23,13 +23,14 @@ include:
       - path: AttributeEncodeState.h
       - path: AttributeReportBuilder.h
       - path: AttributePathExpandIterator.h
-      - path: AttributePathExpandIterator-Ember.h
+      - path: DefaultSafeAttributePersistenceProvider.h
+      - path: StorageDelegateWrapper.h
       - path: InteractionModelDelegatePointers.h
       - path: InteractionModelTimeout.h
       - path: SubscriptionsInfoProvider.h
       - path: SubscriptionResumptionStorage.h
-      - path: AttributePersistenceProvider.h
       - path: EventLoggingDelegate.h
+      - path: EventReporter.h
       - path: TimedRequest.h
       - path: WriteHandler.h
       - path: AttributePathParams.h
@@ -47,12 +48,10 @@ include:
       - path: CommandHandlerExchangeInterface.h
       - path: CommandHandlerImpl.h
       - path: CommandHandler.h
-      - path: DefaultAttributePersistenceProvider.h
       - path: SimpleSubscriptionResumptionStorage.h
       - path: DeviceProxy.h
       - path: ChunkedWriteCallback.h
       - path: TimedHandler.h
-      - path: DeferredAttributePersistenceProvider.h
       - path: TestEventTriggerDelegate.h
       - path: CommandSenderLegacyCallback.h
       - path: EventLogging.h
@@ -92,6 +91,11 @@ include:
       - path: AttributeAccessInterfaceRegistry.h
       - path: AttributeReportBuilder.cpp
       - path: AttributeValueEncoder.cpp
+  - path: third_party/matter_sdk/src/app/util/persistence
+    file_list:
+      - path: AttributePersistenceProvider.h
+      - path: DefaultAttributePersistenceProvider.h
+      - path: DeferredAttributePersistenceProvider.h
 label: libchipdatamodel
 package: matter
 provides:
@@ -103,7 +107,7 @@ metadata:
 source:
   - path: third_party/matter_sdk/src/app/AttributeAccessInterfaceRegistry.cpp
   - path: third_party/matter_sdk/src/app/AttributeReportBuilder.cpp
-  - path: third_party/matter_sdk/src/app/AttributePathExpandIterator-Ember.cpp
+  - path: third_party/matter_sdk/src/app/AttributePathExpandIterator.cpp
   - path: third_party/matter_sdk/src/app/AttributeValueEncoder.cpp
   - path: third_party/matter_sdk/src/app/BufferedReadCallback.cpp
   - path: third_party/matter_sdk/src/app/ChunkedWriteCallback.cpp
@@ -112,8 +116,12 @@ source:
   - path: third_party/matter_sdk/src/app/CommandHandlerImpl.cpp
   - path: third_party/matter_sdk/src/app/CommandHandlerInterfaceRegistry.cpp
   - path: third_party/matter_sdk/src/app/CommandResponseSender.cpp
-  - path: third_party/matter_sdk/src/app/DefaultAttributePersistenceProvider.cpp
-  - path: third_party/matter_sdk/src/app/DeferredAttributePersistenceProvider.cpp
+  - path: third_party/matter_sdk/src/app/GlobalAttributes.cpp
+  - path: third_party/matter_sdk/src/app/StorageDelegateWrapper.cpp
+  - path: third_party/matter_sdk/src/app/SafeAttributePersistenceProvider.cpp
+  - path: third_party/matter_sdk/src/app/util/persistence/AttributePersistenceProvider.cpp
+  - path: third_party/matter_sdk/src/app/util/persistence/DeferredAttributePersistenceProvider.cpp
+  - path: third_party/matter_sdk/src/app/util/persistence/DefaultAttributePersistenceProvider.cpp
   - path: third_party/matter_sdk/src/app/EventManagement.cpp
   - path: third_party/matter_sdk/src/app/FailSafeContext.cpp
   - path: third_party/matter_sdk/src/app/ReadHandler.cpp

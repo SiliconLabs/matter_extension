@@ -1,5 +1,6 @@
 label: performance-test-app-thread-internal-bootloader
 quality: production
+package: matter
 description: Matter solution containing for both a Matter bootloader and Performance Test over Thread Example
 project:
   - path: ../../../sample-app/performance-test-app/efr32/performance-test-app-thread.slcp

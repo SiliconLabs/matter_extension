@@ -62,8 +62,10 @@ requires:
 
   # Matter over Thread and Matter over Wifi uses these separate components per networking protocol
 
-  - name: matter_dnssd_platform
+  - name: matter_dnssd
     condition: [matter_thread]
+  - name: matter_dnssd_wifi
+    condition: [matter_wifi]
 
   - name: matter_libinetlayer
     condition: [matter_thread]
@@ -99,6 +101,7 @@ requires:
   - name: matter_libtransportlayer
   - name: configuration_over_swo
   - name: matter_ot_mbedtls_override
+  - name: matter_server_cluster
   - name: matter_syscall_stubs
   - name: matter_nlassert
   - name: matter_nlio
@@ -108,6 +111,7 @@ requires:
   - name: matter_provision
   - name: matter_callbacks
   - name: matter_check_in_message
+  - name: matter_codegen_data_model_sources
   - name: matter_data_model
   - name: matter_data_model_provider
   - name: matter_error
@@ -117,6 +121,8 @@ requires:
   - name: matter_naming
   - name: matter_text_only_logging
   - name: matter_tracing_headers
+  # TODO: Remove once Zap issue is fixed
+  - name: matter_zap_include
 recommends:
   - id: matter_configuration_over_swo
   - id: matter_ot_mbedtls_override

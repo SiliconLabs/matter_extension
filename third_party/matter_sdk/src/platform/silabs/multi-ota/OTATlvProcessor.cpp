@@ -57,7 +57,7 @@ CHIP_ERROR OTATlvProcessor::Clear()
 CHIP_ERROR OTATlvProcessor::Process(ByteSpan & block)
 {
     CHIP_ERROR status     = CHIP_NO_ERROR;
-    uint32_t bytes        = chip::min(mLength - mProcessedLength, static_cast<uint32_t>(block.size()));
+    uint32_t bytes        = std::min(mLength - mProcessedLength, static_cast<uint32_t>(block.size()));
     ByteSpan relevantData = block.SubSpan(0, bytes);
     if (mProcessedLength + bytes >= mLength)
     {
@@ -124,7 +124,7 @@ void OTADataAccumulator::Clear()
 
 CHIP_ERROR OTADataAccumulator::Accumulate(ByteSpan & block)
 {
-    uint32_t numBytes = chip::min(mThreshold - mBufferOffset, static_cast<uint32_t>(block.size()));
+    uint32_t numBytes = std::min(mThreshold - mBufferOffset, static_cast<uint32_t>(block.size()));
     memcpy(&mBuffer[mBufferOffset], block.data(), numBytes);
     mBufferOffset += numBytes;
     block = block.SubSpan(numBytes);

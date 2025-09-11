@@ -1,0 +1,23 @@
+category: Clusters|Energy Management
+description: >
+  Implementation of the Commodity Price Server Cluster.
+  The user has to enable the Commodity Price Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_commodity_price
+package: matter
+label: Commodity Price Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_commodity_price
+source:
+  - path: third_party/matter_sdk/src/app/clusters/commodity-price-server/commodity-price-server.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/commodity-price-server
+    file_list:
+      - path: commodity-price-server.h
+      - path: CommodityPriceTestEventTriggerHandler.h
+template_contribution:
+  - name: component_catalog
+    value: matter_commodity_price

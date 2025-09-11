@@ -7,7 +7,8 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.1"
+    version: "2.6.2"
+    vendor: silabs
 
 component:
   - id: device_init
@@ -64,8 +65,6 @@ component:
   - id: matter_basic_information
     from: matter
   - id: matter_descriptor
-    from: matter
-  - id: matter_diagnostic_logs
     from: matter
   - id: matter_fixed_label
     from: matter

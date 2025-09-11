@@ -686,7 +686,7 @@ CHIP_ERROR Storage::SignWithDeviceAttestationKey(const ByteSpan & message, Mutab
     }
 #endif // SL_MATTER_ENABLE_EXAMPLE_CREDENTIALS
     ReturnErrorOnFailure(err);
-#if (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE)
+#ifdef SL_MBEDTLS_USE_TINYCRYPT
     uint8_t key_buffer[kDeviceAttestationKeySizeMax] = { 0 };
     MutableByteSpan private_key(key_buffer);
     AttestationKey::Unwrap(temp, size, private_key);
@@ -695,7 +695,7 @@ CHIP_ERROR Storage::SignWithDeviceAttestationKey(const ByteSpan & message, Mutab
     AttestationKey key;
     ReturnErrorOnFailure(key.Import(temp, size));
     return key.SignMessage(message, signature);
-#endif // SLI_SI91X_MCU_INTERFACE
+#endif // SL_MBEDTLS_USE_TINYCRYPT
 }
 
 //
@@ -814,7 +814,13 @@ CHIP_ERROR Storage::SetTestEventTriggerKey(const ByteSpan & value)
 
 CHIP_ERROR Storage::GetTestEventTriggerKey(MutableByteSpan & keySpan)
 {
+#ifdef SL_MATTER_TEST_EVENT_TRIGGER_ENABLED
+    // TODO: Implement Getter
+    // Adding the same return twice to have the function structure
     return CHIP_ERROR_NOT_IMPLEMENTED;
+#else
+    return CHIP_ERROR_NOT_IMPLEMENTED;
+#endif // SL_MATTER_TEST_EVENT_TRIGGER_ENABLED
 }
 
 } // namespace Provision

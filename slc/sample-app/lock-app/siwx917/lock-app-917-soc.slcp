@@ -7,9 +7,10 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.1"
+    version: "2.6.2"
+    vendor: silabs
   - id: wiseconnect3_sdk
-    version: "3.5.1"
+    version: "3.5.2"
 
 component:
   - id: matter_leds
@@ -73,6 +74,8 @@ component:
     from: matter
   - id: matter_user_label
     from: matter
+  - id: matter_unit_localization
+    from: matter
   - id: matter_wifi_network_diagnostics
     from: matter
   # Override configuration for JTAG use
@@ -100,7 +103,7 @@ component:
     from: matter
   - id: matter_log_uart
     from: matter
-  - id: matter_lwip
+  - id: matter_lwip_modified
     from: matter
 
   - id: wifi_resources

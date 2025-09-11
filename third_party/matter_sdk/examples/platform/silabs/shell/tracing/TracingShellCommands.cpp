@@ -34,102 +34,15 @@ using SilabsTracer       = Tracing::Silabs::SilabsTracer;
 
 TimeTraceOperation StringToTimeTraceOperation(const char * str)
 {
-    if (strcmp(str, "Spake2p") == 0)
+    for (auto ttOp = 0; ttOp < to_underlying(TimeTraceOperation::kNumTraces); ttOp++)
     {
-        return TimeTraceOperation::kSpake2p;
+        TimeTraceOperation op = static_cast<TimeTraceOperation>(ttOp);
+        if (strcmp(str, TimeTraceOperationToString(op)) == 0)
+        {
+            return op;
+        }
     }
-    else if (strcmp(str, "Pake1") == 0)
-    {
-        return TimeTraceOperation::kPake1;
-    }
-    else if (strcmp(str, "Pake2") == 0)
-    {
-        return TimeTraceOperation::kPake2;
-    }
-    else if (strcmp(str, "Pake3") == 0)
-    {
-        return TimeTraceOperation::kPake3;
-    }
-    else if (strcmp(str, "OperationalCredentials") == 0)
-    {
-        return TimeTraceOperation::kOperationalCredentials;
-    }
-    else if (strcmp(str, "AttestationVerification") == 0)
-    {
-        return TimeTraceOperation::kAttestationVerification;
-    }
-    else if (strcmp(str, "CSR") == 0)
-    {
-        return TimeTraceOperation::kCSR;
-    }
-    else if (strcmp(str, "NOC") == 0)
-    {
-        return TimeTraceOperation::kNOC;
-    }
-    else if (strcmp(str, "TransportLayer") == 0)
-    {
-        return TimeTraceOperation::kTransportLayer;
-    }
-    else if (strcmp(str, "TransportSetup") == 0)
-    {
-        return TimeTraceOperation::kTransportSetup;
-    }
-    else if (strcmp(str, "FindOperational") == 0)
-    {
-        return TimeTraceOperation::kFindOperational;
-    }
-    else if (strcmp(str, "CaseSession") == 0)
-    {
-        return TimeTraceOperation::kCaseSession;
-    }
-    else if (strcmp(str, "Sigma1") == 0)
-    {
-        return TimeTraceOperation::kSigma1;
-    }
-    else if (strcmp(str, "Sigma2") == 0)
-    {
-        return TimeTraceOperation::kSigma2;
-    }
-    else if (strcmp(str, "Sigma3") == 0)
-    {
-        return TimeTraceOperation::kSigma3;
-    }
-    else if (strcmp(str, "OTA") == 0)
-    {
-        return TimeTraceOperation::kOTA;
-    }
-    else if (strcmp(str, "ImageUpload") == 0)
-    {
-        return TimeTraceOperation::kImageUpload;
-    }
-    else if (strcmp(str, "ImageVerification") == 0)
-    {
-        return TimeTraceOperation::kImageVerification;
-    }
-    else if (strcmp(str, "AppApplyTime") == 0)
-    {
-        return TimeTraceOperation::kAppApplyTime;
-    }
-    else if (strcmp(str, "Bootup") == 0)
-    {
-        return TimeTraceOperation::kBootup;
-    }
-    else if (strcmp(str, "SilabsInit") == 0)
-    {
-        return TimeTraceOperation::kSilabsInit;
-    }
-    else if (strcmp(str, "MatterInit") == 0)
-    {
-        return TimeTraceOperation::kMatterInit;
-    }
-    else if (strcmp(str, "BufferFull") == 0)
-    {
-        return TimeTraceOperation::kBufferFull;
-    }
-    else
-    {
-        return TimeTraceOperation::kNumTraces;
-    }
+    return TimeTraceOperation::kNumTraces;
 }
 
 Engine sShellTracingSubCommands;
@@ -233,7 +146,7 @@ void RegisterCommands()
     static const Shell::Command cmds_silabs_tracing = { &TracingCommandHandler, "tracing",
                                                         "Dispatch Silicon Labs Tracing command" };
 
-    sShellTracingSubCommands.RegisterCommands(sTracingSubCommands, ArraySize(sTracingSubCommands));
+    sShellTracingSubCommands.RegisterCommands(sTracingSubCommands, MATTER_ARRAY_SIZE(sTracingSubCommands));
     Engine::Root().RegisterCommands(&cmds_silabs_tracing, 1);
 }
 

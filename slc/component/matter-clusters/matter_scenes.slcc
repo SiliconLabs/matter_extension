@@ -11,6 +11,8 @@ metadata:
     license: "Apache 2.0"
 provides:
   - name: matter_scenes
+requires:
+  - name: matter_fabric_table
 source:
   - path: third_party/matter_sdk/src/app/clusters/scenes-server/ExtensionFieldSetsImpl.cpp
   - path: third_party/matter_sdk/src/app/clusters/scenes-server/SceneHandlerImpl.cpp

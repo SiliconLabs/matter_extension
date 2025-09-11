@@ -7,9 +7,10 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.1"
+    version: "2.6.2"
+    vendor: silabs
   - id: wiseconnect3_sdk
-    version: "3.5.1"
+    version: "3.5.2"
 
 component:
   - id: matter_leds
@@ -34,9 +35,6 @@ component:
   - id: matter_basic_information
     from: matter
   - id: matter_descriptor
-    from: matter
-  - id: matter_diagnostic_logs
-
     from: matter
   - id: matter_ethernet_network_diagnostics
     from: matter
@@ -91,6 +89,9 @@ component:
     from: matter
   - id: matter_lwip
     from: matter
+  # TODO: Remove this in the SiSDK 25Q4 release, where the LwIP fix will be included in the SiSDK.
+  - id: sl_si91x_lwip_stack
+    from: wiseconnect3_sdk
   - id: matter_icd_core
     from: matter
   - id: matter_icd_management
@@ -162,9 +163,6 @@ include:
       - path: AppEvent.h
       - path: AppTask.h
       - path: SensorManager.h
-      - path: SensorsUI.h
-        condition:
-          - matter_lcd_917SOC
       - path: CHIPProjectConfig.h
     directory: include
 
@@ -173,10 +171,6 @@ source:
     directory: src
   - path: ../../../../examples/multi-sensor-app/src/SensorManager.cpp
     directory: src
-  - path: ../../../../examples/multi-sensor-app/src/SensorsUI.cpp
-    directory: src
-    condition:
-      - matter_lcd_917SOC
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
   - path: ../../../../examples/multi-sensor-app/src/DataModelCallbacks.cpp

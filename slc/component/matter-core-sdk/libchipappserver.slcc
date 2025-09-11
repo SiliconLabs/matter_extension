@@ -21,7 +21,6 @@ include:
       - path: EchoHandler.h
       - path: AclStorage.h
       - path: DefaultAclStorage.h
-      - path: OnboardingCodesUtil.h
       - path: CommissioningWindowManager.h
       - path: Dnssd.h
       - path: Server.h
@@ -40,7 +39,6 @@ source:
   - path: third_party/matter_sdk/src/app/server/DefaultAclStorage.cpp
   - path: third_party/matter_sdk/src/app/server/Dnssd.cpp
   - path: third_party/matter_sdk/src/app/server/EchoHandler.cpp
-  - path: third_party/matter_sdk/src/app/server/OnboardingCodesUtil.cpp
   - path: third_party/matter_sdk/src/app/server/Server.cpp
 ui_hints:
   visibility: never

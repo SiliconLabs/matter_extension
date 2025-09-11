@@ -7,7 +7,8 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.1"
+    version: "2.6.2"
+    vendor: silabs
 
 component:
   - id: device_init
@@ -52,8 +53,6 @@ component:
   - id: matter_basic_information
     from: matter
   - id: matter_descriptor
-    from: matter
-  - id: matter_diagnostic_logs
     from: matter
   - id: matter_ethernet_network_diagnostics
     from: matter
@@ -145,9 +144,6 @@ include:
       - path: AppEvent.h
       - path: AppTask.h
       - path: SensorManager.h
-      - path: SensorsUI.h
-        condition:
-          - matter_lcd
       - path: CHIPProjectConfig.h
     directory: include
 
@@ -156,10 +152,6 @@ source:
     directory: src
   - path: ../../../../examples/multi-sensor-app/src/SensorManager.cpp
     directory: src
-  - path: ../../../../examples/multi-sensor-app/src/SensorsUI.cpp
-    directory: src
-    condition:
-      - matter_lcd
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
   - path: ../../../../examples/multi-sensor-app/src/DataModelCallbacks.cpp

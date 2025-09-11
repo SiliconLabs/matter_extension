@@ -1,7 +1,7 @@
 id: matter_leds
 label: matter LED Support
 package: matter
-description: Simple LED and RGB LED Support for Matter applications
+description: Simple LED Support for Matter applications
 category: Platform
 quality: production
 metadata:
@@ -26,6 +26,9 @@ requires:
   - name: simple_led_recommended_instance
     condition:
       - brd2704a
+  - name: matter_rgb_leds
+    condition:
+      - brd2605a
 
 define:
   # This should cover all supported boards that use simple LEDs
@@ -77,12 +80,6 @@ define:
     value: "1"
     condition:
       - brd2911a
-
-  # This should cover all supported boards that supports RGB LEDs
-  - name: SL_MATTER_RGB_LED_ENABLED
-    value: "1"
-    condition:
-      - brd2605a
   - name: ENABLE_WSTK_LEDS
     value: "1"
     condition:

@@ -38,7 +38,7 @@ static constexpr uint16_t kEmberInvalidEndpointIndex = 0xFFFF;
 #endif
 
 #define DECLARE_DYNAMIC_ENDPOINT(endpointName, clusterList)                                                                        \
-    EmberAfEndpointType endpointName = { clusterList, ArraySize(clusterList), 0 }
+    EmberAfEndpointType endpointName = { clusterList, MATTER_ARRAY_SIZE(clusterList), 0 }
 
 #define DECLARE_DYNAMIC_CLUSTER_LIST_BEGIN(clusterListName) EmberAfCluster clusterListName[] = {
 
@@ -46,7 +46,7 @@ static constexpr uint16_t kEmberInvalidEndpointIndex = 0xFFFF;
 // It can be assigned with the ZAP_CLUSTER_MASK(SERVER) or ZAP_CLUSTER_MASK(CLUSTER) values.
 #define DECLARE_DYNAMIC_CLUSTER(clusterId, clusterAttrs, role, incomingCommands, outgoingCommands)                                 \
     {                                                                                                                              \
-        clusterId, clusterAttrs, ArraySize(clusterAttrs), 0, role, NULL, incomingCommands, outgoingCommands                        \
+        clusterId, clusterAttrs, MATTER_ARRAY_SIZE(clusterAttrs), 0, role, NULL, incomingCommands, outgoingCommands                \
     }
 
 #define DECLARE_DYNAMIC_CLUSTER_LIST_END }
@@ -208,6 +208,10 @@ CHIP_ERROR GetSemanticTagForEndpointAtIndex(chip::EndpointId endpoint, size_t in
 CHIP_ERROR SetTagList(chip::EndpointId endpoint,
                       chip::Span<const chip::app::Clusters::Descriptor::Structs::SemanticTagStruct::Type> tagList);
 
+#if CHIP_CONFIG_USE_ENDPOINT_UNIQUE_ID
+CHIP_ERROR emberAfGetEndpointUniqueIdForEndPoint(chip::EndpointId endpoint, chip::MutableCharSpan & epUniqueIdMutSpan);
+#endif
+
 // Returns number of clusters put into the passed cluster list
 // for the given endpoint and client/server polarity
 uint8_t emberAfGetClustersFromEndpoint(chip::EndpointId endpoint, chip::ClusterId * clusterList, uint8_t listLen, bool server);
@@ -259,6 +263,37 @@ CHIP_ERROR emberAfSetDynamicEndpoint(uint16_t index, chip::EndpointId id, const 
                                      const chip::Span<chip::DataVersion> & dataVersionStorage,
                                      chip::Span<const EmberAfDeviceType> deviceTypeList = {},
                                      chip::EndpointId parentEndpointId                  = chip::kInvalidEndpointId);
+
+// Register a dynamic endpoint. This involves registering descriptors that describe
+// the composition of the endpoint (encapsulated in the 'ep' argument) as well as providing
+// storage for data versions.
+//
+// dataVersionStorage.size() needs to be at least as large as the number of
+// server clusters on this endpoint.  If it's not, the endpoint will not be able
+// to store data versions, which may break consumers.
+//
+// The memory backing dataVersionStorage needs to remain allocated until this dynamic
+// endpoint is cleared.
+//
+// An optional device type list can be passed in as well. If provided, the memory
+// backing the list needs to remain allocated until this dynamic endpoint is cleared.
+//
+// An optional endpointUniqueId can be passed, the data will be copied out of
+// endpointUniqueId and it does not need to survive once this call returns.
+//
+// An optional parent endpoint id should be passed for child endpoints of composed device.
+//
+// Returns  CHIP_NO_ERROR                   No error.
+//          CHIP_ERROR_NO_MEMORY            MAX_ENDPOINT_COUNT is reached or when no storage is left for clusters
+//          CHIP_ERROR_INVALID_ARGUMENT     The EndpointId value passed is kInvalidEndpointId
+//          CHIP_ERROR_ENDPOINT_EXISTS      If the EndpointId value passed already exists
+//
+CHIP_ERROR emberAfSetDynamicEndpointWithEpUniqueId(uint16_t index, chip::EndpointId id, const EmberAfEndpointType * ep,
+                                                   const chip::Span<chip::DataVersion> & dataVersionStorage,
+                                                   chip::Span<const EmberAfDeviceType> deviceTypeList = {},
+                                                   chip::CharSpan endpointUniqueId                    = {},
+                                                   chip::EndpointId parentEndpointId                  = chip::kInvalidEndpointId);
+
 chip::EndpointId emberAfClearDynamicEndpoint(uint16_t index);
 uint16_t emberAfGetDynamicIndexFromEndpoint(chip::EndpointId id);
 /**
@@ -271,6 +306,10 @@ void emberAfInitializeAttributes(chip::EndpointId endpoint);
 // If server == true, returns the number of server clusters,
 // otherwise number of client clusters on this endpoint
 uint8_t emberAfClusterCount(chip::EndpointId endpoint, bool server);
+
+// If server == true, returns the number of server clusters,
+// otherwise number of client clusters on the endpoint at the given index.
+uint8_t emberAfClusterCountForEndpointType(const EmberAfEndpointType * endpointType, bool server);
 
 // Returns the cluster of Nth server or client cluster,
 // depending on server toggle.
@@ -310,6 +349,14 @@ void emberAfAttributeChanged(chip::EndpointId endpoint, chip::ClusterId clusterI
 /// Schedules reporting engine to consider the endpoint dirty, however does NOT increase/alter
 /// any cluster data versions.
 void emberAfEndpointChanged(chip::EndpointId endpoint, chip::app::AttributesChangedListener * listener);
+
+/// Maintains a increasing index of structural changes within ember
+/// that determine if existing "indexes" and metadata pointers within ember
+/// are still valid or not.
+///
+/// Changes to metadata structure (e.g. endpoint enable/disable and dynamic endpoint changes)
+/// are reflected in this generation count changing.
+unsigned emberAfMetadataStructureGeneration();
 
 namespace chip {
 namespace app {
@@ -368,6 +415,18 @@ bool IsFlatCompositionForEndpoint(EndpointId endpoint);
  * @brief Returns true is an Endpoint has tree composition
  */
 bool IsTreeCompositionForEndpoint(EndpointId endpoint);
+
+enum class EndpointComposition : uint8_t
+{
+    kFullFamily,
+    kTree,
+    kInvalid,
+};
+
+/**
+ * @brief Returns the composition for a given endpoint index
+ */
+EndpointComposition GetCompositionForEndpointIndex(uint16_t index);
 
 } // namespace app
 } // namespace chip
