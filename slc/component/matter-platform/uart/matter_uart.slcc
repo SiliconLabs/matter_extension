@@ -12,6 +12,9 @@ requires:
   - name: uartdrv_eusart
     condition:
       - matter_platform_mg
+  - name: si91x_debug
+    condition:
+      - matter_platform_si91x
 
 provides:
   - name: matter_uart

@@ -1,0 +1,50 @@
+id: mbedtls_pki_aws
+package: matter
+label: Public-Key Abstraction Layer for Matter + AWS 
+description: >-
+  This component provides support for the Public Key (PK) abstraction layer in
+  Mbed TLS specifically for Matter+AWS component.This Component avoids tight 
+  coupling of mbedtls and PSA. This layer provides indirect support for public-key 
+  encryption/decryption as well signature generation/verification.
+category: Platform|Security|Mbed TLS|Upper Layer
+quality: production
+source:
+  # The group of source files below contain code that is required for the PK
+  # abstraction layer to function. Normally, these would be included through
+  # their corresponding mbedtls_ components. We can't rely on those being
+  # included now that the PK layer uses PSA Crypto APIs.   
+  - path: third_party/simplicity_sdk/util/third_party/mbedtls/library/pk.c
+  - path: third_party/simplicity_sdk/util/third_party/mbedtls/library/pk_ecc.c
+  - path: third_party/simplicity_sdk/util/third_party/mbedtls/library/pkparse.c
+  - path: third_party/simplicity_sdk/util/third_party/mbedtls/library/pkwrite.c
+  - path: third_party/simplicity_sdk/util/third_party/mbedtls/library/pk_wrap.c
+provides:
+  - name: mbedtls_pki
+    condition: [matter_aws]
+  - name: mbedtls_uses_psa_crypto
+    allow_multiple: true
+requires:
+  - name: mbedtls_core
+  - name: mbedtls_asn1
+  - name: mbedtls_mpi
+  - name: mbedtls_oid
+
+  # We need either RSA or ECDSA to be enabled.
+  - name: mbedtls_pk_backend
+
+template_contribution:
+  - name: mbedtls_config
+    value: MBEDTLS_PK_C
+  - name: mbedtls_config
+    value: MBEDTLS_PK_PARSE_C
+  - name: mbedtls_config
+    value: MBEDTLS_PK_WRITE_C
+metadata:
+  sbom:
+    license: Apache-2.0
+    upstream:
+      name: Mbed TLS
+      version: v3.6.2
+      supplier: Trusted Firmware
+      url: https://github.com/Mbed-TLS/mbedtls.git
+      comment: Mbed TLS is a C library implementing the PSA Cryptography API, cryptographic primitives, X.509 certificate manipulation and the SSL/TLS and DTLS protocols

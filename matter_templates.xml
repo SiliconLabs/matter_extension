@@ -489,7 +489,7 @@
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
-    <properties key="quality" value="EVALUATION"/>
+    <properties key="quality" value="PRODUCTION"/>
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.sample-app.bootloaders.bootloader-storage-single-4096k-series-3.bootloader-storage-single-4096k-series-3.slcp slc.sample-app.refrigerator-app.efr32.refrigerator-app-thread.slcp"/>
@@ -795,7 +795,7 @@
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
-    <properties key="quality" value="EVALUATION"/>
+    <properties key="quality" value="PRODUCTION"/>
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.sample-app.bootloaders.bootloader-storage-single-4096k-series-3.bootloader-storage-single-4096k-series-3.slcp slc.sample-app.dishwasher-app.efr32.dishwasher-app-thread.slcp"/>
@@ -829,7 +829,7 @@
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
-    <properties key="quality" value="EVALUATION"/>
+    <properties key="quality" value="PRODUCTION"/>
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.sample-app.bootloaders.bootloader-storage-single-4096k-series-3.bootloader-storage-single-4096k-series-3.slcp slc.sample-app.light-switch-app.efr32.light-switch-app-thread.slcp"/>
@@ -880,7 +880,7 @@
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
-    <properties key="quality" value="EVALUATION"/>
+    <properties key="quality" value="PRODUCTION"/>
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.sample-app.bootloaders.bootloader-storage-single-4096k-series-3.bootloader-storage-single-4096k-series-3.slcp slc.sample-app.lock-app.efr32.lock-app-thread.slcp"/>
@@ -914,7 +914,7 @@
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
-    <properties key="quality" value="EVALUATION"/>
+    <properties key="quality" value="PRODUCTION"/>
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.sample-app.bootloaders.bootloader-storage-single-4096k-series-3.bootloader-storage-single-4096k-series-3.slcp slc.sample-app.onoff-plug-app.efr32.onoff-plug-app-thread.slcp"/>
@@ -948,7 +948,7 @@
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
-    <properties key="quality" value="EVALUATION"/>
+    <properties key="quality" value="PRODUCTION"/>
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.sample-app.bootloaders.bootloader-storage-single-4096k-series-3.bootloader-storage-single-4096k-series-3.slcp slc.sample-app.multi-sensor-app.efr32.multi-sensor-app-thread.slcp"/>
@@ -982,7 +982,7 @@
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
-    <properties key="quality" value="EVALUATION"/>
+    <properties key="quality" value="PRODUCTION"/>
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.sample-app.bootloaders.bootloader-storage-single-4096k-series-3.bootloader-storage-single-4096k-series-3.slcp slc.sample-app.thermostat.efr32.thermostat-thread.slcp"/>
@@ -1016,7 +1016,7 @@
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
-    <properties key="quality" value="EVALUATION"/>
+    <properties key="quality" value="PRODUCTION"/>
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.sample-app.bootloaders.bootloader-storage-single-4096k-series-3.bootloader-storage-single-4096k-series-3.slcp slc.sample-app.window-app.efr32.window-app-thread.slcp"/>
@@ -1338,7 +1338,7 @@
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
-    <properties key="quality" value="EVALUATION"/>
+    <properties key="quality" value="PRODUCTION"/>
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.sample-app.bootloaders.bootloader-storage-single-4096k-series-3.bootloader-storage-single-4096k-series-3.slcp slc.sample-app.air-quality-sensor-app.efr32.air-quality-sensor-app-thread.slcp"/>
@@ -1372,7 +1372,7 @@
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
-    <properties key="quality" value="EVALUATION"/>
+    <properties key="quality" value="PRODUCTION"/>
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter Technology|Zigbee"/>
     <properties key="solutionProjects" value="slc.sample-app.bootloaders.bootloader-storage-single-4096k-series-3.bootloader-storage-single-4096k-series-3.slcp slc.sample-app.zigbee-matter-light.efr32.zigbee-matter-light.slcp"/>
@@ -1389,7 +1389,7 @@
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
-    <properties key="quality" value="EVALUATION"/>
+    <properties key="quality" value="PRODUCTION"/>
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.sample-app.bootloaders.bootloader-storage-single-4096k-series-3.bootloader-storage-single-4096k-series-3.slcp slc.sample-app.lighting-app.efr32.lighting-app-thread.slcp"/>
@@ -1406,7 +1406,7 @@
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
-    <properties key="quality" value="EVALUATION"/>
+    <properties key="quality" value="PRODUCTION"/>
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
   </descriptors> 

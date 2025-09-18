@@ -19,7 +19,6 @@ requires:
   - name: matter_siwx917_common
   - name: sl_si91x_trng
   - name: siwx917_soc_custom_hal
-  - name: si91x_debug
   - name: nvm3_default
   - name: memory_manager
   - name: memory_manager_pool
@@ -51,6 +50,7 @@ include:
       - path: OTAConfig.h
       - path: MemMonitoring.h
       - path: BaseApplication.h
+      - path: BaseAppEvent.h
       - path: SoftwareFaultReports.h
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/BaseApplication.cpp
@@ -61,8 +61,6 @@ define:
   - name: SUPPORT_CPLUSPLUS
     value: 1
   - name: SL_WFX_CONFIG_SCAN
-    value: 1
-  - name: SIWX_917
     value: 1
   - name: CHIP_9117
     value: 1
@@ -76,3 +74,6 @@ toolchain_settings:
     value: "-Wl,--wrap=MemoryAlloc"
     # Wrap these in case internal newlib call them (e.g. strdup will)
     # directly call _malloc_r)
+  - option: gcc_compiler_option
+    value: "-Wno-cpp"
+    unless: [hardware_board]

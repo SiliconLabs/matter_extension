@@ -7,7 +7,7 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.2"
+    version: "2.7.0"
     vendor: silabs
 
 component:
@@ -184,6 +184,10 @@ configuration:
     value: "4608"
   - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
     value: "1536"
+    unless: [device_series_3]
+  - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+    value: "1856"
+    condition: [device_series_3]
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: 16
   - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS

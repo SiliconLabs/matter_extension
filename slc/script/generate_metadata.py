@@ -22,6 +22,7 @@ out_folder_dir = sys.argv[1]
 examples_dir = os.path.join(root_dir, "Examples")
 root_sub_dirs = os.listdir(root_dir)
 internal_boards = ['brd4319f']
+internal_sample_apps = ['performance-test-app','platform-app','lock-li']
 with open(os.path.join(root_dir,"third_party","matter_private","jenkins","pipeline_metadata.yml"), 'r') as stream:
     pipeline_metadata = yaml.safe_load(stream)
 
@@ -77,6 +78,10 @@ def recurse_dir(file_or_dir):
 recurse_dir(out_folder_dir)
 
 
+# helper function to skip internal apps
+def is_internal_app(demo_name, internal_apps):
+    """Check if the demo name contains any internal app names."""
+    return any(internal_app in demo_name for internal_app in internal_apps)
 
 '''
 generate demo metadata
@@ -94,6 +99,10 @@ for brd, val in demos_map['demos'].items():
     for technology in val.keys():
         if technology == 'OpenThread':
             for demo_ in val[technology]:
+                # Skip internal apps
+                if is_internal_app(demo_, internal_sample_apps):
+                    continue
+                    
                 demo_name = ""
 
                 for name in demo_.split("-"):
@@ -113,9 +122,10 @@ for brd, val in demos_map['demos'].items():
                 demo_name = demo_name.strip()
                 demo_name_ = ' '.join(elem.capitalize() for elem in demo_name_.split())
 
-                # logic for demo_name_ generation for zigbee matter light variants 
+                # logic for demo_name_ generation for zigbee matter light variants
+                iscmp = True if demo_name == "zigbee matter light" else False
                 zigbee_matter_light_variant = ""
-                if demo_name =="zigbee matter light":
+                if iscmp:
                     if "sequential" in demo_:
                         zigbee_matter_light_variant = " Sequential"
                     elif "concurrent" in demo_:
@@ -170,23 +180,22 @@ for brd, val in demos_map['demos'].items():
                 filtersProp.set('value', "Type|SoC Project\\ Difficulty|Advanced Wireless\\ Technology|Matter")
 
                 qualityProp.set('key', 'core.quality')
-
-                # add series 3 boards here
-                # used to set quality to EVALUATION for all series 3 boards
-                series_3_boards = {
-                    "brd1019a", "brd2719a", "brd4407a", "brd4408a"
-                }
-                if brd.lower() in series_3_boards:
-                    qualityProp.set('value', "EVALUATION")
+                qualityProp.set('value', "PRODUCTION")
+                if iscmp:
+                    description.text = "".join("This is a " + demo_name_ +
+                                                " Application over Thread for " + brd.upper())
                 else:
-                    qualityProp.set('value', "PRODUCTION")
-                description.text = "".join("This is a Matter " + demo_name_ +
-                                        " Application over Thread for " + brd.upper())
+                    description.text = "".join("This is a Matter " + demo_name_ +
+                                                " Application over Thread for " + brd.upper())
 
         elif technology == 'WiFi':
             for board_type in val[technology].keys():
                 for demo_ in val[technology][board_type]:
                     demo_name = ""
+                    # Skip internal apps
+                    if is_internal_app(demo_, internal_sample_apps):
+                        continue
+                        
                     for name in demo_.split("-"):
                         if name == 'app':
                             break

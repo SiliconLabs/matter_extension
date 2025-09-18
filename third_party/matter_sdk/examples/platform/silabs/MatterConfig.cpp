@@ -262,6 +262,9 @@ CHIP_ERROR SilabsMatterConfig::InitMatter(const char * appName)
     mbedtls_platform_set_calloc_free(CHIPPlatformMemoryCalloc, CHIPPlatformMemoryFree);
     ReturnErrorOnFailure(chip::Platform::MemoryInit());
     ReturnErrorOnFailure(WifiInterface::GetInstance().InitWiFiStack());
+    // Needs to be done post InitWifiStack for 917.
+    // TODO move it in InitWiFiStack
+    GetPlatform().NvmInit();
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
     ReturnErrorOnFailure(WifiSleepManager::GetInstance().Init(&WifiInterface::GetInstance(), &WifiInterface::GetInstance()));

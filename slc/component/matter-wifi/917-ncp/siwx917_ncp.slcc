@@ -85,3 +85,6 @@ define:
 toolchain_settings:
 - option: gcc_compiler_option
   value: -Wno-unused-parameter
+- option: gcc_compiler_option
+  value: "-Wno-cpp"
+  unless: [hardware_board]

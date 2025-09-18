@@ -47,7 +47,6 @@
 extern "C" {
 #endif
 
-
 #if LWIP_WND_SCALE
 typedef u32_t tcpwnd_size_t;
 #else
@@ -78,7 +77,7 @@ enum tcp_state {
 #define TCP_PRIO_NORMAL 64
 #define TCP_PRIO_MAX    127
 
-const char* tcp_debug_state_str(enum tcp_state s);
+const char *tcp_debug_state_str(enum tcp_state s);
 
 #ifdef __cplusplus
 }

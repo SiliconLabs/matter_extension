@@ -469,11 +469,11 @@ static OtaMqttStatus_t stubMqttPublish( const char * const unused_1,
     return OtaMqttSuccess;
 }
 
-static OtaMqttStatus_t stubMqttPublishOnlySuccedsTopicIsCorrect( const char * const topic,
-                                                                 uint16_t topicLength,
-                                                                 const char * unused_1,
-                                                                 uint32_t unused_2,
-                                                                 uint8_t unused_3 )
+static OtaMqttStatus_t stubMqttPublishOnlySucceedsTopicIsCorrect( const char * const topic,
+                                                                  uint16_t topicLength,
+                                                                  const char * unused_1,
+                                                                  uint32_t unused_2,
+                                                                  uint8_t unused_3 )
 {
     ( void ) unused_1;
     ( void ) unused_2;
@@ -494,11 +494,11 @@ static OtaMqttStatus_t stubMqttPublishOnlySuccedsTopicIsCorrect( const char * co
     return OtaMqttSuccess;
 }
 
-static OtaMqttStatus_t stubMqttPublishOnlySuccedsIfTruncatedValue( const char * const unused_1,
-                                                                   uint16_t unused_2,
-                                                                   const char * msg,
-                                                                   uint32_t msgSize,
-                                                                   uint8_t unused_3 )
+static OtaMqttStatus_t stubMqttPublishOnlySucceedsIfTruncatedValue( const char * const unused_1,
+                                                                    uint16_t unused_2,
+                                                                    const char * msg,
+                                                                    uint32_t msgSize,
+                                                                    uint8_t unused_3 )
 {
     ( void ) unused_1;
     ( void ) unused_2;
@@ -1536,7 +1536,7 @@ void test_OTA_ImageStateAbortUpdateStatusFail()
     TEST_ASSERT_EQUAL( OtaImageStateAborted, OTA_GetImageState() );
 }
 
-void test_OTA_ImageStateRjectWithActiveJob()
+void test_OTA_ImageStateRejectWithActiveJob()
 {
     otaGoToState( OtaAgentStateWaitingForFileBlock );
 
@@ -1544,7 +1544,7 @@ void test_OTA_ImageStateRjectWithActiveJob()
     TEST_ASSERT_EQUAL( OtaImageStateRejected, OTA_GetImageState() );
 }
 
-void test_OTA_ImageStateRjectWithNoJob()
+void test_OTA_ImageStateRejectWithNoJob()
 {
     otaGoToState( OtaAgentStateReady );
     TEST_ASSERT_EQUAL( OtaAgentStateReady, OTA_GetState() );
@@ -2865,7 +2865,7 @@ void test_OTA_MQTT_PublishesToCorrectTopic()
 
     otaInitDefault();
     otaInterfaces.mqtt.subscribe = stubMqttSubscribe;
-    otaInterfaces.mqtt.publish = stubMqttPublishOnlySuccedsTopicIsCorrect;
+    otaInterfaces.mqtt.publish = stubMqttPublishOnlySucceedsTopicIsCorrect;
 
     err = requestJob_Mqtt( &otaAgent );
 
@@ -2879,7 +2879,7 @@ void test_OTA_MQTT_ThingNameTruncated()
 
     otaInit( longestThingname, mockAppCallback );
     otaInterfaces.mqtt.subscribe = stubMqttSubscribe;
-    otaInterfaces.mqtt.publish = stubMqttPublishOnlySuccedsIfTruncatedValue;
+    otaInterfaces.mqtt.publish = stubMqttPublishOnlySucceedsIfTruncatedValue;
 
     err = requestJob_Mqtt( &otaAgent );
 
@@ -3587,7 +3587,7 @@ void test_OTA_parseJobFailsNullJsonDocument()
 
 void test_OTA_parseJobFailsMoreBlocksThanBitmap()
 {
-    OtaFileContext_t * pContext;
+    OtaFileContext_t * pContext = NULL;
     bool updateJob = false;
     DocParseErr_t err;
     JsonDocParam_t otaCustomJobDocModelParamStructure[ 1 ] =
@@ -3595,8 +3595,11 @@ void test_OTA_parseJobFailsMoreBlocksThanBitmap()
         { OTA_JSON_JOB_ID_KEY, OTA_JOB_PARAM_REQUIRED, U16_OFFSET( OtaFileContext_t, pJobName ), U16_OFFSET( OtaFileContext_t, jobNameMaxSize ), UINT16_MAX },
     };
 
-    /* The document structure has an invalid value for ModelParamType_t. */
-    otaAgent.fileContext.blocksRemaining = OTA_MAX_BLOCK_BITMAP_SIZE + 1;
+    /* Set the file size to be more than the maximum that can be tracked using
+     * bitmap. */
+    otaAgent.fileContext.fileSize = ( ( OTA_MAX_BLOCK_BITMAP_SIZE * BITS_PER_BYTE ) /* Maximum number of trackable blocks. */
+                                      * OTA_FILE_BLOCK_SIZE )                       /* Size of each block. */
+                                    + 1;                                            /* File size bigger than the maximum trackable. */
     otaInitDefault();
     err = parseJobDoc( otaCustomJobDocModelParamStructure, 1, JOB_DOC_A, strlen( JOB_DOC_A ), &updateJob, &pContext );
 
@@ -3607,7 +3610,7 @@ void test_OTA_parseJobFailsMoreBlocksThanBitmap()
 
 void test_OTA_extractParameterFailInvalidJobDocModel()
 {
-    OtaFileContext_t * pContext;
+    OtaFileContext_t * pContext = NULL;
     bool updateJob = false;
     DocParseErr_t err;
     JsonDocParam_t otaCustomJobDocModelParamStructure[ 1 ] =
@@ -3823,7 +3826,7 @@ void test_OTA_jobIdMaxLength()
 
 /* Enlarge job name and size in doc param to simulate if the size of pJobNameBuffer in ota.c
  * and pActiveJobName in OtaAgentContext_t is different. */
-void test_OTA_jobBufferLargerThanpActiveJobName()
+void test_OTA_jobBufferLargerThanActiveJobName()
 {
     pOtaJobDoc = JOB_DOC_INVALID_JOB_ID_LEN_MAX;
 

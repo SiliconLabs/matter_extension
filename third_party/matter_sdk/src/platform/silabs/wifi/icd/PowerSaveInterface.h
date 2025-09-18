@@ -34,9 +34,10 @@ public:
 
     enum class PowerSaveConfiguration : uint8_t
     {
-        kHighPerformance = 0,
-        kDeepSleep       = 1,
-        kConnectedSleep  = 2,
+        kHighPerformance  = 0,
+        kDeepSleep        = 1,
+        kConnectedSleep   = 2,
+        kLIConnectedSleep = 3,
     };
 
     /**
@@ -66,6 +67,11 @@ public:
      *                                                         or if it is a non-supported configuration
      */
     virtual CHIP_ERROR ConfigureBroadcastFilter(bool enableBroadcastFilter) { return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE; }
+
+protected:
+    // Default power save configuration is High Performance as the device starts in high power mode and low power modes need to be
+    // explicitly configured
+    PowerSaveConfiguration mCurrentPowerSaveConfiguration = PowerSaveConfiguration::kHighPerformance;
 };
 
 } // namespace Silabs

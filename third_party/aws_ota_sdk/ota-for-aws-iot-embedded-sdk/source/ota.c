@@ -495,6 +495,11 @@ static void callOtaCallback( OtaJobEvent_t eEvent,
  */
 static void resetEventQueue( void );
 
+/**
+ * @brief Calculate the number of blocks required to download the file.
+ */
+static uint32_t fileSizeToBlocks( uint32_t fileSize );
+
 /* OTA state event handler functions. */
 
 static OtaErr_t startHandler( const OtaEventData_t * pEventData );           /*!< Start timers and initiate request for job document. */
@@ -1675,7 +1680,7 @@ static DocParseErr_t extractAndStoreArray( const char * pKey,
     {
         if( *pParamSizeAdd < ( valueLength + 1U ) )
         {
-            err = DocParseErrUserBufferInsuffcient;
+            err = DocParseErrUserBufferInsufficient;
 
             LogError( ( "Insufficient user memory: "
                         "[key: valueLength]=[%s: %lu]",
@@ -1817,8 +1822,20 @@ static DocParseErr_t parseJSONbyModel( const char * pJson,
     uint16_t paramIndex = 0;
     const char * pFileParams = NULL;
     uint32_t fileParamsLength = 0;
+    static char cJsonBuffer[ OTA_MAX_JSON_STR_LEN ];
 
-    LogDebug( ( "JSON received: %s", pJson ) );
+    if( messageLength < OTA_MAX_JSON_STR_LEN - 1 )
+    {
+        memcpy( cJsonBuffer, pJson, messageLength );
+        cJsonBuffer[ messageLength + 1 ] = 0;
+    }
+    else
+    {
+        memcpy( cJsonBuffer, pJson, OTA_MAX_JSON_STR_LEN - 2 );
+        cJsonBuffer[ OTA_MAX_JSON_STR_LEN - 1 ] = 0;
+    }
+
+    LogDebug( ( "JSON received: %s", cJsonBuffer ) );
 
     /* Fetch the model parameters from the DocModel*/
     pModelParam = pDocModel->pBodyDef;
@@ -2163,13 +2180,35 @@ static void handleSelfTestJobDoc( const OtaFileContext_t * pFileContext )
     LogInfo( ( "In self test mode." ) );
 
     #if ( otaconfigAllowDowngrade == 1U )
+    {
+        LogWarn( ( "OTA Config Allow Downgrade has been set to 1, bypassing version check: Begin testing file: File ID=%d",
+                   ( int ) otaAgent.serverFileID ) );
+
+        /* Downgrade is allowed so this means we're ready to start self test phase.
+         * Set image state accordingly and update job status with self test identifier.
+         */
+        otaErr = setImageStateWithReason( OtaImageStateTesting, ( uint32_t ) errVersionCheck );
+
+        if( otaErr != OtaErrNone )
         {
-            LogWarn( ( "OTA Config Allow Downgrade has been set to 1, bypassing version check: Begin testing file: File ID=%d",
+            LogError( ( "Failed to set image state to testing: OtaErr_t=%s", OTA_Err_strerror( otaErr ) ) );
+        }
+    }
+    #else /* if ( otaconfigAllowDowngrade == 1U ) */
+    {
+        /* Validate version of the update received.*/
+        errVersionCheck = validateUpdateVersion( pFileContext );
+
+        if( errVersionCheck == OtaErrNone )
+        {
+            LogInfo( ( "Image version is valid: Begin testing file: File ID=%d",
                        ( int ) otaAgent.serverFileID ) );
 
-            /* Downgrade is allowed so this means we're ready to start self test phase.
+            /* The running firmware version is newer than the firmware that performed
+             * the update so this means we're ready to start the self test phase.
              * Set image state accordingly and update job status with self test identifier.
              */
+
             otaErr = setImageStateWithReason( OtaImageStateTesting, ( uint32_t ) errVersionCheck );
 
             if( otaErr != OtaErrNone )
@@ -2177,48 +2216,26 @@ static void handleSelfTestJobDoc( const OtaFileContext_t * pFileContext )
                 LogError( ( "Failed to set image state to testing: OtaErr_t=%s", OTA_Err_strerror( otaErr ) ) );
             }
         }
-    #else /* if ( otaconfigAllowDowngrade == 1U ) */
+        else
         {
-            /* Validate version of the update received.*/
-            errVersionCheck = validateUpdateVersion( pFileContext );
+            LogWarn( ( "New image is being rejected: Application version of the new image is invalid: "
+                       "OtaErr_t=%s", OTA_Err_strerror( errVersionCheck ) ) );
 
-            if( errVersionCheck == OtaErrNone )
+            otaErr = setImageStateWithReason( OtaImageStateRejected, ( uint32_t ) errVersionCheck );
+
+            if( otaErr != OtaErrNone )
             {
-                LogInfo( ( "Image version is valid: Begin testing file: File ID=%d",
-                           ( int ) otaAgent.serverFileID ) );
-
-                /* The running firmware version is newer than the firmware that performed
-                 * the update so this means we're ready to start the self test phase.
-                 * Set image state accordingly and update job status with self test identifier.
-                 */
-
-                otaErr = setImageStateWithReason( OtaImageStateTesting, ( uint32_t ) errVersionCheck );
-
-                if( otaErr != OtaErrNone )
-                {
-                    LogError( ( "Failed to set image state to testing: OtaErr_t=%s", OTA_Err_strerror( otaErr ) ) );
-                }
+                LogError( ( "Failed to set image state to rejected: OtaErr_t=%s", OTA_Err_strerror( otaErr ) ) );
             }
-            else
-            {
-                LogWarn( ( "New image is being rejected: Application version of the new image is invalid: "
-                           "OtaErr_t=%s", OTA_Err_strerror( errVersionCheck ) ) );
 
-                otaErr = setImageStateWithReason( OtaImageStateRejected, ( uint32_t ) errVersionCheck );
+            /* Application callback for self-test failure.*/
+            callOtaCallback( OtaJobEventSelfTestFailed, NULL );
 
-                if( otaErr != OtaErrNone )
-                {
-                    LogError( ( "Failed to set image state to rejected: OtaErr_t=%s", OTA_Err_strerror( otaErr ) ) );
-                }
-
-                /* Application callback for self-test failure.*/
-                callOtaCallback( OtaJobEventSelfTestFailed, NULL );
-
-                /* Handle self-test failure in the platform specific implementation,
-                 * example, reset the device in case of firmware upgrade. */
-                ( void ) otaAgent.pOtaInterface->pal.reset( &( otaAgent.fileContext ) );
-            }
+            /* Handle self-test failure in the platform specific implementation,
+             * example, reset the device in case of firmware upgrade. */
+            ( void ) otaAgent.pOtaInterface->pal.reset( &( otaAgent.fileContext ) );
         }
+    }
     #endif /* if ( otaconfigAllowDowngrade == 1U ) */
 }
 
@@ -2243,6 +2260,14 @@ static OtaJobParseErr_t validateAndStartJob( OtaFileContext_t * pFileContext,
     {
         LogError( ( "Parameter check failed: pFileContext->fileSize is 0: File size should be > 0." ) );
         err = OtaJobParseErrZeroFileSize;
+    }
+    else if( fileSizeToBlocks( pFileContext->fileSize ) > ( OTA_MAX_BLOCK_BITMAP_SIZE * BITS_PER_BYTE ) )
+    {
+        err = OtaJobParseErrBadModelInitParams;
+        LogError( ( "Parameter check failed: pFileContext->fileSize (%u) greater than can be tracked.",
+                    pFileContext->fileSize ) );
+        LogWarn( ( "Largest trackable size: OTA_MAX_BLOCK_BITMAP_SIZE (%u) * BITS_PER_BYTE (%u) = %u",
+                   OTA_MAX_BLOCK_BITMAP_SIZE, BITS_PER_BYTE, ( OTA_MAX_BLOCK_BITMAP_SIZE * BITS_PER_BYTE ) ) );
     }
     /* If there's an active job, verify that it's the same as what's being reported now. */
     /* We already checked for missing parameters so we SHOULD have a job name in the context. */
@@ -2389,12 +2414,6 @@ static DocParseErr_t parseJobDoc( const JsonDocParam_t * pJsonExpectedParams,
     {
         err = OtaJobParseErrBadModelInitParams;
     }
-    else if( pFileContext->blocksRemaining > OTA_MAX_BLOCK_BITMAP_SIZE )
-    {
-        err = OtaJobParseErrBadModelInitParams;
-        LogWarn( ( "OTA size (%u blocks) greater than can be tracked. Increase `OTA_MAX_BLOCK_BITMAP_SIZE`",
-                   ( unsigned ) pFileContext->blocksRemaining ) );
-    }
     else
     {
         parseError = parseJSONbyModel( pJson, messageLength, &otaJobDocModel );
@@ -2473,7 +2492,7 @@ static OtaErr_t getFileContextFromJob( const char * pRawMsg,
     {
         /* Calculate how many bytes we need in our bitmap for tracking received blocks.
          * The below calculation requires power of 2 page sizes. */
-        numBlocks = ( ( *pFileContext )->fileSize + ( OTA_FILE_BLOCK_SIZE - 1U ) ) >> otaconfigLOG2_FILE_BLOCK_SIZE;
+        numBlocks = fileSizeToBlocks( ( *pFileContext )->fileSize );
         bitmapLen = ( numBlocks + ( BITS_PER_BYTE - 1U ) ) >> LOG2_BITS_PER_BYTE;
 
         /* This conditional statement has been excluded from the coverage report because one of branches in the
@@ -2986,7 +3005,7 @@ static void executeHandler( uint32_t index,
     }
     else if( err == OtaErrEmptyJobDocument )
     {
-        LogInfo( ( "Empty job docuemnt found for event=[%s]", pOtaEventStrings[ pEventMsg->eventId ] ) );
+        LogInfo( ( "Empty job document found for event=[%s]", pOtaEventStrings[ pEventMsg->eventId ] ) );
     }
     else
     {
@@ -3079,6 +3098,11 @@ static void callOtaCallback( OtaJobEvent_t eEvent,
     {
         LogWarn( ( "OtaAppCallback is not registered, event=%d", ( int ) eEvent ) );
     }
+}
+
+static uint32_t fileSizeToBlocks( uint32_t fileSize )
+{
+    return ( uint32_t ) ( ( fileSize + ( OTA_FILE_BLOCK_SIZE - 1U ) ) >> otaconfigLOG2_FILE_BLOCK_SIZE );
 }
 
 void OTA_EventProcessingTask( const void * pUnused )

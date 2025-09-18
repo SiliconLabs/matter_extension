@@ -162,7 +162,7 @@ CHIP_ERROR WifiSleepManager::ConfigureLIBasedSleep()
 
     // Allowing the device to go to sleep must be the last actions to avoid configuration failures.
     ReturnLogErrorOnFailure(
-        mPowerSaveInterface->ConfigurePowerSave(PowerSaveInterface::PowerSaveConfiguration::kConnectedSleep,
+        mPowerSaveInterface->ConfigurePowerSave(PowerSaveInterface::PowerSaveConfiguration::kLIConnectedSleep,
                                                 chip::ICDConfigurationData::GetInstance().GetSlowPollingInterval().count()));
 
     return CHIP_NO_ERROR;

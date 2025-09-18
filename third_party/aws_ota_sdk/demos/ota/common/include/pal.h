@@ -25,7 +25,7 @@
 
 /* *INDENT-OFF* */
 #ifdef __cplusplus
-    extern "C" {
+extern "C" {
 #endif
 /* *INDENT-ON* */
 
@@ -34,17 +34,16 @@
 /**
  * @brief Maximum file path length on Linux
  */
-#define OTA_FILE_PATH_LENGTH_MAX    512
+#define OTA_FILE_PATH_LENGTH_MAX 512
 
 /**
  * @brief The OTA platform interface status for generating
  * absolute file path from the incoming relative file path.
  */
-typedef enum OtaPalPathGenStatus
-{
-    OtaPalFileGenSuccess,    /*!< @brief Absolute path generation success. */
-    OtaPalCWDFailed,         /*!< @brief getcwd failed to output path. */
-    OtaPalBufferInsufficient /*!< @brief Buffer insufficient for storing the file path. */
+typedef enum OtaPalPathGenStatus {
+  OtaPalFileGenSuccess,    /*!< @brief Absolute path generation success. */
+  OtaPalCWDFailed,         /*!< @brief getcwd failed to output path. */
+  OtaPalBufferInsufficient /*!< @brief Buffer insufficient for storing the file path. */
 } OtaPalPathGenStatus_t;
 
 /**
@@ -67,7 +66,7 @@ typedef enum OtaPalPathGenStatus
  * OtaPalSuccess is returned when aborting access to the open file was successful.
  * OtaPalFileAbort is returned when aborting access to the open file context was unsuccessful.
  */
-OtaPalStatus_t otaPal_Abort( OtaFileContext_t * const C );
+OtaPalStatus_t otaPal_Abort(OtaFileContext_t *const C);
 
 /**
  * @brief Create a new receive file for the data chunks as they come in.
@@ -92,7 +91,7 @@ OtaPalStatus_t otaPal_Abort( OtaFileContext_t * const C );
  * OtaPalBootInfoCreateFailed is returned if the bootloader information file creation fails.
  * OtaPalRxFileCreateFailed is returned for other errors creating the file in the device's non-volatile memory.
  */
-OtaPalStatus_t otaPal_CreateFileForRx( OtaFileContext_t * const C );
+OtaPalStatus_t otaPal_CreateFileForRx(OtaFileContext_t *const C);
 
 /* @brief Authenticate and close the underlying receive file in the specified OTA context.
  *
@@ -117,7 +116,7 @@ OtaPalStatus_t otaPal_CreateFileForRx( OtaFileContext_t * const C );
  * OtaPalBadSignerCert is returned for errors in the certificate itself.
  * OtaPalFileClose is returned when closing the file fails.
  */
-OtaPalStatus_t otaPal_CloseFile( OtaFileContext_t * const C );
+OtaPalStatus_t otaPal_CloseFile(OtaFileContext_t *const C);
 
 /**
  * @brief Write a block of data to the specified file at the given offset.
@@ -138,10 +137,7 @@ OtaPalStatus_t otaPal_CloseFile( OtaFileContext_t * const C );
  * @return The number of bytes written on a success, or a negative error code from the platform
  * abstraction layer.
  */
-int16_t otaPal_WriteBlock( OtaFileContext_t * const C,
-                           uint32_t ulOffset,
-                           uint8_t * const pcData,
-                           uint32_t ulBlockSize );
+int16_t otaPal_WriteBlock(OtaFileContext_t *const C, uint32_t ulOffset, uint8_t *const pcData, uint32_t ulBlockSize);
 
 /**
  * @brief Activate the newest MCU image received via OTA.
@@ -155,7 +151,7 @@ int16_t otaPal_WriteBlock( OtaFileContext_t * const C,
  * @return The OTA PAL layer error code combined with the MCU specific error code. See OTA Agent
  * error codes information in ota.h.
  */
-OtaPalStatus_t otaPal_ActivateNewImage( OtaFileContext_t * const C );
+OtaPalStatus_t otaPal_ActivateNewImage(OtaFileContext_t *const C);
 
 /**
  * @brief Reset the device.
@@ -169,7 +165,7 @@ OtaPalStatus_t otaPal_ActivateNewImage( OtaFileContext_t * const C );
  * error codes information in ota.h.
  */
 
-OtaPalStatus_t otaPal_ResetDevice( OtaFileContext_t * const C );
+OtaPalStatus_t otaPal_ResetDevice(OtaFileContext_t *const C);
 
 /**
  * @brief Attempt to set the state of the OTA update image.
@@ -192,8 +188,7 @@ OtaPalStatus_t otaPal_ResetDevice( OtaFileContext_t * const C );
  *   OtaPalRejectFailed: failed to roll back the update image as requested by OtaImageStateRejected.
  *   OtaPalCommitFailed: failed to make the update image permanent as requested by OtaImageStateAccepted.
  */
-OtaPalStatus_t otaPal_SetPlatformImageState( OtaFileContext_t * const C,
-                                             OtaImageState_t eState );
+OtaPalStatus_t otaPal_SetPlatformImageState(OtaFileContext_t *const C, OtaImageState_t eState);
 
 /**
  * @brief Get the state of the OTA update image.
@@ -218,11 +213,11 @@ OtaPalStatus_t otaPal_SetPlatformImageState( OtaFileContext_t * const C,
  *
  *   NOTE: OtaPalImageStateUnknown should NEVER be returned and indicates an implementation error.
  */
-OtaPalImageState_t otaPal_GetPlatformImageState( OtaFileContext_t * const C );
+OtaPalImageState_t otaPal_GetPlatformImageState(OtaFileContext_t *const C);
 
 /* *INDENT-OFF* */
 #ifdef __cplusplus
-    }
+}
 #endif
 /* *INDENT-ON* */
 

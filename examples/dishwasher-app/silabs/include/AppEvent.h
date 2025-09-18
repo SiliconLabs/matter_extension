@@ -19,48 +19,22 @@
 
 #pragma once
 
-#ifdef DISPLAY_ENABLED
-#include "lcd.h"
-#endif
+#include "BaseAppEvent.h"
 
-struct AppEvent;
-typedef void (*EventHandler)(AppEvent *);
-
-struct AppEvent
+struct AppEvent : public BaseAppEvent
 {
     enum AppEventTypes
     {
-        kEventType_Button = 0,
-        kEventType_LCD,
-        kEventType_Timer,
-        kEventType_Dishwasher,
+        kEventType_Dishwasher = BaseAppEvent::kEventType_Max + 1,
         kEventType_Install,
     };
-
-    uint16_t Type;
 
     union
     {
         struct
         {
             uint8_t Action;
-        } ButtonEvent;
-#ifdef DISPLAY_ENABLED
-        struct
-        {
-            SilabsLCD::Screen_e screen;
-        } LCDEvent;
-#endif
-        struct
-        {
-            void * Context;
-        } TimerEvent;
-        struct
-        {
-            uint8_t Action;
             int32_t Actor;
         } DishwasherEvent;
     };
-
-    EventHandler Handler;
 };

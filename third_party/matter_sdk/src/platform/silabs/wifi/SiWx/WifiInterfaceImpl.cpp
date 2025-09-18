@@ -460,6 +460,7 @@ sl_si91x_performance_profile_t ConvertPowerSaveConfiguration(PowerSaveInterface:
         profile = HIGH_PERFORMANCE;
         break;
     case PowerSaveInterface::PowerSaveConfiguration::kConnectedSleep:
+    case PowerSaveInterface::PowerSaveConfiguration::kLIConnectedSleep:
         profile = ASSOCIATED_POWER_SAVE;
         break;
     case PowerSaveInterface::PowerSaveConfiguration::kDeepSleep:
@@ -837,6 +838,9 @@ sl_status_t WifiInterfaceImpl::TriggerPlatformWifiDisconnection()
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
 CHIP_ERROR WifiInterfaceImpl::ConfigurePowerSave(PowerSaveInterface::PowerSaveConfiguration configuration, uint32_t listenInterval)
 {
+    // Power save configuration is already set, nothing to do
+    VerifyOrReturnValue(mCurrentPowerSaveConfiguration != configuration, CHIP_NO_ERROR);
+
     int32_t error = rsi_bt_power_save_profile(RSI_SLEEP_MODE_2, RSI_MAX_PSP);
     VerifyOrReturnError(error == RSI_SUCCESS, CHIP_ERROR_INTERNAL,
                         ChipLogError(DeviceLayer, "rsi_bt_power_save_profile failed: %ld", error));
@@ -851,6 +855,7 @@ CHIP_ERROR WifiInterfaceImpl::ConfigurePowerSave(PowerSaveInterface::PowerSaveCo
     VerifyOrReturnError(status == SL_STATUS_OK, CHIP_ERROR_INTERNAL,
                         ChipLogError(DeviceLayer, "sl_wifi_set_performance_profile failed: 0x%lx", status));
 
+    mCurrentPowerSaveConfiguration = configuration;
     return CHIP_NO_ERROR;
 }
 

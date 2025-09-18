@@ -20,6 +20,7 @@ define:
     value: "platform-header.h"
 config_file:
   - path: slc/config/sl_matter_wifi_config.h
+    file_id: matter_wifi_config
 provides:
   - name: matter_wifi
 requires:

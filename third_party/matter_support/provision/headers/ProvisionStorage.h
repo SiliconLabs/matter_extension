@@ -206,7 +206,7 @@ public:
     CHIP_ERROR GetHardwareVersionString(char * value, size_t max) override;
     CHIP_ERROR GetManufacturingDate(uint16_t & year, uint8_t & month, uint8_t & day) override;
     CHIP_ERROR GetRotatingDeviceIdUniqueId(MutableByteSpan & value) override;
-    CHIP_ERROR GetSoftwareVersionString(char * value, size_t max) override;
+    CHIP_ERROR GetSoftwareVersionString(char * value, size_t max);
 
     //
     // CommissionableDataProvider
