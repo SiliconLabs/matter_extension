@@ -1,5 +1,6 @@
 label: refrigerator-app-thread-internal-bootloader
 quality: production
+package: matter
 description: Matter workspace container both a Matter bootloader and Refrigerator over Thread Example
 project:
   - path: ../../../sample-app/refrigerator-app/efr32/refrigerator-app-thread.slcp

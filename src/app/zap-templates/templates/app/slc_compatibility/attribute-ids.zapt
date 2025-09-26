@@ -1,0 +1,27 @@
+{{> header}}
+
+#pragma once
+
+#include <clusters/shared/GlobalIds.h>
+#include <lib/core/DataModelTypes.h>
+
+namespace chip {
+namespace app {
+namespace Clusters {
+namespace {{asUpperCamelCase name}} {
+namespace Attributes {
+{{#zcl_attributes_server}}
+namespace {{chip_name_for_id_usage label}} {
+{{#if clusterRef}}
+inline constexpr AttributeId Id = {{asHex code 8}};
+{{else}}
+inline constexpr AttributeId Id = Globals::Attributes::{{chip_name_for_id_usage label}}::Id;
+{{/if}}
+} // namespace {{chip_name_for_id_usage label}}
+
+{{/zcl_attributes_server}}
+} // namespace Attributes
+} // namespace {{asUpperCamelCase name}}
+} // namespace Clusters
+} // namespace app
+} // namespace chip

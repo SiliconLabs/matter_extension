@@ -42,6 +42,12 @@
 // <i> Set to true if device supports dynamic switching from SIT to LIT operating modes (DSLS)
 #define CHIP_CONFIG_ENABLE_ICD_DSLS 0
 
+// <q SL_ICD_ENABLE_SELECTIVE_SLEEP>  Enable Dynamic DTIM-LI-based Switching
+// <i> Dynamic Switching from DTIM based to Long Interval based sleep (Default: 1)
+// <i> Set to true, if device supports dynamic switching from DTIM based to Long Interval based sleep (Selective Sleep)
+// <i> This feature is used to reduce power consumption in devices that support both DTIM and Long Interval based sleep modes.
+#define SL_ICD_ENABLE_SELECTIVE_SLEEP 1
+
 // <<< end of configuration section >>>
 
 #endif // SL_MATTER_ICD_CONFIG_H

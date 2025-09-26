@@ -1,6 +1,6 @@
 /*
  *
- *    Copyright (c) 2020-2022 Project CHIP Authors
+ *    Copyright (c) 2020-2025 Project CHIP Authors
  *    Copyright (c) 2019 Google LLC.
  *    Copyright (c) 2013-2017 Nest Labs, Inc.
  *    All rights reserved.
@@ -36,6 +36,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cstddef>
 
 namespace chip {
 namespace ASN1 {
@@ -84,6 +85,7 @@ enum
     kOID_AttributeType_MatterRCACId = 0x0314,
     kOID_AttributeType_MatterFabricId = 0x0315,
     kOID_AttributeType_MatterCASEAuthTag = 0x0316,
+    kOID_AttributeType_MatterVidVerificationSignerId = 0x0317,
 
     kOID_EllipticCurve_prime256v1 = 0x0401,
 
@@ -149,6 +151,7 @@ static const uint8_t sOID_AttributeType_MatterICACId[] = { 0x2B, 0x06, 0x01, 0x0
 static const uint8_t sOID_AttributeType_MatterRCACId[] = { 0x2B, 0x06, 0x01, 0x04, 0x01, 0x82, 0xA2, 0x7C, 0x01, 0x04 };
 static const uint8_t sOID_AttributeType_MatterFabricId[] = { 0x2B, 0x06, 0x01, 0x04, 0x01, 0x82, 0xA2, 0x7C, 0x01, 0x05 };
 static const uint8_t sOID_AttributeType_MatterCASEAuthTag[] = { 0x2B, 0x06, 0x01, 0x04, 0x01, 0x82, 0xA2, 0x7C, 0x01, 0x06 };
+static const uint8_t sOID_AttributeType_MatterVidVerificationSignerId[] = { 0x2B, 0x06, 0x01, 0x04, 0x01, 0x82, 0xA2, 0x7C, 0x01, 0x07 };
 static const uint8_t sOID_EllipticCurve_prime256v1[] = { 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x03, 0x01, 0x07 };
 static const uint8_t sOID_Extension_BasicConstraints[] = { 0x55, 0x1D, 0x13 };
 static const uint8_t sOID_Extension_KeyUsage[] = { 0x55, 0x1D, 0x0F };
@@ -190,6 +193,7 @@ const OIDTableEntry sOIDTable[] =
     { kOID_AttributeType_MatterRCACId, sOID_AttributeType_MatterRCACId, sizeof(sOID_AttributeType_MatterRCACId) },
     { kOID_AttributeType_MatterFabricId, sOID_AttributeType_MatterFabricId, sizeof(sOID_AttributeType_MatterFabricId) },
     { kOID_AttributeType_MatterCASEAuthTag, sOID_AttributeType_MatterCASEAuthTag, sizeof(sOID_AttributeType_MatterCASEAuthTag) },
+    { kOID_AttributeType_MatterVidVerificationSignerId, sOID_AttributeType_MatterVidVerificationSignerId, sizeof(sOID_AttributeType_MatterVidVerificationSignerId) },
     { kOID_EllipticCurve_prime256v1, sOID_EllipticCurve_prime256v1, sizeof(sOID_EllipticCurve_prime256v1) },
     { kOID_Extension_BasicConstraints, sOID_Extension_BasicConstraints, sizeof(sOID_Extension_BasicConstraints) },
     { kOID_Extension_KeyUsage, sOID_Extension_KeyUsage, sizeof(sOID_Extension_KeyUsage) },
@@ -238,6 +242,7 @@ const OIDNameTableEntry sOIDNameTable[] =
     { kOID_AttributeType_MatterRCACId, "MatterRCACId" },
     { kOID_AttributeType_MatterFabricId, "MatterFabricId" },
     { kOID_AttributeType_MatterCASEAuthTag, "MatterCASEAuthTag" },
+    { kOID_AttributeType_MatterVidVerificationSignerId, "MatterVidVerificationSignerId" },
     { kOID_EllipticCurve_prime256v1, "prime256v1" },
     { kOID_Extension_BasicConstraints, "BasicConstraints" },
     { kOID_Extension_KeyUsage, "KeyUsage" },

@@ -1,4 +1,4 @@
-category: Clusters|CHIP
+category: Clusters|General
 description: >
   Implementation of the Bridged Device Basic Information Server Cluster.
   The user has to enable the Bridged Device Basic Information Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.

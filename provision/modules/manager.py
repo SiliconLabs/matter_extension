@@ -29,7 +29,7 @@ class ProvisionManager:
 
         # Help
         action = args.str(ID.kAction)
-        if Actions.kHelp == action:
+        if (Actions.kHelp == action) or args.bool(ID.kHelp):
             args.help()
             exit(0)
         args.print()
@@ -171,6 +171,9 @@ class ProvisionManager:
         elif not os.path.exists(gen_fw) or not os.path.isfile(gen_fw):
             raise ValueError("Missing Generator firmware \"{}\"".format(gen_fw))
         comm.flash(gen_fw)
+        if args.bool(ID.kReset):
+            # Hard reset. Needed for secure boot parts
+            comm.reset()
 
     def writeProductionFirmware(self, args, comm):
         prod_fw = args.str(ID.kProductionFW)

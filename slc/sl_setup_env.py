@@ -172,7 +172,7 @@ class MatterEnvSetup:
     def download_and_extract_slc_cli(self):
         if not os.path.isfile(os.path.join(self.slc_cli_path, "slc")):
             logging.info("Downloading and unzipping slc_cli ...")
-            slc_cli_url = f"https://www.silabs.com/documents/login/software/slc_cli_{self.__platform}.zip"
+            slc_cli_url = f"https://www.silabs.com/documents/public/software/slc_cli_{self.__platform}.zip"
             dload.save_unzip(slc_cli_url, self.tools_folder_path, delete_after=True)
             st = os.stat(os.path.join(self.tools_folder_path, "slc_cli", "slc"))
             os.chmod(os.path.join(self.tools_folder_path, "slc_cli", "slc"), st.st_mode | stat.S_IEXEC)

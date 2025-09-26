@@ -32,6 +32,16 @@ requires:
   - name: mbedtls_ecdsa_deterministic
     condition: [matter_provision]
 
+  # OT CoAP Cert libs
+  - name: mbedtls_tls
+    condition: [ot_coap_cert_libs]
+  - name: mbedtls_dtls
+    condition: [ot_coap_cert_libs]
+  - name: mbedtls_tls_server
+    condition: [ot_coap_cert_libs]
+  - name: mbedtls_jpake
+    condition: [ot_coap_cert_libs]
+
 config_file:
   - path: slc/config/sli_psa_builtin_config.h
     file_id: sli_psa_builtin_config
@@ -43,6 +53,9 @@ define:
     value: 0
   - name: MBEDTLS_USER_CONFIG_FILE
     value: "<sli_psa_builtin_config.h>"
+  # OT CoAP Cert libs
+  - name: MBEDTLS_SSL_HANDSHAKE_WITH_CERT_ENABLED
+    condition: [ot_coap_cert_libs]
 
 template_contribution:
   - name: mbedtls_config

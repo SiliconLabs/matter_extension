@@ -12,11 +12,21 @@ metadata:
 provides:
   - name: matter_network_commissioning
 source:
-  - path: third_party/matter_sdk/src/app/clusters/network-commissioning/network-commissioning.cpp
+  - path: third_party/matter_sdk/src/app/clusters/network-commissioning/CodegenInstance.cpp
+  - path: third_party/matter_sdk/src/app/clusters/network-commissioning/NetworkCommissioningCluster.cpp
+  - path: third_party/matter_sdk/src/app/clusters/network-commissioning/NetworkCommissioningLogic.cpp
+  - path: third_party/matter_sdk/src/app/clusters/network-commissioning/ThreadScanResponse.cpp
+  - path: third_party/matter_sdk/src/app/clusters/network-commissioning/WifiScanResponse.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/network-commissioning
     file_list:
+      - path: CodegenInstance.h
+      - path: constants.h
       - path: network-commissioning.h
+      - path: NetworkCommissioningCluster.h
+      - path: NetworkCommissioningLogic.h
+      - path: ThreadScanResponse.h
+      - path: WifiScanResponse.h
 template_contribution:
   - name: component_catalog
     value: matter_network_commissioning

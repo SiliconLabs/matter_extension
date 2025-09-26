@@ -18,5 +18,5 @@ requires:
 define:
   - name: USE_BYPASS_CLOCK
     value: "1"
-  - name: ACX_MODULE_BOARD
+  - name: SL_SI91X_ACX_MODULE
     value: "1"

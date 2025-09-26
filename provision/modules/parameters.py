@@ -100,6 +100,7 @@ class ID:
     kCsrFile = 0x0105
 
     # Options
+    kHelp = 0x0110
     kVersion = 0x0111
     kAction = 0x0112
     kExtra = 0x0113

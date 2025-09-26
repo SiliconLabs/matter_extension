@@ -356,7 +356,7 @@ def update_header_key(inc_dir, val, lib=""):
                 update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY, 'matter-wifi', 'matter_lwip.slcc')))
             case 'matter_platform':
                 if 'dic' in inc_dir.lower():
-                    update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY, 'matter-wifi', 'matter_dic.slcc')))
+                    update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY, 'matter-wifi', 'matter_aws.slcc')))
                 elif 'rs911x' in str(os.path.join(inc_dir, val)):
                     update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY, 'matter-wifi', 'rs911x', 'rs911x_ncp.slcc')))
                 elif 'SiWx917' in str(os.path.join(inc_dir, val)):

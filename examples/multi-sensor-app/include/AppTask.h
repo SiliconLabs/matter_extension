@@ -24,8 +24,6 @@
 
 #include "AppEvent.h"
 #include "BaseApplication.h"
-#include "FreeRTOS.h"
-#include "timers.h"
 #include <app/clusters/occupancy-sensor-server/occupancy-sensor-server.h>
 #include <ble/BLEEndPoint.h>
 #include <lib/core/CHIPError.h>

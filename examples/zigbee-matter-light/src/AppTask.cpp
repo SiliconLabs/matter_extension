@@ -23,10 +23,11 @@
 
 #include "LEDWidget.h"
 
-#include <app/DeferredAttributePersistenceProvider.h>
 #include <app/clusters/on-off-server/on-off-server.h>
-#include <app/server/OnboardingCodesUtil.h>
 #include <app/server/Server.h>
+#include <app/util/persistence/DefaultAttributePersistenceProvider.h>
+#include <app/util/persistence/DeferredAttributePersistenceProvider.h>
+#include <setup_payload/OnboardingCodesUtil.h>
 
 #include <assert.h>
 
@@ -73,14 +74,6 @@ DeferredAttribute gDeferredAttributeTable[] = {
     DeferredAttribute(ConcreteAttributePath(LIGHT_ENDPOINT, ColorControl::Id, ColorControl::Attributes::CurrentSaturation::Id))
 };
 
-// The DeferredAttributePersistenceProvider will persist the attribute value in non-volatile memory
-// once it remains constant for SL_MATTER_DEFERRED_ATTRIBUTE_STORE_DELAY_MS milliseconds.
-// For all other attributes not listed in gDeferredAttributeTable, the default GetDefaultAttributePersister is used.
-DeferredAttributePersistenceProvider
-    gDeferredAttributePersister(Server::GetInstance().GetDefaultAttributePersister(),
-                                Span<DeferredAttribute>(gDeferredAttributeTable, ArraySize(gDeferredAttributeTable)),
-                                System::Clock::Milliseconds32(SL_MATTER_DEFERRED_ATTRIBUTE_STORE_DELAY_MS));
-
 } // namespace
 
 using namespace chip::TLV;
@@ -101,8 +94,6 @@ CHIP_ERROR AppTask::AppInit()
 #else
     ChipLogProgress(AppServer, "Sequential CMP app");
 #endif
-    MultiProtocolDataModel::Initialize();
-
     err = LightMgr().Init();
     if (err != CHIP_NO_ERROR)
     {
@@ -167,7 +158,23 @@ void AppTask::AppTaskMain(void * pvParameter)
 
     // Initialization that needs to happen before the BaseInit is called here as the BaseApplication::Init() will call
     // the AppInit() after BaseInit.
-    app::SetAttributePersistenceProvider(&gDeferredAttributePersister);
+
+    // Retrieve the existing AttributePersistenceProvider, which should already be created and initialized.
+    // This provider is typically set up by the CodegenDataModelProviderInstance constructor,
+    // which is called in InitMatter within MatterConfig.cpp.
+    // We use this as the base provider for deferred attribute persistence.
+    AttributePersistenceProvider * attributePersistence = GetAttributePersistenceProvider();
+    VerifyOrDie(attributePersistence != nullptr);
+
+    //  The DeferredAttributePersistenceProvider will persist the attribute value in non-volatile memory
+    //  once it remains constant for SL_MATTER_DEFERRED_ATTRIBUTE_STORE_DELAY_MS milliseconds.
+    //  For all other attributes not listed in gDeferredAttributeTable, the default PersistenceProvider is used.
+    sAppTask.pDeferredAttributePersister = new DeferredAttributePersistenceProvider(
+        *attributePersistence, Span<DeferredAttribute>(gDeferredAttributeTable, MATTER_ARRAY_SIZE(gDeferredAttributeTable)),
+        System::Clock::Milliseconds32(SL_MATTER_DEFERRED_ATTRIBUTE_STORE_DELAY_MS));
+    VerifyOrDie(sAppTask.pDeferredAttributePersister != nullptr);
+
+    app::SetAttributePersistenceProvider(sAppTask.pDeferredAttributePersister);
 
     CHIP_ERROR err = sAppTask.Init();
     if (err != CHIP_NO_ERROR)
@@ -181,10 +188,26 @@ void AppTask::AppTaskMain(void * pvParameter)
 #endif
 
     SILABS_LOG("App Task started");
-
+    uint32_t waitTime          = ((uint64_t) osKernelGetTickFreq() * 100) / 1000; // convert 100ms to ticks
+    int8_t zbInitPollRemaining = 5;
     while (true)
     {
-        osStatus_t eventReceived = osMessageQueueGet(sAppEventQueue, &event, NULL, osWaitForever);
+        // SL-TEMP Workaround: in some instance the Zigbee framework task is delayed
+        // We can't do the multiprotocol datamodel synchronization until the Zigbee has initialized its datamodel too.
+        // We don't have a good callback to know when that is done, so we just poll for the endpoint count
+        if (waitTime != osWaitForever)
+        {
+            // zbInitPollRemaining is our get out of jail card in case the Zigbee config really only has 0 endpoint configured
+            // (dynamic endpoint enabled later usecase)
+            if (sl_zigbee_af_endpoint_count() > 0 || zbInitPollRemaining <= 0)
+            {
+                MultiProtocolDataModel::Initialize();
+                waitTime = osWaitForever;
+            }
+            zbInitPollRemaining--;
+        }
+
+        osStatus_t eventReceived = osMessageQueueGet(sAppEventQueue, &event, NULL, waitTime);
         while (eventReceived == osOK)
         {
             sAppTask.DispatchEvent(&event);

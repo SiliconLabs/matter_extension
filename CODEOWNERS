@@ -1,23 +1,22 @@
-@@@MatterWatt @jumartin @jepenven @ricasall @makardou @selissia @rerasool @sashaha @lobelive
-@@@MatterWifi @sekumar @naagarwa @chbansal @rosahay
-@@@Documentation @rerasool @berush
-@@@CICD @yushu @shmakdis @jepenven 
-@@@Matter @@MatterWatt @@MatterWifi @@Documentation @@CICD
+@@@MatterCodeowners @jumartin @jepenven @ricasall @makardou @selissia @rerasool @sashaha @lobelive @naagarwa @chbansal @rosahay @sabollim
+@@@Documentation @rerasool @berush @selissia
+@@@CICD @yushu @shmakdis @jepenven @makardou @sashaha
+@@@Matter @@MatterCodeowners @@Documentation @@CICD
 
 # Pipeline rule
-Jenkinsfile @@MatterWatt @@MatterWifi @@CICD
-jenkins/ @@MatterWatt @@MatterWifi @@CICD 
+Jenkinsfile @@MatterCodeowners @@CICD
+jenkins/ @@MatterCodeowners @@CICD
 
 # Documentation is everyone business
-**/*.md @@Documentation @@MatterWatt @@MatterWifi
-docs/silabs/ @@Documentation @@MatterWatt @@MatterWifi
+**/*.md @@Documentation @@MatterCodeowners
+docs/silabs/ @@Documentation @@MatterCodeowners
 
-CODEOWNERS               @@MatterWatt
+CODEOWNERS               @@MatterCodeowners
 
 # Ensure CODEOWNERS is triggered for every PR
-* @@MatterWatt @@MatterWifi
+* @@MatterCodeowners
 
-# Require at least one reviewer from MatterWatt and two from Matter
-(Check(@@MatterWatt >= 1) & Check(@@Matter >= 2))
+# Require at least one reviewer from MatterCodeowners and two from Matter
+(Check(@@MatterCodeowners >= 1) & Check(@@Matter >= 2))
 
 OverallCheck(2)

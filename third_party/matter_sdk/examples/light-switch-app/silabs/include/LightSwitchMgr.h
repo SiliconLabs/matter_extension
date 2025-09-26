@@ -54,6 +54,8 @@ public:
 
     CHIP_ERROR Init(chip::EndpointId lightSwitchEndpoint, chip::EndpointId genericSwitchEndpoint);
 
+    static LightSwitchMgr & GetInstance() { return sSwitch; }
+
     void GenericSwitchOnInitialPress();
     void GenericSwitchOnShortRelease();
 
@@ -65,13 +67,11 @@ public:
 
     /**
      * @brief Button event processing function
-     * Function triggers a switch action sent to the CHIP task
+     *        Function triggers a switch action sent to the CHIP task
      *
      * @param aEvent button event being processed
      */
     static void SwitchActionEventHandler(uint16_t eventType);
-
-    static LightSwitchMgr & GetInstance() { return sSwitch; }
 
 private:
     static LightSwitchMgr sSwitch;
@@ -80,6 +80,12 @@ private:
     StepModeEnum stepDirection = StepModeEnum::kUp;
 
     LightSwitchMgr() = default;
+
+    /**
+     * @brief This function will be called when PB0 is
+     *        long-pressed to trigger the factory-reset
+     */
+    void HandleLongPress();
 
     static void GenericSwitchWorkerFunction(intptr_t context);
 

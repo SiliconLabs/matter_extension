@@ -19,16 +19,17 @@
 #include "SoftwareFaultReports.h"
 #include "FreeRTOSConfig.h"
 #include "silabs_utils.h"
-#include <app/clusters/software-diagnostics-server/software-diagnostics-server.h>
+#include <app/clusters/software-diagnostics-server/software-fault-listener.h>
 #include <app/util/attribute-storage.h>
+#include <cmsis_os2.h>
 #include <lib/support/CHIPMemString.h>
 #include <lib/support/CodeUtils.h>
 #include <platform/CHIPDeviceLayer.h>
 #include <platform/DiagnosticDataProvider.h>
-#include <uart.h>
 
 // Macro to flush UART TX queue if enabled
 #if SILABS_LOG_OUT_UART
+#include <uart.h>
 #define SILABS_UART_FLUSH() uartFlushTxQueue()
 #else
 #define SILABS_UART_FLUSH() ((void) 0)
@@ -79,11 +80,12 @@ void OnSoftwareFaultEventHandler(const char * faultRecordString)
     softwareFault.id = taskDetails.xTaskNumber;
     softwareFault.faultRecording.SetValue(ByteSpan(Uint8::from_const_char(faultRecordString), strlen(faultRecordString)));
 
-    SystemLayer().ScheduleLambda([&softwareFault] { SoftwareDiagnosticsServer::Instance().OnSoftwareFaultDetect(softwareFault); });
+    SystemLayer().ScheduleLambda(
+        [&softwareFault] { Clusters::SoftwareDiagnostics::SoftwareFaultListener::GlobalNotifySoftwareFaultDetect(softwareFault); });
     // Allow some time for the Fault event to be sent as the next action after exiting this function
     // is typically an assert or reboot.
     // Depending on the task at fault, it is possible the event can't be transmitted.
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    osDelay(pdMS_TO_TICKS(1000));
 #endif // MATTER_DM_PLUGIN_SOFTWARE_DIAGNOSTICS_SERVER
 }
 

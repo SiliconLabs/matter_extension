@@ -1,0 +1,22 @@
+category: Clusters|Cameras
+description: >
+  Implementation of the Camera AV Stream Management Server Cluster.
+  The user has to enable the Camera AV Stream Management Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_camera_av_stream_management
+package: matter
+label: Camera AV Stream Management Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_camera_av_stream_management
+source:
+  - path: third_party/matter_sdk/src/app/clusters/camera-av-stream-management-server/camera-av-stream-management-server.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/camera-av-stream-management-server
+    file_list:
+      - path: camera-av-stream-management-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_camera_av_stream_management

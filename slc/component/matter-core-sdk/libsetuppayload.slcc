@@ -27,6 +27,7 @@ include:
       - path: QRCodeSetupPayloadParser.h
       - path: ManualSetupPayloadGenerator.h
       - path: AdditionalDataPayload.h
+      - path: OnboardingCodesUtil.h
 label: libsetuppayload
 package: matter
 provides:
@@ -40,6 +41,7 @@ source:
   - path: third_party/matter_sdk/src/setup_payload/Base38Encode.cpp
   - path: third_party/matter_sdk/src/setup_payload/ManualSetupPayloadGenerator.cpp
   - path: third_party/matter_sdk/src/setup_payload/ManualSetupPayloadParser.cpp
+  - path: third_party/matter_sdk/src/setup_payload/OnboardingCodesUtil.cpp
   - path: third_party/matter_sdk/src/setup_payload/QRCodeSetupPayloadGenerator.cpp
   - path: third_party/matter_sdk/src/setup_payload/QRCodeSetupPayloadParser.cpp
   - path: third_party/matter_sdk/src/setup_payload/SetupPayload.cpp

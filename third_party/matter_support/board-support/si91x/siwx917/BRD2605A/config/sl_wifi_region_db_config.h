@@ -1,23 +1,35 @@
-/*******************************************************************************
-* @file  sl_wifi_region_db_config.h
-* @brief
-*******************************************************************************
-* # License
-* <b>Copyright 2024 Silicon Laboratories Inc. www.silabs.com</b>
-*******************************************************************************
-*
-* The licensor of this software is Silicon Laboratories Inc. Your use of this
-* software is governed by the terms of Silicon Labs Master Software License
-* Agreement (MSLA) available at
-* www.silabs.com/about-us/legal/master-software-license-agreement. This
-* software is distributed to you in Source Code format and is governed by the
-* sections of the MSLA applicable to Source Code.
-*
-******************************************************************************/
+/********************************************************************************
+ * @file  sl_wifi_region_db_config.h
+ *******************************************************************************
+ * # License
+ * <b>Copyright 2024 Silicon Laboratories Inc. www.silabs.com</b>
+ *******************************************************************************
+ *
+ * SPDX-License-Identifier: Zlib
+ *
+ * The licensor of this software is Silicon Laboratories Inc.
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty. In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ *
+ ******************************************************************************/
 
 #pragma once
 
-// Define default region-specific configurations for 2.4GHz and 5GHz bands
+// Define default region-specific configurations for 2.4 GHz and 5 GHz bands
 const sli_si91x_set_region_ap_request_t default_US_region_2_4GHZ_configurations = {
   .set_region_code_from_user_cmd = SET_REGION_CODE_FROM_USER,
   .country_code                  = "US ",
@@ -36,7 +48,7 @@ const sli_si91x_set_region_ap_request_t default_US_region_5GHZ_configurations = 
   .channel_info[4]               = { .first_channel = 149, .no_of_channels = 5, .max_tx_power = 29 }
 };
 
-// Define default configurations for the European region for 2.4GHz and 5GHz bands
+// Define default configurations for the European region for 2.4 GHz and 5 GHz bands
 const sli_si91x_set_region_ap_request_t default_EU_region_2_4GHZ_configurations = {
   .set_region_code_from_user_cmd = SET_REGION_CODE_FROM_USER,
   .country_code                  = "EU ",
@@ -53,7 +65,7 @@ const sli_si91x_set_region_ap_request_t default_EU_region_5GHZ_configurations = 
   .channel_info[2]               = { .first_channel = 100, .no_of_channels = 11, .max_tx_power = 30 }
 };
 
-// Define default configurations for the Japanese region for 2.4GHz and 5GHz bands
+// Define default configurations for the Japanese region for 2.4 GHz and 5 GHz bands
 const sli_si91x_set_region_ap_request_t default_JP_region_2_4GHZ_configurations = {
   .set_region_code_from_user_cmd = SET_REGION_CODE_FROM_USER,
   .country_code                  = "JP ",
@@ -70,7 +82,7 @@ const sli_si91x_set_region_ap_request_t default_JP_region_5GHZ_configurations = 
   .channel_info[2]               = { .first_channel = 100, .no_of_channels = 11, .max_tx_power = 30 }
 };
 
-// Define default configurations for the Korean region for 2.4GHz and 5GHz bands
+// Define default configurations for the Korean region for 2.4 GHz and 5 GHz bands
 const sli_si91x_set_region_ap_request_t default_KR_region_2_4GHZ_configurations = {
   .set_region_code_from_user_cmd = SET_REGION_CODE_FROM_USER,
   .country_code                  = "KR ",
@@ -88,7 +100,7 @@ const sli_si91x_set_region_ap_request_t default_KR_region_5GHZ_configurations = 
   .channel_info[3]               = { .first_channel = 149, .no_of_channels = 5, .max_tx_power = 23 }
 };
 
-// Define default configurations for the Singapore region for 2.4GHz and 5GHz bands
+// Define default configurations for the Singapore region for 2.4 GHz and 5 GHz bands
 const sli_si91x_set_region_ap_request_t default_SG_region_2_4GHZ_configurations = {
   .set_region_code_from_user_cmd = SET_REGION_CODE_FROM_USER,
   .country_code                  = "SG ",
@@ -107,7 +119,7 @@ const sli_si91x_set_region_ap_request_t default_SG_region_5GHZ_configurations = 
   .channel_info[4]               = { .first_channel = 149, .no_of_channels = 4, .max_tx_power = 29 }
 };
 
-// Define default configurations for the China region for 2.4GHz and 5GHz bands
+// Define default configurations for the China region for 2.4 GHz and 5 GHz bands
 const sli_si91x_set_region_ap_request_t default_CN_region_2_4GHZ_configurations = {
   .set_region_code_from_user_cmd = SET_REGION_CODE_FROM_USER,
   .country_code                  = "CN ",

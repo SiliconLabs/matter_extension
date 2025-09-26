@@ -17,6 +17,7 @@ include:
     file_list:
       - path: SessionParameters.h
       - path: ExchangeDelegate.h
+      - path: ReliableMessageAnalyticsDelegate.h
       - path: ReliableMessageMgr.h
       - path: ExchangeMessageDispatch.h
       - path: ReliableMessageContext.h

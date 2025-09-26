@@ -18,7 +18,6 @@ provides:
 requires:
   - name: lwip_api
   - name: lwip_netif_ethernet
-  - name: matter_dnssd_minimal
   - name: sl_si91x_lwip_stack
     condition: [sl_si91x_wireless]
 
@@ -46,6 +45,3 @@ define:
     value: 1
   - name: LWIP_IPV6
     value: 1
-
-conflicts:
-  - name: matter_sockets

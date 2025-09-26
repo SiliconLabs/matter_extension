@@ -22,7 +22,6 @@ include:
       - path: InteractionModelTimeout.h
       - path: SubscriptionsInfoProvider.h
       - path: SubscriptionResumptionStorage.h
-      - path: AttributePersistenceProvider.h
       - path: EventLoggingDelegate.h
       - path: TimedRequest.h
       - path: WriteHandler.h
@@ -39,12 +38,10 @@ include:
       - path: PendingResponseTrackerImpl.h
       - path: SubscriptionResumptionSessionEstablisher.h
       - path: CommandHandler.h
-      - path: DefaultAttributePersistenceProvider.h
       - path: SimpleSubscriptionResumptionStorage.h
       - path: DeviceProxy.h
       - path: ChunkedWriteCallback.h
       - path: TimedHandler.h
-      - path: DeferredAttributePersistenceProvider.h
       - path: TestEventTriggerDelegate.h
       - path: CommandSenderLegacyCallback.h
       - path: EventLogging.h
@@ -87,8 +84,6 @@ include:
       - path: SynchronizedReportSchedulerImpl.h
       - path: reporting.h
       - path: ReportScheduler.h
-      - path: Read.h
-      - path: Read-Ember.h
 label: interaction_model
 package: matter
 provides:
@@ -114,7 +109,7 @@ source:
   - path: third_party/matter_sdk/src/app/TimedRequest.cpp
   - path: third_party/matter_sdk/src/app/WriteClient.cpp
   - path: third_party/matter_sdk/src/app/reporting/Engine.cpp
-  - path: third_party/matter_sdk/src/app/reporting/Read-Ember.cpp
+  - path: third_party/matter_sdk/src/app/reporting/reporting.cpp
   - path: third_party/matter_sdk/src/app/reporting/ReportSchedulerImpl.cpp
   - path: third_party/matter_sdk/src/app/reporting/SynchronizedReportSchedulerImpl.cpp
 ui_hints:

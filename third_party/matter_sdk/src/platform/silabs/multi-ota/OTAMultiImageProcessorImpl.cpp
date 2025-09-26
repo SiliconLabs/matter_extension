@@ -28,7 +28,7 @@ using namespace ::chip::DeviceLayer::Internal;
 static chip::OTAMultiImageProcessorImpl gImageProcessor;
 
 #if SL_WIFI && !SLI_SI91X_MCU_INTERFACE
-#include <platform/silabs/wifi/wf200/platform/spi_multiplex.h>
+#include <platform/silabs/wifi/ncp/spi_multiplex.h>
 #endif // SL_WIFI
 
 extern "C" {
@@ -46,7 +46,7 @@ namespace chip {
 
 CHIP_ERROR OTAMultiImageProcessorImpl::Init(OTADownloader * downloader)
 {
-    ReturnErrorCodeIf(downloader == nullptr, CHIP_ERROR_INVALID_ARGUMENT);
+    VerifyOrReturnError(downloader != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
 
     gImageProcessor.SetOTADownloader(downloader);
 
@@ -305,7 +305,7 @@ CHIP_ERROR OTAMultiImageProcessorImpl::ConfirmCurrentImage()
     uint32_t targetVersion;
 
     OTARequestorInterface * requestor = chip::GetRequestorInstance();
-    ReturnErrorCodeIf(requestor == nullptr, CHIP_ERROR_INTERNAL);
+    VerifyOrReturnError(requestor != nullptr, CHIP_ERROR_INTERNAL);
 
     targetVersion = requestor->GetTargetVersion();
     ReturnErrorOnFailure(DeviceLayer::ConfigurationMgr().GetSoftwareVersion(currentVersion));
@@ -430,7 +430,8 @@ void OTAMultiImageProcessorImpl::HandleApply(intptr_t context)
 #if (defined(_SILICON_LABS_32B_SERIES_3) || defined(SLI_SI91X_MCU_INTERFACE)) && CHIP_PROGRESS_LOGGING
     osDelay(500); // sl-temp: delay for uart print before reboot
 #endif
-    // This reboots the device
+    // Write that we are rebooting after a software update and reboot the device
+    SilabsConfig::WriteConfigValue(SilabsConfig::kConfigKey_MatterUpdateReboot, true);
 #ifdef SLI_SI91X_MCU_INTERFACE // 917 SoC reboot
     chip::DeviceLayer::Silabs::GetPlatform().SoftwareReset();
 #else // EFR reboot

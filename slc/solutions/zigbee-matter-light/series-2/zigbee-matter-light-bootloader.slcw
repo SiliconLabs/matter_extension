@@ -1,5 +1,6 @@
 label: zigbee-matter-light-bootloader
 quality: production
+package: matter
 description: Matter solution containing both a Matter external bootloader and Light Zigbee Matter Example
 project:
   - path: ../../../sample-app/zigbee-matter-light/efr32/zigbee-matter-light.slcp

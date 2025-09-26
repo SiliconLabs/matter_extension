@@ -7,7 +7,7 @@
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
  *    You may obtain a copy of the License at
- *'
+ *
  *        http://www.apache.org/licenses/LICENSE-2.0
  *
  *    Unless required by applicable law or agreed to in writing, software
@@ -934,14 +934,16 @@ void RegisterSwitchCommands()
     static const shell_command_t sSwitchCommand = { &SwitchCommandHandler, "switch",
                                                     "Light-switch commands. Usage: switch <subcommand>" };
 
-    sShellSwitchGroupsOnOffSubCommands.RegisterCommands(sSwitchGroupsOnOffSubCommands, ArraySize(sSwitchGroupsOnOffSubCommands));
+    sShellSwitchGroupsOnOffSubCommands.RegisterCommands(sSwitchGroupsOnOffSubCommands,
+                                                        MATTER_ARRAY_SIZE(sSwitchGroupsOnOffSubCommands));
     sShellSwitchGroupsLevelControlSubCommands.RegisterCommands(sSwitchGroupsLevelControlSubCommands,
-                                                               ArraySize(sSwitchGroupsLevelControlSubCommands));
-    sShellSwitchOnOffSubCommands.RegisterCommands(sSwitchOnOffSubCommands, ArraySize(sSwitchOnOffSubCommands));
-    sShellSwitchLevelControlSubCommands.RegisterCommands(sSwitchLevelControlSubCommands, ArraySize(sSwitchLevelControlSubCommands));
-    sShellSwitchGroupsSubCommands.RegisterCommands(sSwitchGroupsSubCommands, ArraySize(sSwitchGroupsSubCommands));
-    sShellSwitchBindingSubCommands.RegisterCommands(sSwitchBindingSubCommands, ArraySize(sSwitchBindingSubCommands));
-    sShellSwitchSubCommands.RegisterCommands(sSwitchSubCommands, ArraySize(sSwitchSubCommands));
+                                                               MATTER_ARRAY_SIZE(sSwitchGroupsLevelControlSubCommands));
+    sShellSwitchOnOffSubCommands.RegisterCommands(sSwitchOnOffSubCommands, MATTER_ARRAY_SIZE(sSwitchOnOffSubCommands));
+    sShellSwitchLevelControlSubCommands.RegisterCommands(sSwitchLevelControlSubCommands,
+                                                         MATTER_ARRAY_SIZE(sSwitchLevelControlSubCommands));
+    sShellSwitchGroupsSubCommands.RegisterCommands(sSwitchGroupsSubCommands, MATTER_ARRAY_SIZE(sSwitchGroupsSubCommands));
+    sShellSwitchBindingSubCommands.RegisterCommands(sSwitchBindingSubCommands, MATTER_ARRAY_SIZE(sSwitchBindingSubCommands));
+    sShellSwitchSubCommands.RegisterCommands(sSwitchSubCommands, MATTER_ARRAY_SIZE(sSwitchSubCommands));
 
     Engine::Root().RegisterCommands(&sSwitchCommand, 1);
 }

@@ -37,8 +37,7 @@
 #ifndef MQTT_OPTS_H
 #define MQTT_OPTS_H
 
-
-#ifdef	__cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -47,7 +46,7 @@ extern "C" {
  * @ingroup mqtt
  * @{
  */
-#define MQTT_DEBUG  0x0
+#define MQTT_DEBUG 0x0
 /**
  * Output ring-buffer size, must be able to fit largest outgoing publish message topic+payloads
  */

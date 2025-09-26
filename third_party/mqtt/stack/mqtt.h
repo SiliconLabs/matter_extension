@@ -50,25 +50,38 @@ typedef uint32_t mqtt_mem_size_t;
 typedef struct mqtt_client_t mqtt_client_t;
 typedef struct mqtt_transport_intf_t mqtt_transport_intf_t;
 
-#define MQTT_MIN(x , y)  (((x) < (y)) ? (x) : (y))
-#define MQTT_ARRAYSIZE(x) (sizeof(x)/sizeof((x)[0]))
+#define MQTT_MIN(x, y)    (((x) < (y)) ? (x) : (y))
+#define MQTT_ARRAYSIZE(x) (sizeof(x) / sizeof((x)[0]))
 
 #ifdef ERR_FAIL
 #undef ERR_FAIL
 #endif
 #define ERR_FAIL -1
 
-#define MQTT_PLATFORM_ASSERT(x) do {printf("Assertion \"%s\" failed at line %d in %s\n", \
-                                     x, __LINE__, __FILE__); fflush(NULL); abort();} while(0)
+#define MQTT_PLATFORM_ASSERT(x)                                                  \
+  do {                                                                           \
+    printf("Assertion \"%s\" failed at line %d in %s\n", x, __LINE__, __FILE__); \
+    fflush(NULL);                                                                \
+    abort();                                                                     \
+  } while (0)
 
 #define MQTT_PLATFORM_ERROR(message) MQTT_PLATFORM_ASSERT(message)
 
 /* if "expression" isn't true, then print "message" and execute "handler" expression */
-#define MQTT_ERROR(message, expression, handler) do { if (!(expression)) { \
-  MQTT_PLATFORM_ERROR(message); handler;}} while(0)
+#define MQTT_ERROR(message, expression, handler) \
+  do {                                           \
+    if (!(expression)) {                         \
+      MQTT_PLATFORM_ERROR(message);              \
+      handler;                                   \
+    }                                            \
+  } while (0)
 
-#define MQTT_ASSERT(message, assertion) do { if (!(assertion)) { \
-  MQTT_PLATFORM_ASSERT(message); }} while(0)
+#define MQTT_ASSERT(message, assertion) \
+  do {                                  \
+    if (!(assertion)) {                 \
+      MQTT_PLATFORM_ASSERT(message);    \
+    }                                   \
+  } while (0)
 
 /* Flags for "apiflags" parameter in tcp_write */
 #define MQTT_WRITE_FLAG_COPY 0x01
@@ -77,7 +90,7 @@ typedef struct mqtt_transport_intf_t mqtt_transport_intf_t;
 /*--------------------------------------------------------------------------------------------------------------------- */
 /* Output ring buffer */
 
-#define MQTT_RINGBUF_IDX_MASK ((MQTT_OUTPUT_RINGBUF_SIZE) - 1)
+#define MQTT_RINGBUF_IDX_MASK ((MQTT_OUTPUT_RINGBUF_SIZE)-1)
 
 /** Add single item to ring buffer */
 #define mqtt_ringbuf_put(rb, item) ((rb)->buf)[(rb)->put++ & MQTT_RINGBUF_IDX_MASK] = (item)
@@ -89,23 +102,18 @@ typedef struct mqtt_transport_intf_t mqtt_transport_intf_t;
 #define mqtt_ringbuf_free(rb) (MQTT_OUTPUT_RINGBUF_SIZE - mqtt_ringbuf_len(rb))
 
 /** Return number of bytes possible to read without wrapping around */
-#define mqtt_ringbuf_linear_read_length(rb) MQTT_MIN(mqtt_ringbuf_len(rb), (MQTT_OUTPUT_RINGBUF_SIZE - ((rb)->get & MQTT_RINGBUF_IDX_MASK)))
+#define mqtt_ringbuf_linear_read_length(rb) \
+  MQTT_MIN(mqtt_ringbuf_len(rb), (MQTT_OUTPUT_RINGBUF_SIZE - ((rb)->get & MQTT_RINGBUF_IDX_MASK)))
 
 /** Return pointer to ring buffer get position */
 #define mqtt_ringbuf_get_ptr(rb) (&(rb)->buf[(rb)->get & MQTT_RINGBUF_IDX_MASK])
 
 #define mqtt_ringbuf_advance_get_idx(rb, len) ((rb)->get += (len))
 
-
 /**
  * MQTT client connection states
  */
-enum {
-  TCP_DISCONNECTED,
-  TCP_CONNECTING,
-  MQTT_CONNECTING,
-  MQTT_CONNECTED
-};
+enum { TCP_DISCONNECTED, TCP_CONNECTING, MQTT_CONNECTING, MQTT_CONNECTED };
 
 enum {
   /** No error, everything OK. */
@@ -140,14 +148,14 @@ struct mqtt_connect_client_info_t {
   /** Client identifier, must be set by caller */
   const char *client_id;
   /** User name and password, set to NULL if not used */
-  const char* client_user;
-  const char* client_pass;
+  const char *client_user;
+  const char *client_pass;
   /** keep alive time in seconds, 0 to disable keep alive functionality*/
   uint16_t keep_alive;
   /** will topic, set to NULL if will is not to be used,
       will_msg, will_qos and will retain are then ignored */
-  const char* will_topic;
-  const char* will_msg;
+  const char *will_topic;
+  const char *will_msg;
   uint8_t will_qos;
   uint8_t will_retain;
 };
@@ -155,8 +163,7 @@ struct mqtt_connect_client_info_t {
 /**
  * @ingroup mqtt
  * Connection status codes */
-typedef enum
-{
+typedef enum {
   MQTT_CONNECT_ACCEPTED                 = 0,
   MQTT_CONNECT_REFUSED_PROTOCOL_VERSION = 1,
   MQTT_CONNECT_REFUSED_IDENTIFIER       = 2,
@@ -180,7 +187,6 @@ typedef enum
  */
 typedef void (*mqtt_connection_cb_t)(mqtt_client_t *client, void *arg, mqtt_connection_status_t status);
 
-
 /**
  * @ingroup mqtt
  * Data callback flags */
@@ -201,8 +207,12 @@ enum {
  * @param flags MQTT_DATA_FLAG_LAST set when this call contains the last part of data from publish message
  *
  */
-typedef void (*mqtt_incoming_data_cb_t)(void *arg, const char *topic, uint16_t topic_len, const uint8_t *data, uint16_t len, uint8_t flags);
-
+typedef void (*mqtt_incoming_data_cb_t)(void *arg,
+                                        const char *topic,
+                                        uint16_t topic_len,
+                                        const uint8_t *data,
+                                        uint16_t len,
+                                        uint8_t flags);
 
 /**
  * @ingroup mqtt
@@ -215,7 +225,6 @@ typedef void (*mqtt_incoming_data_cb_t)(void *arg, const char *topic, uint16_t t
  */
 typedef void (*mqtt_incoming_publish_cb_t)(void *arg, const char *topic, uint32_t tot_len);
 
-
 /**
  * @ingroup mqtt
  * Function prototype for mqtt request callback. Called when a subscribe, unsubscribe
@@ -227,12 +236,10 @@ typedef void (*mqtt_incoming_publish_cb_t)(void *arg, const char *topic, uint32_
  */
 typedef void (*mqtt_request_cb_t)(void *arg, mqtt_err_t err);
 
-
 /**
  * Pending request item, binds application callback to pending server requests
  */
-struct mqtt_request_t
-{
+struct mqtt_request_t {
   /** Next item in list, NULL means this is the last in chain,
       next pointing at itself means request is unallocated */
   struct mqtt_request_t *next;
@@ -255,7 +262,7 @@ struct mqtt_ringbuf_t {
 typedef uint16_t (*mqtt_ti_getsndLen)(void *conn);
 typedef int8_t (*mqtt_send_to_network)(void *conn, void *buff, uint16_t len, uint8_t flags, uint8_t isFinal);
 typedef uint16_t (*mqtt_ti_getrcvLen)(void *conn);
-typedef int8_t (*mqtt_recv_from_network)(void *conn, void * buf, uint16_t len, uint16_t offset);
+typedef int8_t (*mqtt_recv_from_network)(void *conn, void *buf, uint16_t len, uint16_t offset);
 typedef void (*mqtt_close_connection)(void *conn);
 
 typedef void (*timer_callback)(void *arg);
@@ -275,8 +282,7 @@ struct mqtt_transport_intf_t {
 };
 
 /** MQTT client */
-struct mqtt_client_t
-{
+struct mqtt_client_t {
   /** Timers and timeouts */
   uint16_t cyclic_tick;
   uint16_t keep_alive;
@@ -305,10 +311,12 @@ struct mqtt_client_t
   struct mqtt_ringbuf_t output;
 };
 
-
 /** Connect to server */
-mqtt_err_t mqtt_client_connect(mqtt_client_t *client, void *conn, mqtt_connection_cb_t cb, void *arg,
-                   const struct mqtt_connect_client_info_t *client_info);
+mqtt_err_t mqtt_client_connect(mqtt_client_t *client,
+                               void *conn,
+                               mqtt_connection_cb_t cb,
+                               void *arg,
+                               const struct mqtt_connect_client_info_t *client_info);
 
 /** Disconnect from server */
 void mqtt_disconnect(mqtt_client_t *client);
@@ -320,11 +328,18 @@ mqtt_client_t *mqtt_client_new(void);
 uint8_t mqtt_client_is_connected(mqtt_client_t *client);
 
 /** Set callback to call for incoming publish */
-void mqtt_set_inpub_callback(mqtt_client_t *client, mqtt_incoming_publish_cb_t,
-                             mqtt_incoming_data_cb_t data_cb, void *arg);
+void mqtt_set_inpub_callback(mqtt_client_t *client,
+                             mqtt_incoming_publish_cb_t,
+                             mqtt_incoming_data_cb_t data_cb,
+                             void *arg);
 
 /** Common function for subscribe and unsubscribe */
-mqtt_err_t mqtt_sub_unsub(mqtt_client_t *client, const char *topic, uint8_t qos, mqtt_request_cb_t cb, void *arg, uint8_t sub);
+mqtt_err_t mqtt_sub_unsub(mqtt_client_t *client,
+                          const char *topic,
+                          uint8_t qos,
+                          mqtt_request_cb_t cb,
+                          void *arg,
+                          uint8_t sub);
 
 /** @ingroup mqtt
  *Subscribe to topic */
@@ -333,10 +348,15 @@ mqtt_err_t mqtt_sub_unsub(mqtt_client_t *client, const char *topic, uint8_t qos,
  *  Unsubscribe to topic */
 #define mqtt_unsubscribe(client, topic, cb, arg) mqtt_sub_unsub(client, topic, 0, cb, arg, 0)
 
-
 /** Publish data to topic */
-mqtt_err_t mqtt_publish(mqtt_client_t *client, const char *topic, const void *payload, uint16_t payload_length, uint8_t qos, uint8_t retain,
-                                    mqtt_request_cb_t cb, void *arg);
+mqtt_err_t mqtt_publish(mqtt_client_t *client,
+                        const char *topic,
+                        const void *payload,
+                        uint16_t payload_length,
+                        uint8_t qos,
+                        uint8_t retain,
+                        mqtt_request_cb_t cb,
+                        void *arg);
 
 void *mqtt_mem_calloc(mqtt_mem_size_t count, mqtt_mem_size_t size);
 void mqtt_close(mqtt_client_t *client, mqtt_connection_status_t reason);

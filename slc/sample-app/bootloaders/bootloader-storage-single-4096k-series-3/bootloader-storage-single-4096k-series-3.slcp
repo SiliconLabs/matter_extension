@@ -1,13 +1,14 @@
 project_name: matter-bootloader-storage-single-4096k
 package: matter
-quality: internal
-label: Bootloader - SoC Storage (single OTA image of size 1540kB for 4MB flash)
+quality: production
+label: Bootloader - SoC Storage (single OTA image)
 description: >
-  This sample configuration of the simplicity bootloader configures the bootloader to use the flash to store firmware update images. The storage configuration is set up to store a single firmware update image at a time, in a single storage slot. The storage slot is configured to start at address 0x01200000 for device with 0x01000000 flash base, and have a size of 1664 kB. This can be configured on the "Storage" tab.
+  This sample configuration of the simplicity bootloader configures the bootloader to use the flash to store firmware update images. The storage configuration is set up to store a single firmware update image at a time, in a single storage slot. This project supports Matter OTA updates for 3MB, 4MB and 8MB variants of Series-3 boards. 
 
 sdk_extension:
   - id: matter
-    version: "2.6.1"
+    version: "2.7.0"
+    vendor: silabs
 
 component:
   - id: btl_core
@@ -25,13 +26,41 @@ component:
 configuration:
   - name: SLOT0_ENABLE
     value: 1
+
+# The OTA storage slot address and size are set based in the flash size of the Series-3 chip.
+
+# The 3MB variant 
+  - name: SLOT0_SIZE
+    value: 1208320
+    condition: [simg301m113wih]
+  - name: SLOT0_START
+    value: 0x01168000
+    condition: [simg301m113wih]
+  - name: BTL_STORAGE_BASE_ADDRESS
+    value: 0x01168000
+    condition: [simg301m113wih]
+
+# The 4MB variant
   - name: SLOT0_SIZE
     value: 1576960
+    unless: [simg301m113wih, simg301m104xil_8mb]
   - name: SLOT0_START
-    value: 18841600
+    value: 0x011F8000
+    unless: [simg301m113wih, simg301m104xil_8mb]
   - name: BTL_STORAGE_BASE_ADDRESS
-    value: 18841600
+    value: 0x011F8000
+    unless: [simg301m113wih, simg301m104xil_8mb]
 
+# The 8MB variant
+  - name: SLOT0_SIZE
+    value: 2732032
+    condition: [simg301m104xil_8mb]
+  - name: SLOT0_START
+    value: 0x0378000
+    condition: [simg301m104xil_8mb]
+  - name: BTL_STORAGE_BASE_ADDRESS
+    value: 0x0378000
+    condition: [simg301m104xil_8mb]
 readme:
   - path: ./readme.md
 ui_hints:

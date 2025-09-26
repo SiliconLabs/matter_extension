@@ -84,15 +84,80 @@ def validate_upgrade_file(directory):
 
         printCleansed(results)
 
-# Print results and remove extra noise from SLC            
+# Print results and remove extra noise from SLC and suppress toolchain warnings            
 def printCleansed(output):
+    # Constants for cleaner code
+    SLC_HEADER_LINES = 2
+    TOOLCHAIN_PATTERNS = [
+        'toolchain_settings', 'gcc_compiler_option', 'gcc_linker_option', 
+        'toolchain', 'linker option', 'compiler option', 'toolchains.slct', 'slct', 'toolchain file'
+    ]
+    TOOLCHAIN_WARNING_MESSAGES = [
+        'toolchain_settings: No toolchain setting schema is defined',
+        'Please add a *.slct file that defines the allowed toolchain_settings',
+        'No toolchain setting schema is defined'
+    ]
+    WARNING_PATTERNS = ['warning:', 'warn:', '[warning]', 'warning -', 'warning found', 'warnings detected']
+    
     for item in output:
         lines = item.split('\n')
-        #Do not print logs for components without any issues.
+        # Do not print logs for components without any issues
         if "No issues detected" in lines[-1]:
             break
-        cleanedOutput = '\n'.join(lines[2:])
-        print(cleanedOutput + "\n")
+        
+        filtered_lines = []
+        
+        for i, line in enumerate(lines[SLC_HEADER_LINES:], start=SLC_HEADER_LINES):
+            # Skip specific toolchain warning patterns
+            if any(toolchain_warning in line for toolchain_warning in TOOLCHAIN_WARNING_MESSAGES):
+                continue
+            
+            # Check if this line is toolchain-related
+            is_toolchain_related = any(pattern in line.lower() for pattern in TOOLCHAIN_PATTERNS)
+            
+            # Skip toolchain warnings but keep toolchain errors
+            if is_toolchain_related:
+                is_warning = any(warning_pattern in line.lower() for warning_pattern in WARNING_PATTERNS)
+                if is_warning:
+                    continue
+            
+            # Handle "Warnings" headers that precede only toolchain warnings
+            if line.strip().lower() in ['warnings', '- warnings']:
+                if skip_toolchain_warnings_header(lines, i, TOOLCHAIN_WARNING_MESSAGES, TOOLCHAIN_PATTERNS):
+                    continue
+            
+            filtered_lines.append(line)
+        
+        if filtered_lines:
+            cleanedOutput = '\n'.join(filtered_lines)
+            print(cleanedOutput + "\n")
+
+def skip_toolchain_warnings_header(lines, current_index, toolchain_messages, toolchain_patterns):
+    """Helper function to determine if a warnings header should be skipped"""
+    upcoming_lines = lines[current_index + 1:]
+    all_toolchain_warnings = True
+    has_warnings = False
+    
+    for upcoming_line in upcoming_lines:
+        if upcoming_line.strip() == "":
+            continue
+            
+        if any(msg in upcoming_line for msg in toolchain_messages):
+            has_warnings = True
+            continue
+            
+        # Stop at next section header
+        if upcoming_line.strip() and not upcoming_line.startswith(' '):
+            break
+            
+        if upcoming_line.strip():
+            has_warnings = True
+            is_upcoming_toolchain = any(pattern in upcoming_line.lower() for pattern in toolchain_patterns)
+            if not is_upcoming_toolchain:
+                all_toolchain_warnings = False
+                break
+    
+    return has_warnings and all_toolchain_warnings
 
 if __name__ == "__main__":
     rootDir  = os.getcwd()

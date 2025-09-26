@@ -218,6 +218,6 @@ Lighting-app's [README](../../../examples/lighting-app/efr32/README.md).
 [4]: ../../../third_party/zap/repo/README.md
 [5]: ../../../
 [6]: #Modifying-the-GN-Build-files
-[7]: src/ZclCallbacks.cpp
+[7]: src/DataModelCallbacks.cpp
 [8]: ../../sl-newLight/efr32/src/
 [9]: ../../sl-newLight/efr32/README.md

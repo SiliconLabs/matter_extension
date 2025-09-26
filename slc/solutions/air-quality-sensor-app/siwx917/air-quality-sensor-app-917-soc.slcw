@@ -1,5 +1,6 @@
 label: air-quality-sensor-app-917-soc
 quality: production
+package: matter
 description: Matter solution containing for Air Quality Sensor App over WiFi
 project:
   - path: ../../../sample-app/air-quality-sensor-app/siwx917/air-quality-sensor-app-917-soc.slcp

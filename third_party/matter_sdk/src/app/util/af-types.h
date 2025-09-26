@@ -26,6 +26,8 @@
 #include <stdbool.h> // For bool
 #include <stdint.h>  // For various uint*_t types
 
+#include <app/util/AttributesChangedListener.h>
+#include <app/util/MarkAttributeDirty.h>
 #include <app/util/basic-types.h>
 #include <app/util/types_stub.h> // For various types.
 
@@ -33,6 +35,7 @@
 
 #include <app/AttributePathParams.h>
 #include <app/ConcreteAttributePath.h>
+#include <app/data-model-provider/MetadataTypes.h>
 #include <app/data-model/Nullable.h>
 #include <lib/core/DataModelTypes.h>
 #include <lib/support/Variant.h>
@@ -133,15 +136,7 @@ struct EmberAfCluster
     bool IsClient() const { return (mask & MATTER_CLUSTER_FLAG_CLIENT) != 0; }
 };
 
-/**
- * @brief Struct that represents a logical device type consisting
- * of a DeviceID and its version.
- */
-typedef struct
-{
-    chip::DeviceTypeId deviceId;
-    uint8_t deviceVersion;
-} EmberAfDeviceType;
+using EmberAfDeviceType = chip::app::DataModel::DeviceTypeEntry;
 
 /**
  * @brief Struct used to find an attribute in storage. Together the elements
@@ -200,7 +195,6 @@ enum class EmberAfEndpointOptions : uint8_t
 {
     isEnabled         = 0x1,
     isFlatComposition = 0x2,
-    isTreeComposition = 0x3,
 };
 
 /**
@@ -241,6 +235,15 @@ struct EmberAfDefinedEndpoint
      * Span pointing to a list of tags. Lifetime has to outlive usage, and data is owned by callers.
      */
     chip::Span<const chip::app::Clusters::Descriptor::Structs::SemanticTagStruct::Type> tagList;
+
+#if CHIP_CONFIG_USE_ENDPOINT_UNIQUE_ID
+    /**
+     * Unique Id for this endpoint.
+     */
+    char endpointUniqueId[chip::app::Clusters::Descriptor::Attributes::EndpointUniqueID::TypeInfo::MaxLength()] = { 0 };
+
+    uint8_t endpointUniqueIdSize = 0;
+#endif
 };
 
 /**
@@ -287,30 +290,3 @@ typedef chip::Protocols::InteractionModel::Status (*EmberAfClusterPreAttributeCh
 #define MAX_INT16U_VALUE (0xFFFF)
 
 /** @} END addtogroup */
-
-namespace chip {
-namespace app {
-
-enum class MarkAttributeDirty
-{
-    kIfChanged,
-    kNo,
-    // kYes might need to be used if the attribute value was previously changed
-    // without reporting, and now is being set in a situation where we know
-    // reporting needs to be triggered (e.g. because QuieterReportingAttribute
-    // indicated that).
-    kYes,
-};
-
-/// Notification object of a specific path being changed
-class AttributesChangedListener
-{
-public:
-    virtual ~AttributesChangedListener() = default;
-
-    /// Called when the set of attributes identified by AttributePathParams (which may contain wildcards) is to be considered dirty.
-    virtual void MarkDirty(const AttributePathParams & path) = 0;
-};
-
-} // namespace app
-} // namespace chip

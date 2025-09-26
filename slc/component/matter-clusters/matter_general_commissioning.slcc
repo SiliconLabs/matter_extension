@@ -13,6 +13,7 @@ provides:
   - name: matter_general_commissioning
 source:
   - path: third_party/matter_sdk/src/app/clusters/general-commissioning-server/general-commissioning-server.cpp
+  #- path: third_party/matter_sdk/src/app/clusters/general-commissioning-server/TemporaryTestCoupling.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/general-commissioning-server
     file_list:

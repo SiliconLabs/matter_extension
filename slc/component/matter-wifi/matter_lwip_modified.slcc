@@ -1,0 +1,181 @@
+id: matter_lwip_modified
+package: matter
+description: >
+  Modified Matter Lwip for wifi with Power optimizations
+label: Matter LwIP
+category: Matter-WiFi|lwip
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+provides:
+  - name: matter_lwip_modified
+  - name: lwip
+  - name: lwip_port_freertos
+  - name: sl_si91x_errno
+  - name: sl_si91x_lwip_stack
+  - name: sl_si91x_network_stack
+
+include:
+  - path: third_party/matter_sdk/src/lwip/silabs
+    file_list:
+      - path: lwipopts.h
+      - path: lwipopts-wf200.h
+      - path: lwipopts-rs911x.h
+      - path: arch/cc.h
+      - path: arch/perf.h
+      - path: lwippools.h
+  - path: slc/inc/lwip
+    file_list:
+      - path: lwip_buildconfig.h
+  - path: third_party/matter_sdk/src/lwip/freertos
+    file_list:
+      - path: arch/sys_arch.h
+  - path: third_party/matter_support/sdk-copies/lwip/src/include
+    file_list:
+      - path: lwip/altcp.h
+      - path: lwip/altcp_tcp.h
+      - path: lwip/altcp_tls.h
+      - path: lwip/api.h
+      - path: lwip/arch.h
+      - path: lwip/autoip.h
+      - path: lwip/debug.h
+      - path: lwip/def.h
+      - path: lwip/dhcp6.h
+      - path: lwip/dhcp.h
+      - path: lwip/dns.h
+      - path: lwip/err.h
+      - path: lwip/errno.h
+      - path: lwip/etharp.h
+      - path: lwip/ethip6.h
+      - path: lwip/icmp6.h
+      - path: lwip/icmp.h
+      - path: lwip/if_api.h
+      - path: lwip/igmp.h
+      - path: lwip/inet_chksum.h
+      - path: lwip/inet.h
+      - path: lwip/init.h
+      - path: lwip/init.h.cmake.in
+      - path: lwip/ip4_addr.h
+      - path: lwip/ip4_frag.h
+      - path: lwip/ip4.h
+      - path: lwip/ip6_addr.h
+      - path: lwip/ip6_frag.h
+      - path: lwip/ip6.h
+      - path: lwip/ip6_zone.h
+      - path: lwip/ip_addr.h
+      - path: lwip/ip.h
+      - path: lwip/mem.h
+      - path: lwip/memp.h
+      - path: lwip/mld6.h
+      - path: lwip/nd6.h
+      - path: lwip/netbuf.h
+      - path: lwip/netdb.h
+      - path: lwip/netifapi.h
+      - path: lwip/netif.h
+      - path: lwip/opt.h
+      - path: lwip/pbuf.h
+      - path: lwip/raw.h
+      - path: lwip/sio.h
+      - path: lwip/snmp.h
+      - path: lwip/sockets.h
+      - path: lwip/stats.h
+      - path: lwip/sys.h
+      - path: lwip/tcpbase.h
+      - path: lwip/tcp.h
+      - path: lwip/tcpip.h
+      - path: lwip/timeouts.h
+      - path: lwip/udp.h
+      - path: lwip/priv/altcp_priv.h
+      - path: lwip/priv/api_msg.h
+      - path: lwip/priv/memp_priv.h
+      - path: lwip/priv/memp_std.h
+      - path: lwip/priv/mem_priv.h
+      - path: lwip/priv/nd6_priv.h
+      - path: lwip/priv/raw_priv.h
+      - path: lwip/priv/sockets_priv.h
+      - path: lwip/priv/tcpip_priv.h
+      - path: lwip/priv/tcp_priv.h
+      - path: lwip/prot/autoip.h
+      - path: lwip/prot/dhcp.h
+      - path: lwip/prot/dhcp6.h
+      - path: lwip/prot/dns.h
+      - path: lwip/prot/etharp.h
+      - path: lwip/prot/ethernet.h
+      - path: lwip/prot/iana.h
+      - path: lwip/prot/icmp.h
+      - path: lwip/prot/icmp6.h
+      - path: lwip/prot/ieee.h
+      - path: lwip/prot/igmp.h
+      - path: lwip/prot/ip.h
+      - path: lwip/prot/ip4.h
+      - path: lwip/prot/ip6.h
+      - path: lwip/prot/mld6.h
+      - path: lwip/prot/nd6.h
+      - path: lwip/prot/tcp.h
+      - path: lwip/prot/udp.h
+      - path: netif/etharp.h
+      - path: netif/ethernet.h
+      - path: netif/ppp/ppp_opts.h
+      - path: netif/ppp/ppp_impl.h
+  
+
+source:
+  - path: third_party/matter_sdk/src/lwip/freertos/sys_arch.c
+
+  - path: third_party/matter_support/sdk-copies/lwip/src/api/api_lib.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/api/api_msg.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/api/err.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/api/if_api.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/api/netbuf.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/api/netdb.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/api/netifapi.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/api/sockets.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/api/tcpip.c
+
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/altcp.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/altcp_alloc.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/altcp_tcp.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/def.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/dns.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/inet_chksum.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/init.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/ip.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/ipv4/autoip.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/ipv4/dhcp.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/ipv4/etharp.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/ipv4/icmp.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/ipv4/igmp.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/ipv4/ip4.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/ipv4/ip4_addr.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/ipv4/ip4_frag.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/ipv6/ethip6.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/ipv6/icmp6.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/ipv6/inet6.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/ipv6/ip6.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/ipv6/ip6_addr.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/ipv6/ip6_frag.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/ipv6/mld6.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/ipv6/nd6.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/mem.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/memp.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/netif.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/pbuf.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/raw.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/stats.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/sys.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/tcp.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/tcp_in.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/tcp_out.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/timeouts.c
+  - path: third_party/matter_support/sdk-copies/lwip/src/core/udp.c
+
+  - path: third_party/matter_support/sdk-copies/lwip/src/netif/ethernet.c
+
+define:
+  - name: LWIP_NETIF_API
+    value: 1
+  - name: LWIP_IPV6
+    value: 1
+  - name: SLI_SI91X_LWIP_HOSTED_NETWORK_STACK
+    value: 1

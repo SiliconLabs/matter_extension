@@ -7,9 +7,10 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.1"
+    version: "2.7.0"
+    vendor: silabs
   - id: wiseconnect3_sdk
-    version: "3.5.1"
+    version: "3.5.2"
 
 component:
   - id: matter_leds
@@ -23,6 +24,12 @@ component:
   - id: matter_shell
     from: matter
 
+  - id: mbedtls_pki_aws
+    condition: [matter_aws]
+    from: matter
+  - id: mbedtls_entropy_default_aws
+    condition: [matter_aws]
+    from: matter
   - id: matter_wifi
     from: matter
 
@@ -81,6 +88,8 @@ component:
     from: matter
   - id: matter_user_label
     from: matter
+  - id: matter_unit_localization
+    from: matter
   - id: matter_wifi_network_diagnostics
     from: matter
   #- id: matter_si70xx_sensor
@@ -93,6 +102,9 @@ component:
     from: matter
   - id: matter_lwip
     from: matter
+  # TODO: Remove this in the SiSDK 25Q4 release, where the LwIP fix will be included in the SiSDK.
+  - id: sl_si91x_lwip_stack
+    from: wiseconnect3_sdk
 
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
@@ -178,7 +190,7 @@ source:
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/ZclCallbacks.cpp
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/DataModelCallbacks.cpp
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/SensorManager.cpp
     directory: src

@@ -348,3 +348,15 @@ upgrade:
           Updating configUSE_NEWLIB_REENTRANT value from 1 to 0 
         value:
           "(1)": "(0)"
+
+  - sdk:
+      id: matter
+      version: 2.7.0
+    component:
+      - trigger: matter
+        description: >
+           !!! WARNING !!! Automatic upgrades to Matter 2.7.0 are not recommended. Instead create a new project and manually port your changes. 
+        status: user_verification
+    configuration:
+      - script: slc/config/scripts/upgrade_config_to_2.7.0.lua
+

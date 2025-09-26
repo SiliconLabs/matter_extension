@@ -1,0 +1,23 @@
+category: Clusters|Energy Management
+description: >
+  Implementation of the Meter Identification Server Cluster.
+  The user has to enable the Meter Identification Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_meter_identification
+package: matter
+label: Meter Identification Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_meter_identification
+source:
+  - path: third_party/matter_sdk/src/app/clusters/meter-identification-server/meter-identification-server.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/meter-identification-server
+    file_list:
+      - path: meter-identification-server.h
+      - path: MeterIdentificationTestEventTriggerHandler.h
+template_contribution:
+  - name: component_catalog
+    value: matter_meter_identification

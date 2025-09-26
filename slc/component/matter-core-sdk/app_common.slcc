@@ -21,7 +21,6 @@ include:
       - path: Engine.h
       - path: SynchronizedReportSchedulerImpl.h
       - path: reporting.h
-      - path: Read-Checked.h
       - path: ReportScheduler.h
   - path: third_party/matter_sdk/src/app
     file_list:
@@ -29,9 +28,9 @@ include:
       - path: util/attribute-table-detail.h
       - path: util/attribute-storage-detail.h
       - path: util/ember-io-storage.h
-      - path: util/ember-global-attribute-access-interface.h
       - path: util/endpoint-config-api.h
       - path: util/DataModelHandler.h
+      - path: util/cluster-config.h
       - path: util/config.h
       - path: util/binding-table.h
       - path: util/af-types.h
@@ -45,14 +44,12 @@ include:
       - path: util/privilege-storage.h
       - path: util/MatterCallbacks.h
       - path: util/basic-types.h
-      - path: util/ember-compatibility-functions.h
       - path: util/attribute-storage-null-handling.h
       - path: util/odd-sized-integers.h
       - path: util/generic-callbacks.h
+      - path: util/AttributesChangedListener.h
       - path: util/IMClusterCommandHandler.h
-  - path: third_party/matter_sdk/src/app/ember_coupling
-    file_list:
-      - path: EventPathValidity.mixin.h
+      - path: util/MarkAttributeDirty.h
 label: app_common
 package: matter
 provides:
@@ -67,7 +64,6 @@ source:
   - path: third_party/matter_sdk/src/app/util/attribute-storage.cpp
   - path: third_party/matter_sdk/src/app/util/attribute-table.cpp
   - path: third_party/matter_sdk/src/app/util/binding-table.cpp
-  - path: third_party/matter_sdk/src/app/util/ember-compatibility-functions.cpp
   - path: third_party/matter_sdk/src/app/util/generic-callback-stubs.cpp
   - path: third_party/matter_sdk/src/app/util/privilege-storage.cpp
   - path: third_party/matter_sdk/src/app/util/util.cpp

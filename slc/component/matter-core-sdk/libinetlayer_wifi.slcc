@@ -39,7 +39,6 @@ include:
       - path: UDPEndPoint.h
       - path: InetConfig.h
       - path: IPPacketInfo.h
-      - path: EndPointStateNetworkFramework.h
       - path: EndPointStateSockets.h
       - path: IANAConstants.h
       - path: InetFaultInjection.h
@@ -57,7 +56,6 @@ metadata:
     license: "Apache 2.0"
 source:
   - path: third_party/matter_sdk/src/inet/EndPointStateLwIP.cpp
-    condition: [matter_lwip]
   - path: third_party/matter_sdk/src/inet/IPAddress-StringFuncts.cpp
   - path: third_party/matter_sdk/src/inet/IPAddress.cpp
   - path: third_party/matter_sdk/src/inet/IPPacketInfo.cpp
@@ -68,8 +66,5 @@ source:
   - path: third_party/matter_sdk/src/inet/InetInterfaceImplDefault.cpp
   - path: third_party/matter_sdk/src/inet/UDPEndPoint.cpp
   - path: third_party/matter_sdk/src/inet/UDPEndPointImplLwIP.cpp
-    condition: [matter_lwip]
-  - path: third_party/matter_sdk/src/inet/UDPEndPointImplSockets.cpp
-    condition: [matter_sockets]
 ui_hints:
   visibility: never

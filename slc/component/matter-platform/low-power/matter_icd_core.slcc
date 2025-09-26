@@ -32,6 +32,7 @@ conflicts:
 
 recommends:
   - id: ot_stack_mtd
+    vendor: silabs
     condition:
       - matter_thread
 

@@ -7,9 +7,10 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.1"
+    version: "2.7.0"
+    vendor: silabs
   - id: wiseconnect3_sdk
-    version: "3.5.1"
+    version: "3.5.2"
 
 component:
   - id: matter_leds
@@ -19,6 +20,13 @@ component:
   - id: matter_wifi_ble
     from: matter
   - id: matter_crypto_tinycrypt_siwx917
+    from: matter
+
+  - id: mbedtls_pki_aws
+    condition: [matter_aws]
+    from: matter
+  - id: mbedtls_entropy_default_aws
+    condition: [matter_aws]
     from: matter
   - id: matter_wifi
     from: matter
@@ -73,6 +81,8 @@ component:
     from: matter
   - id: matter_user_label
     from: matter
+  - id: matter_unit_localization
+    from: matter
   - id: matter_wifi_network_diagnostics
     from: matter
   # Override configuration for JTAG use
@@ -100,7 +110,7 @@ component:
     from: matter
   - id: matter_log_uart
     from: matter
-  - id: matter_lwip
+  - id: matter_lwip_modified
     from: matter
 
   - id: wifi_resources
@@ -175,7 +185,7 @@ source:
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../third_party/matter_sdk/examples/lock-app/silabs/src/ZclCallbacks.cpp
+  - path: ../../../../third_party/matter_sdk/examples/lock-app/silabs/src/DataModelCallbacks.cpp
     directory: src
 
 define:

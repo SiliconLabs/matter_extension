@@ -21,6 +21,7 @@ include:
       - path: OTAConfig.h
       - path: MemMonitoring.h
       - path: BaseApplication.h
+      - path: BaseAppEvent.h
       - path: SoftwareFaultReports.h
 
 source:

@@ -1,0 +1,22 @@
+category: Matter|Core
+description: server_cluster
+id: server_cluster
+include:
+-   path: third_party/matter_sdk/src/app/server-cluster
+    file_list:
+    -   path: DefaultServerCluster.h
+    -   path: ServerClusterContext.h
+    -   path: ServerClusterInterface.h
+label: server_cluster
+package: matter
+provides:
+-   name: matter_server_cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+source:
+-   path: third_party/matter_sdk/src/app/server-cluster/DefaultServerCluster.cpp
+-   path: third_party/matter_sdk/src/app/server-cluster/ServerClusterInterface.cpp
+ui_hints:
+    visibility: never

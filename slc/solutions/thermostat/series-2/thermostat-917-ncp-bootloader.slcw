@@ -1,5 +1,6 @@
 label: thermostat-917-ncp-bootloader
 quality: production
+package: matter
 description: Matter solution containing both a Matter bootloader and Thermostat over WiFi Example
 project:
   - path: ../../../sample-app/thermostat/efr32/thermostat-917-ncp.slcp

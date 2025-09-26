@@ -7,7 +7,8 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.1"
+    version: "2.7.0"
+    vendor: silabs
 
 provides:
   - name: window_app
@@ -89,6 +90,8 @@ component:
     from: matter
   - id: matter_user_label
     from: matter
+  - id: matter_unit_localization
+    from: matter
   - id: matter_wifi_network_diagnostics
     from: matter
   - id: matter_window_covering
@@ -145,7 +148,7 @@ source:
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/window-app/silabs/src/WindowManager.cpp
     directory: src
-  - path: ../../../../third_party/matter_sdk/examples/window-app/silabs/src/ZclCallbacks.cpp
+  - path: ../../../../third_party/matter_sdk/examples/window-app/silabs/src/DataModelCallbacks.cpp
     directory: src
 
 define:
@@ -189,6 +192,10 @@ configuration:
     value: "4608"
   - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
     value: "1536"
+    unless: [device_series_3]
+  - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+    value: "1856"
+    condition: [device_series_3]
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: 16
   - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS

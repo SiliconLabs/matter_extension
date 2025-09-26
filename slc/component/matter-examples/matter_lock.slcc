@@ -10,5 +10,7 @@ provides:
 define:
   - name: IS_DEMO_LOCK
     value: "1"
+source:
+  - path: third_party/matter_sdk/examples/lock-app/silabs/src/LockMigration.cpp 
 ui_hints:
   visibility: never

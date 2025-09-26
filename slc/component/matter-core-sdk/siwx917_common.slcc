@@ -13,7 +13,6 @@ provides:
 
 include:
   - path: .
-  - path: third_party/matter_sdk/examples/common/QRCode/repo/c
   - path: third_party/matter_sdk/examples/platform/silabs
   - path: third_party/matter_sdk/examples/providers
   - path: third_party/matter_sdk/src
@@ -35,7 +34,6 @@ include:
       - path: FreeRTOSConfig.h
       - path: Rpc.h
       - path: silabs_creds.h
-      - path: SilabsTestEventTriggerDelegate.h
       - path: MemMonitoring.h
       - path: BaseApplication.h
   - path: third_party/matter_sdk/src/platform/silabs/SiWx917

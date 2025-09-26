@@ -7,7 +7,8 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.1"
+    version: "2.7.0"
+    vendor: silabs
 
 component:
   - id: device_init
@@ -90,6 +91,8 @@ component:
     from: matter
   - id: matter_user_label
     from: matter
+  - id: matter_unit_localization
+    from: matter
   - id: matter_wifi_network_diagnostics
     from: matter
   # Override configuration for JTAG use
@@ -142,7 +145,7 @@ source:
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/ZclCallbacks.cpp
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/DataModelCallbacks.cpp
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/SensorManager.cpp
     directory: src

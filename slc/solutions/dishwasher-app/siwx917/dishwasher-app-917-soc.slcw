@@ -1,5 +1,6 @@
 label: dishwasher-app-917-soc
 quality: production
+package: matter
 description: Matter solution containing for Dishwasher App over WiFi
 project:
   - path: ../../../sample-app/dishwasher-app/siwx917/dishwasher-app-917-soc.slcp

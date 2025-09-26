@@ -14,13 +14,11 @@ config_file:
       file_id: lwipopts
 
 requires:
-  - name: sl_system
+  - name: sl_main
   - name: matter_siwx917
   - name: matter_siwx917_common
   - name: sl_si91x_trng
   - name: siwx917_soc_custom_hal
-  - name: si91x_debug
-  - name: sl_system_init
   - name: nvm3_default
   - name: memory_manager
   - name: memory_manager_pool
@@ -52,6 +50,7 @@ include:
       - path: OTAConfig.h
       - path: MemMonitoring.h
       - path: BaseApplication.h
+      - path: BaseAppEvent.h
       - path: SoftwareFaultReports.h
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/BaseApplication.cpp
@@ -63,8 +62,6 @@ define:
     value: 1
   - name: SL_WFX_CONFIG_SCAN
     value: 1
-  - name: SIWX_917
-    value: 1
   - name: CHIP_9117
     value: 1
   - name: DEBUG_UART
@@ -72,12 +69,11 @@ define:
   - name: RS911X_WIFI
   - name: SL_SI91x_DUAL_INTERRUPTS_ERRATA
   - name: NVM3_LOCK_OVERRIDE
-  - name: SL_WLAN_EVENT_THREAD_PRIORITY
-    value: osPriorityRealtime6
-  - name: SL_WLAN_COMMAND_ENGINE_THREAD_PRIORITY
-    value: osPriorityRealtime5
 toolchain_settings:
   - option: gcc_linker_option
     value: "-Wl,--wrap=MemoryAlloc"
     # Wrap these in case internal newlib call them (e.g. strdup will)
     # directly call _malloc_r)
+  - option: gcc_compiler_option
+    value: "-Wno-cpp"
+    unless: [hardware_board]

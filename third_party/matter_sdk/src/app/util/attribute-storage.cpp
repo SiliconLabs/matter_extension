@@ -20,14 +20,15 @@
 #include <app/util/attribute-storage-detail.h>
 
 #include <app/AttributeAccessInterfaceRegistry.h>
-#include <app/AttributePersistenceProvider.h>
 #include <app/CommandHandlerInterfaceRegistry.h>
 #include <app/InteractionModelEngine.h>
 #include <app/reporting/reporting.h>
 #include <app/util/config.h>
+#include <app/util/ember-io-storage.h>
 #include <app/util/ember-strings.h>
 #include <app/util/endpoint-config-api.h>
 #include <app/util/generic-callbacks.h>
+#include <app/util/persistence/AttributePersistenceProvider.h>
 #include <lib/core/CHIPConfig.h>
 #include <lib/support/CodeUtils.h>
 #include <lib/support/logging/CHIPLogging.h>
@@ -72,10 +73,6 @@ static bool emAfMatchAttribute(const EmberAfCluster * cluster, const EmberAfAttr
 
 // If server == true, returns the number of server clusters,
 // otherwise number of client clusters on the endpoint at the given index.
-static uint8_t emberAfClusterCountForEndpointType(const EmberAfEndpointType * endpointType, bool server);
-
-// If server == true, returns the number of server clusters,
-// otherwise number of client clusters on the endpoint at the given index.
 static uint8_t emberAfClusterCountByIndex(uint16_t endpointIndex, bool server);
 
 // Check whether there is an endpoint defined with the given endpoint id that is
@@ -92,6 +89,11 @@ namespace {
 uint8_t singletonAttributeData[ACTUAL_SINGLETONS_SIZE];
 
 uint16_t emberEndpointCount = 0;
+
+/// Determines a incremental unique index for ember
+/// metadata that is increased whenever a structural change is made to the
+/// ember metadata (e.g. changing dynamic endpoints or enabling/disabling endpoints)
+unsigned emberMetadataStructureGeneration = 0;
 
 // If we have attributes that are more than 4 bytes, then
 // we need this data block for the defaults
@@ -214,8 +216,23 @@ void emberAfEndpointConfigure()
         emAfEndpoints[ep].dataVersions     = currentDataVersions;
         emAfEndpoints[ep].parentEndpointId = fixedParentEndpoints[ep];
 
+        constexpr const DeviceTypeId kRootnodeId   = 0x0016;
+        constexpr const DeviceTypeId kAggregatorId = 0x000E;
+        constexpr const DeviceTypeId kBridgedNode  = 0x0013;
         emAfEndpoints[ep].bitmask.Set(EmberAfEndpointOptions::isEnabled);
-        emAfEndpoints[ep].bitmask.Set(EmberAfEndpointOptions::isFlatComposition);
+        for (const auto & deviceType : emAfEndpoints[ep].deviceTypeList)
+        {
+            // Default composition for all device types is set to tree. Except rootnode, aggregator and
+            // bridgednode, which are full-family. Clients can manually override these defaults using
+            // SetFlatCompositionForEndpoint / SetTreeCompositionForEndpoint at application init.
+            // TODO: This information should come from the schema XML, not be hardcoded.
+            if ((deviceType.deviceTypeId == kRootnodeId) || (deviceType.deviceTypeId == kAggregatorId) ||
+                (deviceType.deviceTypeId == kBridgedNode))
+            {
+                emAfEndpoints[ep].bitmask.Set(EmberAfEndpointOptions::isFlatComposition);
+                break;
+            }
+        }
 
         // Increment currentDataVersions by 1 (slot) for every server cluster
         // this endpoint has.
@@ -255,7 +272,7 @@ uint16_t emberAfGetDynamicIndexFromEndpoint(EndpointId id)
     {
         if (emAfEndpoints[index].endpoint == id)
         {
-            return static_cast<uint8_t>(index - FIXED_ENDPOINT_COUNT);
+            return static_cast<uint16_t>(index - FIXED_ENDPOINT_COUNT);
         }
     }
     return kEmberInvalidEndpointIndex;
@@ -264,6 +281,14 @@ uint16_t emberAfGetDynamicIndexFromEndpoint(EndpointId id)
 CHIP_ERROR emberAfSetDynamicEndpoint(uint16_t index, EndpointId id, const EmberAfEndpointType * ep,
                                      const Span<DataVersion> & dataVersionStorage, Span<const EmberAfDeviceType> deviceTypeList,
                                      EndpointId parentEndpointId)
+{
+    return emberAfSetDynamicEndpointWithEpUniqueId(index, id, ep, dataVersionStorage, deviceTypeList, {}, parentEndpointId);
+}
+
+CHIP_ERROR emberAfSetDynamicEndpointWithEpUniqueId(uint16_t index, EndpointId id, const EmberAfEndpointType * ep,
+                                                   const Span<DataVersion> & dataVersionStorage,
+                                                   Span<const EmberAfDeviceType> deviceTypeList, CharSpan endpointUniqueId,
+                                                   EndpointId parentEndpointId)
 {
     auto realIndex = index + FIXED_ENDPOINT_COUNT;
 
@@ -291,10 +316,47 @@ CHIP_ERROR emberAfSetDynamicEndpoint(uint16_t index, EndpointId id, const EmberA
         }
     }
 
+    const size_t bufferSize = Compatibility::Internal::gEmberAttributeIOBufferSpan.size();
+    for (uint8_t i = 0; i < ep->clusterCount; i++)
+    {
+        const EmberAfCluster * cluster = &(ep->cluster[i]);
+        if (!cluster->attributes)
+        {
+            continue;
+        }
+
+        for (uint16_t j = 0; j < cluster->attributeCount; j++)
+        {
+            const EmberAfAttributeMetadata * attr = &(cluster->attributes[j]);
+            uint16_t attrSize                     = emberAfAttributeSize(attr);
+            if (attrSize > bufferSize)
+            {
+                ChipLogError(DataManagement,
+                             "Attribute size %u exceeds max size %lu, (attrId=" ChipLogFormatMEI ", clusterId=" ChipLogFormatMEI
+                             ")",
+                             attrSize, static_cast<unsigned long>(bufferSize), ChipLogValueMEI(attr->attributeId),
+                             ChipLogValueMEI(cluster->clusterId));
+                return CHIP_ERROR_NO_MEMORY;
+            }
+        }
+    }
     emAfEndpoints[index].endpoint       = id;
     emAfEndpoints[index].deviceTypeList = deviceTypeList;
     emAfEndpoints[index].endpointType   = ep;
     emAfEndpoints[index].dataVersions   = dataVersionStorage.data();
+#if CHIP_CONFIG_USE_ENDPOINT_UNIQUE_ID
+    MutableCharSpan targetSpan(emAfEndpoints[index].endpointUniqueId);
+    if (CopyCharSpanToMutableCharSpan(endpointUniqueId, targetSpan) != CHIP_NO_ERROR)
+    {
+        return CHIP_ERROR_BUFFER_TOO_SMALL;
+    }
+
+    // Ensure that the size of emAfEndpoints[index].endpointUniqueId fits within uint8_t
+    static_assert(sizeof(emAfEndpoints[0].endpointUniqueId) <= UINT8_MAX,
+                  "The size of emAfEndpoints[index].endpointUniqueId must fit within uint8_t");
+
+    emAfEndpoints[index].endpointUniqueIdSize = static_cast<uint8_t>(targetSpan.size());
+#endif
     // Start the endpoint off as disabled.
     emAfEndpoints[index].bitmask.Clear(EmberAfEndpointOptions::isEnabled);
     emAfEndpoints[index].parentEndpointId = parentEndpointId;
@@ -315,6 +377,7 @@ CHIP_ERROR emberAfSetDynamicEndpoint(uint16_t index, EndpointId id, const EmberA
     // Now enable the endpoint.
     emberAfEndpointEnableDisable(id, true);
 
+    emberMetadataStructureGeneration++;
     return CHIP_NO_ERROR;
 }
 
@@ -322,7 +385,7 @@ EndpointId emberAfClearDynamicEndpoint(uint16_t index)
 {
     EndpointId ep = 0;
 
-    index = static_cast<uint8_t>(index + FIXED_ENDPOINT_COUNT);
+    index = static_cast<uint16_t>(index + FIXED_ENDPOINT_COUNT);
 
     if ((index < MAX_ENDPOINT_COUNT) && (emAfEndpoints[index].endpoint != kInvalidEndpointId) &&
         (emberAfEndpointIndexIsEnabled(index)))
@@ -332,6 +395,7 @@ EndpointId emberAfClearDynamicEndpoint(uint16_t index)
         emAfEndpoints[index].endpoint = kInvalidEndpointId;
     }
 
+    emberMetadataStructureGeneration++;
     return ep;
 }
 
@@ -639,10 +703,20 @@ Status emAfReadOrWriteAttribute(const EmberAfAttributeSearchRecord * attRecord, 
                                 // Is the attribute externally stored?
                                 if (am->mask & MATTER_ATTRIBUTE_FLAG_EXTERNAL_STORAGE)
                                 {
-                                    return (write ? emberAfExternalAttributeWriteCallback(attRecord->endpoint, attRecord->clusterId,
-                                                                                          am, buffer)
-                                                  : emberAfExternalAttributeReadCallback(attRecord->endpoint, attRecord->clusterId,
-                                                                                         am, buffer, emberAfAttributeSize(am)));
+                                    if (write)
+                                    {
+                                        return emberAfExternalAttributeWriteCallback(attRecord->endpoint, attRecord->clusterId, am,
+                                                                                     buffer);
+                                    }
+
+                                    if (readLength < emberAfAttributeSize(am))
+                                    {
+                                        // Prevent a potential buffer overflow
+                                        return Status::ResourceExhausted;
+                                    }
+
+                                    return emberAfExternalAttributeReadCallback(attRecord->endpoint, attRecord->clusterId, am,
+                                                                                buffer, emberAfAttributeSize(am));
                                 }
 
                                 // Internal storage is only supported for fixed endpoints
@@ -945,7 +1019,13 @@ bool emberAfEndpointEnableDisable(EndpointId endpoint, bool enable)
                                 emberAfGlobalInteractionModelAttributesChangedListener());
     }
 
+    emberMetadataStructureGeneration++;
     return true;
+}
+
+unsigned emberAfMetadataStructureGeneration()
+{
+    return emberMetadataStructureGeneration;
 }
 
 // Returns the index of a given endpoint.  Does not consider disabled endpoints.
@@ -1035,7 +1115,20 @@ CHIP_ERROR GetSemanticTagForEndpointAtIndex(EndpointId endpoint, size_t index,
     tag = emAfEndpoints[endpointIndex].tagList[index];
     return CHIP_NO_ERROR;
 }
+#if CHIP_CONFIG_USE_ENDPOINT_UNIQUE_ID
+CHIP_ERROR emberAfGetEndpointUniqueIdForEndPoint(EndpointId endpoint, MutableCharSpan & epUniqueIdMutSpan)
+{
+    uint16_t endpointIndex = emberAfIndexFromEndpoint(endpoint);
 
+    if (endpointIndex == 0xFFFF)
+    {
+        return CHIP_ERROR_NOT_FOUND;
+    }
+
+    CharSpan epUniqueIdSpan(emAfEndpoints[endpointIndex].endpointUniqueId, emAfEndpoints[endpointIndex].endpointUniqueIdSize);
+    return CopyCharSpanToMutableCharSpan(epUniqueIdSpan, epUniqueIdMutSpan);
+}
+#endif
 CHIP_ERROR emberAfSetDeviceTypeList(EndpointId endpoint, Span<const EmberAfDeviceType> deviceTypeList)
 {
     uint16_t endpointIndex = emberAfIndexFromEndpoint(endpoint);
@@ -1366,7 +1459,6 @@ CHIP_ERROR SetFlatCompositionForEndpoint(EndpointId endpoint)
     {
         return CHIP_ERROR_INVALID_ARGUMENT;
     }
-    emAfEndpoints[index].bitmask.Clear(EmberAfEndpointOptions::isTreeComposition);
     emAfEndpoints[index].bitmask.Set(EmberAfEndpointOptions::isFlatComposition);
     return CHIP_NO_ERROR;
 }
@@ -1379,7 +1471,6 @@ CHIP_ERROR SetTreeCompositionForEndpoint(EndpointId endpoint)
         return CHIP_ERROR_INVALID_ARGUMENT;
     }
     emAfEndpoints[index].bitmask.Clear(EmberAfEndpointOptions::isFlatComposition);
-    emAfEndpoints[index].bitmask.Set(EmberAfEndpointOptions::isTreeComposition);
     return CHIP_NO_ERROR;
 }
 
@@ -1400,7 +1491,17 @@ bool IsTreeCompositionForEndpoint(EndpointId endpoint)
     {
         return false;
     }
-    return emAfEndpoints[index].bitmask.Has(EmberAfEndpointOptions::isTreeComposition);
+    return !emAfEndpoints[index].bitmask.Has(EmberAfEndpointOptions::isFlatComposition);
+}
+
+EndpointComposition GetCompositionForEndpointIndex(uint16_t endpointIndex)
+{
+    VerifyOrReturnValue(endpointIndex < MATTER_ARRAY_SIZE(emAfEndpoints), EndpointComposition::kInvalid);
+    if (emAfEndpoints[endpointIndex].bitmask.Has(EmberAfEndpointOptions::isFlatComposition))
+    {
+        return EndpointComposition::kFullFamily;
+    }
+    return EndpointComposition::kTree;
 }
 
 } // namespace app

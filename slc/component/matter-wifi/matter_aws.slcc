@@ -1,0 +1,90 @@
+id: matter_aws
+package: matter
+description: This component enables MATTER AWS feature for matter-wifi
+label: AWS for Matter WiFi
+category: Matter-WiFi|Features
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+
+provides:
+  - name: matter_aws
+
+requires:
+  - name: mbedtls_sha1
+  - name: mbedtls_tls
+  - name: mbedtls_rsa
+  - name: mbedtls_aes
+  - name: mbedtls_pki
+  - name: mbedtls_jpake
+  - name: mbedtls_ecdsa
+  - name: mbedtls_ecc_secp256r1
+  - name: mbedtls_gcm
+  - name: mbedtls_debug
+
+config_file:
+  - path: slc/config/matter_aws/sl_matter_wifi_config.h
+    override:
+      component: "%extension-matter%matter_wifi"
+      file_id: matter_wifi_config
+
+define:
+  - name: SL_MATTER_ENABLE_AWS
+    value: "1"
+# TODO: Rename USE_AWS to reflect proper namespace/context.
+  - name: USE_AWS
+    value: "1"
+  - name: SL_MATTER_AWS_NVM_EMBED_CERT
+    value: "0"
+  - name: CHIP_HAVE_CONFIG_H
+    value: "1"
+  - name: MBEDTLS_SSL_MAX_CONTENT_LEN
+    value: "768"
+    condition: [matter_efr32_wifi]
+
+include:
+  - path: third_party/matter_sdk/examples/platform/silabs/matter_aws/matter_aws_interface/include
+    file_list:
+      - path: MatterAws.h
+      - path: MatterAwsConfig.h
+      - path: MatterAwsControl.h
+      - path: MatterAwsNvmCert.h
+  - path: third_party/mqtt/stack
+    file_list:
+      - path: mqtt.h
+      - path: mqtt_opts.h
+  - path: third_party/mqtt/mqtt_transport_interface/include
+    file_list:
+      - path: altcp.h
+      - path: altcp_opt.h
+      - path: altcp_priv.h
+      - path: altcp_tcp.h
+      - path: altcp_tls.h
+      - path: altcp_tls_mbedtls_mem.h
+      - path: altcp_tls_mbedtls_opts.h
+      - path: altcp_tls_mbedtls_structs.h
+      - path: MQTT_transport.h
+      - path: tcpbase.h
+
+template_contribution:
+  - name: mbedtls_ssl_content_len_in_requirement
+    value: 5120
+  - name: mbedtls_ssl_content_len_out_requirement
+    value: 1560
+
+source:
+  - path: third_party/matter_sdk/examples/platform/silabs/matter_aws/matter_aws_interface/src/MatterAws.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/matter_aws/matter_aws_interface/src/MatterAwsControl.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/matter_aws/matter_aws_interface/src/MatterAwsNvmCert.cpp
+  - path: third_party/mqtt/mqtt_transport_interface/src/MQTT_transport.c
+  - path: third_party/mqtt/mqtt_transport_interface/src/altcp.c
+  - path: third_party/mqtt/mqtt_transport_interface/src/altcp_alloc.c
+  - path: third_party/mqtt/mqtt_transport_interface/src/altcp_tcp.c
+  - path: third_party/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls.c
+  - path: third_party/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls_mem.c
+  - path: third_party/mqtt/stack/mqtt.c
+
+toolchain_settings:
+- option: gcc_compiler_option
+  value: -Wno-unused-variable

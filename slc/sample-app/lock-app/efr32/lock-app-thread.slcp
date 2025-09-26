@@ -7,7 +7,8 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.1"
+    version: "2.7.0"
+    vendor: silabs
 
 component:
   - id: device_init
@@ -95,6 +96,8 @@ component:
     from: matter
   - id: matter_wifi_network_diagnostics
     from: matter
+  - id: matter_unit_localization
+    from: matter
   - id: matter_default_lcd_config
     from: matter
   # Override configuration for JTAG use
@@ -147,7 +150,7 @@ source:
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../third_party/matter_sdk/examples/lock-app/silabs/src/ZclCallbacks.cpp
+  - path: ../../../../third_party/matter_sdk/examples/lock-app/silabs/src/DataModelCallbacks.cpp
     directory: src
 
 define:
@@ -192,6 +195,10 @@ configuration:
     value: "4608"
   - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
     value: "1536"
+    unless: [device_series_3]
+  - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+    value: "1856"
+    condition: [device_series_3]
 
   # Default ICD configurations
   - name: SL_IDLE_MODE_DURATION_S

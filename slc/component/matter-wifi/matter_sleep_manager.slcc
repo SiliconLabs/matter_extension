@@ -12,6 +12,9 @@ metadata:
 provides:
   - name: matter_sleep_manager
 
+requires:
+- name: matter_power_save_interface
+
 include:
   - path: third_party/matter_sdk/src/platform/silabs/wifi/icd
     file_list:

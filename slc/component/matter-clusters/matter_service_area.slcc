@@ -12,7 +12,6 @@ metadata:
 provides:
   - name: matter_service_area
 source:
-  - path: third_party/matter_sdk/src/app/clusters/service-area-server/service-area-delegate.cpp
   - path: third_party/matter_sdk/src/app/clusters/service-area-server/service-area-server.cpp
   - path: third_party/matter_sdk/src/app/clusters/service-area-server/service-area-storage-delegate.cpp
 include:

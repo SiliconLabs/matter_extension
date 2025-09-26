@@ -20,9 +20,12 @@ config("platform_abstraction_includes") {
 
 source_set("common") {
   sources = [
+    "${chip_root}/src/platform/silabs/platformAbstraction/SilabsPlatform.cpp",
     "${chip_root}/src/platform/silabs/platformAbstraction/SilabsPlatform.h",
     "${chip_root}/src/platform/silabs/platformAbstraction/SilabsPlatformBase.h",
   ]
+
+  include_dirs = [ "${chip_root}/src/platform/silabs" ]
   public_deps = [
     "${chip_root}/src/app/icd/server:icd-server-config",
     "${chip_root}/src/lib/core",

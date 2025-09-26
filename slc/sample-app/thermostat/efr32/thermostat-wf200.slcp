@@ -7,7 +7,8 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.1"
+    version: "2.7.0"
+    vendor: silabs
 
 component:
   - id: device_init
@@ -94,6 +95,8 @@ component:
     from: matter
   - id: matter_user_label
     from: matter
+  - id: matter_unit_localization
+    from: matter
   - id: matter_wifi_network_diagnostics
     from: matter
   # Override configuration for JTAG use
@@ -103,9 +106,9 @@ component:
     from: matter
   - id: matter_default_lcd_config
     from: matter
-  - id: matter_shell
-    from: matter
-  - id: matter_log_uart
+  #- id: matter_shell
+  #  from: matter
+  - id: matter_log_rtt
     from: matter
 
 # Require LCD and QR Code components only on the boards that support LCD
@@ -141,10 +144,15 @@ include:
 
 source:
   - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/AppTask.cpp
+    directory: src
   - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/TemperatureManager.cpp
+    directory: src
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
-  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/ZclCallbacks.cpp
+    directory: src
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/DataModelCallbacks.cpp
+    directory: src
   - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/SensorManager.cpp
+    directory: src
 
 define:
   - name: CHIP_CRYPTO_PLATFORM
@@ -163,8 +171,6 @@ define:
     value: "1"
   - name: _REENT_SMALL
     value: 1
-  - name: SL_MATTER_LOG_LEVEL
-    value: SL_MATTER_LOG_ERROR
 configuration:
   - name: SL_SPIDRV_EXP_BITRATE
     value: "10000000"

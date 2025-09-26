@@ -11,34 +11,12 @@ metadata:
 requires:
   - name: matter_lcd
     condition:
-      - brd4407a
-  - name: matter_lcd
+      - hardware_board_supports_wstk_lcd
+  - name: matter_qr_code
     condition:
-      - brd1019a
-  - name: matter_lcd
-    condition:
-      - brd4116a
-  - name: matter_lcd
-    condition:
-      - brd4117a
-  - name: matter_lcd
-    condition:
-      - brd4118a
-  - name: matter_lcd
-    condition:
-      - brd4121a
-  - name: matter_lcd
-    condition:
-      - brd4186c
-  - name: matter_lcd
-    condition:
-      - brd4187c
-  - name: matter_lcd
-    condition:
-      - brd4316a
-  - name: matter_lcd
-    condition:
-      - brd4317a
+      - hardware_board_supports_wstk_lcd
+
+# There is no generic LCD support component provided with 917 boards. Keep a condition for each board that supports it for now
   - name: matter_lcd_917SOC
     condition:
       - brd4338a
@@ -48,51 +26,11 @@ requires:
   - name: matter_lcd_917SOC
     condition:
       - brd4343a
-  - name: matter_lcd
-    condition:
-      - brd4350a
-  - name: matter_lcd
-    condition:
-      - brd4351a
+
+# Keep this requirement under matter_lcd_917SOC's
   - name: matter_qr_code
     condition:
-      - brd4116a
-  - name: matter_qr_code
-    condition:
-      - brd4117a
-  - name: matter_qr_code
-    condition:
-      - brd4118a
-  - name: matter_qr_code
-    condition:
-      - brd4121a
-  - name: matter_qr_code
-    condition:
-      - brd4186c
-  - name: matter_qr_code
-    condition:
-      - brd4187c
-  - name: matter_qr_code
-    condition:
-      - brd4316a
-  - name: matter_qr_code
-    condition:
-      - brd4317a
-  - name: matter_qr_code
-    condition:
-      - brd4338a
-  - name: matter_qr_code
-    condition:
-      - brd4342a
-  - name: matter_qr_code
-    condition:
-      - brd4343a
-  - name: matter_qr_code
-    condition:
-      - brd4350a
-  - name: matter_qr_code
-    condition:
-      - brd4351a
+      - matter_lcd_917SOC
 provides:
   - name: matter_default_lcd_config
 conflicts:

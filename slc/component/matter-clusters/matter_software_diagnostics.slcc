@@ -12,11 +12,16 @@ metadata:
 provides:
   - name: matter_software_diagnostics
 source:
-  - path: third_party/matter_sdk/src/app/clusters/software-diagnostics-server/software-diagnostics-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/software-diagnostics-server/CodegenIntegration.cpp
+  - path: third_party/matter_sdk/src/app/clusters/software-diagnostics-server/software-diagnostics-logic.cpp
+  - path: third_party/matter_sdk/src/app/clusters/software-diagnostics-server/software-fault-listener.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/software-diagnostics-server
     file_list:
-      - path: software-diagnostics-server.h
+      - path: software-diagnostics-cluster.h
+      - path: software-diagnostics-logic.h
+      - path: software-fault-listener.h
+      - path: SoftwareDiagnosticsTestEventTriggerHandler.h
 template_contribution:
   - name: component_catalog
     value: matter_software_diagnostics

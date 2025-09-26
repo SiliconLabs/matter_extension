@@ -21,7 +21,9 @@
 
 namespace {
 #if ENABLE_CHIP_SHELL && CHIP_CONFIG_ENABLE_ICD_SERVER
+#ifdef RTE_UULP_GPIO_1_PIN
 bool ps_requirement_added = false;
+#endif // RTE_UULP_GPIO_1_PIN
 #endif // ENABLE_CHIP_SHELL && CHIP_CONFIG_ENABLE_ICD_SERVER
 } // namespace
 
@@ -59,6 +61,18 @@ void gpio_uulp_pin_interrupt_callback(uint32_t pin_intr)
     }
 }
 
+#ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
+/**
+ * @brief Processing function when a button is triggered
+ *
+ * TODO: Move this to SPAM
+ *
+ * @param btn which button was pressed
+ * @param btnAction the action that triggered the buttone vent
+ */
+void sl_button_on_change(uint8_t btn, uint8_t btnAction);
+#endif // SL_CATALOG_SIMPLE_BUTTON_PRESENT
+
 #endif // SLI_SI91X_MCU_INTERFACE
 #endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 #ifdef __cplusplus
@@ -85,6 +99,7 @@ inline void sl_si91x_btn_event_handler()
                         (sl_si91x_gpio_get_uulp_npss_pin(SL_BUTTON_BTN0_PIN) == LOW) ? BUTTON_PRESSED : BUTTON_RELEASED);
 }
 #endif // SL_CATALOG_SIMPLE_BUTTON_PRESENT
+
 /**
  * @brief      Required to enable MATTER shell UART with ICD feature flag
  * @param[in]  none.
@@ -93,6 +108,7 @@ inline void sl_si91x_btn_event_handler()
 void sl_si91x_uart_power_requirement_handler()
 {
 #ifdef ENABLE_CHIP_SHELL
+#ifdef RTE_UULP_GPIO_1_PIN
     // Checking the UULP PIN 1 status to reinit the UART and not allow the device to go to sleep
     if (sl_si91x_gpio_get_uulp_npss_pin(RTE_UULP_GPIO_1_PIN))
     {
@@ -110,6 +126,7 @@ void sl_si91x_uart_power_requirement_handler()
             ps_requirement_added = false;
         }
     }
+#endif // RTE_UULP_GPIO_1_PIN
 #endif // ENABLE_CHIP_SHELL
 }
 

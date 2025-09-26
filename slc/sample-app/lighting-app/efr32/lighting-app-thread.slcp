@@ -7,7 +7,8 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.1"
+    version: "2.7.0"
+    vendor: silabs
 
 component:
   - id: device_init
@@ -56,8 +57,6 @@ component:
   - id: matter_color_control
     from: matter
   - id: matter_descriptor
-    from: matter
-  - id: matter_diagnostic_logs
     from: matter
   - id: matter_fixed_label
     from: matter
@@ -140,7 +139,7 @@ source:
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../third_party/matter_sdk/examples/lighting-app/silabs/src/ZclCallbacks.cpp
+  - path: ../../../../third_party/matter_sdk/examples/lighting-app/silabs/src/DataModelCallbacks.cpp
     directory: src
 
 define:
@@ -185,6 +184,10 @@ configuration:
     value: "4608"
   - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
     value: "1536"
+    unless: [device_series_3]
+  - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+    value: "1856"
+    condition: [device_series_3]
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: 16
   - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS

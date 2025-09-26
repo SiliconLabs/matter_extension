@@ -20,6 +20,9 @@
 #include "rsi_rom_clks.h"
 #include "silabs_utils.h"
 #include "sl_component_catalog.h"
+#ifndef SL_ICD_ENABLED
+#include "FreeRTOSConfig.h"
+#endif // !defined (SL_ICD_ENABLED)
 
 #ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
 #include "sl_si91x_button_pin_config.h"
@@ -51,6 +54,7 @@
 void sl_button_on_change(uint8_t btn, uint8_t btnAction);
 #endif  //SL_CATALOG_SIMPLE_BUTTON_PRESENT
 
+#ifndef SL_ICD_ENABLED
 int soc_pll_config(void) {
   int32_t status = RSI_OK;
 
@@ -63,7 +67,7 @@ int soc_pll_config(void) {
   // Switch M4 clock to PLL clock for speed operations
   RSI_CLK_M4SocClkConfig(M4CLK, M4_SOCPLLCLK, 0);
 
-  SysTick_Config(SystemCoreClock / 1000);
+  SysTick_Config(SystemCoreClock / configTICK_RATE_HZ);
   DEBUGINIT();
 
 #ifdef SWITCH_QSPI_TO_SOC_PLL
@@ -80,6 +84,7 @@ int soc_pll_config(void) {
 #endif /* SWITCH_QSPI_TO_SOC_PLL */
   return 0;
 }
+#endif // !defined (SL_ICD_ENABLED)
 
 #ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
 void sl_si91x_button_isr(uint8_t pin, int8_t state) {

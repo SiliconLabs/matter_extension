@@ -259,6 +259,7 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #define INCLUDE_xSemaphoreGetMutexHolder (1)
 #define INCLUDE_xTimerPendFunctionCall (1)
 #define INCLUDE_xTaskGetHandle (1)
+#define INCLUDE_xTaskAbortDelay (1)
 
 /* Stop if an assertion fails. */
 #define configASSERT(x)                                                                                                            \

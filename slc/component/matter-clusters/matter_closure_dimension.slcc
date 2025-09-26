@@ -1,0 +1,28 @@
+category: Clusters|Closures
+description: >
+  Implementation of the Closure Dimension Server Cluster.
+  The user has to enable the Closure Dimension Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_closure_dimension
+package: matter
+label: Closure Dimension Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_closure_dimension
+source:
+  - path: third_party/matter_sdk/src/app/clusters/closure-dimension-server/closure-dimension-cluster-logic.cpp
+  - path: third_party/matter_sdk/src/app/clusters/closure-dimension-server/closure-dimension-matter-context.cpp
+  - path: third_party/matter_sdk/src/app/clusters/closure-dimension-server/closure-dimension-server.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/closure-dimension-server
+    file_list:
+      - path: closure-dimension-cluster-logic.h
+      - path: closure-dimension-cluster-objects.h
+      - path: closure-dimension-delegate.h
+      - path: closure-dimension-matter-context.h
+      - path: closure-dimension-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_closure_dimension

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <contentItems xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.silabs.com/ss/ContentItem.ecore">
-  <contentItemData label="Matter Release Notes" itemURI="https://github.com/SiliconLabs/matter_extension/releases/tag/v2.6.1" category="Release Notes" priority="40">
+  <contentItemData label="Matter Release Notes" itemURI="https://github.com/SiliconLabs/matter_extension/releases/tag/v2.7.0" category="Release Notes" priority="40">
     <property key="core.category" value="Release Notes"/>
     <property key="core.priority" value="40"/>
     <property key="core.boardCompatibility" value="brd4116a brd4117a brd4118a brd4120a brd4121a brd4186c brd4187c brd2703a brd2704a brd2601b
                 brd2608a brd4316a brd4317a brd4319a brd4337a brd4318a brd1019a brd4350a brd4351a brd2709a brd2719a brd4407a brd4408a brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a"/>
     <property key="core.partCompatibility" value=".*efr32mg26.* .*efr32mg24.* .*mgm24.* .*mgm26.* .*simg301.* .*si917.* .*siwg917.* "/>
     <property key="core.sdkAndProtocolTags" value="Matter"/>
-    <description>Release Notes for the Silicon Labs Matter v2.6.1-1.4. These release notes provide information on the release including part compatibility, changes and added/deleted/deprecated features/API.</description>
+    <description>Release Notes for the Silicon Labs Matter v2.7.0-1.4. These release notes provide information on the release including part compatibility, changes and added/deleted/deprecated features/API.</description>
   </contentItemData>
 </contentItems>

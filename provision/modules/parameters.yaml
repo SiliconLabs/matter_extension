@@ -30,6 +30,12 @@ internal:
       hidden: true
 
 options:
+    - id: 0x0110
+      desc: "Help"
+      name: "help"
+      short: "h"
+      type: "flag"
+
     - id: 0x0111
       desc: "Version"
       name: "version"

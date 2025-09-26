@@ -7,9 +7,10 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.6.1"
+    version: "2.7.0"
+    vendor: silabs
   - id: wiseconnect3_sdk
-    version: "3.5.1"
+    version: "3.5.2"
 
 component:
   - id: matter_leds
@@ -21,6 +22,12 @@ component:
   - id: matter_crypto_tinycrypt_siwx917
     from: matter
 
+  - id: mbedtls_pki_aws
+    condition: [matter_aws]
+    from: matter
+  - id: mbedtls_entropy_default_aws
+    condition: [matter_aws]
+    from: matter
   - id: matter_wifi
     from: matter
   - id: app_common
@@ -37,8 +44,6 @@ component:
   - id: matter_temperature_control
     from: matter
   - id: matter_descriptor
-    from: matter
-  - id: matter_diagnostic_logs
     from: matter
   - id: matter_fixed_label
     from: matter
@@ -93,6 +98,9 @@ component:
     from: matter
   - id: matter_lwip
     from: matter
+  # TODO: Remove this in the SiSDK 25Q4 release, where the LwIP fix will be included in the SiSDK.
+  - id: sl_si91x_lwip_stack
+    from: wiseconnect3_sdk
 
   - id: matter_refrigerator
     from: matter
@@ -178,7 +186,7 @@ source:
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
-  - path: ../../../../third_party/matter_sdk/examples/refrigerator-app/silabs/src/ZclCallbacks.cpp
+  - path: ../../../../third_party/matter_sdk/examples/refrigerator-app/silabs/src/DataModelCallbacks.cpp
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/refrigerator-app/silabs/src/refrigerator-and-temperature-controlled-cabinet-mode.cpp
     directory: src

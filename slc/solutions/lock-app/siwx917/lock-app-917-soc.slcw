@@ -1,5 +1,6 @@
 label: lock-app-917-soc
 quality: production
+package: matter
 description: Matter solution containing for Lock App over WiFi
 project:
   - path: ../../../sample-app/lock-app/siwx917/lock-app-917-soc.slcp

@@ -21,6 +21,7 @@ include:
       - path: TextOnlyLogging.h
   - path: third_party/matter_sdk/src/lib/support
     file_list:
+      - path: AutoRelease.h
       - path: StringSplitter.h
       - path: PersistentStorageAudit.h
       - path: CHIPPlatformMemory.h
@@ -88,6 +89,8 @@ include:
       - path: ThreadOperationalDataset.h
       - path: Variant.h
       - path: PoolWrapper.h
+      - path: SpanSearchValue.h
+      - path: ReadOnlyBuffer.h
   - path: third_party/matter_sdk/src/lib/support/verhoeff
     file_list:
       - path: Verhoeff.h
@@ -112,6 +115,7 @@ source:
   - path: third_party/matter_sdk/src/lib/support/PersistentStorageAudit.cpp
   - path: third_party/matter_sdk/src/lib/support/Pool.cpp
   - path: third_party/matter_sdk/src/lib/support/PrivateHeap.cpp
+  - path: third_party/matter_sdk/src/lib/support/ReadOnlyBuffer.cpp
   - path: third_party/matter_sdk/src/lib/support/StringBuilder.cpp
   - path: third_party/matter_sdk/src/lib/support/ThreadOperationalDataset.cpp
   - path: third_party/matter_sdk/src/lib/support/TimeUtils.cpp

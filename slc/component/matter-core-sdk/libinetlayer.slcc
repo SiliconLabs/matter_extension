@@ -39,7 +39,6 @@ include:
       - path: UDPEndPoint.h
       - path: InetConfig.h
       - path: IPPacketInfo.h
-      - path: EndPointStateNetworkFramework.h
       - path: EndPointStateSockets.h
       - path: IANAConstants.h
       - path: InetFaultInjection.h
