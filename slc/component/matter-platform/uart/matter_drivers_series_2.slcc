@@ -13,7 +13,6 @@ provides:
 recommends:
   - id: uartdrv_eusart
     instance: [vcom]
-    vendor: silabs
 
 # Crypto operations on Series 2 need these clock settings
 requires:

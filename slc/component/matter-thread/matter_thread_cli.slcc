@@ -15,7 +15,6 @@ provides:
   - name: matter_thread_cli
 recommends:
   - id: ot_cli_source
-    vendor: silabs
 conflicts:
   - name: matter_low_power
   - name: matter_wifi

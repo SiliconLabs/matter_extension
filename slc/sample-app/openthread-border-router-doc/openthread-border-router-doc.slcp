@@ -4,7 +4,6 @@ description: >
   OpenThread Border Router Documentation
 quality: production
 package: matter
-vendor: silabs
 
 readme:
   - path: ./README.md

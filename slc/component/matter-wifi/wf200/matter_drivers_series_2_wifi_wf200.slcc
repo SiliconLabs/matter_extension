@@ -12,10 +12,8 @@ provides:
   - name: matter_drivers_series_2_wifi_wf200
 recommends:
   - id: spidrv
-    vendor: silabs
     instance: [exp]
   - id: uartdrv_eusart
-    vendor: silabs
     instance: [vcom]
 
 # Crypto operations on Series 2 need these clock settings

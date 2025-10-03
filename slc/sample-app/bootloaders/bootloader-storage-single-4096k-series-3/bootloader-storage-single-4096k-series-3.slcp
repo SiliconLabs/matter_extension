@@ -8,7 +8,6 @@ description: >
 sdk_extension:
   - id: matter
     version: "2.7.0"
-    vendor: silabs
 
 component:
   - id: btl_core
