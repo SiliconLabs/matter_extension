@@ -100,3 +100,13 @@
  *
  */
 #define CHIP_CONFIG_MRP_LOCAL_ACTIVE_RETRY_INTERVAL (2000_ms32)
+
+/**
+ * @def CHIP_CONFIG_ENABLE_ACL_EXTENSIONS
+ *
+ * If set to 1, the `Extension` attribute of the ACL Cluster will be enabled
+ * and supported. This attribute is optional and costly to implement. It is required by
+ * some device types, so some applications must enable it in their CHIPProjectConfig.h
+ * as an override.
+ */
+#define CHIP_CONFIG_ENABLE_ACL_EXTENSIONS 1

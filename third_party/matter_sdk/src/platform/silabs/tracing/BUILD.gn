@@ -17,6 +17,31 @@
 
 import("//build_overrides/build.gni")
 import("//build_overrides/chip.gni")
+import("${chip_root}/build/chip/buildconfig_header.gni")
+
+declare_args() {
+  # When enabled, this sets:
+  #  - configGENERATE_RUN_TIME_STATS in FreeRTOS
+  #  - configUSE_STATS_FORMATTING_FUNCTIONS in FreeRTOS
+  #  - Runtime statistics timer configuration
+  #  - Task switching hooks for statistics collection
+  silabs_tracing_runtime_stats = false
+}
+
+buildconfig_header("silabs_tracing_config") {
+  header = "SilabsTracingConfig.h"
+  header_dir = "platform/silabs/tracing"
+
+  defines = []
+
+  if (silabs_tracing_runtime_stats == true) {
+    defines += [
+      "TRACING_RUNTIME_STATS=1",
+      "TRACING_RUNTIME_STATS_MAX_TASKS=16",
+    ]
+  }
+  defines += [ "SERIALIZED_TIME_TRACKERS_SIZE_BYTES=512" ]
+}
 
 static_library("SilabsTracing") {
   sources = [
@@ -33,5 +58,8 @@ static_library("SilabsTracing") {
     "${chip_root}/src/system",
   ]
 
-  public_deps = [ "${chip_root}/src/tracing:tracing" ]
+  public_deps = [
+    ":silabs_tracing_config",
+    "${chip_root}/src/tracing:tracing",
+  ]
 }

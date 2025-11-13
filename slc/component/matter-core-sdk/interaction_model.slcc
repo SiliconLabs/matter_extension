@@ -17,73 +17,73 @@ include:
   - path: third_party/nlio/include
   - path: third_party/matter_sdk/src/app
     file_list:
-      - path: AttributeAccessToken.h
-      - path: InteractionModelDelegatePointers.h
-      - path: InteractionModelTimeout.h
-      - path: SubscriptionsInfoProvider.h
-      - path: SubscriptionResumptionStorage.h
-      - path: EventLoggingDelegate.h
-      - path: TimedRequest.h
-      - path: WriteHandler.h
-      - path: AttributePathParams.h
-      - path: CASEClient.h
-      - path: CommandPathParams.h
-      - path: FailSafeContext.h
-      - path: CASESessionManager.h
-      - path: OperationalSessionSetup.h
-      - path: ConcreteEventPath.h
-      - path: AttributePathExpandIterator.h
-      - path: TimerDelegates.h
-      - path: ConcreteClusterPath.h
-      - path: PendingResponseTrackerImpl.h
-      - path: SubscriptionResumptionSessionEstablisher.h
-      - path: CommandHandler.h
-      - path: SimpleSubscriptionResumptionStorage.h
-      - path: DeviceProxy.h
-      - path: ChunkedWriteCallback.h
-      - path: TimedHandler.h
-      - path: TestEventTriggerDelegate.h
-      - path: CommandSenderLegacyCallback.h
-      - path: EventLogging.h
-      - path: GlobalAttributes.h
-      - path: CommandSender.h
-      - path: AppConfig.h
-      - path: CommandPathRegistry.h
-      - path: ConcreteAttributePath.h
-      - path: EventManagement.h
-      - path: InteractionModelHelper.h
-      - path: InteractionModelEngine.h
-      - path: EventLoggingTypes.h
-      - path: ReadClient.h
-      - path: CommandResponseSender.h
-      - path: StatusResponse.h
-      - path: ReadPrepareParams.h
-      - path: WriteClient.h
-      - path: BufferedReadCallback.h
-      - path: EventPathParams.h
-      - path: CommandResponseHelper.h
-      - path: CommandHandlerInterface.h
-      - path: DataVersionFilter.h
-      - path: AttributeAccessInterfaceCache.h
-      - path: RequiredPrivilege.h
-      - path: PendingResponseTracker.h
-      - path: ConcreteCommandPath.h
-      - path: AttributeAccessInterface.h
-      - path: SafeAttributePersistenceProvider.h
-      - path: EventHeader.h
-      - path: ClusterStateCache.h
-      - path: CASEClientPool.h
-      - path: SpecificationDefinedRevisions.h
-      - path: OperationalSessionSetupPool.h
-      - path: ReadHandler.h
-      - path: OTAUserConsentCommon.h
+    -   path: AttributeAccessToken.h
+    -   path: InteractionModelDelegatePointers.h
+    -   path: InteractionModelTimeout.h
+    -   path: SubscriptionsInfoProvider.h
+    -   path: SubscriptionResumptionStorage.h
+    -   path: EventLoggingDelegate.h
+    -   path: TimedRequest.h
+    -   path: WriteHandler.h
+    -   path: AttributePathParams.h
+    -   path: CASEClient.h
+    -   path: CommandPathParams.h
+    -   path: FailSafeContext.h
+    -   path: CASESessionManager.h
+    -   path: OperationalSessionSetup.h
+    -   path: ConcreteEventPath.h
+    -   path: AttributePathExpandIterator.h
+    -   path: DefaultTimerDelegate.h
+    -   path: ConcreteClusterPath.h
+    -   path: PendingResponseTrackerImpl.h
+    -   path: SubscriptionResumptionSessionEstablisher.h
+    -   path: CommandHandler.h
+    -   path: SimpleSubscriptionResumptionStorage.h
+    -   path: DeviceProxy.h
+    -   path: ChunkedWriteCallback.h
+    -   path: TimedHandler.h
+    -   path: TestEventTriggerDelegate.h
+    -   path: CommandSenderLegacyCallback.h
+    -   path: EventLogging.h
+    -   path: GlobalAttributes.h
+    -   path: CommandSender.h
+    -   path: AppConfig.h
+    -   path: CommandPathRegistry.h
+    -   path: ConcreteAttributePath.h
+    -   path: EventManagement.h
+    -   path: InteractionModelHelper.h
+    -   path: InteractionModelEngine.h
+    -   path: EventLoggingTypes.h
+    -   path: ReadClient.h
+    -   path: CommandResponseSender.h
+    -   path: StatusResponse.h
+    -   path: ReadPrepareParams.h
+    -   path: WriteClient.h
+    -   path: BufferedReadCallback.h
+    -   path: EventPathParams.h
+    -   path: CommandResponseHelper.h
+    -   path: CommandHandlerInterface.h
+    -   path: DataVersionFilter.h
+    -   path: AttributeAccessInterfaceCache.h
+    -   path: RequiredPrivilege.h
+    -   path: PendingResponseTracker.h
+    -   path: ConcreteCommandPath.h
+    -   path: AttributeAccessInterface.h
+    -   path: SafeAttributePersistenceProvider.h
+    -   path: EventHeader.h
+    -   path: ClusterStateCache.h
+    -   path: CASEClientPool.h
+    -   path: SpecificationDefinedRevisions.h
+    -   path: OperationalSessionSetupPool.h
+    -   path: ReadHandler.h
+    -   path: OTAUserConsentCommon.h
   - path: third_party/matter_sdk/src/app/reporting
     file_list:
-      - path: ReportSchedulerImpl.h
-      - path: Engine.h
-      - path: SynchronizedReportSchedulerImpl.h
-      - path: reporting.h
-      - path: ReportScheduler.h
+    -   path: ReportSchedulerImpl.h
+    -   path: Engine.h
+    -   path: SynchronizedReportSchedulerImpl.h
+    -   path: reporting.h
+    -   path: ReportScheduler.h
 label: interaction_model
 package: matter
 provides:
@@ -93,24 +93,24 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
-  - path: third_party/matter_sdk/src/app/CASEClient.cpp
-  - path: third_party/matter_sdk/src/app/CASESessionManager.cpp
-  - path: third_party/matter_sdk/src/app/CommandSender.cpp
-  - path: third_party/matter_sdk/src/app/DeviceProxy.cpp
-  - path: third_party/matter_sdk/src/app/InteractionModelDelegatePointers.cpp
-  - path: third_party/matter_sdk/src/app/InteractionModelEngine.cpp
-  - path: third_party/matter_sdk/src/app/OperationalSessionSetup.cpp
-  - path: third_party/matter_sdk/src/app/PendingResponseTrackerImpl.cpp
-  - path: third_party/matter_sdk/src/app/ReadClient.cpp
-  - path: third_party/matter_sdk/src/app/SimpleSubscriptionResumptionStorage.cpp
-  - path: third_party/matter_sdk/src/app/StatusResponse.cpp
-  - path: third_party/matter_sdk/src/app/SubscriptionResumptionSessionEstablisher.cpp
-  - path: third_party/matter_sdk/src/app/TimedHandler.cpp
-  - path: third_party/matter_sdk/src/app/TimedRequest.cpp
-  - path: third_party/matter_sdk/src/app/WriteClient.cpp
-  - path: third_party/matter_sdk/src/app/reporting/Engine.cpp
-  - path: third_party/matter_sdk/src/app/reporting/reporting.cpp
-  - path: third_party/matter_sdk/src/app/reporting/ReportSchedulerImpl.cpp
-  - path: third_party/matter_sdk/src/app/reporting/SynchronizedReportSchedulerImpl.cpp
+-   path: third_party/matter_sdk/src/app/CASEClient.cpp
+-   path: third_party/matter_sdk/src/app/CASESessionManager.cpp
+-   path: third_party/matter_sdk/src/app/CommandSender.cpp
+-   path: third_party/matter_sdk/src/app/DeviceProxy.cpp
+-   path: third_party/matter_sdk/src/app/InteractionModelDelegatePointers.cpp
+-   path: third_party/matter_sdk/src/app/InteractionModelEngine.cpp
+-   path: third_party/matter_sdk/src/app/OperationalSessionSetup.cpp
+-   path: third_party/matter_sdk/src/app/PendingResponseTrackerImpl.cpp
+-   path: third_party/matter_sdk/src/app/ReadClient.cpp
+-   path: third_party/matter_sdk/src/app/SimpleSubscriptionResumptionStorage.cpp
+-   path: third_party/matter_sdk/src/app/StatusResponse.cpp
+-   path: third_party/matter_sdk/src/app/SubscriptionResumptionSessionEstablisher.cpp
+-   path: third_party/matter_sdk/src/app/TimedHandler.cpp
+-   path: third_party/matter_sdk/src/app/TimedRequest.cpp
+-   path: third_party/matter_sdk/src/app/WriteClient.cpp
+-   path: third_party/matter_sdk/src/app/reporting/Engine.cpp
+-   path: third_party/matter_sdk/src/app/reporting/reporting.cpp
+-   path: third_party/matter_sdk/src/app/reporting/ReportSchedulerImpl.cpp
+-   path: third_party/matter_sdk/src/app/reporting/SynchronizedReportSchedulerImpl.cpp
 ui_hints:
   visibility: never

@@ -36,10 +36,13 @@
 #include <nvm3_lock.h>
 #include <semphr.h>
 #include <sl_token_manager_interface.h>
+
+namespace {
 // Substitute the GSDK weak nvm3_lockBegin and nvm3_lockEnd
 // for an application controlled re-entrance protection
-static SemaphoreHandle_t nvm3_Sem;
-static StaticSemaphore_t nvm3_SemStruct;
+SemaphoreHandle_t nvm3_Sem;
+StaticSemaphore_t nvm3_SemStruct;
+} // namespace
 
 void nvm3_lockBegin(void)
 {
@@ -280,11 +283,6 @@ CHIP_ERROR SilabsConfig::WriteConfigValueStr(Key key, const char * str, size_t s
     VerifyOrReturnError(ValidConfigKey(key), CHIP_DEVICE_ERROR_CONFIG_NOT_FOUND); // Verify key id.
 
     VerifyOrReturnError(str != NULL, CHIP_ERROR_INVALID_ARGUMENT);
-    // Compute the length of the string if not provided.
-    if (strLen == 0)
-    {
-        strLen = strlen(str);
-    }
 
     // Write the string to nvm3 without the terminator char (apart from
     // empty strings where only the terminator char is stored in nvm3).

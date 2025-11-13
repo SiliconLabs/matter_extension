@@ -16,6 +16,8 @@ requires:
   - name: matter_uart
   - name: matter_thread_cli
     condition: [matter_thread]
+  - name: matter_zigbee_debug
+    condition: [matter_zigbee_multiprotocol_common]
 
 include:
   - path: third_party/matter_sdk/src/lib/shell

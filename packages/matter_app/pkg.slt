@@ -1,0 +1,7 @@
+# Version defaults to "0" if not defined
+version = "0"
+ 
+ 
+[dependency]
+# Get a specific version of the package
+matter_app = { version = ">=2.8.0 <2.8.1", installer ="conan", prerelease=true }

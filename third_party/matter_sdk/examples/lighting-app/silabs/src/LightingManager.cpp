@@ -181,7 +181,7 @@ bool LightingManager::InitiateAction(int32_t aActor, Action_t aAction, uint8_t *
 
     if (action_initiated && (aAction == ON_ACTION || aAction == OFF_ACTION))
     {
-        StartTimer(ACTUATOR_MOVEMENT_PERIOS_MS);
+        StartTimer(ACTUATOR_MOVEMENT_PERIOD_MS);
         mState = new_state;
     }
 

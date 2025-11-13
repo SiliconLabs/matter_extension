@@ -14,7 +14,6 @@ provides:
 source:
   - path: third_party/matter_sdk/src/app/clusters/network-commissioning/CodegenInstance.cpp
   - path: third_party/matter_sdk/src/app/clusters/network-commissioning/NetworkCommissioningCluster.cpp
-  - path: third_party/matter_sdk/src/app/clusters/network-commissioning/NetworkCommissioningLogic.cpp
   - path: third_party/matter_sdk/src/app/clusters/network-commissioning/ThreadScanResponse.cpp
   - path: third_party/matter_sdk/src/app/clusters/network-commissioning/WifiScanResponse.cpp
 include:
@@ -24,7 +23,6 @@ include:
       - path: constants.h
       - path: network-commissioning.h
       - path: NetworkCommissioningCluster.h
-      - path: NetworkCommissioningLogic.h
       - path: ThreadScanResponse.h
       - path: WifiScanResponse.h
 template_contribution:

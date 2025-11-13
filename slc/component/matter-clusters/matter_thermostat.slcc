@@ -15,13 +15,17 @@ source:
   - path: third_party/matter_sdk/src/app/clusters/thermostat-server/PresetStructWithOwnedMembers.cpp
   - path: third_party/matter_sdk/src/app/clusters/thermostat-server/thermostat-server-atomic.cpp
   - path: third_party/matter_sdk/src/app/clusters/thermostat-server/thermostat-server-presets.cpp
+  - path: third_party/matter_sdk/src/app/clusters/thermostat-server/thermostat-server-suggestions.cpp
   - path: third_party/matter_sdk/src/app/clusters/thermostat-server/thermostat-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/thermostat-server/ThermostatSuggestionStructWithOwnedMembers.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/thermostat-server
     file_list:
       - path: PresetStructWithOwnedMembers.h
       - path: thermostat-delegate.h
+      - path: thermostat-server-presets.h
       - path: thermostat-server.h
+      - path: ThermostatSuggestionStructWithOwnedMembers.h
 template_contribution:
   - name: component_catalog
     value: matter_thermostat

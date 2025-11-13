@@ -114,6 +114,7 @@ CHIP_ERROR RefrigeratorAlarmSuppressHandler(int argc, char ** argv)
 
     return CHIP_NO_ERROR;
 }
+
 CHIP_ERROR RefrigeratorDoorEventHandler(int argc, char ** argv)
 {
 

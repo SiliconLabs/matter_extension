@@ -15,26 +15,25 @@ include:
   - path: third_party/nlio/include
   - path: third_party/matter_sdk/src/app
     file_list:
-      - path: util/attribute-table.h
-      - path: util/endpoint-config-api.h
-      - path: util/DataModelHandler.h
-      - path: util/cluster-config.h
-      - path: util/config.h
-      - path: util/binding-table.h
-      - path: util/af-types.h
-      - path: util/im-client-callbacks.h
-      - path: util/attribute-storage.h
-      - path: util/ember-strings.h
-      - path: util/types_stub.h
-      - path: util/util.h
-      - path: util/attribute-metadata.h
-      - path: util/endpoint-config-defines.h
-      - path: util/privilege-storage.h
-      - path: util/MatterCallbacks.h
-      - path: util/basic-types.h
-      - path: util/attribute-storage-null-handling.h
-      - path: util/odd-sized-integers.h
-      - path: util/generic-callbacks.h
+    -   path: util/attribute-table.h
+    -   path: util/endpoint-config-api.h
+    -   path: util/DataModelHandler.h
+    -   path: util/cluster-config.h
+    -   path: util/config.h
+    -   path: util/af-types.h
+    -   path: util/im-client-callbacks.h
+    -   path: util/attribute-storage.h
+    -   path: util/ember-strings.h
+    -   path: util/types_stub.h
+    -   path: util/util.h
+    -   path: util/attribute-metadata.h
+    -   path: util/endpoint-config-defines.h
+    -   path: util/privilege-storage.h
+    -   path: util/MatterCallbacks.h
+    -   path: util/basic-types.h
+    -   path: util/attribute-storage-null-handling.h
+    -   path: util/odd-sized-integers.h
+    -   path: util/generic-callbacks.h
 label: callbacks
 package: matter
 provides:

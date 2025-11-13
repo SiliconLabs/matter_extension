@@ -1,0 +1,282 @@
+project_name: zigbee-matter-light
+label: z3-light_ot-ftd_Matter_soc
+package: matter
+category: Matter Zigbee Application
+quality: production
+description: This is the project file for a Matter (OT)+Zigbee+BLE app
+
+component:
+  - id: device_init
+  - id: clock_manager
+  - id: rail_mux
+  - id: sl_main
+  # Needed to use Network Analyser
+  #- id: rail_util_pti
+  - instance: [example]
+    id: cli
+  - id: iostream_stdio
+  - id: segger_rtt
+  #Zigbee Components
+  - id: zigbee_ble_dmp_cli
+  - id: zigbee_address_table
+  - id: zigbee_application_bootloader
+  - id: zigbee_security_link_keys
+  - id: zigbee_source_route
+  - id: zigbee_stack_diagnostics
+  - id: zigbee_ipc
+  - id: zigbee_gp
+  - id: zigbee_zll
+  - id: zigbee_zcl_framework_core
+  - id: zigbee_zcl_cli
+  - id: zigbee_core_cli
+  - id: zigbee_color_control_server
+  - id: zigbee_groups_server
+  - id: zigbee_identify
+  - id: zigbee_level_control
+  - id: zigbee_on_off
+  - id: zigbee_zll_on_off_server
+  - id: zigbee_counters
+  - id: zigbee_find_and_bind_target
+  - id: zigbee_green_power_common
+  - id: zigbee_green_power_client
+  - id: zigbee_green_power_client_cli
+  - id: zigbee_interpan
+  - id: zigbee_zll_commissioning_common
+  - id: zigbee_zll_commissioning_server
+  - id: zigbee_network_creator
+  - id: zigbee_network_creator_security
+  - id: zigbee_network_steering
+  - id: zigbee_reporting
+  - id: zigbee_zll_identify_server
+  - id: zigbee_zll_level_control_server
+  - id: zigbee_scenes
+  - id: zigbee_zll_scenes_server
+  - id: zigbee_basic
+  - id: zigbee_zll_utility_server
+  - id: zigbee_scan_dispatch
+  - id: zigbee_update_tc_link_key
+  - id: zigbee_debug_print
+  - id: zigbee_pro_stack
+  #Bluetooth Components
+  - id: bluetooth_feature_gatt
+  - id: bluetooth_feature_gatt_server
+  - id: bluetooth_feature_legacy_advertiser
+  - id: bluetooth_feature_connection
+  - id: bluetooth_feature_connection_role_peripheral
+  - id: bluetooth_feature_system
+  - id: bluetooth_feature_sm
+  - id: bluetooth_stack
+  #Matter Components
+  - { id: matter_platform_mg }
+  - { id: matter_groups }
+  - { id: matter_group_key_mgmt }
+  - { id: matter_descriptor }
+  - { id: matter_localization_configuration }
+  - { id: matter_crypto }
+  - { id: matter_basic_information }
+  - { id: matter_lighting }
+  - { id: matter_network_commissioning }
+  - { id: matter_operational_credentials }
+  - { id: matter_administrator_commissioning }
+  - { id: matter_on_off }
+  - { id: matter_scenes }
+  - { id: matter }
+  - { id: matter_ota_support }
+  - { id: matter_ota_requestor }
+  - { id: matter_software_diagnostics }
+  - { id: matter_access_control }
+  - { id: matter_general_commissioning }
+  - { id: matter_identify }
+  - { id: matter_general_diagnostics }
+  - { id: matter_color_control }
+  - { id: matter_level_control }
+  - { id: matter_user_label }
+  - { id: matter_fixed_label }
+  - { id: matter_shell }
+  - { id: matter_power_source }
+  - { id: app_common }
+  - { id: matter_provision_default }
+  - { id: matter_log_uart }
+  - { id: matter_tracing }
+  - { id: matter_zigbee_multiprotocol_common }
+  - { id: matter_ble_side_channel }
+  - { id: matter_unit_localization }
+
+  #Matter components wrapper from simplicity_sdk
+  - { id: matter_default_lcd_config }
+  - { id: matter_buttons }
+  - { id: matter_configuration_over_swo }
+  - { id: matter_ble }
+  - { id: matter_thread_network_diagnostics }
+  - { id: matter_thread }
+  - { id: matter_leds }
+
+requires:
+  # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
+  # Select UART/EUART drivers based on device series
+  - name: matter_drivers_series_2
+    condition: [device_series_2]
+  - name: matter_drivers_series_2
+    condition: [device_series_3]
+
+  # RAIL components that enable Concurrent Listening
+  - name: rail_util_ieee802154_fast_channel_switching
+    condition: [device_series_2]
+  - name: rail_util_dma
+    condition: [device_series_2]
+
+toolchain_settings:
+  - option: cxx_standard
+    value: gnu++17
+
+tag:
+  - prebuilt_demo
+  - hardware:device:flash:1536
+  - hardware:device:ram:192
+
+configuration:
+  - name: SL_TOKEN_MANAGER_STATIC_SECURE_TOKEN_SIZE
+    value: 8192
+  - name: SL_BOARD_ENABLE_VCOM
+    value: 1
+  - condition: [iostream_eusart]
+    name: SL_IOSTREAM_EUSART_VCOM_FLOW_CONTROL_TYPE
+    value: eusartHwFlowControlCtsAndRts
+  - name: SL_CLI_MAX_INPUT_ARGUMENTS
+    value: 16
+  - name: SLI_ZIGBEE_PRIMARY_NETWORK_DEVICE_TYPE
+    value: SLI_ZIGBEE_NETWORK_DEVICE_TYPE_COORDINATOR_OR_ROUTER
+  - name: SLI_ZIGBEE_PRIMARY_NETWORK_SECURITY_TYPE
+    value: SLI_ZIGBEE_NETWORK_SECURITY_TYPE_3_0
+  - condition: [iostream_usart]
+    name: SL_IOSTREAM_USART_VCOM_RESTRICT_ENERGY_MODE_TO_ALLOW_RECEPTION
+    value: "1"
+  - name: SL_BT_CONFIG_USER_ADVERTISERS
+    value: 2
+    condition: [matter_ble_side_channel]
+    unless: [matter_ble_dmp_test]
+  - name: SL_BT_CONFIG_USER_ADVERTISERS
+    value: 3
+    condition: [matter_ble_dmp_test]
+  - name: SL_BT_CONFIG_MAX_CONNECTIONS
+    value: 4
+  - name: SL_IOSTREAM_EUSART_VCOM_RX_BUFFER_SIZE
+    value: 128 # Increase from default for open thread
+    condition:
+      - iostream_eusart
+  - name: SL_HEAP_SIZE
+    value: 40960 # Standard Matter HEAP size
+    condition: [freertos]
+  - name: SL_STACK_SIZE
+    value: 5120
+    condition:
+      - freertos
+  - name: LIB_MEM_CFG_HEAP_SIZE
+    value: 0
+  - name: SL_IOSTREAM_EUSART_VCOM_RESTRICT_ENERGY_MODE_TO_ALLOW_RECEPTION
+    value: 1
+    condition:
+      - iostream_eusart
+  - name: SL_OPENTHREAD_RTOS_TASK_PRIORITY
+    value: 49 #Same as Zigbee
+  - name: SL_CLI_HELP_DESCRIPTION_ENABLED
+    value: 0 # Code space savings
+  - name: SL_CLI_EOL_STRING
+    value: '"\r\n"'
+  - name: SL_LEGACY_HAL_DISABLE_WATCHDOG
+    value: 1
+  - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+    value: 1536
+  - name: SL_BT_RTOS_LINK_LAYER_TASK_STACK_SIZE
+    value: 1088
+    condition:
+      - device_series_2
+  - name: CIRCULAR_QUEUE_LEN_MAX
+    value: 16
+  - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS
+    value: 1
+# series 3 requires more stack in zb stacks
+  - name: SL_CLI_EXAMPLE_TASK_STACK_SIZE
+    value: 1500
+    condition:
+      - device_series_3
+  - name: SL_ZIGBEE_STACK_RTOS_TASK_STACK_SIZE
+    value: 5800
+    condition:
+      - device_series_3
+  - name: SL_ZIGBEE_APP_FRAMEWORK_RTOS_TASK_STACK_SIZE
+    value: 6000
+    condition:
+      - device_series_3
+  - name: SL_CLI_EXAMPLE_TASK_STACK_SIZE
+    value: 600
+    condition:
+      - device_series_2
+
+define:
+  - name: OS_CFG_COMPAT_INIT
+  - name: CHIP_CRYPTO_PLATFORM
+    value: 1
+  - name: _WANT_REENT_SMALL
+    value: 1
+  - name: IS_DEMO_LIGHT
+    value: 1
+  - name: NVM3_DEFAULT_NVM_SIZE
+    value: 40960
+  - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
+    value: 4092
+  - name: SL_CLI_TICK_ENABLE
+    value: 0
+
+
+config_file:
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/cmp/config/sl_cmp_config.h
+  - path: ../../../../third_party/matter_sdk/examples/zigbee-matter-light/silabs/config/zcl/zcl_config.zap
+    file_id: zap_config
+    directory: common
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/gatt_configuration.btconf
+    directory: btconf
+    unless: [matter_ble_dmp_test, matter_gatt_static]
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/cmp/config/btconf/gatt_configuration.btconf
+    directory: btconf
+    condition: [matter_ble_dmp_test]
+  - path: ../../../../provision.mattpconf
+    directory: provision
+    file_id: provision_config
+source:
+  - path: ../../../../third_party/matter_sdk/examples/lighting-app/silabs/src/AppTask.cpp
+    directory: src
+  - path: ../../../../third_party/matter_sdk/examples/lighting-app/silabs/src/LightingManager.cpp
+    directory: src
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
+    directory: src
+  - path: ../../../../third_party/matter_sdk/examples/lighting-app/silabs/src/DataModelCallbacks.cpp
+    directory: src
+
+include:
+  - path: ../../../../third_party/matter_sdk/examples/lighting-app/silabs/include
+    file_list:
+      - path: AppConfig.h
+      - path: AppEvent.h
+      - path: AppTask.h
+      - path: CHIPProjectConfig.h
+      - path: LightingManager.h
+      - path: ZigbeeCMPConfig.h
+      - path: ZigbeeSequentialConfig.h
+    directory: include
+post_build:
+  profile: application
+
+readme:
+  - path: ./README.md
+other_file:
+  - path: ./target_behaviour.png
+ui_hints:
+  highlight:
+    - path: readme.md
+      focus: false
+
+sdk_extension:
+  - id: matter
+    version: "2.8.0"
+    vendor: silabs

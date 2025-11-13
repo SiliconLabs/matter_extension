@@ -1,8 +1,0 @@
-label: window-app-917-soc
-quality: production
-package: matter
-description: Matter solution containing for Window App over WiFi
-project:
-  - path: ../../../sample-app/window-app/siwx917/window-app-917-soc.slcp
-    id: application
-    output: window-app-917-soc

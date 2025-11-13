@@ -15,37 +15,37 @@ include:
   - path: third_party/nlio/include
   - path: third_party/matter_sdk/src/inet
     file_list:
-      - path: TCPEndPointImplLwIP.h
-      - path: EndPointStateLwIP.h
-      - path: EndpointQueueFilter.h
-      - path: EndPointStateOpenThread.h
-      - path: TCPEndPointImpl.h
-      - path: IPAddress.h
-      - path: UDPEndPointImplNetworkFramework.h
-      - path: InetError.h
-      - path: UDPEndPointImplOpenThread.h
-      - path: InetInterface.h
-      - path: UDPEndPointImpl.h
-      - path: Inet.h
-      - path: TCPEndPoint.h
-      - path: InetLayer.h
-      - path: EndPointBasis.h
-      - path: TCPEndPointImplOpenThread.h
-      - path: UDPEndPointImplSockets.h
-      - path: arpa-inet-compatibility.h
-      - path: InetInterfaceImpl.h
-      - path: UDPEndPointImplLwIP.h
-      - path: BasicPacketFilters.h
-      - path: UDPEndPoint.h
-      - path: InetConfig.h
-      - path: IPPacketInfo.h
-      - path: EndPointStateSockets.h
-      - path: IANAConstants.h
-      - path: InetFaultInjection.h
-      - path: IPPrefix.h
-      - path: ZephyrSocket.h
-      - path: TCPEndPointImplSockets.h
-      - path: InetArgParser.h
+    -   path: TCPEndPointImplLwIP.h
+    -   path: EndPointStateLwIP.h
+    -   path: EndpointQueueFilter.h
+    -   path: EndPointStateOpenThread.h
+    -   path: TCPEndPointImpl.h
+    -   path: IPAddress.h
+    -   path: UDPEndPointImplNetworkFramework.h
+    -   path: InetError.h
+    -   path: UDPEndPointImplOpenThread.h
+    -   path: InetInterface.h
+    -   path: UDPEndPointImpl.h
+    -   path: Inet.h
+    -   path: TCPEndPoint.h
+    -   path: InetLayer.h
+    -   path: EndPointBasis.h
+    -   path: TCPEndPointImplOpenThread.h
+    -   path: UDPEndPointImplSockets.h
+    -   path: arpa-inet-compatibility.h
+    -   path: InetInterfaceImpl.h
+    -   path: UDPEndPointImplLwIP.h
+    -   path: BasicPacketFilters.h
+    -   path: UDPEndPoint.h
+    -   path: InetConfig.h
+    -   path: IPPacketInfo.h
+    -   path: EndPointStateSockets.h
+    -   path: IANAConstants.h
+    -   path: InetFaultInjection.h
+    -   path: IPPrefix.h
+    -   path: ZephyrSocket.h
+    -   path: TCPEndPointImplSockets.h
+    -   path: InetArgParser.h
 label: libinetlayer_wifi
 package: matter
 provides:

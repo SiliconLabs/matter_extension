@@ -1,0 +1,8 @@
+label: air-quality-sensor-app-siwx
+quality: production
+package: matter
+description: Solution for a Matter over WiFI Air Quality Sensor App Example
+project:
+  - path: ./air-quality-sensor-app-siwx.slcp
+    id: application
+    output: air-quality-sensor-app-siwx

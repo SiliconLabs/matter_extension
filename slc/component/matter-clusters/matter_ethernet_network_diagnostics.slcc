@@ -12,7 +12,12 @@ metadata:
 provides:
   - name: matter_ethernet_network_diagnostics
 source:
-  - path: third_party/matter_sdk/src/app/clusters/ethernet-network-diagnostics-server/ethernet-network-diagnostics-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/ethernet-network-diagnostics-server/CodegenIntegration.cpp
+  - path: third_party/matter_sdk/src/app/clusters/ethernet-network-diagnostics-server/ethernet-diagnostics-cluster.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/ethernet-network-diagnostics-server
+    file_list:
+      - path: ethernet-diagnostics-cluster.h
 template_contribution:
   - name: component_catalog
     value: matter_ethernet_network_diagnostics

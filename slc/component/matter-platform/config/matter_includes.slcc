@@ -26,6 +26,7 @@ include:
       - path: system/SystemBuildConfig.h
       - path: CHIPVersion.h
       - path: FirmwareBuildTime.h
+      - path: codegen/CodegenProcessingBuildConfig.h
   - path: third_party/matter_sdk/src/app/icd/server
     file_list:
       - path: ICDServerConfig.h

@@ -12,6 +12,7 @@ config_file:
     override:
       component: freertos
       file_id: freertos_config
+      vendor: silabs
   - path: slc/config/sl_matter_config.h
     file_id: matter_config
   # ICD configuration is needed by the core SDK (ICD end device or not)
@@ -22,6 +23,9 @@ config_file:
   - path: slc/inc/matter/tracing/build_config.h
     file_id: build_config
     directory: matter/tracing
+  - path: slc/inc/platform/silabs/tracing/SilabsTracingConfig.h
+    file_id: silabs_tracing_config
+    directory: platform/silabs/tracing
 toolchain_settings:
   - option: gcc_compiler_option
     value: -Wno-deprecated-declarations
@@ -114,6 +118,7 @@ requires:
   - name: matter_codegen_data_model_sources
   - name: matter_data_model
   - name: matter_data_model_provider
+  - name: matter_encode_decode
   - name: matter_error
   - name: matter_libinteractionmodel
   - name: matter_memory

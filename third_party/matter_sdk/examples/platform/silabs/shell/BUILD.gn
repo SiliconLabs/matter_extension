@@ -56,7 +56,10 @@ source_set("tracing") {
 
   public_configs = [ ":tracing-shell-config" ]
 
-  deps = [ "${shell_dependency_path}:matter-shell" ]
+  deps = [
+    "${chip_root}/src/platform/silabs/tracing:SilabsTracing",
+    "${shell_dependency_path}:matter-shell",
+  ]
 }
 
 source_set("ble") {
@@ -68,5 +71,4 @@ source_set("ble") {
   public_configs = [ ":ble-shell-config" ]
 
   deps = [ "${shell_dependency_path}:matter-shell" ]
-
 }

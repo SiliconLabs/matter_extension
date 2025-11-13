@@ -1,0 +1,26 @@
+category: Clusters|General
+description: >
+  Implementation of the tls certificate management Server Cluster.
+  The user has to enable the tls certificate management Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_tls_certificate_management
+package: matter
+label: tls certificate management Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_tls_certificate_management
+source:
+  - path: third_party/matter_sdk/src/app/clusters/tls-certificate-management-server/CertificateTableImpl.cpp
+  - path: third_party/matter_sdk/src/app/clusters/tls-certificate-management-server/tls-certificate-management-server.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/tls-certificate-management-server
+    file_list:
+      - path: CertificateTable.h
+      - path: CertificateTableImpl.h
+      - path: IncrementingIdHelper.h
+      - path: tls-certificate-management-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_tls_certificate_management

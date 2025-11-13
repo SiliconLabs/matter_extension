@@ -62,7 +62,10 @@ CHIP_ERROR KeyValueStoreManagerImpl::Init(void)
     }
     ReturnErrorOnFailure(error);
 
-    constexpr osThreadAttr_t attr = { .name = "KvsKeyMapCleanupTask", .stack_size = 512 /* bytes */, .priority = osPriorityLow7 };
+    // On series 3, nvm3 security can use up to ~1100 bytes of stack during read/write operations.
+    // Provide enough stack for all platforms. The KvsKeyMapCleanupTask is deleted once the cleanup is completed and the allocated
+    // stack is freed.
+    constexpr osThreadAttr_t attr = { .name = "KvsKeyMapCleanupTask", .stack_size = 1536 /* bytes */, .priority = osPriorityLow7 };
     if (osThreadNew(KvsKeyMapCleanup, nullptr, &attr) == nullptr)
     {
         // We don't need to crash and force a reboot. we will retry at the next reboot
@@ -274,9 +277,9 @@ void KeyValueStoreManagerImpl::KvsMapMigration(void)
 {
 // this migration precedes Series 3, we don't need to run it in that case
 #ifndef _SILICON_LABS_32B_SERIES_3
-    size_t readlen                 = 0;
-    constexpr size_t oldMaxEntries = 120;
-    uint32_t maxStringLen          = 33; // determined by constant PersistentStorageDelegate::kKeyLengthMax + 1 before migration
+    size_t readlen                  = 0;
+    constexpr size_t oldMaxEntries  = 120;
+    constexpr uint32_t maxStringLen = 33; // value of PersistentStorageDelegate::kKeyLengthMax + 1 when migration was added
     Platform::ScopedMemoryBuffer<char> mKvsStoredKeyString;
     mKvsStoredKeyString.Alloc(oldMaxEntries * maxStringLen);
 
@@ -288,7 +291,8 @@ void KeyValueStoreManagerImpl::KvsMapMigration(void)
 
     if (err == CHIP_NO_ERROR)
     {
-        for (uint8_t i = 0; i < std::min(oldMaxEntries, KeyValueStoreManagerImpl::kMaxEntries); i++)
+        // Migrate the old String Based KvsKeyMap to the Hash based KvsKeyMap
+        for (size_t i = 0; i < std::min(oldMaxEntries, KeyValueStoreManagerImpl::kMaxEntries); i++)
         {
             char * keyString = mKvsStoredKeyString.Get() + (i * maxStringLen);
             if (keyString[0] != 0)

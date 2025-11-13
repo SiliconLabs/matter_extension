@@ -15,7 +15,8 @@
  *
  ******************************************************************************/
 
-#include "ApplicationSleepManager.h"
+#include <ApplicationSleepManager.h>
+#include <VendorHandlerFactory.h>
 #include <lib/core/DataModelTypes.h>
 #include <lib/support/logging/CHIPLogging.h>
 
@@ -24,15 +25,6 @@ namespace app {
 namespace Silabs {
 
 using chip::DeviceLayer::Silabs::WifiSleepManager;
-
-namespace {
-
-enum class SpecialCaseVendorID : uint16_t
-{
-    kAppleKeychain = 4996,
-};
-
-} // namespace
 
 ApplicationSleepManager ApplicationSleepManager::mInstance;
 
@@ -112,7 +104,7 @@ bool ApplicationSleepManager::CanGoToLIBasedSleep()
             if (!mSubscriptionsInfoProvider->FabricHasAtLeastOneActiveSubscription(it->GetFabricIndex()))
             {
                 ChipLogProgress(AppServer, "Fabric index %u has no active subscriptions", it->GetFabricIndex());
-                canGoToLIBasedSleep = ProcessSpecialVendorIDCase(it->GetVendorId());
+                canGoToLIBasedSleep = ProcessVendorIdExceptions(it->GetVendorId());
 
                 if (canGoToLIBasedSleep)
                 {
@@ -132,39 +124,11 @@ bool ApplicationSleepManager::CanGoToLIBasedSleep()
     return canGoToLIBasedSleep;
 }
 
-bool ApplicationSleepManager::ProcessSpecialVendorIDCase(chip::VendorId vendorId)
+bool ApplicationSleepManager::ProcessVendorIdExceptions(chip::VendorId vendorId)
 {
-    bool hasValidException = false;
-    switch (to_underlying(vendorId))
-    {
-    case to_underlying(SpecialCaseVendorID::kAppleKeychain):
-        hasValidException = ProcessKeychainEdgeCase();
-        break;
-
-    default:
-        break;
-    }
-
-    return hasValidException;
-}
-
-bool ApplicationSleepManager::ProcessKeychainEdgeCase()
-{
-    bool hasValidException = true; // Default to true if no VendorId::Apple fabric is found
-
-    for (auto it = mFabricTable->begin(); it != mFabricTable->end(); ++it)
-    {
-        if (it->GetVendorId() == chip::VendorId::Apple)
-        {
-            if (!mSubscriptionsInfoProvider->FabricHasAtLeastOneActiveSubscription(it->GetFabricIndex()))
-            {
-                hasValidException = false; // Found an Apple fabric, but no active subscription
-            }
-            break;
-        }
-    }
-
-    return hasValidException;
+    // Add new handlers here for them to be processed by the factory
+    using Factory = VendorHandlerFactory<AppleKeychainHandler>;
+    return Factory::ProcessVendorCase(vendorId, mSubscriptionsInfoProvider, mFabricTable);
 }
 
 void ApplicationSleepManager::OnEnterActiveMode()

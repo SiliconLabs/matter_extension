@@ -11,8 +11,9 @@ metadata:
 config_file:
   - path: third_party/matter_sdk/src/lwip/silabs/lwipopts.h
     override:
-      component: "%extension-wiseconnect3_sdk%wifi_resources"
+      component: "wifi_resources"
       file_id: lwipopts
+      vendor: silabs
 
 provides:
 - name: siwx917_ncp
@@ -24,7 +25,7 @@ recommends:
     instance: [vcom]
 
 requires:
-- name: wiseconnect3_common
+- name: wiseconnect_common
 - name: sl_si91x_spi_bus
 - name: device_init_dpll
 - name: spidrv_instance
@@ -50,15 +51,11 @@ include:
 - path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx
   file_list:
   - path: WifiInterfaceImpl.h
-- path: third_party/matter_sdk/src/platform/silabs/wifi/wiseconnect-interface
-  file_list:
-  - path: WiseconnectWifiInterface.h
 
 source:
 
 - path: third_party/matter_sdk/src/platform/silabs/wifi/WifiInterface.cpp
 - path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx/ncp/efx32_ncp_host.c
-- path: third_party/matter_sdk/src/platform/silabs/wifi/wiseconnect-interface/WiseconnectWifiInterface.cpp
 - path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp
 - path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx/ncp/sl_si91x_ncp_utility.c
 - path: third_party/matter_sdk/src/platform/silabs/rs911x/BLEManagerImpl.cpp

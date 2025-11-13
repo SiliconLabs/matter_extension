@@ -13,10 +13,6 @@ provides:
   - name: matter_joint_fabric_administrator
 source:
   - path: third_party/matter_sdk/src/app/clusters/joint-fabric-administrator-server/joint-fabric-administrator-server.cpp
-include:
-  - path: third_party/matter_sdk/src/app/clusters/joint-fabric-administrator-server
-    file_list:
-      - path: joint-fabric-administrator-server.h
 template_contribution:
   - name: component_catalog
     value: matter_joint_fabric_administrator

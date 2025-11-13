@@ -53,46 +53,31 @@ DiagnosticDataProviderImpl & DiagnosticDataProviderImpl::GetDefaultInstance()
  */
 CHIP_ERROR DiagnosticDataProviderImpl::GetCurrentHeapFree(uint64_t & currentHeapFree)
 {
-#if (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
-    return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE;
-#else
-    size_t freeHeapSize             = sl_memory_get_free_heap_size();
-    currentHeapFree                 = static_cast<uint64_t>(freeHeapSize);
-#endif //(defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
+    size_t freeHeapSize = sl_memory_get_free_heap_size();
+    currentHeapFree     = static_cast<uint64_t>(freeHeapSize);
     return CHIP_NO_ERROR;
 }
 
 CHIP_ERROR DiagnosticDataProviderImpl::GetCurrentHeapUsed(uint64_t & currentHeapUsed)
 {
-#if (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
-    return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE;
-#else
-    size_t heapUsed                 = sl_memory_get_used_heap_size();
-    currentHeapUsed                 = static_cast<uint64_t>(heapUsed);
-#endif //(defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
+    size_t heapUsed = sl_memory_get_used_heap_size();
+    currentHeapUsed = static_cast<uint64_t>(heapUsed);
     return CHIP_NO_ERROR;
 }
 
 CHIP_ERROR DiagnosticDataProviderImpl::GetCurrentHeapHighWatermark(uint64_t & currentHeapHighWatermark)
 {
-#if (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
-    return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE;
-#else
     size_t HighestHeapUsageRecorded = sl_memory_get_heap_high_watermark();
     currentHeapHighWatermark        = static_cast<uint64_t>(HighestHeapUsageRecorded);
-#endif //(defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
+
     return CHIP_NO_ERROR;
 }
 
 CHIP_ERROR DiagnosticDataProviderImpl::ResetWatermarks()
 {
-#if (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
-    return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE;
-#else
     // If implemented, the server SHALL set the value of the CurrentHeapHighWatermark attribute to the
     // value of the CurrentHeapUsed.
     sl_memory_reset_heap_high_watermark();
-#endif //(defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
     return CHIP_NO_ERROR;
 }
 

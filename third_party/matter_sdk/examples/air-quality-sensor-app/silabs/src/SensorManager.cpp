@@ -114,11 +114,10 @@ CHIP_ERROR SensorManager::Init()
     }
 
 #ifdef USE_AIR_QUALITY_SENSOR
-    sl_status_t status = AirQualitySensor::Init();
-    if (status != SL_STATUS_OK)
+    if (SL_STATUS_OK != AirQualitySensor::Init())
     {
-        ChipLogError(AppServer, "Failed to Init Sensor with error code: %lx", status);
-        return MATTER_PLATFORM_ERROR(status);
+        ChipLogDetail(AppServer, "Failed to Init Sensor");
+        return CHIP_ERROR_INTERNAL;
     }
 #endif
     // Update Air Quality immediatly at bootup

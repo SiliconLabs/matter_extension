@@ -27,6 +27,7 @@ source_set("headers") {
     "headers/ProvisionManager.h",
     "headers/ProvisionProtocol.h",
     "headers/ProvisionStorage.h",
+    "headers/ProvisionedDataProvider.h",
   ]
 
   public_configs = [ ":provision-config" ]

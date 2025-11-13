@@ -30,7 +30,7 @@ import stat
 import subprocess
 import shutil
 import json
-import re 
+import re
 from datetime import datetime
 from zipfile import ZipFile
 from pathlib import Path
@@ -177,8 +177,10 @@ class MatterEnvSetup:
             st = os.stat(os.path.join(self.tools_folder_path, "slc_cli", "slc"))
             os.chmod(os.path.join(self.tools_folder_path, "slc_cli", "slc"), st.st_mode | stat.S_IEXEC)
             if self.platform == "darwin":
-                st = os.stat(os.path.join(self.tools_folder_path, "slc_cli", "bin", "slc-cli", "slc-cli.app", "Contents", "MacOS", "slc-cli"))
-                os.chmod(os.path.join(self.tools_folder_path, "slc_cli", "bin", "slc-cli", "slc-cli.app", "Contents", "MacOS", "slc-cli"), st.st_mode | stat.S_IEXEC)
+                st = os.stat(os.path.join(self.tools_folder_path, "slc_cli", "bin",
+                             "slc-cli", "slc-cli.app", "Contents", "MacOS", "slc-cli"))
+                os.chmod(os.path.join(self.tools_folder_path, "slc_cli", "bin", "slc-cli",
+                         "slc-cli.app", "Contents", "MacOS", "slc-cli"), st.st_mode | stat.S_IEXEC)
             elif self.platform == "linux":
                 st = os.stat(os.path.join(self.tools_folder_path, "slc_cli", "bin", "slc-cli", "slc-cli"))
                 os.chmod(os.path.join(self.tools_folder_path, "slc_cli", "bin", "slc-cli", "slc-cli"), st.st_mode | stat.S_IEXEC)
@@ -220,18 +222,20 @@ class MatterEnvSetup:
         installed_zap_version = datetime.strptime(installed_zap_version, date_format)
         min_zap = datetime.strptime(min_zap, date_format)
         if installed_zap_version < min_zap:
-            logging.warning(f"Installed zap version is {installed_zap_version} which is less than Minimum Required level of {min_zap}")
+            logging.warning(
+                f"Installed zap version is {installed_zap_version} which is less than Minimum Required level of {min_zap}")
             try:
                 logging.info(f"Deleting old version of zap located at {self.zap_path}")
                 shutil.rmtree(self.zap_path)
                 self.download_and_extract_zap(True)
             except Exception as e:
-                logging.error(f"Error while deleting zap located at {self.zap_path}: {e}\nUsing older version of zap may lead to errors.")
+                logging.error(
+                    f"Error while deleting zap located at {self.zap_path}: {e}\nUsing older version of zap may lead to errors.")
 
     def download_and_extract_commander(self):
         commander_url = f"https://www.silabs.com/documents/public/software/SimplicityCommander-{self.__platform.capitalize()}.zip"
-        if not (os.path.isfile(os.path.join(self.commander_path, "Commander.app", "Contents", "MacOS", "commander")) or \
-                os.path.isfile(os.path.join(self.commander_path, "Simplicity Commander", "commander.exe")) or \
+        if not (os.path.isfile(os.path.join(self.commander_path, "Commander.app", "Contents", "MacOS", "commander")) or
+                os.path.isfile(os.path.join(self.commander_path, "Simplicity Commander", "commander.exe")) or
                 os.path.isfile(os.path.join(self.commander_path, "commander", "commander"))):
             logging.info("Downloading and unzipping Simplicity Commander ...")
             dload.save_unzip(commander_url, self.tools_folder_path, delete_after=True)
@@ -267,7 +271,8 @@ class MatterEnvSetup:
                 dload.save_unzip(ninja_url, os.path.join(self.tools_folder_path, "ninja"), delete_after=True)
             else:
                 logging.info("ninja already installed")
-            logging.info(f"For Visual Studio Code and CMAKE based builds please add '{self.ninja_path}' as NINJA_EXE_PATH environment variable\n ")
+            logging.info(
+                f"For Visual Studio Code and CMAKE based builds please add '{self.ninja_path}' as NINJA_EXE_PATH environment variable\n ")
         except Exception as e:
             logging.error(f"============Could not install ninja!!============ {e}")
 
@@ -302,7 +307,8 @@ class MatterEnvSetup:
                 outfile.write(f"ARM_GCC_DIR={self.arm_gcc_dir}\n")
                 outfile.write(f"JAVA17_HOME={os.path.join(self.java_path, 'Contents', 'Home')}\n")
                 outfile.write(f"ZAP_INSTALL_PATH={self.zap_path}\n")
-                outfile.write(f"TOOLS_PATH={self.arm_toolchain_path}:{self.slc_cli_path}:{os.path.join(self.java_path, 'Contents', 'Home', 'bin')}:{self.commander_app_path}:\n")
+                outfile.write(
+                    f"TOOLS_PATH={self.arm_toolchain_path}:{self.slc_cli_path}:{os.path.join(self.java_path, 'Contents', 'Home', 'bin')}:{self.commander_app_path}:\n")
                 outfile.write(f"silabs_chip_root={self.matter_root}\n")
                 outfile.write(f"NINJA_EXE_PATH={self.ninja_path}\n")
                 outfile.write(f"SISDK_ROOT={self.sisdk_root}\n")
@@ -329,7 +335,8 @@ class MatterEnvSetup:
                 outfile.write(f"ARM_GCC_DIR={self.arm_gcc_dir}\n")
                 outfile.write(f"JAVA17_HOME={self.java_path}\n")
                 outfile.write(f"ZAP_INSTALL_PATH={self.zap_path}\n")
-                outfile.write(f"TOOLS_PATH={self.arm_toolchain_path}:{self.slc_cli_path}:{os.path.join(self.java_path, 'bin')}:{self.commander_app_path}\n")
+                outfile.write(
+                    f"TOOLS_PATH={self.arm_toolchain_path}:{self.slc_cli_path}:{os.path.join(self.java_path, 'bin')}:{self.commander_app_path}\n")
                 outfile.write(f"silabs_chip_root={self.matter_root}\n")
                 outfile.write(f"NINJA_EXE_PATH={self.ninja_path}\n")
                 outfile.write(f"SISDK_ROOT={self.sisdk_root}\n")
@@ -365,6 +372,7 @@ def main():
     args = parser.parse_args()
     env_setup = MatterEnvSetup(verbose=args.verbose)
     env_setup.run_setup()
+
 
 if __name__ == "__main__":
     main()

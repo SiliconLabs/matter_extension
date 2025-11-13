@@ -27,14 +27,6 @@ if slc.is_selected('matter_platform_siwx917') or slc.is_selected('siwx917_ncp') 
     ['component'] = '%extension-wiseconnect3_sdk%wifi_resources',
     ['action'] = 'add'
   })
-  table.insert(changeset, {
-    ['component'] = '%extension-wiseconnect3_sdk%sl_si91x_lwip_stack',
-    ['action'] = 'remove'
-  })
-  table.insert(changeset, {
-    ['component'] = '%extension-matter%matter_lwip',
-    ['action'] = 'add'
-  })
 end
 
 return changeset

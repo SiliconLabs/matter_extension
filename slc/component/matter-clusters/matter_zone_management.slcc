@@ -1,0 +1,23 @@
+category: Clusters|General
+description: >
+  Implementation of the zone management Server Cluster.
+  The user has to enable the zone management Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_zone_management
+package: matter
+label: zone management Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_zone_management
+source:
+  - path: third_party/matter_sdk/src/app/clusters/zone-management-server/zone-management-server.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/zone-management-server
+    file_list:
+      - path: zone-geometry.h
+      - path: zone-management-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_zone_management

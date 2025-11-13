@@ -45,6 +45,7 @@ extern void aws_ota_init(void);
 
 #ifdef ZCL_USING_THERMOSTAT_CLUSTER_SERVER
 #include "TemperatureManager.h"
+#include <app/clusters/thermostat-server/thermostat-server.h>
 #endif // ZCL_USING_THERMOSTAT_CLUSTER_SERVER
 
 #ifdef ZCL_USING_THERMOSTAT_CLUSTER_SERVER
@@ -131,8 +132,10 @@ static mqttControlCommand WindowMqttControlCmd[] = {
 namespace ThermAttr                                  = chip::app::Clusters::Thermostat::Attributes;
 static mqttControlCommand thermostatMqttControlCmd[] = {
     { .cmdString = "SetMode",
-      .action    = { .setAttribute = [](EndpointId endpoint,
-                                     int32_t value) { Thermostat::Attributes::SystemMode::Set(endpoint, value); } } },
+      .action    = { .setAttribute =
+                         [](EndpointId endpoint, int32_t value) {
+                          Thermostat::Attributes::SystemMode::Set(endpoint, static_cast<Thermostat::SystemModeEnum>(value));
+                      } } },
     { .cmdString = "Heating",
       .action    = { .setAttribute = [](EndpointId endpoint,
                                      int32_t value) { Thermostat::Attributes::OccupiedHeatingSetpoint::Set(endpoint, value); } } },
@@ -350,7 +353,7 @@ void AttributeHandler(EndpointId endpointId, AttributeId attributeId)
     break;
 
     default: {
-        ChipLogError(AppServer, "[MATTER_AWS] unhandled thermostat attributeId: %x", attributeId);
+        ChipLogError(AppServer, "[MATTER_AWS] unhandled thermostat attributeId: %lx", attributeId);
         return;
     }
     break;

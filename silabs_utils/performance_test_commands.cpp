@@ -25,8 +25,6 @@
 #include <lib/support/CodeUtils.h>
 #include <controller/WriteInteraction.h>
 
-#include <app/clusters/general-diagnostics-server/general-diagnostics-server.h>
-
 #include "debug_channel.h"
 
 #include <performance_test_commands.h>

@@ -1,0 +1,13 @@
+label: onoff-plug-app-series-2
+quality: production
+package: matter
+description: Solution containing both a bootloader and a Matter over OnOff Plug App Example
+project:
+  - path: ./onoff-plug-app.slcp
+    id: application
+    output: onoff-plug-app
+  - path: ../../bootloaders/bootloader-storage-external-single-series-2/bootloader-storage-external-single-series-2.slcp
+    id: bootloader
+    output: matter-bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

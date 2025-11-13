@@ -47,7 +47,6 @@ void MigrateKvsMap(void);
 void MigrateDacProvider(void);
 void MigrateCounterConfigs(void);
 void MigrateHardwareVersion(void);
-void MigrateS3Certificates(void);
 
 } // namespace Silabs
 } // namespace DeviceLayer

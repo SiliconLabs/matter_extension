@@ -1,0 +1,235 @@
+project_name: thermostat-thread
+label: Matter Thermostat
+description: >
+  Matter Thermostat
+quality: production
+package: matter
+
+sdk_extension:
+  - id: matter
+    version: "2.8.0"
+    vendor: silabs
+
+component:
+  - id: device_init
+  - id: sl_main
+  - id: clock_manager
+  - id: matter_buttons
+  - id: matter_leds
+
+  - id: matter
+  - id: matter_platform_mg
+  - id: matter_ble
+  - id: matter_thread
+  - id: rail_util_pti
+  - id: matter_ota_support
+  - id: matter_crypto
+  - id: matter_shell
+  - id: matter_gatt_static
+  - id: matter_provision_default
+
+  - id: matter_thermostat_app
+  - id: app_common
+  - id: matter_access_control
+  - id: matter_administrator_commissioning
+  - id: matter_basic_information
+  - id: matter_bindings
+  - id: matter_descriptor
+  - id: matter_fixed_label
+  - id: matter_general_commissioning
+  - id: matter_general_diagnostics
+  - id: matter_group_key_mgmt
+  - id: matter_groups
+  - id: matter_identify
+  - id: matter_localization_configuration
+  - id: matter_network_commissioning
+  - id: matter_operational_credentials
+  - id: matter_ota_requestor
+  - id: matter_software_diagnostics
+  - id: matter_thermostat
+  - id: matter_thermostat_user_interface_configuration
+  - id: matter_thread_network_diagnostics
+  - id: matter_user_label
+  - id: matter_unit_localization
+  - id: matter_default_lcd_config
+  - id: matter_log_uart
+  - id: matter_si70xx_sensor
+    condition: [hardware_board_has_si70xx]
+
+  # Override configuration for JTAG use
+  - id: matter_configuration_over_swo
+  - id: matter_segger_rtt
+
+  # Matter Zigbee Components
+  - instance: [example]
+    id: cli
+    condition: [matter_zigbee_multiprotocol_common, matter_zigbee_debug]
+  - id: iostream_stdio
+    condition: [matter_zigbee_multiprotocol_common]
+
+requires:
+  # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
+  # Select UART/EUART drivers based on device series
+  - name: matter_drivers_series_2
+    condition:
+      - device_series_2
+  - name: matter_drivers_series_2
+    condition:
+      - device_series_3
+      
+config_file:
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/cmp/config/sl_cmp_config.h
+    condition: [matter_zigbee_multiprotocol_common]
+  - path: ../../../../third_party/matter_sdk/examples/zigbee-matter-thermostat/silabs/config/zcl/zcl_config.zap
+    file_id: zap_config
+    directory: common
+    condition: [matter_zigbee_multiprotocol_common]
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/data_model/thermostat-thread-app.zap
+    directory: common
+    file_id: zap_config
+    unless: [matter_zigbee_multiprotocol_common]
+  - path: ../../../../provision.mattpconf
+    directory: provision
+    file_id: provision_config
+
+include:
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/include
+    file_list:
+      - path: AppConfig.h
+      - path: AppEvent.h
+      - path: AppTask.h
+      - path: SensorManager.h
+      - path: TemperatureManager.h
+      - path: CHIPProjectConfig.h
+    directory: include
+
+source:
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/AppTask.cpp
+    directory: src
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/TemperatureManager.cpp
+    directory: src
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
+    directory: src
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/DataModelCallbacks.cpp
+    directory: src
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/SensorManager.cpp
+    directory: src
+
+define:
+  - name: CHIP_CRYPTO_PLATFORM
+    value: "1"
+  - name: _WANT_REENT_SMALL
+    value: "1"
+  - name: IS_DEMO_THERMOSTAT
+    value: "1"
+  - name: NVM3_DEFAULT_NVM_SIZE
+    value: "40960"
+  - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
+    value: "4092"
+configuration:
+  - name: SL_BT_CONFIG_USER_ADVERTISERS
+    value: 2
+    condition: [matter_ble_side_channel]
+  - name: SL_TOKEN_MANAGER_STATIC_SECURE_TOKEN_SIZE
+    value: 8192
+    condition: [device_series_3]
+  - name: SL_OPENTHREAD_ENABLE_APP_TASK
+    value: 0
+  - name: SL_OPENTHREAD_ENABLE_CLI_TASK
+    value: 0
+  - name: OPENTHREAD_CONFIG_LOG_OUTPUT
+    value: OPENTHREAD_CONFIG_LOG_OUTPUT_APP
+  - name: SL_MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED
+    value: 1
+    condition: [matter_thread_cert_libs]
+  - name: SL_MBEDTLS_KEY_EXCHANGE_PSK_ENABLED
+    value: 1
+  - name: OPENTHREAD_CONFIG_COAP_API_ENABLE
+    value: 1
+    condition: [matter_thread_coap_cert_libs]
+  - name: OPENTHREAD_CONFIG_COAP_OBSERVE_API_ENABLE
+    value: 1
+    condition: [matter_thread_coap_cert_libs]
+  - name: OPENTHREAD_CONFIG_COAP_SECURE_API_ENABLE
+    value: 1
+    condition: [matter_thread_coap_cert_libs]
+  - name: SL_STACK_SIZE
+    value: "4608"
+    unless: [matter_zigbee_multiprotocol_common]
+  - name: SL_STACK_SIZE
+    value: "5120"
+    condition: [matter_zigbee_multiprotocol_common]
+  - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+    value: "1536"
+    unless: [device_series_3]
+  - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+    value: "1856"
+    condition: [device_series_3]
+  - name: CIRCULAR_QUEUE_LEN_MAX
+    value: 16
+  - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS
+    value: 1
+
+# CMP configs for Zigbee Matter
+  - name: SLI_ZIGBEE_PRIMARY_NETWORK_DEVICE_TYPE
+    value: SLI_ZIGBEE_NETWORK_DEVICE_TYPE_COORDINATOR_OR_ROUTER
+    condition: [matter_zigbee_multiprotocol_common]
+  - name: SLI_ZIGBEE_PRIMARY_NETWORK_SECURITY_TYPE
+    value: SLI_ZIGBEE_NETWORK_SECURITY_TYPE_3_0
+    condition: [matter_zigbee_multiprotocol_common]
+  - name: SL_IOSTREAM_USART_VCOM_RESTRICT_ENERGY_MODE_TO_ALLOW_RECEPTION
+    value: "1"
+    condition: [iostream_eusart, matter_zigbee_multiprotocol_common]
+  - name: SL_IOSTREAM_EUSART_VCOM_RESTRICT_ENERGY_MODE_TO_ALLOW_RECEPTION
+    value: "1"
+    condition: [iostream_eusart, matter_zigbee_multiprotocol_common]
+  - name: SL_IOSTREAM_EUSART_VCOM_RX_BUFFER_SIZE
+    value: 128 # Increase from default for open thread
+    condition: [iostream_eusart, matter_zigbee_multiprotocol_common]
+  - name: SL_HEAP_SIZE
+    value: 40960 # Standard Matter HEAP size
+    condition: [matter_zigbee_multiprotocol_common]
+  - name: LIB_MEM_CFG_HEAP_SIZE
+    value: 0
+    condition: [matter_zigbee_multiprotocol_common]
+  - name: SL_OPENTHREAD_RTOS_TASK_PRIORITY
+    value: 49 #Same as Zigbee
+    condition: [matter_zigbee_multiprotocol_common]
+  - name: SL_CLI_HELP_DESCRIPTION_ENABLED
+    value: 0 # Code space savings
+    condition: [matter_zigbee_multiprotocol_common]
+  - name: SL_CLI_EOL_STRING
+    value: '"\r\n"'
+    condition: [matter_zigbee_multiprotocol_common]
+  - name: SL_LEGACY_HAL_DISABLE_WATCHDOG
+    value: 1
+    condition: [matter_zigbee_multiprotocol_common]
+# series 3 requires more stack in zb stacks
+  - name: SL_CLI_EXAMPLE_TASK_STACK_SIZE
+    value: 1500
+    condition: [device_series_3, matter_zigbee_multiprotocol_common]
+  - name: SL_ZIGBEE_STACK_RTOS_TASK_STACK_SIZE
+    value: 5800
+    condition: [device_series_3, matter_zigbee_multiprotocol_common]
+  - name: SL_ZIGBEE_APP_FRAMEWORK_RTOS_TASK_STACK_SIZE
+    value: 6000
+    condition: [device_series_3, matter_zigbee_multiprotocol_common]
+  - name: SL_CLI_EXAMPLE_TASK_STACK_SIZE
+    value: 600
+    condition: [device_series_2, matter_zigbee_multiprotocol_common]
+
+toolchain_settings:
+  - option: cxx_standard
+    value: gnu++17
+
+readme:
+  - path: ./README.md
+ui_hints:
+  highlight:
+    - path: README.md
+      focus: false
+post_build:
+  profile: application
+
+other_file:
+  - path: ../../../image/qr_code_img.png

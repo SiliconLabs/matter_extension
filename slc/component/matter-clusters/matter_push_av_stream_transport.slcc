@@ -1,0 +1,29 @@
+category: Clusters|General
+description: >
+  Implementation of the push av stream transport Server Cluster.
+  The user has to enable the push av stream transport Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_push_av_stream_transport
+package: matter
+label: push av stream transport Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_push_av_stream_transport
+source:
+  - path: third_party/matter_sdk/src/app/clusters/push-av-stream-transport-server/CodegenIntegration.cpp
+  - path: third_party/matter_sdk/src/app/clusters/push-av-stream-transport-server/push-av-stream-transport-cluster.cpp
+  - path: third_party/matter_sdk/src/app/clusters/push-av-stream-transport-server/push-av-stream-transport-logic.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/push-av-stream-transport-server
+    file_list:
+      - path: CodegenIntegration.h
+      - path: constants.h
+      - path: push-av-stream-transport-cluster.h
+      - path: push-av-stream-transport-delegate.h
+      - path: push-av-stream-transport-logic.h
+      - path: push-av-stream-transport-storage.h
+template_contribution:
+  - name: component_catalog
+    value: matter_push_av_stream_transport

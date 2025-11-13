@@ -1,0 +1,26 @@
+category: Clusters|Energy Management
+description: >
+  Implementation of the Commodity Tariff Server Cluster.
+  The user has to enable the Commodity Tariff Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_commodity_tariff
+package: matter
+label: Commodity Tariff Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_commodity_tariff
+source:
+  - path: third_party/matter_sdk/src/app/clusters/commodity-tariff-server/commodity-tariff-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/commodity-tariff-server/CommodityTariffAttrsDataMgmt.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/commodity-tariff-server
+    file_list:
+      - path: commodity-tariff-server.h
+      - path: CommodityTariffAttrsDataMgmt.h
+      - path: CommodityTariffConsts.h
+      - path: CommodityTariffTestEventTriggerHandler.h
+template_contribution:
+  - name: component_catalog
+    value: matter_commodity_tariff

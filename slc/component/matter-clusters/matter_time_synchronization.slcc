@@ -13,14 +13,14 @@ provides:
   - name: matter_time_synchronization
 source:
   - path: third_party/matter_sdk/src/app/clusters/time-synchronization-server/DefaultTimeSyncDelegate.cpp
-  - path: third_party/matter_sdk/src/app/clusters/time-synchronization-server/time-synchronization-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/time-synchronization-server/time-synchronization-cluster.cpp
   - path: third_party/matter_sdk/src/app/clusters/time-synchronization-server/TimeSyncDataProvider.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/time-synchronization-server
     file_list:
       - path: DefaultTimeSyncDelegate.h
+      - path: time-synchronization-cluster.h
       - path: time-synchronization-delegate.h
-      - path: time-synchronization-server.h
       - path: TimeSyncDataProvider.h
 template_contribution:
   - name: component_catalog

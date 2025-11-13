@@ -16,7 +16,7 @@
  *    limitations under the License.
  */
 
-#include <platform/silabs/multi-ota/OTAMultiImageProcessorImpl.h>
+#include "OTAMultiImageProcessorImpl.h"
 #include <platform/silabs/multi-ota/SiWx917/OTAWiFiFirmwareProcessor.h>
 
 #include <app/clusters/ota-requestor/OTARequestorInterface.h>
@@ -37,13 +37,13 @@ CHIP_ERROR OTAWiFiFirmwareProcessor::ProcessInternal(ByteSpan & block)
     if (!mDescriptorProcessed)
     {
         ReturnErrorOnFailure(ProcessDescriptor(block));
-#if SL_MATTER_ENABLE_OTA_ENCRYPTION
+#ifdef SL_MATTER_ENABLE_OTA_ENCRYPTION
         /* 16 bytes to used to store undecrypted data because of unalignment */
         mAccumulator.Init(requestedOtaMaxBlockSize + 16);
 #endif // SL_MATTER_ENABLE_OTA_ENCRYPTION
     }
 
-#if SL_MATTER_ENABLE_OTA_ENCRYPTION
+#ifdef SL_MATTER_ENABLE_OTA_ENCRYPTION
     MutableByteSpan byteBlock = MutableByteSpan(mAccumulator.data(), mAccumulator.GetThreshold());
     memcpy(&byteBlock[0], &byteBlock[requestedOtaMaxBlockSize], mUnalignmentNum);
     memcpy(&byteBlock[mUnalignmentNum], block.data(), block.size());
@@ -63,7 +63,7 @@ CHIP_ERROR OTAWiFiFirmwareProcessor::ProcessInternal(ByteSpan & block)
     }
 
     OTATlvProcessor::vOtaProcessInternalEncryption(byteBlock);
-    if (IsLastBlock() == true)
+    if (IsLastBlock())
     {
         // Remove padding from the last block since if the file was padded, last block will contain padding bytes.
         VerifyOrReturnError(OTATlvProcessor::RemovePadding(byteBlock) == CHIP_NO_ERROR, CHIP_ERROR_WRONG_ENCRYPTION_TYPE,
@@ -98,7 +98,7 @@ CHIP_ERROR OTAWiFiFirmwareProcessor::ProcessInternal(ByteSpan & block)
         // Send RPS content
         status = sl_si91x_fwup_load(block.data(), block.size());
         // When TA received all the blocks it will return SL_STATUS_SI91X_FW_UPDATE_DONE status
-        VerifyOrReturnError(status == SL_STATUS_OK || status == SL_STATUS_SI91X_FW_UPDATE_DONE, MATTER_PLATFORM_ERROR(status),
+        VerifyOrReturnError(status == SL_STATUS_OK || status == SL_STATUS_SI91X_FW_UPDATE_DONE, CHIP_ERROR_INTERNAL,
                             ChipLogError(SoftwareUpdate, "sl_si91x_fwup_load() failed  0x%lx", static_cast<uint32_t>(status)));
     }
     return CHIP_NO_ERROR;

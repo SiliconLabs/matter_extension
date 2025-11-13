@@ -57,6 +57,8 @@ include:
   - path: GenericPlatformManagerImpl_POSIX.h
   - path: GenericConnectivityManagerImpl_NoThread.h
   - path: GenericConnectivityManagerImpl_WiFi.ipp
+  - path: GenericPlatformManagerImpl_POSIX.ipp
+  - path: GenericPlatformManagerImpl_ZephyrSelect.ipp
   - path: GenericConfigurationManagerImpl.h
   - path: GenericPlatformManagerImpl.h
   - path: GenericConnectivityManagerImpl_Thread.h
@@ -94,6 +96,7 @@ include:
 - path: third_party/matter_sdk/src/app/common
   file_list:
   - path: CompatEnumNames.h
+  - path: CompatClusterObjects.h
 - path: third_party/matter_sdk/src/lwip/silabs
   file_list:
   - path: lwipopts-wf200.h
@@ -167,9 +170,6 @@ include:
 - path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx
   file_list:
   - path: WifiInterfaceImpl.h
-- path: third_party/matter_sdk/src/platform/silabs/wifi/wiseconnect-interface/
-  file_list:
-  - path: WiseconnectWifiInterface.h
 
 source:
 - path: third_party/matter_sdk/src/platform/FreeRTOS/SystemTimeSupport.cpp
@@ -190,7 +190,6 @@ source:
 - path: third_party/matter_sdk/src/platform/silabs/rs911x/BLEManagerImpl.cpp
 - path: third_party/matter_sdk/src/platform/silabs/rs911x/wfx_sl_ble_init.cpp
 - path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp
-- path: third_party/matter_sdk/src/platform/silabs/wifi/wiseconnect-interface/WiseconnectWifiInterface.cpp
 - path: third_party/matter_sdk/src/platform/silabs/wifi/WifiInterface.cpp
 
 define:

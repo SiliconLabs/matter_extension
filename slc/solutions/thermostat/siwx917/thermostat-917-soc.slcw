@@ -1,8 +1,0 @@
-label: thermostat-917-soc
-quality: production
-package: matter
-description: Matter solution containing for Thermostat over WiFi
-project:
-  - path: ../../../sample-app/thermostat/siwx917/thermostat-917-soc.slcp
-    id: application
-    output: thermostat-917-soc

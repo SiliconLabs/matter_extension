@@ -30,9 +30,9 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
-  - path: third_party/matter_sdk/src/transport/raw/BLE.cpp
-  - path: third_party/matter_sdk/src/transport/raw/MessageHeader.cpp
-  - path: third_party/matter_sdk/src/transport/raw/PeerAddress.cpp
-  - path: third_party/matter_sdk/src/transport/raw/UDP.cpp
+-   path: third_party/matter_sdk/src/transport/raw/BLE.cpp
+-   path: third_party/matter_sdk/src/transport/raw/MessageHeader.cpp
+-   path: third_party/matter_sdk/src/transport/raw/PeerAddress.cpp
+-   path: third_party/matter_sdk/src/transport/raw/UDP.cpp
 ui_hints:
   visibility: never

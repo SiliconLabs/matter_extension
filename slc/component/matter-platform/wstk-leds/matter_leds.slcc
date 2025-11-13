@@ -26,6 +26,7 @@ requires:
   - name: simple_led_recommended_instance
     condition:
       - brd2704a
+  
   - name: matter_rgb_leds
     condition:
       - brd2605a

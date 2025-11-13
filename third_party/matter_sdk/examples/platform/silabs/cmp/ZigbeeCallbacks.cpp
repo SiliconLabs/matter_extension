@@ -35,14 +35,13 @@
 #include "af-security.h" // Install code
 #include "find-and-bind-target.h"
 #include "network-creator-security.h"
-#include "network-creator-security.h" // Install code
 #include "network-creator.h"
 #include "stack/include/zigbee-security-manager.h" // Install code
 #include "zll-commissioning.h"
 
 #include "AppConfig.h"
-#include "BaseApplication.h"
-#include "LightingManager.h"
+#include "sl_cmp_config.h"
+
 #include "ZigbeeCallbacks.h"
 
 static sl_zigbee_af_event_t start_zigbee_event;
@@ -224,7 +223,7 @@ extern "C" void finding_and_binding_event_handler(sl_zigbee_af_event_t * event)
     {
         sl_zigbee_af_event_set_inactive(&finding_and_binding_event);
 
-        SILABS_LOG(" [ZB] Find and bind target start: 0x%X", sl_zigbee_af_find_and_bind_target_start(LIGHT_ENDPOINT));
+        SILABS_LOG(" [ZB] Find and bind target start: 0x%X", sl_zigbee_af_find_and_bind_target_start(SL_CMP_ENDPOINT));
     }
 }
 
@@ -251,15 +250,6 @@ extern "C" void sl_zigbee_af_stack_status_cb(sl_status_t status)
             pendingRestart = false;
             sl_zigbee_af_event_set_active(&start_zigbee_event);
         }
-#ifdef SL_MATTER_ZIGBEE_SEQUENTIAL
-        // When we close the network, Zigbee stack clears all its tokens.
-        // In sequential mode, when Matter is provisioned, do not consider ZB as factory new either.
-        // This makes sure zll init/touch link isn't done on reboot which causes thread srp issues.
-        if (BaseApplication::GetProvisionStatus())
-        {
-            sl_zigbee_af_zll_unset_factory_new();
-        }
-#endif
     }
 }
 

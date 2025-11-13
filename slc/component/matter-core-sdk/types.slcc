@@ -20,7 +20,6 @@ include:
     -   path: util/DataModelHandler.h
     -   path: util/cluster-config.h
     -   path: util/config.h
-    -   path: util/binding-table.h
     -   path: util/af-types.h
     -   path: util/im-client-callbacks.h
     -   path: util/attribute-storage.h

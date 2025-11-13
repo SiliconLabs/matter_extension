@@ -87,16 +87,7 @@ public:
                                                uint16_t duration, uint8_t maxEvents);
     CHIP_ERROR SideChannelStartAdvertising(void);
     CHIP_ERROR SideChannelStopAdvertising(void);
-    CHIP_ERROR SideChannelIndicate(void)
-    {
-        VerifyOrReturnError(mBleSideChannel != nullptr, CHIP_ERROR_INCORRECT_STATE);
-        return mBleSideChannel->IndicateCharacteristic(mBleSideChannel->GetTXCharHandle());
-    }
-    CHIP_ERROR SideChannelNotify(void)
-    {
-        VerifyOrReturnError(mBleSideChannel != nullptr, CHIP_ERROR_INCORRECT_STATE);
-        return mBleSideChannel->NotifyCharacteristic(mBleSideChannel->GetTXCharHandle());
-    }
+
     // GAP
     CHIP_ERROR SideChannelGeneratAdvertisingData(uint8_t discoverMove, uint8_t connectMode, const Optional<uint16_t> & maxEvents)
     {
@@ -128,21 +119,21 @@ public:
     CHIP_ERROR SideChannelCloseConnection(void) { return mBleSideChannel->CloseConnection(); }
 
     // GATT (All these methods need some event handling to be done in sl_bt_on_event)
-    CHIP_ERROR SideChannelDiscoverServices(void) { return mBleSideChannel->DiscoverRemoteServices(); }
+    CHIP_ERROR SideChannelDiscoverServices(void) { return mBleSideChannel->DiscoverServices(); }
     CHIP_ERROR SideChannelDiscoverCharacteristics(uint32_t serviceHandle)
     {
         VerifyOrReturnError(mBleSideChannel != nullptr, CHIP_ERROR_INCORRECT_STATE);
-        return mBleSideChannel->DiscoverRemoteCharacteristics(serviceHandle);
+        return mBleSideChannel->DiscoverCharacteristics(serviceHandle);
     }
-    CHIP_ERROR SideChannelSetCharacteristicNotification(uint16_t characteristicHandle, uint8_t flags)
+    CHIP_ERROR SideChannelSetCharacteristicNotification(uint8_t characteristicHandle, uint8_t flags)
     {
         VerifyOrReturnError(mBleSideChannel != nullptr, CHIP_ERROR_INCORRECT_STATE);
-        return mBleSideChannel->SetRemoteCharacteristicNotification(characteristicHandle, flags);
+        return mBleSideChannel->SetCharacteristicNotification(characteristicHandle, flags);
     }
-    CHIP_ERROR SideChannelSetCharacteristicValue(uint16_t characteristicHandle, const ByteSpan & value)
+    CHIP_ERROR SideChannelSetCharacteristicValue(uint8_t characteristicHandle, const ByteSpan & value)
     {
         VerifyOrReturnError(mBleSideChannel != nullptr, CHIP_ERROR_INCORRECT_STATE);
-        return mBleSideChannel->SetRemoteCharacteristicValue(characteristicHandle, value);
+        return mBleSideChannel->SetCharacteristicValue(characteristicHandle, value);
     }
     bd_addr SideChannelGetAddr(void) { return mBleSideChannel->GetRandomizedAddr(); }
     BLEConState SideChannelGetConnectionState(void) { return mBleSideChannel->GetConnectionState(); }
@@ -221,12 +212,9 @@ private:
         kExtAdvertisingEnabled    = 0x0040,
     };
 
-    enum
-    {
-        kMaxConnections      = BLE_LAYER_NUM_BLE_ENDPOINTS,
-        kMaxDeviceNameLength = 21,
-        kUnusedIndex         = 0xFF,
-    };
+    static constexpr uint8_t kMaxConnections      = BLE_LAYER_NUM_BLE_ENDPOINTS;
+    static constexpr uint8_t kMaxDeviceNameLength = 21;
+    static constexpr uint8_t kUnusedIndex         = 0xFF;
 
     static constexpr uint8_t kFlagTlvSize       = 3; // 1 byte for length, 1b for type and 1b for the Flag value
     static constexpr uint8_t kUUIDTlvSize       = 4; // 1 byte for length, 1b for type and 2b for the UUID value

@@ -11,7 +11,7 @@
  *   python3 sl_create_new_app.py <NewAppName> <PathToReferenceProjectFile(.slcp or .slcw)> <SilabsBoard> [--verbose]
  *
  * Example:
- *   python3 sl_create_new_app.py MyApp slc/sample-app/lighting-app/efr32/lighting-app-thread.slcpbrd4187c --verbose
+ *   python3 sl_create_new_app.py MyApp slc/apps/lighting-app/thread/lighting-app.slcp brd4187c --verbose
  *
  """
 

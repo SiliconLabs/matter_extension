@@ -27,12 +27,12 @@
 #include <functional>
 #include <platform/CHIPDeviceError.h>
 
-#ifndef SL_COMMON_TOKEN_MANAGER_ENABLE_DYNAMIC_TOKENS
+#ifdef SL_COMMON_TOKEN_MANAGER_ENABLE_DYNAMIC_TOKENS
+#include <sl_token_manager_defines.h>
+#else
 #include "nvm3.h"
 #include "nvm3_hal_flash.h"
-#else
-#include <sl_token_manager_defines.h>
-#endif
+#endif // SL_COMMON_TOKEN_MANAGER_ENABLE_DYNAMIC_TOKENS
 
 #ifndef KVS_MAX_ENTRIES
 #define KVS_MAX_ENTRIES 255 // Available key slot count for Kvs Key mapping.
@@ -61,24 +61,7 @@ namespace Internal {
  * the template class (e.g. the ReadConfigValue() method).
  */
 
-#ifndef SL_COMMON_TOKEN_MANAGER_ENABLE_DYNAMIC_TOKENS
-// Silabs NVM3 objects use a 20-bit number,
-// NVM3 Key 19:16 Stack region
-// NVM3 Key 15:0 Available NVM3 keys 0x0000 -> 0xFFFF.
-// Matter stack reserved region ranges from 0x087200 to 0x087FFF
-// e.g. key = 0x087201
-// '08' = Matter nvm3 region
-// '72' = the sub region group base offset (Factory, Config, Counter or KVS)
-// '01' = the id offset inside the group.
-inline constexpr uint32_t kUserNvm3KeyDomainLoLimit = 0x000000U; // User Domain NVM3 Key Range lower limit
-inline constexpr uint32_t kUserNvm3KeyDomainHiLimit = 0x00FFFFU; // User Domain NVM3 Key Range Maximum limit
-inline constexpr uint32_t kMatterNvm3KeyDomain      = 0x087000U; // Matter specific NVM3 range
-constexpr inline uint32_t SilabsConfigKey(uint8_t keyBaseOffset, uint8_t id)
-{
-    return kMatterNvm3KeyDomain | static_cast<uint32_t>(keyBaseOffset) << 8 | id;
-}
-#else
-
+#ifdef SL_COMMON_TOKEN_MANAGER_ENABLE_DYNAMIC_TOKENS
 inline constexpr uint32_t kUserNvm3KeyDomainLoLimit = SL_TOKEN_NVM3_REGION_USER;
 inline constexpr uint32_t kUserNvm3KeyDomainHiLimit = SL_TOKEN_NVM3_REGION_ZIGBEE - 1;
 
@@ -95,7 +78,23 @@ constexpr inline uint32_t SilabsSecureTokenKey(uint8_t keyBaseOffset, uint8_t id
 {
     return SL_TOKEN_TYPE_STATIC_SECURE | static_cast<uint32_t>(keyBaseOffset) << 8 | id;
 }
-#endif
+#else
+// Silabs NVM3 objects use a 20-bit number,
+// NVM3 Key 19:16 Stack region
+// NVM3 Key 15:0 Available NVM3 keys 0x0000 -> 0xFFFF.
+// Matter stack reserved region ranges from 0x087200 to 0x087FFF
+// e.g. key = 0x087201
+// '08' = Matter nvm3 region
+// '72' = the sub region group base offset (Factory, Config, Counter or KVS)
+// '01' = the id offset inside the group.
+inline constexpr uint32_t kUserNvm3KeyDomainLoLimit = 0x000000U; // User Domain NVM3 Key Range lower limit
+inline constexpr uint32_t kUserNvm3KeyDomainHiLimit = 0x00FFFFU; // User Domain NVM3 Key Range Maximum limit
+inline constexpr uint32_t kMatterNvm3KeyDomain      = 0x087000U; // Matter specific NVM3 range
+constexpr inline uint32_t SilabsConfigKey(uint8_t keyBaseOffset, uint8_t id)
+{
+    return kMatterNvm3KeyDomain | static_cast<uint32_t>(keyBaseOffset) << 8 | id;
+}
+#endif // SL_COMMON_TOKEN_MANAGER_ENABLE_DYNAMIC_TOKENS
 
 inline constexpr uint32_t kMatterNvm3KeyLoLimit = 0x087200U; // Do not modify without Silabs GSDK team approval
 inline constexpr uint32_t kMatterNvm3KeyHiLimit = 0x087FFFU; // Do not modify without Silabs GSDK team approval
@@ -108,7 +107,7 @@ public:
     using Key = uint32_t;
 
     // NVM3 key base offsets used by the CHIP Device Layer.
-    // ** Key base can range from 0x72 to 0x7F **
+    // ** Key base can range from 0x2 to 0xF **
     // Persistent config values set at manufacturing time. Retained during factory reset.
     static constexpr uint8_t kMatterFactory_KeyBase = 0x2;
     // Persistent config values set at runtime. Cleared during factory reset.
@@ -146,7 +145,6 @@ public:
     static constexpr Key kConfigKey_clientid               = SilabsConfigKey(kMatterFactory_KeyBase, 0x16);
     static constexpr Key kConfigKey_Test_Event_Trigger_Key = SilabsConfigKey(kMatterFactory_KeyBase, 0x17);
     static constexpr Key kConfigKey_HardwareVersion        = SilabsConfigKey(kMatterFactory_KeyBase, 0x18);
-    static constexpr Key kConfigKey_SoftwareVersionString  = SilabsConfigKey(kMatterFactory_KeyBase, 0x19);
     // kConfigKey_PersistentUniqueId is the inputkey in the generating of the Rotating Device ID
     // SHALL NOT be the same as the UniqueID attribute exposed in the Basic Information cluster.
     static constexpr Key kConfigKey_PersistentUniqueId = SilabsConfigKey(kMatterFactory_KeyBase, 0x1F);
@@ -208,7 +206,7 @@ public:
     static constexpr Key kMinConfigKey_MatterFactory = SilabsConfigKey(kMatterFactory_KeyBase, 0x00);
     static constexpr Key kMaxConfigKey_MatterFactory = SilabsConfigKey(kMatterFactory_KeyBase, 0x30);
     static constexpr Key kMinConfigKey_MatterConfig  = SilabsConfigKey(kMatterConfig_KeyBase, 0x00);
-    static constexpr Key kMaxConfigKey_MatterConfig  = SilabsConfigKey(kMatterConfig_KeyBase, 0x22);
+    static constexpr Key kMaxConfigKey_MatterConfig  = SilabsConfigKey(kMatterConfig_KeyBase, 0x23);
 
     // Allows 32 Counters to be created.
     static constexpr Key kMinConfigKey_MatterCounter = SilabsConfigKey(kMatterCounter_KeyBase, 0x00);
@@ -234,16 +232,6 @@ public:
     static CHIP_ERROR WriteConfigValue(Key key, uint16_t val);
     static CHIP_ERROR WriteConfigValue(Key key, uint32_t val);
     static CHIP_ERROR WriteConfigValue(Key key, uint64_t val);
-    /** @brief WriteConfigValueStr
-     *  Write a string to the NVM3 storage. This function can be called without providing the length of the string.
-     *  In that case, the length is calculated using strlen() function. Note, this is unsafe as it can lead to buffer
-     *  overflow if the string is not null terminated. We need to support this since the Matter unit test expect
-     *  our API to successfully be able to write a string without providing the length, however we recommend to always
-     *  provide the length of the string.
-     *  @param key The NVM3 key to write the string to.
-     *  @param str The string to write.
-     *  @param strLen The length of the string to write. If 0, the length is calculated using strlen() if the string is not null.
-     */
     static CHIP_ERROR WriteConfigValueStr(Key key, const char * str, size_t strLen = 0);
     static CHIP_ERROR WriteConfigValueBin(Key key, const uint8_t * data, size_t dataLen);
     static CHIP_ERROR WriteConfigValueCounter(uint8_t counterIdx, uint32_t val);

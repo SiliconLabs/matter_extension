@@ -1,0 +1,27 @@
+id: matter_tracing_runtime_stats
+package: matter
+label: tracing_runtime_statistics
+description: >
+  Enables runtime statistics tracing add-on for matter protocol
+category: Matter|Core
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+
+provides:
+  - name: matter_tracing_runtime_stats
+
+define:
+  - name: TRACING_RUNTIME_STATS
+    value: 1
+
+source:
+  - path: third_party/matter_sdk/examples/platform/silabs/FreeRTOSRuntimeStats.c
+
+requires:
+  - name: matter_tracing_headers
+  - name: matter_tracing
+
+ui_hints:
+  visibility: never

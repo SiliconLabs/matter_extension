@@ -1,8 +1,0 @@
-label: onoff-plug-app-917-soc
-quality: production
-package: matter
-description: Matter solution containing for On-Off Plug App over WiFi
-project:
-  - path: ../../../sample-app/onoff-plug-app/siwx917/onoff-plug-app-917-soc.slcp
-    id: application
-    output: onoff-plug-app-917-soc

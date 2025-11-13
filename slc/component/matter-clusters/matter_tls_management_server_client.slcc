@@ -1,0 +1,22 @@
+category: Clusters|General
+description: >
+  Implementation of the Tls Management Server Client Cluster.
+  The user has to enable the Tls Management Server Client Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_tls_management_server_client
+package: matter
+label: Tls Management Server Client Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_tls_management_server_client
+source:
+  - path: third_party/matter_sdk/src/app/clusters/tls-client-management-server/tls-client-management-server.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/tls-client-management-server
+    file_list:
+      - path: tls-client-management-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_tls_management_server_client

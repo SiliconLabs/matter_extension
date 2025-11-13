@@ -14,8 +14,22 @@ include:
   - path: slc/component/sdk-content/zap
   - path: slc/component/sdk-content/zap/app/static-cluster-config
     file_list:
-    - path: SoftwareDiagnostics.h
     - path: AdministratorCommissioning.h
+    - path: BasicInformation.h
+    - path: Binding.h
+    - path: Descriptor.h
+    - path: EthernetNetworkDiagnostics.h
+    - path: FixedLabel.h
+    - path: GeneralCommissioning.h
+    - path: GeneralDiagnostics.h
+    - path: GroupKeyManagement.h
+    - path: LocalizationConfiguration.h
+    - path: SoftwareDiagnostics.h
+    - path: WiFiNetworkDiagnostics.h
+    - path: TimeFormatLocalization.h
+    - path: AccessControl.h
+    - path: OperationalCredentials.h
+    - path: UserLabel.h
   - path: slc/component/sdk-content/zap/clusters/Pm25ConcentrationMeasurement
     file_list:
     - path: AttributeIds.h

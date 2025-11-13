@@ -35,27 +35,28 @@ import logging
 import random
 from typing import Optional
 
-import chip.clusters as Clusters
-from chip import ChipDeviceCtrl
-from chip.ChipDeviceCtrl import CommissioningParameters
-from chip.exceptions import ChipStackError
-from chip.testing.matter_testing import MatterBaseTest, TestStep, async_test_body, default_matter_test_main
-from mdns_discovery.mdns_discovery import MdnsDiscovery
+from mdns_discovery.mdns_discovery import MdnsDiscovery, MdnsServiceType
 from mobly import asserts
+
+import matter.clusters as Clusters
+from matter import ChipDeviceCtrl
+from matter.ChipDeviceCtrl import CommissioningParameters
+from matter.exceptions import ChipStackError
+from matter.testing.matter_testing import MatterBaseTest, TestStep, async_test_body, default_matter_test_main
 
 
 class TC_CADMIN_1_15(MatterBaseTest):
     async def OpenCommissioningWindow(self, th: ChipDeviceCtrl, expectedErrCode: Optional[Clusters.AdministratorCommissioning.Enums.StatusCode] = None) -> CommissioningParameters:
         if expectedErrCode == 0x00:
             params = await th.OpenCommissioningWindow(
-                nodeid=self.dut_node_id, timeout=self.max_window_duration, iteration=10000, discriminator=self.discriminator, option=1)
+                nodeId=self.dut_node_id, timeout=self.max_window_duration, iteration=10000, discriminator=self.discriminator, option=1)
             return params
 
         else:
             ctx = asserts.assert_raises(ChipStackError)
             with ctx:
                 await th.OpenCommissioningWindow(
-                    nodeid=self.dut_node_id, timeout=self.max_window_duration, iteration=10000, discriminator=self.discriminator, option=1)
+                    nodeId=self.dut_node_id, timeout=self.max_window_duration, iteration=10000, discriminator=self.discriminator, option=1)
             errcode = ctx.exception.chip_error
             logging.info('Commissioning complete done. Successful? {}, errorcode = {}'.format(errcode.is_success, errcode))
             asserts.assert_false(errcode.is_success, 'Commissioning complete did not error as expected')
@@ -80,6 +81,11 @@ class TC_CADMIN_1_15(MatterBaseTest):
         await th.CommissionOnNetwork(
             nodeId=self.dut_node_id, setupPinCode=setupPinCode,
             filterType=ChipDeviceCtrl.DiscoveryFilterType.LONG_DISCRIMINATOR, filter=self.discriminator)
+
+    def get_instance_name(self, compressed_fabric_id) -> str:
+        node_id = self.dut_node_id
+        instance_name = f'{compressed_fabric_id:016X}-{node_id:016X}'
+        return instance_name
 
     def steps_TC_CADMIN_1_15(self) -> list[TestStep]:
         return [
@@ -177,12 +183,14 @@ class TC_CADMIN_1_15(MatterBaseTest):
         }
 
         op_services = []
+        services = await mdns.get_operational_services(log_output=True)
         for th, compressed_id in compressed_fabric_ids.items():
-            service = await MdnsDiscovery.get_operational_service(
-                mdns,
-                node_id=self.dut_node_id,
-                compressed_fabric_id=compressed_id,
-                log_output=True
+            instance_name = self.get_instance_name(compressed_id)
+            operational_service_name = f"{instance_name}.{MdnsServiceType.OPERATIONAL.value}"
+
+            service = next(
+                (s for s in services if s.service_name == operational_service_name),
+                None
             )
             op_services.append(service.instance_name)
 
@@ -197,22 +205,18 @@ class TC_CADMIN_1_15(MatterBaseTest):
 
         self.step(11)
         removeFabricCmd = Clusters.OperationalCredentials.Commands.RemoveFabric(fabric_idx_cr2)
-        await self.th2.SendCommand(nodeid=self.dut_node_id, endpoint=0, payload=removeFabricCmd)
+        await self.th2.SendCommand(nodeId=self.dut_node_id, endpoint=0, payload=removeFabricCmd)
 
         self.step(12)
         # Verifies TH_CR2 is unable to read the Basic Information Cluster’s NodeLabel attribute of DUT_CE as no longer on network
-        try:
+        with asserts.assert_raises(ChipStackError) as cm:
             await self.read_single_attribute_check_success(
                 dev_ctrl=self.th2,
                 endpoint=0,
                 cluster=Clusters.BasicInformation,
                 attribute=Clusters.BasicInformation.Attributes.NodeLabel
             )
-            asserts.fail("Expected exception not thrown")
-        except ChipStackError as e:
-            # Verify that the DUT returns an "Timeout" status response
-            asserts.assert_equal(e.err, 0x00000032,
-                                 "Expected to timeout as DUT_CE is no longer on network")
+        asserts.assert_equal(cm.exception.err, 0x00000032, "Expected to timeout as DUT_CE is no longer on network")
 
         self.step(13)
         fabrics2 = await self.get_fabrics(th=self.th1)
@@ -249,11 +253,11 @@ class TC_CADMIN_1_15(MatterBaseTest):
 
         self.step(19)
         removeFabricCmd2 = Clusters.OperationalCredentials.Commands.RemoveFabric(fabric_idx_cr2_2)
-        await self.th1.SendCommand(nodeid=self.dut_node_id, endpoint=0, payload=removeFabricCmd2)
+        await self.th1.SendCommand(nodeId=self.dut_node_id, endpoint=0, payload=removeFabricCmd2)
 
         self.step(20)
         removeFabricCmd3 = Clusters.OperationalCredentials.Commands.RemoveFabric(fabric_idx_cr3)
-        await self.th1.SendCommand(nodeid=self.dut_node_id, endpoint=0, payload=removeFabricCmd3)
+        await self.th1.SendCommand(nodeId=self.dut_node_id, endpoint=0, payload=removeFabricCmd3)
 
         self.step(21)
         fabrics4 = await self.get_fabrics(th=self.th1)

@@ -103,16 +103,16 @@ TEST_F(TestSilabsTracing, TestTimeTrackerMethods)
     // Check that the tracked time is within an expected range
     EXPECT_EQ(trackedTime, uint32_t(100));
 
-    // Retrieve the watermark for the operation
-    auto watermark = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kSpake2p);
+    // Retrieve the metric for the operation
+    auto metric = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kSpake2p);
 
     // Verify the count, moving average, highest, and lowest functionalities
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(1));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(trackedTime));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(trackedTime));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(trackedTime));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(1));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(trackedTime));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(trackedTime));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(trackedTime));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Repeat and verify the count and moving average, high and low got updated properly
     SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSpake2p);
@@ -121,14 +121,14 @@ TEST_F(TestSilabsTracing, TestTimeTrackerMethods)
 
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kSpake2p);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kSpake2p);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kSpake2p);
     EXPECT_EQ(trackedTime, uint32_t(150));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(2));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(125));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(150));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(2));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(1));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(2));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(125));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(150));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(100));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(2));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(1));
 
     // Repeat for another event to verify multiple tracking works
     SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kPake1);
@@ -137,16 +137,16 @@ TEST_F(TestSilabsTracing, TestTimeTrackerMethods)
 
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kPake1);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kPake1);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kPake1);
     EXPECT_EQ(trackedTime, uint32_t(50));
 
     // Verify the count, moving average, highest, and lowest functionalities
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(1));
-    EXPECT_EQ(watermark.mMovingAverage.count(), trackedTime);
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), trackedTime);
-    EXPECT_EQ(watermark.mMinTimeMs.count(), trackedTime);
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(1));
+    EXPECT_EQ(metric.mMovingAverage.count(), trackedTime);
+    EXPECT_EQ(metric.mMaxTimeMs.count(), trackedTime);
+    EXPECT_EQ(metric.mMinTimeMs.count(), trackedTime);
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Repeat Again for first event to verify multiple tracking works
     SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSpake2p);
@@ -155,14 +155,14 @@ TEST_F(TestSilabsTracing, TestTimeTrackerMethods)
 
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kSpake2p);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kSpake2p);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kSpake2p);
     EXPECT_EQ(trackedTime, uint32_t(200));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(3));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(150));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(3));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(2));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(3));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(150));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(200));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(100));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(3));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(2));
 
     // Verify a double start to simulate a failure
     SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSpake2p);
@@ -173,14 +173,14 @@ TEST_F(TestSilabsTracing, TestTimeTrackerMethods)
 
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kSpake2p);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kSpake2p);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kSpake2p);
     EXPECT_EQ(trackedTime, uint32_t(110));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(5));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(140));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(4));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(2));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(5));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(140));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(200));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(100));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(4));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(2));
 
     // Check that traceCount is equal to the number of TimeTraceBegin and TimeTraceEnd calls
     traceCount = SilabsTracer::Instance().GetTimeTracesCount();
@@ -214,42 +214,42 @@ TEST_F(TestSilabsTracing, TestBootupSequence)
     auto trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
     EXPECT_EQ(trackedTime, uint32_t(500));
 
-    // Retrieve the watermark for the operation
-    auto watermark = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kBootup);
+    // Retrieve the metric for the operation
+    auto metric = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kBootup);
 
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(1));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(500));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(500));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(500));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(1));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(500));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(500));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(500));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kSilabsInit);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kSilabsInit);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kSilabsInit);
     EXPECT_EQ(trackedTime, uint32_t(200));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(1));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(1));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(200));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(200));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(200));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kMatterInit);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kMatterInit);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kMatterInit);
     EXPECT_EQ(trackedTime, uint32_t(300));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(1));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(300));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(300));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(300));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(1));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(300));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(300));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(300));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Simulate a second simulation where we have a reboot during Silabs Init
     gMockClock.SetMonotonic(0_ms64);
-    // TODO : Here we simulate that we have restore the watermarks stored in the NVM so we do not do the Init, we should call it
-    // and call the LoadWatermarks method here
+    // TODO : Here we simulate that we have restore the metrics stored in the NVM so we do not do the Init, we should call it
+    // and call the LoadMetrics method here
 
     // SilabsTracer::Instance().Init();
 
@@ -278,36 +278,36 @@ TEST_F(TestSilabsTracing, TestBootupSequence)
     // Verify the time tracker values for each operation after reboot
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kBootup);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kBootup);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kBootup);
     EXPECT_EQ(trackedTime, uint32_t(600));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(3));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(550));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(600));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(500));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(2));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(1));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(3));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(550));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(600));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(500));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(2));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(1));
 
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kSilabsInit);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kSilabsInit);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kSilabsInit);
     EXPECT_EQ(trackedTime, uint32_t(350));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(3));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(275));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(350));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(2));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(1));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(3));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(275));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(350));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(200));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(2));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(1));
 
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kMatterInit);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kMatterInit);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kMatterInit);
     EXPECT_EQ(trackedTime, uint32_t(250));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(2));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(275));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(300));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(250));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(2));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(2));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(275));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(300));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(250));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(2));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Check that traceCount is equal to the number of TimeTraceBegin and TimeTraceEnd calls
     traceCount = SilabsTracer::Instance().GetTimeTracesCount();
@@ -347,51 +347,51 @@ TEST_F(TestSilabsTracing, TestCommissioning)
     auto trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
     EXPECT_EQ(trackedTime, uint32_t(700));
 
-    // Retrieve the watermark for the operation
-    auto watermark = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kSpake2p);
+    // Retrieve the metric for the operation
+    auto metric = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kSpake2p);
 
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(1));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(700));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(700));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(700));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(1));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(700));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(700));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(700));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Verify the time tracker values for Pake1
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kPake1);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kPake1);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kPake1);
     EXPECT_EQ(trackedTime, uint32_t(100));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(2));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(2));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(100));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(100));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(100));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Verify the time tracker values for Pake2
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kPake2);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kPake2);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kPake2);
     EXPECT_EQ(trackedTime, uint32_t(200));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(2));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(2));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(200));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(200));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(200));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Verify the time tracker values for Pake3
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kPake3);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kPake3);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kPake3);
     EXPECT_EQ(trackedTime, uint32_t(200));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(1));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(1));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(200));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(200));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(200));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Simulate Operational Credentials steps
     SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kOperationalCredentials);
@@ -400,14 +400,14 @@ TEST_F(TestSilabsTracing, TestCommissioning)
 
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kOperationalCredentials);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kOperationalCredentials);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kOperationalCredentials);
     EXPECT_EQ(trackedTime, uint32_t(300));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(1));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(300));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(300));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(300));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(1));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(300));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(300));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(300));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Simulate Transport Layer steps
     SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kTransportLayer);
@@ -423,38 +423,38 @@ TEST_F(TestSilabsTracing, TestCommissioning)
     // Verify the time tracker values for Transport Layer
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kTransportLayer);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kTransportLayer);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kTransportLayer);
     EXPECT_EQ(trackedTime, uint32_t(250));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(1));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(250));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(250));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(250));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(1));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(250));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(250));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(250));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Verify the time tracker values for Transport Setup
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kTransportSetup);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kTransportSetup);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kTransportSetup);
     EXPECT_EQ(trackedTime, uint32_t(100));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(1));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(1));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(100));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(100));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(100));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Verify the time tracker values for Find Operational
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kFindOperational);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kFindOperational);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kFindOperational);
     EXPECT_EQ(trackedTime, uint32_t(150));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(1));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(150));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(150));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(150));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(1));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(150));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(150));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(150));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Simulate Case Session steps
     SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kCaseSession);
@@ -476,50 +476,50 @@ TEST_F(TestSilabsTracing, TestCommissioning)
     // Verify the time tracker values for Case Session
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kCaseSession);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kCaseSession);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kCaseSession);
     EXPECT_EQ(trackedTime, uint32_t(550));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(1));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(550));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(550));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(550));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(1));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(550));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(550));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(550));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Verify the time tracker values for Sigma1
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kSigma1);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kSigma1);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kSigma1);
     EXPECT_EQ(trackedTime, uint32_t(100));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(2));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(2));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(100));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(100));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(100));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Verify the time tracker values for Sigma2
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kSigma2);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kSigma2);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kSigma2);
     EXPECT_EQ(trackedTime, uint32_t(150));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(1));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(150));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(150));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(150));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(1));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(150));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(150));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(150));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Verify the time tracker values for Sigma3
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kSigma3);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kSigma3);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kSigma3);
     EXPECT_EQ(trackedTime, uint32_t(200));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(1));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(1));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(200));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(200));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(200));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Check that traceCount is equal to the number of TimeTraceBegin and TimeTraceEnd calls
     traceCount = SilabsTracer::Instance().GetTimeTracesCount();
@@ -544,15 +544,15 @@ TEST_F(TestSilabsTracing, TestOTA)
     auto trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
     EXPECT_EQ(trackedTime, uint32_t(100));
 
-    // Retrieve the watermark for the operation
-    auto watermark = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kOTA);
+    // Retrieve the metric for the operation
+    auto metric = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kOTA);
 
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(1));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(1));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(100));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(100));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(100));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Simulate OTA steps with failure
     SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kOTA);
@@ -562,14 +562,14 @@ TEST_F(TestSilabsTracing, TestOTA)
     // Verify the time tracker values for OTA after failure
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kOTA);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kOTA);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kOTA);
     EXPECT_EQ(trackedTime, uint32_t(150));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(2));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(2));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(100));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(100));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(100));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Simulate Bootup steps after OTA failure
     gMockClock.SetMonotonic(0_ms64); // Resetting to 0 since reboot should reset the monotonic clock
@@ -580,14 +580,14 @@ TEST_F(TestSilabsTracing, TestOTA)
     // Verify the time tracker values for Bootup
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kBootup);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kBootup);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kBootup);
     EXPECT_EQ(trackedTime, uint32_t(200));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(1));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(1));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(200));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(200));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(200));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Simulate subsequent OTA steps that succeed
     SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kOTA);
@@ -597,14 +597,14 @@ TEST_F(TestSilabsTracing, TestOTA)
     // Verify the time tracker values for OTA after success
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kOTA);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kOTA);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kOTA);
     EXPECT_EQ(trackedTime, uint32_t(120));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(3));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(110));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(120));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(2));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(1));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(3));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(110));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(120));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(100));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(2));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(1));
 
     // Check that traceCount is equal to the number of TimeTraceBegin and TimeTraceEnd calls
     traceCount = SilabsTracer::Instance().GetTimeTracesCount();
@@ -637,26 +637,26 @@ TEST_F(TestSilabsTracing, TestLogs)
     auto trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
     EXPECT_EQ(trackedTime, uint32_t(100));
 
-    // Retrieve the watermark for the operation
-    auto watermark = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kOTA);
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(1));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(100));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    // Retrieve the metric for the operation
+    auto metric = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kOTA);
+    EXPECT_EQ(metric.mTotalCount, uint32_t(1));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(100));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(100));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(100));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Verify the time tracker values for Bootup
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kBootup);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
-    watermark   = SilabsTracer::Instance().GetWatermark(TimeTraceOperation::kBootup);
+    metric      = SilabsTracer::Instance().GetMetric(TimeTraceOperation::kBootup);
     EXPECT_EQ(trackedTime, uint32_t(200));
-    EXPECT_EQ(watermark.mTotalCount, uint32_t(1));
-    EXPECT_EQ(watermark.mMovingAverage.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mMaxTimeMs.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mMinTimeMs.count(), uint32_t(200));
-    EXPECT_EQ(watermark.mSuccessfullCount, uint32_t(1));
-    EXPECT_EQ(watermark.mCountAboveAvg, uint32_t(0));
+    EXPECT_EQ(metric.mTotalCount, uint32_t(1));
+    EXPECT_EQ(metric.mMovingAverage.count(), uint32_t(200));
+    EXPECT_EQ(metric.mMaxTimeMs.count(), uint32_t(200));
+    EXPECT_EQ(metric.mMinTimeMs.count(), uint32_t(200));
+    EXPECT_EQ(metric.mSuccessfullCount, uint32_t(1));
+    EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Check that traceCount is equal to the number of TimeTraceBegin and TimeTraceEnd calls
     traceCount = SilabsTracer::Instance().GetTimeTracesCount();
@@ -668,15 +668,15 @@ TEST_F(TestSilabsTracing, TestLogs)
 
     // Verify OTA log
     EXPECT_EQ(SilabsTracer::Instance().GetTraceByOperation(to_underlying(TimeTraceOperation::kOTA), span), CHIP_NO_ERROR);
-    const char * expectedOTALogFormat =
-        "TimeTracker - Type: End, Operation: OTA, Status: 0x0, Start: 00:00:00.000, End: 00:00:00.100, Duration: 00:00:00.100";
+    const char * expectedOTALogFormat = "TimeTracker - End      | OTA                              | Status: 0 | Start: "
+                                        "00:00:00.000| End: 00:00:00.100| Duration: 00:00:00.100";
     EXPECT_STREQ(span.data(), expectedOTALogFormat);
 
     // Verify Bootup log
     span = MutableCharSpan(logBuffer);
     EXPECT_EQ(SilabsTracer::Instance().GetTraceByOperation(to_underlying(TimeTraceOperation::kBootup), span), CHIP_NO_ERROR);
-    const char * expectedBootupLogFormat =
-        "TimeTracker - Type: End, Operation: Bootup, Status: 0x0, Start: 00:00:00.000, End: 00:00:00.200, Duration: 00:00:00.200";
+    const char * expectedBootupLogFormat = "TimeTracker - End      | Bootup                           | Status: 0 | Start: "
+                                           "00:00:00.000| End: 00:00:00.200| Duration: 00:00:00.200";
     EXPECT_STREQ(span.data(), expectedBootupLogFormat);
 
     // Test buffer too small behavior
@@ -709,6 +709,24 @@ TEST_F(TestSilabsTracing, TestLogs)
     EXPECT_EQ(SilabsTracer::Instance().GetTraceByOperation(to_underlying(TimeTraceOperation::kBootup), span), CHIP_ERROR_NOT_FOUND);
     span = MutableCharSpan(logBuffer);
     EXPECT_EQ(SilabsTracer::Instance().GetTraceByOperation(to_underlying(TimeTraceOperation::kOTA), span), CHIP_ERROR_NOT_FOUND);
+
+    // Named traces logging
+    EXPECT_EQ(
+        CHIP_NO_ERROR,
+        SilabsTracer::Instance().NamedTraceBegin(CharSpan::fromCharString("CustomOp"), CharSpan::fromCharString("TestGroup")));
+    gMockClock.AdvanceMonotonic(150_ms64);
+    EXPECT_EQ(CHIP_NO_ERROR,
+              SilabsTracer::Instance().NamedTraceEnd(CharSpan::fromCharString("CustomOp"), CharSpan::fromCharString("TestGroup")));
+
+    // Verify named trace log
+    span = MutableCharSpan(logBuffer);
+    EXPECT_EQ(SilabsTracer::Instance().GetTraceByOperation(CharSpan::fromCharString("TestGroup:CustomOp"), span), CHIP_NO_ERROR);
+    const char * expectedCustomLogFormat = "TimeTracker - End      | TestGroup:CustomOp               | Status: 0 | Start: "
+                                           "00:00:00.200| End: 00:00:00.350| Duration: 00:00:00.150";
+    EXPECT_STREQ(span.data(), expectedCustomLogFormat);
+
+    // Test OutputAllMetrics including named traces
+    EXPECT_EQ(SilabsTracer::Instance().OutputAllMetrics(), CHIP_NO_ERROR);
 }
 
 TEST_F(TestSilabsTracing, TestBufferBusting)
@@ -736,7 +754,8 @@ TEST_F(TestSilabsTracing, TestBufferBusting)
     char logBuffer[256];
     MutableCharSpan logSpan(logBuffer);
     EXPECT_EQ(SilabsTracer::Instance().GetTraceByOperation(to_underlying(TimeTraceOperation::kBufferFull), logSpan), CHIP_NO_ERROR);
-    const char * expectedNumLogFormat = "TimeTracker - Type: Instant, Operation: BufferFull, Status: 0x19, EventTime: 00:00:06.200";
+    const char * expectedNumLogFormat =
+        "TimeTracker - Instant  | BufferFull                       | Status: 19 | Time: 00:00:06.200";
     EXPECT_STREQ(logSpan.data(), expectedNumLogFormat);
 
     // Verify the kImageUpload operation was not added
@@ -770,63 +789,70 @@ TEST_F(TestSilabsTracing, TestBufferBusting)
     EXPECT_EQ(0u, SilabsTracer::Instance().GetTimeTracesCount());
 }
 
-TEST_F(TestSilabsTracing, TestAppSpecificTraces)
+TEST_F(TestSilabsTracing, TestNamedTraces)
 {
     gMockClock.SetMonotonic(0_ms64);
     SilabsTracer::Instance().Init();
     size_t traceCount = 0;
-    traceCount        = SilabsTracer::Instance().GetTimeTracesCount();
-    EXPECT_EQ(traceCount, 0u);
 
-    char appSpecificTrace1[SilabsTracer::kMaxAppOperationKeyLength] = "AppTrace";
-    CharSpan appSpecificSpan(appSpecificTrace1);
-    appSpecificSpan.reduce_size(sizeof("AppTrace"));
-    // Simulate registering an app specific trace
-    EXPECT_EQ(SilabsTracer::Instance().RegisterAppTimeTraceOperation(appSpecificSpan), CHIP_NO_ERROR);
+    // Test creating named traces
+    EXPECT_EQ(
+        CHIP_NO_ERROR,
+        SilabsTracer::Instance().NamedTraceBegin(CharSpan::fromCharString("MyOperation"), CharSpan::fromCharString("TestGroup")));
+    gMockClock.AdvanceMonotonic(100_ms64);
+    EXPECT_EQ(
+        CHIP_NO_ERROR,
+        SilabsTracer::Instance().NamedTraceEnd(CharSpan::fromCharString("MyOperation"), CharSpan::fromCharString("TestGroup")));
 
-    // Simulate an an instant trace for the app specific trace
-    EXPECT_EQ(SilabsTracer::Instance().TimeTraceInstant(appSpecificSpan), CHIP_NO_ERROR);
+    // Test creating a second named trace
+    EXPECT_EQ(
+        CHIP_NO_ERROR,
+        SilabsTracer::Instance().NamedTraceBegin(CharSpan::fromCharString("AnotherOp"), CharSpan::fromCharString("TestGroup")));
+    gMockClock.AdvanceMonotonic(150_ms64);
+    EXPECT_EQ(CHIP_NO_ERROR,
+              SilabsTracer::Instance().NamedTraceEnd(CharSpan::fromCharString("AnotherOp"), CharSpan::fromCharString("TestGroup")));
 
-    // Veryify the app specific trace is added in the buffer by finding its index
-    size_t appSpecificIndex;
-    SilabsTracer::Instance().FindAppOperationIndex(appSpecificSpan, appSpecificIndex);
-    EXPECT_EQ(appSpecificIndex, 0u);
+    // Test instant trace for named operation
+    EXPECT_EQ(
+        CHIP_NO_ERROR,
+        SilabsTracer::Instance().TimeTraceInstant(CharSpan::fromCharString("InstantOp"), CharSpan::fromCharString("TestGroup")));
 
-    // Create a second app specific trace
-    char appSpecificTrace2[SilabsTracer::kMaxAppOperationKeyLength] = "AppTrace2";
-    CharSpan appSpecificSpan2(appSpecificTrace2);
-    // Verify it is not found in the buffer
-    EXPECT_EQ(CHIP_ERROR_NOT_FOUND, SilabsTracer::Instance().FindAppOperationIndex(appSpecificSpan2, appSpecificIndex));
-    EXPECT_EQ(appSpecificIndex, SilabsTracer::kMaxAppOperationKeys);
+    // Verify trace count
+    traceCount = SilabsTracer::Instance().GetTimeTracesCount();
+    EXPECT_EQ(traceCount, 5u); // 2 begin, 2 end, 1 instant
 
-    // Register the second app specific trace
-    EXPECT_EQ(SilabsTracer::Instance().RegisterAppTimeTraceOperation(appSpecificSpan2), CHIP_NO_ERROR);
-
-    // Simulate an an instant trace for the second app specific trace
-    EXPECT_EQ(SilabsTracer::Instance().TimeTraceInstant(appSpecificSpan2), CHIP_NO_ERROR);
-
-    // Verify that the logs match expectation
+    // Test metrics for named traces
     char logBuffer[256];
     MutableCharSpan span(logBuffer);
-    EXPECT_EQ(SilabsTracer::Instance().GetTraceByOperation(appSpecificSpan, span), CHIP_NO_ERROR);
-    const char * expectedAppSpecificLogFormat =
-        "TimeTracker - Type: Instant, Operation: AppTrace, Status: 0x0, EventTime: 00:00:00.000";
-    EXPECT_STREQ(span.data(), expectedAppSpecificLogFormat);
 
-    span = MutableCharSpan(logBuffer);
-    EXPECT_EQ(SilabsTracer::Instance().GetTraceByOperation(appSpecificSpan2, span), CHIP_NO_ERROR);
-    const char * expectedAppSpecificLogFormat2 =
-        "TimeTracker - Type: Instant, Operation: AppTrace2, Status: 0x0, EventTime: 00:00:00.000";
-    EXPECT_STREQ(span.data(), expectedAppSpecificLogFormat2);
+    EXPECT_EQ(CHIP_NO_ERROR, SilabsTracer::Instance().GetTraceByOperation(CharSpan::fromCharString("TestGroup:MyOperation"), span));
 
-    // Confirm trace count
-    traceCount = SilabsTracer::Instance().GetTimeTracesCount();
-    EXPECT_EQ(traceCount, 2u);
-    // Flush the app specific traces
-    EXPECT_EQ(SilabsTracer::Instance().TraceBufferFlushByOperation(appSpecificSpan), CHIP_NO_ERROR);
-    traceCount = SilabsTracer::Instance().GetTimeTracesCount();
-    EXPECT_EQ(traceCount, 1u);
-    EXPECT_EQ(SilabsTracer::Instance().TraceBufferFlushByOperation(appSpecificSpan2), CHIP_NO_ERROR);
-    traceCount = SilabsTracer::Instance().GetTimeTracesCount();
-    EXPECT_EQ(traceCount, 0u);
+    // Test that ending a non-existent trace returns an error
+    EXPECT_EQ(
+        CHIP_ERROR_NOT_FOUND,
+        SilabsTracer::Instance().NamedTraceEnd(CharSpan::fromCharString("NonExistent"), CharSpan::fromCharString("TestGroup")));
+
+    // Flush trace buffer before trying to fill named trace buffer
+    SilabsTracer::Instance().TraceBufferFlushAll();
+
+    // Re-initialize the tracer to clear named traces before buffer overflow test
+    SilabsTracer::Instance().Init();
+
+    // Test buffer overflow for named traces
+    for (size_t i = 0; i < SilabsTracer::kMaxNamedTraces + 1; i++)
+    {
+        char label[16];
+        snprintf(label, sizeof(label), "Op%04zu", i);
+        auto result =
+            SilabsTracer::Instance().TimeTraceInstant(CharSpan::fromCharString(label), CharSpan::fromCharString("OverflowTest"));
+        SilabsTracer::Instance().TraceBufferFlushAll(); // empty trace buffer as we are testing the NamedTrace one
+        if (i < SilabsTracer::kMaxNamedTraces)
+        {
+            EXPECT_EQ(CHIP_NO_ERROR, result);
+        }
+        else
+        {
+            EXPECT_EQ(CHIP_ERROR_BUFFER_TOO_SMALL, result);
+        }
+    }
 }

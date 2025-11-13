@@ -66,6 +66,12 @@
     ]
   },
   {
+    "clusterCode": "boolean state-server",
+    "value": [
+      "%extension-matter%matter_boolean_state"
+    ]
+  },
+  {
     "clusterCode": "bridged device basic information-server",
     "value": [
       "%extension-matter%matter_bridged_device_basic_information"
@@ -120,9 +126,21 @@
     ]
   },
   {
+    "clusterCode": "commodity metering-server",
+    "value": [
+      "%extension-matter%matter_commodity_metering"
+    ]
+  },
+  {
     "clusterCode": "commodity price-server",
     "value": [
       "%extension-matter%matter_commodity_price"
+    ]
+  },
+  {
+    "clusterCode": "commodity tariff-server",
+    "value": [
+      "%extension-matter%matter_commodity_tariff"
     ]
   },
   {
@@ -255,6 +273,12 @@
     "clusterCode": "group key management-server",
     "value": [
       "%extension-matter%matter_group_key_mgmt"
+    ]
+  },
+  {
+    "clusterCode": "groupcast-server",
+    "value": [
+      "%extension-matter%matter_groupcast"
     ]
   },
   {
@@ -426,15 +450,15 @@
     ]
   },
   {
-    "clusterCode": "pump configuration and control-client",
-    "value": [
-      "%extension-matter%matter_pump_configuration_and_control_client"
-    ]
-  },
-  {
     "clusterCode": "pump configuration and control-server",
     "value": [
       "%extension-matter%matter_pump_configuration_and_control"
+    ]
+  },
+  {
+    "clusterCode": "push_av_stream_transport-server",
+    "value": [
+      "%extension-matter%matter_push_av_stream_transport"
     ]
   },
   {
@@ -516,12 +540,6 @@
     ]
   },
   {
-    "clusterCode": "thermostat-client",
-    "value": [
-      "%extension-matter%matter_thermostat_client"
-    ]
-  },
-  {
     "clusterCode": "thermostat-server",
     "value": [
       "%extension-matter%matter_thermostat"
@@ -561,6 +579,18 @@
     "clusterCode": "time synchronization-server",
     "value": [
       "%extension-matter%matter_time_synchronization"
+    ]
+  },
+  {
+    "clusterCode": "tls_certificate_management-server",
+    "value": [
+      "%extension-matter%matter_tls_certificate_management"
+    ]
+  },
+  {
+    "clusterCode": "tls management server-client",
+    "value": [
+      "%extension-matter%matter_tls_management_server_client"
     ]
   },
   {
@@ -621,6 +651,12 @@
     "clusterCode": "window covering-server",
     "value": [
       "%extension-matter%matter_window_covering"
+    ]
+  },
+  {
+    "clusterCode": "zone_management-server",
+    "value": [
+      "%extension-matter%matter_zone_management"
     ]
   }
 ]

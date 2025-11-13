@@ -268,6 +268,16 @@
             "name": "Cluster Metadata",
             "iterator": "availableCluster",
             "output": "clusters/{name:touppercamelcase}/Metadata.h"
+        },        
+        {
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/codedriven-callback.h.zapt",
+            "name": "Matter code driven cluster init and shutdown callbacks header",
+            "output": "CodeDrivenCallback.h"
+        },
+        {
+            "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/codedriven-init-shutdown.cpp.zapt",
+            "name": "Matter code driven cluster init and shutdown calls",
+            "output": "CodeDrivenInitShutdown.cpp"
         }
 
     ],

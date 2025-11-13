@@ -1,0 +1,41 @@
+# Centralized dependency versions consumed by generation / packaging scripts.
+#
+# GOAL: Allow the *same dependency name* to resolve to different versions
+#       depending on whether the project is a Thread (EFR) or Wi‑Fi (SiWx917) build.
+#
+# FORMAT:
+#   thread:  dependencies used when path heuristics detect an EFR/Thread project
+#   wifi:    dependencies used when path heuristics detect a SiWx917 (Wi‑Fi) project
+#   common:  dependencies merged into BOTH (overridden by group-specific values if duplicated)
+#
+# To assign different versions to the same dependency per platform, DO NOT place
+# that key in 'common'. Instead list it separately under 'thread' and 'wifi'.
+# Example (kept same version below; change one side when you actually need divergence):
+#   thread:
+#     bluetooth_le_host: 0.0.6
+#   wifi:
+#     bluetooth_le_host: 0.0.6   # could become 0.0.7 if Wi‑Fi requires newer BLE host
+#
+# The generation scripts merge like: merged = common + group (group overrides).
+# If you later introduce a new group, extend the script logic accordingly.
+
+common:
+  # Put deps here ONLY if version is identical across platforms.
+  # (Left empty intentionally for now to demonstrate per-platform override capability.)
+
+thread:
+  openthread: 3.0.0-alpha.1
+  multiprotocol: 1.0.0-alpha.1
+  zigbee: 9.0.0-alpha.0
+  bluetooth_le_host: 11.0.0-alpha.2
+
+wifi:
+  platform_nwp_siwx91x: 0.0.6
+  bluetooth_le_siwx91x: 0.0.6
+  lwip: 0.0.5
+  bluetooth_le_host: 0.0.7
+  bluetooth_common: 0.0.7
+  bgapi_protocol: 0.0.7
+  bluetooth_le_controller: 0.0.7
+  platform: 0.0.5
+  rail_library: 0.0.5

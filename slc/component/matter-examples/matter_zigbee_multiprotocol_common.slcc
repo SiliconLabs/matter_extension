@@ -5,6 +5,11 @@ description: >
   Provides zigbee to matter data model link for CMP applications.
 id: matter_zigbee_multiprotocol_common
 quality: production
+metadata:
+  sbom:
+    license: MSLA
+requires:
+  - name: matter_zigbee_cmp
 provides:
   - name: matter_zigbee_multiprotocol_common
 recommends:

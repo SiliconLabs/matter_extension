@@ -15,20 +15,20 @@ include:
   - path: third_party/nlio/include
   - path: third_party/matter_sdk/src/messaging
     file_list:
-      - path: SessionParameters.h
-      - path: ExchangeDelegate.h
-      - path: ReliableMessageAnalyticsDelegate.h
-      - path: ReliableMessageMgr.h
-      - path: ExchangeMessageDispatch.h
-      - path: ReliableMessageContext.h
-      - path: ExchangeContext.h
-      - path: ErrorCategory.h
-      - path: Flags.h
-      - path: ReliableMessageProtocolConfig.h
-      - path: ApplicationExchangeDispatch.h
-      - path: ExchangeMgr.h
-      - path: ExchangeHolder.h
-      - path: EphemeralExchangeDispatch.h
+    -   path: SessionParameters.h
+    -   path: ExchangeDelegate.h
+    -   path: ReliableMessageMgr.h
+    -   path: ExchangeMessageDispatch.h
+    -   path: ReliableMessageContext.h
+    -   path: ExchangeContext.h
+    -   path: ErrorCategory.h
+    -   path: Flags.h
+    -   path: ReliableMessageProtocolConfig.h
+    -   path: ApplicationExchangeDispatch.h
+    -   path: ExchangeMgr.h
+    -   path: ExchangeHolder.h
+    -   path: EphemeralExchangeDispatch.h
+    -   path: ReliableMessageAnalyticsDelegate.h
 label: libmessaginglayer
 package: matter
 provides:

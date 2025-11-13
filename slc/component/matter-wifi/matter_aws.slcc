@@ -26,8 +26,9 @@ requires:
 config_file:
   - path: slc/config/matter_aws/sl_matter_wifi_config.h
     override:
-      component: "%extension-matter%matter_wifi"
+      component: matter_wifi
       file_id: matter_wifi_config
+      vendor: silabs
 
 define:
   - name: SL_MATTER_ENABLE_AWS

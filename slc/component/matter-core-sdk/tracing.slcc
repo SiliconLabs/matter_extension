@@ -38,6 +38,8 @@ define:
   - name: MATTER_TRACING_ENABLED
     value: 1
   - name: MATTER_TRACING_BUILD_CONFIG_H_
+  - name: SERIALIZED_TIME_TRACKERS_SIZE_BYTES
+    value: 512
 
 requires:
   - name: matter_tracing_headers

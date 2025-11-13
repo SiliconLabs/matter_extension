@@ -15,6 +15,7 @@ provides:
   - name: sl_si91x_errno
   - name: sl_si91x_lwip_stack
   - name: sl_si91x_network_stack
+  - name: matter_lwip
 
 include:
   - path: third_party/matter_sdk/src/lwip/silabs

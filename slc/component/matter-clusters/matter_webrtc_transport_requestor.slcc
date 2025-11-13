@@ -12,11 +12,11 @@ metadata:
 provides:
   - name: matter_webrtc_transport_requestor
 source:
-  - path: third_party/matter_sdk/src/app/clusters/webrtc-transport-requestor-server/webrtc-transport-requestor-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/webrtc-transport-requestor-server/webrtc-transport-requestor-cluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/webrtc-transport-requestor-server
     file_list:
-      - path: webrtc-transport-requestor-server.h
+      - path: webrtc-transport-requestor-cluster.h
 template_contribution:
   - name: component_catalog
     value: matter_webrtc_transport_requestor

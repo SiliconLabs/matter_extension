@@ -99,12 +99,6 @@ if __name__ == '__main__':
         replace_text(str(ROOT)+"/matter.slsdk",FULL_VERSION_REGEX,EXTENSION_NEW_VERSION+"-"+AUX_VERSION)
     replace_text(str(ROOT)+"/matter.slsdk","version="+VERSION_REGEX_FORMAT,"version="+EXTENSION_NEW_VERSION)
 
-    # Update pipeline_metadata.yml
-    #
-    # REGEX FORMAT:
-    # matterExtensionVersion: '0.0.3'
-    replace_text(str(ROOT)+"/third_party/matter_private/jenkins/pipeline_metadata.yml","matterExtensionVersion: '"+VERSION_REGEX_FORMAT+"'","matterExtensionVersion: '"+EXTENSION_NEW_VERSION+"'")
-
     # Update .md files in slc/ directory
     #
     # REGEX FORMAT:

@@ -12,14 +12,17 @@ metadata:
 provides:
   - name: matter_bindings
 source:
+  - path: third_party/matter_sdk/src/app/clusters/bindings/binding-cluster.cpp
+  - path: third_party/matter_sdk/src/app/clusters/bindings/binding-table.cpp
   - path: third_party/matter_sdk/src/app/clusters/bindings/BindingManager.cpp
-  - path: third_party/matter_sdk/src/app/clusters/bindings/bindings.cpp
+  - path: third_party/matter_sdk/src/app/clusters/bindings/CodegenIntegration.cpp
   - path: third_party/matter_sdk/src/app/clusters/bindings/PendingNotificationMap.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/bindings
     file_list:
+      - path: binding-cluster.h
+      - path: binding-table.h
       - path: BindingManager.h
-      - path: bindings.h
       - path: PendingNotificationMap.h
 template_contribution:
   - name: component_catalog

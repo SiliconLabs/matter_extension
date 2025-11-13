@@ -25,6 +25,7 @@ chip_test_group("silabs_platform_tests") {
   if (sl_build_unit_tests) {
     tests += [
       "${chip_root}/examples/platform/silabs/tests:examples_tests",
+      "${chip_root}/examples/platform/silabs/wifi/icd/vendor-handlers/tests:vendor_handlers_tests",
       "${chip_root}/src/platform/silabs/wifi/icd/tests:wifi_icd_tests",
     ]
   }

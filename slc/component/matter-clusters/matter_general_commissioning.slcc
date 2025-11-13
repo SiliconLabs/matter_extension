@@ -12,12 +12,14 @@ metadata:
 provides:
   - name: matter_general_commissioning
 source:
-  - path: third_party/matter_sdk/src/app/clusters/general-commissioning-server/general-commissioning-server.cpp
-  #- path: third_party/matter_sdk/src/app/clusters/general-commissioning-server/TemporaryTestCoupling.cpp
+  - path: third_party/matter_sdk/src/app/clusters/general-commissioning-server/CodegenIntegration.cpp
+  - path: third_party/matter_sdk/src/app/clusters/general-commissioning-server/general-commissioning-cluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/general-commissioning-server
     file_list:
-      - path: general-commissioning-server.h
+      - path: BreadCrumbTracker.h
+      - path: CodegenIntegration.h
+      - path: general-commissioning-cluster.h
 template_contribution:
   - name: component_catalog
     value: matter_general_commissioning

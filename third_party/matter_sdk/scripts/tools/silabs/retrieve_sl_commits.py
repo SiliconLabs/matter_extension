@@ -6,9 +6,9 @@ from argparse import RawTextHelpFormatter
 
 def get_git_log(start_sha, end_sha, prefixes):
     try:
-        # Run the git log command with output format <commit hash> -- <Title>
+        # Run the git log command with output format <Commit short hash>  |  <Author>  |  <Title>
         result = subprocess.run(
-            ['git', 'log', '--pretty=format:%H -- %s %s', f'{start_sha}..{end_sha}'],
+            ['git', 'log', '--pretty=format:%h  |  %an  |  %s', f'{start_sha}..{end_sha}'],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             check=True,
@@ -16,7 +16,7 @@ def get_git_log(start_sha, end_sha, prefixes):
         )
 
         # Split the result into lines
-        log_lines = result.stdout.split('\n')
+        log_lines = result.stdout.splitlines()
 
         # Initialize a dictionary to hold commits by prefix
         commits_by_prefix = {prefix: [] for prefix in prefixes}

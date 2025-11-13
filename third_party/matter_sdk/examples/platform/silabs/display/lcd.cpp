@@ -45,6 +45,7 @@
 static uint8_t qrCode[qrcodegen_BUFFER_LEN_FOR_VERSION(QR_CODE_VERSION)];
 static uint8_t workBuffer[qrcodegen_BUFFER_LEN_FOR_VERSION(QR_CODE_VERSION)];
 #endif // QR_CODE_ENABLED
+
 CHIP_ERROR SilabsLCD::Init(uint8_t * name, bool initialState)
 {
     EMSTATUS status;
@@ -71,8 +72,8 @@ CHIP_ERROR SilabsLCD::Init(uint8_t * name, bool initialState)
     status = sl_board_enable_display();
     if (status != SL_STATUS_OK)
     {
-        // sl-temp: S3 display isn't working yet, don't crash app for this.
         SILABS_LOG("Board Display enable fail %d", status);
+        err = CHIP_ERROR_INTERNAL;
     }
 #endif
 
@@ -81,7 +82,7 @@ CHIP_ERROR SilabsLCD::Init(uint8_t * name, bool initialState)
     if (DMD_OK != status)
     {
         SILABS_LOG("DMD init failed %d", status);
-        err = MATTER_PLATFORM_ERROR(status);
+        err = CHIP_ERROR_INTERNAL;
     }
 
     /* Initialize the glib context */
@@ -89,7 +90,7 @@ CHIP_ERROR SilabsLCD::Init(uint8_t * name, bool initialState)
     if (GLIB_OK != status)
     {
         SILABS_LOG("Glib context init failed %d", status);
-        err = MATTER_PLATFORM_ERROR(status);
+        err = CHIP_ERROR_INTERNAL;
     }
 
     glibContext.backgroundColor = White;
@@ -98,7 +99,7 @@ CHIP_ERROR SilabsLCD::Init(uint8_t * name, bool initialState)
     if (GLIB_OK != status)
     {
         SILABS_LOG("Glib clear failed %d", status);
-        err = MATTER_PLATFORM_ERROR(status);
+        err = CHIP_ERROR_INTERNAL;
     }
     demoUIInit(&glibContext);
 

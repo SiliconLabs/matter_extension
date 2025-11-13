@@ -155,23 +155,7 @@ private:
      * @param vendorId The vendor ID to check for special cases.
      * @return true if the vendor ID has a special case that allows LI based sleep, false otherwise.
      */
-    bool ProcessSpecialVendorIDCase(chip::VendorId vendorId);
-
-    /**
-     * @brief Processes the Apple Keychain edge case.
-     *
-     * Apple iphone/ipad, when commissioning, adds two fabric to the device. One for Apple Home or Google Home and one for the
-     * Appley Keychain. Apple Home or Google Home is the active fabric which is used to communication with the device. The
-     * associated fabric also has the active subcription. Applye Keychain fabric acts as a safety and doesn't have an active fabric
-     * with the device. As such, we need an alternate method to check if the device can go to LI based sleep
-     *
-     * This method checks if there is any fabric with the Apple Home or Google Home vendor ID that
-     * has at least one active subscription. If such a fabric is found, it allows
-     * the device to go to LI based sleep.
-     *
-     * @return true if the Apple Keychain edge case allows low-power mode, false otherwise.
-     */
-    bool ProcessKeychainEdgeCase();
+    bool ProcessVendorIdExceptions(chip::VendorId vendorId);
 
     static ApplicationSleepManager mInstance;
     chip::FabricTable * mFabricTable                                  = nullptr;

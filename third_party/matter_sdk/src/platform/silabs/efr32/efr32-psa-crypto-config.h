@@ -34,7 +34,7 @@
 #endif // SL_USE_COAP_CONFIG
 
 // Multi-chip OTA encryption processing
-#if SL_MATTER_ENABLE_OTA_ENCRYPTION
+#ifdef SL_MATTER_ENABLE_OTA_ENCRYPTION
 #define PSA_WANT_ALG_CTR
 #endif // SL_MATTER_ENABLE_OTA_ENCRYPTION
 

@@ -124,6 +124,7 @@ public:
      *
      * @param event AppEvent to post
      */
+
     static void PostEvent(const AppEvent * event);
 
 #ifdef DISPLAY_ENABLED

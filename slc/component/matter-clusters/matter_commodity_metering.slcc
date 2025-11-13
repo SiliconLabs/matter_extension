@@ -1,0 +1,23 @@
+category: Clusters|Energy Management
+description: >
+  Implementation of the Commodity Metering Server Cluster.
+  The user has to enable the Commodity Metering Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_commodity_metering
+package: matter
+label: Commodity Metering Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_commodity_metering
+source:
+  - path: third_party/matter_sdk/src/app/clusters/commodity-metering-server/commodity-metering-server.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/commodity-metering-server
+    file_list:
+      - path: commodity-metering-server.h
+      - path: CommodityMeteringTestEventTriggerHandler.h
+template_contribution:
+  - name: component_catalog
+    value: matter_commodity_metering

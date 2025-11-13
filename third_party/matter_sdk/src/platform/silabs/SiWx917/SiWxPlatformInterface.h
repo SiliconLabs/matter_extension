@@ -20,11 +20,9 @@
 #include <app/icd/server/ICDServerConfig.h>
 
 namespace {
-#if ENABLE_CHIP_SHELL && CHIP_CONFIG_ENABLE_ICD_SERVER
-#ifdef RTE_UULP_GPIO_1_PIN
+#if defined(ENABLE_CHIP_SHELL) && CHIP_CONFIG_ENABLE_ICD_SERVER && defined(RTE_UULP_GPIO_1_PIN)
 bool ps_requirement_added = false;
-#endif // RTE_UULP_GPIO_1_PIN
-#endif // ENABLE_CHIP_SHELL && CHIP_CONFIG_ENABLE_ICD_SERVER
+#endif // defined(ENABLE_CHIP_SHELL) && CHIP_CONFIG_ENABLE_ICD_SERVER && defined(RTE_UULP_GPIO_1_PIN)
 } // namespace
 
 #ifdef __cplusplus
@@ -61,7 +59,6 @@ void gpio_uulp_pin_interrupt_callback(uint32_t pin_intr)
     }
 }
 
-#ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
 /**
  * @brief Processing function when a button is triggered
  *
@@ -71,7 +68,6 @@ void gpio_uulp_pin_interrupt_callback(uint32_t pin_intr)
  * @param btnAction the action that triggered the buttone vent
  */
 void sl_button_on_change(uint8_t btn, uint8_t btnAction);
-#endif // SL_CATALOG_SIMPLE_BUTTON_PRESENT
 
 #endif // SLI_SI91X_MCU_INTERFACE
 #endif // CHIP_CONFIG_ENABLE_ICD_SERVER
@@ -86,7 +82,6 @@ namespace SiWxPlatformInterface {
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
 #if SLI_SI91X_MCU_INTERFACE
-#ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
 /**
  * @brief      Required to invoke button press event during sleep as falling edge is not detected
  * @param[in]  none.
@@ -98,7 +93,6 @@ inline void sl_si91x_btn_event_handler()
     sl_button_on_change(SL_BUTTON_BTN0_NUMBER,
                         (sl_si91x_gpio_get_uulp_npss_pin(SL_BUTTON_BTN0_PIN) == LOW) ? BUTTON_PRESSED : BUTTON_RELEASED);
 }
-#endif // SL_CATALOG_SIMPLE_BUTTON_PRESENT
 
 /**
  * @brief      Required to enable MATTER shell UART with ICD feature flag

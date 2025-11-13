@@ -152,6 +152,7 @@ extern "C" __attribute__((used)) void debugHardfault(uint32_t * sp)
  * Log a fault to the debugHardfault function.
  * This function is called by the fault handlers to log the fault details.
  */
+
 extern "C" __attribute__((naked)) void LogFault_Handler(void)
 {
     uint32_t * sp;
@@ -190,7 +191,7 @@ extern "C" __attribute__((naked)) void DebugMon_Handler(void)
 {
     __asm volatile("b LogFault_Handler");
 }
-#endif // SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
+#endif // !SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
 
 extern "C" void vApplicationMallocFailedHook(void)
 {

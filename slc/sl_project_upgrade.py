@@ -13,7 +13,7 @@ Prerequisites:
   python sl_project_upgrade.py <PathToReferenceProjectFile(.slcp)> <extensionVersion>
 
 @example
-  python3 sl_project_upgrade.py out/lgt/thread/lighting-app-thread.slcp 2.6.0
+  python3 sl_project_upgrade.py out/lgt/thread/lighting-app.slcp 2.6.0
 """
 
 import argparse

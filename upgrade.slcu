@@ -325,18 +325,6 @@ upgrade:
       version: "2.6.0"
 
     component:
-      - trigger: matter_dnssd
-        description: Renamed the matter_dnssd to matter_dnssd_platform
-        remove:
-          - matter_dnssd
-        add:
-          - matter_dnssd_platform
-      - trigger: matter_dnssd_wifi
-        description: Renamed the matter_dnssd_wifi to matter_dnssd_minimal
-        remove:
-          - matter_dnssd_wifi
-        add:
-          - matter_dnssd_minimal
       - script: slc/config/scripts/upgrade_components_to_2.6.0.lua
         description: >
           matter_gatt is removed to allow to chose between different GATT configurations.
@@ -351,8 +339,12 @@ upgrade:
 
   - sdk:
       id: matter
-      version: "2.7.0"
-
+      version: 2.7.0
+    component:
+      - trigger: matter
+        description: >
+           !!! WARNING !!! Automatic upgrades to Matter 2.7.0 are not recommended. Instead create a new project and manually port your changes. 
+        status: user_verification
     configuration:
       - script: slc/config/scripts/upgrade_config_to_2.7.0.lua
 

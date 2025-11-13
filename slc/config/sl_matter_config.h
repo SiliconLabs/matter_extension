@@ -55,8 +55,8 @@
 #define CHIP_DEVICE_CONFIG_MAX_DISCOVERED_IP_ADDRESSES 5
 
 // <o KVS_MAX_ENTRIES> Maximum amount of KVS Entries
-// <i> Default: 255
-#define KVS_MAX_ENTRIES 255
+// <i> Default: 511
+#define KVS_MAX_ENTRIES 511
 
 // <q CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED> Synchronous Reports
 // <i> Default: 0

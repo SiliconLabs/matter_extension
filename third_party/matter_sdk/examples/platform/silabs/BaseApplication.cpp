@@ -73,12 +73,13 @@
 
 #ifdef SL_WIFI
 #include <platform/silabs/NetworkCommissioningWiFiDriver.h>
-#include <platform/silabs/wifi/WifiInterface.h>
+#include <platform/silabs/wifi/WifiInterface.h> // nogncheck
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
 #include <platform/silabs/wifi/icd/WifiSleepManager.h> // nogncheck
-#endif                                                 // CHIP_CONFIG_ENABLE_ICD_SERVER
-#endif                                                 // SL_WIFI
+
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
+#endif // SL_WIFI
 
 #ifdef SL_MATTER_ENABLE_AWS
 #include "MatterAws.h"
@@ -243,6 +244,7 @@ void BaseApplicationDelegate::OnCommissioningWindowClosed()
 #if SL_MATTER_ENABLE_APP_SLEEP_MANAGER
     app::Silabs::ApplicationSleepManager::GetInstance().OnCommissioningWindowClosed();
 #endif // SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+
     if (BaseApplication::GetProvisionStatus())
     {
         // After the device is provisioned and the commissioning passed
@@ -318,7 +320,28 @@ CHIP_ERROR BaseApplication::Init()
         appError(err);
         return err;
     }
-
+#ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
+#if defined(SL_MATTER_ZIGBEE_SEQUENTIAL) ||                                                                                        \
+    (defined(SL_MATTER_ZIGBEE_CMP) && !defined(SL_CATALOG_RAIL_UTIL_IEEE802154_FAST_CHANNEL_SWITCHING_PRESENT))
+    PlatformMgr().LockChipStack();
+    uint16_t nbOfMatterFabric = Server::GetInstance().GetFabricTable().FabricCount();
+    PlatformMgr().UnlockChipStack();
+    if (nbOfMatterFabric != 0)
+    {
+#ifdef SL_MATTER_ZIGBEE_CMP
+        uint8_t channel = otLinkGetChannel(ThreadStackMgrImpl().OTInstance());
+        SILABS_LOG("Setting Zigbee channel to %d", channel);
+        Zigbee::RequestStart(channel);
+#else
+        Zigbee::RequestLeave();
+#endif // SL_MATTER_ZIGBEE_CMP
+    }
+    else
+#endif // SL_MATTER_ZIGBEE_SEQUENTIAL || (SL_MATTER_ZIGBEE_CMP && !SL_CATALOG_RAIL_UTIL_IEEE802154_FAST_CHANNEL_SWITCHING_PRESENT)
+    {
+        Zigbee::RequestStart();
+    }
+#endif // SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
     SILABS_TRACE_END_ERROR(TimeTraceOperation::kAppInit, err);
     SILABS_TRACE_END_ERROR(TimeTraceOperation::kBootup, err);
     return err;
@@ -411,7 +434,7 @@ CHIP_ERROR BaseApplication::BaseInit()
     return err;
 }
 
-void BaseApplication::InitCompleteCallback([[maybe_unused]] CHIP_ERROR err)
+void BaseApplication::InitCompleteCallback(CHIP_ERROR err)
 {
     // A stub for backward compatibility
 }
@@ -918,6 +941,9 @@ void BaseApplication::ScheduleFactoryReset()
         PlatformMgr().HandleServerShuttingDown(); // HandleServerShuttingDown calls OnShutdown() which is only implemented for the
                                                   // basic information cluster it seems. And triggers and Event flush, which is not
                                                   // relevant when there are no fabrics left
+#ifdef SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
+        Zigbee::TokenFactoryReset();
+#endif
         ConfigurationMgr().InitiateFactoryReset();
     });
 }
@@ -974,7 +1000,7 @@ void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
         {
             if (MATTER_AWS_OK != MatterAwsInit(matterAws::control::subscribeCB))
             {
-                ChipLogError(AppServer, "dic_init failed");
+                ChipLogError(AppServer, "MatterAwsInit failed");
             }
         }
 #endif // SL_MATTER_ENABLE_AWS
@@ -1019,8 +1045,6 @@ void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
 
     case DeviceEventType::kCommissioningComplete: {
 #if SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
-        // DUT is commissioned, removing the High Performance request
-        WifiSleepManager::GetInstance().RemoveHighPerformanceRequest();
         WifiSleepManager::GetInstance().VerifyAndTransitionToLowPowerMode(WifiSleepManager::PowerEvent::kCommissioningComplete);
 #endif // SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
 

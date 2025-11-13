@@ -12,7 +12,12 @@ metadata:
 provides:
   - name: matter_descriptor
 source:
-  - path: third_party/matter_sdk/src/app/clusters/descriptor/descriptor.cpp
+  - path: third_party/matter_sdk/src/app/clusters/descriptor/CodegenIntegration.cpp
+  - path: third_party/matter_sdk/src/app/clusters/descriptor/descriptor-cluster.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/descriptor
+    file_list:
+      - path: descriptor-cluster.h
 template_contribution:
   - name: component_catalog
     value: matter_descriptor

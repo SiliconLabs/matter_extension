@@ -101,19 +101,10 @@ namespace {
 #define BLE_CONFIG_MIN_INTERVAL (16) // Time = Value x 1.25 ms = 20ms
 #define BLE_CONFIG_MAX_INTERVAL (80) // Time = Value x 1.25 ms = 100ms
 #define BLE_CONFIG_LATENCY (0)
+#define BLE_CONFIG_TIMEOUT (100)          // Time = Value x 10 ms = 1s
 #define BLE_CONFIG_MIN_CE_LENGTH (0)      // Leave to min value
 #define BLE_CONFIG_MAX_CE_LENGTH (0xFFFF) // Leave to max value
 
-// SL-TEMP Using Zigbee HDR PHY can cause delays in BLE exchange when there is 15.4 traffic,
-// so we need to increase the timeout to avoid the connection timeout.
-#ifdef SL_CATALOG_HIGH_DATARATE_PHY_PRESENT
-#define BLE_CONFIG_TIMEOUT (300) // Time = Value x 10 ms = 2.5s
-#else
-#define BLE_CONFIG_TIMEOUT (100) // Time = Value x 10 ms = 1s
-#endif
-
-// Side Channel default intervals: between 20ms to 5s, API does Value * 0.625ms, so we should check where the default above comes
-// from
 #define BLE_CONFIG_MIN_INTERVAL_SC (32)   // Time = Value * 0.625 ms = 20ms
 #define BLE_CONFIG_MAX_INTERVAL_SC (8000) // Time = Value * 0.625 ms = 5s
 
@@ -328,7 +319,7 @@ CHIP_ERROR BLEManagerImpl::CloseConnection(BLE_CONNECTION_OBJECT conId)
 
     if (err != CHIP_NO_ERROR)
     {
-        ChipLogError(DeviceLayer, "sl_bt_connection_close() failed: %s", ErrorStr(err));
+        ChipLogError(DeviceLayer, "sl_bt_connection_close() failed: %" CHIP_ERROR_FORMAT, err.Format());
     }
 
     return err;
@@ -423,7 +414,7 @@ void BLEManagerImpl::DriveBLEState(void)
 exit:
     if (err != CHIP_NO_ERROR)
     {
-        ChipLogError(DeviceLayer, "Disabling CHIPoBLE service due to error: %s", ErrorStr(err));
+        ChipLogError(DeviceLayer, "Disabling CHIPoBLE service due to error: %" CHIP_ERROR_FORMAT, err.Format());
         mServiceMode = ConnectivityManager::kCHIPoBLEServiceMode_Disabled;
     }
 }
@@ -499,13 +490,13 @@ CHIP_ERROR BLEManagerImpl::ConfigureAdvertisingData(void)
         ret = sl_bt_advertiser_create_set(&mAdvertisingSetHandle);
         VerifyOrExit(ret == SL_STATUS_OK, {
             err = MapBLEError(ret);
-            ChipLogError(DeviceLayer, "sl_bt_advertiser_create_set() failed: %s", ErrorStr(err));
+            ChipLogError(DeviceLayer, "sl_bt_advertiser_create_set() failed: %" CHIP_ERROR_FORMAT, err.Format());
         });
 
         ret = sl_bt_advertiser_set_random_address(mAdvertisingSetHandle, sl_bt_gap_static_address, randomizedAddr, &randomizedAddr);
         VerifyOrExit(ret == SL_STATUS_OK, {
             err = MapBLEError(ret);
-            ChipLogError(DeviceLayer, "sl_bt_advertiser_set_random_address() failed: %s", ErrorStr(err));
+            ChipLogError(DeviceLayer, "sl_bt_advertiser_set_random_address() failed: %" CHIP_ERROR_FORMAT, err.Format());
         });
         ChipLogDetail(DeviceLayer, "BLE Static Device Address %02X:%02X:%02X:%02X:%02X:%02X", randomizedAddr.addr[5],
                       randomizedAddr.addr[4], randomizedAddr.addr[3], randomizedAddr.addr[2], randomizedAddr.addr[1],
@@ -517,7 +508,8 @@ CHIP_ERROR BLEManagerImpl::ConfigureAdvertisingData(void)
 
     VerifyOrExit(ret == SL_STATUS_OK, {
         err = MapBLEError(ret);
-        ChipLogError(DeviceLayer, "sl_bt_legacy_advertiser_set_data() - Advertising Data failed: %s", ErrorStr(err));
+        ChipLogError(DeviceLayer, "sl_bt_legacy_advertiser_set_data() - Advertising Data failed: %" CHIP_ERROR_FORMAT,
+                     err.Format());
     });
 
     index = 0;
@@ -537,7 +529,7 @@ CHIP_ERROR BLEManagerImpl::ConfigureAdvertisingData(void)
 
     VerifyOrExit(ret == SL_STATUS_OK, {
         err = MapBLEError(ret);
-        ChipLogError(DeviceLayer, "sl_bt_legacy_advertiser_set_data() - Scan Response failed: %s", ErrorStr(err));
+        ChipLogError(DeviceLayer, "sl_bt_legacy_advertiser_set_data() - Scan Response failed: %" CHIP_ERROR_FORMAT, err.Format());
     });
 
     err = MapBLEError(ret);
@@ -744,7 +736,10 @@ void BLEManagerImpl::HandleReadEvent(volatile sl_bt_msg_t * evt)
     {
         // Side channel read request
         ChipLogProgress(DeviceLayer, "Char Read Req, char : %d", evt->data.evt_gatt_server_user_read_request.characteristic);
-        mBleSideChannel->HandleReadRequest(evt);
+
+        char dataBuff[] = "You are reading the Si-Channel TX characteristic";
+        ByteSpan dataSpan((const uint8_t *) dataBuff, sizeof(dataBuff));
+        mBleSideChannel->HandleReadRequest(evt, dataSpan);
     }
 }
 #endif // defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
@@ -914,7 +909,14 @@ void BLEManagerImpl::HandleWriteEvent(volatile sl_bt_msg_t * evt)
     else
     {
         VerifyOrReturn(mBleSideChannel != nullptr);
-        mBleSideChannel->HandleWriteRequest(evt);
+
+        uint8_t dataBuff[255] = { 0 };
+        MutableByteSpan dataSpan(dataBuff);
+        mBleSideChannel->HandleWriteRequest(evt, dataSpan);
+
+        // Buffered (&Deleted) the following data:
+        ChipLogProgress(DeviceLayer, "Buffered (&Deleted) the following data:");
+        ChipLogByteSpan(DeviceLayer, dataSpan);
     }
 }
 
@@ -971,7 +973,8 @@ void BLEManagerImpl::HandleTXCharCCCDWrite(volatile sl_bt_msg_t * evt)
     else
     {
         VerifyOrReturn(mBleSideChannel != nullptr);
-        err = mBleSideChannel->HandleCCCDWriteRequest(evt);
+        bool isNewSubscription = false;
+        err                    = mBleSideChannel->HandleCCCDWriteRequest(evt, isNewSubscription);
     }
 
     LogErrorOnFailure(err);
@@ -1003,7 +1006,7 @@ void BLEManagerImpl::HandleRXCharWrite(volatile sl_bt_msg_t * evt)
 exit:
     if (err != CHIP_NO_ERROR)
     {
-        ChipLogError(DeviceLayer, "HandleRXCharWrite() failed: %s", ErrorStr(err));
+        ChipLogError(DeviceLayer, "HandleRXCharWrite() failed: %" CHIP_ERROR_FORMAT, err.Format());
     }
 }
 
@@ -1186,8 +1189,7 @@ void BLEManagerImpl::BleAdvTimeoutHandler(void * arg)
 {
     if (BLEMgrImpl().mFlags.Has(Flags::kFastAdvertisingEnabled))
     {
-        // TODO : This log causes a stack overflow in Series 3, need to investigate before re-enabling
-        // ChipLogDetail(DeviceLayer, "bleAdv Timeout : Start slow advertisement");
+        ChipLogDetail(DeviceLayer, "bleAdv Timeout : Start slow advertisement");
         BLEMgrImpl().mFlags.Set(Flags::kAdvertising);
         BLEMgr().SetAdvertisingMode(BLEAdvertisingMode::kSlowAdvertising);
 #if CHIP_DEVICE_CONFIG_EXT_ADVERTISING
@@ -1198,8 +1200,7 @@ void BLEManagerImpl::BleAdvTimeoutHandler(void * arg)
 #if CHIP_DEVICE_CONFIG_EXT_ADVERTISING
     else
     {
-        // TODO : This log causes a stack overflow in Series 3, need to investigate before re-enabling
-        // ChipLogDetail(DeviceLayer, "bleAdv Timeout : Start extended advertisement");
+        ChipLogDetail(DeviceLayer, "bleAdv Timeout : Start extended advertisement");
         BLEMgrImpl().mFlags.Set(Flags::kAdvertising);
         BLEMgrImpl().mFlags.Set(Flags::kExtAdvertisingEnabled);
         BLEMgr().SetAdvertisingMode(BLEAdvertisingMode::kSlowAdvertising);
@@ -1318,15 +1319,7 @@ void BLEManagerImpl::ParseEvent(volatile sl_bt_msg_t * evt)
 
         if (sl_bt_gatt_server_confirmation == StatusFlags)
         {
-            if (isMATTERoBLECharacteristic(evt->data.evt_gatt_server_characteristic_status.characteristic))
-            {
-                HandleTxConfirmationEvent(evt->data.evt_gatt_server_characteristic_status.connection);
-            }
-            else if (mBleSideChannel != nullptr &&
-                     mBleSideChannel->GetConnectionHandle() == evt->data.evt_gatt_server_characteristic_status.connection)
-            {
-                mBleSideChannel->HandleIndicationConfirmation(evt);
-            }
+            HandleTxConfirmationEvent(evt->data.evt_gatt_server_characteristic_status.connection);
         }
         else
         {
@@ -1357,14 +1350,6 @@ void BLEManagerImpl::ParseEvent(volatile sl_bt_msg_t * evt)
     }
     break;
 
-    case sl_bt_evt_gatt_server_indication_timeout_id: {
-        // Only handled by the Side Channel
-        if (mBleSideChannel != nullptr)
-        {
-            mBleSideChannel->HandleIndicationTimeout(evt);
-        }
-        break;
-    }
     default: {
         ChipLogProgress(DeviceLayer, "evt_UNKNOWN id = %08" PRIx32, SL_BT_MSG_ID(evt->header));
         break;

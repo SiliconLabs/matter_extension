@@ -1,0 +1,13 @@
+label: zigbee-matter-light-series-3
+quality: production
+package: matter
+description: Matter solution containing both a Matter bootloader and Light Zigbee Matter Example
+project:
+  - path: ./zigbee-matter-light.slcp
+    id: application
+    output: zigbee-matter-light
+  - path: ../../bootloaders/bootloader-storage-single-4096k-series-3/bootloader-storage-single-4096k-series-3.slcp
+    id: bootloader
+    output: matter-bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

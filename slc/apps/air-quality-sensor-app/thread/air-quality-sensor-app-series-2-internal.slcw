@@ -1,0 +1,13 @@
+label: air-quality-sensor-app-series-2-internal
+quality: production
+package: matter
+description: Solution containing both a bootloader and a Matter over Thread Air Quality App Example
+project:
+  - path: ./air-quality-sensor-app.slcp
+    id: application
+    output: air-quality-sensor-app
+  - path: ../../bootloaders/bootloader-storage-internal-single-series-2/bootloader-storage-internal-single-series-2.slcp
+    id: bootloader
+    output: matter-bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

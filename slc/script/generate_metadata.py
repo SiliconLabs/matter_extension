@@ -4,7 +4,6 @@ import xml.etree.ElementTree as ET
 import xml.dom.minidom
 import pathlib
 import sys
-import yaml
 
 
 ###########################################################################################
@@ -23,10 +22,15 @@ examples_dir = os.path.join(root_dir, "Examples")
 root_sub_dirs = os.listdir(root_dir)
 internal_boards = ['brd4319f']
 internal_sample_apps = ['performance-test-app','platform-app','lock-li']
-with open(os.path.join(root_dir,"third_party","matter_private","jenkins","pipeline_metadata.yml"), 'r') as stream:
-    pipeline_metadata = yaml.safe_load(stream)
 
-matterExtensionVersion = pipeline_metadata['toolchain_info']['matterExtensionVersion']
+# Read version from matter.slce file
+matter_slce_path = os.path.join(root_dir, "matter.slce")
+with open(matter_slce_path, 'r') as stream:
+    for line in stream:
+        if line.startswith('version:'):
+            matterExtensionVersion = line.split(':')[1].strip()
+            break
+
 asset_prefix = "asset://extension.matter_"+matterExtensionVersion+"/"
 
 if not os.path.exists(out_folder_dir):
@@ -67,7 +71,7 @@ def recurse_dir(file_or_dir):
                 board_type = "917-soc"
 
             if brd not in demos_map['demos'].keys():
-                demos_map['demos'][brd] = {'OpenThread': [], 'WiFi': {'917-soc': [], '917-ncp': [], '917-ncp-brd4357a': [], 'wf200': [], 'rs911x': []}}
+                demos_map['demos'][brd] = {'OpenThread': [], 'WiFi': {'917-soc': [], '917-ncp': [], '917-ncp-brd4357a': [], 'wf200': []}}
 
             if tech_ == 'OpenThread':
                 demos_map['demos'][brd][tech_].append(str(os.path.basename(file_or_dir).replace('.s37', '')))
@@ -258,7 +262,7 @@ for brd, val in demos_map['demos'].items():
                     imageFileProp.set('value', asset_prefix + os.path.join("demos", brd, technology, demoFilename))
                     readmeFileProp.set('key', 'core.readmeFiles')
                     readmeFileProp.set(
-                        'value',  os.path.join("slc","sample-app", '-'.join([demo_name.replace(" ", "-").replace("SiWx917-","").replace("-example","").replace('.rps',''), 'app']) if 'thermostat' not in demo_name else "thermostat", ("siwx917" if "soc" in board_type else "efr32"),"README_WiFi.md"))
+                        'value',  os.path.join("slc","sample-app", '-'.join([demo_name.replace(" ", "-").replace("SiWx917-","").replace("-example","").replace('.rps',''), 'app']) if 'thermostat' not in demo_name else "thermostat", ("siwx917" if "soc" in board_type else "efr32"),"README.md"))
 
                     filtersProp.set('key', 'filters')
                     filtersProp.set('value', "Type|" + ("SoC" if "soc" in board_type else "NCP") + " Project\\ Difficulty|Advanced Wireless\\ Technology|Matter")
@@ -267,7 +271,7 @@ for brd, val in demos_map['demos'].items():
                     qualityProp.set('value', "PRODUCTION")
                     description.text = "".join("This is a Matter " + demo_name_ +
                                                 " Application for " + brd.upper() #+ " to be used with Wi-Fi " +
-                                                + (' with SiWx917 Wi-Fi SoC' if "soc" in board_type else (" to be used with Wi-Fi " + ('RS9116' if board_type == 'rs911x' else board_type.upper()))))
+                                                + (' with SiWx917 Wi-Fi SoC' if "soc" in board_type else (" to be used with Wi-Fi " + board_type.upper())))
 
 outputString = ET.tostring(demos, encoding='UTF-8')
 dom = xml.dom.minidom.parseString(outputString)

@@ -1,0 +1,13 @@
+label: lock-app-wf200
+quality: production
+package: matter
+description: Matter solution containing both a Matter bootloader and Lock over WiFi Example
+project:
+  - path: ./lock-app-wf200.slcp
+    id: application
+    output: lock-app-wf200
+  - path: ../../bootloaders/bootloader-storage-external-single-series-2/bootloader-storage-external-single-series-2.slcp
+    id: bootloader
+    output: matter-bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

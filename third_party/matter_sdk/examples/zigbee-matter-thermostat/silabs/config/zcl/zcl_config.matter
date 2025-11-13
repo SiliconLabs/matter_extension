@@ -1,0 +1,4144 @@
+// This IDL was generated automatically by ZAP.
+// It is for view/code review purposes only.
+
+enum 11073ConnectRequestConnectControl : enum8 {
+  kPreemptible = 1;
+}
+
+enum 11073TunnelConnectionStatus : enum8 {
+  kDisconnected = 0;
+  kConnected = 1;
+  kNotAuthorized = 2;
+  kReconnectRequest = 3;
+  kAlreadyConnected = 4;
+}
+
+enum AlertCountType : enum8 {
+  kUnstructured = 0;
+}
+
+enum AlertStructureCategory : enum16 {
+  kWarning = 256;
+  kDanger = 512;
+  kFailure = 768;
+}
+
+enum AlertStructurePresenceRecovery : enum16 {
+  kRecovery = 0;
+  kPresence = 4096;
+}
+
+enum AlternateCostUnit : enum8 {
+  kKgOfCo2PerUnitOfMeasure = 2;
+}
+
+enum AmiCriticalityLevel : enum8 {
+  kReserved = 0;
+  kGreen = 1;
+  k1 = 2;
+  k2 = 3;
+  k3 = 4;
+  k4 = 5;
+  k5 = 6;
+  kEmergency = 7;
+  kPlannedOutage = 8;
+  kServiceDisconnect = 9;
+  kUtilityDefined1 = 10;
+  kUtilityDefined2 = 11;
+  kUtilityDefined3 = 12;
+  kUtilityDefined4 = 13;
+  kUtilityDefined5 = 14;
+  kUtilityDefined6 = 15;
+}
+
+enum AmiEventStatus : enum8 {
+  kLoadControlEventCommandRx = 1;
+  kEventStarted = 2;
+  kEventCompleted = 3;
+  kUserHasChooseToOptOut = 4;
+  kUserHasChooseToOptIn = 5;
+  kTheEventHasBeenCanceled = 6;
+  kTheEventHasBeenSuperseded = 7;
+  kEventPartiallyCompletedWithUserOptOut = 8;
+  kEventPartiallyCompletedDueToUserOptIn = 9;
+  kEventCompletedNoUserParticipationPreviousOptOut = 10;
+  kInvalidOptOut = 246;
+  kEventNotFound = 247;
+  kRejectedInvalidCancelCommand = 248;
+  kRejectedInvalidCancelCommandInvalidEffectiveTime = 249;
+  kRejectedEventExpired = 251;
+  kRejectedInvalidCancelUndefinedEvent = 253;
+  kLoadControlEventCommandRejected = 254;
+}
+
+enum AmiGetProfileStatus : enum8 {
+  kSuccess = 0;
+  kUndefinedIntervalChannelRequested = 1;
+  kIntervalChannelNotSupported = 2;
+  kInvalidEndTime = 3;
+  kMorePeriodsRequestedThanCanBeReturned = 4;
+  kNoIntervalsAvailableForTheRequestedTime = 5;
+}
+
+enum AmiIntervalChannel : enum8 {
+  kConsumptionDelivered = 0;
+  kConsumptionReceived = 1;
+}
+
+enum AmiIntervalPeriod : enum8 {
+  kDaily = 0;
+  kMinutes60 = 1;
+  kMinutes30 = 2;
+  kMinutes15 = 3;
+  kMinutes10 = 4;
+  kMinutes7p5 = 5;
+  kMinutes5 = 6;
+  kMinutes2p5 = 7;
+}
+
+enum AmiKeyEstablishmentStatus : enum8 {
+  kSuccess = 0;
+  kUnknownIssuer = 1;
+  kBadKeyConfirm = 2;
+  kBadMessage = 3;
+  kNoResources = 4;
+  kUnsupportedSuite = 5;
+  kInvalidKeyUsage = 6;
+}
+
+enum AmiRegistrationState : enum8 {
+  kUnregistered = 0;
+  kJoiningNetwork = 1;
+  kJoinedNetwork = 2;
+  kSubmittedRegistrationRequest = 3;
+  kRegistrationRejected = 4;
+  kRegistered = 5;
+  kRegisterationNotPossible = 6;
+}
+
+enum AmiUnitOfMeasure : enum8 {
+  kKiloWattHours = 0;
+  kCubicMeterPerHour = 1;
+  kCubicFeetPerHour = 2;
+  kCentumCubicFeetPerHour = 3;
+  kUsGallonsPerHour = 4;
+  kImperialGallonsPerHour = 5;
+  kBtUsOrBtuPerHour = 6;
+  kLitersOrLitersPerHour = 7;
+  kKpaGauge = 8;
+  kKpaAbsolute = 9;
+  kMcfOrMcfPerSecond = 10;
+  kUnitless = 11;
+  kMjOrMjPerSecond = 12;
+  kKVarOrKVarHours = 13;
+  kKiloWattHoursBcd = 128;
+  kCubicMeterPerHourBcd = 129;
+  kCubicFeetPerHourBcd = 130;
+  kCentumCubicFeetPerHourBcd = 131;
+  kUsGallonsPerHourBcd = 132;
+  kImperialGallonsPerHourBcd = 133;
+  kBtUsOrBtuPerHourBcd = 134;
+  kLitersOrLitersPerHourBcd = 135;
+  kKpaGuageBcd = 136;
+  kKpaAbsoluteBcd = 137;
+  kMcfOrMcfPerSecondBcd = 138;
+  kUnitlessBcd = 139;
+  kMjOrMjPerSecondBcd = 140;
+  kKVarOrKVarHoursBcd = 141;
+}
+
+enum AnonymousDataState : enum8 {
+  kNoSourceFound = 0;
+  kSourceFound = 1;
+}
+
+enum ApplianceStatus : enum8 {
+  kOff = 1;
+  kStandBy = 2;
+  kProgrammed = 3;
+  kProgrammedWaitingToStart = 4;
+  kRunning = 5;
+  kPause = 6;
+  kEndProgrammed = 7;
+  kFailure = 8;
+  kProgrammeInterrupted = 9;
+  kIdle = 10;
+  kRinseHold = 11;
+  kService = 12;
+  kSuperfreezing = 13;
+  kSupercooling = 14;
+  kSuperheating = 15;
+}
+
+enum AttributeReportingStatus : enum8 {
+  kPending = 0;
+  kAttributeReportingComplete = 1;
+}
+
+enum AttributeWritePermission : enum8 {
+  kDenyWrite = 0;
+  kAllowWriteNormal = 1;
+  kAllowWriteOfReadOnly = 2;
+  kUnsupportedAttribute = 134;
+  kInvalidValue = 135;
+  kReadOnly = 136;
+  kInvalidDataType = 141;
+}
+
+enum BarrierControlBarrierPosition : enum8 {
+  kClosed = 0;
+  kOpen = 100;
+  kUnknown = 255;
+}
+
+enum BarrierControlMovingState : enum8 {
+  kStopped = 0;
+  kClosing = 1;
+  kOpening = 2;
+}
+
+enum BatterySize : enum8 {
+  kNoBattery = 0;
+  kBuiltIn = 1;
+  kOther = 2;
+  kAA = 3 [spec_name = "AA"];
+  kAAA = 4 [spec_name = "AAA"];
+  kC = 5;
+  kD = 6;
+  kUnknown = 255;
+}
+
+enum BillingPeriodDurationUnits : enum24 {
+  kMinutes = 0;
+  kDays = 4194304;
+  kWeeks = 8388608;
+  kMonths = 12582912;
+}
+
+enum Block : enum8 {
+  kNoBlocksInUse = 0;
+  kBlock1 = 1;
+  kBlock2 = 2;
+  kBlock3 = 3;
+  kBlock4 = 4;
+  kBlock5 = 5;
+  kBlock6 = 6;
+  kBlock7 = 7;
+  kBlock8 = 8;
+  kBlock9 = 9;
+  kBlock10 = 10;
+  kBlock11 = 11;
+  kBlock12 = 12;
+  kBlock13 = 13;
+  kBlock14 = 14;
+  kBlock15 = 15;
+  kBlock16 = 16;
+}
+
+enum BlockPeriodDurationTypeControl : enum8 {
+  kStartOfTimebase = 0;
+  kEndOfTimebase = 16;
+  kNotSpecified = 32;
+}
+
+enum BlockPeriodDurationTypeTimebase : enum8 {
+  kMinutes = 0;
+  kDays = 1;
+  kWeeks = 2;
+  kMonths = 3;
+}
+
+enum CO2Unit : enum8 {
+  kKilogramPerKilowattHour = 1;
+  kKilogramPerGallonOfGasoline = 2;
+  kKilogramPerThermOfNaturalGas = 3;
+}
+
+enum CalendarTimeReference : enum8 {
+  kUtcTime = 0;
+  kStandardTime = 1;
+  kLocalTime = 2;
+}
+
+enum CalendarType : enum8 {
+  kDeliveredCalendar = 0;
+  kReceivedCalendar = 1;
+  kDeliveredAndReceivedCalendar = 2;
+  kFriendlyCreditCalendar = 3;
+  kAuxilliaryLoadSwitchCalendar = 4;
+}
+
+enum CalorificValueUnit : enum8 {
+  kMegajoulePerCubicMeter = 1;
+  kMegajoulePerKilogram = 2;
+}
+
+enum CecedSpecificationVersion : enum8 {
+  kCompliantWithV10NotCertified = 16;
+  kCompliantWithV10Certified = 26;
+}
+
+enum ColorControlOptions : enum8 {
+  kExecuteIfOff = 1;
+}
+
+enum ColorLoopAction : enum8 {
+  kDeactivate = 0;
+  kActivateFromColorLoopStartEnhancedHue = 1;
+  kActivateFromEnhancedCurrentHue = 2;
+}
+
+enum ColorLoopDirection : enum8 {
+  kDecrementHue = 0;
+  kIncrementHue = 1;
+}
+
+enum ColorMode : enum8 {
+  kCurrentHueAndCurrentSaturation = 0;
+  kCurrentXAndCurrentY = 1;
+  kColorTemperature = 2;
+}
+
+enum CommandIdentification : enum8 {
+  kStart = 1;
+  kStop = 2;
+  kPause = 3;
+  kStartSuperfreezing = 4;
+  kStopSuperfreezing = 5;
+  kStartSupercooling = 6;
+  kStopSupercooling = 7;
+  kDisableGas = 8;
+  kEnableGas = 9;
+  kEnableEnergyControl = 10;
+  kDisableEnergyControl = 11;
+}
+
+enum CommissioningStartupControl : enum8 {
+  kNoAction = 0;
+  kFormNetwork = 1;
+  kRejoinNetwork = 2;
+  kStartFromScratch = 3;
+}
+
+enum CommodityType : enum8 {
+  kElectricMetering = 0;
+  kGasMetering = 1;
+  kWaterMetering = 2;
+  kThermalMetering = 3;
+  kPressureMetering = 4;
+  kHeatMetering = 5;
+  kCoolingMetering = 6;
+  kElectricVehicleChargingMetering = 7;
+  kPvGenerationMetering = 8;
+  kWindTurbineGenerationMetering = 9;
+  kWaterTurbineGenerationMetering = 10;
+  kMicroGenerationMetering = 11;
+  kSolarHotWaterGenerationMetering = 12;
+  kElectricMeteringElement1 = 13;
+  kElectricMeteringElement2 = 14;
+  kElectricMeteringElement3 = 15;
+}
+
+enum CppEventResponseCppAuth : enum8 {
+  kAccepted = 1;
+  kRejected = 2;
+}
+
+enum CppPriceTier : enum8 {
+  kCPP1 = 0 [spec_name = "CPP1"];
+  kCPP2 = 1 [spec_name = "CPP2"];
+}
+
+enum CreditAdjustmentType : enum8 {
+  kCreditIncremental = 0;
+  kCreditAbsolute = 1;
+}
+
+enum CreditPaymentStatus : enum8 {
+  kPending = 0;
+  kReceivedPaid = 1;
+  kOverdue = 2;
+  k2PaymentsOverdue = 3;
+  k3PaymentsOverdue = 4;
+}
+
+enum DataQualityId : enum16 {
+  kAllDataCertified = 0;
+  kOnlyInstantaneousPowerNotCertified = 1;
+  kOnlyCumulatedConsumptionNotCertified = 2;
+  kNotCertifiedData = 3;
+}
+
+enum DebtAmountType : enum8 {
+  kType1Absolute = 0;
+  kType1Incremental = 1;
+  kType2Absolute = 2;
+  kType2Incremental = 3;
+  kType3Absolute = 4;
+  kType3Incremental = 5;
+}
+
+enum DebtRecoveryFrequency : enum8 {
+  kPerHour = 0;
+  kPerDay = 1;
+  kPerWeek = 2;
+  kPerMonth = 3;
+  kPerQuarter = 4;
+}
+
+enum DebtRecoveryMethod : enum8 {
+  kTimeBased = 0;
+  kPercentageBased = 1;
+  kCatchUpBased = 2;
+}
+
+enum DehumidifcationLockout : enum8 {
+  kNotAllowed = 0;
+  kAllowed = 1;
+}
+
+enum DeviceInformationRecordSort : enum8 {
+  kNotSorted = 0;
+  kTopOfTheList = 1;
+}
+
+enum DeviceStatus2Structure : enum8 {
+  kIrisSymptomCode = 32;
+}
+
+enum DoorLockAlarmCode : enum8 {
+  kDeadboltJammed = 0;
+  kResetToFactoryDefaults = 1;
+  kRFModulePowerCycled = 3;
+  kTamperWrongCodeEntryLimit = 4;
+  kTamperFrontEscutcheon = 5;
+  kForcedDoorOpen = 6;
+  kDoorAjar = 7;
+  kCoerced = 8;
+}
+
+enum DoorLockEventSource : enum8 {
+  kKeypad = 0;
+  kRf = 1;
+  kManual = 2;
+  kRfid = 3;
+  kBiometricCred = 4;
+  kIndeterminate = 255;
+}
+
+enum DoorLockEventType : enum8 {
+  kOperation = 0;
+  kProgramming = 1;
+  kAlarm = 2;
+}
+
+enum DoorLockOperatingMode : enum8 {
+  kNormalMode = 0;
+  kVacationMode = 1;
+  kPrivacyMode = 2;
+  kNoRfLockOrUnlock = 3;
+  kPassageMode = 4;
+}
+
+enum DoorLockOperationEventCode : enum8 {
+  kUnknownOrMfgSpecific = 0;
+  kLock = 1;
+  kUnlock = 2;
+  kLockInvalidPinOrId = 3;
+  kLockInvalidSchedule = 4;
+  kUnlockInvalidPinOrId = 5;
+  kUnlockInvalidSchedule = 6;
+  kOneTouchLock = 7;
+  kKeyLock = 8;
+  kKeyUnlock = 9;
+  kAutoLock = 10;
+  kScheduleLock = 11;
+  kScheduleUnlock = 12;
+  kManualLock = 13;
+  kManualUnlock = 14;
+  kUnlockCoercedUser = 16;
+  kFingerpintUnlock = 17;
+  kFaceIDUnlock = 18;
+  kFingerveinUnlock = 19;
+  kAutoUnlock = 20;
+  kApplicationUnlock = 21;
+  kUnlockDisposableUser = 22;
+}
+
+enum DoorLockProgrammingEventCode : enum8 {
+  kUnknownOrMfgSpecific = 0;
+  kMasterCodeChanged = 1;
+  kPinAdded = 2;
+  kPinDeleted = 3;
+  kPinChanged = 4;
+  kIdAdded = 5;
+  kIdDeleted = 6;
+  kFingerprintAdded = 7;
+  kFingerprintDeleted = 8;
+  kFaceIdAdded = 9;
+  kFaceIdDeleted = 10;
+  kFingerveinAdded = 11;
+  kFingerveinDeleted = 12;
+}
+
+enum DoorLockSecurityLevel : enum8 {
+  kNetworkSecurity = 0;
+  kApsSecurity = 1;
+}
+
+enum DoorLockSetPinOrIdStatus : enum8 {
+  kSuccess = 0;
+  kGeneralFailure = 1;
+  kMemoryFull = 2;
+  kDuplicateCodeError = 3;
+}
+
+enum DoorLockSoundVolume : enum8 {
+  kSilent = 0;
+  kLow = 1;
+  kHigh = 2;
+  kMedium = 3;
+}
+
+enum DoorLockState : enum8 {
+  kNotFullyLocked = 0;
+  kLocked = 1;
+  kUnlocked = 2;
+}
+
+enum DoorLockType : enum8 {
+  kDeadBolt = 0;
+  kMagnetic = 1;
+  kOther = 2;
+  kMortise = 3;
+  kRim = 4;
+  kLatchBolt = 5;
+  kCylindrical = 6;
+  kTubular = 7;
+  kInterconnected = 8;
+  kDeadLatch = 9;
+  kDoorFurniture = 10;
+}
+
+enum DoorLockUserStatus : enum8 {
+  kAvailable = 0;
+  kOccupiedEnabled = 1;
+  kOccupiedDisabled = 3;
+  kNotSupported = 255;
+}
+
+enum DoorLockUserType : enum8 {
+  kUnrestricted = 0;
+  kYearDayScheduleUser = 1;
+  kWeekDayScheduleUser = 2;
+  kMasterUser = 3;
+  kNonAccessUser = 4;
+  kCoercedUser = 5;
+  kDisposableUser = 6;
+  kNotSupported = 255;
+}
+
+enum DoorState : enum8 {
+  kOpen = 0;
+  kClosed = 1;
+  kErrorJammed = 2;
+  kErrorForcedOpen = 3;
+  kErrorUnspecified = 4;
+  kErrorAjar = 5;
+}
+
+enum ElectricityAlarmGroups : enum8 {
+  kLowVoltageL1 = 16;
+  kHighVoltageL1 = 17;
+  kLowVoltageL2 = 18;
+  kHighVoltageL2 = 19;
+  kLowVoltageL3 = 20;
+  kHighVoltageL3 = 21;
+  kOverCurrentL1 = 22;
+  kOverCurrentL2 = 23;
+  kOverCurrentL3 = 24;
+  kFrequencyTooLowL1 = 25;
+  kFrequencyTooHighL1 = 26;
+  kFrequencyTooLowL2 = 27;
+  kFrequencyTooHighL2 = 28;
+  kFrequencyTooLowL3 = 29;
+  kFrequencyTooHighL3 = 30;
+  kGroundFault = 31;
+  kElectricTamperDetect = 32;
+  kIncorrectPolarity = 33;
+  kCurrentNoVoltage = 34;
+  kUnderVoltage = 35;
+  kOverVoltage = 36;
+  kNormalVoltage = 37;
+  kPFBelowThreshold = 38;
+  kPFAboveThreshold = 39;
+  kTerminalCoverRemoved = 40;
+  kTerminalCoverClosed = 41;
+}
+
+enum EnhancedColorMode : enum8 {
+  kCurrentHueAndCurrentSaturation = 0;
+  kCurrentXAndCurrentY = 1;
+  kColorTemperature = 2;
+  kEnhancedCurrentHueAndCurrentSaturation = 3;
+}
+
+enum EventConfigurationControl : enum8 {
+  kApplyByList = 0;
+  kApplyByEventGroup = 1;
+  kApplyByLogType = 2;
+  kApplyByConfigurationMatch = 3;
+}
+
+enum EventConfigurationLogAction : enum8 {
+  kDoNotLog = 0;
+  kLogAsTamper = 1;
+  kLogAsFault = 2;
+  kLogAsGeneralEvent = 3;
+  kLogAsSecurityEvent = 4;
+  kLogAsNetworkEvent = 5;
+}
+
+enum EventControl : enum8 {
+  kRetrieveMinimalInformation = 0;
+  kRetrieveFullInformation = 16;
+}
+
+enum EventId : enum8 {
+  kMeterCoverRemoved = 0;
+  kMeterCoverClosed = 1;
+  kStrongMagneticField = 2;
+  kNoStrongMagneticField = 3;
+  kBatteryFailure = 4;
+  kLowBattery = 5;
+  kProgramMemoryError = 6;
+  kRamError = 7;
+  kNvMemoryError = 8;
+  kMeasurementSystemError = 9;
+  kWatchdogError = 10;
+  kSupplyDisconnectFailure = 11;
+  kSupplyConnectFailure = 12;
+  kMeasurmentSoftwareChanged = 13;
+  kDstEnabled = 14;
+  kDstDisabled = 15;
+  kClockAdjBackward = 16;
+  kClockAdjForward = 17;
+  kClockInvalid = 18;
+  kCommsErrorHan = 19;
+  kCommsOkHan = 20;
+  kFraudAttempt = 21;
+  kPowerLoss = 22;
+  kIncorrectProtocol = 23;
+  kUnusualHanTraffic = 24;
+  kUnexpectedClockChange = 25;
+  kCommsUsingUnauthenticatedComponent = 26;
+  kErrorRegClear = 27;
+  kAlarmRegClear = 28;
+  kUnexpectedHwReset = 29;
+  kUnexpectedProgramExecution = 30;
+  kEventLogCleared = 31;
+  kManualDisconnect = 32;
+  kManualConnect = 33;
+  kRemoteDisconnection = 34;
+  kLocalDisconnection = 35;
+  kLimitThresholdExceeded = 36;
+  kLimitThresholdOk = 37;
+  kLimitThresholdChanged = 38;
+  kMaximumDemandExceeded = 39;
+  kProfileCleared = 40;
+  kFirmwareReadyForActivation = 41;
+  kFirmwareActivated = 42;
+  kPatchFailure = 43;
+  kTouTariffActivation = 44;
+  k8x8Tariffactivated = 45;
+  kSingleTariffRateActivated = 46;
+  kAsynchronousBillingOccurred = 47;
+  kSynchronousBillingOccurred = 48;
+  kIncorrectPolarity = 128;
+  kCurrentNoVoltage = 129;
+  kUnderVoltage = 130;
+  kOverVoltage = 131;
+  kNormalVoltage = 132;
+  kPfBelowThreshold = 133;
+  kPfAboveThreshold = 134;
+  kTerminalCoverRemoved = 135;
+  kTerminalCoverClosed = 136;
+  kReverseFlow = 160;
+  kTiltTamper = 161;
+  kBatteryCoverRemoved = 162;
+  kBatteryCoverClosed = 163;
+  kExcessFlow = 164;
+  kCreditOk = 192;
+  kLowCredit = 193;
+  kEmergencyCreditInUse = 192;
+  kEmergencyCreditExhausted = 193;
+  kZeroCreditEcNotSelected = 194;
+  kSupplyOn = 195;
+  kSupplyOffAarmed = 196;
+  kSupplyOff = 197;
+  kDiscountApplied = 198;
+  kManufacturerSpecificA = 224;
+  kManufacturerSpecificB = 225;
+  kManufacturerSpecificC = 226;
+  kManufacturerSpecificD = 227;
+  kManufacturerSpecificE = 228;
+  kManufacturerSpecificF = 229;
+  kManufacturerSpecificG = 230;
+  kManufacturerSpecificH = 231;
+  kManufacturerSpecificI = 232;
+}
+
+enum EventIdentification : enum8 {
+  kEndOfCycle = 1;
+  kTemperatureReached = 4;
+  kEndOfCooking = 5;
+  kSwitchingOff = 6;
+  kWrongData = 7;
+}
+
+enum EventLogId : enum8 {
+  kAllLogs = 0;
+  kTamperLog = 1;
+  kFaultLog = 2;
+  kGeneralEventLog = 3;
+  kSecurityEventLog = 4;
+  kNetworkEventLog = 5;
+  kGbcsGeneralEventLog = 6;
+  kGbcsSecurityEventLog = 7;
+}
+
+enum EventLogPayloadControl : enum8 {
+  kEventsDoNotCrossFrameBoundary = 0;
+  kEventCrossesFrameBoundary = 1;
+}
+
+enum ExtendedGenericAlarmGroups : enum8 {
+  kMeasurementSystemError = 112;
+  kWatchdogError = 113;
+  kSupplyDisconnectFailure = 114;
+  kSupplyConnectFailure = 115;
+  kMeasurmentSoftwareChanged = 116;
+  kDstEnabled = 117;
+  kDstDisabled = 118;
+  kClockAdjBackward = 119;
+  kClockAdjForward = 120;
+  kClockInvalid = 121;
+  kCommunicationErrorHan = 122;
+  kCommunicationOkHAn = 123;
+  kMeterFraudAttempt = 124;
+  kPowerLoss = 125;
+  kUnusualHanTraffic = 126;
+  kUnexpectedClockChange = 127;
+  kCommsUsingUnauthenticatedComponent = 128;
+  kErrorRegClear = 129;
+  kAlarmRegClear = 130;
+  kUnexpectedHwReset = 131;
+  kUnexpectedProgramExecution = 132;
+  kEventLogCleared = 133;
+  kLimitThresholdExceeded = 134;
+  kLimitThresholdOk = 135;
+  kLimitThresholdChanged = 136;
+  kMaximumDemandExceeded = 137;
+  kProfileCleared = 138;
+  kSamplingBuffercleared = 139;
+  kBatteryWarning = 140;
+  kWrongSignature = 141;
+  kNoSignature = 142;
+  kUnauthorisedActionfromHan = 143;
+  kFastPollingStart = 144;
+  kFastPollingEnd = 145;
+  kMeterReportingIntervalChanged = 146;
+  kDisconnectDuetoLoadLimit = 147;
+  kMeterSupplyStatusRegisterChanged = 148;
+  kMeterAlarmStatusRegisterChanged = 149;
+  kExtendedMeterAlarmStatusRegisterChanged = 150;
+}
+
+enum ExtendedNumberOfPriceTiers : enum8 {
+  kReferToNumberOfPriceTiersField = 0;
+  kNumberOfPriceTiers16 = 1;
+  kNumberOfPriceTiers17 = 2;
+  kNumberOfPriceTiers18 = 3;
+  kNumberOfPriceTiers19 = 4;
+  kNumberOfPriceTiers20 = 5;
+  kNumberOfPriceTiers21 = 6;
+  kNumberOfPriceTiers22 = 7;
+  kNumberOfPriceTiers23 = 8;
+  kNumberOfPriceTiers24 = 9;
+  kNumberOfPriceTiers25 = 10;
+  kNumberOfPriceTiers26 = 11;
+  kNumberOfPriceTiers27 = 12;
+  kNumberOfPriceTiers28 = 13;
+  kNumberOfPriceTiers29 = 14;
+  kNumberOfPriceTiers30 = 15;
+  kNumberOfPriceTiers31 = 16;
+  kNumberOfPriceTiers32 = 17;
+  kNumberOfPriceTiers33 = 18;
+  kNumberOfPriceTiers34 = 19;
+  kNumberOfPriceTiers35 = 20;
+  kNumberOfPriceTiers36 = 21;
+  kNumberOfPriceTiers37 = 22;
+  kNumberOfPriceTiers38 = 23;
+  kNumberOfPriceTiers39 = 24;
+  kNumberOfPriceTiers40 = 25;
+  kNumberOfPriceTiers41 = 26;
+  kNumberOfPriceTiers42 = 27;
+  kNumberOfPriceTiers43 = 28;
+  kNumberOfPriceTiers44 = 29;
+  kNumberOfPriceTiers45 = 30;
+  kNumberOfPriceTiers46 = 31;
+  kNumberOfPriceTiers47 = 32;
+  kNumberOfPriceTiers48 = 33;
+}
+
+enum ExtendedPriceTier : enum8 {
+  kReferToPriceTierField = 0;
+  kTier16PriceLabel = 1;
+  kTier17PriceLabel = 2;
+  kTier18PriceLabel = 3;
+  kTier19PriceLabel = 4;
+  kTier20PriceLabel = 5;
+  kTier21PriceLabel = 6;
+  kTier22PriceLabel = 7;
+  kTier23PriceLabel = 8;
+  kTier24PriceLabel = 9;
+  kTier25PriceLabel = 10;
+  kTier26PriceLabel = 11;
+  kTier27PriceLabel = 12;
+  kTier28PriceLabel = 13;
+  kTier29PriceLabel = 14;
+  kTier30PriceLabel = 15;
+  kTier31PriceLabel = 16;
+  kTier32PriceLabel = 17;
+  kTier33PriceLabel = 18;
+  kTier34PriceLabel = 19;
+  kTier35PriceLabel = 20;
+  kTier36PriceLabel = 21;
+  kTier37PriceLabel = 22;
+  kTier38PriceLabel = 23;
+  kTier39PriceLabel = 24;
+  kTier40PriceLabel = 25;
+  kTier41PriceLabel = 26;
+  kTier42PriceLabel = 27;
+  kTier43PriceLabel = 28;
+  kTier44PriceLabel = 29;
+  kTier45PriceLabel = 30;
+  kTier46PriceLabel = 31;
+  kTier47PriceLabel = 32;
+  kTier48PriceLabel = 33;
+}
+
+enum ExtendedRegisterTier : enum8 {
+  kReferToRegisterTierField = 0;
+  kCurrentTier16SummationDeliveredAttribute = 1;
+  kCurrentTier17SummationDeliveredAttribute = 2;
+  kCurrentTier18SummationDeliveredAttribute = 3;
+  kCurrentTier19SummationDeliveredAttribute = 4;
+  kCurrentTier20SummationDeliveredAttribute = 5;
+  kCurrentTier21SummationDeliveredAttribute = 6;
+  kCurrentTier22SummationDeliveredAttribute = 7;
+  kCurrentTier23SummationDeliveredAttribute = 8;
+  kCurrentTier24SummationDeliveredAttribute = 9;
+  kCurrentTier25SummationDeliveredAttribute = 10;
+  kCurrentTier26SummationDeliveredAttribute = 11;
+  kCurrentTier27SummationDeliveredAttribute = 12;
+  kCurrentTier28SummationDeliveredAttribute = 13;
+  kCurrentTier29SummationDeliveredAttribute = 14;
+  kCurrentTier30SummationDeliveredAttribute = 15;
+  kCurrentTier31SummationDeliveredAttribute = 16;
+  kCurrentTier32SummationDeliveredAttribute = 17;
+  kCurrentTier33SummationDeliveredAttribute = 18;
+  kCurrentTier34SummationDeliveredAttribute = 19;
+  kCurrentTier35SummationDeliveredAttribute = 20;
+  kCurrentTier36SummationDeliveredAttribute = 21;
+  kCurrentTier37SummationDeliveredAttribute = 22;
+  kCurrentTier38SummationDeliveredAttribute = 23;
+  kCurrentTier39SummationDeliveredAttribute = 24;
+  kCurrentTier40SummationDeliveredAttribute = 25;
+  kCurrentTier41SummationDeliveredAttribute = 26;
+  kCurrentTier42SummationDeliveredAttribute = 27;
+  kCurrentTier43SummationDeliveredAttribute = 28;
+  kCurrentTier44SummationDeliveredAttribute = 29;
+  kCurrentTier45SummationDeliveredAttribute = 30;
+  kCurrentTier46SummationDeliveredAttribute = 31;
+  kCurrentTier47SummationDeliveredAttribute = 32;
+  kCurrentTier48SummationDeliveredAttribute = 33;
+}
+
+enum EzModeCommissioningClusterType : enum8 {
+  kServer = 0;
+  kClient = 1;
+}
+
+enum FanMode : enum8 {
+  kOff = 0;
+  kLow = 1;
+  kMedium = 2;
+  kHigh = 3;
+  kOn = 4;
+  kAuto = 5;
+  kSmart = 6;
+}
+
+enum FanModeSequence : enum8 {
+  kLowMedHigh = 0;
+  kLowHigh = 1;
+  kLowMedHighAuto = 2;
+  kLowHighAuto = 3;
+  kOnAuto = 4;
+}
+
+enum GasSpecificAlarmGroups : enum8 {
+  kTiltTamper = 96;
+  kBatteryCoverRemoved = 97;
+  kBatteryCoverClosed = 98;
+  kExcessFlow = 99;
+  kTiltTamperEnded = 100;
+}
+
+enum GenerationTier : enum8 {
+  kCurrentTier1SummationReceivedAttribute = 1;
+  kCurrentTier2SummationReceivedAttribute = 2;
+  kCurrentTier3SummationReceivedAttribute = 3;
+  kCurrentTier4SummationReceivedAttribute = 4;
+  kCurrentTier5SummationReceivedAttribute = 5;
+  kCurrentTier6SummationReceivedAttribute = 6;
+  kCurrentTier7SummationReceivedAttribute = 7;
+  kCurrentTier8SummationReceivedAttribute = 8;
+  kCurrentTier9SummationReceivedAttribute = 9;
+  kCurrentTier10SummationReceivedAttribute = 10;
+  kCurrentTier11SummationReceivedAttribute = 11;
+  kCurrentTier12SummationReceivedAttribute = 12;
+  kCurrentTier13SummationReceivedAttribute = 13;
+  kCurrentTier14SummationReceivedAttribute = 14;
+  kCurrentTier15SummationReceivedAttribute = 15;
+  kCurrentTier16SummationReceivedAttribute = 16;
+  kCurrentTier17SummationReceivedAttribute = 17;
+  kCurrentTier18SummationReceivedAttribute = 18;
+  kCurrentTier19SummationReceivedAttribute = 19;
+  kCurrentTier20SummationReceivedAttribute = 20;
+  kCurrentTier21SummationReceivedAttribute = 21;
+  kCurrentTier22SummationReceivedAttribute = 22;
+  kCurrentTier23SummationReceivedAttribute = 23;
+  kCurrentTier24SummationReceivedAttribute = 24;
+  kCurrentTier25SummationReceivedAttribute = 25;
+  kCurrentTier26SummationReceivedAttribute = 26;
+  kCurrentTier27SummationReceivedAttribute = 27;
+  kCurrentTier28SummationReceivedAttribute = 28;
+  kCurrentTier29SummationReceivedAttribute = 29;
+  kCurrentTier30SummationReceivedAttribute = 30;
+  kCurrentTier31SummationReceivedAttribute = 31;
+  kCurrentTier32SummationReceivedAttribute = 32;
+  kCurrentTier33SummationReceivedAttribute = 33;
+  kCurrentTier34SummationReceivedAttribute = 34;
+  kCurrentTier35SummationReceivedAttribute = 35;
+  kCurrentTier36SummationReceivedAttribute = 36;
+  kCurrentTier37SummationReceivedAttribute = 37;
+  kCurrentTier38SummationReceivedAttribute = 38;
+  kCurrentTier39SummationReceivedAttribute = 39;
+  kCurrentTier40SummationReceivedAttribute = 40;
+  kCurrentTier41SummationReceivedAttribute = 41;
+  kCurrentTier42SummationReceivedAttribute = 42;
+  kCurrentTier43SummationReceivedAttribute = 43;
+  kCurrentTier44SummationReceivedAttribute = 44;
+  kCurrentTier45SummationReceivedAttribute = 45;
+  kCurrentTier46SummationReceivedAttribute = 46;
+  kCurrentTier47SummationReceivedAttribute = 47;
+  kCurrentTier48SummationReceivedAttribute = 48;
+}
+
+enum GenericAlarmGroups : enum8 {
+  kCheckMeter = 0;
+  kLowBattery = 1;
+  kTamperDetect = 2;
+  kLeakDetect = 5;
+  kServiceDisconnect = 6;
+  kMeterCoverRemoved = 8;
+  kMeterCoverClosed = 9;
+  kStrongMagneticField = 10;
+  kNoStrongMagneticField = 11;
+  kBatteryFailure = 12;
+  kProgramMemoryError = 13;
+  kRAMError = 14;
+  kNVMemoryError = 15;
+}
+
+enum GenericAlarmGroupsElectricity : enum8 {
+  kPowerFailure = 3;
+  kPowerQuality = 4;
+}
+
+enum GenericAlarmGroupsGas : enum8 {
+  kLowPressure = 4;
+  kReverseFlow = 7;
+}
+
+enum GenericAlarmGroupsHeatCooling : enum8 {
+  kTemperatureSensor = 3;
+  kBurstDetect = 4;
+  kFlowSensor = 7;
+}
+
+enum GenericAlarmGroupsWater : enum8 {
+  kWaterPipeEmpty = 3;
+  kWaterLowPressure = 4;
+  kWaterReverseFlow = 7;
+}
+
+enum GenericDeviceClass : enum8 {
+  kLighting = 0;
+}
+
+enum GenericDeviceType : enum8 {
+  kIncandescent = 0;
+  kSpotlightHalogen = 1;
+  kHalogenBulb = 2;
+  kCFL = 3 [spec_name = "CFL"];
+  kLinearFlourescent = 4;
+  kLedBulb = 5;
+  kSpotlightLed = 6;
+  kLedStrip = 7;
+  kLedTube = 8;
+  kGenericIndoorFixture = 9;
+  kGenericOutdoorFixture = 10;
+  kPendantFixture = 11;
+  kFloorStandingFixture = 12;
+  kGenericController = 224;
+  kWallSwitch = 225;
+  kPortableRemoteController = 226;
+  kMotionOrLightSensor = 227;
+  kGenericActuator = 240;
+  kPluginUnit = 241;
+  kRetrofitActuator = 242;
+  kUnspecified = 255;
+}
+
+enum GenericFlowPressureAlarmGroups : enum8 {
+  kBurstDetect = 48;
+  kPressureTooLow = 49;
+  kPressureTooHigh = 50;
+  kFlowSensorCommunicationError = 51;
+  kFlowSensorMeasurementFault = 52;
+  kFlowSensorReverseFlow = 53;
+  kFlowSensorAirDetect = 54;
+  kPipeEmpty = 55;
+}
+
+enum GpDeviceId : enum8 {
+  kGpSimpleGenericOneStateSwitch = 0;
+  kGpSimpleGenericTwoStateSwitch = 0;
+  kGpOnOffSwitch = 8;
+  kGpLevelControlSwitch = 16;
+  kGpSimpleSensor = 24;
+  kGpAdvancedGenericOneStateSwitch = 24;
+  kGpAdvancedGenericTwoStateSwitch = 24;
+  kGpColorDimmerSwitch = 24;
+  kGpLightSensor = 24;
+  kGpOccpancySensor = 24;
+  kGpDoorLockController = 24;
+  kGpTemperatureSensor = 24;
+  kGpPressureSensor = 24;
+  kGpFlowSensor = 24;
+  kGpIndoorEnvironmentSnesor = 24;
+}
+
+enum GpGpdf : enum8 {
+  kIdentify = 0;
+  kMatchOnlyOnGpdAddress = 2;
+  kRecallScene0 = 16;
+  kRecallScene1 = 17;
+  kRecallScene2 = 18;
+  kRecallScene3 = 19;
+  kRecallScene4 = 20;
+  kRecallScene5 = 21;
+  kRecallScene6 = 22;
+  kRecallScene7 = 23;
+  kStoreScene0 = 24;
+  kStoreScene1 = 25;
+  kStoreScene2 = 26;
+  kStoreScene3 = 27;
+  kStoreScene4 = 28;
+  kStoreScene5 = 29;
+  kStoreScene6 = 30;
+  kStoreScene7 = 31;
+  kOff = 32;
+  kOn = 33;
+  kToggle = 34;
+  kRelease = 35;
+  kMoveUp = 48;
+  kMoveDown = 49;
+  kStepUp = 50;
+  kStepDown = 51;
+  kLevelControlStop = 52;
+  kMoveUpWithOnOff = 53;
+  kMoveDownWithOnOff = 54;
+  kStepUpWithOnOff = 55;
+  kStepDownWithOnOff = 56;
+  kMoveHueStop = 64;
+  kMoveHueUp = 65;
+  kMoveHueDown = 66;
+  kStepHueUp = 67;
+  kStepHueDown = 68;
+  kMoveSaturationStop = 69;
+  kMoveSaturationUp = 70;
+  kMoveSaturationDown = 71;
+  kStepSaturationUp = 72;
+  kStepSaturationDown = 73;
+  kMoveColor = 74;
+  kStepColor = 75;
+  kLockDoor = 80;
+  kUnlockDoor = 81;
+  kPress1Of1 = 96;
+  kRelease1Of1 = 97;
+  kPress1Of2 = 98;
+  kRelease1Of2 = 99;
+  kPress2Of2 = 100;
+  kRelease2Of2 = 101;
+  kShortPress1Of1 = 102;
+  kShortPress1Of2 = 103;
+  kShortPress2Of2 = 104;
+  k8bitsVectorPress = 105;
+  k8bitsVectorRelease = 106;
+  kAttributeReporting = 160;
+  kMfrSpAttrRptg = 161;
+  kMultiClusterRptg = 162;
+  kMfrSpMultiClusterRptg = 163;
+  kRequestAttribute = 164;
+  kReadAttrResponse = 165;
+  kZclTunnelingWithPayload = 166;
+  kCompactAttributeReporting = 168;
+  kAnyGpdSensorCmd = 175;
+  kMfrDefGpdCmd0 = 176;
+  kMfrDefGpdCmd1 = 177;
+  kMfrDefGpdCmd2 = 178;
+  kMfrDefGpdCmd3 = 179;
+  kMfrDefGpdCmd4 = 180;
+  kMfrDefGpdCmd5 = 181;
+  kMfrDefGpdCmd6 = 182;
+  kMfrDefGpdCmd7 = 183;
+  kMfrDefGpdCmd8 = 184;
+  kMfrDefGpdCmd9 = 185;
+  kMfrDefGpdCmdA = 186;
+  kMfrDefGpdCmdB = 187;
+  kMfrDefGpdCmdC = 188;
+  kMfrDefGpdCmdD = 189;
+  kMfrDefGpdCmdE = 190;
+  kMfrDefGpdCmdF = 191;
+  kCommissioning = 224;
+  kDecommissioning = 225;
+  kSuccess = 226;
+  kChannelRequest = 227;
+  kApplicationDescription = 228;
+  kCommissioningReply = 240;
+  kWriteAttributes = 241;
+  kReadAttributes = 242;
+  kChannelConfiguration = 243;
+  kZclTunneling = 246;
+}
+
+enum GpPairingConfigurationAction : enum8 {
+  kNoAction = 0;
+  kExtendSinkTableEntry = 1;
+  kReplaceSinkTableEntry = 2;
+  kRemoveAPairing = 3;
+  kRemoveGpd = 4;
+  kApplicationDescription = 5;
+}
+
+enum GpPairingConfigurationOptionCommunicationMode : enum8 {
+  kUnicastForwarding = 0;
+  kGroupcastForwardingToDGroupID = 8;
+  kGroupcastForwardingToPreCommissioned = 16;
+  kUnicastForwardingLightweight = 24;
+}
+
+enum GpPairingOptionsCommunicationMode : enum8 {
+  kFullUnicastForwarding = 0;
+  kGroupcastForwardingToDGroupId = 1;
+  kGroupcastForwardingToPreCommUnit = 16;
+  kUnicastForwardingByProxSupport = 17;
+}
+
+enum GpProxyTableRequestOptionsRequestType : enum8 {
+  kByGpdId = 0;
+  kByIndex = 1;
+}
+
+enum GpProxyTableResponseStatus : enum8 {
+  kSUCCESS = 0 [spec_name = "SUCCESS"];
+  kNOTFOUND = 139 [spec_name = "NOT_FOUND"];
+}
+
+enum GpSecurityKeyType : enum8 {
+  kNone = 0;
+  kZigbeeNetworkKey = 1;
+  kGpdGroupKey = 2;
+  kNetworkDerivedGroupKey = 3;
+  kIndividigualGpdKey = 4;
+  kDerivedIndividualGpdKey = 7;
+}
+
+enum GpSinkTableRequestOptions : enum8 {
+  kRequestTableEntriesByGpdId = 0;
+  kRequestTableEntriesByIndex = 1;
+}
+
+enum GpSinkTableResponseStatus : enum8 {
+  kSUCCESS = 0 [spec_name = "SUCCESS"];
+  kNOTFOUND = 139 [spec_name = "NOT_FOUND"];
+}
+
+enum GpTranslationTableResponseStatus : enum8 {
+  kSUCCESS = 0 [spec_name = "SUCCESS"];
+  kNOTFOUND = 139 [spec_name = "NOT_FOUND"];
+}
+
+enum GpTranslationTableUpdateAction : enum8 {
+  kAddTranslationTableEntry = 0;
+  kReplaceTranslationTableEntry = 8;
+  kRemoveTranslationTableEntry = 16;
+  kReserved = 24;
+}
+
+enum HeatAndCoolingSpecificAlarmGroups : enum8 {
+  kInletTemperatureSensorFault = 80;
+  kOutletTemperatureSensorFault = 81;
+}
+
+enum HueDirection : enum8 {
+  kShortestDistance = 0;
+  kLongestDistance = 1;
+  kUp = 2;
+  kDown = 3;
+}
+
+enum HueMoveMode : enum8 {
+  kStop = 0;
+  kUp = 1;
+  kDown = 3;
+}
+
+enum HueStepMode : enum8 {
+  kUp = 1;
+  kDown = 3;
+}
+
+enum IasAceAlarmStatus : enum8 {
+  kNoAlarm = 0;
+  kBurglar = 1;
+  kFire = 2;
+  kEmergency = 3;
+  kPolicePanic = 4;
+  kFirePanic = 5;
+  kEmergencyPanic = 6;
+}
+
+enum IasAceArmMode : enum8 {
+  kDisarm = 0;
+  kArmDayHomeZonesOnly = 1;
+  kArmNightSleepZonesOnly = 2;
+  kArmAllZones = 3;
+}
+
+enum IasAceArmNotification : enum8 {
+  kAllZonesDisarmed = 0;
+  kOnlyDayHomeZonesArmed = 1;
+  kOnlyNightSleepZonesArmed = 2;
+  kAllZonesArmed = 3;
+  kInvalidArmDisarmCode = 4;
+  kNotReadyToArm = 5;
+  kAlreadyDisarmed = 6;
+}
+
+enum IasAceAudibleNotification : enum8 {
+  kMute = 0;
+  kDefaultSound = 1;
+}
+
+enum IasAceBypassResult : enum8 {
+  kZoneBypassed = 0;
+  kZoneNotBypassed = 1;
+  kNotAllowed = 2;
+  kInvalidZoneId = 3;
+  kUnknownZoneId = 4;
+  kInvalidArmDisarmCode = 5;
+}
+
+enum IasAcePanelStatus : enum8 {
+  kPanelDisarmed = 0;
+  kArmedStay = 1;
+  kArmedNight = 2;
+  kArmedAway = 3;
+  kExitDelay = 4;
+  kEntryDelay = 5;
+  kNotReadyToArm = 6;
+  kInAlarm = 7;
+  kArmingStay = 8;
+  kArmingNight = 9;
+  kArmingAway = 10;
+}
+
+enum IasEnrollResponseCode : enum8 {
+  kSuccess = 0;
+  kNotSupported = 1;
+  kNoEnrollPermit = 2;
+  kTooManyZones = 3;
+}
+
+enum IasZoneState : enum8 {
+  kNotEnrolled = 0;
+  kEnrolled = 1;
+}
+
+enum IasZoneType : enum16 {
+  kStandardCie = 0;
+  kMotionSensor = 13;
+  kContactSwitch = 21;
+  kFireSensor = 40;
+  kWaterSensor = 42;
+  kGasSensor = 43;
+  kPersonalEmergencyDevice = 44;
+  kVibrationMovementSensor = 45;
+  kRemoteControl = 271;
+  kKeyFob = 277;
+  kKeypad = 541;
+  kStandardWarningDevice = 549;
+  kGlassBreakSensor = 550;
+  kCarbonMonoxideSensor = 551;
+  kSecurityRepeater = 553;
+  kInvalidZoneType = 65535;
+}
+
+enum IdentifyEffectIdentifier : enum8 {
+  kBlink = 0;
+  kBreathe = 1;
+  kOkay = 2;
+  kChannelChange = 11;
+  kFinishEffect = 254;
+  kStopEffect = 255;
+}
+
+enum IdentifyEffectVariant : enum8 {
+  kDefault = 0;
+}
+
+enum KeyIndex : enum8 {
+  kDevelopment = 0;
+  kMaster = 4;
+  kCertification = 15;
+}
+
+enum KeypadLockout : enum8 {
+  kNoLockout = 0;
+  kLevelOneLockout = 1;
+  kLevelTwoLockout = 2;
+  kLevelThreeLockout = 3;
+  kLevelFourLockout = 4;
+  kLevelfiveLockout = 5;
+}
+
+enum LevelControlOptions : enum8 {
+  kExecuteIfOff = 1;
+  kCoupleColorTempToLevel = 2;
+}
+
+enum LevelStatus : enum8 {
+  kOnTarget = 0;
+  kBelowTarget = 1;
+  kAboveTarget = 2;
+}
+
+enum LocationMethod : enum8 {
+  kLateration = 0;
+  kSignposting = 1;
+  kRfFingerprinting = 2;
+  kOutOfBand = 3;
+}
+
+enum ManufacturerSpecificAlarmGroups : enum8 {
+  kManufacturerSpecificA = 176;
+  kManufacturerSpecificB = 177;
+  kManufacturerSpecificC = 178;
+  kManufacturerSpecificD = 179;
+  kManufacturerSpecificE = 180;
+  kManufacturerSpecificF = 181;
+  kManufacturerSpecificG = 182;
+  kManufacturerSpecificH = 183;
+  kManufacturerSpecificI = 184;
+}
+
+enum MeasurementLightSensorType : enum8 {
+  kPhotodiode = 0;
+  kCMOS = 1 [spec_name = "CMOS"];
+}
+
+enum MessagingControlConfirmation : enum8 {
+  kNotRequired = 0;
+  kRequired = 128;
+}
+
+enum MessagingControlEnhancedConfirmation : enum8 {
+  kNotRequired = 0;
+  kRequired = 32;
+}
+
+enum MessagingControlImportance : enum8 {
+  kLow = 0;
+  kMedium = 4;
+  kHigh = 8;
+  kCritical = 12;
+}
+
+enum MessagingControlTransmission : enum8 {
+  kNormal = 0;
+  kNormalAndAnonymous = 1;
+  kAnonymous = 2;
+  kReserved = 3;
+}
+
+enum MeterDeviceType : enum8 {
+  kElectricMeter = 0;
+  kGasMeter = 1;
+  kWaterMeter = 2;
+  kThermalMeter = 3;
+  kPressureMeter = 4;
+  kHeatMeter = 5;
+  kCoolingMeter = 6;
+  kMirroredGasMeter = 128;
+  kMirroredWaterMeter = 129;
+  kMirroredThermalMeter = 130;
+  kMirroredPressureMeter = 131;
+  kMirroredHeatMeter = 132;
+  kMirroredCoolingMeter = 133;
+  kUndefinedMirrorMeter = 254;
+}
+
+enum MeterTypeId : enum16 {
+  kUtilityPrimaryMeter = 0;
+  kUtilityProductionMeter = 1;
+  kUtilitySecondaryMeter = 2;
+  kPrivatePrimaryMeter = 256;
+  kPrivateProductionMeter = 257;
+  kPrivateSecondaryMeters = 258;
+  kGenericMeter = 272;
+}
+
+enum MeteringAlarmCode : enum8 {
+  kCheckMeter = 0;
+  kLowBattery = 1;
+  kTamperDetect = 2;
+  kPowerFailurePipeEmptyTemperatureSensor = 3;
+  kPowerQualityLowPressureBurstDetect = 4;
+  kLeakDetect = 5;
+  kServiceDisconnect = 6;
+  kReverseFlowFlowSensor = 7;
+  kMeterCoverRemoved = 8;
+  kMeterCoverClosed = 9;
+  kStrongMagneticField = 10;
+  kNoStrongMagneticField = 11;
+  kBatteryFailure = 12;
+  kProgramMemoryError = 13;
+  kRAMError = 14;
+  kNVMemoryError = 15;
+  kLowVoltageL1 = 16;
+  kHighVoltageL1 = 17;
+  kLowVoltageL2 = 18;
+  kHighVoltageL2 = 19;
+  kLowVoltageL3 = 20;
+  kHighVoltageL3 = 21;
+  kOverCurrentL1 = 22;
+  kOverCurrentL2 = 23;
+  kOverCurrentL3 = 24;
+  kFrequencyTooLowL1 = 25;
+  kFrequencyTooHighL1 = 26;
+  kFrequencyTooLowL2 = 27;
+  kFrequencyTooHighL2 = 28;
+  kFrequencyTooLowL3 = 29;
+  kFrequencyTooHighL3 = 30;
+  kGroundFault = 31;
+  kElectricTamperDetect = 32;
+  kIncorrectPolarity = 33;
+  kCurrentNoVoltage = 34;
+  kUnderVoltage = 35;
+  kOverVoltage = 36;
+  kNormalVoltage = 37;
+  kPFBelowThreshold = 38;
+  kPFAboveThreshold = 39;
+  kTerminalCoverRemoved = 40;
+  kTerminalCoverClosed = 41;
+  kBurstDetect = 48;
+  kPressureTooLow = 49;
+  kPressureTooHigh = 50;
+  kFlowSensorCommunicationError = 51;
+  kFlowSensorMeasurementFault = 52;
+  kFlowSensorReverseFlow = 53;
+  kFlowSensorAirDetect = 54;
+  kPipeEmpty = 55;
+  kInletTemperatureSensorFault = 80;
+  kOutletTemperatureSensorFault = 81;
+  kTiltTamper = 96;
+  kBatteryCoverRemoved = 97;
+  kBatteryCoverClosed = 98;
+  kExcessFlow = 99;
+  kTiltTamperEnded = 100;
+  kMeasurementSystemError = 112;
+  kWatchdogError = 113;
+  kSupplyDisconnectFailure = 114;
+  kSupplyConnectFailure = 115;
+  kMeasurmentSoftwareChanged = 116;
+  kDstEnabled = 117;
+  kDstDisabled = 118;
+  kClockAdjBackward = 119;
+  kClockAdjForward = 120;
+  kClockInvalid = 121;
+  kCommunicationErrorHan = 122;
+  kCommunicationOkHAn = 123;
+  kMeterFraudAttempt = 124;
+  kPowerLoss = 125;
+  kUnusualHanTraffic = 126;
+  kUnexpectedClockChange = 127;
+  kCommsUsingUnauthenticatedComponent = 128;
+  kErrorRegClear = 129;
+  kAlarmRegClear = 130;
+  kUnexpectedHwReset = 131;
+  kUnexpectedProgramExecution = 132;
+  kEventLogCleared = 133;
+  kLimitThresholdExceeded = 134;
+  kLimitThresholdOk = 135;
+  kLimitThresholdChanged = 136;
+  kMaximumDemandExceeded = 137;
+  kProfileCleared = 138;
+  kSamplingBuffercleared = 139;
+  kBatteryWarning = 140;
+  kWrongSignature = 141;
+  kNoSignature = 142;
+  kUnauthorisedActionfromHan = 143;
+  kFastPollingStart = 144;
+  kFastPollingEnd = 145;
+  kMeterReportingIntervalChanged = 146;
+  kDisconnectDuetoLoadLimit = 147;
+  kMeterSupplyStatusRegisterChanged = 148;
+  kMeterAlarmStatusRegisterChanged = 149;
+  kExtendedMeterAlarmStatusRegisterChanged = 150;
+  kManufacturerSpecificA = 176;
+  kManufacturerSpecificB = 177;
+  kManufacturerSpecificC = 178;
+  kManufacturerSpecificD = 179;
+  kManufacturerSpecificE = 180;
+  kManufacturerSpecificF = 181;
+  kManufacturerSpecificG = 182;
+  kManufacturerSpecificH = 183;
+  kManufacturerSpecificI = 184;
+}
+
+enum MeteringBlockEnumerations : enum8 {
+  kNoBlocksInUse = 0;
+  kBlock1 = 1;
+  kBlock2 = 2;
+  kBlock3 = 3;
+  kBlock4 = 4;
+  kBlock5 = 5;
+  kBlock6 = 6;
+  kBlock7 = 7;
+  kBlock8 = 8;
+  kBlock9 = 9;
+  kBlock10 = 10;
+  kBlock11 = 11;
+  kBlock12 = 12;
+  kBlock13 = 13;
+  kBlock14 = 14;
+  kBlock15 = 15;
+  kBlock16 = 16;
+}
+
+enum MeteringConsumptionStatus : enum8 {
+  kLowEnergyUsage = 0;
+  kMediumEnergyUsage = 1;
+  kHighEnergyUsage = 2;
+}
+
+enum MeteringDeviceType : enum8 {
+  kElectricMetering = 0;
+  kGasMetering = 1;
+  kWaterMetering = 2;
+  kThermalMetering = 3;
+  kPressureMetering = 4;
+  kHeatMetering = 5;
+  kCoolingMetering = 6;
+  kElectricVehicleChargingMetering = 7;
+  kPvGenerationMetering = 8;
+  kWindTurbineGenerationMetering = 9;
+  kWaterTurbineGenerationMetering = 10;
+  kMicroGenerationMetering = 11;
+  kSolarHotWaterGenerationMetering = 12;
+  kElectricMeteringElement1 = 13;
+  kElectricMeteringElement2 = 14;
+  kElectricMeteringElement3 = 15;
+  kMirroredElectricMetering = 127;
+  kMirroredGasMetering = 128;
+  kMirroredWaterMetering = 129;
+  kMirroredThermalMetering = 130;
+  kMirroredPressureMetering = 131;
+  kMirroredHeatMetering = 132;
+  kMirroredCoolingMetering = 133;
+  kMirroredElectricVehicleChargingMetering = 134;
+  kMirroredPvGenerationMetering = 135;
+  kMirroredWindTurbineGenerationMetering = 136;
+  kMirroredWaterTurbineGenerationMetering = 137;
+  kMirroredMicroGenerationMetering = 138;
+  kMirroredSolarHotWaterGenerationMetering = 139;
+  kMirroredElectricMeteringElement1 = 140;
+  kMirroredElectricMeteringElement2 = 141;
+  kMirroredElectricMeteringElement3 = 142;
+  kUndefinedMirrorMeter = 254;
+}
+
+enum MeteringSupplyStatus : enum8 {
+  kSupplyOff = 0;
+  kSupplyOffArmed = 1;
+  kSupplyOn = 2;
+}
+
+enum MeteringTemperatureUnitOfMeasure : enum8 {
+  kKelvin = 0;
+  kCelsius = 1;
+  kFahrenheit = 2;
+  kKelvinBcd = 128;
+  kCelsiusBcd = 129;
+  kFahrenheitBcd = 130;
+}
+
+enum MoveMode : enum8 {
+  kUp = 0;
+  kDown = 1;
+}
+
+enum NotificationScheme : enum8 {
+  kNoNotificationSchemeDefined = 0;
+  kPredefinedNotificationSchemeA = 1;
+  kPredefinedNotificationSchemeB = 2;
+}
+
+enum OccupancySensorType : enum8 {
+  kPIR = 0 [spec_name = "PIR"];
+  kUltrasonic = 1;
+  kPirAndUltrasonic = 2;
+  kPhysicalContact = 3;
+}
+
+enum OnOffDelayedAllOffEffectVariant : enum8 {
+  kFadeToOffIn0p8Seconds = 0;
+  kNoFade = 1;
+  k50PercentDimDownIn0p8SecondsThenFadeToOffIn12Seconds = 2;
+}
+
+enum OnOffDyingLightEffectVariant : enum8 {
+  k20PercenterDimUpIn0p5SecondsThenFadeToOffIn1Second = 0;
+}
+
+enum OnOffEffectIdentifier : enum8 {
+  kDelayedAllOff = 0;
+  kDyingLight = 1;
+}
+
+enum OperatingMode : enum8 {
+  kNormal = 0;
+  kConfigure = 1;
+}
+
+enum OriginatingDevice : enum8 {
+  kEnergyServiceInterface = 0;
+  kMeter = 1;
+  kInHomeDisplayDevice = 2;
+}
+
+enum PasswordType : enum8 {
+  kPassword1ServiceMenuAccess = 1;
+  kPassword2ConsumerMenuAccess = 2;
+  kPassword3 = 3;
+  kPassword4 = 4;
+}
+
+enum PaymentDiscountDuration : enum8 {
+  kCurrentBillingPeriod = 0;
+  kCurrentConsolidatedBill = 1;
+  kOneMonth = 2;
+  kOneQuarter = 3;
+  kOneYear = 4;
+}
+
+enum PhysicalEnvironment : enum8 {
+  kUnspecified = 0;
+  kFirstProfileSpecifiedValue = 1;
+  kLastProfileSpecifiedValue = 127;
+  kUnknown = 255;
+}
+
+enum PowerProfileState : enum8 {
+  kPowerProfileWaitingToStart = 1;
+  kPowerProfileStarted = 2;
+  kEnergyPhaseRunning = 3;
+  kEnergyPhaseEnded = 4;
+  kEnergyPhaseWaitingToStart = 5;
+  kEnergyPhaseStarted = 6;
+  kPowerProfileEnded = 7;
+  kProfileReadyForScheduling = 8;
+  kPowerProfileScheduled = 9;
+}
+
+enum PowerSource : enum8 {
+  kUnknown = 0;
+  kSinglePhaseMains = 1;
+  kThreePhaseMains = 2;
+  kBattery = 3;
+  kDcSource = 4;
+  kEmergencyMainsConstantPower = 5;
+  kEmergencyMainsTransferSwitch = 6;
+  kBatteryBackup = 128;
+}
+
+enum PrePayGenericAlarmGroup : enum8 {
+  kLowCredit = 0;
+  kNoCredit = 1;
+  kCreditExhausted = 2;
+  kEmergencyCreditEnabled = 3;
+  kEmergencyCreditExhausted = 4;
+  kIhdLowCreditWarning = 5;
+  kEventLogCleared = 6;
+}
+
+enum PrepayEventAlarmGroup : enum8 {
+  kPhysicalAttackOnThePrepayMeter = 32;
+  kElectronicAttackOnThePrepayMeter = 33;
+  kDiscountApplied = 34;
+  kCreditAdjustment = 35;
+  kCreditAdjustmentFail = 36;
+  kDebtAdjustment = 37;
+  kDebtAdjustmentFail = 38;
+  kModeChange = 39;
+  kTopupCodeError = 40;
+  kTopupAlreadyUsed = 41;
+  kTopupCodeInvalid = 42;
+  kFriendlyCreditInUse = 43;
+  kFriendlyCreditPeriodEndWarning = 44;
+  kFriendlyCreditPeriodEnd = 45;
+  kErrorRegClear = 48;
+  kAlarmRegClear = 49;
+  kPrepayClusterNotFound = 50;
+  kModeCredit2Prepay = 65;
+  kModePrepay2Credit = 66;
+  kModeDefault = 67;
+}
+
+enum PrepaySnapshotPayloadType : enum8 {
+  kDebtCreditStatus = 0;
+  kNotUsed = 255;
+}
+
+enum PrepaySwitchAlarmGroup : enum8 {
+  kSupplyOn = 16;
+  kSupplyArm = 17;
+  kSupplyOff = 18;
+  kDisconnectionFailure = 19;
+  kDisconnectedDueToTamperDetected = 20;
+  kDisconnectedDueToCutOffValue = 21;
+  kRemoteDisconnected = 22;
+}
+
+enum PriceControlAcknowledgement : enum8 {
+  kNotRequired = 0;
+  kRequired = 1;
+}
+
+enum PriceTier : enum8 {
+  kNoTierRelated = 0;
+  kTier1PriceLabel = 1;
+  kTier2PriceLabel = 2;
+  kTier3PriceLabel = 3;
+  kTier4PriceLabel = 4;
+  kTier5PriceLabel = 5;
+  kTier6PriceLabel = 6;
+  kTier7PriceLabel = 7;
+  kTier8PriceLabel = 8;
+  kTier9PriceLabel = 9;
+  kTier10PriceLabel = 10;
+  kTier11PriceLabel = 11;
+  kTier12PriceLabel = 12;
+  kTier13PriceLabel = 13;
+  kTier14PriceLabel = 14;
+  kReferToExtendedPriceTierField = 15;
+  kTier15PriceLabel = 15;
+}
+
+enum ProductCode : enum8 {
+  kManufacturerDefined = 0;
+  kIternationalArticleNumber = 1;
+  kGlobalTradeItemNumber = 2;
+  kUniversalProductCode = 3;
+  kStockKeepingUnit = 4;
+}
+
+enum ProductTypeId : enum16 {
+  kWhiteGoods = 0;
+  kDishwasher = 22017;
+  kTumbleDryer = 22018;
+  kWasherDryer = 22019;
+  kWashingMachine = 22020;
+  kHobs = 24067;
+  kInductionHobs = 24073;
+  kOven = 24065;
+  kElectricalOven = 24070;
+  kRefrigeratorFreezer = 26113;
+}
+
+enum ProposedSupplyStatus : enum8 {
+  kReserved = 0;
+  kSupplyOffArmed = 1;
+  kSupplyOn = 2;
+}
+
+enum PublishCppEventCppAuth : enum8 {
+  kPending = 0;
+  kAccepted = 1;
+  kRejected = 2;
+  kForced = 3;
+}
+
+enum PumpControlMode : enum8 {
+  kConstantSpeed = 0;
+  kConstantPressure = 1;
+  kProportionalPressure = 2;
+  kConstantFlow = 3;
+  kConstantTemperature = 5;
+  kAutomatic = 7;
+}
+
+enum PumpOperationMode : enum8 {
+  kNormal = 0;
+  kMinimum = 1;
+  kMaximum = 2;
+  kLocal = 3;
+}
+
+enum PushHistoricalMeteringData : enum16 {
+  kDay = 64;
+  kWeek = 128;
+  kMonth = 384;
+  kYear = 448;
+}
+
+enum PushHistoricalPaymentData : enum16 {
+  kDay = 512;
+  kWeek = 1024;
+  kMonth = 3072;
+  kYear = 3584;
+}
+
+enum RegisterTier : enum8 {
+  kNoTierRelated = 0;
+  kCurrentTier1SummationDeliveredAttribute = 1;
+  kCurrentTier2SummationDeliveredAttribute = 2;
+  kCurrentTier3SummationDeliveredAttribute = 3;
+  kCurrentTier4SummationDeliveredAttribute = 4;
+  kCurrentTier5SummationDeliveredAttribute = 5;
+  kCurrentTier6SummationDeliveredAttribute = 6;
+  kCurrentTier7SummationDeliveredAttribute = 7;
+  kCurrentTier8SummationDeliveredAttribute = 8;
+  kCurrentTier9SummationDeliveredAttribute = 9;
+  kCurrentTier10SummationDeliveredAttribute = 10;
+  kCurrentTier11SummationDeliveredAttribute = 11;
+  kCurrentTier12SummationDeliveredAttribute = 12;
+  kCurrentTier13SummationDeliveredAttribute = 13;
+  kCurrentTier14SummationDeliveredAttribute = 14;
+  kReferToExtendedRegisterTierField = 15;
+  kCurrentTier15SummationDeliveredAttribute = 15;
+}
+
+enum RelativeHumidityDisplay : enum8 {
+  kNotDisplayed = 0;
+  kDisplayed = 1;
+}
+
+enum RelativeHumidityMode : enum8 {
+  kMeasureLocally = 0;
+  kUpdatedOverTheNetwork = 1;
+}
+
+enum RemoteEnableFlags : enum8 {
+  kDisabled = 0;
+  kTemporarilyLockedDisabled = 7;
+  kEnabledRemoteControl = 15;
+  kEnabledRemoteAndEnergyControl = 1;
+}
+
+enum RepaymentDebtType : enum8 {
+  kDebt1 = 0;
+  kDebt2 = 1;
+  kDebt3 = 2;
+  kAllDebts = 255;
+}
+
+enum ReportingDirection : enum8 {
+  kReported = 0;
+  kReceived = 1;
+}
+
+enum ResultType : enum8 {
+  kAccepted = 0;
+  kRejectedInvalidTopUp = 1;
+  kRejectedDuplicateTopUp = 2;
+  kRejectedError = 3;
+  kRejectedMaxCreditReached = 4;
+  kRejectedKeypadLock = 5;
+  kRejectedTopUpValueTooLarge = 6;
+  kAcceptedSupplyEnabled = 16;
+  kAcceptedSupplyDisabled = 17;
+  kAcceptedSupplyArmed = 18;
+}
+
+enum SampleType : enum8 {
+  kConsumptionDelivered = 0;
+}
+
+enum SaturationMoveMode : enum8 {
+  kStop = 0;
+  kUp = 1;
+  kDown = 3;
+}
+
+enum SaturationStepMode : enum8 {
+  kUp = 1;
+  kDown = 3;
+}
+
+enum SensingLightSensorType : enum8 {
+  kPhotodiode = 0;
+  kCMOS = 1 [spec_name = "CMOS"];
+}
+
+enum SetpointAdjustMode : enum8 {
+  kHeatSetpoint = 0;
+  kCoolSetpoint = 1;
+  kHeatAndCoolSetpoints = 2;
+}
+
+enum SignatureType : enum8 {
+  kReserved = 0;
+  kECDSA = 1 [spec_name = "ECDSA"];
+}
+
+enum SnapshotConfirmation : enum8 {
+  kAccepted = 0;
+  kSnapshotCauseNotSupported = 1;
+}
+
+enum SnapshotPayloadType : enum8 {
+  kTouInformationSetDeliveredRegisters = 0;
+  kTouInformationSetReceivedRegisters = 1;
+  kBlockTierInformationSetDelivered = 2;
+  kBlockTierInformationSetReceived = 3;
+  kTouInformationSetDeliveredRegistersNoBilling = 4;
+  kTouInformationSetReceivedRegisterNoBillings = 5;
+  kBlockTierInformationSetDeliveredNoBilling = 6;
+  kBlockTierInformationSetReceivedNoBilling = 7;
+  kDataUnavailable = 128;
+}
+
+enum SnapshotScheduleConfirmation : enum8 {
+  kAccepted = 0;
+  kSnapshotTypeNotSupported = 1;
+  kSnapshotCauseNotSupported = 2;
+  kSnapshotScheduleNotCurrentlyAvailable = 3;
+  kSnapshotSchedulesNotSupportedByDevice = 4;
+  kInsufficientSpaceForSnapshotSchedule = 5;
+}
+
+enum SquawkLevel : enum8 {
+  kLowLevel = 0;
+  kMediumLevel = 1;
+  kHighLevel = 2;
+  kVeryHighLevel = 2;
+}
+
+enum SquawkMode : enum8 {
+  kSystemIsArmed = 0;
+  kSystemIsDisarmed = 1;
+}
+
+enum SquawkStobe : enum8 {
+  kNoStrobe = 0;
+  kUseStrobe = 1;
+}
+
+enum StartOfWeek : enum8 {
+  kSunday = 0;
+  kMonday = 1;
+  kTuesday = 2;
+  kWednesday = 3;
+  kThursday = 4;
+  kFriday = 5;
+  kSaturday = 6;
+}
+
+enum StartUpOnOffValue : enum8 {
+  kSetToOff = 0;
+  kSetToOn = 1;
+  kSetToToggle = 2;
+  kSetToPrevious = 255;
+}
+
+enum Status : enum8 {
+  kSUCCESS = 0 [spec_name = "SUCCESS"];
+  kFAILURE = 1 [spec_name = "FAILURE"];
+  kNOTAUTHORIZED = 126 [spec_name = "NOT_AUTHORIZED"];
+  kMALFORMEDCOMMAND = 128 [spec_name = "MALFORMED_COMMAND"];
+  kUNSUPCOMMAND = 129 [spec_name = "UNSUP_COMMAND"];
+  kUNSUPGENERALCOMMAND = 130 [spec_name = "UNSUP_GENERAL_COMMAND"];
+  kUNSUPMANUFCLUSTERCOMMAND = 131 [spec_name = "UNSUP_MANUF_CLUSTER_COMMAND"];
+  kUNSUPMANUFGENERALCOMMAND = 132 [spec_name = "UNSUP_MANUF_GENERAL_COMMAND"];
+  kINVALIDFIELD = 133 [spec_name = "INVALID_FIELD"];
+  kUNSUPPORTEDATTRIBUTE = 134 [spec_name = "UNSUPPORTED_ATTRIBUTE"];
+  kINVALIDVALUE = 135 [spec_name = "INVALID_VALUE"];
+  kREADONLY = 136 [spec_name = "READ_ONLY"];
+  kINSUFFICIENTSPACE = 137 [spec_name = "INSUFFICIENT_SPACE"];
+  kDUPLICATEEXISTS = 138 [spec_name = "DUPLICATE_EXISTS"];
+  kNOTFOUND = 139 [spec_name = "NOT_FOUND"];
+  kUNREPORTABLEATTRIBUTE = 140 [spec_name = "UNREPORTABLE_ATTRIBUTE"];
+  kINVALIDDATATYPE = 141 [spec_name = "INVALID_DATA_TYPE"];
+  kINVALIDSELECTOR = 142 [spec_name = "INVALID_SELECTOR"];
+  kWRITEONLY = 143 [spec_name = "WRITE_ONLY"];
+  kINCONSISTENTSTARTUPSTATE = 144 [spec_name = "INCONSISTENT_STARTUP_STATE"];
+  kDEFINEDOUTOFBAND = 145 [spec_name = "DEFINED_OUT_OF_BAND"];
+  kACTIONDENIED = 147 [spec_name = "ACTION_DENIED"];
+  kTIMEOUT = 148 [spec_name = "TIMEOUT"];
+  kABORT = 149 [spec_name = "ABORT"];
+  kINVALIDIMAGE = 150 [spec_name = "INVALID_IMAGE"];
+  kWAITFORDATA = 151 [spec_name = "WAIT_FOR_DATA"];
+  kNOIMAGEAVAILABLE = 152 [spec_name = "NO_IMAGE_AVAILABLE"];
+  kREQUIREMOREIMAGE = 153 [spec_name = "REQUIRE_MORE_IMAGE"];
+  kNOTIFICATIONPENDING = 154 [spec_name = "NOTIFICATION_PENDING"];
+  kHARDWAREFAILURE = 192 [spec_name = "HARDWARE_FAILURE"];
+  kSOFTWAREFAILURE = 193 [spec_name = "SOFTWARE_FAILURE"];
+  kUNSUPPORTEDCLUSTER = 195 [spec_name = "UNSUPPORTED_CLUSTER"];
+  kLIMITREACHED = 196 [spec_name = "LIMIT_REACHED"];
+}
+
+enum StepMode : enum8 {
+  kUp = 0;
+  kDown = 1;
+}
+
+enum SupplyStatus : enum8 {
+  kSupplyOff = 0;
+  kSupplyOffArmed = 1;
+  kSupplyOn = 2;
+  kSupplyUnchanged = 3;
+}
+
+enum SwitchActions : enum8 {
+  kOn = 0;
+  kOff = 1;
+  kToggle = 2;
+}
+
+enum SwitchType : enum8 {
+  kToggle = 0;
+  kMomentary = 1;
+  kMultiFunction = 2;
+}
+
+enum TariffChargingScheme : enum8 {
+  kTouTariff = 0;
+  kBlockTariff = 16;
+  kBlockTouTariffWithCommonThresholds = 32;
+  kBlockTouTariffWithIndividualThresholdsPerTier = 48;
+}
+
+enum TariffResolutionPeriod : enum8 {
+  kNotDefined = 0;
+  kBlockPeriod = 1;
+  kOneDay = 2;
+}
+
+enum TariffType : enum8 {
+  kDeliveredTariff = 0;
+  kReceivedTariff = 1;
+  kDeliveredAndReceivedTariff = 2;
+}
+
+enum TemperatureDisplayMode : enum8 {
+  kCelsius = 0;
+  kFahrenheit = 1;
+}
+
+enum TemperatureSetpointHold : enum8 {
+  kSetpointHoldOff = 0;
+  kSetpointHoldOn = 1;
+}
+
+enum ThermostatControlSequence : enum8 {
+  kCoolingOnly = 0;
+  kCoolingWithReheat = 1;
+  kHeatingOnly = 2;
+  kHeatingWithReheat = 3;
+  kCoolingAndHeating = 4;
+  kCoolingAndHeatingWithReheat = 5;
+}
+
+enum ThermostatRunningMode : enum8 {
+  kOff = 0;
+  kCool = 3;
+  kHeat = 4;
+}
+
+enum ThermostatSystemMode : enum8 {
+  kOff = 0;
+  kAuto = 1;
+  kCool = 3;
+  kHeat = 4;
+  kEmergencyHeating = 5;
+  kPrecooling = 6;
+  kFanOnly = 7;
+  kDry = 8;
+  kSleep = 9;
+}
+
+enum TierBlockMode : enum8 {
+  kActiveBlock = 0;
+  kActiveBlockPriceTier = 1;
+  kActiveBlockPriceTierThreshold = 2;
+  kNotUsed = 255;
+}
+
+enum TimeEncoding : enum8 {
+  kRelative = 0;
+  kAbsolute = 64;
+}
+
+enum TunnelingProtocolId : enum8 {
+  kDLMSCOSEM = 0 [spec_name = "DLMS_COSEM"];
+  kIEC61107 = 1 [spec_name = "IEC_61107"];
+  kANSIC12 = 2 [spec_name = "ANSI_C12"];
+  kMBUS = 3 [spec_name = "M_BUS"];
+  kSML = 4 [spec_name = "SML"];
+  kClimateTalk = 5;
+  kGBHRGP = 6 [spec_name = "GB_HRGP"];
+  kIPV4 = 7 [spec_name = "IP_V4"];
+  kIPV6 = 8 [spec_name = "IP_V6"];
+  kTest = 199;
+}
+
+enum TunnelingTransferDataStatus : enum8 {
+  kNoSuchTunnel = 0;
+  kWrongDevice = 1;
+  kDataOverflow = 2;
+}
+
+enum TunnelingTunnelStatus : enum8 {
+  kSuccess = 0;
+  kBusy = 1;
+  kNoMoreTunnelIds = 2;
+  kProtocolNotSupported = 3;
+  kFlowControlNotSupported = 4;
+}
+
+enum WanStatus : enum8 {
+  kConnectionToWanIsNotAvailable = 0;
+  kConnectionToWanIsAvailable = 1;
+}
+
+enum WarningEvent : enum8 {
+  kWarning1OverallPowerAboveAvailablePowerLevel = 0;
+  kWarning2OverallPowerAbovePowerThresholdLevel = 1;
+  kWarning3OverallPowerBackBelowTheAvailablePowerLevel = 2;
+  kWarning4OverallPowerBackBelowThePowerThresholdLevel = 3;
+  kWarning5OverallPowerWillBePotentiallyAboveAvailablePowerLevelIfTheApplianceStarts = 4;
+}
+
+enum WarningMode : enum8 {
+  kStop = 0;
+  kBurglar = 1;
+  kFire = 2;
+  kEmergency = 3;
+  kPolicePanic = 4;
+  kFirePanic = 5;
+  kEmergencyPanic = 6;
+}
+
+enum WarningStobe : enum8 {
+  kNoStrobe = 0;
+  kUseStrobe = 1;
+}
+
+enum WwahIasZoneEnrollmentMode : enum8 {
+  kTripToPair = 0;
+  kAutoEnrollmentResponse = 1;
+  kRequest = 2;
+}
+
+enum WwahPowerNotificationReason : enum8 {
+  kUnknown = 0;
+  kBattery = 1;
+  kBrownout = 2;
+  kWatchdog = 3;
+  kResetPin = 4;
+  kMemoryHardwareFault = 5;
+  kSofwareException = 6;
+  kOtaBootloadSuccess = 7;
+  kSoftwareReset = 8;
+  kPowerButton = 9;
+  kTemperature = 10;
+  kBootloadFailure = 11;
+}
+
+enum ZigbeeInformationLogicalType : enum8 {
+  kCoordinator = 0;
+  kRouter = 1;
+  kEndDevice = 2;
+}
+
+enum ZllStatus : enum8 {
+  kSuccess = 0;
+  kFailure = 1;
+}
+
+bitmap AlarmMask : bitmap8 {
+  kGeneralHwFault = 0x1;
+  kGeneralSwFault = 0x2;
+}
+
+bitmap AlertCount : bitmap8 {
+  kNumberOfAlerts = 0xF;
+  kTypeOfAlert = 0xF0;
+}
+
+bitmap AlertStructure : bitmap24 {
+  kAlertId = 0xFF;
+  kCategory = 0xF00;
+  kPresenceRecovery = 0x3000;
+}
+
+bitmap AlternateCostTrailingDigit : bitmap8 {
+  kTrailingDigit = 0xF0;
+}
+
+bitmap AmiCancelControl : bitmap8 {
+  kTerminateWithRandomization = 0x1;
+}
+
+bitmap AmiCommandOptions : bitmap8 {
+  kRequestRxOnWhenIdle = 0x1;
+}
+
+bitmap AmiDeviceClass : bitmap16 {
+  kHvacCompressorOrFurnace = 0x1;
+  kStripHeatBaseboardHeat = 0x2;
+  kWaterHeater = 0x4;
+  kPoolPumpSpaJacuzzi = 0x8;
+  kSmartAppliances = 0x10;
+  kIrrigationPump = 0x20;
+  kManagedCAndILoads = 0x40;
+  kSimpleMiscLoads = 0x80;
+  kExteriorLighting = 0x100;
+  kInteriorLighting = 0x200;
+  kElectricVehicle = 0x400;
+  kGenerationSystems = 0x800;
+}
+
+bitmap AmiEventControl : bitmap8 {
+  kRandomizedStartTime = 0x1;
+  kRandomizedEndTime = 0x2;
+}
+
+bitmap AmiMeterStatus : bitmap8 {
+  kCheckMeter = 0x1;
+  kLowBattery = 0x2;
+  kTamperDetect = 0x4;
+  kPowerFailure = 0x8;
+  kPowerQuality = 0x10;
+  kLeakDetect = 0x20;
+  kServiceDisconnectOpen = 0x40;
+  kReserved = 0x80;
+}
+
+bitmap AuxiliaryLoadSwitchState : bitmap8 {
+  kAuxiliarySwitch1 = 0x1;
+  kAuxiliarySwitch2 = 0x2;
+  kAuxiliarySwitch3 = 0x4;
+  kAuxiliarySwitch4 = 0x8;
+  kAuxiliarySwitch5 = 0x10;
+  kAuxiliarySwitch6 = 0x20;
+  kAuxiliarySwitch7 = 0x40;
+  kAuxiliarySwitch8 = 0x80;
+}
+
+bitmap BallastStatus : bitmap8 {
+  kNonOperational = 0x1;
+  kLampNotInSocket = 0x2;
+}
+
+bitmap BarrierControlCapabilities : bitmap8 {
+  kPartialBarrier = 0x1;
+}
+
+bitmap BarrierControlSafetyStatus : bitmap16 {
+  kRemoteLockout = 0x1;
+  kTemperDetected = 0x2;
+  kFailedCommunication = 0x4;
+  kPositionFailure = 0x8;
+}
+
+bitmap BatteryAlarmMask : bitmap8 {
+  kVoltageTooLow = 0x1;
+}
+
+bitmap BillTrailingDigit : bitmap8 {
+  kTrailingDigit = 0xF0;
+}
+
+bitmap BillingPeriodDuration : bitmap24 {
+  kDuration = 0x3FFFFF;
+  kUnits = 0xC00000;
+}
+
+bitmap BillingPeriodDurationType : bitmap8 {
+  kTimebase = 0xF;
+  kControl = 0xF0;
+}
+
+bitmap BlockPeriodControl : bitmap8 {
+  kPriceAcknowledgementRequirement = 0x1;
+  kRepeatingBlock = 0x2;
+}
+
+bitmap BlockPeriodDurationType : bitmap8 {
+  kTimebase = 0xF;
+  kControl = 0xF0;
+}
+
+bitmap BlockThresholdMask : bitmap16 {
+  kTier1 = 0x2;
+  kTier2 = 0x4;
+  kTier3 = 0x8;
+  kTier4 = 0x10;
+  kTier5 = 0x20;
+  kTier6 = 0x40;
+  kTier7 = 0x80;
+  kTier8 = 0x100;
+  kTier9 = 0x200;
+  kTier10 = 0x400;
+  kTier11 = 0x800;
+  kTier12 = 0x1000;
+  kTier13 = 0x2000;
+  kTier14 = 0x4000;
+  kTier15 = 0x8000;
+}
+
+bitmap BlockThresholdSubPayloadControl : bitmap8 {
+  kApplyToAllTouTiersOrWhenBlockOnlyCharging = 0x1;
+}
+
+bitmap CO2TrailingDigit : bitmap8 {
+  kTrailingDigit = 0xF0;
+}
+
+bitmap CalorificValueTrailingDigit : bitmap8 {
+  kTrailingDigit = 0xF0;
+}
+
+bitmap ChannelMask : bitmap32 {
+  kChannel0 = 0x1;
+  k863Channel0 = 0x1;
+  k863Channel27 = 0x1;
+  k863Channel35 = 0x1;
+  k915Channel0 = 0x1;
+  kChannel1 = 0x2;
+  k863Channel1 = 0x2;
+  k863Channel28 = 0x2;
+  k853Channel36 = 0x2;
+  k915Channel1 = 0x2;
+  kChannel2 = 0x4;
+  k863Channel2 = 0x4;
+  k863Channel29 = 0x4;
+  k863Channel37 = 0x4;
+  k915Channel2 = 0x4;
+  kChannel3 = 0x8;
+  k863Channel3 = 0x8;
+  k863Channel30 = 0x8;
+  k863Channel38 = 0x8;
+  k915Channel3 = 0x8;
+  kChannel4 = 0x10;
+  k863Channel4 = 0x10;
+  k863Channel31 = 0x10;
+  k863Channel39 = 0x10;
+  k915Channel4 = 0x10;
+  kChannel5 = 0x20;
+  k863Channel5 = 0x20;
+  k863Channel32 = 0x20;
+  k863Channel40 = 0x20;
+  k915Channel5 = 0x20;
+  kChannel6 = 0x40;
+  k863Channel6 = 0x40;
+  k863Channel33 = 0x40;
+  k863Channel41 = 0x40;
+  k915Channel6 = 0x40;
+  kChannel7 = 0x80;
+  k863Channel7 = 0x80;
+  k863Channel34 = 0x80;
+  k863Channel42 = 0x80;
+  k915Channel7 = 0x80;
+  kChannel8 = 0x100;
+  k863Channel8 = 0x100;
+  k863Channel62 = 0x100;
+  k863Channel43 = 0x100;
+  k915Channel8 = 0x100;
+  kChannel9 = 0x200;
+  k863Channel9 = 0x200;
+  k863Channel44 = 0x200;
+  k915Channel9 = 0x200;
+  kChannel10 = 0x400;
+  k863Channel10 = 0x400;
+  k863Channel45 = 0x400;
+  k915Channel10 = 0x400;
+  kChannel11 = 0x800;
+  k863Channel11 = 0x800;
+  k863Channel46 = 0x800;
+  k915Channel11 = 0x800;
+  kChannel12 = 0x1000;
+  k863Channel12 = 0x1000;
+  k863Channel47 = 0x1000;
+  k915Channel12 = 0x1000;
+  kChannel13 = 0x2000;
+  k863Channel13 = 0x2000;
+  k863Channel48 = 0x2000;
+  k915Channel13 = 0x2000;
+  kChannel14 = 0x4000;
+  k863Channel14 = 0x4000;
+  k863Channel49 = 0x4000;
+  k915Channel14 = 0x4000;
+  kChannel15 = 0x8000;
+  k863Channel15 = 0x8000;
+  k863Channel50 = 0x8000;
+  k915Channel15 = 0x8000;
+  kChannel16 = 0x10000;
+  k863Channel16 = 0x10000;
+  k863Channel51 = 0x10000;
+  k915Channel16 = 0x10000;
+  kChannel17 = 0x20000;
+  k863Channel17 = 0x20000;
+  k863Channel52 = 0x20000;
+  k915Channel17 = 0x20000;
+  kChannel18 = 0x40000;
+  k863Channel18 = 0x40000;
+  k863Channel53 = 0x40000;
+  k915Channel18 = 0x40000;
+  kChannel19 = 0x80000;
+  k863Channel19 = 0x80000;
+  k863Channel54 = 0x80000;
+  k915Channel19 = 0x80000;
+  kChannel20 = 0x100000;
+  k863Channel20 = 0x100000;
+  k863Channel55 = 0x100000;
+  k915Channel20 = 0x100000;
+  kChannel21 = 0x200000;
+  k863Channel21 = 0x200000;
+  k863Channel56 = 0x200000;
+  k915Channel21 = 0x200000;
+  kChannel22 = 0x400000;
+  k863Channel22 = 0x400000;
+  k863Channel57 = 0x400000;
+  k915Channel22 = 0x400000;
+  kChannel23 = 0x800000;
+  k863Channel23 = 0x800000;
+  k863Channel58 = 0x800000;
+  k915Channel23 = 0x800000;
+  kChannel24 = 0x1000000;
+  k863Channel24 = 0x1000000;
+  k863Channel59 = 0x1000000;
+  k915Channel24 = 0x1000000;
+  kChannel25 = 0x2000000;
+  k863Channel25 = 0x2000000;
+  k863Channel60 = 0x2000000;
+  k915Channel25 = 0x2000000;
+  kChannel26 = 0x4000000;
+  k863Channel26 = 0x4000000;
+  k863Channel61 = 0x4000000;
+  k915Channel26 = 0x4000000;
+  kPage = 0xF8000000;
+}
+
+bitmap ClearedEventsLogs : bitmap8 {
+  kAllLogsCleared = 0x1;
+  kTamperLogCleared = 0x2;
+  kFaultLogCleared = 0x4;
+  kGeneralEventLogCleared = 0x8;
+  kSecurityEventLogCleared = 0x10;
+  kNetworkEventLogCleared = 0x20;
+}
+
+bitmap ColorCapabilities : bitmap16 {
+  kHueSaturationSupported = 0x1;
+  kEnhancedHueSupported = 0x2;
+  kColorLoopSupported = 0x4;
+  kXYAttributesSupported = 0x8;
+  kColorTemperatureSupported = 0x10;
+}
+
+bitmap ColorLoopUpdateFlags : bitmap8 {
+  kUpdateAction = 0x1;
+  kUpdateDirection = 0x2;
+  kUpdateTime = 0x4;
+  kUpdateStartHue = 0x8;
+}
+
+bitmap ConversionFactorTrailingDigit : bitmap8 {
+  kTrailingDigit = 0xF0;
+}
+
+bitmap CreditStatus : bitmap8 {
+  kCreditOk = 0x1;
+  kLowCredit = 0x2;
+  kEmergencyCreditEnabled = 0x4;
+  kEmergencyCreditAvailable = 0x8;
+  kEmergencyCreditSelected = 0x10;
+  kEmergencyCreditInUse = 0x20;
+  kCreditExhausted = 0x40;
+}
+
+bitmap CurrencyChangeControl : bitmap32 {
+  kClearBillingInfo = 0x1;
+  kConvertBillingInfoUsingNewCurrency = 0x2;
+  kClearOldConsumptionData = 0x4;
+  kConvertOldConsumptionDataUsingNewCurrency = 0x8;
+}
+
+bitmap CurrentEventStatus : bitmap8 {
+  kRandomizedStartTime = 0x1;
+  kRandomizedDuration = 0x2;
+  kExtendedBitsPresent = 0x4;
+  kEventActive = 0x8;
+  kDeviceParticipatingInEvent = 0x10;
+  kReducingLoad = 0x20;
+  kOnAtEndOfEvent = 0x40;
+}
+
+bitmap DayOfWeek : bitmap8 {
+  kSunday = 0x1;
+  kMonday = 0x2;
+  kTuesday = 0x4;
+  kWednesday = 0x8;
+  kThursday = 0x10;
+  kFriday = 0x20;
+  kSaturday = 0x40;
+  kAwayOrVacation = 0x80;
+}
+
+bitmap DeviceTempAlarmMask : bitmap8 {
+  kTooLow = 0x1;
+  kTooHigh = 0x2;
+}
+
+bitmap DoorLockDayOfWeek : bitmap8 {
+  kSunday = 0x1;
+  kMonday = 0x2;
+  kTuesday = 0x4;
+  kWednesday = 0x8;
+  kThursday = 0x10;
+  kFriday = 0x20;
+  kSaturday = 0x40;
+}
+
+bitmap EnergyFormatting : bitmap8 {
+  kNumberOfDigitsToTheRightOfTheDecimalPoint = 0x7;
+  kNumberOfDigitsToTheLeftOfTheDecimalPoint = 0x78;
+  kSuppressLeadingZeros = 0x80;
+}
+
+bitmap EventActionControl : bitmap8 {
+  kReportEventToHANDevices = 0x1;
+  kReportEventToWAN = 0x2;
+}
+
+bitmap EventConfiguration : bitmap8 {
+  kLogAction = 0x7;
+  kPushEventToWAN = 0x8;
+  kPushEventToHAN = 0x10;
+  kRaiseAlarmZigBee = 0x20;
+  kRaiseAlarmPhysical = 0x40;
+}
+
+bitmap EventControlLogId : bitmap8 {
+  kLogId = 0xF;
+  kEventControl = 0xF0;
+}
+
+bitmap FriendlyCredit : bitmap8 {
+  kFriendlyCreditEnabled = 0x1;
+}
+
+bitmap FunctionalNotificationFlags : bitmap32 {
+  kNewOtaFirmware = 0x1;
+  kCbkeUpdateRequest = 0x2;
+  kTimeSync = 0x4;
+  kStayAwakeRequestHan = 0x10;
+  kStayAwakeRequestWan = 0x20;
+  kPushHistoricalMeteringDataAttributeSet = 0x1C0;
+  kPushHistoricalPrepaymentDataAttributeSet = 0xE00;
+  kPushAllStaticDataBasicCluster = 0x1000;
+  kPushAllStaticDataMeteringCluster = 0x2000;
+  kPushAllStaticDataPrepaymentCluster = 0x4000;
+  kNetworkKeyActive = 0x8000;
+  kDisplayMessage = 0x10000;
+  kCancelAllMessages = 0x20000;
+  kChangeSupply = 0x40000;
+  kLocalChangeSupply = 0x80000;
+  kSetUncontrolledFlowThreshold = 0x100000;
+  kTunnelMessagePending = 0x200000;
+  kGetSnapshot = 0x400000;
+  kGetSampledData = 0x800000;
+  kNewSubGhzChannelMasksAvailable = 0x1000000;
+  kEnergyScanPending = 0x2000000;
+  kChannelChangePending = 0x4000000;
+}
+
+bitmap GetLocationDataFlags : bitmap8 {
+  kAbsoluteOnly = 0x1;
+  kRecalculate = 0x2;
+  kBroadcast = 0x4;
+  kBroadcastResponse = 0x8;
+  kCompactResponse = 0x10;
+}
+
+bitmap GpApplicationInformation : bitmap8 {
+  kManufactureIdPresent = 0x1;
+  kModelIdPresent = 0x2;
+  kGpdCommandsPresent = 0x4;
+  kClusterListPresent = 0x8;
+  kSwitchInformationPresent = 0x10;
+  kApplicationDescriptionPresent = 0x20;
+}
+
+bitmap GpCommissioningNotificationOption : bitmap16 {
+  kApplicationId = 0x7;
+  kRxAfterTx = 0x8;
+  kSecurityLevel = 0x30;
+  kSecurityKeyType = 0x1C0;
+  kSecurityProcessingFailed = 0x200;
+  kBidirectionalCapability = 0x400;
+  kProxyInfoPresent = 0x800;
+  kReserved = 0xF000;
+}
+
+bitmap GpGpdChannelConfigurationChannel : bitmap8 {
+  kMask = 0x1F;
+  kOperationalChannel = 0xF;
+  kBasic = 0x10;
+  kReserved = 0xE0;
+}
+
+bitmap GpGpdChannelRequestChannelTogglingBehaviourRxChannel : bitmap8 {
+  kNextAttempt = 0xF;
+  kSecondNextAttempt = 0xF0;
+}
+
+bitmap GpGpdCommissioningExtendedOptions : bitmap8 {
+  kSecurityLevelCapabilities = 0x3;
+  kKeyType = 0x1C;
+  kGpdKeyPresent = 0x20;
+  kGpdKeyEncryption = 0x40;
+  kGpdOutgoingCounterPresent = 0x80;
+}
+
+bitmap GpGpdCommissioningOptions : bitmap8 {
+  kMacSeqNumCap = 0x1;
+  kRxOnCap = 0x2;
+  kApplicationInformationPresent = 0x4;
+  kReserved = 0x8;
+  kPanIdRequest = 0x10;
+  kGpSecurityKeyRequest = 0x20;
+  kFixedLocation = 0x40;
+  kExtendedOptionsField = 0x80;
+}
+
+bitmap GpGpdCommissioningReplyOptions : bitmap8 {
+  kPanIdPresent = 0x1;
+  kGpdSecurityKeyPresent = 0x2;
+  kGpdkeyEncryption = 0x4;
+  kSecurityLevel = 0x18;
+  kKeyType = 0xE0;
+}
+
+bitmap GpGpsFunctionality : bitmap24 {
+  kGpFeature = 0x1;
+  kDirectCommunication = 0x2;
+  kDerivedGroupcastCommunication = 0x4;
+  kPreCommissionedGroupcastCommunication = 0x8;
+  kFullUnicastCommunication = 0x10;
+  kLightweightUnicastCommunication = 0x20;
+  kProximityBidirectionalCommunication = 0x40;
+  kMultihopBidirectionalCommunication = 0x80;
+  kProxyTableMaintainance = 0x100;
+  kProximityCommunication = 0x200;
+  kMultihopCommunication = 0x400;
+  kCtBasedCommissioning = 0x800;
+  kMaintainanceGpdf = 0x1000;
+  kGpdSecurityLevel0InOperation = 0x2000;
+  kGpdSecurityLevel1InOperation = 0x4000;
+  kGpdSecurityLevel2InOperation = 0x8000;
+  kGpdSecurityLevel3InOperation = 0x10000;
+  kSinkTableBasedGroupcastForwarding = 0x20000;
+  kTranslationTable = 0x40000;
+  kGpdIeeeAddress = 0x80000;
+  kCompactAttributeReporting = 0x100000;
+  kReserved = 0xE00000;
+}
+
+bitmap GpNotificationOption : bitmap16 {
+  kApplicationId = 0x7;
+  kAlsoUnicast = 0x8;
+  kAlsoDerivedGroup = 0x10;
+  kAlsoCommissionedGroup = 0x20;
+  kSecurityLevel = 0xC0;
+  kSecurityKeyType = 0x700;
+  kRxAfterTx = 0x800;
+  kGpTxQueueFull = 0x1000;
+  kBidirectionalCapability = 0x2000;
+  kProxyInfoPresent = 0x4000;
+  kReserved = 0x8000;
+}
+
+bitmap GpNotificationResponseOption : bitmap8 {
+  kApplicationId = 0x7;
+  kFirstToForward = 0x8;
+  kNoPairing = 0x10;
+  kReserved = 0xE0;
+}
+
+bitmap GpPairingConfigurationActions : bitmap8 {
+  kAction = 0x7;
+  kSendGpPairing = 0x8;
+  kReserved = 0xF0;
+}
+
+bitmap GpPairingConfigurationOption : bitmap16 {
+  kApplicationId = 0x7;
+  kCommunicationMode = 0x18;
+  kSequenceNumberCapabilities = 0x20;
+  kRxOnCapability = 0x40;
+  kFixedLocation = 0x80;
+  kAssignedAlias = 0x100;
+  kSecurityUse = 0x200;
+  kApplicationInformationPresent = 0x400;
+  kReserved = 0xF800;
+}
+
+bitmap GpPairingOption : bitmap24 {
+  kApplicationId = 0x7;
+  kAddSink = 0x8;
+  kRemoveGpd = 0x10;
+  kCommunicationMode = 0x60;
+  kGpdFixed = 0x80;
+  kGpdMacSequenceNumberCapabilities = 0x100;
+  kSecurityLevel = 0x600;
+  kSecurityKeyType = 0x3800;
+  kGpdSecurityFrameCounterPresent = 0x4000;
+  kGpdSecurityKeyPresent = 0x8000;
+  kAssignedAliasPresent = 0x10000;
+  kGroupcastRadiusPresent = 0x20000;
+  kReserved = 0xFC0000;
+}
+
+bitmap GpPairingSearchOption : bitmap16 {
+  kApplicationId = 0x7;
+  kRequestUnicastSinks = 0x8;
+  kRequestDerivedGroupcastSinks = 0x10;
+  kRequestCommissionedGroupcastSinks = 0x20;
+  kRequestGpdSecurityFrameCounter = 0x40;
+  kRequestGpdSecurityKey = 0x80;
+  kReserved = 0xFF00;
+}
+
+bitmap GpProxyCommissioningModeExitMode : bitmap8 {
+  kOnCommissioningWindowExpiration = 0x2;
+  kOnFirstPairingSuccess = 0x4;
+  kOnGpProxyCommissioningModeExit = 0x8;
+}
+
+bitmap GpProxyCommissioningModeOption : bitmap8 {
+  kAction = 0x1;
+  kCommissioningWindowPresent = 0x2;
+  kExitMode = 0xC;
+  kChannelPresent = 0x10;
+  kUnicastCommunication = 0x20;
+  kReserved = 0xC0;
+}
+
+bitmap GpProxyTableEntryOptions : bitmap32 {
+  kApplicationId = 0x7;
+  kEntryActive = 0x8;
+  kEntryValid = 0x10;
+  kSequenceNumberCap = 0x20;
+  kLightweightUnicastGps = 0x40;
+  kDerivedGroupGps = 0x80;
+  kCommisionedGroupGps = 0x100;
+  kFirstToForward = 0x200;
+  kInRange = 0x400;
+  kGpdFixed = 0x800;
+  kHasAllUnicastRoutes = 0x1000;
+  kAssignedAlias = 0x2000;
+  kSecurityUse = 0x4000;
+  kExtension = 0x8000;
+  kFullUnicastGps = 0x10000;
+}
+
+bitmap GpProxyTableEntrySecurityOptions : bitmap8 {
+  kSecurityLevel = 0x3;
+  kSecurityKeyType = 0x1C;
+  kReserved = 0xE0;
+}
+
+bitmap GpProxyTableRequestOptions : bitmap8 {
+  kApplicationId = 0x7;
+  kRequestType = 0x18;
+  kReserved = 0xE0;
+}
+
+bitmap GpResponseOption : bitmap8 {
+  kApplicationId = 0x7;
+  kTransmitOnEndPointMatch = 0x8;
+  kReserved = 0xF0;
+}
+
+bitmap GpResponseTempMasterTxChannel : bitmap8 {
+  kTransmitChannel = 0xF;
+  kReserved = 0xF0;
+}
+
+bitmap GpSinkCommissioningModeExitMode : bitmap8 {
+  kOnCommissioningWindowExpiration = 0x1;
+  kOnFirstPairingSuccess = 0x2;
+  kOnGpProxyCommissioningModeExit = 0x4;
+  kReserved = 0xF8;
+}
+
+bitmap GpSinkCommissioningModeOptions : bitmap8 {
+  kAction = 0x1;
+  kInvolveGpmInSecurity = 0x2;
+  kInvolveGpmInPairing = 0x4;
+  kInvolveProxies = 0x8;
+  kReserved = 0xF0;
+}
+
+bitmap GpSinkTableEntryOptions : bitmap16 {
+  kApplicationId = 0x7;
+  kCommunicationMode = 0x18;
+  kSequenceNumCapabilities = 0x20;
+  kRxOnCapability = 0x40;
+  kFixedLocation = 0x80;
+  kAssignedAlias = 0x100;
+  kSecurityUse = 0x200;
+  kReserved = 0xFC00;
+}
+
+bitmap GpSinkTableEntrySecurityOptions : bitmap8 {
+  kSecurityLevel = 0x3;
+  kSecurityKeyType = 0x1C;
+  kReserved = 0xE0;
+}
+
+bitmap GpSinkTableRequestOptions : bitmap8 {
+  kApplicationId = 0x7;
+  kRequestType = 0x18;
+  kReserved = 0xE0;
+}
+
+bitmap GpTranslationTableResponseOption : bitmap8 {
+  kApplicationId = 0x7;
+  kAdditionalInformationBlockPresent = 0x8;
+  kReserved = 0xF0;
+}
+
+bitmap GpTranslationTableScanLevel : bitmap8 {
+  kGpdId = 0x1;
+  kCmdId = 0x2;
+  kPayload = 0x4;
+  kZbEndpoint = 0x8;
+  kAdditionalInfoBlock = 0x10;
+}
+
+bitmap GpTranslationTableUpdateOption : bitmap16 {
+  kApplicationId = 0x7;
+  kAction = 0x18;
+  kNumberOfTranslations = 0xE0;
+  kAdditionalInformationBlockPresent = 0x100;
+  kReserved = 0xFE00;
+}
+
+bitmap GpTunnelingStopOption : bitmap8 {
+  kApplicationId = 0x7;
+  kAlsoDerivedGroup = 0x8;
+  kAlsoCommissionedGroup = 0x10;
+  kReserved = 0xE0;
+}
+
+bitmap IasZoneStatus : bitmap16 {
+  kAlarm1 = 0x1;
+  kAlarm2 = 0x2;
+  kTamper = 0x4;
+  kBattery = 0x8;
+  kSupervisionReports = 0x10;
+  kRestoreReports = 0x20;
+  kTrouble = 0x40;
+  kAC = 0x80 [spec_name = "AC"];
+  kTest = 0x100;
+  kBatteryDefect = 0x200;
+}
+
+bitmap KeyBitmask : bitmap16 {
+  kDevelopment = 0x1;
+  kMaster = 0x10;
+  kCertification = 0x8000;
+}
+
+bitmap LampAlarmMode : bitmap8 {
+  kLampBurnHours = 0x1;
+}
+
+bitmap LoadControlState : bitmap8 {
+  kRelayOpenOrConsumptionInterupted = 0x1;
+  kEventInProgress = 0x2;
+  kPowerStabilizing = 0x4;
+  kOtherLoadReduction = 0x8;
+  kCurrentFlowOrConsumingCommodity = 0x10;
+  kLoadCall = 0x20;
+}
+
+bitmap LocationType : bitmap8 {
+  kAbsolute = 0x1;
+  k2D = 0x2;
+  kCoordinateSystem = 0xC;
+}
+
+bitmap MainsAlarmMask : bitmap8 {
+  kVoltageTooLow = 0x1;
+  kVoltageTooHigh = 0x2;
+  kMainsPowerSupplyLost = 0x4;
+}
+
+bitmap MessagingConfirmationControl : bitmap8 {
+  kNoReturned = 0x1;
+  kYesReturned = 0x2;
+}
+
+bitmap MessagingControlMask : bitmap8 {
+  kTransMechanism = 0x3;
+  kMessageUrgency = 0xC;
+  kEnhancedConfirmationRequest = 0x20;
+  kMessageConfirmation = 0x80;
+}
+
+bitmap MessagingExtendedControlMask : bitmap8 {
+  kMessageConfirmationStatus = 0x1;
+}
+
+bitmap MeteringExtendedStatus : bitmap64 {
+  kMeterCoverRemoved = 0x1;
+  kStrongMagneticFieldDetected = 0x2;
+  kBatteryFailure = 0x4;
+  kProgramMemoryError = 0x8;
+  kRamError = 0x10;
+  kNvMemoryError = 0x20;
+  kMeasurementSystemError = 0x40;
+  kWatchdogError = 0x80;
+  kSupplyDisconnectFailure = 0x100;
+  kSupplyConnectFailure = 0x200;
+  kMeasurementSwChangedTampered = 0x400;
+  kClockInvalid = 0x800;
+  kTemperatureExceeded = 0x1000;
+  kMoistureDetected = 0x2000;
+  kElectricityMeterTerminalCoverRemoved = 0x1000000;
+  kElectricityMeterIncorrectPolarity = 0x2000000;
+  kElectricityMeterCurrentWithNoVoltage = 0x4000000;
+  kElectricityMeterLimitThresholdExceeded = 0x8000000;
+  kElectricityMeterUnderVoltage = 0x10000000;
+  kElectricityMeterOverVoltage = 0x20000000;
+  kGasMeterBatteryCoverRemoved = 0x1000000;
+  kGasMeterTiltTamper = 0x2000000;
+  kGasMeterExcessFlow = 0x4000000;
+  kElectricityMeterServiceDisconnectionReasonOffDueToOverPower = 0x40000000;
+  kElectricityMeterServiceDisconnectionReasonOffDueToOverVoltage = 0x80000000;
+  kElectricityMeterServiceDisconnectionReasonOffDueToRemoteLoadControl = 0xC0000000;
+  kElectricityMeterServiceDisconnectionReasonOffByOtherRemoteCommand = 0x100000000;
+  kElectricityMeterServiceDisconnectionReasonOffDueToOverheatingShortCircuit = 0x140000000;
+  kElectricityMeterServiceDisconnectionReasonOffDueToOverheatingOther = 0x180000000;
+  kElectricityMeterBiDirectionalOperation = 0x400000000;
+  kElectricityMeterActivePowerReceived = 0x800000000;
+  kElectricityMeterModeOfOperation = 0x1000000000;
+}
+
+bitmap MeteringStatusElectricity : bitmap8 {
+  kCheckMeter = 0x1;
+  kLowBattery = 0x2;
+  kTamperDetect = 0x4;
+  kPowerFailure = 0x8;
+  kPowerQuality = 0x10;
+  kLeakDetect = 0x20;
+  kServiceDisconnectOpen = 0x40;
+  kReserved = 0x80;
+}
+
+bitmap MeteringStatusGas : bitmap8 {
+  kCheckMeter = 0x1;
+  kLowBattery = 0x2;
+  kTamperDetect = 0x4;
+  kNotDefined = 0x8;
+  kLowPressure = 0x10;
+  kLeakDetect = 0x20;
+  kServiceDisconnect = 0x40;
+  kReverseFlow = 0x80;
+}
+
+bitmap MeteringStatusHeatAndCooling : bitmap8 {
+  kCheckMeter = 0x1;
+  kLowBattery = 0x2;
+  kTamperDetect = 0x4;
+  kTemperatureSensor = 0x8;
+  kBurstDetect = 0x10;
+  kLeakDetect = 0x20;
+  kServiceDisconnect = 0x40;
+  kFlowSensor = 0x80;
+}
+
+bitmap MeteringStatusWater : bitmap8 {
+  kCheckMeter = 0x1;
+  kLowBattery = 0x2;
+  kTamperDetect = 0x4;
+  kPipeEmpty = 0x8;
+  kLowPressure = 0x10;
+  kLeakDetect = 0x20;
+  kServiceDisconnect = 0x40;
+  kReverseFlow = 0x80;
+}
+
+bitmap ModeForSequence : bitmap8 {
+  kHeatSetpointFieldPresent = 0x1;
+  kCoolSetpointFieldPresent = 0x2;
+}
+
+bitmap NumberOfEventsLogPayloadControl : bitmap8 {
+  kLogPayloadControl = 0xF;
+  kNumberOfEvents = 0xF0;
+}
+
+bitmap Occupancy : bitmap8 {
+  kOccupied = 0x1;
+}
+
+bitmap OccupancySensorTypeBitmap : bitmap8 {
+  kPir = 0x1;
+  kUltrasonic = 0x2;
+  kPhysicalContact = 0x4;
+}
+
+bitmap OnOffControl : bitmap8 {
+  kAcceptOnlyWhenOn = 0x1;
+}
+
+bitmap OriginatorIdSupplyControlBits : bitmap8 {
+  kAcknowledgeRequired = 0x1;
+}
+
+bitmap PaymentControlConfiguration : bitmap16 {
+  kDisconnectionEnabled = 0x1;
+  kPrepaymentEnabled = 0x2;
+  kCreditManagementEnabled = 0x4;
+  kCreditDisplayEnabled = 0x10;
+  kAccountBase = 0x40;
+  kContactorFitted = 0x80;
+  kStandingChargeConfiguration = 0x100;
+  kEmergencyStandingChargeConfiguration = 0x200;
+  kDebtConfiguration = 0x400;
+  kEmergencyDebtConfiguration = 0x800;
+}
+
+bitmap PrepaySnapshotPayloadCause : bitmap32 {
+  kGeneral = 0x1;
+  kChangeOfTariffInformation = 0x8;
+  kChangeOfPriceMatrix = 0x10;
+  kManuallyTriggeredFromClient = 0x400;
+  kChangeOfTenancy = 0x1000;
+  kChangeOfSupplier = 0x2000;
+  kChangeOfMeterMode = 0x4000;
+  kTopUpAddition = 0x40000;
+  kDebtCreditAddition = 0x80000;
+}
+
+bitmap PrepaymentAlarmStatus : bitmap16 {
+  kLowCreditWarning = 0x1;
+  kTopUpCodeError = 0x2;
+  kTopUpCodeAlreadyUsed = 0x4;
+  kTopUpCodeInvalid = 0x8;
+  kFriendlyCreditInUse = 0x10;
+  kFriendlyCreditPeriodEndWarning = 0x20;
+  kEcAvailable = 0x40;
+  kUnauthorisedEnergyUse = 0x80;
+  kDisconnectedSupplyDueToCredit = 0x100;
+  kDisconnectedSupplyDueToTamper = 0x200;
+  kDisconnectedSupplyDueToHes = 0x400;
+  kPhysicalAttack = 0x800;
+  kElectronicAttack = 0x1000;
+  kManufactureAlarmCodeA = 0x2000;
+  kManufactureAlarmCodeB = 0x4000;
+}
+
+bitmap PriceControlMask : bitmap8 {
+  kPriceAcknowledgementRequired = 0x1;
+  kTotalTiersExceeds15 = 0x2;
+}
+
+bitmap PriceMatrixSubPayloadControl : bitmap8 {
+  kTouBased = 0x1;
+}
+
+bitmap PriceNumberOfPriceTiersAndRegisterTier : bitmap8 {
+  kRegisterTier = 0xF;
+  kNumberOfPriceTiers = 0xF0;
+}
+
+bitmap PriceTrailingDigit : bitmap8 {
+  kTrailingDigit = 0xF0;
+}
+
+bitmap PriceTrailingDigitAndPriceTier : bitmap8 {
+  kPriceTier = 0xF;
+  kTrailingDigit = 0xF0;
+}
+
+bitmap ProposedChangeControl : bitmap32 {
+  kPreSnapshots = 0x1;
+  kPostSnapshots = 0x2;
+  kResetCreditRegister = 0x4;
+  kResetDebitRegister = 0x8;
+  kResetBillingPeriod = 0x10;
+  kClearTariffPlan = 0x20;
+  kClearStandingCharge = 0x40;
+  kBlockHistoricalLoadProfileInformation = 0x80;
+  kClearHistoricalLoadProfileInformation = 0x100;
+  kClearIhdDataConsumer = 0x200;
+  kClearIhdDataSupplier = 0x400;
+  kMeterConnectorStateOnOffArmed = 0x1800;
+  kClearTransactionLog = 0x2000;
+  kClearPrepaymentLog = 0x4000;
+}
+
+bitmap PumpAlarmMask : bitmap16 {
+  kSupplyVoltageTooLow = 0x1;
+  kSupplyVoltageTooHigh = 0x2;
+  kPowerMissingPhase = 0x4;
+  kSystemPressureTooLow = 0x8;
+  kSystemPressureTooHigh = 0x10;
+  kDryRunning = 0x20;
+  kMotorTemperatureTooHigh = 0x40;
+  kPumpMotorHasFatalFailure = 0x80;
+  kElectronicTemperatureTooHigh = 0x100;
+  kPumpBlocked = 0x200;
+  kSensorFailure = 0x400;
+  kElectronicNonFatalFailure = 0x800;
+  kElectronicFatalFailure = 0x1000;
+  kGeneralFault = 0x2000;
+}
+
+bitmap PumpStatus : bitmap16 {
+  kDeviceFault = 0x1;
+  kSupplyfault = 0x2;
+  kSpeedLow = 0x4;
+  kSpeedHigh = 0x8;
+  kLocalOverride = 0x10;
+  kRunning = 0x20;
+  kRemotePressure = 0x40;
+  kRemoteFlow = 0x80;
+  kRemoteTemperature = 0x100;
+}
+
+bitmap RemoteEnableFlagsAndDeviceStatus2 : bitmap8 {
+  kRemoteEnableFlags = 0xF;
+  kDeviceStatus2Structure = 0xF0;
+}
+
+bitmap ResetOptions : bitmap8 {
+  kResetCurrent = 0x1;
+  kResetAll = 0x2;
+  kEraseIndex = 0x4;
+}
+
+bitmap RestartOptions : bitmap8 {
+  kStartMode1 = 0x1;
+  kStartupMode2 = 0x2;
+  kStartupMode3 = 0x4;
+  kImmediate = 0x8;
+}
+
+bitmap ScenesCopyMode : bitmap8 {
+  kCopyAllScenes = 0x1;
+}
+
+bitmap ShadeClosureStatus : bitmap8 {
+  kOperational = 0x1;
+  kAdjusting = 0x2;
+  kOpening = 0x4;
+  kMotorOpening = 0x8;
+}
+
+bitmap SnapshotCause : bitmap32 {
+  kGeneral = 0x1;
+  kEndOfBillingPeriod = 0x2;
+  kEndOfBlockPeriod = 0x4;
+  kChangeOfTariffInformation = 0x8;
+  kChangeOfPriceMatrix = 0x10;
+  kChangeOfBlockThresholds = 0x20;
+  kChangeOfCv = 0x40;
+  kChangeOfCf = 0x80;
+  kChangeOfCalendar = 0x100;
+  kCriticalPeakPricing = 0x200;
+  kManuallyTriggeredFromClient = 0x400;
+  kEndOfResolvePeriod = 0x800;
+  kChangeOfTenancy = 0x1000;
+  kChangeOfSupplier = 0x2000;
+  kChangeOfMode = 0x4000;
+  kDebtPayment = 0x8000;
+  kScheduledSnapshot = 0x10000;
+  kOtaFirmwareDownload = 0x20000;
+}
+
+bitmap SquawkInfo : bitmap8 {
+  kMode = 0xF0;
+  kStrobe = 0x8;
+  kLevel = 0x3;
+}
+
+bitmap StartTime : bitmap16 {
+  kMinutes = 0x3F;
+  kTimeEncoding = 0xC0;
+  kHours = 0xFF00;
+}
+
+bitmap SupplyControlBits : bitmap8 {
+  kAcknowledgeRequired = 0x1;
+}
+
+bitmap TariffTypeChargingScheme : bitmap8 {
+  kTariffType = 0xF;
+  kTariffChargingScheme = 0xF0;
+}
+
+bitmap ThermostatAlarmMask : bitmap8 {
+  kInitializationFailure = 0x1;
+  kHardwareFailure = 0x2;
+  kSelfcalibrationFailure = 0x4;
+}
+
+bitmap ThermostatOccupancy : bitmap8 {
+  kOccupied = 0x1;
+}
+
+bitmap ThermostatRunningState : bitmap16 {
+  kHeatStateOn = 0x1;
+  kCoolStateOn = 0x2;
+  kFanStateOn = 0x4;
+  kHeatSecondStageStateOn = 0x8;
+  kCoolSecondStageStateOn = 0x10;
+  kFanSecondStageStateOn = 0x20;
+  kFanThirdStageStateOn = 0x40;
+}
+
+bitmap ThermostatSensing : bitmap8 {
+  kLocalTempSensedRemotely = 0x1;
+  kOutdoorTempSensedRemotely = 0x2;
+  kOccupancySensedRemotely = 0x4;
+}
+
+bitmap TimeStatusMask : bitmap8 {
+  kMasterClock = 0x1;
+  kSynchronized = 0x2;
+  kMasterZoneDst = 0x4;
+  kSuperseding = 0x8;
+}
+
+bitmap WarningInfo : bitmap8 {
+  kMode = 0xF0;
+  kStrobe = 0xC;
+  kSirenLevel = 0x3;
+}
+
+bitmap ZigbeeInformation : bitmap8 {
+  kLogicalType = 0x3;
+  kRxOnWhenIdle = 0x4;
+}
+
+bitmap ZllInformation : bitmap8 {
+  kFactoryNew = 0x1;
+  kAddressAssignment = 0x2;
+  kTouchLinkInitiator = 0x10;
+  kTouchLinkPriorityRequest = 0x20;
+  kProfileInterop = 0x80;
+}
+
+struct BlockThreshold {
+  enum8 blockThreshold = 0;
+  bitmap8 priceControl = 1;
+  utc_time blockPeriodStartTime = 2;
+  int24u blockPeriodDurationMinutes = 3;
+  enum8 fuelType = 4;
+  int32u standingCharge = 5;
+}
+
+struct BlockThresholdSubPayload {
+  int8u tierNumberOfBlockThresholds = 0;
+  int48u blockThreshold = 1;
+}
+
+struct ChatParticipant {
+  int16u uid = 0;
+  char_string nickname = 1;
+}
+
+struct ChatRoom {
+  int16u cid = 0;
+  char_string name = 1;
+}
+
+struct ConfigureReportingRecord {
+  int8u direction = 0;
+  attribute_id attributeId = 1;
+  int8u attributeType = 2;
+  int16u minimumReportingInterval = 3;
+  int16u maximumReportingInterval = 4;
+  no_data reportableChangeLocation = 5;
+  int16u timeoutPeriod = 6;
+}
+
+struct ConfigureReportingStatusRecord {
+  Status status = 0;
+  int8u direction = 1;
+  attribute_id attributeId = 2;
+}
+
+struct DebtPayload {
+  utc_time collectionTime = 0;
+  int32u amountCollected = 1;
+  RepaymentDebtType debtType = 2;
+  int32u outstandingDebt = 3;
+}
+
+struct DeviceInformationRecord {
+  ieee_address ieeeAddress = 0;
+  int8u endpointId = 1;
+  int16u profileId = 2;
+  int16u deviceId = 3;
+  int8u version = 4;
+  int8u groupIdCount = 5;
+  DeviceInformationRecordSort sort = 6;
+}
+
+struct DiscoverAttributesInfoRecord {
+  attribute_id attributeId = 0;
+  int8u attributeType = 1;
+}
+
+struct EndpointInformationRecord {
+  int16u networkAddress = 0;
+  int8u endpointId = 1;
+  int16u profileId = 2;
+  int16u deviceId = 3;
+  int8u version = 4;
+}
+
+struct EphemeralData {
+}
+
+struct EventConfigurationPayload {
+  int16u eventId = 0;
+  EventConfiguration eventConfiguration = 1;
+}
+
+struct EventLogPayload {
+  EventLogId logId = 0;
+  int16u eventId = 1;
+  utc_time eventTime = 2;
+  octet_string eventData = 3;
+}
+
+struct ExtendedDiscoverAttributesInfoRecord {
+  attribute_id attributeId = 0;
+  int8u attributeType = 1;
+  int8u attributeAccessControl = 2;
+}
+
+struct GpPairingConfigurationGroupList {
+  int16u sinkGroup = 0;
+  int16u alias = 1;
+}
+
+struct GpTranslationTableUpdateTranslation {
+  int8u index = 0;
+  int8u gpdCommandId = 1;
+  int8u endpoint = 2;
+  int16u profile = 3;
+  int16u cluster = 4;
+  int8u zigbeeCommandId = 5;
+  octet_string zigbeeCommandPayload = 6;
+  octet_string additionalInfoBlock = 7;
+}
+
+struct GroupInformationRecord {
+  int16u groupId = 0;
+  int8u groupType = 1;
+}
+
+struct IasAceZoneStatusResult {
+  int8u zoneId = 0;
+  IasZoneStatus zoneStatus = 1;
+}
+
+struct Identity {
+}
+
+struct NeighborInfo {
+  ieee_address neighbor = 0;
+  int16s x = 1;
+  int16s y = 2;
+  int16s z = 3;
+  int8s rssi = 4;
+  int8u numberRssiMeasurements = 5;
+}
+
+struct NodeInformation {
+  int16u uid = 0;
+  data16 address = 1;
+  int8u endpoint = 2;
+  char_string nickname = 3;
+}
+
+struct Notification {
+  int16u contentId = 0;
+  Status statusFeedback = 1;
+}
+
+struct PowerProfileRecord {
+  int8u powerProfileId = 0;
+  int8u energyPhaseId = 1;
+  boolean powerProfileRemoteControl = 2;
+  enum8 powerProfileState = 3;
+}
+
+struct PriceMatrixSubPayload {
+  int8u tierBlockId = 0;
+  int32u price = 1;
+}
+
+struct Protocol {
+  int16u manufacturerCode = 0;
+  int8u protocolId = 1;
+}
+
+struct ReadAttributeStatusRecord {
+  attribute_id attributeId = 0;
+  Status status = 1;
+  int8u attributeType = 2;
+  no_data attributeLocation = 3;
+}
+
+struct ReadReportingConfigurationAttributeRecord {
+  int8u direction = 0;
+  attribute_id attributeId = 1;
+}
+
+struct ReadReportingConfigurationRecord {
+  Status status = 0;
+  int8u direction = 1;
+  attribute_id attributeId = 2;
+  int8u attributeType = 3;
+  int16u minimumReportingInterval = 4;
+  int16u maximumReportingInterval = 5;
+  no_data reportableChangeLocation = 6;
+  int16u timeoutPeriod = 7;
+}
+
+struct ReadStructuredAttributeRecord {
+  attribute_id attributeId = 0;
+  int8u indicator = 1;
+  int16u indicies[] = 2;
+}
+
+struct ReportAttributeRecord {
+  attribute_id attributeId = 0;
+  int8u attributeType = 1;
+  no_data attributeLocation = 2;
+}
+
+struct SceneExtensionAttributeInfo {
+  int8u attributeType = 0;
+  no_data attributeLocation = 1;
+}
+
+struct SceneExtensionFieldSet {
+  cluster_id clusterId = 0;
+  int8u length = 1;
+  int8u value = 2;
+}
+
+struct ScheduleEntry {
+  int16u startTime = 0;
+  int8u activePriceTierOrFriendlyCreditEnable = 1;
+}
+
+struct ScheduleEntryAuxilliaryLoadSwitchTimes {
+  int16u startTime = 0;
+  AuxiliaryLoadSwitchState auxiliaryLoadSwitchState = 1;
+}
+
+struct ScheduleEntryFriendlyCreditSwitchTimes {
+  int16u startTime = 0;
+  boolean friendlyCreditEnable = 1;
+}
+
+struct ScheduleEntryRateSwitchTimes {
+  int16u startTime = 0;
+  PriceTier priceTier = 1;
+}
+
+struct ScheduledPhase {
+  int8u energyPhaseId = 0;
+  int16u scheduledTime = 1;
+}
+
+struct SeasonEntry {
+  date seasonStartDate = 0;
+  int8u weekIdRef = 1;
+}
+
+struct Signature {
+}
+
+struct Smac {
+}
+
+struct SnapshotResponsePayload {
+  int8u snapshotScheduleId = 0;
+  SnapshotScheduleConfirmation snapshotScheduleConfirmation = 1;
+}
+
+struct SnapshotSchedulePayload {
+  int8u snapshotScheduleId = 0;
+  utc_time snapshotStartTime = 1;
+  bitmap24 snapshotSchedule = 2;
+  SnapshotPayloadType snapshotPayloadType = 3;
+  SnapshotCause snapshotCause = 4;
+}
+
+struct SpecialDay {
+  date specialDayDate = 0;
+  int8u dayIdRef = 1;
+}
+
+struct TierLabelsPayload {
+  int8u tierId = 0;
+  octet_string tierLabel = 1;
+}
+
+struct TopUpPayload {
+  octet_string topUpCode = 0;
+  int32s topUpAmount = 1;
+  utc_time topUpTime = 2;
+}
+
+struct TransferredPhase {
+  int8u energyPhaseId = 0;
+  int8u macroPhaseId = 1;
+  int16u expectedDuration = 2;
+  int16u peakPower = 3;
+  int16u energy = 4;
+  int16u maxActivationDelay = 5;
+}
+
+struct WriteAttributeRecord {
+  attribute_id attributeId = 0;
+  int8u attributeType = 1;
+  no_data attributeLocation = 2;
+}
+
+struct WriteAttributeStatusRecord {
+  Status status = 0;
+  attribute_id attributeId = 1;
+}
+
+struct WriteStructuredAttributeRecord {
+  attribute_id attributeId = 0;
+  int8u indicator = 1;
+  int16u indicies[] = 2;
+  int8u attributeType = 3;
+  no_data attributeLocation = 4;
+}
+
+struct WriteStructuredAttributeStatusRecord {
+  Status status = 0;
+  attribute_id attributeId = 1;
+  int8u indicator = 2;
+  int16u indicies[] = 3;
+}
+
+struct WwahBeaconSurvey {
+  int16u deviceShort = 0;
+  int8u rssi = 1;
+  int8u classificationMask = 2;
+}
+
+struct WwahClusterStatusToUseTC {
+  cluster_id clusterId = 0;
+  Status status = 1;
+}
+
+/** Attributes for determining basic information about a device, setting user device information such as location, and enabling a device. */
+cluster Basic = 0 {
+  revision 3;
+
+  readonly nosubscribe attribute int8u zclVersion = 0;
+  readonly nosubscribe attribute optional int8u applicationVersion = 1;
+  readonly nosubscribe attribute optional int8u stackVersion = 2;
+  readonly nosubscribe attribute optional int8u hardwareVersion = 3;
+  readonly nosubscribe attribute optional char_string<32> manufacturerName = 4;
+  readonly nosubscribe attribute optional char_string<32> modelIdentifier = 5;
+  readonly nosubscribe attribute optional char_string<16> dateCode = 6;
+  readonly nosubscribe attribute enum8 powerSource = 7;
+  readonly nosubscribe attribute optional enum8 genericDeviceClass = 8;
+  readonly nosubscribe attribute optional enum8 genericDeviceType = 9;
+  readonly nosubscribe attribute optional octet_string<16> productCode = 10;
+  readonly nosubscribe attribute optional char_string<64> productUrl = 11;
+  readonly nosubscribe attribute optional char_string<64> manufacturerVersionDetails = 12;
+  readonly nosubscribe attribute optional char_string<32> serialNumber = 13;
+  readonly nosubscribe attribute optional char_string<64> productLabel = 14;
+  nosubscribe attribute optional char_string<16> locationDescription = 16;
+  nosubscribe attribute optional enum8 physicalEnvironment = 17;
+  nosubscribe attribute optional boolean deviceEnabled = 18;
+  nosubscribe attribute optional bitmap8 alarmMask = 19;
+  nosubscribe attribute optional bitmap8 disableLocalConfig = 20;
+  nosubscribe attribute optional char_string<5> currentLocale = 21;
+  readonly nosubscribe attribute optional char_string<16> swBuildId = 16384;
+  readonly nosubscribe attribute int16u clusterRevision = 65533;
+  readonly nosubscribe attribute optional enum8 reportingStatus = 65534;
+
+  request struct GetLocalesSupportedRequest {
+    CHAR_STRING startLocale = 0;
+    INT8U maxLocalesRequested = 1;
+  }
+
+  response struct GetLocalesSupportedResponse = 1 {
+    INT8U discoveryComplete = 0;
+    CHAR_STRING localeSupported[] = 1;
+  }
+
+  /** Command that resets all attribute values to factory default. */
+  command ResetToFactoryDefaults(): DefaultSuccess = 0;
+  /** This command gets locales supported. */
+  command GetLocalesSupported(GetLocalesSupportedRequest): DefaultSuccess = 1;
+}
+
+/** Attributes and commands for putting a device into Identification mode (e.g. flashing a light). */
+cluster Identify = 3 {
+  revision 2;
+
+  nosubscribe attribute int16u identifyTime = 0;
+  readonly nosubscribe attribute optional bitmap8 commissionState = 1;
+  readonly nosubscribe attribute int16u clusterRevision = 65533;
+  readonly nosubscribe attribute optional enum8 reportingStatus = 65534;
+
+  request struct IdentifyRequest {
+    INT16U identifyTime = 0;
+  }
+
+  response struct IdentifyQueryResponse = 0 {
+    INT16U timeout = 0;
+  }
+
+  request struct EZModeInvokeRequest {
+    BITMAP8 action = 0;
+  }
+
+  request struct UpdateCommissionStateRequest {
+    ENUM8 action = 0;
+    BITMAP8 commissionStateMask = 1;
+  }
+
+  request struct TriggerEffectRequest {
+    IdentifyEffectIdentifier effectId = 0;
+    IdentifyEffectVariant effectVariant = 1;
+  }
+
+  /** Command description for Identify */
+  command Identify(IdentifyRequest): DefaultSuccess = 0;
+  /** Command description for IdentifyQuery */
+  command IdentifyQuery(): DefaultSuccess = 1;
+  /** Invoke EZMode on an Identify Server */
+  command EZModeInvoke(EZModeInvokeRequest): DefaultSuccess = 2;
+  /** Update Commission State on the server device. */
+  command UpdateCommissionState(UpdateCommissionStateRequest): DefaultSuccess = 3;
+  /** Command description for TriggerEffect */
+  command TriggerEffect(TriggerEffectRequest): DefaultSuccess = 64;
+}
+
+/** Attributes and commands for putting a device into Identification mode (e.g. flashing a light). */
+cluster Identify = 3 {
+  revision 2;
+
+  nosubscribe attribute int16u identifyTime = 0;
+  readonly nosubscribe attribute optional bitmap8 commissionState = 1;
+  readonly nosubscribe attribute int16u clusterRevision = 65533;
+  readonly nosubscribe attribute optional enum8 reportingStatus = 65534;
+
+  request struct IdentifyRequest {
+    INT16U identifyTime = 0;
+  }
+
+  response struct IdentifyQueryResponse = 0 {
+    INT16U timeout = 0;
+  }
+
+  request struct EZModeInvokeRequest {
+    BITMAP8 action = 0;
+  }
+
+  request struct UpdateCommissionStateRequest {
+    ENUM8 action = 0;
+    BITMAP8 commissionStateMask = 1;
+  }
+
+  request struct TriggerEffectRequest {
+    IdentifyEffectIdentifier effectId = 0;
+    IdentifyEffectVariant effectVariant = 1;
+  }
+
+  /** Command description for Identify */
+  command Identify(IdentifyRequest): DefaultSuccess = 0;
+  /** Command description for IdentifyQuery */
+  command IdentifyQuery(): DefaultSuccess = 1;
+  /** Invoke EZMode on an Identify Server */
+  command EZModeInvoke(EZModeInvokeRequest): DefaultSuccess = 2;
+  /** Update Commission State on the server device. */
+  command UpdateCommissionState(UpdateCommissionStateRequest): DefaultSuccess = 3;
+  /** Command description for TriggerEffect */
+  command TriggerEffect(TriggerEffectRequest): DefaultSuccess = 64;
+}
+
+/** Attributes and commands for group configuration and manipulation. */
+cluster Groups = 4 {
+  revision 3;
+
+  readonly nosubscribe attribute bitmap8 nameSupport = 0;
+  readonly nosubscribe attribute int16u clusterRevision = 65533;
+  readonly nosubscribe attribute optional enum8 reportingStatus = 65534;
+
+  request struct AddGroupRequest {
+    INT16U groupId = 0;
+    CHAR_STRING groupName = 1;
+  }
+
+  response struct AddGroupResponse = 0 {
+    Status status = 0;
+    INT16U groupId = 1;
+  }
+
+  request struct ViewGroupRequest {
+    INT16U groupId = 0;
+  }
+
+  response struct ViewGroupResponse = 1 {
+    Status status = 0;
+    INT16U groupId = 1;
+    CHAR_STRING groupName = 2;
+  }
+
+  request struct GetGroupMembershipRequest {
+    INT8U groupCount = 0;
+    INT16U groupList[] = 1;
+  }
+
+  response struct GetGroupMembershipResponse = 2 {
+    INT8U capacity = 0;
+    INT8U groupCount = 1;
+    INT16U groupList[] = 2;
+  }
+
+  request struct RemoveGroupRequest {
+    INT16U groupId = 0;
+  }
+
+  response struct RemoveGroupResponse = 3 {
+    Status status = 0;
+    INT16U groupId = 1;
+  }
+
+  request struct AddGroupIfIdentifyingRequest {
+    INT16U groupId = 0;
+    CHAR_STRING groupName = 1;
+  }
+
+  /** Command description for AddGroup */
+  command AddGroup(AddGroupRequest): DefaultSuccess = 0;
+  /** Command description for ViewGroup */
+  command ViewGroup(ViewGroupRequest): DefaultSuccess = 1;
+  /** Command description for GetGroupMembership */
+  command GetGroupMembership(GetGroupMembershipRequest): DefaultSuccess = 2;
+  /** Command description for RemoveGroup */
+  command RemoveGroup(RemoveGroupRequest): DefaultSuccess = 3;
+  /** Command description for RemoveAllGroups */
+  command RemoveAllGroups(): DefaultSuccess = 4;
+  /** Command description for AddGroupIfIdentifying */
+  command AddGroupIfIdentifying(AddGroupIfIdentifyingRequest): DefaultSuccess = 5;
+}
+
+/** Attributes and commands for commissioning and managing a ZigBee device. */
+cluster Commissioning = 21 {
+  revision 2;
+
+  nosubscribe attribute int16u shortAddress = 0;
+  nosubscribe attribute ieee_address extendedPanId = 1;
+  nosubscribe attribute int16u panId = 2;
+  nosubscribe attribute bitmap32 channelMask = 3;
+  nosubscribe attribute int8u protocolVersion = 4;
+  nosubscribe attribute int8u stackProfile = 5;
+  nosubscribe attribute enum8 startupControl = 6;
+  nosubscribe attribute ieee_address trustCenterAddress = 16;
+  nosubscribe attribute optional security_key trustCenterMasterKey = 17;
+  nosubscribe attribute security_key networkKey = 18;
+  nosubscribe attribute boolean useInsecureJoin = 19;
+  nosubscribe attribute security_key preconfiguredLinkKey = 20;
+  nosubscribe attribute int8u networkKeySequenceNumber = 21;
+  nosubscribe attribute enum8 networkKeyType = 22;
+  nosubscribe attribute int16u networkManagerAddress = 23;
+  nosubscribe attribute int8u scanAttempts = 32;
+  nosubscribe attribute int16u timeBetweenScans = 33;
+  nosubscribe attribute int16u rejoinInterval = 34;
+  nosubscribe attribute int16u maxRejoinInterval = 35;
+  nosubscribe attribute int16u indirectPollRate = 48;
+  nosubscribe attribute int8u parentRetryThreshold = 49;
+  nosubscribe attribute boolean concentratorFlag = 64;
+  nosubscribe attribute int8u concentratorRadius = 65;
+  nosubscribe attribute int8u concentratorDiscoveryTime = 66;
+  readonly nosubscribe attribute int16u clusterRevision = 65533;
+  readonly nosubscribe attribute optional enum8 reportingStatus = 65534;
+
+  request struct RestartDeviceRequest {
+    RestartOptions options = 0;
+    INT8U delay = 1;
+    INT8U jitter = 2;
+  }
+
+  response struct RestartDeviceResponse = 0 {
+    ENUM8 status = 0;
+  }
+
+  request struct SaveStartupParametersRequest {
+    BITMAP8 options = 0;
+    INT8U index = 1;
+  }
+
+  response struct SaveStartupParametersResponse = 1 {
+    ENUM8 status = 0;
+  }
+
+  request struct RestoreStartupParametersRequest {
+    BITMAP8 options = 0;
+    INT8U index = 1;
+  }
+
+  response struct RestoreStartupParametersResponse = 2 {
+    ENUM8 status = 0;
+  }
+
+  request struct ResetStartupParametersRequest {
+    ResetOptions options = 0;
+    INT8U index = 1;
+  }
+
+  response struct ResetStartupParametersResponse = 3 {
+    ENUM8 status = 0;
+  }
+
+  /** Command description for RestartDevice */
+  command RestartDevice(RestartDeviceRequest): DefaultSuccess = 0;
+  /** Command description for SaveStartupParameters */
+  command SaveStartupParameters(SaveStartupParametersRequest): DefaultSuccess = 1;
+  /** Command description for RestoreStartupParameters */
+  command RestoreStartupParameters(RestoreStartupParametersRequest): DefaultSuccess = 2;
+  /** Command description for ResetStartupParameters */
+  command ResetStartupParameters(ResetStartupParametersRequest): DefaultSuccess = 3;
+}
+
+/** An interface for configuring and controlling the functionality of a thermostat. */
+cluster Thermostat = 513 {
+  revision 3;
+
+  readonly attribute int16s localTemperature = 0;
+  readonly nosubscribe attribute optional int16s outdoorTemperature = 1;
+  readonly nosubscribe attribute optional bitmap8 occupancy = 2;
+  readonly nosubscribe attribute optional int16s absMinHeatSetpointLimit = 3;
+  readonly nosubscribe attribute optional int16s absMaxHeatSetpointLimit = 4;
+  readonly nosubscribe attribute optional int16s absMinCoolSetpointLimit = 5;
+  readonly nosubscribe attribute optional int16s absMaxCoolSetpointLimit = 6;
+  readonly attribute optional int8u piCoolingDemand = 7;
+  readonly attribute optional int8u piHeatingDemand = 8;
+  nosubscribe attribute optional bitmap8 hvacSystemTypeConfiguration = 9;
+  nosubscribe attribute optional int8s localTemperatureCalibration = 16;
+  nosubscribe attribute int16s occupiedCoolingSetpoint = 17;
+  nosubscribe attribute int16s occupiedHeatingSetpoint = 18;
+  nosubscribe attribute optional int16s unoccupiedCoolingSetpoint = 19;
+  nosubscribe attribute optional int16s unoccupiedHeatingSetpoint = 20;
+  nosubscribe attribute optional int16s minHeatSetpointLimit = 21;
+  nosubscribe attribute optional int16s maxHeatSetpointLimit = 22;
+  nosubscribe attribute optional int16s minCoolSetpointLimit = 23;
+  nosubscribe attribute optional int16s maxCoolSetpointLimit = 24;
+  nosubscribe attribute optional int8s minSetpointDeadBand = 25;
+  nosubscribe attribute optional bitmap8 remoteSensing = 26;
+  nosubscribe attribute enum8 controlSequenceOfOperation = 27;
+  nosubscribe attribute enum8 systemMode = 28;
+  readonly nosubscribe attribute optional bitmap8 alarmMask = 29;
+  readonly nosubscribe attribute optional enum8 thermostatRunningMode = 30;
+  readonly nosubscribe attribute optional enum8 startOfWeek = 32;
+  readonly nosubscribe attribute optional int8u numberOfWeeklyTransitions = 33;
+  readonly nosubscribe attribute optional int8u numberOfDailyTransitions = 34;
+  nosubscribe attribute optional enum8 temperatureSetpointHold = 35;
+  nosubscribe attribute optional int16u temperatureSetpointHoldDuration = 36;
+  nosubscribe attribute optional bitmap8 thermostatProgrammingOperationMode = 37;
+  readonly nosubscribe attribute optional bitmap16 hvacRelayState = 41;
+  readonly nosubscribe attribute optional enum8 setpointChangeSource = 48;
+  readonly nosubscribe attribute optional int16s setpointChangeAmount = 49;
+  readonly nosubscribe attribute optional utc_time setpointChangeSourceTimestamp = 50;
+  nosubscribe attribute optional int8u occupiedSetback = 52;
+  readonly nosubscribe attribute optional int8u occupiedSetbackMin = 53;
+  readonly nosubscribe attribute optional int8u occupiedSetbackMax = 54;
+  nosubscribe attribute optional int8u unoccupiedSetback = 55;
+  readonly nosubscribe attribute optional int8u unoccupiedSetbackMin = 56;
+  readonly nosubscribe attribute optional int8u unoccupiedSetbackMax = 57;
+  nosubscribe attribute optional int8u emergencyHeatDelta = 58;
+  nosubscribe attribute optional enum8 acType = 64;
+  nosubscribe attribute optional int16u acCapacity = 65;
+  nosubscribe attribute optional enum8 acRefrigerantType = 66;
+  nosubscribe attribute optional enum8 acCompressor = 67;
+  nosubscribe attribute optional bitmap32 acErrorCode = 68;
+  nosubscribe attribute optional enum8 acLouverPosition = 69;
+  readonly nosubscribe attribute optional int16s acCoilTemperature = 70;
+  nosubscribe attribute optional enum8 acCapacityFormat = 71;
+  readonly nosubscribe attribute int16u clusterRevision = 65533;
+  readonly nosubscribe attribute optional enum8 reportingStatus = 65534;
+
+  request struct SetpointRaiseLowerRequest {
+    SetpointAdjustMode mode = 0;
+    INT8S amount = 1;
+  }
+
+  response struct CurrentWeeklySchedule = 0 {
+    ENUM8 numberOfTransitionsForSequence = 0;
+    DayOfWeek dayOfWeekForSequence = 1;
+    ModeForSequence modeForSequence = 2;
+    INT8U payload[] = 3;
+  }
+
+  request struct SetWeeklyScheduleRequest {
+    ENUM8 numberOfTransitionsForSequence = 0;
+    DayOfWeek dayOfWeekForSequence = 1;
+    ModeForSequence modeForSequence = 2;
+    INT8U payload[] = 3;
+  }
+
+  response struct RelayStatusLog = 1 {
+    INT16U timeOfDay = 0;
+    BITMAP16 relayStatus = 1;
+    INT16S localTemperature = 2;
+    INT8U humidityInPercentage = 3;
+    INT16S setpoint = 4;
+    INT16U unreadEntries = 5;
+  }
+
+  request struct GetWeeklyScheduleRequest {
+    DayOfWeek daysToReturn = 0;
+    ModeForSequence modeToReturn = 1;
+  }
+
+  /** Command description for SetpointRaiseLower */
+  command SetpointRaiseLower(SetpointRaiseLowerRequest): DefaultSuccess = 0;
+  /** Command description for SetWeeklySchedule */
+  command SetWeeklySchedule(SetWeeklyScheduleRequest): DefaultSuccess = 1;
+  /** Command description for GetWeeklySchedule */
+  command GetWeeklySchedule(GetWeeklyScheduleRequest): DefaultSuccess = 2;
+  /** The Clear Weekly Schedule command is used to clear the weekly schedule. */
+  command ClearWeeklySchedule(): DefaultSuccess = 3;
+  /** The Get Relay Status Log command is used to query the thermostat internal relay status log. */
+  command GetRelayStatusLog(): DefaultSuccess = 4;
+}
+
+/** An interface for configuring the user interface of a thermostat (which may be remote from the thermostat). */
+cluster ThermostatUserInterfaceConfiguration = 516 {
+  revision 1; // NOTE: Default/not specifically set
+
+  nosubscribe attribute enum8 temperatureDisplayMode = 0;
+  nosubscribe attribute enum8 keypadLockout = 1;
+  nosubscribe attribute optional enum8 scheduleProgrammingVisibility = 2;
+  nosubscribe attribute optional int16u backlightTimeout = 3;
+  nosubscribe attribute optional enum8 setpointSourceIndication = 4;
+  readonly nosubscribe attribute int16u clusterRevision = 65533;
+  readonly nosubscribe attribute optional enum8 reportingStatus = 65534;
+}
+
+endpoint 0 {
+
+}
+endpoint 1 {
+  device type cba_tstat = 769, version 1;
+
+
+  server cluster Basic {
+    ram      attribute zclVersion default = 0x08;
+    ram      attribute powerSource default = 0x00;
+    ram      attribute clusterRevision default = 3;
+  }
+
+  server cluster Identify {
+    ram      attribute identifyTime default = 0x0000;
+    ram      attribute clusterRevision default = 2;
+
+    handle command Identify;
+    handle command IdentifyQueryResponse;
+    handle command IdentifyQuery;
+  }
+
+  server cluster Groups {
+    ram      attribute nameSupport;
+    ram      attribute clusterRevision default = 3;
+
+    handle command AddGroup;
+    handle command AddGroupResponse;
+    handle command ViewGroup;
+    handle command ViewGroupResponse;
+    handle command GetGroupMembership;
+    handle command GetGroupMembershipResponse;
+    handle command RemoveGroup;
+    handle command RemoveGroupResponse;
+    handle command RemoveAllGroups;
+    handle command AddGroupIfIdentifying;
+  }
+
+  server cluster Commissioning {
+    ram      attribute shortAddress default = 0xFFFF;
+    ram      attribute extendedPanId default = 0xFFFFFFFFFFFFFFFF;
+    ram      attribute panId default = 0xFFFF;
+    ram      attribute channelMask default = 0x07FFF800;
+    ram      attribute protocolVersion default = 0x02;
+    ram      attribute stackProfile default = 0x02;
+    ram      attribute startupControl default = 0x03;
+    ram      attribute trustCenterAddress default = 0x0000000000000000;
+    ram      attribute networkKey default = 0x00000000000000000000000000000000;
+    ram      attribute useInsecureJoin default = 0x01;
+    ram      attribute preconfiguredLinkKey default = 0x00000000000000000000000000000000;
+    ram      attribute networkKeySequenceNumber default = 0x00;
+    ram      attribute networkKeyType default = 0x05;
+    ram      attribute networkManagerAddress default = 0x0000;
+    ram      attribute scanAttempts default = 0x05;
+    ram      attribute timeBetweenScans default = 0x0064;
+    ram      attribute rejoinInterval default = 0x003C;
+    ram      attribute maxRejoinInterval default = 0x0E10;
+    ram      attribute indirectPollRate;
+    ram      attribute parentRetryThreshold;
+    ram      attribute concentratorFlag default = 0x00;
+    ram      attribute concentratorRadius default = 0x0F;
+    ram      attribute concentratorDiscoveryTime default = 0x00;
+    ram      attribute clusterRevision default = 2;
+
+    handle command RestartDevice;
+    handle command RestartDeviceResponse;
+    handle command SaveStartupParametersResponse;
+    handle command RestoreStartupParametersResponse;
+    handle command ResetStartupParameters;
+    handle command ResetStartupParametersResponse;
+  }
+
+  server cluster Thermostat {
+    ram      attribute localTemperature;
+    ram      attribute occupiedCoolingSetpoint default = 0x0A28;
+    ram      attribute occupiedHeatingSetpoint default = 0x07D0;
+    ram      attribute controlSequenceOfOperation default = 0x04;
+    ram      attribute systemMode default = 0x01;
+    ram      attribute clusterRevision default = 3;
+
+    handle command SetpointRaiseLower;
+    handle command CurrentWeeklySchedule;
+    handle command SetWeeklySchedule;
+    handle command RelayStatusLog;
+    handle command GetWeeklySchedule;
+    handle command ClearWeeklySchedule;
+    handle command GetRelayStatusLog;
+  }
+
+  server cluster ThermostatUserInterfaceConfiguration {
+    ram      attribute temperatureDisplayMode default = 0x00;
+    ram      attribute keypadLockout default = 0x00;
+    ram      attribute clusterRevision default = 0x0001;
+  }
+}
+endpoint 1 {
+
+  binding cluster Identify;
+
+  server cluster Identify {
+    ram      attribute identifyTime default = 0x0000;
+    ram      attribute commissionState default = 0x0;
+    ram      attribute clusterRevision default = 0x0005;
+
+    handle command Identify;
+    handle command TriggerEffect;
+  }
+
+  server cluster Groups {
+    ram      attribute nameSupport;
+    ram      attribute clusterRevision default = 4;
+
+    handle command AddGroup;
+    handle command AddGroupResponse;
+    handle command ViewGroup;
+    handle command ViewGroupResponse;
+    handle command GetGroupMembership;
+    handle command GetGroupMembershipResponse;
+    handle command RemoveGroup;
+    handle command RemoveGroupResponse;
+    handle command RemoveAllGroups;
+    handle command AddGroupIfIdentifying;
+  }
+
+  server cluster Thermostat {
+    ram      attribute localTemperature;
+    ram      attribute absMinHeatSetpointLimit default = 700;
+    ram      attribute absMaxHeatSetpointLimit default = 3000;
+    ram      attribute absMinCoolSetpointLimit default = 1600;
+    ram      attribute absMaxCoolSetpointLimit default = 3200;
+    ram      attribute localTemperatureCalibration default = 0x00;
+    persist  attribute occupiedCoolingSetpoint default = 0x0A28;
+    persist  attribute occupiedHeatingSetpoint default = 0x07D0;
+    ram      attribute minHeatSetpointLimit default = 700;
+    ram      attribute maxHeatSetpointLimit default = 3000;
+    ram      attribute minCoolSetpointLimit default = 1600;
+    ram      attribute maxCoolSetpointLimit default = 3200;
+    ram      attribute minSetpointDeadBand default = 0x19;
+    ram      attribute controlSequenceOfOperation default = 0x04;
+    persist  attribute systemMode default = 0x01;
+    ram      attribute clusterRevision default = 8;
+
+    handle command SetpointRaiseLower;
+  }
+
+  server cluster ThermostatUserInterfaceConfiguration {
+    ram      attribute temperatureDisplayMode default = 0x00;
+    ram      attribute keypadLockout default = 0x00;
+    ram      attribute clusterRevision default = 2;
+  }
+}
+
+

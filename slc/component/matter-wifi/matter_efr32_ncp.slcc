@@ -12,13 +12,6 @@ metadata:
 provides:
   - name: matter_efr32_ncp
 
-include:
-  - path: slc/inc/wifi
-    file_list:
-      - path: brd4186c.h
-      - path: brd4187c.h
-      - path: sl_custom_board.h
-
 define:
   - name: CORTEXM3_EFM32_MICRO
   - name: EFR32_SERIES2_CONFIG4_MICRO

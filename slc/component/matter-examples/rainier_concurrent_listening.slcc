@@ -8,6 +8,9 @@ description: >
   Provides a PHY rail configuration that allows Concurrent channel listening/fast channel switching on Rainier boards
 id: rainier_concurrent_listening
 quality: internal
+metadata:
+  sbom:
+    license: Zlib
 provides:
   - name: rainier_concurrent_listening
 

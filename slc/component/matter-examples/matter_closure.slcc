@@ -1,0 +1,11 @@
+category: Matter|Examples
+package: matter
+description: >
+  Provides example component for a closure application. This component should be 
+  included in all closure applications to help resolve SLC dependencies. Only applicable to closure applications.
+id: matter_closure
+quality: production
+provides:
+  - name: matter_closure
+ui_hints:
+  visibility: never
