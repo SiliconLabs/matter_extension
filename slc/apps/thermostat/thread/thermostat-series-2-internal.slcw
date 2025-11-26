@@ -1,7 +1,7 @@
 label: thermostat-series-2-internal
 quality: production
 package: matter
-description: Solution containing both a bootloader and a Matter over Thermostat App Example
+description: Solution containing both a bootloader and a Matter over Thread Thermostat App Example
 project:
   - path: ./thermostat.slcp
     id: application

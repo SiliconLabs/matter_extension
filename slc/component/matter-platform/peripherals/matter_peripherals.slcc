@@ -1,0 +1,17 @@
+id: matter_peripherals
+label: Peripherals Component
+description: Peripheral support for Matter Platform certification testing with platform-template app EFR
+package: matter
+category: "Matter|Platform"
+quality: production
+
+requires:
+  - name: matter_buttons
+  - name: matter_leds
+  - name: matter_shell
+  - name: matter_log_uart
+  - name: matter_default_lcd_config
+provides:
+  - name: matter_peripherals
+conflicts:
+  - name: matter_log_rtt

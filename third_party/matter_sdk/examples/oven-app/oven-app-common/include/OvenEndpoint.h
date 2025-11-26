@@ -60,7 +60,6 @@ public:
 private:
     EndpointId mEndpointId;
 
-    // Static arrays moved to implementation file to reduce header size
     static const detail::Structs::ModeTagStruct::Type sModeTagsBake[];
     static const detail::Structs::ModeTagStruct::Type sModeTagsConvection[];
     static const detail::Structs::ModeTagStruct::Type sModeTagsGrill[];
@@ -72,13 +71,23 @@ private:
     static const detail::Structs::ModeTagStruct::Type sModeTagsProofing[];
 
     static const detail::Structs::ModeOptionStruct::Type skModeOptions[];
+
+    /**
+     * @brief Checks if the provided mode is supported.
+     *
+     * @param mode The mode to check.
+     * @return true if the mode is supported, false otherwise.
+     */
+    bool IsSupportedMode(uint8_t mode);
 };
 
 class TemperatureControlledCabinetEndpoint
 {
 public:
+    static constexpr uint8_t kModeBaseFeatures = 0; // No specific features for ModeBase::Instance
     TemperatureControlledCabinetEndpoint(EndpointId endpointId) :
-        mEndpointId(endpointId), mOvenModeDelegate(mEndpointId), mOvenModeInstance(&mOvenModeDelegate, mEndpointId, OvenMode::Id, 0)
+        mEndpointId(endpointId), mOvenModeDelegate(mEndpointId),
+        mOvenModeInstance(&mOvenModeDelegate, mEndpointId, OvenMode::Id, kModeBaseFeatures)
     {}
 
     /**
@@ -88,6 +97,13 @@ public:
      * @return returns CHIP_NO_ERROR on success, or an error code on failure.
      */
     CHIP_ERROR Init();
+
+    /**
+     * @brief Get the oven mode delegate instance.
+     *
+     * @return Reference to the oven mode delegate.
+     */
+    OvenModeDelegate & GetOvenModeDelegate() { return mOvenModeDelegate; }
 
 private:
     EndpointId mEndpointId = kInvalidEndpointId;
@@ -105,13 +121,6 @@ class OvenEndpoint
 {
 public:
     OvenEndpoint() {}
-
-    /**
-     * @brief Initialize the oven endpoint.
-     *
-     * @return returns CHIP_NO_ERROR on success, or an error code on failure.
-     */
-    CHIP_ERROR Init();
 };
 
 } // namespace Oven

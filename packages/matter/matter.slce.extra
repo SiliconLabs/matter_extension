@@ -870,6 +870,7 @@ extra_files:
   - slc/component/matter-core-sdk/libsystemlayer.slcc
   - slc/component/matter-core-sdk/efr32_icd_subscription_callback.slcc
   - slc/component/matter-core-sdk/tracing.slcc
+  - slc/component/matter-core-sdk/energy_tracing.slcc
   - slc/component/matter-core-sdk/responders.slcc
   - slc/component/matter-core-sdk/efr32.slcc
   - slc/component/matter-core-sdk/configuration_data.slcc

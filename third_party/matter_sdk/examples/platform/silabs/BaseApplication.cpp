@@ -321,23 +321,16 @@ CHIP_ERROR BaseApplication::Init()
         return err;
     }
 #ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
-#if defined(SL_MATTER_ZIGBEE_SEQUENTIAL) ||                                                                                        \
-    (defined(SL_MATTER_ZIGBEE_CMP) && !defined(SL_CATALOG_RAIL_UTIL_IEEE802154_FAST_CHANNEL_SWITCHING_PRESENT))
+#ifdef SL_MATTER_ZIGBEE_SEQUENTIAL
     PlatformMgr().LockChipStack();
     uint16_t nbOfMatterFabric = Server::GetInstance().GetFabricTable().FabricCount();
     PlatformMgr().UnlockChipStack();
     if (nbOfMatterFabric != 0)
     {
-#ifdef SL_MATTER_ZIGBEE_CMP
-        uint8_t channel = otLinkGetChannel(ThreadStackMgrImpl().OTInstance());
-        SILABS_LOG("Setting Zigbee channel to %d", channel);
-        Zigbee::RequestStart(channel);
-#else
         Zigbee::RequestLeave();
-#endif // SL_MATTER_ZIGBEE_CMP
     }
     else
-#endif // SL_MATTER_ZIGBEE_SEQUENTIAL || (SL_MATTER_ZIGBEE_CMP && !SL_CATALOG_RAIL_UTIL_IEEE802154_FAST_CHANNEL_SWITCHING_PRESENT)
+#endif // SL_MATTER_ZIGBEE_SEQUENTIAL
     {
         Zigbee::RequestStart();
     }
@@ -1050,14 +1043,11 @@ void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
 
 // SL-Only
 #ifdef SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
-#if defined(SL_MATTER_ZIGBEE_CMP) && !defined(SL_CATALOG_RAIL_UTIL_IEEE802154_FAST_CHANNEL_SWITCHING_PRESENT)
-        uint8_t channel = otLinkGetChannel(DeviceLayer::ThreadStackMgrImpl().OTInstance());
-        Zigbee::RequestStart(channel);     // leave handle internally
-#elif defined(SL_MATTER_ZIGBEE_SEQUENTIAL) // Matter Zigbee sequential
+#ifdef SL_MATTER_ZIGBEE_SEQUENTIAL // Matter Zigbee sequential
         Zigbee::RequestLeave();
         Zigbee::ZLLNotFactoryNew();
-#endif                                     // SL_MATTER_ZIGBEE_CMP
-#endif                                     // SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
+#endif // SL_MATTER_ZIGBEE_SEQUENTIAL
+#endif // SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
     }
     break;
     default:

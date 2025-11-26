@@ -22,6 +22,7 @@
 
 #include <AppConfig.h>
 
+#include "OvenManager.h"
 #include <app-common/zap-generated/attributes/Accessors.h>
 #include <app-common/zap-generated/callback.h>
 #include <app-common/zap-generated/cluster-objects.h>
@@ -36,11 +37,27 @@ using namespace ::chip;
 void MatterPostAttributeChangeCallback(const app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
                                        uint8_t * value)
 {
-    switch (attributePath.mClusterId)
+    ClusterId clusterId     = attributePath.mClusterId;
+    AttributeId attributeId = attributePath.mAttributeId;
+    switch (clusterId)
     {
     case app::Clusters::Identify::Id:
-        ChipLogProgress(Zcl, "Identify cluster ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u",
-                        ChipLogValueMEI(attributePath.mAttributeId), type, *value, size);
+        ChipLogDetail(Zcl, "Identify cluster ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u", ChipLogValueMEI(attributeId),
+                      type, *value, size);
+        break;
+    case app::Clusters::OnOff::Id:
+        ChipLogDetail(Zcl, "OnOff cluster ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u", ChipLogValueMEI(attributeId),
+                      type, *value, size);
+        OvenManager::GetInstance().OnOffAttributeChangeHandler(attributePath.mEndpointId, attributeId, value, size);
+        break;
+    case app::Clusters::TemperatureControl::Id:
+        ChipLogDetail(Zcl, "TemperatureControl cluster ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u",
+                      ChipLogValueMEI(attributeId), type, *value, size);
+        break;
+    case app::Clusters::OvenMode::Id:
+        ChipLogDetail(Zcl, "OvenMode cluster ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u", ChipLogValueMEI(attributeId),
+                      type, *value, size);
+        OvenManager::GetInstance().OvenModeAttributeChangeHandler(attributePath.mEndpointId, attributeId, value, size);
         break;
     default:
         break;

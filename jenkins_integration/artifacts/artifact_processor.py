@@ -12,6 +12,7 @@ import os
 import shutil
 import sys
 import zipfile
+import re
 
 # Add the workspace root to Python path to enable importing internal modules
 workspace_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -22,6 +23,58 @@ import jenkins_integration.config as config
 from jenkins_integration.github.github_workflow import _make_github_api_request
 from jenkins_integration.artifacts.ubai_client import upload_to_ubai
 from jenkins_integration.artifacts.artifactory_client import upload_to_artifactory
+
+
+def _get_matter_extension_version():
+    """
+    Extract the version from the matter.slce file.
+    
+    Returns:
+        str: Version string from matter.slce file
+        
+    Raises:
+        RuntimeError: If matter.slce file is not found or version cannot be parsed
+    """
+    matter_slce_path = os.path.join(workspace_root, 'matter.slce')
+    
+    if not os.path.exists(matter_slce_path):
+        raise RuntimeError(f"matter.slce file not found at: {matter_slce_path}")
+    
+    try:
+        with open(matter_slce_path, 'r') as file:
+            content = file.read()
+            
+        version_match = re.search(r'^version:\s*([^\s]+)', content, re.MULTILINE)
+        if version_match:
+            version = version_match.group(1)
+            print(f"Extracted Matter extension version: {version}")
+            return version
+        else:
+            raise RuntimeError("Could not find version field in matter.slce")
+            
+    except Exception as e:
+        raise RuntimeError(f"Error: {e}")
+
+
+def _generate_artifactory_artifact_name(original_name):
+    """
+    Generate a custom artifact name for Artifactory uploads in the format extension.matter_<version>.
+    
+    Args:
+        original_name (str): Original artifact name from GitHub Actions
+        
+    Returns:
+        str: Custom artifact name for Artifactory (e.g., 'extension.matter_2.8.0.zip')
+    """
+    try:
+        version = _get_matter_extension_version()
+        extension = '.zip' if original_name.endswith('.zip') else ''
+        artifactory_name = f"extension.matter_{version}{extension}"
+        print(f"Generated Artifactory artifact name: {artifactory_name}")
+        return artifactory_name
+    except Exception as e:
+        print(f"Warning: Failed to generate custom artifact name, using original: {e}")
+        return original_name
 
 
 def download_and_upload_artifacts(workflow_id, branch_name, build_number, sqa=False):
@@ -46,7 +99,7 @@ def download_and_upload_artifacts(workflow_id, branch_name, build_number, sqa=Fa
         _upload_individual_artifacts(artifact_info['extracted_folder'], branch_name, build_number, sqa)
         print("Uploading merged artifacts to UBAI and Artifactory.")
         _upload_merged_artifacts(artifact_info['artifact_file'], artifact_info['artifact_name'], 
-                               branch_name, build_number)
+                               branch_name, build_number, sqa)
         print("Artifact download and upload process completed successfully.")
     except Exception as e:
         print(f"Error during artifact processing: {e}")
@@ -234,7 +287,7 @@ def _upload_individual_artifacts(extracted_folder, branch_name, build_number, sq
         raise RuntimeError(f"Failed to upload individual artifacts: {e}")
 
 
-def _upload_merged_artifacts(artifact_file, artifact_name, branch_name, build_number):
+def _upload_merged_artifacts(artifact_file, artifact_name, branch_name, build_number, sqa=False):
     """
     Upload the merged artifact to both UBAI and Artifactory.
     
@@ -256,7 +309,9 @@ def _upload_merged_artifacts(artifact_file, artifact_name, branch_name, build_nu
             branch_name=branch_name,
             build_number=build_number
         )
-        upload_to_artifactory(artifact_file, artifact_name, branch_name, str(build_number))
+        if not sqa:
+            artifactory_artifact_name = _generate_artifactory_artifact_name(artifact_name)
+            upload_to_artifactory(artifact_file, artifactory_artifact_name, branch_name, str(build_number))
     except Exception as e:
         raise RuntimeError(f"Failed to upload merged artifacts: {e}")
 
@@ -418,21 +473,39 @@ def _determine_app_info(app_name_folder, board_id, sqa):
     Returns:
         dict: Application information containing app_name and app_type
     """
+    board_id = board_id.split(",")[0] # Handles 1019A 3MB BRD1019A,SIMG301M113WIH
     if "series-" in app_name_folder:
         app_name = f"{board_id}-OpenThread"
     else:
         app_name = f"{board_id}-WiFi"
     app_type = None
+    # Default zigbee-matter-light app which is concurrent.
+    if "zigbee-matter-light" in app_name_folder and "sequential" not in app_name_folder:
+        app_type = "concurrent"
     if app_name_folder.split("solution")[1] is not None:
+        folder_app_name = app_name_folder.split("solution")[0].split("-series")[0]
         app_name_suffix = app_name_folder.split("solution")[1]
-        if "sequential" in app_name_suffix:
+        cmp_apps = ["zigbee-matter-light", "thermostat"]
+        if folder_app_name in cmp_apps and "sequential" in app_name_suffix:
             app_type = "sequential"
             app_name_suffix = app_name_suffix.split("sequential")[1]
-        elif "cmp-concurrent" in app_name_suffix:
+        elif folder_app_name in cmp_apps and "cmp-concurrent" in app_name_suffix:
             app_type = "concurrent"
             app_name_suffix = app_name_suffix.split("cmp-concurrent")[1]
+        elif folder_app_name in cmp_apps and "concurrent-listening" in app_name_suffix:
+            app_type = "concurrent-listening"
+        elif "lto" in app_name_suffix:
+            app_type = "lto"
+            app_name_suffix = app_name_suffix.split("lto")[1]
         elif "icd" in app_name_suffix:
             app_type = "icd"
+            app_name_suffix = app_name_suffix.split("icd")[1]
+        elif "brd4357a" in app_name_suffix:
+            app_type = "brd4357a"
+            app_name_suffix = app_name_suffix.split("brd4357a")[1]
+        elif "trustzone" in app_name_suffix:
+            app_type = "trustzone"
+            app_name_suffix = app_name_suffix.split("trustzone")[1]
         if sqa:
             app_name = f"{app_name}{app_name_suffix}"
     return {
@@ -452,6 +525,7 @@ def _upload_board_artifact_files(artifact_folder, app_info, board_id, branch_nam
         branch_name (str): Branch name for upload
         build_number (int): Build number for upload
     """
+    board_id = board_id.split(",")[0]  # Handles 1019A 3MB BRD1019A,SIMG301M113WIH
     for file_name in os.listdir(artifact_folder):
         file_path = os.path.join(artifact_folder, file_name)
         if os.path.isfile(file_path) and file_name.endswith(('.s37', '.rps')):

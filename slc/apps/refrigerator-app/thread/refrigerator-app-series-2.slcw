@@ -1,7 +1,7 @@
 label: refrigerator-app-series-2
 quality: production
 package: matter
-description: Solution containing both a bootloader and a Matter over Refrigerator App Example
+description: Solution containing both a bootloader and a Matter over Thread Refrigerator App Example
 project:
   - path: ./refrigerator-app.slcp
     id: application

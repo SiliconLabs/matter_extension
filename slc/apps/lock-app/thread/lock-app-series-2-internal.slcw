@@ -1,7 +1,7 @@
 label: lock-app-series-2-internal
 quality: production
 package: matter
-description: Solution containing both a bootloader and a Matter over Lock App Example
+description: Solution containing both a bootloader and a Matter over Thread Lock App Example
 project:
   - path: ./lock-app.slcp
     id: application

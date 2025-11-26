@@ -26,15 +26,10 @@ struct AppEvent : public BaseAppEvent
     enum AppEventTypes
     {
         kEventType_Oven = BaseAppEvent::kEventType_Max + 1,
-        kEventType_Install,
     };
 
-    union
+    struct
     {
-        struct
-        {
-            uint8_t Action;
-            int32_t Actor;
-        } OvenEvent;
-    };
+        uint8_t Action;
+    } OvenEvent;
 };

@@ -64,7 +64,6 @@ typedef struct
     uint32_t systemPreemptionRatio;
     uint32_t activeTaskCount;
     uint32_t terminatedTaskCount;
-    uint32_t totalTaskCount;
 } SystemTaskStats;
 
 /**

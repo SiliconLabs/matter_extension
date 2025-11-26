@@ -1,7 +1,7 @@
 label: zigbee-matter-light-series-3
 quality: production
 package: matter
-description: Matter solution containing both a Matter bootloader and Light Zigbee Matter Example
+description: Matter solution containing both a Matter bootloader and a Matter over Thread Light Zigbee Matter Example
 project:
   - path: ./zigbee-matter-light.slcp
     id: application

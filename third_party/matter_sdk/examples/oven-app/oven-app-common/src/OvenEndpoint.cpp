@@ -17,7 +17,10 @@
  */
 
 #include "OvenEndpoint.h"
+#include <app-common/zap-generated/attributes/Accessors.h>
 #include <app-common/zap-generated/cluster-objects.h>
+
+#include "OvenManager.h"
 #include <app/clusters/mode-base-server/mode-base-cluster-objects.h>
 #include <lib/core/CHIPError.h>
 #include <lib/support/CodeUtils.h>
@@ -29,59 +32,55 @@ using namespace chip::app::Clusters::Oven;
 using namespace chip::app::Clusters::OvenMode;
 using namespace chip::app::Clusters::TemperatureControlledCabinet;
 using chip::Protocols::InteractionModel::Status;
+using detail::Structs::ModeTagStruct::Type;
 
 // Static member definitions
-const detail::Structs::ModeTagStruct::Type OvenModeDelegate::sModeTagsBake[1] = { { .value = to_underlying(ModeTag::kBake) } };
+const Type OvenModeDelegate::sModeTagsBake[1] = { { .value = to_underlying(ModeTag::kBake) } };
 
-const detail::Structs::ModeTagStruct::Type OvenModeDelegate::sModeTagsConvection[1] = { { .value = to_underlying(
-                                                                                              ModeTag::kConvection) } };
+const Type OvenModeDelegate::sModeTagsConvection[1] = { { .value = to_underlying(ModeTag::kConvection) } };
 
-const detail::Structs::ModeTagStruct::Type OvenModeDelegate::sModeTagsGrill[1] = { { .value = to_underlying(ModeTag::kGrill) } };
+const Type OvenModeDelegate::sModeTagsGrill[1] = { { .value = to_underlying(ModeTag::kGrill) } };
 
-const detail::Structs::ModeTagStruct::Type OvenModeDelegate::sModeTagsRoast[1] = { { .value = to_underlying(ModeTag::kRoast) } };
+const Type OvenModeDelegate::sModeTagsRoast[1] = { { .value = to_underlying(ModeTag::kRoast) } };
 
-const detail::Structs::ModeTagStruct::Type OvenModeDelegate::sModeTagsClean[1] = { { .value = to_underlying(ModeTag::kClean) } };
+const Type OvenModeDelegate::sModeTagsClean[1] = { { .value = to_underlying(ModeTag::kClean) } };
 
-const detail::Structs::ModeTagStruct::Type OvenModeDelegate::sModeTagsConvectionBake[1] = { { .value = to_underlying(
-                                                                                                  ModeTag::kConvectionBake) } };
+const Type OvenModeDelegate::sModeTagsConvectionBake[1] = { { .value = to_underlying(ModeTag::kConvectionBake) } };
 
-const detail::Structs::ModeTagStruct::Type OvenModeDelegate::sModeTagsConvectionRoast[1] = { { .value = to_underlying(
-                                                                                                   ModeTag::kConvectionRoast) } };
+const Type OvenModeDelegate::sModeTagsConvectionRoast[1] = { { .value = to_underlying(ModeTag::kConvectionRoast) } };
 
-const detail::Structs::ModeTagStruct::Type OvenModeDelegate::sModeTagsWarming[1] = { { .value =
-                                                                                           to_underlying(ModeTag::kWarming) } };
+const Type OvenModeDelegate::sModeTagsWarming[1] = { { .value = to_underlying(ModeTag::kWarming) } };
 
-const detail::Structs::ModeTagStruct::Type OvenModeDelegate::sModeTagsProofing[1] = { { .value =
-                                                                                            to_underlying(ModeTag::kProofing) } };
+const Type OvenModeDelegate::sModeTagsProofing[1] = { { .value = to_underlying(ModeTag::kProofing) } };
 
 const detail::Structs::ModeOptionStruct::Type OvenModeDelegate::skModeOptions[to_underlying(OvenModes::kModeCount)] = {
     { .label    = CharSpan::fromCharString("Bake"),
       .mode     = to_underlying(OvenModes::kModeBake),
-      .modeTags = DataModel::List<const detail::Structs::ModeTagStruct::Type>(sModeTagsBake) },
+      .modeTags = DataModel::List<const Type>(sModeTagsBake) },
     { .label    = CharSpan::fromCharString("Convection"),
       .mode     = to_underlying(OvenModes::kModeConvection),
-      .modeTags = DataModel::List<const detail::Structs::ModeTagStruct::Type>(sModeTagsConvection) },
+      .modeTags = DataModel::List<const Type>(sModeTagsConvection) },
     { .label    = CharSpan::fromCharString("Grill"),
       .mode     = to_underlying(OvenModes::kModeGrill),
-      .modeTags = DataModel::List<const detail::Structs::ModeTagStruct::Type>(sModeTagsGrill) },
+      .modeTags = DataModel::List<const Type>(sModeTagsGrill) },
     { .label    = CharSpan::fromCharString("Roast"),
       .mode     = to_underlying(OvenModes::kModeRoast),
-      .modeTags = DataModel::List<const detail::Structs::ModeTagStruct::Type>(sModeTagsRoast) },
+      .modeTags = DataModel::List<const Type>(sModeTagsRoast) },
     { .label    = CharSpan::fromCharString("Clean"),
       .mode     = to_underlying(OvenModes::kModeClean),
-      .modeTags = DataModel::List<const detail::Structs::ModeTagStruct::Type>(sModeTagsClean) },
+      .modeTags = DataModel::List<const Type>(sModeTagsClean) },
     { .label    = CharSpan::fromCharString("Convection Bake"),
       .mode     = to_underlying(OvenModes::kModeConvectionBake),
-      .modeTags = DataModel::List<const detail::Structs::ModeTagStruct::Type>(sModeTagsConvectionBake) },
+      .modeTags = DataModel::List<const Type>(sModeTagsConvectionBake) },
     { .label    = CharSpan::fromCharString("Convection Roast"),
       .mode     = to_underlying(OvenModes::kModeConvectionRoast),
-      .modeTags = DataModel::List<const detail::Structs::ModeTagStruct::Type>(sModeTagsConvectionRoast) },
+      .modeTags = DataModel::List<const Type>(sModeTagsConvectionRoast) },
     { .label    = CharSpan::fromCharString("Warming"),
       .mode     = to_underlying(OvenModes::kModeWarming),
-      .modeTags = DataModel::List<const detail::Structs::ModeTagStruct::Type>(sModeTagsWarming) },
+      .modeTags = DataModel::List<const Type>(sModeTagsWarming) },
     { .label    = CharSpan::fromCharString("Proofing"),
       .mode     = to_underlying(OvenModes::kModeProofing),
-      .modeTags = DataModel::List<const detail::Structs::ModeTagStruct::Type>(sModeTagsProofing) }
+      .modeTags = DataModel::List<const Type>(sModeTagsProofing) }
 };
 
 CHIP_ERROR OvenModeDelegate::Init()
@@ -92,9 +91,57 @@ CHIP_ERROR OvenModeDelegate::Init()
 
 void OvenModeDelegate::HandleChangeToMode(uint8_t NewMode, ModeBase::Commands::ChangeToModeResponse::Type & response)
 {
-    ChipLogProgress(Zcl, "OvenModeDelegate::HandleChangeToMode: NewMode=%d", NewMode);
-    // TODO: Implement logic to change the oven mode.
-    response.status = to_underlying(ModeBase::StatusCode::kSuccess);
+    ChipLogProgress(Zcl, "OvenModeDelegate forwarding mode change to OvenManager (ep=%u newMode=%u)", mEndpointId, NewMode);
+    // Lambda helper to set response status and optional statusText
+    auto setResponse = [&](ModeBase::StatusCode code, const char * text = nullptr) {
+        response.status = to_underlying(code);
+        if (text != nullptr)
+        {
+            response.statusText.SetValue(CharSpan::fromCharString(text));
+        }
+    };
+
+    // Verify newMode is among supported modes
+    if (!IsSupportedMode(NewMode))
+    {
+        setResponse(ModeBase::StatusCode::kUnsupportedMode);
+        return;
+    }
+
+    // Read Current Oven Mode
+    uint8_t currentMode;
+    Status attrStatus = OvenMode::Attributes::CurrentMode::Get(mEndpointId, &currentMode);
+    if (attrStatus != Status::Success)
+    {
+        ChipLogError(AppServer, "OvenManager: Failed to read CurrentMode");
+        setResponse(ModeBase::StatusCode::kGenericFailure, "Read CurrentMode failed");
+        return;
+    }
+
+    // No action needed if current mode is the same as new mode
+    if (currentMode == NewMode)
+    {
+        setResponse(ModeBase::StatusCode::kSuccess);
+        return;
+    }
+
+    if (OvenManager::GetInstance().IsTransitionBlocked(currentMode, NewMode))
+    {
+        ChipLogProgress(AppServer, "OvenManager: Blocked transition %u -> %u", currentMode, NewMode);
+        setResponse(ModeBase::StatusCode::kGenericFailure, "Transition blocked");
+        return;
+    }
+
+    // Write new mode
+    Status writeStatus = OvenMode::Attributes::CurrentMode::Set(mEndpointId, NewMode);
+    if (writeStatus != Status::Success)
+    {
+        ChipLogError(AppServer, "OvenManager: Failed to write CurrentMode");
+        setResponse(ModeBase::StatusCode::kGenericFailure, "Write CurrentMode failed");
+        return;
+    }
+
+    setResponse(ModeBase::StatusCode::kSuccess);
 }
 
 CHIP_ERROR OvenModeDelegate::GetModeLabelByIndex(uint8_t modeIndex, MutableCharSpan & label)
@@ -131,7 +178,14 @@ CHIP_ERROR TemperatureControlledCabinetEndpoint::Init()
     return CHIP_NO_ERROR;
 }
 
-CHIP_ERROR OvenEndpoint::Init()
+bool OvenModeDelegate::IsSupportedMode(uint8_t mode)
 {
-    return CHIP_NO_ERROR;
+    for (auto const & opt : skModeOptions)
+    {
+        if (opt.mode == mode)
+        {
+            return true;
+        }
+    }
+    return false;
 }

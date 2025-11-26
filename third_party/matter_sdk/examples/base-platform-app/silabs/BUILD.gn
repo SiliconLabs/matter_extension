@@ -76,7 +76,7 @@ if (wifi_soc) {
   siwx917_sdk("sdk") {
     sources = common_sources
     include_dirs =
-        [ "${chip_root}/src/platform/silabs/SiWx917" ] + common_include_dirs
+        [ "${chip_root}/src/platform/silabs/SiWx" ] + common_include_dirs
     defines = common_defines
   }
 } else {
@@ -87,12 +87,6 @@ if (wifi_soc) {
 
     if (use_wf200) {
       include_dirs += [ "${examples_plat_dir}/wf200" ]
-    }
-    if (chip_enable_ble_rs911x) {
-      include_dirs += [
-        "${examples_plat_dir}/rs911x",
-        "${examples_plat_dir}/rs911x/hal",
-      ]
     }
     defines = common_defines
   }

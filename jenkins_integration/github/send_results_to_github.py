@@ -174,7 +174,6 @@ def get_check_run_id(commit_sha):
     
     print(f"Exceeded maximum retries ({MAX_RETRIES}). Check run ID not found.")
     sys.exit(1)
-    return None
 
 
 def find_check_run_by_name(check_runs):

@@ -1,0 +1,26 @@
+id: matter_multipan_internal
+label: Matter Multi-PAN with Internal Initialization
+description: Enables Multi-PAN support for Matter over Thread devices with internal initialization. Reach out to Silicon Labs support for details on how to use this feature.
+package: matter
+category: Matter-Thread
+quality: evaluation
+metadata:
+  sbom:
+    license: Zlib
+requires:
+  - name: matter_multipan
+provides:
+  - name: matter_multipan_internal
+source:
+  - path: silabs_utils/init_matter_multipan.cpp
+include:
+  - path: silabs_utils
+    file_list:
+      - path: init_matter_multipan.h
+template_contribution:
+  - name: ot_init
+    value: sl_internal_app_init_second_instance
+    priority: 15
+  - name: ot_init
+    value: sl_internal_app_init_cli
+    priority: 22

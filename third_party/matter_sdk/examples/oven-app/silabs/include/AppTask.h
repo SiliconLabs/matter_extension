@@ -78,6 +78,13 @@ public:
      */
     static void ButtonEventHandler(uint8_t button, uint8_t btnAction);
 
+    /**
+     * @brief Handle oven-related AppEvents to update UI and LEDs.
+     *
+     * @param aEvent Oven Event to process
+     */
+    static void OvenActionHandler(AppEvent * aEvent);
+
 private:
     static AppTask sAppTask;
 
@@ -89,11 +96,22 @@ private:
     CHIP_ERROR AppInit() override;
 
     /**
-     * @brief PB0 Button event processing function
-     *        Press and hold will trigger a factory reset timer start
-     *        Press and release will restart BLEAdvertising if not commissioned
+     * @brief PB1 Button event processing function for oven functionality
+     *        Press and release will toggle cooktop and cook surface states
      *
      * @param aEvent button event being processed
      */
-    static void ButtonHandler(AppEvent * aEvent);
+    static void OvenButtonHandler(AppEvent * aEvent);
+
+    /**
+     * @brief Updates the cluster state for button actions
+     *
+     * The context parameter contains the desired OnOff state encoded as an intptr_t
+     * (0 == Off, non-zero == On). This value is provided by the caller via
+     * PlatformMgr().ScheduleWork. The worker will set the OnOff attribute to
+     * this boolean value.
+     *
+     * @param context bool value encoded as intptr_t
+     */
+    static void UpdateClusterState(intptr_t context);
 };

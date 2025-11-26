@@ -99,6 +99,11 @@ CHIP_ERROR TasksCommandHandler(int argc, char ** argv)
     return SilabsTracer::Instance().OutputTaskStatistics();
 }
 
+CHIP_ERROR EnergyCommandHandler(int argc, char ** argv)
+{
+    return SilabsTracer::Instance().OutputPowerManagerStatistics();
+}
+
 } // namespace
 
 namespace TracingCommands {
@@ -111,6 +116,7 @@ void RegisterCommands()
         { &MetricsCommandHandler, "metrics", "Display runtime metrics. Usage: metrics <TimeTraceOperation>" },
         { &FlushCommandHandler, "flush", "Display buffered traces. Usage: flush <TimeTraceOperation>" },
         { &TasksCommandHandler, "tasks", "Display FreeRTOS task statistics." },
+        { &EnergyCommandHandler, "energy", "Display energy mode statistics." },
     };
     static const Shell::Command cmds_silabs_tracing = { &TracingCommandHandler, "tracing",
                                                         "Dispatch Silicon Labs Tracing command" };

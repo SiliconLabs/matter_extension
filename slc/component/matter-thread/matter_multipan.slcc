@@ -1,0 +1,20 @@
+id: matter_multipan
+label: Matter Multi-PAN Support
+description: Enables Multi-PAN support for Matter over Thread devices. Reach out to Silicon Labs support for details on how to use this feature.
+package: matter
+category: Matter-Thread
+quality: evaluation
+metadata:
+  sbom:
+    license: Zlib
+requires:
+  - name: matter_thread
+  - name: matter_thread_cli
+  - name: ot_multi_instance_cli
+  - name: ot_multi_instance_cert_libs
+  - name: matter_crypto
+provides:
+  - name: matter_multipan
+define:
+  - name: CHIP_DEVICE_CONFIG_ENABLE_MULTI_PAN
+    value: 1

@@ -1,0 +1,37 @@
+#/***************************************************************************
+# * @file args.gni
+# * @brief Instrumenting for matter operation tracing for the Silicon Labs platform.
+# *******************************************************************************
+# * # License
+# * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
+# *******************************************************************************
+# *
+# * The licensor of this software is Silicon Laboratories Inc. Your use of this
+# * software is governed by the terms of Silicon Labs Master Software License
+# * Agreement (MSLA) available at
+# * www.silabs.com/about-us/legal/master-software-license-agreement. This
+# * software is distributed to you in Source Code format and is governed by the
+# * sections of the MSLA applicable to Source Code.
+# *
+# ******************************************************************************/
+
+declare_args() {
+  # When enabled, this sets:
+  #  - configGENERATE_RUN_TIME_STATS in FreeRTOS
+  #  - configUSE_STATS_FORMATTING_FUNCTIONS in FreeRTOS
+  #  - Runtime statistics timer configuration
+  #  - Task switching hooks for statistics collection
+  silabs_tracing_runtime_stats = false
+
+  # This shows a simple output about energy states and their statistics. Use "tracing energy" in matterCli.
+  silabs_tracing_energy_stats = false
+
+  # Debug output of each energy state transition, external analysis required. Can be enabled independently from tracing.
+  silabs_tracing_energy_traces = false
+
+  # Time to wait before outputting the results
+  silabs_tracing_energy_traces_seconds = 600
+
+  # Maximum number of energy traces to store
+  silabs_tracing_energy_traces_max = 3000
+}

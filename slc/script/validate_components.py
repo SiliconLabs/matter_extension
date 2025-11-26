@@ -53,12 +53,33 @@ def _sanitize_slc_path(slc_path: str) -> str:
     return slc_path.strip()
 
 
+def has_non_toolchain_issues(output: str) -> bool:
+    """!
+    @brief Check if output contains issues other than toolchain warnings.
+    
+    @param output The validation output string to check.
+    @return True if there are non-toolchain issues; False otherwise.
+    """
+    lines = output.split('\n')
+    
+    # Filter out toolchain warnings, "No issues detected", and empty lines
+    significant_lines = [
+        line for line in lines
+        if line.strip() and
+           not line.strip().startswith("toolchain_settings:") and
+           "No toolchain setting schema is defined" not in line and
+           "No issues detected" not in line
+    ]
+    
+    return len(significant_lines) > 0
+
+
 def print_cleansed(output: Iterable[str], stash: bool = False) -> None:
     """!
     @brief Print validator output while removing extra noise.
 
     Do not print logs for components without any issues (those that end with
-    "No issues detected").
+    "No issues detected"). Also filters out toolchain-related warnings.
 
     @param output Iterable of output strings to cleanse and log.
     @param stash  If True, drop the first 2 lines from SLC output (stash-mode formatting).
@@ -67,7 +88,15 @@ def print_cleansed(output: Iterable[str], stash: bool = False) -> None:
         lines = item.split('\n')
         if lines and "No issues detected" in lines[-1]:
             break
-        cleaned_output = '\n'.join(lines[2:]) if stash else '\n'.join(lines)
+        
+        # Filter out toolchain warnings
+        filtered_lines = [
+            line for line in lines 
+            if not line.strip().startswith("toolchain_settings:") and
+               "No toolchain setting schema is defined" not in line
+        ]
+        
+        cleaned_output = '\n'.join(filtered_lines[2:]) if stash else '\n'.join(filtered_lines)
         cleaned_output = cleaned_output.strip()
         if cleaned_output:
             logger.info("%s\n", cleaned_output)
@@ -102,13 +131,19 @@ def validate_slcc_files(directory: str, slc_cmd: str, stash: bool = False) -> bo
                         capture_output=True,
                         text=True,
                     )
-                    results.append((completed.stdout or "").strip())
+                    output = (completed.stdout or "").strip()
+                    results.append(output)
+                    # Only mark as failure if there are non-toolchain issues
+                    if has_non_toolchain_issues(output):
+                        success = False
                 except subprocess.CalledProcessError as e:
                     out = (e.stdout or "")
                     err = (e.stderr or "")
                     combined = (out + ("\n" if out and err else "") + err).strip()
                     results.append(combined)
-                    success = False
+                    # Only mark as failure if there are non-toolchain issues
+                    if has_non_toolchain_issues(combined):
+                        success = False
                 except FileNotFoundError as e:
                     # slc not installed or not found on PATH
                     results.append(str(e))

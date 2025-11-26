@@ -1,0 +1,11 @@
+category: Matter|Examples
+package: matter
+description: >
+  Provides example component for a Platform application. This component should be 
+  included in all platform applications to help resolve SLC dependencies. Only applicable to platform applications.
+id: matter_platform_template
+quality: production
+provides:
+  - name: matter_platform_template
+ui_hints:
+  visibility: never

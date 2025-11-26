@@ -1,7 +1,7 @@
 label: lighting-app-series-2
 quality: production
 package: matter
-description: Solution containing both a bootloader and a Matter over Lighting App Example
+description: Solution containing both a bootloader and a Matter over Thread Lighting App Example
 project:
   - path: ./lighting-app.slcp
     id: application

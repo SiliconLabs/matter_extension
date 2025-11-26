@@ -49,14 +49,14 @@ conflicts:
 
 source:
   # tinycrypt source
-  - path: third_party/matter_sdk/src/platform/silabs/SiWx917/CHIPCryptoPALTinyCrypt.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/SiWx/CHIPCryptoPALTinyCrypt.cpp
   - path: third_party/matter_support/tinycrypt/src/ecc.c
   - path: third_party/matter_support/tinycrypt/src/ecc_dh.c
   - path: third_party/matter_support/tinycrypt/src/ecc_dsa.c
   - path: third_party/matter_support/tinycrypt/src/tinycrypt_util.c
 
 include:
-  - path: third_party/matter_sdk/src/platform/silabs/SiWx917
+  - path: third_party/matter_sdk/src/platform/silabs/SiWx
     file_list:
       - path: siwx917-chip-mbedtls-config.h
   - path: third_party/matter_support/tinycrypt/inc

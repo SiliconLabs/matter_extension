@@ -278,6 +278,11 @@
             "path": "../../../third_party/matter_sdk/src/app/zap-templates/templates/app/codedriven-init-shutdown.cpp.zapt",
             "name": "Matter code driven cluster init and shutdown calls",
             "output": "CodeDrivenInitShutdown.cpp"
+        },
+        {
+            "path": "templates/app/slc_compatibility/static-cluster-config-Descriptor.zapt",
+            "name": "Descriptor static cluster configuration",
+            "output": "app/static-cluster-config/Descriptor.h"
         }
 
     ],

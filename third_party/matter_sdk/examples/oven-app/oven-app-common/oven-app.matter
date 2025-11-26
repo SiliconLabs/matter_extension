@@ -426,6 +426,77 @@ cluster OnOff = 6 {
   command OnWithTimedOff(OnWithTimedOffRequest): DefaultSuccess = 66;
 }
 
+/** Attributes and commands for switching devices between 'On' and 'Off' states. */
+cluster OnOff = 6 {
+  revision 6;
+
+  enum DelayedAllOffEffectVariantEnum : enum8 {
+    kDelayedOffFastFade = 0;
+    kNoFade = 1;
+    kDelayedOffSlowFade = 2;
+  }
+
+  enum DyingLightEffectVariantEnum : enum8 {
+    kDyingLightFadeOff = 0;
+  }
+
+  enum EffectIdentifierEnum : enum8 {
+    kDelayedAllOff = 0;
+    kDyingLight = 1;
+  }
+
+  enum StartUpOnOffEnum : enum8 {
+    kOff = 0;
+    kOn = 1;
+    kToggle = 2;
+  }
+
+  bitmap Feature : bitmap32 {
+    kLighting = 0x1;
+    kDeadFrontBehavior = 0x2;
+    kOffOnly = 0x4;
+  }
+
+  bitmap OnOffControlBitmap : bitmap8 {
+    kAcceptOnlyWhenOn = 0x1;
+  }
+
+  readonly attribute boolean onOff = 0;
+  readonly attribute optional boolean globalSceneControl = 16384;
+  attribute optional int16u onTime = 16385;
+  attribute optional int16u offWaitTime = 16386;
+  attribute access(write: manage) optional nullable StartUpOnOffEnum startUpOnOff = 16387;
+  readonly attribute command_id generatedCommandList[] = 65528;
+  readonly attribute command_id acceptedCommandList[] = 65529;
+  readonly attribute attrib_id attributeList[] = 65531;
+  readonly attribute bitmap32 featureMap = 65532;
+  readonly attribute int16u clusterRevision = 65533;
+
+  request struct OffWithEffectRequest {
+    EffectIdentifierEnum effectIdentifier = 0;
+    enum8 effectVariant = 1;
+  }
+
+  request struct OnWithTimedOffRequest {
+    OnOffControlBitmap onOffControl = 0;
+    int16u onTime = 1;
+    int16u offWaitTime = 2;
+  }
+
+  /** On receipt of this command, a device SHALL enter its ‘Off’ state. This state is device dependent, but it is recommended that it is used for power off or similar functions. On receipt of the Off command, the OnTime attribute SHALL be set to 0. */
+  command Off(): DefaultSuccess = 0;
+  /** On receipt of this command, a device SHALL enter its ‘On’ state. This state is device dependent, but it is recommended that it is used for power on or similar functions. On receipt of the On command, if the value of the OnTime attribute is equal to 0, the device SHALL set the OffWaitTime attribute to 0. */
+  command On(): DefaultSuccess = 1;
+  /** On receipt of this command, if a device is in its ‘Off’ state it SHALL enter its ‘On’ state. Otherwise, if it is in its ‘On’ state it SHALL enter its ‘Off’ state. On receipt of the Toggle command, if the value of the OnOff attribute is equal to FALSE and if the value of the OnTime attribute is equal to 0, the device SHALL set the OffWaitTime attribute to 0. If the value of the OnOff attribute is equal to TRUE, the OnTime attribute SHALL be set to 0. */
+  command Toggle(): DefaultSuccess = 2;
+  /** The OffWithEffect command allows devices to be turned off using enhanced ways of fading. */
+  command OffWithEffect(OffWithEffectRequest): DefaultSuccess = 64;
+  /** This command allows the recall of the settings when the device was turned off. */
+  command OnWithRecallGlobalScene(): DefaultSuccess = 65;
+  /** This command allows devices to be turned on for a specific duration with a guarded off duration so that SHOULD the device be subsequently turned off, further OnWithTimedOff commands, received during this time, are prevented from turning the devices back on. */
+  command OnWithTimedOff(OnWithTimedOffRequest): DefaultSuccess = 66;
+}
+
 /** The Descriptor Cluster is meant to replace the support from the Zigbee Device Object (ZDO) for describing a node, its endpoints and clusters. */
 cluster Descriptor = 29 {
   revision 3;
@@ -445,6 +516,26 @@ cluster Descriptor = 29 {
   readonly attribute endpoint_no partsList[] = 3;
   readonly attribute optional SemanticTagStruct tagList[] = 4;
   readonly attribute optional char_string<32> endpointUniqueID = 5;
+  readonly attribute command_id generatedCommandList[] = 65528;
+  readonly attribute command_id acceptedCommandList[] = 65529;
+  readonly attribute attrib_id attributeList[] = 65531;
+  readonly attribute bitmap32 featureMap = 65532;
+  readonly attribute int16u clusterRevision = 65533;
+}
+
+/** The Binding Cluster is meant to replace the support from the Zigbee Device Object (ZDO) for supporting the binding table. */
+cluster Binding = 30 {
+  revision 1;
+
+  fabric_scoped struct TargetStruct {
+    optional node_id node = 1;
+    optional group_id group = 2;
+    optional endpoint_no endpoint = 3;
+    optional cluster_id cluster = 4;
+    fabric_idx fabricIndex = 254;
+  }
+
+  attribute access(write: manage) TargetStruct binding[] = 0;
   readonly attribute command_id generatedCommandList[] = 65528;
   readonly attribute command_id acceptedCommandList[] = 65529;
   readonly attribute attrib_id attributeList[] = 65531;
@@ -2049,6 +2140,87 @@ cluster TemperatureControl = 86 {
   command SetTemperature(SetTemperatureRequest): DefaultSuccess = 0;
 }
 
+/** An interface for controlling a fan in a heating/cooling system. */
+cluster FanControl = 514 {
+  revision 5;
+
+  enum AirflowDirectionEnum : enum8 {
+    kForward = 0;
+    kReverse = 1;
+  }
+
+  enum FanModeEnum : enum8 {
+    kOff = 0;
+    kLow = 1;
+    kMedium = 2;
+    kHigh = 3;
+    kOn = 4;
+    kAuto = 5;
+    kSmart = 6;
+  }
+
+  enum FanModeSequenceEnum : enum8 {
+    kOffLowMedHigh = 0;
+    kOffLowHigh = 1;
+    kOffLowMedHighAuto = 2;
+    kOffLowHighAuto = 3;
+    kOffHighAuto = 4;
+    kOffHigh = 5;
+  }
+
+  enum StepDirectionEnum : enum8 {
+    kIncrease = 0;
+    kDecrease = 1;
+  }
+
+  bitmap Feature : bitmap32 {
+    kMultiSpeed = 0x1;
+    kAuto = 0x2;
+    kRocking = 0x4;
+    kWind = 0x8;
+    kStep = 0x10;
+    kAirflowDirection = 0x20;
+  }
+
+  bitmap RockBitmap : bitmap8 {
+    kRockLeftRight = 0x1;
+    kRockUpDown = 0x2;
+    kRockRound = 0x4;
+  }
+
+  bitmap WindBitmap : bitmap8 {
+    kSleepWind = 0x1;
+    kNaturalWind = 0x2;
+  }
+
+  attribute FanModeEnum fanMode = 0;
+  readonly attribute FanModeSequenceEnum fanModeSequence = 1;
+  attribute nullable percent percentSetting = 2;
+  readonly attribute percent percentCurrent = 3;
+  readonly attribute optional int8u speedMax = 4;
+  attribute optional nullable int8u speedSetting = 5;
+  readonly attribute optional int8u speedCurrent = 6;
+  readonly attribute optional RockBitmap rockSupport = 7;
+  attribute optional RockBitmap rockSetting = 8;
+  readonly attribute optional WindBitmap windSupport = 9;
+  attribute optional WindBitmap windSetting = 10;
+  attribute optional AirflowDirectionEnum airflowDirection = 11;
+  readonly attribute command_id generatedCommandList[] = 65528;
+  readonly attribute command_id acceptedCommandList[] = 65529;
+  readonly attribute attrib_id attributeList[] = 65531;
+  readonly attribute bitmap32 featureMap = 65532;
+  readonly attribute int16u clusterRevision = 65533;
+
+  request struct StepRequest {
+    StepDirectionEnum direction = 0;
+    optional boolean wrap = 1;
+    optional boolean lowestOff = 2;
+  }
+
+  /** This command speeds up or slows down the fan, in steps, without a client having to know the fan speed. */
+  command Step(StepRequest): DefaultSuccess = 0;
+}
+
 /** Attributes and commands for configuring the measurement of temperature, and reporting temperature measurements. */
 cluster TemperatureMeasurement = 1026 {
   revision 4;
@@ -2074,6 +2246,15 @@ endpoint 0 {
     callback attribute serverList;
     callback attribute clientList;
     callback attribute partsList;
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute attributeList;
+    callback attribute featureMap;
+    callback attribute clusterRevision;
+  }
+
+  server cluster Binding {
+    callback attribute binding;
     callback attribute generatedCommandList;
     callback attribute acceptedCommandList;
     callback attribute attributeList;
@@ -2465,6 +2646,8 @@ endpoint 2 {
 endpoint 3 {
   device type cooktop = 120, version 1;
 
+  binding cluster OnOff;
+  binding cluster FanControl;
 
   server cluster OnOff {
     ram      attribute onOff;
@@ -2482,6 +2665,15 @@ endpoint 3 {
     callback attribute serverList;
     callback attribute clientList;
     callback attribute partsList;
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute attributeList;
+    callback attribute featureMap;
+    callback attribute clusterRevision;
+  }
+
+  server cluster Binding {
+    callback attribute binding;
     callback attribute generatedCommandList;
     callback attribute acceptedCommandList;
     callback attribute attributeList;

@@ -23,4 +23,5 @@ config("config") {
 chip_data_model("oven-app-common") {
   zap_file = "oven-app.zap"
   is_server = true
+  public_deps = [ "${chip_root}/src/app/clusters/bindings:binding-manager" ]
 }

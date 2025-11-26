@@ -21,7 +21,6 @@ define:
 include:
   - path: third_party/aws_ota_sdk/demos/ota/ota_demo_core_mqtt
     file_list:
-      - path: core_mqtt_config.h
       - path: demo_config.h
       - path: ota_config.h
   - path: third_party/aws_ota_sdk/demos/ota/common/include

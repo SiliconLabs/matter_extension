@@ -1,7 +1,7 @@
 label: dishwasher-app-series-2
 quality: production
 package: matter
-description: Solution containing both a bootloader and a Matter over Dishwasher App Example
+description: Solution containing both a bootloader and a Matter over Thread Dishwasher App Example
 project:
   - path: ./dishwasher-app.slcp
     id: application

@@ -13,7 +13,6 @@ provides:
   - name: matter_valve_configuration_and_control
 source:
   - path: third_party/matter_sdk/src/app/clusters/valve-configuration-and-control-server/valve-configuration-and-control-cluster.cpp
-  - path: third_party/matter_sdk/src/app/clusters/valve-configuration-and-control-server/valve-configuration-and-control-server.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/valve-configuration-and-control-server
     file_list:

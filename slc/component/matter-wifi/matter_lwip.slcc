@@ -13,11 +13,10 @@ provides:
   - name: matter_lwip
   - name: lwip
   - name: lwip_port_freertos
+  - name: netstack_silabs_lwip_port_freertos
   - name: sl_si91x_errno
 
 requires:
-  - name: lwip_api
-  - name: lwip_netif_ethernet
   - name: sl_si91x_lwip_stack
     condition: [sl_si91x_wireless]
 
@@ -26,7 +25,7 @@ include:
     file_list:
       - path: lwipopts.h
       - path: lwipopts-wf200.h
-      - path: lwipopts-rs911x.h
+      - path: lwipopts-siwx.h
       - path: arch/cc.h
       - path: arch/perf.h
       - path: lwippools.h

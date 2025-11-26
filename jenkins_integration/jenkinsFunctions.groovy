@@ -13,6 +13,198 @@ def upload_artifacts(sqa=false, commit_sha="null", workflow_id="null", run_numbe
     }
 }
 
+def run_code_size_analysis() {
+    echo "Starting code size analysis for branch: ${env.BRANCH_NAME}"
+        
+    sh 'python3 -m venv code_size_analysis_venv'
+    sh '. code_size_analysis_venv/bin/activate && python3 -m pip install --upgrade pip'
+    sh '. code_size_analysis_venv/bin/activate && pip3 install code_size_analyzer_client-python>=1.0.1'
+    
+    echo "Build number: ${env.BUILD_NUMBER}"
+    echo "Branch name: ${env.BRANCH_NAME}"
+    
+    withEnv([
+        "BRANCH_NAME=${env.BRANCH_NAME}",
+        "BUILD_NUMBER=${env.BUILD_NUMBER}"
+    ]) {            
+            sh '''
+                extract_app_from_path() {
+                    local path=$1
+                    local app_name
+                    
+                    local solution_dir=\$(echo "\$path" | grep -oE "[^/]*-solution(-lto)?" | head -1)
+                    
+                    if [ -n "$solution_dir" ]; then
+                        local base_name=\$(echo "\$solution_dir" | sed -E 's/-solution(-lto)?\$//')
+                        
+                        case "\$base_name" in
+                            *zigbee-matter-light*)
+                                app_name="zigbee-matter-light"
+                                ;;
+                            *)
+                                app_name=\$(echo "\$base_name" | sed -E 's/^([^-]+-[^-]+)-.*/\\1/')
+                                ;;
+                        esac
+                    else
+                        echo "ERROR: Could not find solution directory in path: \$path" >&2
+                        return 1
+                    fi
+                    
+                    echo "\$app_name"
+                }
+                
+                determine_protocol() {
+                    local path=$1
+                    if [[ "$path" == *"siwx"* ]]; then
+                        echo "wifi"
+                    else
+                        echo "thread"
+                    fi
+                }
+                
+                determine_build_options() {
+                    local path=$1
+                    if [[ "$path" == *"-solution-lto/"* ]]; then
+                        echo "-lto"
+                    else
+                        echo ""
+                    fi
+                }
+                
+                perform_code_analysis() {
+                    local map_file_path=$1
+                    
+                    local brd
+                    case "$map_file_path" in
+                        *brd4187c*)
+                            brd="BRD4187C"
+                            ;;
+                        *brd4407a*)
+                            brd="BRD4407A"
+                            ;;
+                        *brd4338a*)
+                            brd="BRD4338A"
+                            ;;
+                        *)
+                            echo "ERROR: Unsupported board in path: $map_file_path"
+                            return 1
+                            ;;
+                    esac
+                    
+                    local app=\$(extract_app_from_path "\$map_file_path")
+                    if [ $? -ne 0 ] || [ -z "$app" ]; then
+                        echo "ERROR: Failed to extract app name from $map_file_path"
+                        return 1
+                    fi
+                    
+                    local protocol=\$(determine_protocol "\$map_file_path")
+                    local options=\$(determine_build_options "\$map_file_path")
+                    
+                    echo "Processing: $map_file_path"
+                    echo "  Board: $brd, App: $app, Protocol: $protocol, Options: $options"
+                    
+                    if [ "$brd" = "BRD4338A" ]; then
+                        if [[ "$app" == *"-app" ]]; then
+                            app_stripped=\$(echo "$app" | sed 's/-app\$//')
+                            app="SiWx917-${app_stripped}"
+                        else
+                            app="SiWx917-${app}"
+                        fi
+                    fi
+                    
+                    if [ "$protocol" = "thread" ]; then
+                        example_type="OpenThread"
+                    elif [ "$protocol" = "wifi" ]; then
+                        example_type="WiFi"
+                    else
+                        echo "ERROR: Unknown protocol: $protocol"
+                        return 1
+                    fi
+                    
+                    if [ "$brd" = "BRD4187C" ]; then
+                        family="MG24"
+                        target_part="efr32mg24b210f1536im48"
+                    elif [ "$brd" = "BRD4407A" ]; then
+                        family="MG301"  
+                        target_part="simg301m114lih"
+                    elif [ "$brd" = "BRD4338A" ]; then
+                        family="Si917"
+                        target_part="siwg917m111mgtba"
+                    fi
+                    
+                    application_name="slc-${app}-release-${family}"
+                    output_file="${app}-${example_type}-${family}.json"
+                    
+                    if [ "$options" = "-lto" ]; then
+                        : # no-op
+                    else
+                        application_name="${application_name}-nolto"
+                        output_file="${output_file%.json}-nolto.json"
+                    fi
+                    
+                    echo "  Running analysis:"
+                    echo "    Application name: $application_name"
+                    echo "    Output file: $output_file"
+                    
+                    . code_size_analysis_venv/bin/activate
+                    unset OTEL_EXPORTER_OTLP_ENDPOINT || true
+                    if code_size_analyzer_cli \\
+                        --map_file "$map_file_path" \\
+                        --stack_name matter \\
+                        --target_part "$target_part" \\
+                        --compiler gcc \\
+                        --target_board "$brd" \\
+                        --app_name "$application_name" \\
+                        --service_url https://code-size-analyzer.silabs.net \\
+                        --branch_name "$BRANCH_NAME" \\
+                        --build_number "b$BUILD_NUMBER" \\
+                        --output_file "$output_file" \\
+                        --store_results True \\
+                        --verify_ssl False \\
+                        --uc_component_branch_name "silabs_slc/$BRANCH_NAME"; then
+                        echo "  Analysis completed successfully"
+                    else
+                        echo "  Analysis failed"
+                    fi
+                }
+                
+                echo "Cleaning up leftover JSON files"
+                rm -f *.json
+                
+                echo "Available map files:"
+                map_files_found=\$(find . -name "*.map" | sort)
+                if [ -z "$map_files_found" ]; then
+                    echo "ERROR: No map files found"
+                    exit 1
+                fi
+                echo "$map_files_found"
+                echo ""
+                
+                target_apps="lighting-app|lock-app|zigbee-matter-light"
+                echo "Filtering for target apps: $target_apps"
+                filtered_map_files=\$(echo "\$map_files_found" | grep -E "($target_apps)" | grep -v -E "(-ncp-|-wf200-|-sequential)")
+                
+                if [ -z "$filtered_map_files" ]; then
+                    echo "WARNING: No map files found for target apps ($target_apps)"
+                    echo "Available apps in map files:"
+                    echo "$map_files_found" | sed -E 's|.*/([^/]*-solution[^/]*)/.*|\1|' | sort -u
+                    exit 0
+                fi
+                
+                echo "Target app map files to process:"
+                echo "$filtered_map_files"
+                echo ""
+                
+                echo "Processing map files for target apps only..."
+                echo "$filtered_map_files" | while read map_file; do
+                    perform_code_analysis "$map_file"
+                done
+            '''
+        }
+        
+        echo "Code size analysis completed"
+    }
+
 def parse_upload_artifacts_output(output) {
         def sha_matcher = output =~ /Commit SHA - (\w+)/
         def commit_sha = sha_matcher ? sha_matcher[0][1] : null
@@ -193,7 +385,7 @@ def trigger_sqa_pipelines(pipeline_type)
     if(sqaFunctions.isProductionJenkinsServer())
     {
         def smoke_list = ['smoke-thread', 'smoke-wifi', 'smoke-cmp']
-        def regression_list = ['feature-thread', 'feature-wifi', 'regression-thread', 'regression-wifi', 'regression-cmp',
+        def regression_list = ['feature-thread', 'feature-wifi', 'feature-cmp', 'regression-thread', 'regression-wifi', 'regression-cmp',
                                'regression-ota-thread', 'regression-ota-wifi', 'regression-ota-cmp', 'regression-metrics',
                                'ext-regression-thread', 'ext-regression-wifi', 'ext-regression-cmp',
                                'ext-smoke-thread', 'ext-smoke-wifi', 'ext-smoke-cmp',

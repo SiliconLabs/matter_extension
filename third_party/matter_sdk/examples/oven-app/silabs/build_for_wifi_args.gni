@@ -18,4 +18,4 @@ chip_enable_openthread = false
 import("${chip_root}/src/platform/silabs/wifi/args.gni")
 
 chip_enable_ota_requestor = true
-app_data_model = "${chip_root}/examples/oven-app/oven-app-common"
+app_data_model = "${chip_root}/examples/oven-app/silabs/data_model:silabs-oven"

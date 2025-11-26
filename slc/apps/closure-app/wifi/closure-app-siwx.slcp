@@ -60,7 +60,6 @@ component:
 
   - id: wifi_resources
   - id: matter_lwip
-  - id: sl_si91x_lwip_stack
   - id: sl_si91x_common_flash_nvm3
   - id: sl_si91x_wireless
   - id: wifi
@@ -95,7 +94,7 @@ configuration:
     value: 0
 
 config_file:
-  - path: ../../../../third_party/matter_sdk/examples/closure-app/closure-common/closure-app.zap
+  - path: ../../../../third_party/matter_sdk/examples/closure-app/silabs/data_model/closure-wifi-app.zap
     directory: common
     file_id: zap_config
   - path: ../../../../provision.mattpconf

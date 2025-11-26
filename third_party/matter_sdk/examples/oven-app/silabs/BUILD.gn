@@ -71,11 +71,12 @@ if (wifi_soc) {
     ]
 
     include_dirs = [
-      "${chip_root}/src/platform/silabs/SiWx917",
+      "${chip_root}/src/platform/silabs/SiWx",
       "${silabs_project_dir}/include",
       "${examples_plat_dir}",
       "${chip_root}/src/lib",
       "${examples_common_plat_dir}",
+      "${example_oven_dir}/oven-app-common/include",
     ]
 
     defines = []
@@ -101,15 +102,18 @@ silabs_executable("oven_app") {
   }
 
   sources = [
-    "${example_oven_dir}/oven-app-common/src/CookSurfaceEndpoint.cpp",
-    "${example_oven_dir}/oven-app-common/src/CookTopEndpoint.cpp",
+    "${example_oven_dir}/oven-app-common/src/CookEndpoints.cpp",
     "${example_oven_dir}/oven-app-common/src/OvenEndpoint.cpp",
     "${examples_common_plat_dir}/main.cpp",
     "src/AppSupportedTemperatureLevelsDelegate.cpp",
     "src/AppTask.cpp",
     "src/DataModelCallbacks.cpp",
+    "src/OvenBindingHandler.cpp",
     "src/OvenManager.cpp",
   ]
+  if (!disable_lcd) {
+    sources += [ "src/OvenUI.cpp" ]
+  }
 
   deps = [ ":sdk" ]
 

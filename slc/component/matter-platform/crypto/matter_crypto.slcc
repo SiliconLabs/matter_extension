@@ -42,6 +42,16 @@ requires:
   - name: mbedtls_jpake
     condition: [ot_coap_cert_libs]
 
+  # OT Multi-Instance Cert libs
+  - name: mbedtls_tls
+    condition: [ot_multi_instance_cert_libs]
+  - name: mbedtls_dtls
+    condition: [ot_multi_instance_cert_libs]
+  - name: mbedtls_tls_server
+    condition: [ot_multi_instance_cert_libs]
+  - name: mbedtls_jpake
+    condition: [ot_multi_instance_cert_libs]
+
 config_file:
   - path: slc/config/sli_psa_builtin_config.h
     file_id: sli_psa_builtin_config
@@ -56,6 +66,9 @@ define:
   # OT CoAP Cert libs
   - name: MBEDTLS_SSL_HANDSHAKE_WITH_CERT_ENABLED
     condition: [ot_coap_cert_libs]
+  # OT Multi-Instance Cert libs
+  - name: MBEDTLS_SSL_HANDSHAKE_WITH_CERT_ENABLED
+    condition: [ot_multi_instance_cert_libs]
 
 template_contribution:
   - name: mbedtls_config

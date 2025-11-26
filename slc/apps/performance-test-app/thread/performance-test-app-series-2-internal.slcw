@@ -1,7 +1,7 @@
 label: performance-test-app-series-2-internal
 quality: production
 package: matter
-description: Solution containing both a bootloader and a Matter over Performance Test App Example
+description: Solution containing both a bootloader and a Matter over Thread Performance Test App Example
 project:
   - path: ./performance-test-app.slcp
     id: application

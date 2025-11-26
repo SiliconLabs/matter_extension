@@ -66,7 +66,7 @@ component:
   - id: matter_test_event_trigger
   - id: matter_icd_management
   - id: matter_log_uart
-  - id: matter_lwip_modified
+  - id: matter_lwip
 
   - id: wifi_resources
   - id: sl_si91x_common_flash_nvm3

@@ -86,3 +86,15 @@ private:
 #define SILABS_TRACE_FLUSH_ALL() _MATTER_TRACE_DISABLE()
 
 #endif // MATTER_TRACING_ENABLED
+
+// Need to use the sleeptimer for power tracing. The RAIL timer doesn't tick in EM2 and creates invalid timestamps for this
+// application.
+#ifndef SL_GET_SLEEPTIMER_TIME
+#if defined(SL_RAIL_LIB_MULTIPROTOCOL_SUPPORT) && SL_RAIL_LIB_MULTIPROTOCOL_SUPPORT
+#if (defined(SL_TRACING_ENERGY_STATS) && SL_TRACING_ENERGY_STATS == 1) ||                                                          \
+    (defined(SL_TRACING_ENERGY_TRACES) && SL_TRACING_ENERGY_TRACES == 1)
+#include "sl_sleeptimer.h"
+#define SL_GET_SLEEPTIMER_TIME() uint32_t((sl_sleeptimer_get_tick_count64() * 1000ULL) / sl_sleeptimer_get_timer_frequency())
+#endif
+#endif
+#endif // SL_GET_SLEEPTIMER_TIME

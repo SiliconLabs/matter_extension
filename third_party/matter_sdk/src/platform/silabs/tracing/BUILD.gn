@@ -18,15 +18,7 @@
 import("//build_overrides/build.gni")
 import("//build_overrides/chip.gni")
 import("${chip_root}/build/chip/buildconfig_header.gni")
-
-declare_args() {
-  # When enabled, this sets:
-  #  - configGENERATE_RUN_TIME_STATS in FreeRTOS
-  #  - configUSE_STATS_FORMATTING_FUNCTIONS in FreeRTOS
-  #  - Runtime statistics timer configuration
-  #  - Task switching hooks for statistics collection
-  silabs_tracing_runtime_stats = false
-}
+import("${chip_root}/src/platform/silabs/tracing/args.gni")
 
 buildconfig_header("silabs_tracing_config") {
   header = "SilabsTracingConfig.h"
@@ -34,12 +26,25 @@ buildconfig_header("silabs_tracing_config") {
 
   defines = []
 
+  if (silabs_tracing_energy_stats == true) {
+    defines += [ "SL_TRACING_ENERGY_STATS=1" ]
+  }
+
   if (silabs_tracing_runtime_stats == true) {
     defines += [
       "TRACING_RUNTIME_STATS=1",
       "TRACING_RUNTIME_STATS_MAX_TASKS=16",
     ]
   }
+
+  if (silabs_tracing_energy_traces) {
+    defines += [
+      "SL_TRACING_ENERGY_TRACES=1",
+      "SL_TRACING_ENERGY_TRACES_SECONDS=${silabs_tracing_energy_traces_seconds}",
+      "SL_TRACING_ENERGY_TRACES_MAX=${silabs_tracing_energy_traces_max}",
+    ]
+  }
+
   defines += [ "SERIALIZED_TIME_TRACKERS_SIZE_BYTES=512" ]
 }
 
@@ -50,6 +55,24 @@ static_library("SilabsTracing") {
     "SilabsTracing.cpp",
     "SilabsTracing.h",
     "SilabsTracingTypes.h",
+  ]
+
+  deps = [
+    "${chip_root}/src/lib/core",
+    "${chip_root}/src/lib/support",
+    "${chip_root}/src/system",
+  ]
+
+  public_deps = [
+    ":silabs_tracing_config",
+    "${chip_root}/src/tracing:tracing",
+  ]
+}
+
+static_library("SilabsPowerTracing") {
+  sources = [
+    "SilabsPowerTracing.cpp",
+    "SilabsPowerTracing.h",
   ]
 
   deps = [

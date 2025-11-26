@@ -17,7 +17,7 @@ include:
 - path: third_party/matter_sdk/src
 - path: third_party/matter_sdk/src/include
 - path: third_party/matter_sdk/src/lib
-- path: third_party/matter_sdk/src/platform/silabs/SiWx917
+- path: third_party/matter_sdk/src/platform/silabs/SiWx
 - path: third_party/matter_sdk/src/platform/silabs/wifi
 - path: third_party/nlassert/include
 - path: third_party/nlio/include
@@ -100,7 +100,7 @@ include:
 - path: third_party/matter_sdk/src/lwip/silabs
   file_list:
   - path: lwipopts-wf200.h
-  - path: lwipopts-rs911x.h
+  - path: lwipopts-siwx.h
   - path: lwippools.h
   - path: lwipopts.h
 - path: third_party/matter_sdk/examples/platform/silabs
@@ -123,11 +123,10 @@ include:
   file_list:
   - path: SilabsPlatformBase.h
   - path: SilabsPlatform.h
-- path: third_party/matter_sdk/src/platform/silabs/rs911x
+- path: third_party/matter_sdk/src/platform/silabs/SiWx/ble
   file_list:
   - path: ble_config.h
-  - path: wfx_sl_ble_init.h
-  - path: rsi_ble_config.h
+  - path: sl_si91x_ble_init.h
 - path: third_party/matter_sdk/src/platform
   file_list:
   - path: DeviceSafeQueue.h
@@ -158,7 +157,7 @@ include:
   - path: SystemTimeSupport.h
   - path: GenericThreadStackManagerImpl_FreeRTOS.h
   - path: GenericThreadStackManagerImpl_FreeRTOS.hpp
-- path: third_party/matter_sdk/src/platform/silabs/SiWx917
+- path: third_party/matter_sdk/src/platform/silabs/SiWx
   file_list:
   - path: siwx917-chip-psa-config.h
   - path: siwx917-chip-mbedtls-config.h
@@ -182,13 +181,13 @@ source:
 - path: third_party/matter_sdk/src/platform/silabs/Logging.cpp
 - path: third_party/matter_sdk/src/platform/silabs/MigrationManager.cpp
 - path: third_party/matter_sdk/src/platform/silabs/NetworkCommissioningWiFiDriver.cpp
-- path: third_party/matter_sdk/src/platform/silabs/SiWx917/OTAImageProcessorImpl.cpp
+- path: third_party/matter_sdk/src/platform/silabs/SiWx/OTAImageProcessorImpl.cpp
 - path: third_party/matter_sdk/src/platform/silabs/PlatformManagerImpl.cpp
 - path: third_party/matter_sdk/src/platform/silabs/SilabsConfig.cpp
 - path: third_party/matter_sdk/src/platform/silabs/platformAbstraction/WiseMcuSpam.cpp
 - path: third_party/matter_sdk/src/platform/silabs/platformAbstraction/SilabsPlatform.cpp
-- path: third_party/matter_sdk/src/platform/silabs/rs911x/BLEManagerImpl.cpp
-- path: third_party/matter_sdk/src/platform/silabs/rs911x/wfx_sl_ble_init.cpp
+- path: third_party/matter_sdk/src/platform/silabs/SiWx/ble/BLEManagerImpl.cpp
+- path: third_party/matter_sdk/src/platform/silabs/SiWx/ble/sl_si91x_ble_init.cpp
 - path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp
 - path: third_party/matter_sdk/src/platform/silabs/wifi/WifiInterface.cpp
 

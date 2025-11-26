@@ -21,8 +21,10 @@
 #include "AppConfig.h"
 #include "AppEvent.h"
 #include "LEDWidget.h"
+#include "OvenBindingHandler.h"
 
 #ifdef DISPLAY_ENABLED
+#include "OvenUI.h"
 #include "lcd.h"
 #ifdef QR_CODE_ENABLED
 #include "qrcodegen.h"
@@ -36,6 +38,7 @@
 #include <app-common/zap-generated/ids/Clusters.h>
 #include <app/ConcreteAttributePath.h>
 #include <app/clusters/network-commissioning/network-commissioning.h>
+#include <app/clusters/on-off-server/on-off-server.h>
 #include <app/server/Server.h>
 #include <app/util/attribute-storage.h>
 #include <app/util/endpoint-config-api.h>
@@ -48,6 +51,12 @@
 #include <setup_payload/QRCodeSetupPayloadGenerator.h>
 #include <setup_payload/SetupPayload.h>
 
+#ifdef SL_CATALOG_SIMPLE_LED_LED1_PRESENT
+#define LIGHT_LED 1
+#else
+#define LIGHT_LED 0
+#endif
+
 #define APP_FUNCTION_BUTTON 0
 #define APP_ACTION_BUTTON 1
 
@@ -59,6 +68,8 @@ using namespace ::chip::DeviceLayer::Silabs;
 using namespace ::chip::DeviceLayer::Internal;
 using namespace chip::TLV;
 
+LEDWidget sLightLED; // Use LEDWidget for basic LED functionality
+
 AppTask AppTask::sAppTask;
 
 CHIP_ERROR AppTask::AppInit()
@@ -68,20 +79,21 @@ CHIP_ERROR AppTask::AppInit()
 
 #ifdef DISPLAY_ENABLED
     GetLCD().Init((uint8_t *) "Oven-App");
+    GetLCD().SetCustomUI(OvenUI::DrawUI);
 #endif
-
-    // Initialization of Oven Manager and endpoints of oven and ovenpanel.
+    DeviceLayer::PlatformMgr().LockChipStack();
+    // Initialization of Oven Manager and endpoints of oven.
     OvenManager::GetInstance().Init();
+    DeviceLayer::PlatformMgr().UnlockChipStack();
+
+    sLightLED.Init(LIGHT_LED);
+    sLightLED.Set(OvenManager::GetInstance().GetCookTopState());
 
 // Update the LCD with the Stored value. Show QR Code if not provisioned
 #ifdef DISPLAY_ENABLED
     GetLCD().WriteDemoUI(false);
 #ifdef QR_CODE_ENABLED
-#ifdef SL_WIFI
-    if (!ConnectivityMgr().IsWiFiStationProvisioned())
-#else
-    if (!ConnectivityMgr().IsThreadProvisioned())
-#endif /* !SL_WIFI */
+    if (!BaseApplication::GetProvisionStatus())
     {
         GetLCD().ShowQRCode(true);
     }
@@ -108,6 +120,8 @@ void AppTask::AppTaskMain(void * pvParameter)
         appError(err);
     }
 
+    sAppTask.StartStatusLEDTimer();
+
     ChipLogProgress(AppServer, "App Task started");
 
     while (true)
@@ -126,6 +140,72 @@ void AppTask::ButtonEventHandler(uint8_t button, uint8_t btnAction)
     AppEvent button_event           = {};
     button_event.Type               = AppEvent::kEventType_Button;
     button_event.ButtonEvent.Action = btnAction;
-    button_event.Handler            = BaseApplication::ButtonHandler;
+
+    // Handle button1 specifically for oven functionality
+    if (button == APP_ACTION_BUTTON)
+    {
+        button_event.Handler = OvenButtonHandler;
+    }
+    else
+    {
+        button_event.Handler = BaseApplication::ButtonHandler;
+    }
+
     AppTask::GetAppTask().PostEvent(&button_event);
+}
+
+void AppTask::OvenButtonHandler(AppEvent * aEvent)
+{
+    // Handle button press to toggle cooktop and cook surface
+    if (aEvent->ButtonEvent.Action == static_cast<uint8_t>(SilabsPlatform::ButtonAction::ButtonPressed))
+    {
+        ChipLogDetail(AppServer, "Oven button pressed - starting toggle action");
+
+        // Determine new state (toggle current state)
+        bool newOnOffState = !OvenManager::GetInstance().GetCookTopState();
+
+        // Schedule work to set the OnOff attribute.
+        chip::DeviceLayer::PlatformMgr().ScheduleWork(UpdateClusterState, static_cast<intptr_t>(newOnOffState));
+    }
+}
+
+void AppTask::UpdateClusterState(intptr_t context)
+{
+    bool newOnOffState = static_cast<bool>(context);
+
+    ChipLogDetail(AppServer, "Updating cooktop OnOff cluster state to %s", newOnOffState ? "On" : "Off");
+
+    // Set the OnOff attribute value for the cooktop endpoint
+    DeviceLayer::PlatformMgr().LockChipStack();
+    Protocols::InteractionModel::Status status =
+        OnOffServer::Instance().setOnOffValue(OvenManager::GetCookTopEndpoint(), newOnOffState, false);
+    DeviceLayer::PlatformMgr().UnlockChipStack();
+
+    if (status != Protocols::InteractionModel::Status::Success)
+    {
+        ChipLogError(AppServer, "Failed to update cooktop OnOff cluster state: %x", to_underlying(status));
+    }
+}
+
+void AppTask::OvenActionHandler(AppEvent * aEvent)
+{
+    // Emulate hardware Action : Update the LEDs and LCD of oven-app as required.
+    switch (aEvent->OvenEvent.Action)
+    {
+    case OvenManager::COOK_TOP_ON_ACTION:
+    case OvenManager::COOK_TOP_OFF_ACTION: {
+        sLightLED.Set(OvenManager::GetInstance().GetCookTopState());
+#ifdef DISPLAY_ENABLED
+        GetLCD().WriteDemoUI(false);
+#endif // DISPLAY_ENABLED
+        break;
+    }
+    case OvenManager::OVEN_MODE_UPDATE_ACTION:
+#ifdef DISPLAY_ENABLED
+        GetLCD().WriteDemoUI(false);
+#endif // DISPLAY_ENABLED
+        break;
+    default:
+        break;
+    }
 }

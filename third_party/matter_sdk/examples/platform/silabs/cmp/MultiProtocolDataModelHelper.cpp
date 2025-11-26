@@ -22,6 +22,7 @@
 #include <app/util/attribute-table.h>
 #include <lib/support/TypeTraits.h>
 #include <lib/support/logging/CHIPLogging.h>
+#include <platform/PlatformManager.h>
 #include <protocols/interaction_model/StatusCode.h>
 #include <sl-matter-attribute-storage.h>
 #include <sl_component_catalog.h>
@@ -138,8 +139,10 @@ extern "C" sl_status_t sli_matter_af_write_attribute(uint16_t endpointId, uint32
     chip::AttributeId matterAttributeId = attributeId;
     EmberAfAttributeType matterDataType = type;
 
+    chip::DeviceLayer::PlatformMgr().LockChipStack();
     chip::Protocols::InteractionModel::Status imStatus =
         emberAfWriteAttribute(matterEndpointId, matterClusterId, matterAttributeId, attributeValue, matterDataType);
+    chip::DeviceLayer::PlatformMgr().UnlockChipStack();
 
     // For sl internal use so we return a known status type to our stack
     sl_status_t slStatus = SL_STATUS_OK;

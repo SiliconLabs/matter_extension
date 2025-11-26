@@ -56,27 +56,42 @@ def recurse_dir(file_or_dir):
         if '.ds_store' in file_or_dir.lower():
             os.remove(file_or_dir)        
         elif '.s37' in file_or_dir or '.rps' in file_or_dir:
+            brd = None
             for leaf in file_or_dir.split('/'):
-                if 'BRD' in leaf:
+                if 'brd' in leaf.lower():
                     brd = leaf
-                elif 'OpenThread' in leaf or 'WiFi' in leaf:
-                    tech_ = leaf
+                    break
+            
+            if brd is None:
+                return
+            
+            if 'series-2' in file_or_dir or 'series-3' in file_or_dir:
+                tech_ = 'OpenThread'
+            else:
+                tech_ = 'WiFi'
 
-            board_type = (str(os.path.basename(file_or_dir).replace('.s37', '')).replace('.rps','').split('-'))[-1]
+            basename = os.path.basename(file_or_dir).replace('.s37', '').replace('.rps','')
+            basename = basename.replace('-full', '').replace('-internal', '')
+            board_type = (str(basename).split('-'))[-1]
+            
             if board_type == "ncp":
                 board_type = "917-ncp"
             elif board_type == "brd4357a":
                 board_type = "917-ncp-brd4357a"
-            elif board_type == "soc" or board_type == "example":
+            elif board_type == "soc" or board_type == "example" or board_type == "siwx":
                 board_type = "917-soc"
+            elif board_type == "wf200":
+                board_type = "wf200"
 
             if brd not in demos_map['demos'].keys():
                 demos_map['demos'][brd] = {'OpenThread': [], 'WiFi': {'917-soc': [], '917-ncp': [], '917-ncp-brd4357a': [], 'wf200': []}}
 
+            rel_path = os.path.relpath(file_or_dir, out_folder_dir)
+            
             if tech_ == 'OpenThread':
-                demos_map['demos'][brd][tech_].append(str(os.path.basename(file_or_dir).replace('.s37', '')))
+                demos_map['demos'][brd][tech_].append(rel_path)
             elif tech_ == 'WiFi':
-                demos_map['demos'][brd][tech_][board_type].append(str(os.path.basename(file_or_dir).replace('.s37', '').replace('.rps','')))
+                demos_map['demos'][brd][tech_][board_type].append(rel_path)
   
 
 recurse_dir(out_folder_dir)
@@ -102,15 +117,17 @@ for brd, val in demos_map['demos'].items():
         continue
     for technology in val.keys():
         if technology == 'OpenThread':
-            for demo_ in val[technology]:
+            for demo_path in val[technology]:
+                demo_filename = os.path.basename(demo_path).replace('.s37', '')
+                
                 # Skip internal apps
-                if is_internal_app(demo_, internal_sample_apps):
+                if is_internal_app(demo_filename, internal_sample_apps):
                     continue
                     
                 demo_name = ""
 
-                for name in demo_.split("-"):
-                    if name == 'app' or name == 'thread':
+                for name in demo_filename.split("-"):
+                    if name in ['app', 'thread', 'series', 'full', 'internal']:
                         break
                     else:
                         demo_name += name + " "
@@ -126,15 +143,14 @@ for brd, val in demos_map['demos'].items():
                 demo_name = demo_name.strip()
                 demo_name_ = ' '.join(elem.capitalize() for elem in demo_name_.split())
 
-                # logic for demo_name_ generation for zigbee matter light variants
-                iscmp = True if demo_name == "zigbee matter light" else False
-                zigbee_matter_light_variant = ""
-                if iscmp:
-                    if "sequential" in demo_:
-                        zigbee_matter_light_variant = " Sequential"
-                    elif "concurrent" in demo_:
-                        zigbee_matter_light_variant = " Concurrent"
-                    demo_name_ = "Zigbee Matter Light" + zigbee_matter_light_variant
+                variant_suffix = ""
+                if "sequential" in demo_path:
+                    variant_suffix = " Sequential"
+                elif "concurrent" in demo_path:
+                    variant_suffix = " Concurrent"
+                
+                if variant_suffix:
+                    demo_name_ = demo_name_ + variant_suffix
 
                 demo = ET.SubElement(demos, 'demo')
                 blurbProp = ET.SubElement(demo, 'property')
@@ -161,31 +177,30 @@ for brd, val in demos_map['demos'].items():
                 boardCompatibilityProp.set('value', brd.lower())
 
                 imageFileProp.set('key', 'demos.imageFile')
-                imageFileProp.set('value', asset_prefix + os.path.join(
-                    "demos", brd, technology, demo_ + ".s37"))
+                imageFileProp.set('value', asset_prefix + demo_path)
 
                 readmeFileProp.set('key', 'core.readmeFiles')
 
-                # append special cases for README path generation here 
-                special_readme_dir_cases = {
-                    "thermostat", "zigbee-matter-light"
-                }
-                
+                # generate README path for slc app structure
                 demo_name_dir = demo_name.replace(" ", "-")
-                if demo_name_dir in special_readme_dir_cases:
-                    readme_dir = demo_name_dir
+                if demo_name_dir == "zigbee-matter-light":
+                    app_dir = "zigbee-matter-light"
+                elif demo_name_dir == "thermostat":
+                    app_dir = "thermostat"
                 else:
-                    readme_dir = '-'.join([demo_name_dir, 'app'])
+                    app_dir = demo_name_dir + "-app"
 
                 readmeFileProp.set(
-                    'value',  os.path.join("slc","sample-app", readme_dir, "efr32","README.md"))
+                    'value',  os.path.join("slc","apps", app_dir, "thread","README.md"))
 
                 filtersProp.set('key', 'filters')
                 filtersProp.set('value', "Type|SoC Project\\ Difficulty|Advanced Wireless\\ Technology|Matter")
 
                 qualityProp.set('key', 'core.quality')
                 qualityProp.set('value', "PRODUCTION")
-                if iscmp:
+                
+                # special case for zigbee matter light to avoid redundant "Matter" prefix
+                if "zigbee matter light" in demo_name_.lower():
                     description.text = "".join("This is a " + demo_name_ +
                                                 " Application over Thread for " + brd.upper())
                 else:
@@ -194,14 +209,16 @@ for brd, val in demos_map['demos'].items():
 
         elif technology == 'WiFi':
             for board_type in val[technology].keys():
-                for demo_ in val[technology][board_type]:
+                for demo_path in val[technology][board_type]:
+                    demo_filename = os.path.basename(demo_path).replace('.s37', '').replace('.rps', '')
+                    
                     demo_name = ""
                     # Skip internal apps
-                    if is_internal_app(demo_, internal_sample_apps):
+                    if is_internal_app(demo_filename, internal_sample_apps):
                         continue
                         
-                    for name in demo_.split("-"):
-                        if name == 'app':
+                    for name in demo_filename.split("-"):
+                        if name in ['app', 'siwx', 'series', 'full', 'internal']:
                             break
                         else:
                             demo_name += name + " "
@@ -252,17 +269,17 @@ for brd, val in demos_map['demos'].items():
                     boardCompatibilityProp.set('value', brd.lower())
 
                     imageFileProp.set('key', 'demos.imageFile')
-                    if "soc" in board_type:
-                        #exception for thermostat app name 
-                        if demo_name=="thermostat":
-                            demo_name = "SiWx917-thermostat-example"
-                        demoFilename = demo_name.replace(' ','-') + ".rps"
-                    else:
-                        demoFilename = (("".join(demo_name+" "+board_type if 'thermostat' in demo_name else demo_name+" app"+" "+board_type)).replace(" ", "-") + ".s37")
-                    imageFileProp.set('value', asset_prefix + os.path.join("demos", brd, technology, demoFilename))
+                    imageFileProp.set('value', asset_prefix + demo_path)
                     readmeFileProp.set('key', 'core.readmeFiles')
-                    readmeFileProp.set(
-                        'value',  os.path.join("slc","sample-app", '-'.join([demo_name.replace(" ", "-").replace("SiWx917-","").replace("-example","").replace('.rps',''), 'app']) if 'thermostat' not in demo_name else "thermostat", ("siwx917" if "soc" in board_type else "efr32"),"README.md"))
+                    
+                    # generate README path for slc app structure
+                    demo_name_dir = demo_name.replace(" ", "-")
+                    if demo_name_dir == "thermostat":
+                        app_dir = "thermostat"
+                    else:
+                        app_dir = demo_name_dir + "-app"
+                    
+                    readmeFileProp.set('value', os.path.join("slc","apps", app_dir, "wifi","README.md"))
 
                     filtersProp.set('key', 'filters')
                     filtersProp.set('value', "Type|" + ("SoC" if "soc" in board_type else "NCP") + " Project\\ Difficulty|Advanced Wireless\\ Technology|Matter")

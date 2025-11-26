@@ -72,7 +72,7 @@ requires:
       - device_series_3
 
 config_file:
-  - path: ../../../../third_party/matter_sdk/examples/closure-app/closure-common/closure-app.zap
+  - path: ../../../../third_party/matter_sdk/examples/closure-app/silabs/data_model/closure-thread-app.zap
     file_id: zap_config
     directory: common
   - path: ../../../../provision.mattpconf

@@ -1,3 +1,4 @@
+# Keeping this component till we get a stability report with latest lwip
 id: matter_lwip_modified
 package: matter
 description: >
@@ -13,16 +14,13 @@ provides:
   - name: lwip
   - name: lwip_port_freertos
   - name: sl_si91x_errno
-  - name: sl_si91x_lwip_stack
-  - name: sl_si91x_network_stack
-  - name: matter_lwip
 
 include:
   - path: third_party/matter_sdk/src/lwip/silabs
     file_list:
       - path: lwipopts.h
       - path: lwipopts-wf200.h
-      - path: lwipopts-rs911x.h
+      - path: lwipopts-siwx.h
       - path: arch/cc.h
       - path: arch/perf.h
       - path: lwippools.h

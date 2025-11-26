@@ -17,7 +17,6 @@ config_file:
 
 provides:
 - name: siwx917_ncp
-- name: efx_ncp_custom_host_mcu
 
 recommends:
   - id: uartdrv_eusart
@@ -33,16 +32,14 @@ requires:
 include:
 - path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx/ncp
   file_list:
-  - path: sl_board_configuration.h
   - path: sl_si91x_ncp_utility.h
 - path: third_party/matter_sdk/src/platform/silabs/wifi/ncp
   file_list:
   - path: spi_multiplex.h
-- path: third_party/matter_sdk/src/platform/silabs/rs911x
+- path: third_party/matter_sdk/src/platform/silabs/SiWx/ble
   file_list:
   - path: ble_config.h
-  - path: rsi_ble_config.h
-  - path: wfx_sl_ble_init.h
+  - path: sl_si91x_ble_init.h
 - path: third_party/matter_sdk/src/platform/silabs/wifi
   file_list:
   - path: wfx_msgs.h
@@ -55,14 +52,13 @@ include:
 source:
 
 - path: third_party/matter_sdk/src/platform/silabs/wifi/WifiInterface.cpp
-- path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx/ncp/efx32_ncp_host.c
 - path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp
 - path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx/ncp/sl_si91x_ncp_utility.c
-- path: third_party/matter_sdk/src/platform/silabs/rs911x/BLEManagerImpl.cpp
-- path: third_party/matter_sdk/src/platform/silabs/rs911x/wfx_sl_ble_init.cpp
+- path: third_party/matter_sdk/src/platform/silabs/SiWx/ble/BLEManagerImpl.cpp
+- path: third_party/matter_sdk/src/platform/silabs/SiWx/ble/sl_si91x_ble_init.cpp
 
 define:
-- name: RS911X_WIFI
+- name: SL_MATTER_SIWX_WIFI_ENABLE
 - name: EXP_BOARD
   value: 1
 - name: CHIP_9117
@@ -70,10 +66,6 @@ define:
 - name: SL_WFX_CONFIG_SCAN
   value: 1
 - name: SL_WFX_USE_SPI
-- name: EFX32_RS911X
-  value: 1
-- name: RSI_WLAN_ENABLE
-- name: RSI_SPI_INTERFACE
 - name: RSI_WITH_OS
 - name: SL_WIFI_COMPONENT_INCLUDED
 - name: __WEAK

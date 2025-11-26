@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 This script copies the contents of the current working directory to a specified target location,
 excluding certain directories and files based on predefined rules.
@@ -126,6 +125,9 @@ def copy_directory(source_directory, target_location):
         for file in files:
             # Skip hidden files
             if file.startswith("."):
+                continue
+            # Skip .slt files
+            if file.endswith(".slt"):
                 continue
             source_file = os.path.join(root, file)
             if not os.path.exists(source_file):

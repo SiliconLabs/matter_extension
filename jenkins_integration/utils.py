@@ -14,7 +14,7 @@ workspace_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath
 if workspace_root not in sys.path:
     sys.path.insert(0, workspace_root)
 
-from jenkins_integration.github.github_workflow import get_latest_sha, get_workflow_info, wait_for_artifacts
+from jenkins_integration.github.github_workflow import get_workflow_info, wait_for_artifacts
 from jenkins_integration.artifacts.ubai_client import search_file_in_ubai
 from jenkins_integration.artifacts.artifact_processor import download_and_upload_artifacts
 
@@ -54,12 +54,7 @@ def get_dev_workflow_info(args):
         RuntimeError: If GitHub API request fails or workflow info cannot be determined
     """
     try:
-        commit_sha, pr_build_number, head_branch = get_latest_sha(args.branch_name)
-        
-        if pr_build_number is None:
-            run_number, workflow_id = get_workflow_info(args.branch_name, commit_sha)
-        else:
-            run_number, workflow_id = get_workflow_info(pr_build_number, commit_sha, pr=True, head_branch=head_branch)
+        run_number, workflow_id, commit_sha = get_workflow_info(args.branch_name)
         branch_name = args.branch_name
         build_number = args.build_number
 

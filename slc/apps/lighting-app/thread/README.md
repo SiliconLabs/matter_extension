@@ -110,3 +110,15 @@ chip-tool pairing ble-thread 1 hex:<operationalDataset> 20202021 3840
 
 chip-tool onoff on 1 1
 ```
+
+## TrustZone
+
+TrustZone requires a separate workspace, which combines the secure, non-secure and bootloader builds into a single solution,
+and generates a combined artifact. This example can be built using:
+```
+./slc/build.sh slc/apps/lighting-app/thread/trustzone/lighting-app.slcw brd4187c -pids trustzone
+```
+Then:
+```
+commander flash out/brd4187c/lighting-app-solution/artifact/lighting-app-combined.s37
+```

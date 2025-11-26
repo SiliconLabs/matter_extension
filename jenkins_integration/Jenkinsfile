@@ -4,7 +4,7 @@
 def pipelineProperties = []
 
 // Configure pollSCM triggers
-if(env.BRANCH_NAME == 'main'){
+if(env.BRANCH_NAME == 'release_2.8-1.5'){
     // Trigger daily at 9pm EST (3 hrs after github trigger)
     pipelineProperties << pipelineTriggers([pollSCM('0 1 * * *')])
 }
@@ -16,6 +16,7 @@ def run_number = ""
 def workflow_id = ""
 def pr_number = ""
 def bypass_send_results_gh = ""
+def build_description = ""
 
 def sendSlackNotification(String messageType, String status, String summary = "", String color = "", String commitSha = "", String runNumber = "", String workflowId = "") {
     def currentTime = new Date().format("yyyy-MM-dd HH:mm:ss", TimeZone.getTimeZone('UTC'))
@@ -75,6 +76,13 @@ pipeline
                 script {
                     pipelineFunctions = load 'jenkins_integration/jenkinsFunctions.groovy'
                     echo "pipelineFunctions loaded: ${pipelineFunctions != null}"
+                    sh 'git submodule update --init --checkout third_party/simplicity_sdk'
+                    sh 'git submodule update --init --checkout third_party/wifi_sdk'
+                    sisdk_build_number = sh(script: 'cat third_party/simplicity_sdk/.build-number', returnStdout: true).trim()
+                    wiseconnect_build_number = sh(script: 'cat third_party/wifi_sdk/.build-number', returnStdout: true).trim()
+                    build_description = "SISDK build number: ${sisdk_build_number}"
+                    build_description += "\nWiFi Extension build number: ${wiseconnect_build_number}"
+                    buildDescription(build_description)
                 }
             }
         }
@@ -91,9 +99,22 @@ pipeline
                                 bypass_send_results_gh = result.bypass_send_results
                                 pr_number = result.pr_number
                                 echo "commit_sha: ${commit_sha}, run_number: ${run_number}, workflow_id: ${workflow_id}"
-                                buildDescription("GitHub Workflow Run Number: ${run_number}")
+                                build_description += "\nGitHub Workflow Run Number: ${run_number}"
+                                buildDescription(build_description)
                             }
                         }
+                    }
+                }
+            }
+        }
+        stage('Code Size Analysis') {
+            when {
+                expression { env.BRANCH_NAME == "main" || env.BRANCH_NAME.startsWith("release_") }
+            }
+            steps {
+                script {
+                    withDockerContainer(image: 'artifactory.silabs.net/gsdk-docker-production/gsdk_nomad_containers/gsdk_ubai:latest') {
+                        pipelineFunctions.run_code_size_analysis()
                     }
                 }
             }

@@ -13,7 +13,6 @@ provides:
   - name: matter_boolean_state_configuration
 source:
   - path: third_party/matter_sdk/src/app/clusters/boolean-state-configuration-server/boolean-state-configuration-cluster.cpp
-  - path: third_party/matter_sdk/src/app/clusters/boolean-state-configuration-server/boolean-state-configuration-server.cpp
   - path: third_party/matter_sdk/src/app/clusters/boolean-state-configuration-server/BooleanStateConfigurationTestEventTriggerHandler.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/boolean-state-configuration-server

@@ -57,14 +57,11 @@ component:
   - id: matter_default_lcd_config
   - id: matter_log_uart
   - id: matter_lwip
-  # TODO: Remove this in the SiSDK 25Q4 release, where the LwIP fix will be included in the SiSDK.
-  - id: sl_si91x_lwip_stack
 
   - id: matter_air_quality_app
 
   - id: wifi_resources
   - id: sl_si91x_common_flash_nvm3
-  - id: sl_si91x_lwip_stack
   - id: sl_si91x_wireless
   - id: wifi
   - id: basic_network_config_manager

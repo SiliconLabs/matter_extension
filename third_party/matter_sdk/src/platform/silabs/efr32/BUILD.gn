@@ -18,6 +18,7 @@ import("${chip_root}/build/chip/buildconfig_header.gni")
 import("${chip_root}/src/crypto/crypto.gni")
 import("${chip_root}/src/platform/device.gni")
 import("${chip_root}/src/platform/silabs/multi-ota/args.gni")
+import("${chip_root}/src/platform/silabs/tracing/args.gni")
 import("${chip_root}/src/tracing/tracing_args.gni")
 import("${chip_root}/third_party/silabs/efr32_sdk.gni")
 import("${chip_root}/third_party/silabs/silabs_board.gni")
@@ -71,12 +72,19 @@ static_library("efr32") {
     "../../SingletonConfigurationManager.cpp",
   ]
 
-  if (chip_enable_ble_rs911x) {
+  public_deps = [
+    "${chip_root}/src/platform:platform_base",
+    "${chip_root}/src/platform/logging:headers",
+    "${silabs_platform_dir}/platformAbstraction:gsdk",
+  ]
+
+  # BLE implementation selection: use SiWx BLE wrapper or local EFR32 implementation
+  if (sl_matter_enable_siwx_ble) {
+    public_deps += [ "${silabs_platform_dir}/SiWx/ble:siwx-ble" ]
     sources += [
-      "../rs911x/BLEManagerImpl.cpp",
-      "../rs911x/rsi_ble_config.h",
-      "../rs911x/wfx_sl_ble_init.cpp",
-      "../rs911x/wfx_sl_ble_init.h",
+      "${silabs_platform_dir}/SiWx/ble/BLEManagerImpl.cpp",
+      "${silabs_platform_dir}/SiWx/ble/sl_si91x_ble_init.cpp",
+      "${silabs_platform_dir}/SiWx/ble/sl_si91x_ble_init.h",
     ]
   } else {
     sources += [
@@ -86,12 +94,6 @@ static_library("efr32") {
       "BLEManagerImpl.cpp",
     ]
   }
-
-  public_deps = [
-    "${chip_root}/src/platform:platform_base",
-    "${chip_root}/src/platform/logging:headers",
-    "${silabs_platform_dir}/platformAbstraction:gsdk",
-  ]
   deps = [
     "${chip_root}/src/app/common:ids",
     "${chip_root}/src/tracing/silabs:silabs_tracing",
@@ -103,6 +105,11 @@ static_library("efr32") {
       "${chip_root}/src/platform/silabs/tracing:SilabsTracing",
       "${chip_root}/src/tracing",
     ]
+  }
+
+  if (silabs_tracing_energy_traces) {
+    public_deps +=
+        [ "${chip_root}/src/platform/silabs/tracing:SilabsPowerTracing" ]
   }
 
   # Add platform crypto implementation

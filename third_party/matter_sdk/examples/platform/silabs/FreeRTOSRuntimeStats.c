@@ -308,7 +308,6 @@ uint32_t ulGetAllTaskInfo(TaskInfo * taskInfoArray, uint32_t taskInfoArraySize, 
     if (systemStats != NULL)
     {
         systemStats->terminatedTaskCount = deletedCount;
-        systemStats->totalTaskCount      = systemStats->activeTaskCount + deletedCount;
         systemStats->activeTaskCount     = actualTasks;
     }
 
