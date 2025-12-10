@@ -146,20 +146,20 @@ void OvenModeDelegate::HandleChangeToMode(uint8_t NewMode, ModeBase::Commands::C
 
 CHIP_ERROR OvenModeDelegate::GetModeLabelByIndex(uint8_t modeIndex, MutableCharSpan & label)
 {
-    VerifyOrReturnError(modeIndex < to_underlying(OvenModes::kModeCount), CHIP_ERROR_INVALID_LIST_LENGTH);
+    VerifyOrReturnError(modeIndex < to_underlying(OvenModes::kModeCount), CHIP_ERROR_PROVIDER_LIST_EXHAUSTED);
     return CopyCharSpanToMutableCharSpan(skModeOptions[modeIndex].label, label);
 }
 
 CHIP_ERROR OvenModeDelegate::GetModeValueByIndex(uint8_t modeIndex, uint8_t & value)
 {
-    VerifyOrReturnError(modeIndex < to_underlying(OvenModes::kModeCount), CHIP_ERROR_INVALID_LIST_LENGTH);
+    VerifyOrReturnError(modeIndex < to_underlying(OvenModes::kModeCount), CHIP_ERROR_PROVIDER_LIST_EXHAUSTED);
     value = skModeOptions[modeIndex].mode;
     return CHIP_NO_ERROR;
 }
 
 CHIP_ERROR OvenModeDelegate::GetModeTagsByIndex(uint8_t modeIndex, DataModel::List<detail::Structs::ModeTagStruct::Type> & tags)
 {
-    VerifyOrReturnError(modeIndex < MATTER_ARRAY_SIZE(skModeOptions), CHIP_ERROR_INVALID_LIST_LENGTH);
+    VerifyOrReturnError(modeIndex < MATTER_ARRAY_SIZE(skModeOptions), CHIP_ERROR_PROVIDER_LIST_EXHAUSTED);
 
     VerifyOrReturnError(tags.size() >= skModeOptions[modeIndex].modeTags.size(), CHIP_ERROR_INVALID_ARGUMENT);
 

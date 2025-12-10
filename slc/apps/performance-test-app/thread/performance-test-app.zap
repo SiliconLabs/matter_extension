@@ -1,6 +1,6 @@
 {
   "fileFormat": 2,
-  "featureLevel": 99,
+  "featureLevel": 109,
   "creator": "zap",
   "keyValuePairs": [
     {
@@ -14,7 +14,11 @@
     {
       "key": "manufacturerCodes",
       "value": "0x1002"
-    }
+    },
+    {
+      "key": "generateStaticTemplates",
+      "value": "true"
+    }      
   ],
   "package": [
     {

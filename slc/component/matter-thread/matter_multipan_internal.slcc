@@ -12,15 +12,15 @@ requires:
 provides:
   - name: matter_multipan_internal
 source:
-  - path: silabs_utils/init_matter_multipan.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/multi-pan/InitMatterMultipan.cpp
 include:
-  - path: silabs_utils
+  - path: third_party/matter_sdk/examples/platform/silabs/multi-pan
     file_list:
-      - path: init_matter_multipan.h
+      - path: InitMatterMultipan.h
 template_contribution:
   - name: ot_init
-    value: sl_internal_app_init_second_instance
+    value: InternalAppInitSecondInstance
     priority: 15
   - name: ot_init
-    value: sl_internal_app_init_cli
+    value: InternalAppInitCli
     priority: 22

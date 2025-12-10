@@ -63,6 +63,8 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
   - id: matter_segger_rtt
+  # Generate additional ZAP content for custom clusters
+  - id: matter_zap_custom_generation
 
 requires:
   # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART

@@ -63,6 +63,7 @@ include:
       - path: ICDMonitoringTable.h
 requires:
   - name: cpp_support
+  - name: matter_static_generated_zap_content
 
   # Matter over Thread and Matter over Wifi uses these separate components per networking protocol
 

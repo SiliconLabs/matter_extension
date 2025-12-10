@@ -119,12 +119,6 @@ requires:
   - name: matter_drivers_series_2
     condition: [device_series_3]
 
-  # RAIL components that enable Concurrent Listening
-  - name: rail_util_ieee802154_fast_channel_switching
-    condition: [device_series_2]
-  - name: rail_util_dma
-    condition: [device_series_2]
-
 toolchain_settings:
   - option: cxx_standard
     value: gnu++17

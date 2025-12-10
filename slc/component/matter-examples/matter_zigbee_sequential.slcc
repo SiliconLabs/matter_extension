@@ -7,6 +7,7 @@ id: matter_zigbee_sequential
 quality: production
 provides:
   - name: matter_zigbee_sequential
+  - name: matter_zigbee_type
 define:
   - name: SL_MATTER_ZIGBEE_SEQUENTIAL
     value: "1"

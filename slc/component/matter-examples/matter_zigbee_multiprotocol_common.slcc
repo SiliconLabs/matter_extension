@@ -10,6 +10,18 @@ metadata:
     license: MSLA
 requires:
   - name: matter_zigbee_cmp
+  - name: matter_zigbee_type
+    # RAIL components that enable Concurrent Listening on series 2.
+    # We keep it in common to respect grandfather configuration
+  - name: rail_util_ieee802154_fast_channel_switching
+    condition: [device_series_2]
+  - name: rail_util_dma
+    condition: [device_series_2]
+  # Rail PHY selection needed with rail mux for series3
+  - name: sl_rail_util_ieee802154_rx_duty_cycling
+    condition: [ device_generic_family_sixx301 ]
+  - name: sl_rail_util_ieee802154_phy_select
+    condition: [ device_generic_family_sixx301 ]
 provides:
   - name: matter_zigbee_multiprotocol_common
 recommends:

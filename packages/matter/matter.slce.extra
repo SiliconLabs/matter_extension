@@ -885,7 +885,6 @@ extra_files:
   - slc/component/matter-examples/matter_dishwasher.slcc
   - slc/component/matter-examples/matter_zigbee_concurrent.slcc
   - slc/component/matter-examples/matter_multi_sensor_app.slcc
-  - slc/component/matter-examples/rainier_concurrent_listening.slcc
   - slc/component/matter-examples/matter_lock.slcc
   - slc/component/matter-examples/matter_lighting.slcc
   - slc/component/matter-examples/matter_thermostat_app.slcc

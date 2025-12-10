@@ -36,7 +36,6 @@ exclude_submodules = [
 # specific exlude from matter_sdk
 matter_sdk_exclude = [
     'matter_sdk/third_party',
-    'matter_sdk/zzz_generated',
     'matter_sdk/examples/virtual-device-app',
     'matter_sdk/src/controller/java/generated',
     'matter_sdk/examples/chef/devices',

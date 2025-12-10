@@ -7,6 +7,11 @@ id: matter_zigbee_concurrent
 quality: production
 provides:
   - name: matter_zigbee_concurrent
+  - name: matter_zigbee_type
+requires:
+  # RAIL component that enable Fast channel switching on Series3
+  - name: sl_rail_util_ieee802154_fast_channel_switching
+    condition: [ device_generic_family_sixx301 ]
 define:
   - name: SL_MATTER_ZIGBEE_CMP
     value: "1"

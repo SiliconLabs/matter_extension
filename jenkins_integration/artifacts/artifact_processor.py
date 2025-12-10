@@ -96,7 +96,7 @@ def download_and_upload_artifacts(workflow_id, branch_name, build_number, sqa=Fa
     try:
         artifact_info = _download_and_extract_artifacts(workflow_id, sqa)
         print("Uploading individual artifacts to UBAI.")
-        _upload_individual_artifacts(artifact_info['extracted_folder'], branch_name, build_number, sqa)
+        _upload_individual_artifacts(artifact_info['extracted_folder'], branch_name, build_number)
         print("Uploading merged artifacts to UBAI and Artifactory.")
         _upload_merged_artifacts(artifact_info['artifact_file'], artifact_info['artifact_name'], 
                                branch_name, build_number, sqa)
@@ -106,7 +106,7 @@ def download_and_upload_artifacts(workflow_id, branch_name, build_number, sqa=Fa
         raise RuntimeError(f"Failed to process artifacts: {e}")
 
 
-def upload_binaries_individually_to_ubai(binaries_folder, branch_name, build_number, sqa):
+def upload_binaries_individually_to_ubai(binaries_folder, branch_name, build_number):
     """
     Upload individual binary files from the extracted artifact folder to UBAI.
     
@@ -114,7 +114,6 @@ def upload_binaries_individually_to_ubai(binaries_folder, branch_name, build_num
         binaries_folder (str): Path to the folder containing binaries.
         branch_name (str): Branch name for the upload.
         build_number (int): Build number for the upload.
-        sqa (bool): Bool to indicate if artifacts are sqa
     Raises:
         ValueError: If parameters are invalid
         RuntimeError: If upload fails
@@ -126,7 +125,7 @@ def upload_binaries_individually_to_ubai(binaries_folder, branch_name, build_num
         for artifact in os.listdir(binaries_folder):
             artifact_path = os.path.join(binaries_folder, artifact)
             print(f"Processing artifact: {artifact}")
-            _process_individual_artifact(artifact, artifact_path, branch_name, build_number, sqa)
+            _process_individual_artifact(artifact, artifact_path, branch_name, build_number)
         print("Individual binary uploads completed successfully.")
     except Exception as e:
         error_msg = f"Failed to upload individual binaries: {e}"
@@ -269,7 +268,7 @@ def _extract_artifact(artifact_file):
         raise RuntimeError(f"Failed to extract {artifact_name}: {e}")
 
 
-def _upload_individual_artifacts(extracted_folder, branch_name, build_number, sqa):
+def _upload_individual_artifacts(extracted_folder, branch_name, build_number):
     """
     Upload individual binary artifacts to UBAI.
     
@@ -277,12 +276,11 @@ def _upload_individual_artifacts(extracted_folder, branch_name, build_number, sq
         extracted_folder (str): Path to the extracted artifacts folder
         branch_name (str): Branch name for the upload
         build_number (int): Build number for the upload
-        sqa (bool): Bool to indicate if artifacts are sqa
     Raises:
         RuntimeError: If upload fails
     """
     try:
-        upload_binaries_individually_to_ubai(extracted_folder, branch_name, build_number, sqa)
+        upload_binaries_individually_to_ubai(extracted_folder, branch_name, build_number)
     except Exception as e:
         raise RuntimeError(f"Failed to upload individual artifacts: {e}")
 
@@ -338,7 +336,7 @@ def _validate_binaries_upload_parameters(binaries_folder, branch_name, build_num
         raise ValueError("Run number must be a positive integer")
 
 
-def _process_individual_artifact(artifact_name, artifact_path, branch_name, build_number, sqa):
+def _process_individual_artifact(artifact_name, artifact_path, branch_name, build_number):
     """
     Process an individual artifact based on its type.
     
@@ -347,7 +345,6 @@ def _process_individual_artifact(artifact_name, artifact_path, branch_name, buil
         artifact_path (str): Path to the artifact
         branch_name (str): Branch name for upload
         build_number (int): Build number for upload
-        sqa (bool): Bool to indicate if artifacts are sqa
     """
     if artifact_name == "chip-tool":
         _upload_chip_tool(artifact_path, branch_name, build_number)
@@ -361,7 +358,7 @@ def _process_individual_artifact(artifact_name, artifact_path, branch_name, buil
         if artifact_name == "WiFi-Firmware":
             _upload_wifi_firmware(artifact_path, branch_name, build_number)
         else:
-            _upload_board_artifacts(artifact_name, artifact_path, branch_name, build_number, sqa)
+            _upload_board_artifacts(artifact_name, artifact_path, branch_name, build_number)
 
 
 def _upload_chip_tool(artifact_path, branch_name, build_number):
@@ -423,7 +420,7 @@ def _upload_wifi_firmware_files(board_path, board_folder, branch_name, build_num
                 upload_to_ubai(fw_file_path, ubai_app_name, board_folder, branch_name, build_number)
 
 
-def _upload_board_artifacts(board_id, board_path, branch_name, build_number, sqa):
+def _upload_board_artifacts(board_id, board_path, branch_name, build_number):
     """
     Upload board-specific artifacts to UBAI.
 
@@ -432,7 +429,6 @@ def _upload_board_artifacts(board_id, board_path, branch_name, build_number, sqa
         board_path (str): Path to the board directory
         branch_name (str): Branch name for upload
         build_number (int): Build number for upload
-        sqa (bool): Bool to indicate if artifacts are sqa
     """
     board_id_upper = board_id.upper()
     print(f"Processing board ID: {board_id_upper}")
@@ -440,10 +436,10 @@ def _upload_board_artifacts(board_id, board_path, branch_name, build_number, sqa
         app_name_path = os.path.join(board_path, app_name_folder)
         print(f"Sample App Path: {app_name_path}")
         if os.path.isdir(app_name_path):
-            _process_board_app(app_name_folder, app_name_path, board_id_upper, branch_name, build_number, sqa)
+            _process_board_app(app_name_folder, app_name_path, board_id_upper, branch_name, build_number)
 
 
-def _process_board_app(app_name_folder, app_name_path, board_id, branch_name, build_number, sqa):
+def _process_board_app(app_name_folder, app_name_path, board_id, branch_name, build_number):
     """
     Process a board application and upload its artifacts.
 
@@ -453,91 +449,73 @@ def _process_board_app(app_name_folder, app_name_path, board_id, branch_name, bu
         board_id (str): Board identifier
         branch_name (str): Branch name for upload
         build_number (int): Build number for upload
-        sqa (bool): Bool to indicate if artifacts are sqa
     """
-    app_info = _determine_app_info(app_name_folder, board_id, sqa)
-    print(f"Sample App Name: {app_info['app_name']}")
-    artifact_folder = os.path.join(app_name_path, 'artifact')
-    if os.path.exists(artifact_folder) and os.path.isdir(artifact_folder):
-        _upload_board_artifact_files(artifact_folder, app_info, board_id, branch_name, build_number)
+    try:
+        board_id = board_id.split(",")[0] # Handles 1019A 3MB BRD1019A,SIMG301M113WIH
+        ubai_app_name = determine_ubai_app_name(app_name_folder)
+        artifact_solution_folder = os.path.join(app_name_path, 'artifact')
+        if os.path.exists(artifact_solution_folder) and os.path.isdir(artifact_solution_folder):
+            _upload_board_artifact_files(artifact_solution_folder, ubai_app_name, board_id, branch_name, build_number)
+        # For OTA, we need the application without bootloader uploaded to UBAI as well (not applicable to 917SoC).
+        if "ota" in ubai_app_name and "siwx" not in app_name_path:
+            if "-series" in app_name_folder: # Thread
+                app_name_base = app_name_folder.split("-series")[0]
+            else: # WIFI NCP
+                app_name_base = app_name_folder.split("-solution")[0]
+            artifact_app_only_folder = os.path.join(app_name_path, app_name_base, 'artifact')
+            if os.path.exists(artifact_app_only_folder) and os.path.isdir(artifact_app_only_folder):
+                _upload_board_artifact_files(artifact_app_only_folder, ubai_app_name, board_id, branch_name, build_number)
+    except Exception as e:
+        print(f"Error during binary upload: {e}")
 
-
-def _determine_app_info(app_name_folder, board_id, sqa):
+def determine_ubai_app_name(app_name_folder):
     """
-    Determine application information based on folder name.
+    Determine UBAI app name, used by SQA.
 
     Args:
         app_name_folder (str): Application folder name
-        board_id (str): Board identifier
-        sqa (bool): Bool to indicate if artifacts are sqa
     Returns:
-        dict: Application information containing app_name and app_type
+        str: UBAI app name metadata.
     """
-    board_id = board_id.split(",")[0] # Handles 1019A 3MB BRD1019A,SIMG301M113WIH
-    if "series-" in app_name_folder:
-        app_name = f"{board_id}-OpenThread"
+    print(f"Processing artifact with folder name: {app_name_folder}")
+    split_result = app_name_folder.split("solution")
+    if len(split_result) > 1:
+        suffix = split_result[1]
     else:
-        app_name = f"{board_id}-WiFi"
-    app_type = None
-    # Default zigbee-matter-light app which is concurrent.
-    if "zigbee-matter-light" in app_name_folder and "sequential" not in app_name_folder:
-        app_type = "concurrent"
-    if app_name_folder.split("solution")[1] is not None:
-        folder_app_name = app_name_folder.split("solution")[0].split("-series")[0]
-        app_name_suffix = app_name_folder.split("solution")[1]
-        cmp_apps = ["zigbee-matter-light", "thermostat"]
-        if folder_app_name in cmp_apps and "sequential" in app_name_suffix:
-            app_type = "sequential"
-            app_name_suffix = app_name_suffix.split("sequential")[1]
-        elif folder_app_name in cmp_apps and "cmp-concurrent" in app_name_suffix:
-            app_type = "concurrent"
-            app_name_suffix = app_name_suffix.split("cmp-concurrent")[1]
-        elif folder_app_name in cmp_apps and "concurrent-listening" in app_name_suffix:
-            app_type = "concurrent-listening"
-        elif "lto" in app_name_suffix:
-            app_type = "lto"
-            app_name_suffix = app_name_suffix.split("lto")[1]
-        elif "icd" in app_name_suffix:
-            app_type = "icd"
-            app_name_suffix = app_name_suffix.split("icd")[1]
-        elif "brd4357a" in app_name_suffix:
-            app_type = "brd4357a"
-            app_name_suffix = app_name_suffix.split("brd4357a")[1]
-        elif "trustzone" in app_name_suffix:
-            app_type = "trustzone"
-            app_name_suffix = app_name_suffix.split("trustzone")[1]
-        if sqa:
-            app_name = f"{app_name}{app_name_suffix}"
-    return {
-            'app_name': app_name,
-            'app_type': app_type
-        }
+        # If ever solution is missing, mark it.
+        suffix = "solution-false"
+    if suffix == "":
+        if "zigbee-matter-light" in app_name_folder:
+            # Match thermostat cmp app
+            ubai_app_name = "cmp-concurrent"
+        else:
+            ubai_app_name = ""
+    else:
+        if suffix.startswith('-'):
+            ubai_app_name = suffix.lstrip('-')
+        else:
+            ubai_app_name = suffix
+    print(f"UBAI app name after processing: {ubai_app_name}")
+    return ubai_app_name
 
 
-def _upload_board_artifact_files(artifact_folder, app_info, board_id, branch_name, build_number):
+def _upload_board_artifact_files(artifact_folder, ubai_app_name, board_id, branch_name, build_number):
     """
     Upload board artifact files to UBAI.
 
     Args:
         artifact_folder (str): Path to the artifact folder
-        app_info (dict): Application information
+        ubai_app_name (str): UBAI app name to be used when uploading artifact.
         board_id (str): Board identifier
         branch_name (str): Branch name for upload
         build_number (int): Build number for upload
     """
-    board_id = board_id.split(",")[0]  # Handles 1019A 3MB BRD1019A,SIMG301M113WIH
     for file_name in os.listdir(artifact_folder):
         file_path = os.path.join(artifact_folder, file_name)
         if os.path.isfile(file_path) and file_name.endswith(('.s37', '.rps')):
-            if app_info['app_type'] is not None:
-                name_part, ext = file_name.rsplit('.', 1)
-                new_file_name = f"{name_part}-{app_info['app_type']}.{ext}"
-            else:
-                new_file_name = file_name
-            new_file_path = os.path.join(artifact_folder, new_file_name)
-            os.rename(file_path, new_file_path)
-            print(f"Renamed file {file_name} to {new_file_name}.")
-            upload_to_ubai(new_file_path, app_info['app_name'], board_id, branch_name, build_number)
+            # Do not upload copy-sources binary
+            if "copy-sources" not in ubai_app_name:
+                upload_to_ubai(file_path, ubai_app_name, board_id, branch_name, build_number)
 
 def _extract_sample_app_name(file_name):
     """

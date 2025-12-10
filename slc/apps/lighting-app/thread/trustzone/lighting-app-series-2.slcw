@@ -14,4 +14,4 @@ project:
     id: bootloader
     output: matter-bootloader
 post_build:
-    profile: tz_application
+    profile: ot-tz-workspace

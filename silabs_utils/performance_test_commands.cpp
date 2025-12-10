@@ -102,7 +102,7 @@ void MatterPerfTest::PingExecuteNextAction()
 {
     if(pingInProgress != true) {
         // Should not happen
-        ChipLogError(NotSpecified, "ERROR: Received a ping responce with no ping in progress");
+        ChipLogError(NotSpecified, "ERROR: Received a ping response with no ping in progress");
         return;
     }
 

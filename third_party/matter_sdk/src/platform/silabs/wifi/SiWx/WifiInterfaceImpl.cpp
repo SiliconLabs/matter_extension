@@ -478,7 +478,7 @@ sl_status_t SetWifiConfigurations()
             .security = security,
             .encryption = SL_WIFI_DEFAULT_ENCRYPTION,
             .client_options = SL_WIFI_JOIN_WITH_SCAN,
-            .credential_id = SL_NET_DEFAULT_WIFI_CLIENT_CREDENTIAL_ID,
+            .credential_id = (security == SL_WIFI_OPEN) ? SL_NET_NO_CREDENTIAL_ID : SL_NET_DEFAULT_WIFI_CLIENT_CREDENTIAL_ID,
         },
         .ip = {
             .mode = SL_IP_MANAGEMENT_DHCP,
@@ -855,12 +855,11 @@ CHIP_ERROR WifiInterfaceImpl::ConfigurePowerSave(PowerSaveInterface::PowerSaveCo
     VerifyOrReturnError(error == RSI_SUCCESS, CHIP_ERROR_INTERNAL,
                         ChipLogError(DeviceLayer, "rsi_bt_power_save_profile failed: %ld", error));
 
-    sl_wifi_performance_profile_v2_t wifi_profile = { .profile = ConvertPowerSaveConfiguration(configuration),
-                                                      // TODO: Performance profile fails if not aligned with DTIM
-                                                      .dtim_aligned_type = SL_SI91X_ALIGN_WITH_DTIM_BEACON,
-                                                      .listen_interval   = listenInterval };
+    sl_wifi_performance_profile_v2_t wifiProfile = { .profile           = ConvertPowerSaveConfiguration(configuration),
+                                                     .dtim_aligned_type = SL_SI91X_ALIGN_WITH_BEACON,
+                                                     .listen_interval   = listenInterval };
 
-    sl_status_t status = sl_wifi_set_performance_profile_v2(&wifi_profile);
+    sl_status_t status = sl_wifi_set_performance_profile_v2(&wifiProfile);
     VerifyOrReturnError(status == SL_STATUS_OK, CHIP_ERROR_INTERNAL,
                         ChipLogError(DeviceLayer, "sl_wifi_set_performance_profile_v2 failed: 0x%lx", status));
 

@@ -136,23 +136,6 @@
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="core.hidden" value="true"/>
   </descriptors>
-  <descriptors name="MatterDishwasherOverThread" label="Matter - SoC Dishwasher over Thread"
-               description="This project builds a Matter Dishwasher app that can be developed inside Simplicity Studio">
-    <properties key="namespace" value="template.uc"/>
-    <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.apps.dishwasher-app.thread.dishwasher-app.slcp"/>
-    <properties key="projectFilePaths" value="slc/apps/dishwasher-app/thread/dishwasher-app.slcp"/>
-    <properties key="readmeFiles" value="slc/apps/dishwasher-app/thread/README.md"/>
-    <properties key="boardCompatibility" value="brd1019a brd2719a brd4116a brd4117a brd4118a brd4120a brd4121a brd4186c brd4187c brd4316a brd4317a brd4318a brd4337a brd4407a brd4408a brd2601b brd2608a brd2703a brd4350a brd4351a brd2709a brd2704a brd4319a:0.0.0.A00 com.silabs.board.none "/>
-    <properties key="partCompatibility" value=".*efr32mg24.* .*efr32mg26.* .*mgm24.* .*mgm26.* .*simg301.*"/>
-    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
-    <properties key="toolchainCompatibility" value="gcc"/>
-    <properties key="category" value="Matter Application"/>
-    <properties key="quality" value="PRODUCTION"/>
-    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
-    <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-    <properties key="core.hidden" value="true"/>
-  </descriptors>
   <descriptors name="MatterClosureControlOverThread" label="Matter - Closure Control over Thread"
            description="This project builds a Matter Closure Control app that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
@@ -732,23 +715,6 @@
     <properties key="filters" value="Type|NCP Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader-storage-internal-single-series-2.bootloader-storage-internal-single-series-2.slcp slc.apps.window-app.wifi.window-app-917-ncp.slcp"/>
   </descriptors>
-  <descriptors name="MatterDishwasherOverWiFi" label="Matter - SoC Dishwasher over Wi-Fi"
-               description="This project builds a Matter Dishwasher app for Wi-Fi SiWx917 that can be developed inside Simplicity Studio">
-    <properties key="namespace" value="template.uc"/>
-    <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.apps.dishwasher-app.wifi.dishwasher-app-siwx.slcp"/>
-    <properties key="projectFilePaths" value="slc/apps/dishwasher-app/wifi/dishwasher-app-siwx.slcp"/>
-    <properties key="readmeFiles" value="slc/apps/dishwasher-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
-    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
-    <properties key="toolchainCompatibility" value="gcc"/>
-    <properties key="category" value="Matter Application"/>
-    <properties key="quality" value="PRODUCTION"/>
-    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
-    <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-    <properties key="core.hidden" value="true"/>
-  </descriptors>
   <descriptors name="MatterSensorOverWiFi" label="Matter - SoC Multi Sensor over  Wi-Fi"
                description="This project builds a Matter Sensor app for Wi-Fi SiWx917 that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
@@ -800,63 +766,12 @@
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="core.hidden" value="true"/>
   </descriptors>
-  <descriptors name="MatterDishwasherOverThreadSolution" label="Matter - SoC Dishwasher over Thread with external Bootloader"
-               description="This project builds a Matter Dishwasher and Matter External Bootloader that can be developed inside Simplicity Studio">
-    <properties key="namespace" value="template.solution.uc"/>
-    <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.apps.dishwasher-app.thread.dishwasher-app-series-2.slcw"/>
-    <properties key="projectFilePaths" value="slc/apps/dishwasher-app/thread/dishwasher-app-series-2.slcw"/>
-    <properties key="readmeFiles" value="slc/apps/dishwasher-app/thread/README.md"/>
-    <properties key="boardCompatibility" value="brd4116a brd4117a brd4118a brd4120a brd4121a brd4186c brd4187c brd4316a brd4317a brd4318a brd2601b brd2608a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=".*efr32mg24.* .*efr32mg26.* .*mgm24.*"/>
-    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
-    <properties key="toolchainCompatibility" value="gcc"/>
-    <properties key="category" value="Matter Application"/>
-    <properties key="quality" value="PRODUCTION"/>
-    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
-    <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-    <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader-storage-external-single-series-2.bootloader-storage-external-single-series-2.slcp slc.apps.dishwasher-app.thread.dishwasher-app.slcp"/>
-  </descriptors>
-  <descriptors name="MatterDishwasherOverThreadSolution" label="Matter - SoC Dishwasher over Thread with internal Bootloader"
-               description="This project builds a Matter Dishwasher and Matter Internal Bootloader that can be developed inside Simplicity Studio">
-    <properties key="namespace" value="template.solution.uc"/>
-    <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.apps.dishwasher-app.thread.dishwasher-app-series-2-internal.slcw"/>
-    <properties key="projectFilePaths" value="slc/apps/dishwasher-app/thread/dishwasher-app-series-2-internal.slcw"/>
-    <properties key="readmeFiles" value="slc/apps/dishwasher-app/thread/README.md"/>
-    <properties key="boardCompatibility" value="brd4337a brd2703a brd2704a brd4319a:0.0.0.A00 brd4350a brd4351a brd2709a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=".*mgm24.* .*efr32mg24.* .*efr32mg26.* .*mgm26.* "/>
-    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
-    <properties key="toolchainCompatibility" value="gcc"/>
-    <properties key="category" value="Matter Application"/>
-    <properties key="quality" value="PRODUCTION"/>
-    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
-    <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-    <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader-storage-internal-single-series-2.bootloader-storage-internal-single-series-2.slcp slc.apps.dishwasher-app.thread.dishwasher-app.slcp"/>
-  </descriptors>
-    <descriptors name="MatterDishwasherOverThreadSolution" label="Matter - SoC Dishwasher over Thread with internal Bootloader"
-               description="This project builds a Matter Dishwasher and Matter Internal Bootloader that can be developed inside Simplicity Studio">
-    <properties key="namespace" value="template.solution.uc"/>
-    <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.apps.dishwasher-app.thread.dishwasher-app-series-3.slcw"/>
-    <properties key="projectFilePaths" value="slc/apps/dishwasher-app/thread/dishwasher-app-series-3.slcw"/>
-    <properties key="readmeFiles" value="slc/apps/dishwasher-app/thread/README.md"/>
-    <properties key="boardCompatibility" value="brd1019a brd2719a brd4407a brd4408a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=".*mgm24.* .*efr32mg24.* .*efr32mg26.* .*mgm26.* .*simg301.*"/>
-    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
-    <properties key="toolchainCompatibility" value="gcc"/>
-    <properties key="category" value="Matter Application"/>
-    <properties key="quality" value="PRODUCTION"/>
-    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
-    <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-    <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader-storage-single-4096k-series-3.bootloader-storage-single-4096k-series-3.slcp slc.apps.dishwasher-app.thread.dishwasher-app.slcp"/>
-  </descriptors>
   <descriptors name="MatterLightSwitchOverThreadSolution" label="Matter - SoC Light Switch over Thread with internal Bootloader"
                description="This project builds a Matter Light Switch and Matter Internal Bootloader that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.solution.uc"/>
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.apps.light-switch-app.thread.light-switch-app-series-2-internal.slcw"/>
-    <properties key="projectFilePaths" value="slc/apps/light-switch-app/wifi/light-switch-app-siwx.slcw"/>
+    <properties key="projectFilePaths" value="slc/apps/light-switch-app/thread/light-switch-app-series-2-internal.slcw"/>
     <properties key="readmeFiles" value="slc/apps/light-switch-app/thread/README.md"/>
     <properties key="boardCompatibility" value="brd4337a brd2703a brd2704a brd4319a:0.0.0.A00 brd4350a brd4351a brd2709a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*mgm24.* .*efr32mg24.* .*efr32mg26.* .*mgm26.* "/>
@@ -1258,23 +1173,6 @@
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.apps.onoff-plug-app.wifi.onoff-plug-app-siwx.slcp"/>
   </descriptors>
-  <descriptors name="MatterDishwasherOverWiFiSolution" label="Matter - SoC Dishwasher over Wi-Fi"
-               description="This project builds a Matter Dishwasher App that can be developed inside Simplicity Studio">
-    <properties key="namespace" value="template.solution.uc"/>
-    <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.apps.dishwasher-app.wifi.dishwasher-app-siwx.slcw"/>
-    <properties key="projectFilePaths" value="slc/apps/dishwasher-app/wifi/dishwasher-app-siwx.slcw"/>
-    <properties key="readmeFiles" value="slc/apps/dishwasher-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
-    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
-    <properties key="toolchainCompatibility" value="gcc"/>
-    <properties key="category" value="Matter Application"/>
-    <properties key="quality" value="PRODUCTION"/>
-    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
-    <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
-    <properties key="solutionProjects" value="slc.apps.dishwasher-app.wifi.dishwasher-app-siwx.slcp"/>
-  </descriptors>
   <descriptors name="MatterSensorOverWiFiSolution" label="Matter - SoC Multi Sensor over Wi-Fi"
                description="This project builds a Matter Sensor App that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.solution.uc"/>
@@ -1416,7 +1314,7 @@
     <properties key="namespace" value="template.solution.uc"/>
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.apps.air-quality-sensor-app.thread.air-quality-sensor-app-series-2-internal.slcw"/>
-    <properties key="projectFilePaths" value="slc/apps/air-quality-sensor-app/wifi/air-quality-sensor-app-siwx.slcw"/>
+    <properties key="projectFilePaths" value="slc/apps/air-quality-sensor-app/thread/air-quality-sensor-app-series-2-internal.slcw"/>
     <properties key="readmeFiles" value="slc/apps/air-quality-sensor-app/thread/README.md"/>
     <properties key="boardCompatibility" value="brd4337a brd2703a brd2704a brd4319a:0.0.0.A00 brd4350a brd4351a brd2709a com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*mgm24.* .*efr32mg24.* .*efr32mg26.* .*mgm26.* "/>

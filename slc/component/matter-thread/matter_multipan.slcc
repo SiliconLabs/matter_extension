@@ -16,5 +16,12 @@ requires:
 provides:
   - name: matter_multipan
 define:
-  - name: CHIP_DEVICE_CONFIG_ENABLE_MULTI_PAN
+  - name: SL_OPENTHREAD_MULTI_PAN_ENABLE
     value: 1
+template_contribution:
+  - name: psa_key_slots
+    value:
+      name: psa_key_slots_multipan_ot
+      count: 15
+    condition:
+      - psa_crypto

@@ -54,7 +54,9 @@ def recurse_dir(file_or_dir):
             recurse_dir(os.path.join(file_or_dir, unit))
     else:
         if '.ds_store' in file_or_dir.lower():
-            os.remove(file_or_dir)        
+            os.remove(file_or_dir)
+        elif '.asset' in file_or_dir:
+            return
         elif '.s37' in file_or_dir or '.rps' in file_or_dir:
             brd = None
             for leaf in file_or_dir.split('/'):

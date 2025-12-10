@@ -109,7 +109,7 @@ run_slc_generate_with_retry() {
 				echo "Maximum retries reached after ConcurrentModificationException."
 			fi
 		# Check for timeout
-		elif echo "$output" | grep -q "Follow-up generation did not complete within.*seconds"; then
+		elif echo "$output" | grep -qi "Generation did not complete within .* seconds!"; then
 			if [ $attempt -lt $max_retries ]; then
 				echo "Timeout detected. Retrying slc generate command..."
 				sleep 1
