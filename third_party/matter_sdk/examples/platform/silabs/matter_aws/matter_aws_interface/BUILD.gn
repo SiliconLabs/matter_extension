@@ -17,9 +17,10 @@ import("${chip_root}/src/platform/silabs/wifi/args.gni")
 
 config("silabs_matterAws_config") {
   include_dirs = [
-    "${chip_root}/third_party/silabs/mqtt/stack",
-    "${chip_root}/third_party/silabs/mqtt/mqtt_transport_interface/include",
+    "${chip_root}/src/platform/silabs/mqtt/stack",
+    "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/include",
     "${chip_root}/examples/platform/silabs/matter_aws/matter_aws_interface/include",
+    "${chip_root}/examples/platform/silabs/display",
   ]
 }
 
@@ -28,12 +29,12 @@ source_set("silabs-matter-aws") {
     "${chip_root}/examples/platform/silabs/matter_aws/matter_aws_interface/src/MatterAws.cpp",
     "${chip_root}/examples/platform/silabs/matter_aws/matter_aws_interface/src/MatterAwsControl.cpp",
     "${chip_root}/examples/platform/silabs/matter_aws/matter_aws_interface/src/MatterAwsNvmCert.cpp",
-    "${chip_root}/third_party/silabs/mqtt/mqtt_transport_interface/src/MQTT_transport.c",
-    "${chip_root}/third_party/silabs/mqtt/mqtt_transport_interface/src/altcp.c",
-    "${chip_root}/third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_alloc.c",
-    "${chip_root}/third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_tcp.c",
-    "${chip_root}/third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls.c",
-    "${chip_root}/third_party/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls_mem.c",
+    "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/src/MQTT_transport.c",
+    "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp.c",
+    "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_alloc.c",
+    "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_tcp.c",
+    "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls.c",
+    "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls_mem.c",
   ]
 
   public_deps = [
@@ -47,8 +48,8 @@ source_set("silabs-matter-aws") {
 
 config("silabs_aws_sdk_ota_config") {
   include_dirs = [
-    "${chip_root}/third_party/silabs/mqtt/stack",
-    "${chip_root}/third_party/silabs/mqtt/mqtt_transport_interface/include",
+    "${chip_root}/src/platform/silabs/mqtt/stack",
+    "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/include",
     "${chip_root}/examples/platform/silabs/matter_aws/matter_aws_interface/include",
     "${chip_root}/third_party/silabs/aws_ota_sdk/demos/ota/ota_demo_core_mqtt",
     "${chip_root}/third_party/silabs/aws_ota_sdk/demos/ota/common/include",

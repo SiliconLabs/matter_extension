@@ -76,7 +76,7 @@ CHIP_ERROR AppTask::AppInit()
     }
 
     // Initialize mOccupancyInstance with the required feature map
-    BitMask<app::Clusters::OccupancySensing::Feature> featureMap(app::Clusters::OccupancySensing::Feature::kOther);
+    BitMask<app::Clusters::OccupancySensing::Feature> featureMap(app::Clusters::OccupancySensing::Feature::kPassiveInfrared);
     mOccupancyInstance = std::make_unique<chip::app::Clusters::OccupancySensing::Instance>(featureMap);
     mOccupancyInstance->Init();
 

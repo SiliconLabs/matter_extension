@@ -147,7 +147,7 @@ struct Storage : public GenericStorage,
     static constexpr size_t kProductUrlLengthMax         = 32;
     static constexpr size_t kPartNumberLengthMax         = 32;
     static constexpr size_t kHardwareVersionStrLengthMax = 32;
-    static constexpr size_t kManufacturingDateLengthMax  = 11; // yyyy-mm-dd + \0
+    static constexpr size_t kManufacturingDateLengthMax  = 16; // yyyymmddhhmmssxx
     static constexpr size_t kPersistentUniqueIdMaxLength = 16;
     static constexpr size_t kSpake2pVerifierB64LengthMax = BASE64_ENCODED_LEN(chip::Crypto::kSpake2p_VerifierSerialized_Length) + 1;
     static constexpr size_t kSpake2pSaltB64LengthMax     = BASE64_ENCODED_LEN(chip::Crypto::kSpake2p_Max_PBKDF_Salt_Length) + 1;

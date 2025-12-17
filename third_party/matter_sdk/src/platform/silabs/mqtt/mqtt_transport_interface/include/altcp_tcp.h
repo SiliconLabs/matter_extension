@@ -1,12 +1,12 @@
 /**
  * @file
- * Application layered TCP/TLS connection API (to be used from TCPIP thread)
+ * Application layered TCP connection API (to be used from TCPIP thread)\n
+ * This interface mimics the tcp callback API to the application while preventing
+ * direct linking (much like virtual functions).
+ * This way, an application can make use of other application layer protocols
+ * on top of TCP without knowing the details (e.g. TLS, proxy connection).
  *
- * This file contains memory management function prototypes for a TLS layer using mbedTLS.
- *
- * Memory management contains:
- * - allocating/freeing altcp_mbedtls_state_t
- * - allocating/freeing memory used in the mbedTLS library
+ * This file contains the base implementation calling into tcp.
  */
 
 /*
@@ -40,33 +40,33 @@
  * Author: Simon Goldschmidt <goldsimon@gmx.de>
  *
  */
-#ifndef LWIP_HDR_ALTCP_MBEDTLS_MEM_H
-#define LWIP_HDR_ALTCP_MBEDTLS_MEM_H
+#ifndef TRANSPORT_HDR_ALTCP_TCP_H
+#define TRANSPORT_HDR_ALTCP_TCP_H
 
 #include "altcp_opt.h"
 
 #if TRANSPORT_ALTCP /* don't build if not configured for use in lwipopts.h */
 
-#include "altcp_tls_mbedtls_opts.h"
-
-#if TRANSPORT_ALTCP_TLS && TRANSPORT_ALTCP_TLS_MBEDTLS
-
-#include "altcp_tls_mbedtls_structs.h"
+#include "altcp.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void altcp_mbedtls_mem_init(void);
-altcp_mbedtls_state_t *altcp_mbedtls_alloc(void *conf);
-void altcp_mbedtls_free(void *conf, altcp_mbedtls_state_t *state);
-void *altcp_mbedtls_alloc_config(size_t size);
-void altcp_mbedtls_free_config(void *item);
+struct altcp_pcb * altcp_tcp_new_ip_type(u8_t ip_type);
+
+#define altcp_tcp_new() altcp_tcp_new_ip_type(IPADDR_TYPE_V4)
+#define altcp_tcp_new_ip6() altcp_tcp_new_ip_type(IPADDR_TYPE_V6)
+
+struct altcp_pcb * altcp_tcp_alloc(void * arg, u8_t ip_type);
+
+struct tcp_pcb;
+struct altcp_pcb * altcp_tcp_wrap(struct tcp_pcb * tpcb);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* TRANSPORT_ALTCP_TLS && LWIP_ALTCP_TLS_MBEDTLS */
 #endif /* TRANSPORT_ALTCP */
-#endif /* TRANSPORT_HDR_ALTCP_MBEDTLS_MEM_H */
+
+#endif /* TRANSPORT_HDR_ALTCP_TCP_H */

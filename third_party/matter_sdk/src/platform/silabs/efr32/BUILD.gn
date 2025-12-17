@@ -89,10 +89,15 @@ static_library("efr32") {
   } else {
     sources += [
       "BLEChannel.h",
-      "BLEChannelImpl.cpp",
-      "BLEChannelImpl.h",
       "BLEManagerImpl.cpp",
     ]
+
+    if (sl_use_internal_ble_side_channel) {
+      sources += [
+        "BLEChannelImpl.cpp",
+        "BLEChannelImpl.h",
+      ]
+    }
   }
   deps = [
     "${chip_root}/src/app/common:ids",

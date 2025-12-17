@@ -28,8 +28,6 @@ config_file:
     directory: platform/silabs/tracing
 toolchain_settings:
   - option: gcc_compiler_option
-    value: -Wno-deprecated-declarations
-  - option: gcc_compiler_option
     value: -Wno-maybe-uninitialized
   - option: gcc_compiler_option
     value: -Wno-missing-field-initializers

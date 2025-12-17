@@ -189,6 +189,10 @@ configuration:
     value: 16
   - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS
     value: 1
+# Additional config when using ot_coap_cert_libs
+  - name: SL_MBEDTLS_KEY_EXCHANGE_PSK_ENABLED
+    value: 1
+    condition: [ot_coap_cert_libs]
 # series 3 requires more stack in zb stacks
   - name: SL_CLI_EXAMPLE_TASK_STACK_SIZE
     value: 1500
@@ -228,12 +232,6 @@ config_file:
   - path: ../../../../third_party/matter_sdk/examples/zigbee-matter-light/silabs/config/zcl/zcl_config.zap
     file_id: zap_config
     directory: common
-  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/gatt_configuration.btconf
-    directory: btconf
-    unless: [matter_ble_dmp_test, matter_gatt_static]
-  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/cmp/config/btconf/gatt_configuration.btconf
-    directory: btconf
-    condition: [matter_ble_dmp_test]
   - path: ../../../../provision.mattpconf
     directory: provision
     file_id: provision_config

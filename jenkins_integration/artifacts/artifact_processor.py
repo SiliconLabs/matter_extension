@@ -457,7 +457,7 @@ def _process_board_app(app_name_folder, app_name_path, board_id, branch_name, bu
         if os.path.exists(artifact_solution_folder) and os.path.isdir(artifact_solution_folder):
             _upload_board_artifact_files(artifact_solution_folder, ubai_app_name, board_id, branch_name, build_number)
         # For OTA, we need the application without bootloader uploaded to UBAI as well (not applicable to 917SoC).
-        if "ota" in ubai_app_name and "siwx" not in app_name_path:
+        if ("ota" in ubai_app_name or "series-3" in app_name_path) and "siwx" not in app_name_path:
             if "-series" in app_name_folder: # Thread
                 app_name_base = app_name_folder.split("-series")[0]
             else: # WIFI NCP

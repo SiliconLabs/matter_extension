@@ -51,11 +51,11 @@ include:
       - path: MatterAwsConfig.h
       - path: MatterAwsControl.h
       - path: MatterAwsNvmCert.h
-  - path: third_party/mqtt/stack
+  - path: third_party/matter_sdk/src/platform/silabs/mqtt/stack
     file_list:
       - path: mqtt.h
       - path: mqtt_opts.h
-  - path: third_party/mqtt/mqtt_transport_interface/include
+  - path: third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/include
     file_list:
       - path: altcp.h
       - path: altcp_opt.h
@@ -78,13 +78,13 @@ source:
   - path: third_party/matter_sdk/examples/platform/silabs/matter_aws/matter_aws_interface/src/MatterAws.cpp
   - path: third_party/matter_sdk/examples/platform/silabs/matter_aws/matter_aws_interface/src/MatterAwsControl.cpp
   - path: third_party/matter_sdk/examples/platform/silabs/matter_aws/matter_aws_interface/src/MatterAwsNvmCert.cpp
-  - path: third_party/mqtt/mqtt_transport_interface/src/MQTT_transport.c
-  - path: third_party/mqtt/mqtt_transport_interface/src/altcp.c
-  - path: third_party/mqtt/mqtt_transport_interface/src/altcp_alloc.c
-  - path: third_party/mqtt/mqtt_transport_interface/src/altcp_tcp.c
-  - path: third_party/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls.c
-  - path: third_party/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls_mem.c
-  - path: third_party/mqtt/stack/mqtt.c
+  - path: third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/src/MQTT_transport.c
+  - path: third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp.c
+  - path: third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_alloc.c
+  - path: third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_tcp.c
+  - path: third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls.c
+  - path: third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls_mem.c
+  - path: third_party/matter_sdk/src/platform/silabs/mqtt/stack/mqtt.c
 
 toolchain_settings:
 - option: gcc_compiler_option

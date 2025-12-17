@@ -20,9 +20,9 @@
 #ifndef __ALTCP_OPTS_H__
 #define __ALTCP_OPTS_H__
 
-#define TRANSPORT_ALTCP             1
-#define TRANSPORT_ALTCP_TLS         1
+#define TRANSPORT_ALTCP 1
+#define TRANSPORT_ALTCP_TLS 1
 #define TRANSPORT_ALTCP_TLS_MBEDTLS 1
-#define TRANSPORT_DEBUG             1
+#define TRANSPORT_DEBUG 1
 
 #endif

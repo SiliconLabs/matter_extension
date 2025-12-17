@@ -16,9 +16,9 @@
 // <SL_MATTER_LOG_PROGRESS=> Progress
 // <SL_MATTER_LOG_DETAIL=> Detailed log (debug)
 // <SL_MATTER_LOG_AUTOMATION=> Automation
-// <i> Default: SL_MATTER_LOG_DETAIL
+// <i> Default: SL_MATTER_LOG_PROGRESS
 #ifndef SL_MATTER_LOG_LEVEL
-#define SL_MATTER_LOG_LEVEL SL_MATTER_LOG_DETAIL
+#define SL_MATTER_LOG_LEVEL SL_MATTER_LOG_PROGRESS
 #endif
 
 // <q SILABS_LOG_ENABLED> Enable Silabs specific log used in matter

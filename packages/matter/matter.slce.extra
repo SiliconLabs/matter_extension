@@ -717,25 +717,25 @@ extra_files:
   - packages/_shared/base_recipe.py
   - third_party/aws_ota_sdk/LICENSE
   - third_party/aws_ota_sdk/README.md
-  - third_party/mqtt/stack/mqtt.c
-  - third_party/mqtt/stack/mqtt_opts.h
-  - third_party/mqtt/stack/mqtt.h
-  - third_party/mqtt/mqtt_transport_interface/include/altcp_tcp.h
-  - third_party/mqtt/mqtt_transport_interface/include/altcp_tls.h
-  - third_party/mqtt/mqtt_transport_interface/include/altcp_tls_mbedtls_opts.h
-  - third_party/mqtt/mqtt_transport_interface/include/altcp.h
-  - third_party/mqtt/mqtt_transport_interface/include/altcp_opt.h
-  - third_party/mqtt/mqtt_transport_interface/include/tcpbase.h
-  - third_party/mqtt/mqtt_transport_interface/include/MQTT_transport.h
-  - third_party/mqtt/mqtt_transport_interface/include/altcp_tls_mbedtls_mem.h
-  - third_party/mqtt/mqtt_transport_interface/include/altcp_priv.h
-  - third_party/mqtt/mqtt_transport_interface/include/altcp_tls_mbedtls_structs.h
-  - third_party/mqtt/mqtt_transport_interface/src/MQTT_transport.c
-  - third_party/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls_mem.c
-  - third_party/mqtt/mqtt_transport_interface/src/altcp_alloc.c
-  - third_party/mqtt/mqtt_transport_interface/src/altcp_tcp.c
-  - third_party/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls.c
-  - third_party/mqtt/mqtt_transport_interface/src/altcp.c
+  - third_party/matter_sdk/src/platform/silabs/mqtt/stack/mqtt.c
+  - third_party/matter_sdk/src/platform/silabs/mqtt/stack/mqtt_opts.h
+  - third_party/matter_sdk/src/platform/silabs/mqtt/stack/mqtt.h
+  - third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/include/altcp_tcp.h
+  - third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/include/altcp_tls.h
+  - third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/include/altcp_tls_mbedtls_opts.h
+  - third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/include/altcp.h
+  - third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/include/altcp_opt.h
+  - third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/include/tcpbase.h
+  - third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/include/MQTT_transport.h
+  - third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/include/altcp_tls_mbedtls_mem.h
+  - third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/include/altcp_priv.h
+  - third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/include/altcp_tls_mbedtls_structs.h
+  - third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/src/MQTT_transport.c
+  - third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls_mem.c
+  - third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_alloc.c
+  - third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_tcp.c
+  - third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls.c
+  - third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp.c
   - third_party/aws_ota_sdk/demos/ota/ota_demo_core_mqtt/ota_demo_core_mqtt.c
   - third_party/aws_ota_sdk/demos/ota/ota_demo_core_mqtt/demo_config.h
   - third_party/aws_ota_sdk/demos/ota/ota_demo_core_mqtt/ota.c

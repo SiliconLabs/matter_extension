@@ -210,9 +210,6 @@ void ApplicationStart(void * unused)
     SILABS_TRACE_END(TimeTraceOperation::kMatterInit);
     SILABS_TRACE_BEGIN(TimeTraceOperation::kAppInit);
 
-    gExampleDeviceInfoProvider.SetStorageDelegate(&chip::Server::GetInstance().GetPersistentStorage());
-    chip::DeviceLayer::SetDeviceInfoProvider(&gExampleDeviceInfoProvider);
-
     chip::DeviceLayer::PlatformMgr().LockChipStack();
     // Initialize device attestation config
     SetDeviceAttestationCredentialsProvider(&Provision::Manager::GetInstance().GetStorage());
@@ -371,6 +368,10 @@ CHIP_ERROR SilabsMatterConfig::InitMatter(const char * appName)
     // Register ICDStateObserver
     chip::Server::GetInstance().GetICDManager().RegisterObserver(&app::Silabs::ApplicationSleepManager::GetInstance());
 #endif // SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+
+    // This is needed by localization configuration cluster so we set it before the initialization
+    gExampleDeviceInfoProvider.SetStorageDelegate(initParams.persistentStorageDelegate);
+    chip::DeviceLayer::SetDeviceInfoProvider(&gExampleDeviceInfoProvider);
 
     // Init Matter Server and Start Event Loop
     err = chip::Server::GetInstance().Init(initParams);

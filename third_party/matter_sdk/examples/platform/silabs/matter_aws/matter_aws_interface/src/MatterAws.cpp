@@ -44,15 +44,14 @@ extern "C" {
 }
 #endif
 
-static TaskHandle_t matterAwsTask         = NULL;
-static EventGroupHandle_t matterAwsEvents = NULL;
+static TaskHandle_t matterAwsTask         = nullptr;
+static EventGroupHandle_t matterAwsEvents = nullptr;
 
 mqtt_client_t * mqtt_client    = nullptr;
 MQTT_Transport_t * transport   = nullptr;
 matterAws_subscribe_cb gSubsCB = NULL;
 static mqtt_transport_intf_t trans;
 
-static bool end_loop;
 static bool init_complete;
 
 static void MatterAwsMqttSubscribeCb(void * arg, mqtt_err_t err)
@@ -83,8 +82,10 @@ static void MatterAwsMqttConnCb(mqtt_client_t * client, void * arg, mqtt_connect
     ChipLogProgress(AppServer, "[MATTER_AWS] MQTT connection status: %u", status);
     if (status != MQTT_CONNECT_ACCEPTED)
     {
-        if (matterAwsTask)
-            end_loop = true;
+        /* Signal the task to exit cleanly - the task will handle the event and set its local endLoop flag */
+        VerifyOrReturn(matterAwsTask != nullptr && matterAwsEvents != nullptr,
+                       ChipLogError(AppServer, "[MATTER_AWS] Task or events not initialized in MQTT callback"));
+        xEventGroupSetBits(matterAwsEvents, SIGNAL_TRANSINTF_CONN_CLOSE);
         return;
     }
     if (gSubsCB != NULL)
@@ -128,14 +129,22 @@ void MatterAwsTcpConnectCb(err_t err)
     }
     init_complete = false;
 exit:
-    vTaskDelete(matterAwsTask);
-    vEventGroupDelete(matterAwsEvents);
-    matterAwsTask = NULL;
+    /* Instead of deleting the task from callback context (which causes hardfault),
+     * signal the task to exit and let it clean up itself. The callback is called
+     * from TCP/IP thread context, and deleting a task from another task's context
+     * can corrupt FreeRTOS internal structures. */
+    VerifyOrReturn(matterAwsTask != nullptr && matterAwsEvents != nullptr,
+                   ChipLogError(AppServer, "[MATTER_AWS] Task or events not initialized in TCP callback"));
+    /* Signal the task to wake up and exit cleanly - task will set its local endLoop flag */
+    xEventGroupSetBits(matterAwsEvents, SIGNAL_TRANSINTF_CONN_CLOSE);
     return;
 }
 
 static void MatterAwsTaskFn(void * args)
 {
+    /* Local flag to control the task loop - reset each time the task starts */
+    bool endLoop = false;
+
     /* get MQTT client handle */
     err_t ret;
     gSubsCB                                     = reinterpret_cast<void (*)()>(args);
@@ -174,10 +183,10 @@ static void MatterAwsTaskFn(void * args)
         VerifyOrExit(ERR_OK == ret, ChipLogError(AppServer, "[MATTER_AWS] failed to configure SSL to mqtt transport"));
     }
 
-    ret = MQTT_Transport_Connect(transport, hostname, MATTER_AWS_SERVER_PORT, MatterAwsTcpConnectCb);
+    ret = MQTT_Transport_Connect(transport, hostname, hostname_length, MATTER_AWS_SERVER_PORT, MatterAwsTcpConnectCb);
     VerifyOrExit(ERR_OK == ret, ChipLogError(AppServer, "[MATTER_AWS] transport connection failed: %d", ret));
 
-    while (!end_loop)
+    while (!endLoop)
     {
         EventBits_t event;
         event = xEventGroupWaitBits(matterAwsEvents,
@@ -187,7 +196,7 @@ static void MatterAwsTaskFn(void * args)
         if (event & SIGNAL_TRANSINTF_CONN_CLOSE)
         {
             mqtt_close(mqtt_client, MQTT_CONNECT_DISCONNECTED);
-            end_loop = true;
+            endLoop = true;
         }
         else
         {
@@ -202,9 +211,17 @@ static void MatterAwsTaskFn(void * args)
     init_complete = false;
 
 exit:
-    vTaskDelete(matterAwsTask);
-    matterAwsTask = NULL;
-    vEventGroupDelete(matterAwsEvents);
+    /* Clean up resources before task deletion.
+     * Save handle and nullify pointers atomically to prevent race with callbacks. */
+    if (matterAwsTask != nullptr)
+    {
+        vEventGroupDelete(matterAwsEvents);
+        matterAwsEvents = nullptr;
+        matterAwsTask   = nullptr;
+    }
+    /* Delete the current task - use NULL to delete self */
+    vTaskDelete(NULL);
+    /* This line should never be reached */
     return;
 }
 
@@ -216,7 +233,7 @@ void MatterAwsPubRespCb(void * arg, mqtt_err_t err)
 
 matterAws_err_t MatterAwsInit(matterAws_subscribe_cb subs_cb)
 {
-    VerifyOrReturnError(matterAwsTask == NULL, MATTER_AWS_OK);
+    VerifyOrReturnError(matterAwsTask == nullptr, MATTER_AWS_OK);
 
     /* Create events group used to receive events from transport layer*/
     matterAwsEvents = xEventGroupCreate();

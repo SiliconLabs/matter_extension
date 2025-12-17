@@ -57,7 +57,7 @@ include:
     file_list:
       - path: TracingShellCommands.h
   - path: third_party/matter_sdk/examples/platform/silabs/shell/ble
-    condition: [matter_ble_side_channel]
+    condition: [matter_internal_ble_side_channel]
     file_list:
       - path: BLEShellCommands.h
 
@@ -102,7 +102,7 @@ source:
   - path: third_party/matter_sdk/examples/platform/silabs/shell/tracing/TracingShellCommands.cpp
     condition: [matter_tracing]
   - path: third_party/matter_sdk/examples/platform/silabs/shell/ble/BLEShellCommands.cpp
-    condition: [matter_ble_side_channel]
+    condition: [matter_internal_ble_side_channel]
     
 define:
   - name: ENABLE_CHIP_SHELL

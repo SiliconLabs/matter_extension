@@ -55,6 +55,7 @@
 // <o SL_MATTER_CMP_SECURE_ZIGBEE> Enable Install code for Zigbee.
 // <i> Default: 0
 // <i> Change the commissioning behaviour of Zigbee to use Install code
+// <i> Users must install their own install code and euid64 on the device for secure commissioning
 #define SL_MATTER_CMP_SECURE_ZIGBEE 0
 
 // <o SL_MATTER_CMP_INSTALL_CODE> Default install code

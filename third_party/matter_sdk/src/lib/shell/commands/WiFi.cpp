@@ -115,7 +115,7 @@ static CHIP_ERROR WiFiConnectHandler(int argc, char ** argv)
     ByteSpan ssidSpan     = ByteSpan(Uint8::from_const_char(argv[0]), strlen(argv[0]));
     ByteSpan passwordSpan = ByteSpan(Uint8::from_const_char(argv[1]), strlen(argv[1]));
 
-    VerifyOrReturnError(IsSpanUsable(ssidSpan) && IsSpanUsable(passwordSpan), CHIP_ERROR_INVALID_ARGUMENT);
+    VerifyOrReturnError(!ssidSpan.empty() && !passwordSpan.empty(), CHIP_ERROR_INVALID_ARGUMENT);
 
     ChipLogProgress(Shell, "Adding/Updating network %s", argv[0]);
 

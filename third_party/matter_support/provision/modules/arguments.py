@@ -137,7 +137,7 @@ class Argument(Parameter):
         r = self.range()
         if r is not None:
             if i not in r:
-                raise ValueError("Integer \"{}\" out of range: {} [{}, {}]".format(self.name, x, self.min, self.max))
+                raise ValueError("Integer \"{}\" out of range: {} [{}, {}]".format(self.name, x, self.min or 0, self.max))
         return i
 
     def _validateBool(self, x):

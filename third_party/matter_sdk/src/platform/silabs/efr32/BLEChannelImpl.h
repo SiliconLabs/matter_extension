@@ -30,6 +30,8 @@ public:
     CHIP_ERROR StartAdvertising(void) override;
     CHIP_ERROR StopAdvertising(void) override;
 
+    bool CanHandleEvent(uint32_t event) override;
+    void ParseEvent(volatile sl_bt_msg_t * evt) override;
     void AddConnection(uint8_t connectionHandle, uint8_t bondingHandle) override;
     bool RemoveConnection(uint8_t connectionHandle) override;
     void HandleReadRequest(volatile sl_bt_msg_t * evt, ByteSpan data) override;

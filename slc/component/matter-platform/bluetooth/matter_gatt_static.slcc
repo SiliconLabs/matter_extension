@@ -11,13 +11,12 @@ metadata:
 config_file:
   - directory: btconf
     path: third_party/matter_sdk/examples/platform/silabs/gatt_configuration.btconf
+    unless: [matter_ble_dmp_test]
 provides:
+-   name: matter_gatt_static
 -   name: gatt_configuration
 -   name: bluetooth_gatt_database
--   name: matter_gatt
--   name: matter_gatt_static
-conflicts:
--   name: matter_gatt_dynamic
+    allow_multiple: true
 requires:
   - name: "bluetooth_gattdb_definition"
 template_contribution:

@@ -67,8 +67,7 @@
 #define ALTCP_MBEDTLS_MEM_DEBUG LWIP_DBG_OFF
 #endif
 
-#if defined(MBEDTLS_PLATFORM_MEMORY) \
-  && (!defined(MBEDTLS_PLATFORM_FREE_MACRO) || defined(MBEDTLS_PLATFORM_CALLOC_MACRO))
+#if defined(MBEDTLS_PLATFORM_MEMORY) && (!defined(MBEDTLS_PLATFORM_FREE_MACRO) || defined(MBEDTLS_PLATFORM_CALLOC_MACRO))
 #define ALTCP_MBEDTLS_PLATFORM_ALLOC 1
 #else
 #define ALTCP_MBEDTLS_PLATFORM_ALLOC 0
@@ -81,34 +80,37 @@
 #endif
 
 /* This is an example/debug implementation of alloc/free functions only */
-typedef struct altcp_mbedtls_malloc_helper_s {
-  size_t c;
-  size_t len;
+typedef struct altcp_mbedtls_malloc_helper_s
+{
+    size_t c;
+    size_t len;
 } altcp_mbedtls_malloc_helper_t;
 
 #if ALTCP_MBEDTLS_PLATFORM_ALLOC_STATS
-typedef struct altcp_mbedtls_malloc_stats_s {
-  size_t allocedBytes;
-  size_t allocCnt;
-  size_t maxBytes;
-  size_t totalBytes;
+typedef struct altcp_mbedtls_malloc_stats_s
+{
+    size_t allocedBytes;
+    size_t allocCnt;
+    size_t maxBytes;
+    size_t totalBytes;
 } altcp_mbedtls_malloc_stats_t;
 altcp_mbedtls_malloc_stats_t altcp_mbedtls_malloc_stats;
 volatile int altcp_mbedtls_malloc_clear_stats;
 #endif
 
-static void *tls_malloc(size_t c, size_t len)
+static void * tls_malloc(size_t c, size_t len)
 {
-  altcp_mbedtls_malloc_helper_t *hlpr;
-  void *ret;
-  size_t alloc_size;
+    altcp_mbedtls_malloc_helper_t * hlpr;
+    void * ret;
+    size_t alloc_size;
 #if ALTCP_MBEDTLS_PLATFORM_ALLOC_STATS
-  if (altcp_mbedtls_malloc_clear_stats) {
-    altcp_mbedtls_malloc_clear_stats = 0;
-    memset(&altcp_mbedtls_malloc_stats, 0, sizeof(altcp_mbedtls_malloc_stats));
-  }
+    if (altcp_mbedtls_malloc_clear_stats)
+    {
+        altcp_mbedtls_malloc_clear_stats = 0;
+        memset(&altcp_mbedtls_malloc_stats, 0, sizeof(altcp_mbedtls_malloc_stats));
+    }
 #endif
-  alloc_size = sizeof(altcp_mbedtls_malloc_helper_t) + (c * len);
+    alloc_size = sizeof(altcp_mbedtls_malloc_helper_t) + (c * len);
 /* check for maximum allocation size, mainly to prevent mem_size_t overflow */
 #if 0
   if (alloc_size > MEM_SIZE) {
@@ -117,90 +119,97 @@ static void *tls_malloc(size_t c, size_t len)
     return NULL;
   }
 #endif
-  hlpr = (altcp_mbedtls_malloc_helper_t *)pvPortMalloc((mem_size_t)alloc_size);
-  if (hlpr == NULL) {
-    TRANSPORT_DEBUGF(("mbedtls alloc callback failed for %c * %d bytes", (int)c, (int)len));
-    return NULL;
-  }
+    hlpr = (altcp_mbedtls_malloc_helper_t *) pvPortMalloc((mem_size_t) alloc_size);
+    if (hlpr == NULL)
+    {
+        TRANSPORT_DEBUGF(("mbedtls alloc callback failed for %c * %d bytes", (int) c, (int) len));
+        return NULL;
+    }
 #if ALTCP_MBEDTLS_PLATFORM_ALLOC_STATS
-  altcp_mbedtls_malloc_stats.allocCnt++;
-  altcp_mbedtls_malloc_stats.allocedBytes += c * len;
-  if (altcp_mbedtls_malloc_stats.allocedBytes > altcp_mbedtls_malloc_stats.maxBytes) {
-    altcp_mbedtls_malloc_stats.maxBytes = altcp_mbedtls_malloc_stats.allocedBytes;
-  }
-  altcp_mbedtls_malloc_stats.totalBytes += c * len;
+    altcp_mbedtls_malloc_stats.allocCnt++;
+    altcp_mbedtls_malloc_stats.allocedBytes += c * len;
+    if (altcp_mbedtls_malloc_stats.allocedBytes > altcp_mbedtls_malloc_stats.maxBytes)
+    {
+        altcp_mbedtls_malloc_stats.maxBytes = altcp_mbedtls_malloc_stats.allocedBytes;
+    }
+    altcp_mbedtls_malloc_stats.totalBytes += c * len;
 #endif
-  hlpr->c   = c;
-  hlpr->len = len;
-  ret       = hlpr + 1;
-  /* zeroing the allocated chunk is required by mbedTLS! */
-  memset(ret, 0, c * len);
-  return ret;
+    hlpr->c   = c;
+    hlpr->len = len;
+    ret       = hlpr + 1;
+    /* zeroing the allocated chunk is required by mbedTLS! */
+    memset(ret, 0, c * len);
+    return ret;
 }
 
-static void tls_free(void *ptr)
+static void tls_free(void * ptr)
 {
-  altcp_mbedtls_malloc_helper_t *hlpr;
-  if (ptr == NULL) {
-    /* this obviously happened in mbedtls... */
-    return;
-  }
-  hlpr = ((altcp_mbedtls_malloc_helper_t *)ptr) - 1;
+    altcp_mbedtls_malloc_helper_t * hlpr;
+    if (ptr == NULL)
+    {
+        /* this obviously happened in mbedtls... */
+        return;
+    }
+    hlpr = ((altcp_mbedtls_malloc_helper_t *) ptr) - 1;
 #if ALTCP_MBEDTLS_PLATFORM_ALLOC_STATS
-  if (!altcp_mbedtls_malloc_clear_stats) {
-    altcp_mbedtls_malloc_stats.allocedBytes -= hlpr->c * hlpr->len;
-  }
+    if (!altcp_mbedtls_malloc_clear_stats)
+    {
+        altcp_mbedtls_malloc_stats.allocedBytes -= hlpr->c * hlpr->len;
+    }
 #endif
-  vPortFree(hlpr);
+    vPortFree(hlpr);
 }
 #endif /* ALTCP_MBEDTLS_PLATFORM_ALLOC*/
 
 void altcp_mbedtls_mem_init(void)
 {
-  /* not much to do here when using the heap */
+    /* not much to do here when using the heap */
 
 #if ALTCP_MBEDTLS_PLATFORM_ALLOC
-  /* set mbedtls allocation methods */
-  mbedtls_platform_set_calloc_free(&tls_malloc, &tls_free);
+    /* set mbedtls allocation methods */
+    mbedtls_platform_set_calloc_free(&tls_malloc, &tls_free);
 #endif
 }
 
-altcp_mbedtls_state_t *altcp_mbedtls_alloc(void *conf)
+altcp_mbedtls_state_t * altcp_mbedtls_alloc(void * conf)
 {
-  altcp_mbedtls_state_t *ret = (altcp_mbedtls_state_t *)pvPortMalloc(sizeof(altcp_mbedtls_state_t));
-  if (ret != NULL) {
-    memset(ret, 0x00, sizeof(altcp_mbedtls_state_t));
-    ret->conf = conf;
-  }
-  return ret;
+    altcp_mbedtls_state_t * ret = (altcp_mbedtls_state_t *) pvPortMalloc(sizeof(altcp_mbedtls_state_t));
+    if (ret != NULL)
+    {
+        memset(ret, 0x00, sizeof(altcp_mbedtls_state_t));
+        ret->conf = conf;
+    }
+    return ret;
 }
 
-void altcp_mbedtls_free(void *conf, altcp_mbedtls_state_t *state)
+void altcp_mbedtls_free(void * conf, altcp_mbedtls_state_t * state)
 {
-  TRANSPORT_UNUSED_ARG(conf);
-  TRANSPORT_ASSERT("state != NULL", state != NULL);
-  vPortFree(state);
+    TRANSPORT_UNUSED_ARG(conf);
+    TRANSPORT_ASSERT("state != NULL", state != NULL);
+    vPortFree(state);
 }
 
-void *altcp_mbedtls_alloc_config(size_t size)
+void * altcp_mbedtls_alloc_config(size_t size)
 {
-  void *ret;
-  size_t checked_size = (mem_size_t)size;
-  if (size != checked_size) {
-    /* allocation too big (mem_size_t overflow) */
-    return NULL;
-  }
-  ret = (altcp_mbedtls_state_t *)pvPortMalloc((mem_size_t)size);
-  if (ret != NULL) {
-    memset(ret, 0x00, sizeof(altcp_mbedtls_state_t));
-  }
-  return ret;
+    void * ret;
+    size_t checked_size = (mem_size_t) size;
+    if (size != checked_size)
+    {
+        /* allocation too big (mem_size_t overflow) */
+        return NULL;
+    }
+    ret = (altcp_mbedtls_state_t *) pvPortMalloc((mem_size_t) size);
+    if (ret != NULL)
+    {
+        memset(ret, 0x00, sizeof(altcp_mbedtls_state_t));
+    }
+    return ret;
 }
 
-void altcp_mbedtls_free_config(void *item)
+void altcp_mbedtls_free_config(void * item)
 {
-  TRANSPORT_ASSERT("item != NULL", item != NULL);
-  vPortFree(item);
+    TRANSPORT_ASSERT("item != NULL", item != NULL);
+    vPortFree(item);
 }
 
 #endif /* TRANSPORT_ALTCP_TLS && TRANSPORT_ALTCP_TLS_MBEDTLS */

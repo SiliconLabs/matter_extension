@@ -221,6 +221,40 @@
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="core.hidden" value="true"/>
   </descriptors>
+  <descriptors name="MatterOvenOverWiFi" label="Matter - SoC Oven over Wi-Fi"
+               description="This project builds a Matter Oven app for Wi-Fi SiWx917 that can be developed inside Simplicity Studio">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.apps.oven-app.wifi.oven-app-siwx.slcp"/>
+    <properties key="projectFilePaths" value="slc/apps/oven-app/wifi/oven-app-siwx.slcp"/>
+    <properties key="readmeFiles" value="slc/apps/oven-app/wifi/README.md"/>
+    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
+    <properties key="core.hidden" value="true"/>
+  </descriptors>
+  <descriptors name="MatterRangehoodOverWiFi" label="Matter - SoC Rangehood over Wi-Fi"
+               description="This project builds a Matter Rangehood app for Wi-Fi SiWx917 that can be developed inside Simplicity Studio">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.apps.rangehood-app.wifi.rangehood-app-siwx.slcp"/>
+    <properties key="projectFilePaths" value="slc/apps/rangehood-app/wifi/rangehood-app-siwx.slcp"/>
+    <properties key="readmeFiles" value="slc/apps/rangehood-app/wifi/README.md"/>
+    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
+    <properties key="core.hidden" value="true"/>
+  </descriptors>
   <descriptors name="MatterRefrigeratorThread" label="Matter - SoC Refrigerator Switch over Thread"
                description="This project builds a Matter Refrigerator Switch app that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
@@ -458,6 +492,42 @@
       <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
       <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
       <properties key="solutionProjects" value="slc.apps.refrigerator-app.wifi.refrigerator-app-siwx.slcp"/>
+  </descriptors>
+
+  <descriptors name="MatterOvenOverWiFiSolution" label="Matter - SoC Oven over Wi-Fi"
+              description="This project builds a Matter Oven app for Wi-Fi SiWx917 that can be developed inside Simplicity Studio">
+      <properties key="namespace" value="template.solution.uc"/>
+      <properties key="keywords" value="Matter"/>
+      <properties key="solutionReferenceId" value="slc.apps.oven-app.wifi.oven-app-siwx.slcw"/>
+      <properties key="projectFilePaths" value="slc/apps/oven-app/wifi/oven-app-siwx.slcw"/>
+      <properties key="readmeFiles" value="slc/apps/oven-app/wifi/README.md"/>
+      <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
+      <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+      <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+      <properties key="toolchainCompatibility" value="gcc"/>
+      <properties key="category" value="Matter Application"/>
+      <properties key="quality" value="PRODUCTION"/>
+      <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+      <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
+      <properties key="solutionProjects" value="slc.apps.oven-app.wifi.oven-app-siwx.slcp"/>
+  </descriptors>
+
+  <descriptors name="MatterRangehoodOverWiFiSolution" label="Matter - SoC Rangehood over Wi-Fi"
+              description="This project builds a Matter Rangehood app for Wi-Fi SiWx917 that can be developed inside Simplicity Studio">
+      <properties key="namespace" value="template.solution.uc"/>
+      <properties key="keywords" value="Matter"/>
+      <properties key="solutionReferenceId" value="slc.apps.rangehood-app.wifi.rangehood-app-siwx.slcw"/>
+      <properties key="projectFilePaths" value="slc/apps/rangehood-app/wifi/rangehood-app-siwx.slcw"/>
+      <properties key="readmeFiles" value="slc/apps/rangehood-app/wifi/README.md"/>
+      <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
+      <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+      <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+      <properties key="toolchainCompatibility" value="gcc"/>
+      <properties key="category" value="Matter Application"/>
+      <properties key="quality" value="PRODUCTION"/>
+      <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+      <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
+      <properties key="solutionProjects" value="slc.apps.rangehood-app.wifi.rangehood-app-siwx.slcp"/>
   </descriptors>
 
   <descriptors name="MatterRefrigeratorOverThreadSolution" label="Matter - SoC Refrigerator over Thread with external Bootloader"
@@ -1460,6 +1530,7 @@
     <properties key="quality" value="PRODUCTION"/>
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
+    <properties key="core.hidden" value="true"/>
   </descriptors>
   <descriptors name="MatterPlatformTemplateOverThread" label="Matter - SoC Platform Template over Thread"
                description="This project builds a Matter Platform Template that can be developed inside Simplicity Studio">

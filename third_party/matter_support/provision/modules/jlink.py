@@ -40,10 +40,6 @@ class JLinkChannel(_base.Channel):
             print("* Open DEFAULT connection to {}\n".format(self.part_number))
             self.link.open()
 
-        # This line is not in the provisioning repository.
-        # This is a workaround to enable SQA to use the local JLinkDevice instead of the one in the JLink installation folder.
-        # Do not remove this until SQA updates their test setups.
-        self.link.exec_command("JLinkDevicesXMLPath {}/".format(self.support_dir))
         self.link.set_tif(interface=pylink.JLinkInterfaces.SWD)
         self.link.connect(chip_name=self.part_number, speed="auto", verbose=True)
         # Use custom RTT control block address, if configured

@@ -44,6 +44,12 @@
 
 #include "ZigbeeCallbacks.h"
 
+#if SL_MATTER_CMP_SECURE_ZIGBEE
+#include "sl_token_manager_api.h"
+#include "sl_token_manager_defines.h"
+#include "sl_token_manager_manufacturing.h"
+#endif // SL_MATTER_CMP_SECURE_ZIGBEE
+
 static sl_zigbee_af_event_t start_zigbee_event;
 static sl_zigbee_af_event_t finding_and_binding_event;
 static bool pendingRestart = false;
@@ -97,21 +103,61 @@ void TokenFactoryReset()
 } // namespace Zigbee
 
 #if SL_MATTER_CMP_SECURE_ZIGBEE
-sl_802154_long_addr_t reverse_eui64 = { SL_MATTER_CMP_INSTALL_CODE_EUID64 };
-uint8_t code[18]                    = { SL_MATTER_CMP_INSTALL_CODE };
-
-extern "C" void option_install_code(void)
+extern "C" void option_install_code(sl_zigbee_sec_man_key_t * key, sl_802154_long_addr_t eui64)
 {
 #if (defined(EMBER_AF_HAS_SECURITY_PROFILE_SE_TEST) || defined(EMBER_AF_HAS_SECURITY_PROFILE_SE_FULL) ||                           \
      defined(EMBER_AF_HAS_SECURITY_PROFILE_Z3))
+    if (key == nullptr)
+    {
+        return;
+    }
+#ifndef EMBER_AF_HAS_SECURITY_PROFILE_Z3
+    // Add the key to the link key table.
 
-    sl_zigbee_key_data_t key;
+    sl_status_t status = sl_zigbee_sec_man_import_link_key(0, // index
+                                                           eui64, (sl_zigbee_sec_man_key_t *) &key);
+    SILABS_LOG("add link key %lu", status);
+#else
+    // Add the key to the transient key table.
+    // This will be used while the DUT joins.
+    sl_status_t status = sl_zigbee_sec_man_import_transient_key(eui64, (sl_zigbee_sec_man_key_t *) &key);
+    SILABS_LOG("Set joining link key %lu", status);
+#endif
+
+#else
+    (void) key;
+    (void) eui64;
+    SILABS_LOG("This command only supports the Z3 or SE application profile.");
+#endif
+}
+
+extern "C" void open_network_with_key()
+{
+    sl_zigbee_key_data_t keyData;
     sl_status_t status;
-    uint8_t length = 18;
+    const uint8_t installCodeLength           = SL_ZIGBEE_ENCRYPTION_KEY_SIZE + SL_ZIGBEE_INSTALL_CODE_CRC_SIZE;
+    uint8_t installCode[installCodeLength]    = { SL_MATTER_CMP_INSTALL_CODE };
+    sl_802154_long_addr_t eui64               = { SL_MATTER_CMP_INSTALL_CODE_EUID64 };
+    tokTypeMfgInstallationCode tokInstallCode = {};
+
+    status = sl_token_manager_get_data(SL_TOKEN_GET_STATIC_SECURE_TOKEN(TOKEN_MFG_INSTALLATION_CODE), (void *) &tokInstallCode,
+                                       sizeof(tokTypeMfgInstallationCode));
+    if (status == SL_STATUS_OK)
+    {
+        if (sizeof(tokInstallCode.value) != SL_ZIGBEE_ENCRYPTION_KEY_SIZE)
+        {
+            SILABS_LOG("ERR: Install Code size in token does not match expected size");
+            return;
+        }
+
+        memcpy(installCode, tokInstallCode.value, SL_ZIGBEE_ENCRYPTION_KEY_SIZE);
+        // two last bytes are the CRC
+        installCode[SL_ZIGBEE_ENCRYPTION_KEY_SIZE]     = tokInstallCode.crc & 0xFF;        // CRC LSB
+        installCode[SL_ZIGBEE_ENCRYPTION_KEY_SIZE + 1] = (tokInstallCode.crc >> 8) & 0xFF; // CRC MSB
+    }
 
     // Convert the install code to a key.
-    status = sli_zigbee_af_install_code_to_key(code, length, &key);
-
+    status = sli_zigbee_af_install_code_to_key(installCode, installCodeLength, &keyData);
     if (SL_STATUS_OK != status)
     {
         if (SL_STATUS_INVALID_CONFIGURATION == status)
@@ -130,44 +176,14 @@ extern "C" void option_install_code(void)
         return;
     }
 
-#ifndef EMBER_AF_HAS_SECURITY_PROFILE_Z3
-    // Add the key to the link key table.
-
-    status = sl_zigbee_sec_man_import_link_key(0, // index
-                                               reverse_eui64, (sl_zigbee_sec_man_key_t *) &key);
-    SILABS_LOG("add link key %lu", status);
-#else
-    // Add the key to the transient key table.
-    // This will be used while the DUT joins.
-    if (SL_STATUS_OK == status)
-    {
-        status = sl_zigbee_sec_man_import_transient_key(reverse_eui64, (sl_zigbee_sec_man_key_t *) &key);
-        SILABS_LOG("Set joining link key %lu", status);
-    }
-#endif
-
-#else
-    SILABS_LOG("This command only supports the Z3 or SE application profile.");
-#endif
-}
-
-extern "C" void open_network_with_key()
-{
-    sl_zigbee_key_data_t keyData;
-    sl_status_t status;
-
-    // Convert the install code to a key.
-    status = sli_zigbee_af_install_code_to_key(code, length, &key);
-
-    if (SL_STATUS_OK != status)
-    {
-        SILABS_LOG("%s: Failed to convert install code: 0x%X", SL_ZIGBEE_AF_PLUGIN_NETWORK_CREATOR_SECURITY_PLUGIN_NAME, status);
-        return;
-    }
-
-    status = sl_zigbee_af_network_creator_security_open_network_with_key_pair(reverse_eui64, keyData);
+    status = sl_zigbee_af_network_creator_security_open_network_with_key_pair(eui64, keyData);
 
     SILABS_LOG("%s: Open network: 0x%X", SL_ZIGBEE_AF_PLUGIN_NETWORK_CREATOR_SECURITY_PLUGIN_NAME, status);
+
+    if (SL_STATUS_OK == status)
+    {
+        option_install_code((sl_zigbee_sec_man_key_t *) &keyData, eui64);
+    }
 }
 #endif // SL_MATTER_CMP_SECURE_ZIGBEE
 
@@ -204,7 +220,6 @@ extern "C" void start_zigbee_event_handler(sl_zigbee_af_event_t * event)
     {
 #if SL_MATTER_CMP_SECURE_ZIGBEE
         open_network_with_key();
-        option_install_code();
 #else
         SILABS_LOG(" [ZB] Start_evt_handler: Permitting Join");
         sl_zigbee_af_permit_join(254, NULL);
@@ -278,7 +293,6 @@ extern "C" void sl_zigbee_af_network_creator_complete_cb(const sl_zigbee_network
     SILABS_LOG(" [ZB] Form Network Complete: 0x%X", SL_STATUS_OK);
 #if SL_MATTER_CMP_SECURE_ZIGBEE
     open_network_with_key();
-    option_install_code();
 #else
     SILABS_LOG(" [ZB] af_network_creator_complete: Permitting Join");
     sl_zigbee_af_permit_join(254, NULL);

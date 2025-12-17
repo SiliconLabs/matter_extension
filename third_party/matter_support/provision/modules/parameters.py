@@ -288,8 +288,7 @@ class Parameter:
             self.fixed = p.fixed
         if p.default is not None:
             self.default = p.default
-        if p.min is not None:
-            self.min = p.min
+        self.min = (p.min is not None) and p.min or 0
         if p.max is not None:
             self.max = p.max
         if p.invalid is not None:
