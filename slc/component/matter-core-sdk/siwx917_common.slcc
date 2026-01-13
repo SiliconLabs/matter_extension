@@ -1,7 +1,7 @@
 id: siwx917_common
 package: matter
 label: siwx917_common
-description: siwx917_common
+description: Provides common Matter platform utilities and example application support for Silicon Labs SiWx917 Wi-Fi devices.
 category: Matter|Core
 quality: production
 metadata:

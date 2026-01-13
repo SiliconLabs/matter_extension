@@ -816,6 +816,264 @@ cluster OtaSoftwareUpdateRequestor = 42 {
   command access(invoke: administer) AnnounceOTAProvider(AnnounceOTAProviderRequest): DefaultSuccess = 0;
 }
 
+/** This cluster is used to describe the configuration and capabilities of a physical power source that provides power to the Node. */
+cluster PowerSource = 47 {
+  revision 3;
+
+  enum BatApprovedChemistryEnum : enum16 {
+    kUnspecified = 0;
+    kAlkaline = 1;
+    kLithiumCarbonFluoride = 2;
+    kLithiumChromiumOxide = 3;
+    kLithiumCopperOxide = 4;
+    kLithiumIronDisulfide = 5;
+    kLithiumManganeseDioxide = 6;
+    kLithiumThionylChloride = 7;
+    kMagnesium = 8;
+    kMercuryOxide = 9;
+    kNickelOxyhydride = 10;
+    kSilverOxide = 11;
+    kZincAir = 12;
+    kZincCarbon = 13;
+    kZincChloride = 14;
+    kZincManganeseDioxide = 15;
+    kLeadAcid = 16;
+    kLithiumCobaltOxide = 17;
+    kLithiumIon = 18;
+    kLithiumIonPolymer = 19;
+    kLithiumIronPhosphate = 20;
+    kLithiumSulfur = 21;
+    kLithiumTitanate = 22;
+    kNickelCadmium = 23;
+    kNickelHydrogen = 24;
+    kNickelIron = 25;
+    kNickelMetalHydride = 26;
+    kNickelZinc = 27;
+    kSilverZinc = 28;
+    kSodiumIon = 29;
+    kSodiumSulfur = 30;
+    kZincBromide = 31;
+    kZincCerium = 32;
+  }
+
+  enum BatChargeFaultEnum : enum8 {
+    kUnspecified = 0;
+    kAmbientTooHot = 1;
+    kAmbientTooCold = 2;
+    kBatteryTooHot = 3;
+    kBatteryTooCold = 4;
+    kBatteryAbsent = 5;
+    kBatteryOverVoltage = 6;
+    kBatteryUnderVoltage = 7;
+    kChargerOverVoltage = 8;
+    kChargerUnderVoltage = 9;
+    kSafetyTimeout = 10;
+  }
+
+  enum BatChargeLevelEnum : enum8 {
+    kOK = 0 [spec_name = "OK"];
+    kWarning = 1;
+    kCritical = 2;
+  }
+
+  enum BatChargeStateEnum : enum8 {
+    kUnknown = 0;
+    kIsCharging = 1;
+    kIsAtFullCharge = 2;
+    kIsNotCharging = 3;
+  }
+
+  enum BatCommonDesignationEnum : enum16 {
+    kUnspecified = 0;
+    kAAA = 1 [spec_name = "AAA"];
+    kAA = 2 [spec_name = "AA"];
+    kC = 3;
+    kD = 4;
+    k4v5 = 5;
+    k6v0 = 6;
+    k9v0 = 7;
+    k12AA = 8 [spec_name = "1_2AA"];
+    kAAAA = 9 [spec_name = "AAAA"];
+    kA = 10;
+    kB = 11;
+    kF = 12;
+    kN = 13;
+    kNo6 = 14;
+    kSubC = 15;
+    kA23 = 16;
+    kA27 = 17;
+    kBA5800 = 18 [spec_name = "BA5800"];
+    kDuplex = 19;
+    k4SR44 = 20 [spec_name = "4SR44"];
+    k523 = 21;
+    k531 = 22;
+    k15v0 = 23;
+    k22v5 = 24;
+    k30v0 = 25;
+    k45v0 = 26;
+    k67v5 = 27;
+    kJ = 28;
+    kCR123A = 29 [spec_name = "CR123A"];
+    kCR2 = 30 [spec_name = "CR2"];
+    k2CR5 = 31 [spec_name = "2CR5"];
+    kCRP2 = 32 [spec_name = "CR_P2"];
+    kCRV3 = 33 [spec_name = "CR_V3"];
+    kSR41 = 34 [spec_name = "SR41"];
+    kSR43 = 35 [spec_name = "SR43"];
+    kSR44 = 36 [spec_name = "SR44"];
+    kSR45 = 37 [spec_name = "SR45"];
+    kSR48 = 38 [spec_name = "SR48"];
+    kSR54 = 39 [spec_name = "SR54"];
+    kSR55 = 40 [spec_name = "SR55"];
+    kSR57 = 41 [spec_name = "SR57"];
+    kSR58 = 42 [spec_name = "SR58"];
+    kSR59 = 43 [spec_name = "SR59"];
+    kSR60 = 44 [spec_name = "SR60"];
+    kSR63 = 45 [spec_name = "SR63"];
+    kSR64 = 46 [spec_name = "SR64"];
+    kSR65 = 47 [spec_name = "SR65"];
+    kSR66 = 48 [spec_name = "SR66"];
+    kSR67 = 49 [spec_name = "SR67"];
+    kSR68 = 50 [spec_name = "SR68"];
+    kSR69 = 51 [spec_name = "SR69"];
+    kSR516 = 52 [spec_name = "SR516"];
+    kSR731 = 53 [spec_name = "SR731"];
+    kSR712 = 54 [spec_name = "SR712"];
+    kLR932 = 55 [spec_name = "LR932"];
+    kA5 = 56;
+    kA10 = 57;
+    kA13 = 58;
+    kA312 = 59;
+    kA675 = 60;
+    kAC41E = 61 [spec_name = "AC41E"];
+    k10180 = 62;
+    k10280 = 63;
+    k10440 = 64;
+    k14250 = 65;
+    k14430 = 66;
+    k14500 = 67;
+    k14650 = 68;
+    k15270 = 69;
+    k16340 = 70;
+    kRCR123A = 71 [spec_name = "RCR123A"];
+    k17500 = 72;
+    k17670 = 73;
+    k18350 = 74;
+    k18500 = 75;
+    k18650 = 76;
+    k19670 = 77;
+    k25500 = 78;
+    k26650 = 79;
+    k32600 = 80;
+  }
+
+  enum BatFaultEnum : enum8 {
+    kUnspecified = 0;
+    kOverTemp = 1;
+    kUnderTemp = 2;
+  }
+
+  enum BatReplaceabilityEnum : enum8 {
+    kUnspecified = 0;
+    kNotReplaceable = 1;
+    kUserReplaceable = 2;
+    kFactoryReplaceable = 3;
+  }
+
+  enum PowerSourceStatusEnum : enum8 {
+    kUnspecified = 0;
+    kActive = 1;
+    kStandby = 2;
+    kUnavailable = 3;
+  }
+
+  enum WiredCurrentTypeEnum : enum8 {
+    kAC = 0 [spec_name = "AC"];
+    kDC = 1 [spec_name = "DC"];
+  }
+
+  enum WiredFaultEnum : enum8 {
+    kUnspecified = 0;
+    kOverVoltage = 1;
+    kUnderVoltage = 2;
+  }
+
+  bitmap Feature : bitmap32 {
+    kWired = 0x1;
+    kBattery = 0x2;
+    kRechargeable = 0x4;
+    kReplaceable = 0x8;
+  }
+
+  struct BatChargeFaultChangeType {
+    BatChargeFaultEnum current[] = 0;
+    BatChargeFaultEnum previous[] = 1;
+  }
+
+  struct BatFaultChangeType {
+    BatFaultEnum current[] = 0;
+    BatFaultEnum previous[] = 1;
+  }
+
+  struct WiredFaultChangeType {
+    WiredFaultEnum current[] = 0;
+    WiredFaultEnum previous[] = 1;
+  }
+
+  info event WiredFaultChange = 0 {
+    WiredFaultEnum current[] = 0;
+    WiredFaultEnum previous[] = 1;
+  }
+
+  info event BatFaultChange = 1 {
+    BatFaultEnum current[] = 0;
+    BatFaultEnum previous[] = 1;
+  }
+
+  info event BatChargeFaultChange = 2 {
+    BatChargeFaultEnum current[] = 0;
+    BatChargeFaultEnum previous[] = 1;
+  }
+
+  readonly attribute PowerSourceStatusEnum status = 0;
+  readonly attribute int8u order = 1;
+  readonly attribute char_string<60> description = 2;
+  readonly attribute optional nullable int32u wiredAssessedInputVoltage = 3;
+  readonly attribute optional nullable int16u wiredAssessedInputFrequency = 4;
+  readonly attribute optional WiredCurrentTypeEnum wiredCurrentType = 5;
+  readonly attribute optional nullable int32u wiredAssessedCurrent = 6;
+  readonly attribute optional int32u wiredNominalVoltage = 7;
+  readonly attribute optional int32u wiredMaximumCurrent = 8;
+  readonly attribute optional boolean wiredPresent = 9;
+  readonly attribute optional WiredFaultEnum activeWiredFaults[] = 10;
+  readonly attribute optional nullable int32u batVoltage = 11;
+  readonly attribute optional nullable int8u batPercentRemaining = 12;
+  readonly attribute optional nullable int32u batTimeRemaining = 13;
+  readonly attribute optional BatChargeLevelEnum batChargeLevel = 14;
+  readonly attribute optional boolean batReplacementNeeded = 15;
+  readonly attribute optional BatReplaceabilityEnum batReplaceability = 16;
+  readonly attribute optional boolean batPresent = 17;
+  readonly attribute optional BatFaultEnum activeBatFaults[] = 18;
+  readonly attribute optional char_string<60> batReplacementDescription = 19;
+  readonly attribute optional BatCommonDesignationEnum batCommonDesignation = 20;
+  readonly attribute optional char_string<20> batANSIDesignation = 21;
+  readonly attribute optional char_string<20> batIECDesignation = 22;
+  readonly attribute optional BatApprovedChemistryEnum batApprovedChemistry = 23;
+  readonly attribute optional int32u batCapacity = 24;
+  readonly attribute optional int8u batQuantity = 25;
+  readonly attribute optional BatChargeStateEnum batChargeState = 26;
+  readonly attribute optional nullable int32u batTimeToFullCharge = 27;
+  readonly attribute optional boolean batFunctionalWhileCharging = 28;
+  readonly attribute optional nullable int32u batChargingCurrent = 29;
+  readonly attribute optional BatChargeFaultEnum activeBatChargeFaults[] = 30;
+  readonly attribute endpoint_no endpointList[] = 31;
+  readonly attribute command_id generatedCommandList[] = 65528;
+  readonly attribute command_id acceptedCommandList[] = 65529;
+  readonly attribute attrib_id attributeList[] = 65531;
+  readonly attribute bitmap32 featureMap = 65532;
+  readonly attribute int16u clusterRevision = 65533;
+}
+
 /** This cluster is used to manage global aspects of the Commissioning flow. */
 cluster GeneralCommissioning = 48 {
   revision 2;
@@ -1094,6 +1352,52 @@ cluster NetworkCommissioning = 49 {
   command access(invoke: administer) ReorderNetwork(ReorderNetworkRequest): NetworkConfigResponse = 8;
   /** Retrieve details about and optionally proof of possession of a network client identity. */
   command access(invoke: administer) QueryIdentity(QueryIdentityRequest): QueryIdentityResponse = 9;
+}
+
+/** The cluster provides commands for retrieving unstructured diagnostic logs from a Node that may be used to aid in diagnostics. */
+cluster DiagnosticLogs = 50 {
+  revision 1;
+
+  enum IntentEnum : enum8 {
+    kEndUserSupport = 0;
+    kNetworkDiag = 1;
+    kCrashLogs = 2;
+  }
+
+  enum StatusEnum : enum8 {
+    kSuccess = 0;
+    kExhausted = 1;
+    kNoLogs = 2;
+    kBusy = 3;
+    kDenied = 4;
+  }
+
+  enum TransferProtocolEnum : enum8 {
+    kResponsePayload = 0;
+    kBDX = 1 [spec_name = "BDX"];
+  }
+
+  readonly attribute command_id generatedCommandList[] = 65528;
+  readonly attribute command_id acceptedCommandList[] = 65529;
+  readonly attribute attrib_id attributeList[] = 65531;
+  readonly attribute bitmap32 featureMap = 65532;
+  readonly attribute int16u clusterRevision = 65533;
+
+  request struct RetrieveLogsRequestRequest {
+    IntentEnum intent = 0;
+    TransferProtocolEnum requestedProtocol = 1;
+    optional char_string<32> transferFileDesignator = 2;
+  }
+
+  response struct RetrieveLogsResponse = 1 {
+    StatusEnum status = 0;
+    long_octet_string<1024> logContent = 1;
+    optional epoch_us UTCTimeStamp = 2;
+    optional systime_us timeSinceBoot = 3;
+  }
+
+  /** Reception of this command starts the process of retrieving diagnostic logs from a Node. */
+  command RetrieveLogsRequest(RetrieveLogsRequestRequest): RetrieveLogsResponse = 0;
 }
 
 /** The General Diagnostics Cluster, along with other diagnostics clusters, provide a means to acquire standardized diagnostics metrics that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems. */
@@ -1820,627 +2124,677 @@ cluster GroupKeyManagement = 63 {
   fabric command access(invoke: administer) KeySetReadAllIndices(): KeySetReadAllIndicesResponse = 4;
 }
 
-/** Attributes for reporting air quality classification */
-cluster AirQuality = 91 {
-  revision 1;
+/** The User Label Cluster provides a feature to tag an endpoint with zero or more labels. */
+cluster UserLabel = 65 {
+  revision 1; // NOTE: Default/not specifically set
 
-  enum AirQualityEnum : enum8 {
-    kUnknown = 0;
-    kGood = 1;
-    kFair = 2;
-    kModerate = 3;
-    kPoor = 4;
-    kVeryPoor = 5;
-    kExtremelyPoor = 6;
+  shared struct LabelStruct {
+    char_string<16> label = 0;
+    char_string<16> value = 1;
+  }
+
+  attribute access(write: manage) LabelStruct labelList[] = 0;
+  readonly attribute command_id generatedCommandList[] = 65528;
+  readonly attribute command_id acceptedCommandList[] = 65529;
+  readonly attribute attrib_id attributeList[] = 65531;
+  readonly attribute bitmap32 featureMap = 65532;
+  readonly attribute int16u clusterRevision = 65533;
+}
+
+/** An interface to a generic way to secure a door */
+cluster DoorLock = 257 {
+  revision 9;
+
+  enum AlarmCodeEnum : enum8 {
+    kLockJammed = 0;
+    kLockFactoryReset = 1;
+    kLockRadioPowerCycled = 3;
+    kWrongCodeEntryLimit = 4;
+    kFrontEsceutcheonRemoved = 5;
+    kDoorForcedOpen = 6;
+    kDoorAjar = 7;
+    kForcedUser = 8;
+  }
+
+  enum CredentialRuleEnum : enum8 {
+    kSingle = 0;
+    kDual = 1;
+    kTri = 2;
+  }
+
+  enum CredentialTypeEnum : enum8 {
+    kProgrammingPIN = 0;
+    kPIN = 1 [spec_name = "PIN"];
+    kRFID = 2 [spec_name = "RFID"];
+    kFingerprint = 3;
+    kFingerVein = 4;
+    kFace = 5;
+    kAliroCredentialIssuerKey = 6;
+    kAliroEvictableEndpointKey = 7;
+    kAliroNonEvictableEndpointKey = 8;
+  }
+
+  enum DataOperationTypeEnum : enum8 {
+    kAdd = 0;
+    kClear = 1;
+    kModify = 2;
+  }
+
+  enum DlLockState : enum8 {
+    kNotFullyLocked = 0;
+    kLocked = 1;
+    kUnlocked = 2;
+    kUnlatched = 3;
+  }
+
+  enum DlLockType : enum8 {
+    kDeadBolt = 0;
+    kMagnetic = 1;
+    kOther = 2;
+    kMortise = 3;
+    kRim = 4;
+    kLatchBolt = 5;
+    kCylindricalLock = 6;
+    kTubularLock = 7;
+    kInterconnectedLock = 8;
+    kDeadLatch = 9;
+    kDoorFurniture = 10;
+    kEurocylinder = 11;
+  }
+
+  enum DlStatus : enum8 {
+    kSuccess = 0;
+    kFailure = 1;
+    kDuplicate = 2;
+    kOccupied = 3;
+    kInvalidField = 133;
+    kResourceExhausted = 137;
+    kNotFound = 139;
+  }
+
+  enum DoorLockOperationEventCode : enum8 {
+    kUnknownOrMfgSpecific = 0;
+    kLock = 1;
+    kUnlock = 2;
+    kLockInvalidPinOrId = 3;
+    kLockInvalidSchedule = 4;
+    kUnlockInvalidPinOrId = 5;
+    kUnlockInvalidSchedule = 6;
+    kOneTouchLock = 7;
+    kKeyLock = 8;
+    kKeyUnlock = 9;
+    kAutoLock = 10;
+    kScheduleLock = 11;
+    kScheduleUnlock = 12;
+    kManualLock = 13;
+    kManualUnlock = 14;
+  }
+
+  enum DoorLockProgrammingEventCode : enum8 {
+    kUnknownOrMfgSpecific = 0;
+    kMasterCodeChanged = 1;
+    kPinAdded = 2;
+    kPinDeleted = 3;
+    kPinChanged = 4;
+    kIdAdded = 5;
+    kIdDeleted = 6;
+  }
+
+  enum DoorLockSetPinOrIdStatus : enum8 {
+    kSuccess = 0;
+    kGeneralFailure = 1;
+    kMemoryFull = 2;
+    kDuplicateCodeError = 3;
+  }
+
+  enum DoorLockUserStatus : enum8 {
+    kAvailable = 0;
+    kOccupiedEnabled = 1;
+    kOccupiedDisabled = 3;
+    kNotSupported = 255;
+  }
+
+  enum DoorLockUserType : enum8 {
+    kUnrestricted = 0;
+    kYearDayScheduleUser = 1;
+    kWeekDayScheduleUser = 2;
+    kMasterUser = 3;
+    kNonAccessUser = 4;
+    kNotSupported = 255;
+  }
+
+  enum DoorStateEnum : enum8 {
+    kDoorOpen = 0;
+    kDoorClosed = 1;
+    kDoorJammed = 2;
+    kDoorForcedOpen = 3;
+    kDoorUnspecifiedError = 4;
+    kDoorAjar = 5;
+  }
+
+  enum LockDataTypeEnum : enum8 {
+    kUnspecified = 0;
+    kProgrammingCode = 1;
+    kUserIndex = 2;
+    kWeekDaySchedule = 3;
+    kYearDaySchedule = 4;
+    kHolidaySchedule = 5;
+    kPIN = 6 [spec_name = "PIN"];
+    kRFID = 7 [spec_name = "RFID"];
+    kFingerprint = 8;
+    kFingerVein = 9;
+    kFace = 10;
+    kAliroCredentialIssuerKey = 11;
+    kAliroEvictableEndpointKey = 12;
+    kAliroNonEvictableEndpointKey = 13;
+  }
+
+  enum LockOperationTypeEnum : enum8 {
+    kLock = 0;
+    kUnlock = 1;
+    kNonAccessUserEvent = 2;
+    kForcedUserEvent = 3;
+    kUnlatch = 4;
+  }
+
+  enum OperatingModeEnum : enum8 {
+    kNormal = 0;
+    kVacation = 1;
+    kPrivacy = 2;
+    kNoRemoteLockUnlock = 3;
+    kPassage = 4;
+  }
+
+  enum OperationErrorEnum : enum8 {
+    kUnspecified = 0;
+    kInvalidCredential = 1;
+    kDisabledUserDenied = 2;
+    kRestricted = 3;
+    kInsufficientBattery = 4;
+  }
+
+  enum OperationSourceEnum : enum8 {
+    kUnspecified = 0;
+    kManual = 1;
+    kProprietaryRemote = 2;
+    kKeypad = 3;
+    kAuto = 4;
+    kButton = 5;
+    kSchedule = 6;
+    kRemote = 7;
+    kRFID = 8 [spec_name = "RFID"];
+    kBiometric = 9;
+    kAliro = 10;
+  }
+
+  enum UserStatusEnum : enum8 {
+    kAvailable = 0;
+    kOccupiedEnabled = 1;
+    kOccupiedDisabled = 3;
+  }
+
+  enum UserTypeEnum : enum8 {
+    kUnrestrictedUser = 0;
+    kYearDayScheduleUser = 1;
+    kWeekDayScheduleUser = 2;
+    kProgrammingUser = 3;
+    kNonAccessUser = 4;
+    kForcedUser = 5;
+    kDisposableUser = 6;
+    kExpiringUser = 7;
+    kScheduleRestrictedUser = 8;
+    kRemoteOnlyUser = 9;
+  }
+
+  bitmap DaysMaskMap : bitmap8 {
+    kSunday = 0x1;
+    kMonday = 0x2;
+    kTuesday = 0x4;
+    kWednesday = 0x8;
+    kThursday = 0x10;
+    kFriday = 0x20;
+    kSaturday = 0x40;
+  }
+
+  bitmap DlCredentialRuleMask : bitmap8 {
+    kSingle = 0x1;
+    kDual = 0x2;
+    kTri = 0x4;
+  }
+
+  bitmap DlCredentialRulesSupport : bitmap8 {
+    kSingle = 0x1;
+    kDual = 0x2;
+    kTri = 0x4;
+  }
+
+  bitmap DlDefaultConfigurationRegister : bitmap16 {
+    kEnableLocalProgrammingEnabled = 0x1;
+    kKeypadInterfaceDefaultAccessEnabled = 0x2;
+    kRemoteInterfaceDefaultAccessIsEnabled = 0x4;
+    kSoundEnabled = 0x20;
+    kAutoRelockTimeSet = 0x40;
+    kLEDSettingsSet = 0x80;
+  }
+
+  bitmap DlKeypadOperationEventMask : bitmap16 {
+    kUnknown = 0x1;
+    kLock = 0x2;
+    kUnlock = 0x4;
+    kLockInvalidPIN = 0x8;
+    kLockInvalidSchedule = 0x10;
+    kUnlockInvalidCode = 0x20;
+    kUnlockInvalidSchedule = 0x40;
+    kNonAccessUserOpEvent = 0x80;
+  }
+
+  bitmap DlKeypadProgrammingEventMask : bitmap16 {
+    kUnknown = 0x1;
+    kProgrammingPINChanged = 0x2;
+    kPINAdded = 0x4;
+    kPINCleared = 0x8;
+    kPINChanged = 0x10;
+  }
+
+  bitmap DlLocalProgrammingFeatures : bitmap8 {
+    kAddUsersCredentialsSchedulesLocally = 0x1;
+    kModifyUsersCredentialsSchedulesLocally = 0x2;
+    kClearUsersCredentialsSchedulesLocally = 0x4;
+    kAdjustLockSettingsLocally = 0x8;
+  }
+
+  bitmap DlManualOperationEventMask : bitmap16 {
+    kUnknown = 0x1;
+    kThumbturnLock = 0x2;
+    kThumbturnUnlock = 0x4;
+    kOneTouchLock = 0x8;
+    kKeyLock = 0x10;
+    kKeyUnlock = 0x20;
+    kAutoLock = 0x40;
+    kScheduleLock = 0x80;
+    kScheduleUnlock = 0x100;
+    kManualLock = 0x200;
+    kManualUnlock = 0x400;
+  }
+
+  bitmap DlRFIDOperationEventMask : bitmap16 {
+    kUnknown = 0x1;
+    kLock = 0x2;
+    kUnlock = 0x4;
+    kLockInvalidRFID = 0x8;
+    kLockInvalidSchedule = 0x10;
+    kUnlockInvalidRFID = 0x20;
+    kUnlockInvalidSchedule = 0x40;
+  }
+
+  bitmap DlRFIDProgrammingEventMask : bitmap16 {
+    kUnknown = 0x1;
+    kRFIDCodeAdded = 0x20;
+    kRFIDCodeCleared = 0x40;
+  }
+
+  bitmap DlRemoteOperationEventMask : bitmap16 {
+    kUnknown = 0x1;
+    kLock = 0x2;
+    kUnlock = 0x4;
+    kLockInvalidCode = 0x8;
+    kLockInvalidSchedule = 0x10;
+    kUnlockInvalidCode = 0x20;
+    kUnlockInvalidSchedule = 0x40;
+  }
+
+  bitmap DlRemoteProgrammingEventMask : bitmap16 {
+    kUnknown = 0x1;
+    kProgrammingPINChanged = 0x2;
+    kPINAdded = 0x4;
+    kPINCleared = 0x8;
+    kPINChanged = 0x10;
+    kRFIDCodeAdded = 0x20;
+    kRFIDCodeCleared = 0x40;
+  }
+
+  bitmap DlSupportedOperatingModes : bitmap16 {
+    kNormal = 0x1;
+    kVacation = 0x2;
+    kPrivacy = 0x4;
+    kNoRemoteLockUnlock = 0x8;
+    kPassage = 0x10;
+  }
+
+  bitmap DoorLockDayOfWeek : bitmap8 {
+    kSunday = 0x1;
+    kMonday = 0x2;
+    kTuesday = 0x4;
+    kWednesday = 0x8;
+    kThursday = 0x10;
+    kFriday = 0x20;
+    kSaturday = 0x40;
   }
 
   bitmap Feature : bitmap32 {
-    kFair = 0x1;
-    kModerate = 0x2;
-    kVeryPoor = 0x4;
-    kExtremelyPoor = 0x8;
+    kPINCredential = 0x1 [spec_name = "PIN Credential"];
+    kRFIDCredential = 0x2 [spec_name = "RFID Credential"];
+    kFingerCredentials = 0x4;
+    kLogging = 0x8;
+    kWeekDayAccessSchedules = 0x10;
+    kDoorPositionSensor = 0x20;
+    kFaceCredentials = 0x40;
+    kCredentialsOverTheAirAccess = 0x80;
+    kUser = 0x100;
+    kNotification = 0x200;
+    kYearDayAccessSchedules = 0x400;
+    kHolidaySchedules = 0x800;
+    kUnbolt = 0x1000;
+    kAliroProvisioning = 0x2000;
+    kAliroBLEUWB = 0x4000;
   }
 
-  readonly attribute AirQualityEnum airQuality = 0;
+  struct CredentialStruct {
+    CredentialTypeEnum credentialType = 0;
+    int16u credentialIndex = 1;
+  }
+
+  critical event DoorLockAlarm = 0 {
+    AlarmCodeEnum alarmCode = 0;
+  }
+
+  critical event DoorStateChange = 1 {
+    DoorStateEnum doorState = 0;
+  }
+
+  critical event LockOperation = 2 {
+    LockOperationTypeEnum lockOperationType = 0;
+    OperationSourceEnum operationSource = 1;
+    nullable int16u userIndex = 2;
+    nullable fabric_idx fabricIndex = 3;
+    nullable node_id sourceNode = 4;
+    optional nullable CredentialStruct credentials[] = 5;
+  }
+
+  critical event LockOperationError = 3 {
+    LockOperationTypeEnum lockOperationType = 0;
+    OperationSourceEnum operationSource = 1;
+    OperationErrorEnum operationError = 2;
+    nullable int16u userIndex = 3;
+    nullable fabric_idx fabricIndex = 4;
+    nullable node_id sourceNode = 5;
+    optional nullable CredentialStruct credentials[] = 6;
+  }
+
+  info event LockUserChange = 4 {
+    LockDataTypeEnum lockDataType = 0;
+    DataOperationTypeEnum dataOperationType = 1;
+    OperationSourceEnum operationSource = 2;
+    nullable int16u userIndex = 3;
+    nullable fabric_idx fabricIndex = 4;
+    nullable node_id sourceNode = 5;
+    nullable int16u dataIndex = 6;
+  }
+
+  readonly attribute nullable DlLockState lockState = 0;
+  readonly attribute DlLockType lockType = 1;
+  readonly attribute boolean actuatorEnabled = 2;
+  readonly attribute optional nullable DoorStateEnum doorState = 3;
+  attribute access(write: manage) optional int32u doorOpenEvents = 4;
+  attribute access(write: manage) optional int32u doorClosedEvents = 5;
+  attribute access(write: manage) optional int16u openPeriod = 6;
+  readonly attribute optional int16u numberOfTotalUsersSupported = 17;
+  readonly attribute optional int16u numberOfPINUsersSupported = 18;
+  readonly attribute optional int16u numberOfRFIDUsersSupported = 19;
+  readonly attribute optional int8u numberOfWeekDaySchedulesSupportedPerUser = 20;
+  readonly attribute optional int8u numberOfYearDaySchedulesSupportedPerUser = 21;
+  readonly attribute optional int8u numberOfHolidaySchedulesSupported = 22;
+  readonly attribute optional int8u maxPINCodeLength = 23;
+  readonly attribute optional int8u minPINCodeLength = 24;
+  readonly attribute optional int8u maxRFIDCodeLength = 25;
+  readonly attribute optional int8u minRFIDCodeLength = 26;
+  readonly attribute optional DlCredentialRuleMask credentialRulesSupport = 27;
+  readonly attribute optional int8u numberOfCredentialsSupportedPerUser = 28;
+  attribute access(write: manage) optional char_string<3> language = 33;
+  attribute access(write: manage) optional int8u LEDSettings = 34;
+  attribute access(write: manage) optional int32u autoRelockTime = 35;
+  attribute access(write: manage) optional int8u soundVolume = 36;
+  attribute access(write: manage) OperatingModeEnum operatingMode = 37;
+  readonly attribute DlSupportedOperatingModes supportedOperatingModes = 38;
+  readonly attribute optional DlDefaultConfigurationRegister defaultConfigurationRegister = 39;
+  attribute access(write: administer) optional boolean enableLocalProgramming = 40;
+  attribute access(write: manage) optional boolean enableOneTouchLocking = 41;
+  attribute access(write: manage) optional boolean enableInsideStatusLED = 42;
+  attribute access(write: manage) optional boolean enablePrivacyModeButton = 43;
+  attribute access(write: administer) optional DlLocalProgrammingFeatures localProgrammingFeatures = 44;
+  attribute access(write: administer) optional int8u wrongCodeEntryLimit = 48;
+  attribute access(write: administer) optional int8u userCodeTemporaryDisableTime = 49;
+  attribute access(write: administer) optional boolean sendPINOverTheAir = 50;
+  attribute access(write: administer) optional boolean requirePINforRemoteOperation = 51;
+  attribute access(write: administer) optional int16u expiringUserTimeout = 53;
+  readonly attribute access(read: administer) optional nullable octet_string<65> aliroReaderVerificationKey = 128;
+  readonly attribute access(read: administer) optional nullable octet_string<16> aliroReaderGroupIdentifier = 129;
+  readonly attribute access(read: administer) optional octet_string<16> aliroReaderGroupSubIdentifier = 130;
+  readonly attribute access(read: administer) optional octet_string aliroExpeditedTransactionSupportedProtocolVersions[] = 131;
+  readonly attribute access(read: administer) optional nullable octet_string<16> aliroGroupResolvingKey = 132;
+  readonly attribute access(read: administer) optional octet_string aliroSupportedBLEUWBProtocolVersions[] = 133;
+  readonly attribute access(read: administer) optional int8u aliroBLEAdvertisingVersion = 134;
+  readonly attribute optional int16u numberOfAliroCredentialIssuerKeysSupported = 135;
+  readonly attribute optional int16u numberOfAliroEndpointKeysSupported = 136;
   readonly attribute command_id generatedCommandList[] = 65528;
   readonly attribute command_id acceptedCommandList[] = 65529;
   readonly attribute attrib_id attributeList[] = 65531;
   readonly attribute bitmap32 featureMap = 65532;
   readonly attribute int16u clusterRevision = 65533;
-}
 
-/** Attributes and commands for configuring the measurement of temperature, and reporting temperature measurements. */
-cluster TemperatureMeasurement = 1026 {
-  revision 4;
-
-  readonly attribute nullable temperature measuredValue = 0;
-  readonly attribute nullable temperature minMeasuredValue = 1;
-  readonly attribute nullable temperature maxMeasuredValue = 2;
-  readonly attribute optional int16u tolerance = 3;
-  readonly attribute command_id generatedCommandList[] = 65528;
-  readonly attribute command_id acceptedCommandList[] = 65529;
-  readonly attribute attrib_id attributeList[] = 65531;
-  readonly attribute bitmap32 featureMap = 65532;
-  readonly attribute int16u clusterRevision = 65533;
-}
-
-/** Attributes and commands for configuring the measurement of relative humidity, and reporting relative humidity measurements. */
-cluster RelativeHumidityMeasurement = 1029 {
-  revision 3;
-
-  readonly attribute nullable int16u measuredValue = 0;
-  readonly attribute nullable int16u minMeasuredValue = 1;
-  readonly attribute nullable int16u maxMeasuredValue = 2;
-  readonly attribute optional int16u tolerance = 3;
-  readonly attribute command_id generatedCommandList[] = 65528;
-  readonly attribute command_id acceptedCommandList[] = 65529;
-  readonly attribute attrib_id attributeList[] = 65531;
-  readonly attribute bitmap32 featureMap = 65532;
-  readonly attribute int16u clusterRevision = 65533;
-}
-
-/** Attributes for reporting carbon monoxide concentration measurements */
-cluster CarbonMonoxideConcentrationMeasurement = 1036 {
-  revision 3;
-
-  shared enum LevelValueEnum : enum8 {
-    kUnknown = 0;
-    kLow = 1;
-    kMedium = 2;
-    kHigh = 3;
-    kCritical = 4;
+  request struct LockDoorRequest {
+    optional octet_string PINCode = 0;
   }
 
-  shared enum MeasurementMediumEnum : enum8 {
-    kAir = 0;
-    kWater = 1;
-    kSoil = 2;
+  request struct UnlockDoorRequest {
+    optional octet_string PINCode = 0;
   }
 
-  shared enum MeasurementUnitEnum : enum8 {
-    kPPM = 0 [spec_name = "PPM"];
-    kPPB = 1 [spec_name = "PPB"];
-    kPPT = 2 [spec_name = "PPT"];
-    kMGM3 = 3 [spec_name = "MGM3"];
-    kUGM3 = 4 [spec_name = "UGM3"];
-    kNGM3 = 5 [spec_name = "NGM3"];
-    kPM3 = 6 [spec_name = "PM3"];
-    kBQM3 = 7 [spec_name = "BQM3"];
+  request struct UnlockWithTimeoutRequest {
+    int16u timeout = 0;
+    optional octet_string PINCode = 1;
   }
 
-  bitmap Feature : bitmap32 {
-    kNumericMeasurement = 0x1;
-    kLevelIndication = 0x2;
-    kMediumLevel = 0x4;
-    kCriticalLevel = 0x8;
-    kPeakMeasurement = 0x10;
-    kAverageMeasurement = 0x20;
+  request struct SetWeekDayScheduleRequest {
+    int8u weekDayIndex = 0;
+    int16u userIndex = 1;
+    DaysMaskMap daysMask = 2;
+    int8u startHour = 3;
+    int8u startMinute = 4;
+    int8u endHour = 5;
+    int8u endMinute = 6;
   }
 
-  readonly attribute optional nullable single measuredValue = 0;
-  readonly attribute optional nullable single minMeasuredValue = 1;
-  readonly attribute optional nullable single maxMeasuredValue = 2;
-  readonly attribute optional nullable single peakMeasuredValue = 3;
-  readonly attribute optional elapsed_s peakMeasuredValueWindow = 4;
-  readonly attribute optional nullable single averageMeasuredValue = 5;
-  readonly attribute optional elapsed_s averageMeasuredValueWindow = 6;
-  readonly attribute optional single uncertainty = 7;
-  readonly attribute optional MeasurementUnitEnum measurementUnit = 8;
-  readonly attribute MeasurementMediumEnum measurementMedium = 9;
-  readonly attribute optional LevelValueEnum levelValue = 10;
-  readonly attribute command_id generatedCommandList[] = 65528;
-  readonly attribute command_id acceptedCommandList[] = 65529;
-  readonly attribute attrib_id attributeList[] = 65531;
-  readonly attribute bitmap32 featureMap = 65532;
-  readonly attribute int16u clusterRevision = 65533;
-}
-
-/** Attributes for reporting carbon dioxide concentration measurements */
-cluster CarbonDioxideConcentrationMeasurement = 1037 {
-  revision 3;
-
-  shared enum LevelValueEnum : enum8 {
-    kUnknown = 0;
-    kLow = 1;
-    kMedium = 2;
-    kHigh = 3;
-    kCritical = 4;
+  request struct GetWeekDayScheduleRequest {
+    int8u weekDayIndex = 0;
+    int16u userIndex = 1;
   }
 
-  shared enum MeasurementMediumEnum : enum8 {
-    kAir = 0;
-    kWater = 1;
-    kSoil = 2;
+  response struct GetWeekDayScheduleResponse = 12 {
+    int8u weekDayIndex = 0;
+    int16u userIndex = 1;
+    DlStatus status = 2;
+    optional DaysMaskMap daysMask = 3;
+    optional int8u startHour = 4;
+    optional int8u startMinute = 5;
+    optional int8u endHour = 6;
+    optional int8u endMinute = 7;
   }
 
-  shared enum MeasurementUnitEnum : enum8 {
-    kPPM = 0 [spec_name = "PPM"];
-    kPPB = 1 [spec_name = "PPB"];
-    kPPT = 2 [spec_name = "PPT"];
-    kMGM3 = 3 [spec_name = "MGM3"];
-    kUGM3 = 4 [spec_name = "UGM3"];
-    kNGM3 = 5 [spec_name = "NGM3"];
-    kPM3 = 6 [spec_name = "PM3"];
-    kBQM3 = 7 [spec_name = "BQM3"];
+  request struct ClearWeekDayScheduleRequest {
+    int8u weekDayIndex = 0;
+    int16u userIndex = 1;
   }
 
-  bitmap Feature : bitmap32 {
-    kNumericMeasurement = 0x1;
-    kLevelIndication = 0x2;
-    kMediumLevel = 0x4;
-    kCriticalLevel = 0x8;
-    kPeakMeasurement = 0x10;
-    kAverageMeasurement = 0x20;
+  request struct SetYearDayScheduleRequest {
+    int8u yearDayIndex = 0;
+    int16u userIndex = 1;
+    epoch_s localStartTime = 2;
+    epoch_s localEndTime = 3;
   }
 
-  readonly attribute optional nullable single measuredValue = 0;
-  readonly attribute optional nullable single minMeasuredValue = 1;
-  readonly attribute optional nullable single maxMeasuredValue = 2;
-  readonly attribute optional nullable single peakMeasuredValue = 3;
-  readonly attribute optional elapsed_s peakMeasuredValueWindow = 4;
-  readonly attribute optional nullable single averageMeasuredValue = 5;
-  readonly attribute optional elapsed_s averageMeasuredValueWindow = 6;
-  readonly attribute optional single uncertainty = 7;
-  readonly attribute optional MeasurementUnitEnum measurementUnit = 8;
-  readonly attribute MeasurementMediumEnum measurementMedium = 9;
-  readonly attribute optional LevelValueEnum levelValue = 10;
-  readonly attribute command_id generatedCommandList[] = 65528;
-  readonly attribute command_id acceptedCommandList[] = 65529;
-  readonly attribute attrib_id attributeList[] = 65531;
-  readonly attribute bitmap32 featureMap = 65532;
-  readonly attribute int16u clusterRevision = 65533;
-}
-
-/** Attributes for reporting nitrogen dioxide concentration measurements */
-cluster NitrogenDioxideConcentrationMeasurement = 1043 {
-  revision 3;
-
-  shared enum LevelValueEnum : enum8 {
-    kUnknown = 0;
-    kLow = 1;
-    kMedium = 2;
-    kHigh = 3;
-    kCritical = 4;
+  request struct GetYearDayScheduleRequest {
+    int8u yearDayIndex = 0;
+    int16u userIndex = 1;
   }
 
-  shared enum MeasurementMediumEnum : enum8 {
-    kAir = 0;
-    kWater = 1;
-    kSoil = 2;
+  response struct GetYearDayScheduleResponse = 15 {
+    int8u yearDayIndex = 0;
+    int16u userIndex = 1;
+    DlStatus status = 2;
+    optional epoch_s localStartTime = 3;
+    optional epoch_s localEndTime = 4;
   }
 
-  shared enum MeasurementUnitEnum : enum8 {
-    kPPM = 0 [spec_name = "PPM"];
-    kPPB = 1 [spec_name = "PPB"];
-    kPPT = 2 [spec_name = "PPT"];
-    kMGM3 = 3 [spec_name = "MGM3"];
-    kUGM3 = 4 [spec_name = "UGM3"];
-    kNGM3 = 5 [spec_name = "NGM3"];
-    kPM3 = 6 [spec_name = "PM3"];
-    kBQM3 = 7 [spec_name = "BQM3"];
+  request struct ClearYearDayScheduleRequest {
+    int8u yearDayIndex = 0;
+    int16u userIndex = 1;
   }
 
-  bitmap Feature : bitmap32 {
-    kNumericMeasurement = 0x1;
-    kLevelIndication = 0x2;
-    kMediumLevel = 0x4;
-    kCriticalLevel = 0x8;
-    kPeakMeasurement = 0x10;
-    kAverageMeasurement = 0x20;
+  request struct SetHolidayScheduleRequest {
+    int8u holidayIndex = 0;
+    epoch_s localStartTime = 1;
+    epoch_s localEndTime = 2;
+    OperatingModeEnum operatingMode = 3;
   }
 
-  readonly attribute optional nullable single measuredValue = 0;
-  readonly attribute optional nullable single minMeasuredValue = 1;
-  readonly attribute optional nullable single maxMeasuredValue = 2;
-  readonly attribute optional nullable single peakMeasuredValue = 3;
-  readonly attribute optional elapsed_s peakMeasuredValueWindow = 4;
-  readonly attribute optional nullable single averageMeasuredValue = 5;
-  readonly attribute optional elapsed_s averageMeasuredValueWindow = 6;
-  readonly attribute optional single uncertainty = 7;
-  readonly attribute optional MeasurementUnitEnum measurementUnit = 8;
-  readonly attribute MeasurementMediumEnum measurementMedium = 9;
-  readonly attribute optional LevelValueEnum levelValue = 10;
-  readonly attribute command_id generatedCommandList[] = 65528;
-  readonly attribute command_id acceptedCommandList[] = 65529;
-  readonly attribute attrib_id attributeList[] = 65531;
-  readonly attribute bitmap32 featureMap = 65532;
-  readonly attribute int16u clusterRevision = 65533;
-}
-
-/** Attributes for reporting ozone concentration measurements */
-cluster OzoneConcentrationMeasurement = 1045 {
-  revision 3;
-
-  shared enum LevelValueEnum : enum8 {
-    kUnknown = 0;
-    kLow = 1;
-    kMedium = 2;
-    kHigh = 3;
-    kCritical = 4;
+  request struct GetHolidayScheduleRequest {
+    int8u holidayIndex = 0;
   }
 
-  shared enum MeasurementMediumEnum : enum8 {
-    kAir = 0;
-    kWater = 1;
-    kSoil = 2;
+  response struct GetHolidayScheduleResponse = 18 {
+    int8u holidayIndex = 0;
+    DlStatus status = 1;
+    optional epoch_s localStartTime = 2;
+    optional epoch_s localEndTime = 3;
+    optional OperatingModeEnum operatingMode = 4;
   }
 
-  shared enum MeasurementUnitEnum : enum8 {
-    kPPM = 0 [spec_name = "PPM"];
-    kPPB = 1 [spec_name = "PPB"];
-    kPPT = 2 [spec_name = "PPT"];
-    kMGM3 = 3 [spec_name = "MGM3"];
-    kUGM3 = 4 [spec_name = "UGM3"];
-    kNGM3 = 5 [spec_name = "NGM3"];
-    kPM3 = 6 [spec_name = "PM3"];
-    kBQM3 = 7 [spec_name = "BQM3"];
+  request struct ClearHolidayScheduleRequest {
+    int8u holidayIndex = 0;
   }
 
-  bitmap Feature : bitmap32 {
-    kNumericMeasurement = 0x1;
-    kLevelIndication = 0x2;
-    kMediumLevel = 0x4;
-    kCriticalLevel = 0x8;
-    kPeakMeasurement = 0x10;
-    kAverageMeasurement = 0x20;
+  request struct SetUserRequest {
+    DataOperationTypeEnum operationType = 0;
+    int16u userIndex = 1;
+    nullable char_string userName = 2;
+    nullable int32u userUniqueID = 3;
+    nullable UserStatusEnum userStatus = 4;
+    nullable UserTypeEnum userType = 5;
+    nullable CredentialRuleEnum credentialRule = 6;
   }
 
-  readonly attribute optional nullable single measuredValue = 0;
-  readonly attribute optional nullable single minMeasuredValue = 1;
-  readonly attribute optional nullable single maxMeasuredValue = 2;
-  readonly attribute optional nullable single peakMeasuredValue = 3;
-  readonly attribute optional elapsed_s peakMeasuredValueWindow = 4;
-  readonly attribute optional nullable single averageMeasuredValue = 5;
-  readonly attribute optional elapsed_s averageMeasuredValueWindow = 6;
-  readonly attribute optional single uncertainty = 7;
-  readonly attribute optional MeasurementUnitEnum measurementUnit = 8;
-  readonly attribute MeasurementMediumEnum measurementMedium = 9;
-  readonly attribute optional LevelValueEnum levelValue = 10;
-  readonly attribute command_id generatedCommandList[] = 65528;
-  readonly attribute command_id acceptedCommandList[] = 65529;
-  readonly attribute attrib_id attributeList[] = 65531;
-  readonly attribute bitmap32 featureMap = 65532;
-  readonly attribute int16u clusterRevision = 65533;
-}
-
-/** Attributes for reporting PM2.5 concentration measurements */
-cluster Pm25ConcentrationMeasurement = 1066 {
-  revision 3;
-
-  shared enum LevelValueEnum : enum8 {
-    kUnknown = 0;
-    kLow = 1;
-    kMedium = 2;
-    kHigh = 3;
-    kCritical = 4;
+  request struct GetUserRequest {
+    int16u userIndex = 0;
   }
 
-  shared enum MeasurementMediumEnum : enum8 {
-    kAir = 0;
-    kWater = 1;
-    kSoil = 2;
+  response struct GetUserResponse = 28 {
+    int16u userIndex = 0;
+    nullable char_string userName = 1;
+    nullable int32u userUniqueID = 2;
+    nullable UserStatusEnum userStatus = 3;
+    nullable UserTypeEnum userType = 4;
+    nullable CredentialRuleEnum credentialRule = 5;
+    nullable CredentialStruct credentials[] = 6;
+    nullable fabric_idx creatorFabricIndex = 7;
+    nullable fabric_idx lastModifiedFabricIndex = 8;
+    nullable int16u nextUserIndex = 9;
   }
 
-  shared enum MeasurementUnitEnum : enum8 {
-    kPPM = 0 [spec_name = "PPM"];
-    kPPB = 1 [spec_name = "PPB"];
-    kPPT = 2 [spec_name = "PPT"];
-    kMGM3 = 3 [spec_name = "MGM3"];
-    kUGM3 = 4 [spec_name = "UGM3"];
-    kNGM3 = 5 [spec_name = "NGM3"];
-    kPM3 = 6 [spec_name = "PM3"];
-    kBQM3 = 7 [spec_name = "BQM3"];
+  request struct ClearUserRequest {
+    int16u userIndex = 0;
   }
 
-  bitmap Feature : bitmap32 {
-    kNumericMeasurement = 0x1;
-    kLevelIndication = 0x2;
-    kMediumLevel = 0x4;
-    kCriticalLevel = 0x8;
-    kPeakMeasurement = 0x10;
-    kAverageMeasurement = 0x20;
+  request struct SetCredentialRequest {
+    DataOperationTypeEnum operationType = 0;
+    CredentialStruct credential = 1;
+    long_octet_string credentialData = 2;
+    nullable int16u userIndex = 3;
+    nullable UserStatusEnum userStatus = 4;
+    nullable UserTypeEnum userType = 5;
   }
 
-  readonly attribute optional nullable single measuredValue = 0;
-  readonly attribute optional nullable single minMeasuredValue = 1;
-  readonly attribute optional nullable single maxMeasuredValue = 2;
-  readonly attribute optional nullable single peakMeasuredValue = 3;
-  readonly attribute optional elapsed_s peakMeasuredValueWindow = 4;
-  readonly attribute optional nullable single averageMeasuredValue = 5;
-  readonly attribute optional elapsed_s averageMeasuredValueWindow = 6;
-  readonly attribute optional single uncertainty = 7;
-  readonly attribute optional MeasurementUnitEnum measurementUnit = 8;
-  readonly attribute MeasurementMediumEnum measurementMedium = 9;
-  readonly attribute optional LevelValueEnum levelValue = 10;
-  readonly attribute command_id generatedCommandList[] = 65528;
-  readonly attribute command_id acceptedCommandList[] = 65529;
-  readonly attribute attrib_id attributeList[] = 65531;
-  readonly attribute bitmap32 featureMap = 65532;
-  readonly attribute int16u clusterRevision = 65533;
-}
-
-/** Attributes for reporting formaldehyde concentration measurements */
-cluster FormaldehydeConcentrationMeasurement = 1067 {
-  revision 3;
-
-  shared enum LevelValueEnum : enum8 {
-    kUnknown = 0;
-    kLow = 1;
-    kMedium = 2;
-    kHigh = 3;
-    kCritical = 4;
+  response struct SetCredentialResponse = 35 {
+    DlStatus status = 0;
+    nullable int16u userIndex = 1;
+    nullable int16u nextCredentialIndex = 2;
   }
 
-  shared enum MeasurementMediumEnum : enum8 {
-    kAir = 0;
-    kWater = 1;
-    kSoil = 2;
+  request struct GetCredentialStatusRequest {
+    CredentialStruct credential = 0;
   }
 
-  shared enum MeasurementUnitEnum : enum8 {
-    kPPM = 0 [spec_name = "PPM"];
-    kPPB = 1 [spec_name = "PPB"];
-    kPPT = 2 [spec_name = "PPT"];
-    kMGM3 = 3 [spec_name = "MGM3"];
-    kUGM3 = 4 [spec_name = "UGM3"];
-    kNGM3 = 5 [spec_name = "NGM3"];
-    kPM3 = 6 [spec_name = "PM3"];
-    kBQM3 = 7 [spec_name = "BQM3"];
+  response struct GetCredentialStatusResponse = 37 {
+    boolean credentialExists = 0;
+    nullable int16u userIndex = 1;
+    nullable fabric_idx creatorFabricIndex = 2;
+    nullable fabric_idx lastModifiedFabricIndex = 3;
+    nullable int16u nextCredentialIndex = 4;
+    optional nullable octet_string credentialData = 5;
   }
 
-  bitmap Feature : bitmap32 {
-    kNumericMeasurement = 0x1;
-    kLevelIndication = 0x2;
-    kMediumLevel = 0x4;
-    kCriticalLevel = 0x8;
-    kPeakMeasurement = 0x10;
-    kAverageMeasurement = 0x20;
+  request struct ClearCredentialRequest {
+    nullable CredentialStruct credential = 0;
   }
 
-  readonly attribute optional nullable single measuredValue = 0;
-  readonly attribute optional nullable single minMeasuredValue = 1;
-  readonly attribute optional nullable single maxMeasuredValue = 2;
-  readonly attribute optional nullable single peakMeasuredValue = 3;
-  readonly attribute optional elapsed_s peakMeasuredValueWindow = 4;
-  readonly attribute optional nullable single averageMeasuredValue = 5;
-  readonly attribute optional elapsed_s averageMeasuredValueWindow = 6;
-  readonly attribute optional single uncertainty = 7;
-  readonly attribute optional MeasurementUnitEnum measurementUnit = 8;
-  readonly attribute MeasurementMediumEnum measurementMedium = 9;
-  readonly attribute optional LevelValueEnum levelValue = 10;
-  readonly attribute command_id generatedCommandList[] = 65528;
-  readonly attribute command_id acceptedCommandList[] = 65529;
-  readonly attribute attrib_id attributeList[] = 65531;
-  readonly attribute bitmap32 featureMap = 65532;
-  readonly attribute int16u clusterRevision = 65533;
-}
-
-/** Attributes for reporting PM1 concentration measurements */
-cluster Pm1ConcentrationMeasurement = 1068 {
-  revision 3;
-
-  shared enum LevelValueEnum : enum8 {
-    kUnknown = 0;
-    kLow = 1;
-    kMedium = 2;
-    kHigh = 3;
-    kCritical = 4;
+  request struct UnboltDoorRequest {
+    optional octet_string PINCode = 0;
   }
 
-  shared enum MeasurementMediumEnum : enum8 {
-    kAir = 0;
-    kWater = 1;
-    kSoil = 2;
+  request struct SetAliroReaderConfigRequest {
+    octet_string<32> signingKey = 0;
+    octet_string<65> verificationKey = 1;
+    octet_string<16> groupIdentifier = 2;
+    optional octet_string<16> groupResolvingKey = 3;
   }
 
-  shared enum MeasurementUnitEnum : enum8 {
-    kPPM = 0 [spec_name = "PPM"];
-    kPPB = 1 [spec_name = "PPB"];
-    kPPT = 2 [spec_name = "PPT"];
-    kMGM3 = 3 [spec_name = "MGM3"];
-    kUGM3 = 4 [spec_name = "UGM3"];
-    kNGM3 = 5 [spec_name = "NGM3"];
-    kPM3 = 6 [spec_name = "PM3"];
-    kBQM3 = 7 [spec_name = "BQM3"];
-  }
-
-  bitmap Feature : bitmap32 {
-    kNumericMeasurement = 0x1;
-    kLevelIndication = 0x2;
-    kMediumLevel = 0x4;
-    kCriticalLevel = 0x8;
-    kPeakMeasurement = 0x10;
-    kAverageMeasurement = 0x20;
-  }
-
-  readonly attribute optional nullable single measuredValue = 0;
-  readonly attribute optional nullable single minMeasuredValue = 1;
-  readonly attribute optional nullable single maxMeasuredValue = 2;
-  readonly attribute optional nullable single peakMeasuredValue = 3;
-  readonly attribute optional elapsed_s peakMeasuredValueWindow = 4;
-  readonly attribute optional nullable single averageMeasuredValue = 5;
-  readonly attribute optional elapsed_s averageMeasuredValueWindow = 6;
-  readonly attribute optional single uncertainty = 7;
-  readonly attribute optional MeasurementUnitEnum measurementUnit = 8;
-  readonly attribute MeasurementMediumEnum measurementMedium = 9;
-  readonly attribute optional LevelValueEnum levelValue = 10;
-  readonly attribute command_id generatedCommandList[] = 65528;
-  readonly attribute command_id acceptedCommandList[] = 65529;
-  readonly attribute attrib_id attributeList[] = 65531;
-  readonly attribute bitmap32 featureMap = 65532;
-  readonly attribute int16u clusterRevision = 65533;
-}
-
-/** Attributes for reporting PM10 concentration measurements */
-cluster Pm10ConcentrationMeasurement = 1069 {
-  revision 3;
-
-  shared enum LevelValueEnum : enum8 {
-    kUnknown = 0;
-    kLow = 1;
-    kMedium = 2;
-    kHigh = 3;
-    kCritical = 4;
-  }
-
-  shared enum MeasurementMediumEnum : enum8 {
-    kAir = 0;
-    kWater = 1;
-    kSoil = 2;
-  }
-
-  shared enum MeasurementUnitEnum : enum8 {
-    kPPM = 0 [spec_name = "PPM"];
-    kPPB = 1 [spec_name = "PPB"];
-    kPPT = 2 [spec_name = "PPT"];
-    kMGM3 = 3 [spec_name = "MGM3"];
-    kUGM3 = 4 [spec_name = "UGM3"];
-    kNGM3 = 5 [spec_name = "NGM3"];
-    kPM3 = 6 [spec_name = "PM3"];
-    kBQM3 = 7 [spec_name = "BQM3"];
-  }
-
-  bitmap Feature : bitmap32 {
-    kNumericMeasurement = 0x1;
-    kLevelIndication = 0x2;
-    kMediumLevel = 0x4;
-    kCriticalLevel = 0x8;
-    kPeakMeasurement = 0x10;
-    kAverageMeasurement = 0x20;
-  }
-
-  readonly attribute optional nullable single measuredValue = 0;
-  readonly attribute optional nullable single minMeasuredValue = 1;
-  readonly attribute optional nullable single maxMeasuredValue = 2;
-  readonly attribute optional nullable single peakMeasuredValue = 3;
-  readonly attribute optional elapsed_s peakMeasuredValueWindow = 4;
-  readonly attribute optional nullable single averageMeasuredValue = 5;
-  readonly attribute optional elapsed_s averageMeasuredValueWindow = 6;
-  readonly attribute optional single uncertainty = 7;
-  readonly attribute optional MeasurementUnitEnum measurementUnit = 8;
-  readonly attribute MeasurementMediumEnum measurementMedium = 9;
-  readonly attribute optional LevelValueEnum levelValue = 10;
-  readonly attribute command_id generatedCommandList[] = 65528;
-  readonly attribute command_id acceptedCommandList[] = 65529;
-  readonly attribute attrib_id attributeList[] = 65531;
-  readonly attribute bitmap32 featureMap = 65532;
-  readonly attribute int16u clusterRevision = 65533;
-}
-
-/** Attributes for reporting total volatile organic compounds concentration measurements */
-cluster TotalVolatileOrganicCompoundsConcentrationMeasurement = 1070 {
-  revision 3;
-
-  shared enum LevelValueEnum : enum8 {
-    kUnknown = 0;
-    kLow = 1;
-    kMedium = 2;
-    kHigh = 3;
-    kCritical = 4;
-  }
-
-  shared enum MeasurementMediumEnum : enum8 {
-    kAir = 0;
-    kWater = 1;
-    kSoil = 2;
-  }
-
-  shared enum MeasurementUnitEnum : enum8 {
-    kPPM = 0 [spec_name = "PPM"];
-    kPPB = 1 [spec_name = "PPB"];
-    kPPT = 2 [spec_name = "PPT"];
-    kMGM3 = 3 [spec_name = "MGM3"];
-    kUGM3 = 4 [spec_name = "UGM3"];
-    kNGM3 = 5 [spec_name = "NGM3"];
-    kPM3 = 6 [spec_name = "PM3"];
-    kBQM3 = 7 [spec_name = "BQM3"];
-  }
-
-  bitmap Feature : bitmap32 {
-    kNumericMeasurement = 0x1;
-    kLevelIndication = 0x2;
-    kMediumLevel = 0x4;
-    kCriticalLevel = 0x8;
-    kPeakMeasurement = 0x10;
-    kAverageMeasurement = 0x20;
-  }
-
-  readonly attribute optional nullable single measuredValue = 0;
-  readonly attribute optional nullable single minMeasuredValue = 1;
-  readonly attribute optional nullable single maxMeasuredValue = 2;
-  readonly attribute optional nullable single peakMeasuredValue = 3;
-  readonly attribute optional elapsed_s peakMeasuredValueWindow = 4;
-  readonly attribute optional nullable single averageMeasuredValue = 5;
-  readonly attribute optional elapsed_s averageMeasuredValueWindow = 6;
-  readonly attribute optional single uncertainty = 7;
-  readonly attribute optional MeasurementUnitEnum measurementUnit = 8;
-  readonly attribute MeasurementMediumEnum measurementMedium = 9;
-  readonly attribute optional LevelValueEnum levelValue = 10;
-  readonly attribute command_id generatedCommandList[] = 65528;
-  readonly attribute command_id acceptedCommandList[] = 65529;
-  readonly attribute attrib_id attributeList[] = 65531;
-  readonly attribute bitmap32 featureMap = 65532;
-  readonly attribute int16u clusterRevision = 65533;
-}
-
-/** Attributes for reporting radon concentration measurements */
-cluster RadonConcentrationMeasurement = 1071 {
-  revision 3;
-
-  shared enum LevelValueEnum : enum8 {
-    kUnknown = 0;
-    kLow = 1;
-    kMedium = 2;
-    kHigh = 3;
-    kCritical = 4;
-  }
-
-  shared enum MeasurementMediumEnum : enum8 {
-    kAir = 0;
-    kWater = 1;
-    kSoil = 2;
-  }
-
-  shared enum MeasurementUnitEnum : enum8 {
-    kPPM = 0 [spec_name = "PPM"];
-    kPPB = 1 [spec_name = "PPB"];
-    kPPT = 2 [spec_name = "PPT"];
-    kMGM3 = 3 [spec_name = "MGM3"];
-    kUGM3 = 4 [spec_name = "UGM3"];
-    kNGM3 = 5 [spec_name = "NGM3"];
-    kPM3 = 6 [spec_name = "PM3"];
-    kBQM3 = 7 [spec_name = "BQM3"];
-  }
-
-  bitmap Feature : bitmap32 {
-    kNumericMeasurement = 0x1;
-    kLevelIndication = 0x2;
-    kMediumLevel = 0x4;
-    kCriticalLevel = 0x8;
-    kPeakMeasurement = 0x10;
-    kAverageMeasurement = 0x20;
-  }
-
-  readonly attribute optional nullable single measuredValue = 0;
-  readonly attribute optional nullable single minMeasuredValue = 1;
-  readonly attribute optional nullable single maxMeasuredValue = 2;
-  readonly attribute optional nullable single peakMeasuredValue = 3;
-  readonly attribute optional elapsed_s peakMeasuredValueWindow = 4;
-  readonly attribute optional nullable single averageMeasuredValue = 5;
-  readonly attribute optional elapsed_s averageMeasuredValueWindow = 6;
-  readonly attribute optional single uncertainty = 7;
-  readonly attribute optional MeasurementUnitEnum measurementUnit = 8;
-  readonly attribute MeasurementMediumEnum measurementMedium = 9;
-  readonly attribute optional LevelValueEnum levelValue = 10;
-  readonly attribute command_id generatedCommandList[] = 65528;
-  readonly attribute command_id acceptedCommandList[] = 65529;
-  readonly attribute attrib_id attributeList[] = 65531;
-  readonly attribute bitmap32 featureMap = 65532;
-  readonly attribute int16u clusterRevision = 65533;
+  /** This command causes the lock device to lock the door. */
+  timed command LockDoor(LockDoorRequest): DefaultSuccess = 0;
+  /** This command causes the lock device to unlock the door. */
+  timed command UnlockDoor(UnlockDoorRequest): DefaultSuccess = 1;
+  /** This command causes the lock device to unlock the door with a timeout parameter. */
+  timed command UnlockWithTimeout(UnlockWithTimeoutRequest): DefaultSuccess = 3;
+  /** Set a weekly repeating schedule for a specified user. */
+  command access(invoke: administer) SetWeekDaySchedule(SetWeekDayScheduleRequest): DefaultSuccess = 11;
+  /** Retrieve the specific weekly schedule for the specific user. */
+  command access(invoke: administer) GetWeekDaySchedule(GetWeekDayScheduleRequest): GetWeekDayScheduleResponse = 12;
+  /** Clear the specific weekly schedule or all weekly schedules for the specific user. */
+  command access(invoke: administer) ClearWeekDaySchedule(ClearWeekDayScheduleRequest): DefaultSuccess = 13;
+  /** Set a time-specific schedule ID for a specified user. */
+  command access(invoke: administer) SetYearDaySchedule(SetYearDayScheduleRequest): DefaultSuccess = 14;
+  /** Returns the year day schedule data for the specified schedule and user indexes. */
+  command access(invoke: administer) GetYearDaySchedule(GetYearDayScheduleRequest): GetYearDayScheduleResponse = 15;
+  /** Clears the specific year day schedule or all year day schedules for the specific user. */
+  command access(invoke: administer) ClearYearDaySchedule(ClearYearDayScheduleRequest): DefaultSuccess = 16;
+  /** Set the holiday Schedule by specifying local start time and local end time with respect to any Lock Operating Mode. */
+  command access(invoke: administer) SetHolidaySchedule(SetHolidayScheduleRequest): DefaultSuccess = 17;
+  /** Get the holiday schedule for the specified index. */
+  command access(invoke: administer) GetHolidaySchedule(GetHolidayScheduleRequest): GetHolidayScheduleResponse = 18;
+  /** Clears the holiday schedule or all holiday schedules. */
+  command access(invoke: administer) ClearHolidaySchedule(ClearHolidayScheduleRequest): DefaultSuccess = 19;
+  /** Set User into the lock. */
+  timed command access(invoke: administer) SetUser(SetUserRequest): DefaultSuccess = 26;
+  /** Retrieve User. */
+  command access(invoke: administer) GetUser(GetUserRequest): GetUserResponse = 27;
+  /** Clears a User or all Users. */
+  timed command access(invoke: administer) ClearUser(ClearUserRequest): DefaultSuccess = 29;
+  /** Set a credential (e.g. PIN, RFID, Fingerprint, etc.) into the lock for a new user, existing user, or ProgrammingUser. */
+  timed command access(invoke: administer) SetCredential(SetCredentialRequest): SetCredentialResponse = 34;
+  /** Retrieve the status of a particular credential (e.g. PIN, RFID, Fingerprint, etc.) by index. */
+  command access(invoke: administer) GetCredentialStatus(GetCredentialStatusRequest): GetCredentialStatusResponse = 36;
+  /** Clear one, one type, or all credentials except ProgrammingPIN credential. */
+  timed command access(invoke: administer) ClearCredential(ClearCredentialRequest): DefaultSuccess = 38;
+  /** This command causes the lock device to unlock the door without pulling the latch. */
+  timed command UnboltDoor(UnboltDoorRequest): DefaultSuccess = 39;
+  /** This command communicates an Aliro Reader configuration to the lock. */
+  timed command access(invoke: administer) SetAliroReaderConfig(SetAliroReaderConfigRequest): DefaultSuccess = 40;
+  /** This command clears an existing Aliro Reader configuration for the lock. */
+  timed command access(invoke: administer) ClearAliroReaderConfig(): DefaultSuccess = 41;
 }
 
 endpoint 0 {
-  device type ma_rootdevice = 22, version 3;
+  device type ma_rootdevice = 22, version 4;
+  device type ma_powersource = 17, version 1;
   device type ma_otarequestor = 18, version 1;
 
   binding cluster OtaSoftwareUpdateProvider;
@@ -2520,6 +2874,21 @@ endpoint 0 {
     handle command AnnounceOTAProvider;
   }
 
+  server cluster PowerSource {
+    emits event WiredFaultChange;
+    ram      attribute status default = 1;
+    ram      attribute order default = 0;
+    ram      attribute description default = "USB";
+    ram      attribute wiredCurrentType default = 0;
+    ram      attribute wiredAssessedCurrent;
+    callback attribute endpointList;
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute attributeList;
+    ram      attribute featureMap default = 1;
+    callback attribute clusterRevision;
+  }
+
   server cluster GeneralCommissioning {
     callback attribute breadcrumb;
     callback attribute basicCommissioningInfo;
@@ -2566,7 +2935,18 @@ endpoint 0 {
     handle command ReorderNetwork;
   }
 
+  server cluster DiagnosticLogs {
+    callback attribute featureMap;
+    callback attribute clusterRevision;
+
+    handle command RetrieveLogsRequest;
+    handle command RetrieveLogsResponse;
+  }
+
   server cluster GeneralDiagnostics {
+    emits event HardwareFaultChange;
+    emits event RadioFaultChange;
+    emits event NetworkFaultChange;
     emits event BootReason;
     callback attribute networkInterfaces;
     callback attribute rebootCount;
@@ -2716,7 +3096,6 @@ endpoint 0 {
     callback attribute clusterRevision;
 
     handle command OpenCommissioningWindow;
-    handle command OpenBasicCommissioningWindow;
     handle command RevokeCommissioning;
   }
 
@@ -2768,9 +3147,16 @@ endpoint 0 {
     handle command KeySetReadAllIndices;
     handle command KeySetReadAllIndicesResponse;
   }
+
+  server cluster UserLabel {
+    callback attribute labelList;
+    callback attribute featureMap;
+    callback attribute clusterRevision;
+  }
 }
 endpoint 1 {
-  device type ma_air_quality_sensor = 44, version 1;
+  device type ma_powersource = 17, version 1;
+  device type ma_doorlock = 10, version 3;
 
 
   server cluster Identify {
@@ -2783,6 +3169,7 @@ endpoint 1 {
     callback attribute clusterRevision;
 
     handle command Identify;
+    handle command TriggerEffect;
   }
 
   server cluster Descriptor {
@@ -2797,225 +3184,83 @@ endpoint 1 {
     callback attribute clusterRevision;
   }
 
-  server cluster AirQuality {
-    callback attribute airQuality;
+  server cluster PowerSource {
+    ram      attribute status default = 1;
+    ram      attribute order default = 1;
+    ram      attribute description default = "Battery";
+    ram      attribute batChargeLevel;
+    ram      attribute batReplacementNeeded;
+    ram      attribute batReplaceability;
+    ram      attribute batReplacementDescription;
+    ram      attribute batQuantity default = 1;
+    callback attribute endpointList;
     callback attribute generatedCommandList;
     callback attribute acceptedCommandList;
     callback attribute attributeList;
-    callback attribute featureMap;
-    ram      attribute clusterRevision default = 1;
+    ram      attribute featureMap default = 0x0A;
+    callback attribute clusterRevision;
   }
 
-  server cluster TemperatureMeasurement {
-    ram      attribute measuredValue;
-    ram      attribute minMeasuredValue;
-    ram      attribute maxMeasuredValue;
+  server cluster DoorLock {
+    emits event DoorLockAlarm;
+    emits event DoorStateChange;
+    emits event LockOperation;
+    emits event LockOperationError;
+    emits event LockUserChange;
+    persist  attribute lockState default = 1;
+    ram      attribute lockType;
+    ram      attribute actuatorEnabled;
+    ram      attribute doorState;
+    ram      attribute numberOfTotalUsersSupported default = 10;
+    ram      attribute numberOfPINUsersSupported default = 10;
+    ram      attribute numberOfWeekDaySchedulesSupportedPerUser default = 10;
+    ram      attribute numberOfYearDaySchedulesSupportedPerUser default = 10;
+    ram      attribute numberOfHolidaySchedulesSupported default = 10;
+    ram      attribute maxPINCodeLength default = 8;
+    ram      attribute minPINCodeLength default = 6;
+    ram      attribute credentialRulesSupport default = 1;
+    ram      attribute numberOfCredentialsSupportedPerUser default = 5;
+    ram      attribute language default = "en";
+    ram      attribute autoRelockTime default = 60;
+    ram      attribute soundVolume default = 0x00;
+    ram      attribute operatingMode default = 0x00;
+    ram      attribute supportedOperatingModes default = 0xFFF6;
+    ram      attribute enableOneTouchLocking default = 0x00;
+    ram      attribute enablePrivacyModeButton default = 0x00;
+    ram      attribute wrongCodeEntryLimit default = 3;
+    ram      attribute userCodeTemporaryDisableTime default = 10;
+    ram      attribute requirePINforRemoteOperation default = 0;
     callback attribute generatedCommandList;
     callback attribute acceptedCommandList;
     callback attribute attributeList;
-    ram      attribute featureMap default = 0;
-    ram      attribute clusterRevision default = 4;
-  }
+    ram      attribute featureMap default = 7601;
+    ram      attribute clusterRevision default = 9;
 
-  server cluster RelativeHumidityMeasurement {
-    ram      attribute measuredValue;
-    ram      attribute minMeasuredValue;
-    ram      attribute maxMeasuredValue;
-    callback attribute generatedCommandList;
-    callback attribute acceptedCommandList;
-    callback attribute attributeList;
-    ram      attribute featureMap default = 0;
-    ram      attribute clusterRevision default = 3;
-  }
-
-  server cluster CarbonMonoxideConcentrationMeasurement {
-    callback attribute measuredValue;
-    callback attribute minMeasuredValue;
-    callback attribute maxMeasuredValue;
-    callback attribute peakMeasuredValue;
-    callback attribute peakMeasuredValueWindow;
-    callback attribute averageMeasuredValue;
-    callback attribute averageMeasuredValueWindow;
-    callback attribute uncertainty;
-    callback attribute measurementUnit;
-    callback attribute measurementMedium;
-    callback attribute levelValue;
-    callback attribute generatedCommandList;
-    callback attribute acceptedCommandList;
-    callback attribute attributeList;
-    callback attribute featureMap;
-    ram      attribute clusterRevision default = 3;
-  }
-
-  server cluster CarbonDioxideConcentrationMeasurement {
-    callback attribute measuredValue;
-    callback attribute minMeasuredValue;
-    callback attribute maxMeasuredValue;
-    callback attribute peakMeasuredValue;
-    callback attribute peakMeasuredValueWindow;
-    callback attribute averageMeasuredValue;
-    callback attribute averageMeasuredValueWindow;
-    callback attribute uncertainty;
-    callback attribute measurementUnit;
-    callback attribute measurementMedium;
-    callback attribute levelValue;
-    callback attribute generatedCommandList;
-    callback attribute acceptedCommandList;
-    callback attribute attributeList;
-    callback attribute featureMap;
-    ram      attribute clusterRevision default = 3;
-  }
-
-  server cluster NitrogenDioxideConcentrationMeasurement {
-    callback attribute measuredValue;
-    callback attribute minMeasuredValue;
-    callback attribute maxMeasuredValue;
-    callback attribute peakMeasuredValue;
-    callback attribute peakMeasuredValueWindow;
-    callback attribute averageMeasuredValue;
-    callback attribute averageMeasuredValueWindow;
-    callback attribute uncertainty;
-    callback attribute measurementUnit;
-    callback attribute measurementMedium;
-    callback attribute levelValue;
-    callback attribute generatedCommandList;
-    callback attribute acceptedCommandList;
-    callback attribute attributeList;
-    callback attribute featureMap;
-    ram      attribute clusterRevision default = 3;
-  }
-
-  server cluster OzoneConcentrationMeasurement {
-    callback attribute measuredValue;
-    callback attribute minMeasuredValue;
-    callback attribute maxMeasuredValue;
-    callback attribute peakMeasuredValue;
-    callback attribute peakMeasuredValueWindow;
-    callback attribute averageMeasuredValue;
-    callback attribute averageMeasuredValueWindow;
-    callback attribute uncertainty;
-    callback attribute measurementUnit;
-    callback attribute measurementMedium;
-    callback attribute levelValue;
-    callback attribute generatedCommandList;
-    callback attribute acceptedCommandList;
-    callback attribute attributeList;
-    callback attribute featureMap;
-    ram      attribute clusterRevision default = 3;
-  }
-
-  server cluster Pm25ConcentrationMeasurement {
-    callback attribute measuredValue;
-    callback attribute minMeasuredValue;
-    callback attribute maxMeasuredValue;
-    callback attribute peakMeasuredValue;
-    callback attribute peakMeasuredValueWindow;
-    callback attribute averageMeasuredValue;
-    callback attribute averageMeasuredValueWindow;
-    callback attribute uncertainty;
-    callback attribute measurementUnit;
-    callback attribute measurementMedium;
-    callback attribute levelValue;
-    callback attribute generatedCommandList;
-    callback attribute acceptedCommandList;
-    callback attribute attributeList;
-    callback attribute featureMap;
-    ram      attribute clusterRevision default = 3;
-  }
-
-  server cluster FormaldehydeConcentrationMeasurement {
-    callback attribute measuredValue;
-    callback attribute minMeasuredValue;
-    callback attribute maxMeasuredValue;
-    callback attribute peakMeasuredValue;
-    callback attribute peakMeasuredValueWindow;
-    callback attribute averageMeasuredValue;
-    callback attribute averageMeasuredValueWindow;
-    callback attribute uncertainty;
-    callback attribute measurementUnit;
-    callback attribute measurementMedium;
-    callback attribute levelValue;
-    callback attribute generatedCommandList;
-    callback attribute acceptedCommandList;
-    callback attribute attributeList;
-    callback attribute featureMap;
-    ram      attribute clusterRevision default = 3;
-  }
-
-  server cluster Pm1ConcentrationMeasurement {
-    callback attribute measuredValue;
-    callback attribute minMeasuredValue;
-    callback attribute maxMeasuredValue;
-    callback attribute peakMeasuredValue;
-    callback attribute peakMeasuredValueWindow;
-    callback attribute averageMeasuredValue;
-    callback attribute averageMeasuredValueWindow;
-    callback attribute uncertainty;
-    callback attribute measurementUnit;
-    callback attribute measurementMedium;
-    callback attribute levelValue;
-    callback attribute generatedCommandList;
-    callback attribute acceptedCommandList;
-    callback attribute attributeList;
-    callback attribute featureMap;
-    ram      attribute clusterRevision default = 3;
-  }
-
-  server cluster Pm10ConcentrationMeasurement {
-    callback attribute measuredValue;
-    callback attribute minMeasuredValue;
-    callback attribute maxMeasuredValue;
-    callback attribute peakMeasuredValue;
-    callback attribute peakMeasuredValueWindow;
-    callback attribute averageMeasuredValue;
-    callback attribute averageMeasuredValueWindow;
-    callback attribute uncertainty;
-    callback attribute measurementUnit;
-    callback attribute measurementMedium;
-    callback attribute levelValue;
-    callback attribute generatedCommandList;
-    callback attribute acceptedCommandList;
-    callback attribute attributeList;
-    callback attribute featureMap;
-    ram      attribute clusterRevision default = 3;
-  }
-
-  server cluster TotalVolatileOrganicCompoundsConcentrationMeasurement {
-    callback attribute measuredValue;
-    callback attribute minMeasuredValue;
-    callback attribute maxMeasuredValue;
-    callback attribute peakMeasuredValue;
-    callback attribute peakMeasuredValueWindow;
-    callback attribute averageMeasuredValue;
-    callback attribute averageMeasuredValueWindow;
-    callback attribute uncertainty;
-    callback attribute measurementUnit;
-    callback attribute measurementMedium;
-    callback attribute levelValue;
-    callback attribute generatedCommandList;
-    callback attribute acceptedCommandList;
-    callback attribute attributeList;
-    callback attribute featureMap;
-    ram      attribute clusterRevision default = 3;
-  }
-
-  server cluster RadonConcentrationMeasurement {
-    callback attribute measuredValue;
-    callback attribute minMeasuredValue;
-    callback attribute maxMeasuredValue;
-    callback attribute peakMeasuredValue;
-    callback attribute peakMeasuredValueWindow;
-    callback attribute averageMeasuredValue;
-    callback attribute averageMeasuredValueWindow;
-    callback attribute uncertainty;
-    callback attribute measurementUnit;
-    callback attribute measurementMedium;
-    callback attribute levelValue;
-    callback attribute generatedCommandList;
-    callback attribute acceptedCommandList;
-    callback attribute attributeList;
-    callback attribute featureMap;
-    ram      attribute clusterRevision default = 3;
+    handle command LockDoor;
+    handle command UnlockDoor;
+    handle command UnlockWithTimeout;
+    handle command SetWeekDaySchedule;
+    handle command GetWeekDaySchedule;
+    handle command GetWeekDayScheduleResponse;
+    handle command ClearWeekDaySchedule;
+    handle command SetYearDaySchedule;
+    handle command GetYearDaySchedule;
+    handle command GetYearDayScheduleResponse;
+    handle command ClearYearDaySchedule;
+    handle command SetHolidaySchedule;
+    handle command GetHolidaySchedule;
+    handle command GetHolidayScheduleResponse;
+    handle command ClearHolidaySchedule;
+    handle command SetUser;
+    handle command GetUser;
+    handle command GetUserResponse;
+    handle command ClearUser;
+    handle command SetCredential;
+    handle command SetCredentialResponse;
+    handle command GetCredentialStatus;
+    handle command GetCredentialStatusResponse;
+    handle command ClearCredential;
+    handle command UnboltDoor;
   }
 }
 

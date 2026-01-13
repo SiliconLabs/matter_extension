@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libclusterobjects
+description: Provides generated Matter cluster object definitions used by the application and interaction model.
 id: libclusterobjects
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

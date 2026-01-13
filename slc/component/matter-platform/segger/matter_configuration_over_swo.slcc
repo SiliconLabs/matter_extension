@@ -1,7 +1,7 @@
 id: matter_configuration_over_swo
 package: matter
 label: "Configuration Over SWO"
-description: Allows Matter application to use SWD/JTAG debugging. Overrides GSDK's configuration_over_swo component
+description: Allows Matter application to use SWD/JTAG debugging. Overrides SiSDK's configuration_over_swo component
 category: Platform
 quality: production
 metadata:

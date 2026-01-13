@@ -2,7 +2,8 @@ category: Multi-Protocol Application
 label: Matter Zigbee Concurrent
 package: matter
 description: >
-  Provides example component for a concurrent zigbee and matter application.
+  Enables support for a concurrent Matter and Zigbee application running on the same device (CMP).
+  This component configures the system to allow Matter and Zigbee stacks to operate simultaneously, including support for fast channel switching where required.
 id: matter_zigbee_concurrent
 quality: production
 provides:

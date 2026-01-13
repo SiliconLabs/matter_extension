@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: text_only_logging
+description: Provides a text-only logging backend for Matter to reduce binary logging overhead.
 id: text_only_logging
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

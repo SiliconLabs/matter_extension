@@ -37,7 +37,7 @@
 #include <semphr.h>
 
 namespace {
-// Substitute the GSDK weak nvm3_lockBegin and nvm3_lockEnd
+// Substitute the SiSDK weak nvm3_lockBegin and nvm3_lockEnd
 // for an application controlled re-entrance protection
 SemaphoreHandle_t nvm3_Sem;
 StaticSemaphore_t nvm3_SemStruct;

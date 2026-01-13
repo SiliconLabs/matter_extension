@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: error
+description: Defines core Matter error types and utilities for error handling and reporting.
 id: error
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

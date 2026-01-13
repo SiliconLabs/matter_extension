@@ -6,7 +6,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libchipappserver
+description: Provides the Matter application server framework for device commissioning, access control, and service advertisement.
 id: libchipappserver
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

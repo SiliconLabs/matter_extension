@@ -2,7 +2,7 @@ category: Matter|Core
 define:
   - name: PW_SPAN_ENABLE_ASSERTS
     value: "false"
-description: libpwtestswrapper
+description: Provides a wrapper for Pigweed-based test utilities used by Matter unit and integration tests.
 id: libpwtestswrapper
 include:
   - path: third_party/matter_sdk/src/lib/support

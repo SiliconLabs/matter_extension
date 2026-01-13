@@ -27,7 +27,7 @@ An example showing the use of CHIP on the Silicon Labs SiWx917
 ## Introduction
 
 The SiWx917 Closure example provides a baseline demonstration of a closure base
-device type, built using Matter and the Silicon Labs gecko SDK. It can be
+device type, built using Matter and the Silicon Labs Simplicity SDK. It can be
 controlled by a Chip controller over Wifi network.
 
 The SiWx917 device can be commissioned over Bluetooth Low Energy where the

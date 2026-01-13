@@ -2,7 +2,7 @@ id: matter_shell
 package: matter
 label: Matter Shell
 description: >
-  Enables the Matter Shell (CHIP Shell) functionality
+  Enables the Matter Shell (CHIP Shell), a command-line interface for interacting with and inspecting Matter device state at runtime.
 category: Stack|Shell
 quality: production
 metadata:

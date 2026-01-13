@@ -60,7 +60,7 @@ template_contribution:
   - name: memory_ram_start
     value: 0x20000000
   - name: memory_ram_size
-    value: 0x3000
+    value: 0x6000
 
 tag:
   - companion:nonsecure_app # Needs a companion app and cannot be built alone

@@ -2,7 +2,8 @@
 id: matter_lwip_modified
 package: matter
 description: >
-  Modified Matter Lwip for wifi with Power optimizations
+  Provides a modified LwIP TCP/IP networking stack for Matter over Wi-Fi that includes platform-specific power and stability optimizations.
+  This component integrates a forked LwIP implementation with Matter and FreeRTOS to support IPv6 networking while addressing power-sensitive Wi-Fi use cases.
 label: Matter LwIP
 category: Matter-WiFi|lwip
 quality: production

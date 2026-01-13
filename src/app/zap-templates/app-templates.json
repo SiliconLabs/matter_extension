@@ -1,6 +1,7 @@
 {
     "name": "CHIP Application templates",
     "version": "chip-v1",
+    "requiredFeatureLevel": 109,
     "category": "matter",
     "options": {
         "generator": {

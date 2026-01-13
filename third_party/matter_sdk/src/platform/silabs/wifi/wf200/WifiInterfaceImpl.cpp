@@ -499,7 +499,8 @@ static void sl_wfx_scan_complete_callback(uint32_t status)
  *****************************************************************************/
 static void sl_wfx_start_ap_callback(uint32_t status)
 {
-    VerifyOrReturnLogError(status == AP_START_SUCCESS, CHIP_ERROR_INTERNAL);
+    VerifyOrReturnLogError(status == AP_START_SUCCESS, MATTER_PLATFORM_ERROR(status),
+                           ChipLogError(DeviceLayer, "Failed to start AP: %ld", status));
     wifi_extra.Set(WifiInterface::WifiState::kAPReady);
 
     xEventGroupSetBits(sl_wfx_event_group, SL_WFX_START_AP);

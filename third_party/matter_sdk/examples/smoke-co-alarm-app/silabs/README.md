@@ -35,8 +35,8 @@ An example showing the use of CHIP on the Silicon Labs EFR32 MG24.
 ## Introduction
 
 The EFR32 Smoke CO Alarm example provides a baseline demonstration of a Smoke CO
-Alarm control device, built using Matter and the Silicon Labs gecko SDK. It can
-be controlled by a Chip controller over an Openthread or Wifi network..
+Alarm control device, built using Matter and the Silicon Labs Simplicity SDK. It
+can be controlled by a Chip controller over an Openthread or Wifi network..
 
 The EFR32 device can be commissioned over Bluetooth Low Energy where the device
 and the Chip controller will exchange security information with the Rendez-vous

@@ -429,13 +429,17 @@ void mqtt_close(mqtt_client_t * client, mqtt_connection_status_t reason)
 {
     MQTT_ASSERT("mqtt_close: client != NULL", client != NULL);
 
-    client->conn->close_connection(client->conn->connCtxt);
+    /* Check if connection exists before trying to close */
+    if (client->conn != NULL)
+    {
+        client->conn->close_connection(client->conn->connCtxt);
 
-    /* Remove all pending requests */
-    mqtt_clear_requests(&client->pend_req_queue);
-    /* Stop cyclic timer */
-    client->conn->timer_stop(mqtt_cyclic_timer, client);
-    client->conn = NULL;
+        /* Remove all pending requests */
+        mqtt_clear_requests(&client->pend_req_queue);
+        /* Stop cyclic timer */
+        client->conn->timer_stop(mqtt_cyclic_timer, client);
+        client->conn = NULL;
+    }
 
     /* Notify upper layer of disconnection if changed state */
     if (client->conn_state != TCP_DISCONNECTED)

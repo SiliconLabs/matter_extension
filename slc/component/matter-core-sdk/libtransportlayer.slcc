@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libtransportlayer
+description: Provides the Matter transport layer for managing secure and unsecured sessions and message delivery.
 id: libtransportlayer
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

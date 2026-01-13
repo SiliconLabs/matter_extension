@@ -6,7 +6,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: app_common
+description: Provides common Matter application-layer utilities for data model handling, attribute storage, and reporting.
 id: app_common
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

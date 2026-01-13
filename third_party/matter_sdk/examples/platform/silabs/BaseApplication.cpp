@@ -50,7 +50,6 @@
 #endif // ENABLE_CHIP_SHELL
 #endif // SL_USE_INTERNAL_BLE_SIDE_CHANNEL
 
-#include <app/util/attribute-storage.h>
 #include <assert.h>
 #include <headers/ProvisionManager.h>
 #include <lib/support/CodeUtils.h>
@@ -97,7 +96,11 @@
 #ifdef SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
 #include "ZigbeeCallbacks.h"
 #include "sl_cmp_config.h"
-#endif
+
+#ifdef SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT
+#include <MultiProtocolDataModelHelper.h>
+#endif // SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT
+#endif // SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
 
 // Tracing
 #include <platform/silabs/tracing/SilabsTracingMacros.h>
@@ -314,7 +317,13 @@ CHIP_ERROR BaseApplication::Init()
         appError(err);
         return err;
     }
+    GetPlatform().WatchdogInit();
+
 #ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
+#ifdef SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT
+    chip::DeviceLayer::PlatformMgr().ScheduleWork([](intptr_t) { MultiProtocolDataModel::Initialize(); });
+#endif // SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT
+
 #ifdef SL_MATTER_ZIGBEE_SEQUENTIAL
     PlatformMgr().LockChipStack();
     uint16_t nbOfMatterFabric = Server::GetInstance().GetFabricTable().FabricCount();
@@ -938,9 +947,6 @@ void BaseApplication::ScheduleFactoryReset()
         PlatformMgr().HandleServerShuttingDown(); // HandleServerShuttingDown calls OnShutdown() which is only implemented for the
                                                   // basic information cluster it seems. And triggers and Event flush, which is not
                                                   // relevant when there are no fabrics left
-#ifdef SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
-        Zigbee::TokenFactoryReset();
-#endif
         ConfigurationMgr().InitiateFactoryReset();
     });
 }

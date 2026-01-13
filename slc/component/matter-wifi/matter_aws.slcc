@@ -1,6 +1,8 @@
 id: matter_aws
 package: matter
-description: This component enables MATTER AWS feature for matter-wifi
+description: >
+  Enables the Silicon Labs Matter + AWS feature for Matter devices using Wi-Fi, allowing a device to connect directly to proprietary cloud services such as AWS.
+  This component integrates MQTT and TLS support with the Matter Wi-Fi platform to enable secure cloud connectivity alongside standard Matter functionality.
 label: AWS for Matter WiFi
 category: Matter-WiFi|Features
 quality: production

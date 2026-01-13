@@ -6,7 +6,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: icd check-in sender
+description: Provides the ICD check-in sender used by Matter Idle Mode Devices to notify controllers of device availability.
 id: matter_check_in_sender
 include:
   - path: third_party/matter_sdk/examples/lighting-app/silabs/include

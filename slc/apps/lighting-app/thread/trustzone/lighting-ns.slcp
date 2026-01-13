@@ -200,9 +200,9 @@ template_contribution:
   - name: memory_flash_size
     value: 0x158000
   - name: memory_ram_start
-    value: 0x20003000
+    value: 0x20006000
   - name: memory_ram_size
-    value: 0x3D000
+    value: 0x3A000
 
 import:
   # Import the config files from the TZ Secure application

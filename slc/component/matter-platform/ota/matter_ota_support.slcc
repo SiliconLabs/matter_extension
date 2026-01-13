@@ -1,6 +1,6 @@
 id: matter_ota_support
 label: OTA Requestor
-description: OTA Requestor functionality for Matter
+description: Enables the Matter OTA Requestor functionality, allowing a device to receive firmware updates using the Matter OTA protocol.
 package: matter
 category: Stack
 quality: production

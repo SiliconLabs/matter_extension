@@ -4,7 +4,7 @@ define:
     value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
 -   name: CHIP_HAVE_CONFIG_H
     value: '1'
-description: fabric_table
+description: Provides the Matter fabric table implementation for managing fabrics, credentials, and fabric-scoped state.
 id: fabric_table
 include:
 -   path: third_party/matter_sdk/src/app/storage

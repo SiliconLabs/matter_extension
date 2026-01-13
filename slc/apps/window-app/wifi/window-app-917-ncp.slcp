@@ -36,6 +36,13 @@ component:
   - id: app_common
   - id: matter_provision_default
 
+  - id: mbedtls_pki_aws
+    condition: [matter_aws]
+  - id: mbedtls_entropy_default_aws
+    condition: [matter_aws]
+  - id: psa_crypto_tls12_prf
+    condition: [matter_aws]
+
   - id: matter_access_control
   - id: matter_administrator_commissioning
   - id: matter_basic_information

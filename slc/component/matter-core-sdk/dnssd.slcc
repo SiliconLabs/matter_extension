@@ -7,7 +7,7 @@ define:
   - name: CHIP_DNSSD_DEFAULT_PLATFORM
     value: 1
 
-description: dnssd
+description: Provides the platform DNS-SD implementation used by Matter for service advertisement and discovery.
 id: dnssd
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

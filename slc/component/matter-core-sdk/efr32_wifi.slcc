@@ -1,7 +1,7 @@
 id: efr32_wifi
 package: matter
 label: efr32_wifi
-description: efr32_wifi
+description: Provides the Silicon Labs EFR32 platform implementation for Matter devices using Wi-Fi connectivity.
 category: Matter|Core
 quality: production
 metadata:

@@ -1,7 +1,7 @@
 id: matter_wifi
 package: matter
 description: >
-  matter wifi
+  Adds Wi-Fi network layer for Matter devices
 label: Matter WiFi
 category: Matter-WiFi
 quality: production

@@ -1,6 +1,6 @@
 category: Matter|Core
 define: []
-description: libopenthread_platform
+description: Provides the OpenThread platform abstraction layer used by Matter Thread integrations.
 id: libopenthread_platform
 include: []
 label: libopenthread_platform

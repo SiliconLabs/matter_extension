@@ -33,6 +33,13 @@ component:
   - id: app_common
   - id: matter_provision_default
 
+  - id: mbedtls_pki_aws
+    condition: [matter_aws]
+  - id: mbedtls_entropy_default_aws
+    condition: [matter_aws]
+  - id: psa_crypto_tls12_prf
+    condition: [matter_aws]
+    
   - id: matter_access_control
   - id: matter_administrator_commissioning
   - id: matter_basic_information
@@ -95,6 +102,10 @@ include:
       - path: TemperatureManager.h
       - path: CHIPProjectConfig.h
     directory: include
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/thermostat-common/include
+    file_list:
+      - path: thermostat-delegate-impl.h
+    directory: include
 
 source:
   - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/AppTask.cpp
@@ -106,6 +117,8 @@ source:
   - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/DataModelCallbacks.cpp
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/SensorManager.cpp
+    directory: src
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/thermostat-common/src/thermostat-delegate-impl.cpp
     directory: src
 
 define:

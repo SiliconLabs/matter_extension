@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libbdx
+description: Provides the Matter Bulk Data Exchange (BDX) protocol implementation for large data transfers.
 id: libbdx
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

@@ -2,7 +2,8 @@
 id: matter_lwip
 package: matter
 description: >
-  matter lwip for wifi
+  Provides the LwIP TCP/IP networking stack configuration and FreeRTOS port used by Matter applications running over Wi-Fi on Silicon Labs platforms.
+  This component integrates Matter's LwIP adaptations with the Silicon Labs Wi-Fi SDK, enabling IPv6 networking required for Matter over Wi-Fi.
 label: Matter LwIP
 category: Matter-WiFi|lwip
 quality: production

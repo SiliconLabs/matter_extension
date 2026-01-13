@@ -59,6 +59,7 @@ requires:
   - name: rail_lib_multiprotocol
   - name: rail_util_pti
   - name: freertos_heap_3
+  - name: hal_wdog
   # components required for series 2
   - name: gpiointerrupt
     condition: [device_series_2]

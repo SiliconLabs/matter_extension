@@ -27,8 +27,8 @@ An example showing the use of Matter on the Silicon Labs EFR32 MG24 boards.
 ## Introduction
 
 The Silabs dishwasher example provides a baseline demonstration of a dishwasher
-control device, built using Matter and the Silicon Labs gecko SDK. It can be
-controlled by a Chip controller over an Openthread or Wifi network..
+control device, built using Matter and the Silicon Labs Simplicity SDK. It can
+be controlled by a Chip controller over an Openthread or Wifi network..
 
 The Silabs device can be commissioned over Bluetooth Low Energy where the device
 and the Chip controller will exchange security information with the Rendez-vous

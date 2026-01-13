@@ -2,7 +2,7 @@ id: matter_synchronized_sed
 package: matter
 label: Matter Synchronized SED
 description: >
-  Enables Matter over Thread SSEDs
+   Enables support for Matter Synchronized Sleepy End Devices (SSEDs) when using Thread as the network transport.
 category: Matter-Thread
 quality: production
 metadata:

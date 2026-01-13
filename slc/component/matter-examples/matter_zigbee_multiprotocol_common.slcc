@@ -2,7 +2,8 @@ category: Matter Zigbee CMP Application
 label: Matter Zigbee common
 package: matter
 description: >
-  Provides zigbee to matter data model link for CMP applications.
+  Provides the common data model and integration logic used by Matter–Zigbee multiprotocol (CMP) applications.
+  This component links Zigbee clusters and callbacks to the Matter data model, enabling coordinated behavior and state synchronization between the two stacks.
 id: matter_zigbee_multiprotocol_common
 quality: production
 metadata:
@@ -18,8 +19,6 @@ requires:
   - name: rail_util_dma
     condition: [device_series_2]
   # Rail PHY selection needed with rail mux for series3
-  - name: sl_rail_util_ieee802154_rx_duty_cycling
-    condition: [ device_generic_family_sixx301 ]
   - name: sl_rail_util_ieee802154_phy_select
     condition: [ device_generic_family_sixx301 ]
 provides:

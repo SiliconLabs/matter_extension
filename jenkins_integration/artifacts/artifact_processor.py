@@ -285,9 +285,65 @@ def _upload_individual_artifacts(extracted_folder, branch_name, build_number):
         raise RuntimeError(f"Failed to upload individual artifacts: {e}")
 
 
+def _create_filtered_artifact(artifact_file, artifact_name):
+    """
+    Create a filtered version of the artifact containing only .s37, .asset, and .rps files.
+    The filtered artifact has the structure: extension.matter<version>/demos/<contents>
+    
+    Args:
+        artifact_file (str): Path to the original artifact ZIP file
+        artifact_name (str): Name of the original artifact
+        
+    Returns:
+        str: Path to the filtered artifact file
+        
+    Raises:
+        RuntimeError: If creation fails
+    """
+    try:
+        # Get version for folder structure
+        version = _get_matter_extension_version()
+        # Zip filename: extension.matter<version>.zip (no dot before version)
+        filtered_artifact_name = f"extension.matter{version}.zip"
+        filtered_artifact_file = os.path.join('.', filtered_artifact_name)
+        
+        # Remove existing filtered artifact if it exists
+        if os.path.exists(filtered_artifact_file):
+            print(f"Removing existing filtered artifact file: {filtered_artifact_file}")
+            os.remove(filtered_artifact_file)
+        
+        # Internal folder structure: extension.matter.<version>/demos/ (with dot before version)
+        base_folder = f"extension.matter.{version}/demos"
+        
+        print(f"Creating filtered artifact {filtered_artifact_name} with structure {base_folder}/")
+        print(f"Including only .s37, .asset, and .rps files")
+        
+        with zipfile.ZipFile(artifact_file, 'r') as source_zip:
+            with zipfile.ZipFile(filtered_artifact_file, 'w', zipfile.ZIP_DEFLATED) as filtered_zip:
+                for item in source_zip.infolist():
+                    # Check if file ends with .s37, .asset, or .rps
+                    if item.filename.endswith('.s37') or item.filename.endswith('.asset') or item.filename.endswith('.rps'):
+                        # Read the file data
+                        data = source_zip.read(item.filename)
+                        # Create new path: extension.matter.<version>/demos/<original_path>
+                        new_path = os.path.join(base_folder, item.filename).replace('\\', '/')
+                        # Create a new ZipInfo with the new path
+                        new_item = zipfile.ZipInfo(new_path)
+                        new_item.external_attr = item.external_attr
+                        new_item.compress_type = item.compress_type
+                        filtered_zip.writestr(new_item, data)
+                        print(f"Added to filtered artifact: {new_path}")
+        
+        print(f"Successfully created filtered artifact: {filtered_artifact_file}")
+        return filtered_artifact_file
+    except Exception as e:
+        raise RuntimeError(f"Failed to create filtered artifact: {e}")
+
+
 def _upload_merged_artifacts(artifact_file, artifact_name, branch_name, build_number, sqa=False):
     """
-    Upload the merged artifact to both UBAI and Artifactory.
+    Upload the merged artifact to UBAI and Artifactory.
+    Also creates and uploads a filtered version (containing only .s37, .asset, and .rps files) to Artifactory only.
     
     Args:
         artifact_file (str): Path to the artifact file
@@ -299,6 +355,7 @@ def _upload_merged_artifacts(artifact_file, artifact_name, branch_name, build_nu
         RuntimeError: If upload fails
     """
     try:
+        # Upload original artifact as-is to UBAI
         upload_to_ubai(
             file_path=artifact_file,
             app_name="matter",
@@ -308,8 +365,15 @@ def _upload_merged_artifacts(artifact_file, artifact_name, branch_name, build_nu
             build_number=build_number
         )
         if not sqa:
-            artifactory_artifact_name = _generate_artifactory_artifact_name(artifact_name)
-            upload_to_artifactory(artifact_file, artifactory_artifact_name, branch_name, str(build_number))
+            # Upload unfiltered artifact to Artifactory with name "build-binaries"
+            upload_to_artifactory(artifact_file, "build-binaries.zip", branch_name, str(build_number))
+        
+        # Create and upload filtered artifact (only .s37 and .asset files) to Artifactory only
+        if not sqa:
+            filtered_artifact_file = _create_filtered_artifact(artifact_file, artifact_name)
+            # Use the filename from the filtered artifact (extension.matter<version>.zip)
+            filtered_artifactory_artifact_name = os.path.basename(filtered_artifact_file)
+            upload_to_artifactory(filtered_artifact_file, filtered_artifactory_artifact_name, branch_name, str(build_number))
     except Exception as e:
         raise RuntimeError(f"Failed to upload merged artifacts: {e}")
 

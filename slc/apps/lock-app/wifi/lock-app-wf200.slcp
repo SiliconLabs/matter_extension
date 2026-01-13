@@ -29,7 +29,6 @@ component:
   - id: matter_wifi
   - id: wf200_ncp
   - id: matter_test_event_trigger
-  - id: matter_icd_management
 
   - id: matter_lock
   - id: app_common
@@ -64,8 +63,7 @@ component:
  # - id: matter_shell
   - id: matter_log_rtt
 
-# Disable due to size increase of ICD functionality
-#  - id: matter_default_lcd_config
+  - id: matter_default_lcd_config
 
 # Require LCD and QR Code components only on the boards that support LCD
 requires:
@@ -80,7 +78,7 @@ requires:
       - device_series_2
 
 config_file:
-  - path: ../../../../third_party/matter_sdk/examples/lock-app/silabs/data_model/lock-app.zap
+  - path: ../../../../third_party/matter_sdk/examples/lock-app/silabs/data_model/lock-app-non-icd.zap
     directory: common
     file_id: zap_config
   - path: ../../../../provision.mattpconf
@@ -118,8 +116,6 @@ define:
     value: "40960"
   - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
     value: "4092"
-  - name: GSDK_WF200_BUILD
-    value: "1"
   - name: NDEBUG
     value: "1"
   - name: _REENT_SMALL

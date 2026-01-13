@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: notifier
+description: Provides the ICD notifier used by Matter Idle Mode Devices to inform observers of state changes.
 id: notifier
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

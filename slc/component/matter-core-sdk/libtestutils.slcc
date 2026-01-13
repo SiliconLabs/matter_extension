@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libtestutils
+description: Provides utility helpers and common support code used by Matter tests and validation tools.
 id: libtestutils
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

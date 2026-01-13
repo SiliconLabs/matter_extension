@@ -1,7 +1,7 @@
 id: matter_crypto_psa_siwx917
 label: Matter MbedTLS and PSA Integration
 description: >
-  mbedTLS and PSA for SiWx917 SoC
+  Integrates the Matter cryptography layer with Mbed TLS using PSA-backed implementations on the SiWx917 SoC.
 package: matter
 category: "Matter-WiFi|Platform|PSA"
 quality: production

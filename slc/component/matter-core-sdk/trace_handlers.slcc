@@ -6,7 +6,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: trace_handlers
+description: Provides trace handler implementations for processing and routing Matter protocol tracing events.
 id: trace_handlers
 include:
   - path: third_party/matter_sdk/examples/common/tracing

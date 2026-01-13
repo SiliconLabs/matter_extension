@@ -1,4 +1,3 @@
-from genericpath import isdir
 import os
 import xml.etree.ElementTree as ET
 import xml.dom.minidom
@@ -17,26 +16,39 @@ import sys
 
 
 root_dir = pathlib.Path(sys.argv[0]).parent.parent.parent.absolute()
+
+# Check if required command line argument is provided
+if len(sys.argv) < 2:
+    print("ERROR: Missing required argument!")
+    print("Usage: python3 generate_metadata.py <full path to binaries folder>")
+    print("Example: python3 generate_metadata.py ../out/release/")
+    sys.exit(1)
+
 out_folder_dir = sys.argv[1]
-examples_dir = os.path.join(root_dir, "Examples")
-root_sub_dirs = os.listdir(root_dir)
 internal_boards = ['brd4319f']
 internal_sample_apps = ['performance-test-app','platform-app','lock-li']
 
 # Read version from matter.slce file
+matterExtensionVersion = None
 matter_slce_path = os.path.join(root_dir, "matter.slce")
-with open(matter_slce_path, 'r') as stream:
-    for line in stream:
-        if line.startswith('version:'):
-            matterExtensionVersion = line.split(':')[1].strip()
-            break
+if os.path.exists(matter_slce_path):
+    with open(matter_slce_path, 'r') as stream:
+        for line in stream:
+            if line.startswith('version:'):
+                matterExtensionVersion = line.split(':')[1].strip()
+                break
 
-asset_prefix = "asset://extension.matter_"+matterExtensionVersion+"/"
+if matterExtensionVersion is None:
+    print("ERROR: Could not find version in matter.slce file!")
+    print("Please verify matter.slce file exists and contains a version line.")
+    sys.exit(1)
+
+asset_prefix = "asset://extension.matter_"+matterExtensionVersion+"/"+"demos/"
 
 if not os.path.exists(out_folder_dir):
     print("ERROR: Binaries output folder can't be found!")
     print("Please verify path to binaries is correct.")
-    sys.exit()
+    sys.exit(1)
 
 demos_map = {
     'demos': {}
@@ -57,7 +69,8 @@ def recurse_dir(file_or_dir):
             os.remove(file_or_dir)
         elif '.asset' in file_or_dir:
             return
-        elif '.s37' in file_or_dir or '.rps' in file_or_dir:
+        exclude_patterns = ['-lto', 'trustzone', 'peripherals']
+        if (file_or_dir.endswith('-full.s37') or file_or_dir.endswith('.rps')) and not any(p in file_or_dir for p in exclude_patterns):
             brd = None
             for leaf in file_or_dir.split('/'):
                 if 'brd' in leaf.lower():
@@ -288,9 +301,10 @@ for brd, val in demos_map['demos'].items():
 
                     qualityProp.set('key', 'core.quality')
                     qualityProp.set('value', "PRODUCTION")
-                    description.text = "".join("This is a Matter " + demo_name_ +
-                                                " Application for " + brd.upper() #+ " to be used with Wi-Fi " +
-                                                + (' with SiWx917 Wi-Fi SoC' if "soc" in board_type else (" to be used with Wi-Fi " + board_type.upper())))
+                    if "soc" in board_type:
+                        description.text = "This is a Matter " + demo_name_ + " Application for " + brd.upper() + " with SiWx917 Wi-Fi SoC"
+                    else:
+                        description.text = "This is a Matter " + demo_name_ + " Application for " + brd.upper() + " to be used with Wi-Fi " + board_type.upper()
 
 outputString = ET.tostring(demos, encoding='UTF-8')
 dom = xml.dom.minidom.parseString(outputString)

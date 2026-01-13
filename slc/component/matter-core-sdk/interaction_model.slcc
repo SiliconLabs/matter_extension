@@ -6,7 +6,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: interaction_model
+description: Implements the Matter Interaction Model for reading, writing, subscribing, and commanding cluster data.
 id: interaction_model
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

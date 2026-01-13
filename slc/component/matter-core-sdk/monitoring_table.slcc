@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: monitoring_table
+description: Provides the ICD monitoring table used by Matter Idle Mode Devices to track observers and check-in state.
 id: monitoring_table
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

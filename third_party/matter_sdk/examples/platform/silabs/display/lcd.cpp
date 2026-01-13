@@ -82,7 +82,7 @@ CHIP_ERROR SilabsLCD::Init(uint8_t * name, bool initialState)
     if (DMD_OK != status)
     {
         SILABS_LOG("DMD init failed %d", status);
-        err = CHIP_ERROR_INTERNAL;
+        err = MATTER_PLATFORM_ERROR(status);
     }
 
     /* Initialize the glib context */
@@ -90,7 +90,7 @@ CHIP_ERROR SilabsLCD::Init(uint8_t * name, bool initialState)
     if (GLIB_OK != status)
     {
         SILABS_LOG("Glib context init failed %d", status);
-        err = CHIP_ERROR_INTERNAL;
+        err = MATTER_PLATFORM_ERROR(status);
     }
 
     glibContext.backgroundColor = White;
@@ -99,7 +99,7 @@ CHIP_ERROR SilabsLCD::Init(uint8_t * name, bool initialState)
     if (GLIB_OK != status)
     {
         SILABS_LOG("Glib clear failed %d", status);
-        err = CHIP_ERROR_INTERNAL;
+        err = MATTER_PLATFORM_ERROR(status);
     }
     demoUIInit(&glibContext);
 

@@ -120,6 +120,10 @@ include:
       - path: TemperatureManager.h
       - path: CHIPProjectConfig.h
     directory: include
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/thermostat-common/include
+    file_list:
+      - path: thermostat-delegate-impl.h
+    directory: include
 
 source:
   - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/AppTask.cpp
@@ -131,6 +135,8 @@ source:
   - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/DataModelCallbacks.cpp
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/SensorManager.cpp
+    directory: src
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/thermostat-common/src/thermostat-delegate-impl.cpp
     directory: src
 
 define:

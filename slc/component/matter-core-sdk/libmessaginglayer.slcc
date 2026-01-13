@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libmessaginglayer
+description: Provides the Matter messaging layer for reliable exchange management and protocol message delivery.
 id: libmessaginglayer
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

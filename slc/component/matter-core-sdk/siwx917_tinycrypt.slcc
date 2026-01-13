@@ -2,7 +2,7 @@ category: Matter|Core
 define:
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: siwx917_tinycrypt
+description: Provides TinyCrypt-based cryptographic support for Matter on Silicon Labs SiWx917 platforms.
 id: siwx917_tinycrypt
 include:
   - path: .

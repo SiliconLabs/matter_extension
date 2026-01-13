@@ -423,7 +423,7 @@ sl_status_t sl_wfx_host_pre_lcd_spi_transfer(void)
     xSemaphoreTake(spi_sem_sync_hdl, portMAX_DELAY);
 #endif // SL_SPICTRL_MUX
     SPIDRV_SetBaudrate(SL_SPIDRV_LCD_BITRATE);
-    /*LCD CS is handled as part of LCD gsdk*/
+    /*LCD CS is handled as part of LCD sisdk*/
     return SL_STATUS_OK;
 }
 

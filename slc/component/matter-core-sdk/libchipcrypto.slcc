@@ -10,7 +10,7 @@ define:
   - name: CHIP_CRYPTO_KEYSTORE_PSA
     value: "1"
     unless: [matter_crypto_tinycrypt_siwx917]
-description: libchipcrypto
+description: Provides the Matter cryptography framework for key management, secure storage, and cryptographic operations.
 id: libchipcrypto
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

@@ -97,7 +97,6 @@ component:
   - { id: app_common }
   - { id: matter_provision_default }
   - { id: matter_log_uart }
-  - { id: matter_tracing }
   - { id: matter_zigbee_multiprotocol_common }
   - { id: matter_ble_side_channel }
   - { id: matter_unit_localization }

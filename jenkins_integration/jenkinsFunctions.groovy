@@ -86,8 +86,8 @@ def run_code_size_analysis() {
                             brd="BRD4338A"
                             ;;
                         *)
-                            echo "ERROR: Unsupported board in path: $map_file_path"
-                            return 1
+                            echo "Skipping the codesize Analysis for board in path: $map_file_path"
+                            return 0
                             ;;
                     esac
                     
@@ -172,7 +172,7 @@ def run_code_size_analysis() {
                 rm -f *.json
                 
                 echo "Available map files:"
-                map_files_found=\$(find . -name "*.map" | sort)
+                map_files_found=\$(find . -name "*.map" | grep -v "sqa-artifacts" | sort)
                 if [ -z "$map_files_found" ]; then
                     echo "ERROR: No map files found"
                     exit 1

@@ -96,8 +96,8 @@ constexpr inline uint32_t SilabsConfigKey(uint8_t keyBaseOffset, uint8_t id)
 }
 #endif // SL_COMMON_TOKEN_MANAGER_ENABLE_DYNAMIC_TOKENS
 
-inline constexpr uint32_t kMatterNvm3KeyLoLimit = 0x087200U; // Do not modify without Silabs GSDK team approval
-inline constexpr uint32_t kMatterNvm3KeyHiLimit = 0x087FFFU; // Do not modify without Silabs GSDK team approval
+inline constexpr uint32_t kMatterNvm3KeyLoLimit = 0x087200U; // Do not modify without Silabs SiSDK team approval
+inline constexpr uint32_t kMatterNvm3KeyHiLimit = 0x087FFFU; // Do not modify without Silabs SiSDK team approval
 
 class SilabsConfig
 {

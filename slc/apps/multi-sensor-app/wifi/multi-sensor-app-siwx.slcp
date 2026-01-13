@@ -151,6 +151,13 @@ configuration:
     value: "0"
   - name: SL_TRANSPORT_IDLE_INTERVAL
     value: "3000"
+  # Wakeup configurations
+  - name: SL_ENABLE_GPIO_WAKEUP_SOURCE
+    value: "1"
+    condition: [matter_icd_core]
+  - name: ENABLE_NPSS_GPIO_2
+    value: "1"
+    condition: [matter_icd_core]
 
 toolchain_settings:
   - option: cxx_standard

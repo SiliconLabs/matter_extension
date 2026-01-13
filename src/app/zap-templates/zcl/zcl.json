@@ -2,7 +2,7 @@
     "description": "Matter SDK ZCL data",
     "category": "matter",
     "version": 1,
-    "requiredFeatureLevel": 102,
+    "requiredFeatureLevel": 109,
     "xmlRoot": [
         "./../../../../third_party/matter_sdk/src/app/zap-templates/zcl/.",
         "./../../../../third_party/matter_sdk/src/app/zap-templates/zcl/data-model/chip"

@@ -1,7 +1,7 @@
 id: siwx917
 package: matter
 label: siwx917
-description: siwx917
+description: Provides the Matter platform implementation for Silicon Labs SiWx917 Wi-Fi devices.
 category: Matter|Core
 quality: production
 metadata:

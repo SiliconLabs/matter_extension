@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: efr32
+description: Provides the core Silicon Labs EFR32 platform implementation for Matter device functionality.
 id: efr32
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

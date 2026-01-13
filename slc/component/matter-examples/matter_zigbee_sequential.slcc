@@ -2,7 +2,8 @@ category: Multi-Protocol Application
 label: Matter Zigbee Sequential
 package: matter
 description: >
-  Provides example component for a sequential zigbee and matter application.
+  Enables support for a sequential Matter and Zigbee multiprotocol (CMP) application running on the same device.
+  This component configures the system so that Matter and Zigbee stacks operate one at a time, switching between protocols rather than running simultaneously.
 id: matter_zigbee_sequential
 quality: production
 provides:

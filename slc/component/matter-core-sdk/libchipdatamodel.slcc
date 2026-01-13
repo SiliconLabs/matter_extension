@@ -6,7 +6,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libchipdatamodel
+description: Provides the Matter application data model implementation for attribute access, command handling, events, and persistence.
 id: libchipdatamodel
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

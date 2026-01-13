@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libinetlayer
+description: Provides the core Matter Inet layer for IP networking across supported transport implementations.
 id: libinetlayer
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

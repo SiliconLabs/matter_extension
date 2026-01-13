@@ -2,7 +2,7 @@ id: matter_efr32_ncp
 package: matter
 label: Src Platform EFR32 Components
 description: >
-  EFR32 based Wifi Interfaces for NCPs
+  Provides Silicon Labs EFR32 platform support components used when an EFR32 device operates as a Network Co-Processor (NCP) in a Matter Wi-Fi system.
 category: Matter-WiFi|Platform
 quality: production
 metadata:

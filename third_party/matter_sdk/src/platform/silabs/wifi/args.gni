@@ -34,7 +34,7 @@ if (chip_crypto == "") {
 # examples/platform/silabs/SilabsDeviceDataProvider is now used.
 chip_use_transitional_commissionable_data_provider = false
 
-# Use GSDK lwip instead of CHIP
+# Use SiSDK lwip instead of CHIP
 lwip_root = "${silabs_sdk_build_root}/silabs_lwip"
 
 #lwip_platform = "external"

@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libinetlayer_wifi
+description: Provides the Matter Inet layer implementation for IP networking over Wi-Fi using LwIP.
 id: libinetlayer_wifi
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

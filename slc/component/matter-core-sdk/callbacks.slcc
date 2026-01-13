@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: callbacks
+description: Provides core Matter callback interfaces for handling attribute access, cluster events, and data model interactions.
 id: callbacks
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

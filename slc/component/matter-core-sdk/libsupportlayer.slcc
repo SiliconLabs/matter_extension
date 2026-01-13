@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libsupportlayer
+description: Provides common Matter support utilities including logging, memory helpers, parsing, and platform abstractions.
 id: libsupportlayer
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

@@ -5,8 +5,8 @@ def pipelineProperties = []
 
 // Configure pollSCM triggers
 if(env.BRANCH_NAME == 'release_2.8-1.5'){
-    // Trigger daily at 9pm EST (3 hrs after github trigger)
-    pipelineProperties << pipelineTriggers([pollSCM('0 1 * * *')])
+    // Trigger daily at 11pm EST (2 hrs after github trigger)
+    pipelineProperties << pipelineTriggers([pollSCM('0 4 * * *')])
 }
 
 properties(pipelineProperties)
@@ -137,7 +137,6 @@ pipeline
                                 branch_name, env.BUILD_NUMBER)
                         }
                     }
-
                     parallelNodes['SIWX Lighting-App'] = {
                         pipelineFunctions.actionWithRetry {
                             failed_tests_917 = pipelineFunctions.execute_sanity_tests(
@@ -145,14 +144,15 @@ pipeline
                                 'lighting-app','wifi','BRD4338A','917_soc', branch_name, env.BUILD_NUMBER)
                         }
                     }
-                    parallelNodes['SiMG301 Lighting-App'] = {
-                        pipelineFunctions.actionWithRetry {
-                            failed_tests_4407a = pipelineFunctions.execute_sanity_tests(
-                                'gsdkMontrealNode','utf-matter-thread-4407a-ci',
-                                '4878', 'lighting-app','thread','BRD4407A',"",
-                                branch_name, env.BUILD_NUMBER)
-                        }
-                    }
+//                     Temp comment out due to SQA setup issues
+//                     parallelNodes['SiMG301 Lighting-App'] = {
+//                         pipelineFunctions.actionWithRetry {
+//                             failed_tests_4407a = pipelineFunctions.execute_sanity_tests(
+//                                 'gsdkMontrealNode','utf-matter-thread-4407a-ci',
+//                                 '4878', 'lighting-app','thread','BRD4407A',"",
+//                                 branch_name, env.BUILD_NUMBER)
+//                         }
+//                     }
 
                     parallelNodes.failFast = false
                     parallel parallelNodes
@@ -170,10 +170,11 @@ pipeline
                         failedTestsSummary << "917: ${failed_tests_917.failedCount} failed tests - ${failed_tests_917.failedTests.join(', ')}"
                     }
 
-                    if (failed_tests_4407a && failed_tests_4407a.failedCount > 0) {
-                        totalFailedTests += failed_tests_4407a.failedCount
-                        failedTestsSummary << "SiMG301: ${failed_tests_4407a.failedCount} failed tests - ${failed_tests_4407a.failedTests.join(', ')}"
-                    }
+//                     Temp comment out due to SQA setup issues
+//                     if (failed_tests_4407a && failed_tests_4407a.failedCount > 0) {
+//                         totalFailedTests += failed_tests_4407a.failedCount
+//                         failedTestsSummary << "SiMG301: ${failed_tests_4407a.failedCount} failed tests - ${failed_tests_4407a.failedTests.join(', ')}"
+//                     }
 
                     def sqa_tests_result = totalFailedTests > 0 ? "FAIL" : "PASS"
                     def sqa_tests_summary = failedTestsSummary.isEmpty() ? "All tests passed successfully." : failedTestsSummary.join('\n')

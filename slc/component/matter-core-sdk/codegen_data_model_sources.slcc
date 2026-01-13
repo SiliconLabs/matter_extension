@@ -1,5 +1,5 @@
 category: Matter|Core
-description: codegen_data_model_sources
+description: Provides code-generated Matter data model provider sources for cluster integration and attribute access.
 id: codegen_data_model_sources
 include:
 -   path: third_party/matter_sdk/src/data-model-providers/codegen

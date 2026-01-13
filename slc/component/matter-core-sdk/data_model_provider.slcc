@@ -1,5 +1,5 @@
 category: Matter|Core
-description: data_model_provider
+description: Defines the Matter data model provider framework for accessing cluster metadata, actions, and events.
 id: data_model_provider
 include:
   - path: third_party/matter_sdk/src/app/data-model-provider

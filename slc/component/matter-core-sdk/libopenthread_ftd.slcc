@@ -18,7 +18,7 @@ define:
     value: \1.0.0\""
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libopenthread_ftd
+description: Provides the OpenThread Full Thread Device (FTD) stack for Matter over Thread applications.
 id: libopenthread_ftd
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

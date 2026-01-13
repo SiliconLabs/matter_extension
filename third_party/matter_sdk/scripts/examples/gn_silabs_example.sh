@@ -152,7 +152,7 @@ if [ "$#" == "0" ]; then
         --release
             Remove all logs and debugs features (including the LCD). Yield the smallest image size possible
         --docker
-            Change GSDK root for docker builds
+            Change SiSDK root for docker builds
         --uart_log
             Forward Logs to Uart instead of RTT
         --slc_generate

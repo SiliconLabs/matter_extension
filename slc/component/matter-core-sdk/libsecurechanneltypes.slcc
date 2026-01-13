@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libsecurechanneltypes
+description: Provides shared Secure Channel protocol types and status definitions used by Matter authentication and session handling.
 id: libsecurechanneltypes
 include:
   - path: third_party/matter_sdk/examples/platform/silabs
