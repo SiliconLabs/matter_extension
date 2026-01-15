@@ -56,10 +56,10 @@ configuration:
     value: 2732032
     condition: [simg301m104xil_8mb]
   - name: SLOT0_START
-    value: 0x0378000
+    value: 0x01378000
     condition: [simg301m104xil_8mb]
   - name: BTL_STORAGE_BASE_ADDRESS
-    value: 0x0378000
+    value: 0x01378000
     condition: [simg301m104xil_8mb]
 readme:
   - path: ./readme.md
