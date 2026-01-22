@@ -41,15 +41,26 @@ include:
     condition: [matter_air_quality_app]
     file_list:
       - path: AirQualitySensorUI.h
+  - path: third_party/matter_sdk/examples/fan-control-app/silabs/include
+    condition: [matter_fan_control_app]
+    file_list:
+      - path: FanControlUI.h
+      - path: FanControlIcons.h
   - path: third_party/matter_sdk/examples/refrigerator-app/silabs/include/
     condition: [matter_refrigerator]
     file_list:
       - path: RefrigeratorUI.h
       - path: RefrigeratorIcons.h
-  - path: examples/multi-sensor-app/include
+  - path: third_party/matter_sdk/examples/multi-sensor-app/silabs/include
     condition: [matter_multi_sensor_app]
     file_list:
       - path: SensorsUI.h
+  - path: third_party/matter_sdk/examples/closure-app/silabs/include
+    condition: [matter_closure]
+    file_list:
+      - path: ClosureUI.h
+      - path: ClosureUIStrings.h
+
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/display/demo-ui.c
   - path: third_party/matter_sdk/examples/platform/silabs/display/lcd.cpp
@@ -59,11 +70,17 @@ source:
   - path: third_party/matter_sdk/examples/thermostat/silabs/src/ThermostatUI.cpp
     condition:
       - matter_thermostat_app
+  - path: third_party/matter_sdk/examples/fan-control-app/silabs/src/FanControlUI.cpp
+    condition:
+      - matter_fan_control_app
   - path: third_party/matter_sdk/examples/air-quality-sensor-app/silabs/src/AirQualitySensorUI.cpp
     condition:
       - matter_air_quality_app
-  - path: examples/multi-sensor-app/src/SensorsUI.cpp
+  - path: third_party/matter_sdk/examples/multi-sensor-app/silabs/src/SensorsUI.cpp
     condition:
       - matter_multi_sensor_app
+  - path: third_party/matter_sdk/examples/closure-app/silabs/src/ClosureUI.cpp
+    condition:
+      - matter_closure
 define:
   - name: DISPLAY_ENABLED

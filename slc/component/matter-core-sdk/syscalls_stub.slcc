@@ -1,6 +1,6 @@
 category: Matter|Core
 define: []
-description: syscalls_stub
+description: Provides stub implementations for system calls required by Matter platform code.
 id: syscalls_stub
 include:
   - path: third_party/matter_sdk/src/platform

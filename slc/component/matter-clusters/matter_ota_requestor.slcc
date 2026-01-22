@@ -1,6 +1,8 @@
 category: Clusters|CHIP
 description: >
-  Implementation of the OTA Software Update Requestor Cluster.
+  Implements the Matter OTA Software Update Requestor Cluster, which allows a device to discover an OTA Provider and request software updates over the Matter fabric.
+  This component handles querying for available updates, downloading images using the Matter OTA and BDX protocols, and coordinating the update process.
+  Enable this component if your device should receive firmware updates locally over Matter, such as when updates are provided by a hub or controller rather than directly from the internet.
   The user has to enable the OTA Software Update Requestor Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_ota_requestor
 package: matter

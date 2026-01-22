@@ -31,6 +31,8 @@
 #include "AppEvent.h"
 #include "BaseApplication.h"
 #include "LightingManager.h"
+
+#include <app/persistence/DeferredAttributePersistenceProvider.h>
 #include <ble/Ble.h>
 #include <cmsis_os2.h>
 #include <lib/core/CHIPError.h>
@@ -84,8 +86,6 @@ public:
 #endif // (defined(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED)
 
 private:
-    static AppTask sAppTask;
-
     static void ActionInitiated(LightingManager::Action_t aAction, int32_t aActor, uint8_t * value);
     static void ActionCompleted(LightingManager::Action_t aAction);
     static void LightActionEventHandler(AppEvent * aEvent);
@@ -118,4 +118,7 @@ private:
      * @param aEvent button event being processed
      */
     static void SwitchActionEventHandler(AppEvent * aEvent);
+
+    static AppTask sAppTask;
+    chip::app::DeferredAttributePersistenceProvider * pDeferredAttributePersister = nullptr;
 };

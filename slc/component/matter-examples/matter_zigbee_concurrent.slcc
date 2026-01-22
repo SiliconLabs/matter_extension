@@ -2,11 +2,17 @@ category: Multi-Protocol Application
 label: Matter Zigbee Concurrent
 package: matter
 description: >
-  Provides example component for a concurrent zigbee and matter application.
+  Enables support for a concurrent Matter and Zigbee application running on the same device (CMP).
+  This component configures the system to allow Matter and Zigbee stacks to operate simultaneously, including support for fast channel switching where required.
 id: matter_zigbee_concurrent
 quality: production
 provides:
   - name: matter_zigbee_concurrent
+  - name: matter_zigbee_type
+requires:
+  # RAIL component that enable Fast channel switching on Series3
+  - name: sl_rail_util_ieee802154_fast_channel_switching
+    condition: [ device_generic_family_sixx301 ]
 define:
   - name: SL_MATTER_ZIGBEE_CMP
     value: "1"

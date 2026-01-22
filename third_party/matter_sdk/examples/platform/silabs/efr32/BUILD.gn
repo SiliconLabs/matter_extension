@@ -33,11 +33,12 @@ declare_args() {
   ota_periodic_query_timeout_sec = 86400
 }
 
+chip_detail_logging = sl_verbose_mode
+
 import("${silabs_common_plat_dir}/args.gni")
 
 # Sanity check
 assert(!(chip_enable_wifi && chip_enable_openthread))
-assert(!(use_rs9116 && chip_enable_openthread))
 assert(!(use_SiWx917 && chip_enable_openthread))
 assert(!(use_wf200 && chip_enable_openthread))
 
@@ -56,20 +57,6 @@ config("chip_examples_project_config") {
     "-Wl,--wrap=_free_r",
     "-Wl,--wrap=_calloc_r",
     "-Wl,--wrap=main",
-  ]
-}
-
-config("test-event-trigger-config") {
-  defines = [ "SL_MATTER_TEST_EVENT_TRIGGER_ENABLED" ]
-}
-
-source_set("test-event-trigger") {
-  deps = [ "${sl_provision_root}:headers" ]
-  public_configs = [ ":test-event-trigger-config" ]
-  public_deps = [
-    "${chip_root}/src/app:test-event-trigger",
-    "${chip_root}/src/lib/core",
-    "${chip_root}/src/lib/support",
   ]
 }
 
@@ -129,10 +116,6 @@ config("efr32-common-config") {
     defines += [ "HEAP_MONITORING" ]
   }
 
-  if (chip_enable_multi_ota_requestor) {
-    defines += [ "CHIP_DEVICE_CONFIG_ENABLE_MULTI_OTA_REQUESTOR=1" ]
-  }
-
   ldflags = [
     "-Wl,--no-warn-rwx-segment",
     "-fno-lto",
@@ -174,6 +157,11 @@ source_set("efr32-common") {
     "${silabs_common_plat_dir}/syscalls_stubs.cpp",
   ]
 
+  # FreeRTOS runtime statistics support
+  if (matter_enable_tracing_support) {
+    sources += [ "${silabs_common_plat_dir}/FreeRTOSRuntimeStats.c" ]
+  }
+
   if (chip_enable_pw_rpc || chip_build_libshell || enable_openthread_cli ||
       sl_uart_log_output) {
     sources += [ "${silabs_common_plat_dir}/uart.cpp" ]
@@ -206,8 +194,8 @@ source_set("efr32-common") {
   }
 
   if (sl_enable_rgb_led) {
-    sources += [ "${silabs_common_plat_dir}/led/RGBLEDWidget.cpp" ]
-    include_dirs = [ "${silabs_common_plat_dir}/rgb_led" ]
+    sources += [ "${silabs_common_plat_dir}/rgb_led/RGBLEDWidget.cpp" ]
+    include_dirs += [ "${silabs_common_plat_dir}/rgb_led" ]
   }
 
   if (chip_build_libshell) {
@@ -216,7 +204,6 @@ source_set("efr32-common") {
     if (chip_enable_icd_server) {
       deps += [ "${silabs_common_plat_dir}/shell:icd" ]
     }
-
     if (matter_enable_tracing_support) {
       public_deps += [ "${silabs_common_plat_dir}/shell:tracing" ]
     }
@@ -235,13 +222,6 @@ source_set("efr32-common") {
 
   if (sl_enable_test_event_trigger) {
     public_deps += [ "${silabs_common_plat_dir}/test-event-trigger:sources" ]
-  }
-
-  if (sl_enable_si70xx_sensor) {
-    sources += [
-      "${silabs_common_plat_dir}/Si70xxSensor.cpp",
-      "${silabs_common_plat_dir}/Si70xxSensor.h",
-    ]
   }
 
   if (sl_enable_si70xx_sensor) {

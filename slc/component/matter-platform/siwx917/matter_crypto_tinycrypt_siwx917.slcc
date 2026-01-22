@@ -1,7 +1,7 @@
 id: matter_crypto_tinycrypt_siwx917
 label: Matter MbedTLS Integration
 description: >
-  mbedtls and Tinycrypt for SiWx917 SoC
+  Integrates the Matter cryptography layer with Mbed TLS using TinyCrypt-backed implementations on the SiWx917 SoC.
 package: matter
 category: "Matter-WiFi|Platform|Tinycrypt"
 quality: production
@@ -49,14 +49,14 @@ conflicts:
 
 source:
   # tinycrypt source
-  - path: third_party/matter_sdk/src/platform/silabs/SiWx917/CHIPCryptoPALTinyCrypt.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/SiWx/CHIPCryptoPALTinyCrypt.cpp
   - path: third_party/matter_support/tinycrypt/src/ecc.c
   - path: third_party/matter_support/tinycrypt/src/ecc_dh.c
   - path: third_party/matter_support/tinycrypt/src/ecc_dsa.c
   - path: third_party/matter_support/tinycrypt/src/tinycrypt_util.c
 
 include:
-  - path: third_party/matter_sdk/src/platform/silabs/SiWx917
+  - path: third_party/matter_sdk/src/platform/silabs/SiWx
     file_list:
       - path: siwx917-chip-mbedtls-config.h
   - path: third_party/matter_support/tinycrypt/inc

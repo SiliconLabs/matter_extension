@@ -1,0 +1,8 @@
+label: oven-app-siwx
+quality: production
+package: matter
+description: Matter Oven Wi-Fi SoC solution
+project:
+  - path: ./oven-app-siwx.slcp
+    id: application
+    output: oven-app-siwx

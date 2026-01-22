@@ -1,0 +1,8 @@
+label: fan-control-app-siwx
+quality: production
+package: matter
+description: Solution for a Matter over WiFI Fan Control App Example
+project:
+  - path: ./fan-control-app-siwx.slcp
+    id: application
+    output: fan-control-app-siwx

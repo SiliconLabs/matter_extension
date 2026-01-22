@@ -48,20 +48,6 @@ using TimeTraceOperation = chip::Tracing::Silabs::TimeTraceOperation;
     }
 #endif
 
-#ifdef _SILICON_LABS_32B_SERIES_2
-// Series 2 bootloader_ api calls must be called from a critical section context for thread safeness
-#define WRAP_BL_DFU_CALL(code)                                                                                                     \
-    {                                                                                                                              \
-        CORE_CRITICAL_SECTION(code;)                                                                                               \
-    }
-#else
-// series 3 bootloader_ calls uses rtos mutex for thread safety. Cannot be called within a critical section
-#define WRAP_BL_DFU_CALL(code)                                                                                                     \
-    {                                                                                                                              \
-        code;                                                                                                                      \
-    }
-#endif
-
 /// No error, operation OK
 #define SL_BOOTLOADER_OK 0L
 
@@ -182,15 +168,12 @@ void OTAImageProcessorImpl::HandlePrepareDownload(intptr_t context)
 
     SILABS_TRACE_BEGIN(TimeTraceOperation::kImageUpload);
 
-#ifdef _SILICON_LABS_32B_SERIES_2
-    // TODO sl-temp: bootloader_init is called previously sl_platform_init(). Recalling it for series3 causes a crash.
     WRAP_BL_DFU_CALL(err = bootloader_init())
     if (err != SL_BOOTLOADER_OK)
     {
         ChipLogProgress(SoftwareUpdate, "bootloader_init Failed error: %ld", err);
         SILABS_TRACE_END_ERROR(TimeTraceOperation::kImageUpload, CHIP_ERROR_INTERNAL);
     }
-#endif
 
     mSlotId                                 = 0; // Single slot until we support multiple images
     writeBufOffset                          = 0;
@@ -398,7 +381,7 @@ void OTAImageProcessorImpl::HandleProcessBlock(intptr_t context)
 
     if (chip_error != CHIP_NO_ERROR)
     {
-        ChipLogError(SoftwareUpdate, "Matter image header parser error: %s", chip::ErrorStr(chip_error));
+        ChipLogError(SoftwareUpdate, "Matter image header parser error: %" CHIP_ERROR_FORMAT, chip_error.Format());
         imageProcessor->mDownloader->EndDownload(CHIP_ERROR_INVALID_FILE_IDENTIFIER);
         return;
     }

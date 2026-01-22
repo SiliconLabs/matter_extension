@@ -18,7 +18,7 @@ define:
     value: \1.0.0\""
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libopenthread_mtd
+description: Provides the OpenThread Minimal Thread Device (MTD) stack for Matter over Thread applications.
 id: libopenthread_mtd
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

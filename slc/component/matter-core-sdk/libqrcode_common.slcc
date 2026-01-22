@@ -1,6 +1,6 @@
 category: Matter|Core
 define: []
-description: libqrcode_common
+description: Provides common QR code generation utilities used by Matter setup and commissioning flows.
 id: libqrcode_common
 include:
   - path: third_party/QR-Code-generator/c

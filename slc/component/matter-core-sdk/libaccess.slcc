@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libaccess
+description: Provides the Matter access control framework for enforcing privileges and authorization rules.
 id: libaccess
 include:
   - path: third_party/matter_sdk/examples/platform/silabs
@@ -15,18 +15,18 @@ include:
   - path: third_party/nlio/include
   - path: third_party/matter_sdk/src/access
     file_list:
-      - path: SubjectDescriptor.h
-      - path: AccessControl.h
-      - path: AuthMode.h
-      - path: Privilege.h
-      - path: RequestPath.h
-      - path: AccessConfig.h
-      - path: AccessRestrictionProvider.h
-      - path: ProviderDeviceTypeResolver.h
+    -   path: SubjectDescriptor.h
+    -   path: AccessControl.h
+    -   path: AuthMode.h
+    -   path: Privilege.h
+    -   path: RequestPath.h
+    -   path: AccessConfig.h
+    -   path: AccessRestrictionProvider.h
+    -   path: ProviderDeviceTypeResolver.h
   - path: third_party/matter_sdk/src/access/examples
     file_list:
-      - path: ExampleAccessControlDelegate.h
-      - path: PermissiveAccessControlDelegate.h
+    -   path: ExampleAccessControlDelegate.h
+    -   path: PermissiveAccessControlDelegate.h
 label: libaccess
 package: matter
 provides:

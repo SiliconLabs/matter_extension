@@ -12,11 +12,11 @@ metadata:
 provides:
   - name: matter_soil_measurement
 source:
-  - path: third_party/matter_sdk/src/app/clusters/soil-measurement-server/soil-measurement-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/soil-measurement-server/soil-measurement-cluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/soil-measurement-server
     file_list:
-      - path: soil-measurement-server.h
+      - path: soil-measurement-cluster.h
 template_contribution:
   - name: component_catalog
     value: matter_soil_measurement

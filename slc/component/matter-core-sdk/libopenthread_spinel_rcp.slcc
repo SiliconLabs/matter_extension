@@ -16,7 +16,7 @@ define:
     value: "1"
   - name: SPINEL_PLATFORM_HEADER
     value: \spinel_platform.h\""
-description: libopenthread_spinel_rcp
+description: Provides the OpenThread Spinel RCP interface for Matter Thread radio co-processor architectures.
 id: libopenthread_spinel_rcp
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

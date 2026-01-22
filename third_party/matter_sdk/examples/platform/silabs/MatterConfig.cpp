@@ -20,13 +20,24 @@
 #include "AppConfig.h"
 #include "BaseApplication.h"
 #include <MatterConfig.h>
-#include <app/icd/server/ICDServerConfig.h>
 #include <cmsis_os2.h>
+
 #include <mbedtls/platform.h>
+
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
+#if defined(SL_MATTER_EM4_SLEEP) && (SL_MATTER_EM4_SLEEP == 1)
+#include "sl_sleeptimer.h"
+#include <app/icd/server/ICDConfigurationData.h> // nogncheck
+
+#include "em_burtc.h"
+#include "em_cmu.h"
+#include "em_emu.h"
+#endif // defined(SL_MATTER_EM4_SLEEP) && (SL_MATTER_EM4_SLEEP == 1)
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 
 #ifdef SL_WIFI
 #include <platform/silabs/NetworkCommissioningWiFiDriver.h>
-#include <platform/silabs/wifi/WifiInterface.h>
+#include <platform/silabs/wifi/WifiInterface.h> // nogncheck
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
 #include <platform/silabs/wifi/icd/WifiSleepManager.h> // nogncheck
@@ -34,7 +45,7 @@
 
 // TODO: We shouldn't need any platform specific includes in this file
 #if (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
-#include <platform/silabs/SiWx917/SiWxPlatformInterface.h>
+#include <platform/silabs/SiWx/SiWxPlatformInterface.h>
 #endif // (defined(SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE == 1)
 #endif // SL_WIFI
 
@@ -62,8 +73,8 @@
 static chip::DeviceLayer::Internal::Efr32PsaOperationalKeystore gOperationalKeystore;
 #endif
 
+#include <app/DefaultTimerDelegate.h>
 #include <app/InteractionModelEngine.h>
-#include <app/TimerDelegates.h>
 #include <data-model-providers/codegen/Instance.h>
 #include <headers/ProvisionManager.h>
 
@@ -89,13 +100,18 @@ static chip::DeviceLayer::Internal::Efr32PsaOperationalKeystore gOperationalKeys
 #include <app/server/Server.h>
 
 #include <platform/silabs/platformAbstraction/SilabsPlatform.h>
+
+#include <app/clusters/network-commissioning/network-commissioning.h>
+
 #include <platform/silabs/tracing/SilabsTracingMacros.h>
 #if MATTER_TRACING_ENABLED
 #include <platform/silabs/tracing/BackendImpl.h> // nogncheck
 #include <tracing/registry.h>
 #endif // MATTER_TRACING_ENABLED
 
-#include <app/clusters/network-commissioning/network-commissioning.h>
+#if defined(SL_TRACING_ENERGY_TRACES) && SL_TRACING_ENERGY_TRACES == 1
+#include <platform/silabs/tracing/SilabsPowerTracing.h> // nogncheck
+#endif                                                  // SL_TRACING_ENERGY_TRACES
 
 /**********************************************************
  * Defines
@@ -194,9 +210,6 @@ void ApplicationStart(void * unused)
     SILABS_TRACE_END(TimeTraceOperation::kMatterInit);
     SILABS_TRACE_BEGIN(TimeTraceOperation::kAppInit);
 
-    gExampleDeviceInfoProvider.SetStorageDelegate(&chip::Server::GetInstance().GetPersistentStorage());
-    chip::DeviceLayer::SetDeviceInfoProvider(&gExampleDeviceInfoProvider);
-
     chip::DeviceLayer::PlatformMgr().LockChipStack();
     // Initialize device attestation config
     SetDeviceAttestationCredentialsProvider(&Provision::Manager::GetInstance().GetStorage());
@@ -223,11 +236,6 @@ void SilabsMatterConfig::AppInit()
 #endif // SL_WIFI
 
     GetPlatform().Init();
-
-#ifdef HEAP_MONITORING
-    DisplayMemoryUsage();
-#endif
-
     sMainTaskHandle = osThreadNew(ApplicationStart, nullptr, &kMainTaskAttr);
     ChipLogProgress(DeviceLayer, "Starting scheduler");
     VerifyOrDie(sMainTaskHandle); // We can't proceed if the Main Task creation failed.
@@ -238,7 +246,6 @@ void SilabsMatterConfig::AppInit()
 
     // Should never get here.
     chip::Platform::MemoryShutdown();
-
     ChipLogError(DeviceLayer, "Start Scheduler Failed, Not enough RAM");
     appError(CHIP_ERROR_NO_MEMORY);
 #endif // SL_CATALOG_CUSTOM_MAIN_PRESENT
@@ -307,9 +314,9 @@ CHIP_ERROR SilabsMatterConfig::InitMatter(const char * appName)
     ReturnErrorOnFailure(sWifiNetworkDriver.Init());
 #endif
 
-    // Verify if the platform is updated by reading the NVM3 config value. This needs to  be done after the wifi network driver
-    // initialization the 917 nvm is accessed through the TA and the communication between the M4 and the TA is available at this
-    // point. For thread devices, this needs to be after InitChipStack.
+    // Verify if the platform is updated by reading the NVM3 config value. This needs to be done after the wifi network driver
+    // initialization, as the 917 nvm is accessed through the TA, and the communication between the M4 and the TA is available at
+    // this point. For thread devices, this needs to be after InitChipStack.
     ReturnErrorOnFailure(GetPlatform().VerifyIfUpdated());
     // Stop Matter event handling while setting up resources
     chip::DeviceLayer::PlatformMgr().LockChipStack();
@@ -362,6 +369,10 @@ CHIP_ERROR SilabsMatterConfig::InitMatter(const char * appName)
     chip::Server::GetInstance().GetICDManager().RegisterObserver(&app::Silabs::ApplicationSleepManager::GetInstance());
 #endif // SL_MATTER_ENABLE_APP_SLEEP_MANAGER
 
+    // This is needed by localization configuration cluster so we set it before the initialization
+    gExampleDeviceInfoProvider.SetStorageDelegate(initParams.persistentStorageDelegate);
+    chip::DeviceLayer::SetDeviceInfoProvider(&gExampleDeviceInfoProvider);
+
     // Init Matter Server and Start Event Loop
     err = chip::Server::GetInstance().Init(initParams);
 
@@ -369,6 +380,11 @@ CHIP_ERROR SilabsMatterConfig::InitMatter(const char * appName)
     static Tracing::Silabs::BackendImpl backend;
     Tracing::Register(backend);
 #endif // MATTER_TRACING_ENABLED
+
+#if defined(SL_TRACING_ENERGY_TRACES) && SL_TRACING_ENERGY_TRACES == 1
+    VerifyOrDo(chip::Tracing::Silabs::SilabsPowerTracing::Instance().Init() == CHIP_NO_ERROR,
+               ChipLogError(DeviceLayer, "SilabsPowerTracing init failed"));
+#endif // defined(SL_TRACING_ENERGY_TRACES) && SL_TRACING_ENERGY_TRACES == 1
 
     chip::DeviceLayer::PlatformMgr().UnlockChipStack();
 
@@ -384,9 +400,35 @@ CHIP_ERROR SilabsMatterConfig::InitMatter(const char * appName)
     return CHIP_NO_ERROR;
 }
 
+#if defined(SL_MATTER_EM4_SLEEP) && (SL_MATTER_EM4_SLEEP == 1)
+void OnEM4Trigger(uint32_t duration)
+{
+    CMU_ClockSelectSet(cmuClock_EM4GRPACLK, cmuSelect_ULFRCO);
+    CMU_ClockEnable(cmuClock_BURTC, true);
+    CMU_ClockEnable(cmuClock_BURAM, true);
+
+    BURTC_Init_TypeDef burtcInit = BURTC_INIT_DEFAULT;
+    burtcInit.compare0Top        = true; // reset counter when counter reaches compare value
+    burtcInit.em4comp            = true; // BURTC compare interrupt wakes from EM4 (causes reset)
+    BURTC_Init(&burtcInit);
+
+    BURTC_CounterReset();
+    BURTC_CompareSet(0, duration);
+
+    BURTC_IntEnable(BURTC_IEN_COMP); // compare match
+    NVIC_EnableIRQ(BURTC_IRQn);
+    BURTC_Enable(true);
+    EMU_EM4Init_TypeDef em4Init = EMU_EM4INIT_DEFAULT;
+    EMU_EM4Init(&em4Init);
+    BURTC_CounterReset();
+    EMU_EnterEM4();
+}
+
+#endif // defined(SL_MATTER_EM4_SLEEP) && (SL_MATTER_EM4_SLEEP == 1)
 // ================================================================================
 // FreeRTOS Callbacks
 // ================================================================================
+
 extern "C" void vApplicationIdleHook(void)
 {
 #if (SLI_SI91X_MCU_INTERFACE && CHIP_CONFIG_ENABLE_ICD_SERVER)
@@ -395,4 +437,34 @@ extern "C" void vApplicationIdleHook(void)
 #endif // SL_CATALOG_SIMPLE_BUTTON_PRESENT
     SiWxPlatformInterface::sl_si91x_uart_power_requirement_handler();
 #endif
+#if SL_MATTER_DEBUG_WATCHDOG_ENABLE
+    GetPlatform().WatchdogFeed();
+#endif // SL_MATTER_DEBUG_WATCHDOG_ENABLE
 }
+
+#if CHIP_CONFIG_ENABLE_ICD_SERVER
+#if defined(SL_MATTER_EM4_SLEEP) && (SL_MATTER_EM4_SLEEP == 1)
+
+#ifndef SL_MATTER_EM4_THRESHOLD_PERCENTAGE
+#define SL_MATTER_EM4_THRESHOLD_PERCENTAGE 90
+#endif
+
+static_assert(SL_MATTER_EM4_THRESHOLD_PERCENTAGE > 0 && SL_MATTER_EM4_THRESHOLD_PERCENTAGE < 100,
+              "SL_MATTER_EM4_THRESHOLD_PERCENTAGE must be between 1 and 99");
+
+extern "C" void sl_matter_em4_check(uint32_t expected_idle_time_ms)
+{
+    if (chip::ICDConfigurationData::GetInstance().GetICDMode() == chip::ICDConfigurationData::ICDMode::LIT)
+    {
+        uint32_t idleDuration_seconds = chip::ICDConfigurationData::GetInstance().GetModeBasedIdleModeDuration().count();
+        uint32_t threshold_ms         = idleDuration_seconds * SL_EM4_THRESHOLD_PERCENTAGE * 10;
+        // Since the sleep timer will never match the actual idle time (hardware latency, etc), we set a threshold
+        // Multiply by 10 to converts seconds into milliseconds (e.g. 90% of 1000sec in ms is 1000*90*10 = 900000ms)
+        if (expected_idle_time_ms >= threshold_ms)
+        {
+            OnEM4Trigger(expected_idle_time_ms);
+        }
+    }
+}
+#endif // defined(SL_MATTER_EM4_SLEEP) && (SL_MATTER_EM4_SLEEP == 1)
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER

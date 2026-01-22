@@ -1,0 +1,55 @@
+id: matter_zigbee_cmp
+package: matter
+label: zigbee cmp
+description: >
+  Enables Zigbee components required in a matter cmp project
+category: Matter|Core
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+requires:
+# For compatibility with the Zigbee token manager
+  - name: common_token_manager_dynamic
+  - name: common_token_manager
+
+  - name: zigbee_address_table
+  - name: zigbee_application_bootloader
+  - name: zigbee_security_link_keys
+  - name: zigbee_source_route
+  - name: zigbee_stack_diagnostics
+  - name: zigbee_ipc
+  - name: zigbee_zll
+  - name: zigbee_zcl_framework_core
+  - name: zigbee_groups_server
+  - name: zigbee_identify
+  - name: zigbee_counters
+  - name: zigbee_find_and_bind_target
+  - name: zigbee_interpan
+  - name: zigbee_zll_commissioning_common
+  - name: zigbee_zll_commissioning_server
+  - name: zigbee_network_creator
+  - name: zigbee_network_creator_security
+  - name: zigbee_network_steering
+  - name: zigbee_reporting
+  - name: zigbee_zll_identify_server
+  - name: zigbee_basic
+  - name: zigbee_zll_utility_server
+  - name: zigbee_scan_dispatch
+  - name: zigbee_update_tc_link_key
+  - name: zigbee_pro_stack
+provides:
+  - name: matter_zigbee_cmp
+
+recommends:
+  - id: zigbee_ipc
+    vendor: silabs
+  - id: zigbee_pro_stack
+    vendor: silabs
+        
+define:
+  - name: OS_CFG_COMPAT_INIT
+
+template_contribution:
+  - name: gcc_compiler_option
+    value: -Dsl_zigbee_af_core_println(format,...)=do{(void)(format);(void)(__VA_ARGS__);}while(0)

@@ -8,6 +8,7 @@
 import xml.etree.ElementTree as ET
 import os 
 import pathlib
+import sys
 
 def validate_matter_templates():
     Matter_Repo =  str(pathlib.Path(os.path.realpath(__file__)).parent.parent.parent)
@@ -17,10 +18,15 @@ def validate_matter_templates():
     for descriptors in tree.findall('descriptors'):
         i = descriptors.findall('properties')
         for num in range(len(i)):
-            if i[num].attrib["key"]=="solutionReferenceId" or i[num].attrib["key"]=="projectFilePaths":
+            if i[num].attrib["key"]=="solutionReferenceId":
                 val = i[num].attrib['value'].replace(".","/").replace("/slc",".slc")
-                path = os.path.join(Matter_Repo,val)
-                if not os.path.isfile(path):
+                if not os.path.isfile(val):
+                    result = "Could not find file at path: "+i[num].attrib['value']
+                    print(result)
+                    file_data.append(result)
+            elif i[num].attrib["key"]=="projectFilePaths":
+                val = i[num].attrib['value']
+                if not os.path.isfile(val):
                     result = "Could not find file at path: "+i[num].attrib['value']
                     print(result)
                     file_data.append(result)
@@ -35,7 +41,7 @@ def validate_matter_templates():
                         file_data.append(result)
             if i[num].attrib["key"]=="readmeFiles":
                 val = i[num].attrib['value']
-                path = os.path.join(Matter_Repo,val)
+                path = os.path.join(val)
                 if not os.path.isfile(path):
                     result = "Could not find file at path: "+i[num].attrib['value']
                     print(result)
@@ -43,6 +49,9 @@ def validate_matter_templates():
                     
     if len(file_data) == 0:
         print("All files found")
+        sys.exit(0)
+    else:
+        sys.exit(1)
 
 
 if __name__ == '__main__':

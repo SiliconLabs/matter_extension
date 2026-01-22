@@ -28,7 +28,7 @@
 #include "sl_component_catalog.h"
 #endif
 
-// Only include app properties if the Gecko SDK component that does it automatically isn't present
+// Only include app properties if the Simplicity SDK component that does it automatically isn't present
 #if !defined(SL_CATALOG_GECKO_BOOTLOADER_INTERFACE_PRESENT)
 // Header used for building the image GBL file
 #define APP_PROPERTIES_VERSION 1
@@ -94,7 +94,7 @@ void OTAConfig::Init()
     // Periodic query timeout must be set prior to requestor being initialized
     gRequestorUser.SetPeriodicQueryTimeout(OTA_PERIODIC_TIMEOUT);
 
-#if CHIP_DEVICE_CONFIG_ENABLE_MULTI_OTA_REQUESTOR
+#if SL_MATTER_ENABLE_MULTI_OTA_REQUESTOR
     auto & imageProcessor = chip::OTAMultiImageProcessorImpl::GetDefaultInstance();
 #else
     auto & imageProcessor = chip::OTAImageProcessorImpl::GetDefaultInstance();

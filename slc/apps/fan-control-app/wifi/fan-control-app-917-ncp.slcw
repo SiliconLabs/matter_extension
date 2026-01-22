@@ -1,0 +1,13 @@
+label: fan-control-app-917-ncp
+quality: production
+package: matter
+description: Matter solution containing both a Matter bootloader and Fan Control over WiFi Example
+project:
+  - path: ./fan-control-app-917-ncp.slcp
+    id: application
+    output: fan-control-app-917-ncp
+  - path: ../../bootloaders/bootloader-storage-internal-single-series-2/bootloader-storage-internal-single-series-2.slcp
+    id: bootloader
+    output: matter-bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

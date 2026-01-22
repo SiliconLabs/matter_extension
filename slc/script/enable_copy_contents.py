@@ -186,7 +186,7 @@ def resolve_header_file(header_map, header_file_list, header_list):
     global matter_component
     global headers_not_mapped
     temp_list = []
-    additional_relpaths = ['lib/core/', 'platform/silabs/efr32/rs911x/', 'lib/asn1/', 'app/MessageDef/', 'protocols/user_directed_commissioning/',
+    additional_relpaths = ['lib/core/', 'lib/asn1/', 'app/MessageDef/', 'protocols/user_directed_commissioning/',
                            'protocols/bdx/', 'app/util/', 'access/examples/', 'setup_payload/', 'platform/silabs/', 'credentials/examples/', 'lib/support/']
 
     for header in header_file_list:
@@ -308,8 +308,6 @@ def update_header_key(inc_dir, val, lib=""):
                 update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY, 'matter-wifi', 'matter_efr32_ncp.slcc')))
             case 'common' | 'trace':
                 update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY, 'matter-core-sdk',  'app_common.slcc')))
-            case 'rs911x_ncp':
-                update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY, 'matter-wifi', 'rs911x',  lib+'.slcc')))
             case 'deviceinfoprovider':
                 update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY,
                        'matter-core-sdk',  'libmatterdeviceinfoproviderexample.slcc')))
@@ -357,8 +355,6 @@ def update_header_key(inc_dir, val, lib=""):
             case 'matter_platform':
                 if 'dic' in inc_dir.lower():
                     update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY, 'matter-wifi', 'matter_aws.slcc')))
-                elif 'rs911x' in str(os.path.join(inc_dir, val)):
-                    update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY, 'matter-wifi', 'rs911x', 'rs911x_ncp.slcc')))
                 elif 'SiWx917' in str(os.path.join(inc_dir, val)):
                     if 'system_si917.h' in val:
                         update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY,
@@ -397,8 +393,6 @@ def update_header_key(inc_dir, val, lib=""):
                 update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY, 'matter-core-sdk', 'libnlunit_test.slcc')))
             case 'setup_payload':
                 update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY, 'matter-core-sdk', 'libsetuppayload.slcc')))
-            case 'wiseconnect':
-                update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY, 'matter-wifi', 'rs911x', 'wiseconnect_sapi.slcc')))
             case 'clusters':
                 if 'basic-information' in inc_dir:
                     cluster_file = 'basic'
@@ -491,8 +485,6 @@ def update_components():
                                 update_header_key(inc_root, header, lib='devicelayer')
                             elif 'wifi' in str(os.path.join(inc_root, header)):
                                 update_header_key(inc_root, header, lib='wifi')
-                            elif 'rs911x' in str(os.path.join(inc_root, header)):
-                                update_header_key(inc_root, header, lib='rs911x_ncp')
                             else:
                                 update_header_key(inc_root, header,  lib=header.split("/")[0])
                         case _:
@@ -527,10 +519,7 @@ def update_components():
             elif 'src/lib' in inc_root:
                 for header in headers_list:
                     update_header_key(inc_root, header,  lib=header.split('/')[0])
-            elif 'rs911x' in inc_root:
-                for header in headers_list:
-                    update_header_key(inc_root, header,  lib='rs911x_ncp_extension')
-            elif ('examples/platform' in inc_root and not 'rs911x' in inc_root) or 'zzz_generated/app-common' == inc_root or 'third_party/nlassert' in inc_root:
+            elif ('examples/platform' in inc_root) or 'zzz_generated/app-common' == inc_root or 'third_party/nlassert' in inc_root:
                 for header in headers_list:
                     update_header_key(inc_root, header,  lib='common')
             elif 'lwip' in inc_root:

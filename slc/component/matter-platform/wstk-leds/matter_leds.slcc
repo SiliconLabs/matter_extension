@@ -28,6 +28,9 @@ requires:
       - brd2704a
   - name: matter_rgb_leds
     condition:
+      - hardware_board_has_rgb
+  - name: matter_rgb_leds
+    condition:
       - brd2605a
 
 define:

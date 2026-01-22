@@ -21,11 +21,19 @@
 
 #include "silabs_utils.h"
 
-// ---- Lighting Example App Config ----
-
+#ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
+#include "sl_cmp_config.h"
+#ifdef SL_MATTER_ZIGBEE_CMP
+#define APP_TASK_NAME "CMP-Therm"
+#define BLE_DEV_NAME "SL-" APP_TASK_NAME "-Conc"
+#elif defined(SL_MATTER_ZIGBEE_SEQUENTIAL)
+#define APP_TASK_NAME "CMP-Therm"
+#define BLE_DEV_NAME "SL-" APP_TASK_NAME "-Seq"
+#endif // SL_MATTER_ZIGBEE_CMP
+#else
 #define APP_TASK_NAME "Therm"
-
 #define BLE_DEV_NAME "SL-" APP_TASK_NAME
+#endif // SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
 
 // Time it takes in ms for the simulated actuator to move from one
 // state to another.

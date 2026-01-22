@@ -2,7 +2,7 @@ id: matter_shell
 package: matter
 label: Matter Shell
 description: >
-  Enables the Matter Shell (CHIP Shell) functionality
+  Enables the Matter Shell (CHIP Shell), a command-line interface for interacting with and inspecting Matter device state at runtime.
 category: Stack|Shell
 quality: production
 metadata:
@@ -16,6 +16,8 @@ requires:
   - name: matter_uart
   - name: matter_thread_cli
     condition: [matter_thread]
+  - name: matter_zigbee_debug
+    condition: [matter_zigbee_multiprotocol_common]
 
 include:
   - path: third_party/matter_sdk/src/lib/shell
@@ -55,7 +57,7 @@ include:
     file_list:
       - path: TracingShellCommands.h
   - path: third_party/matter_sdk/examples/platform/silabs/shell/ble
-    condition: [matter_ble_side_channel]
+    condition: [matter_internal_ble_side_channel]
     file_list:
       - path: BLEShellCommands.h
 
@@ -100,7 +102,7 @@ source:
   - path: third_party/matter_sdk/examples/platform/silabs/shell/tracing/TracingShellCommands.cpp
     condition: [matter_tracing]
   - path: third_party/matter_sdk/examples/platform/silabs/shell/ble/BLEShellCommands.cpp
-    condition: [matter_ble_side_channel]
+    condition: [matter_internal_ble_side_channel]
     
 define:
   - name: ENABLE_CHIP_SHELL

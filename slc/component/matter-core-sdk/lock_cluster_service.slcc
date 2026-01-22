@@ -6,7 +6,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: lock_cluster_service
+description: Provides the Matter Door Lock cluster service implementation used by lock application examples.
 id: lock_cluster_service
 include:
   - path: third_party/matter_sdk/examples/lock-app/lock-common/include

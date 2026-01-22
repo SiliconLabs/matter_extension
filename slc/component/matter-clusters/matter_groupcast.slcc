@@ -1,0 +1,25 @@
+category: Clusters|General
+description: >
+  Implementation of the Groupcast Cluster.
+  The user has to enable the Groupcast Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_groupcast
+package: matter
+label: Groupcast Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_groupcast
+source:
+  - path: third_party/matter_sdk/src/app/clusters/groupcast/CodegenIntegration.cpp
+  - path: third_party/matter_sdk/src/app/clusters/groupcast/GroupcastCluster.cpp
+  - path: third_party/matter_sdk/src/app/clusters/groupcast/GroupcastLogic.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/groupcast
+    file_list:
+      - path: GroupcastCluster.h
+      - path: GroupcastLogic.h
+template_contribution:
+  - name: component_catalog
+    value: matter_groupcast

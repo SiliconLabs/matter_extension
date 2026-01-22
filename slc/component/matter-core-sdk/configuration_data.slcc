@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: configuration_data
+description: Provides configuration data structures and helpers for Matter Intermittently Connected Devices (ICD) behavior.
 id: configuration_data
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: address_policy
+description: Defines address selection and filtering policies used by Matter mDNS for IP address advertisement and discovery.
 id: address_policy
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

@@ -7,7 +7,7 @@ define:
   - name: CHIP_DNSSD_DEFAULT_MINIMAL
     value: 1
 
-description: dnssd_wifi
+description: Provides DNS-SD service advertisement and discovery support for Matter devices over Wi-Fi using minimal mDNS.
 id: dnssd_wifi
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

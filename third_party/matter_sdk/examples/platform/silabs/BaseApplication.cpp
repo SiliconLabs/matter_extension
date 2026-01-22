@@ -44,15 +44,12 @@
 #endif // ENABLE_CHIP_SHELL
 #endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 
-#if defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
-#include <platform/internal/BLEManager.h>
-#include <platform/silabs/efr32/BLEChannelImpl.h>
+#if SL_USE_INTERNAL_BLE_SIDE_CHANNEL
 #ifdef ENABLE_CHIP_SHELL
 #include <BLEShellCommands.h>
 #endif // ENABLE_CHIP_SHELL
-#endif // defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
+#endif // SL_USE_INTERNAL_BLE_SIDE_CHANNEL
 
-#include <app/util/attribute-storage.h>
 #include <assert.h>
 #include <headers/ProvisionManager.h>
 #include <lib/support/CodeUtils.h>
@@ -73,12 +70,13 @@
 
 #ifdef SL_WIFI
 #include <platform/silabs/NetworkCommissioningWiFiDriver.h>
-#include <platform/silabs/wifi/WifiInterface.h>
+#include <platform/silabs/wifi/WifiInterface.h> // nogncheck
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
 #include <platform/silabs/wifi/icd/WifiSleepManager.h> // nogncheck
-#endif                                                 // CHIP_CONFIG_ENABLE_ICD_SERVER
-#endif                                                 // SL_WIFI
+
+#endif // CHIP_CONFIG_ENABLE_ICD_SERVER
+#endif // SL_WIFI
 
 #ifdef SL_MATTER_ENABLE_AWS
 #include "MatterAws.h"
@@ -89,12 +87,20 @@
 #include <performance_test_commands.h>
 #endif // PERFORMANCE_TEST_ENABLED
 
+#ifdef MATTER_DM_PLUGIN_IDENTIFY_SERVER
+#include <app-common/zap-generated/callback.h>
+#endif
+
 // SL-Only
 #include "sl_component_catalog.h"
 #ifdef SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
 #include "ZigbeeCallbacks.h"
 #include "sl_cmp_config.h"
-#endif
+
+#ifdef SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT
+#include <MultiProtocolDataModelHelper.h>
+#endif // SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT
+#endif // SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
 
 // Tracing
 #include <platform/silabs/tracing/SilabsTracingMacros.h>
@@ -132,9 +138,6 @@ using namespace ::chip::DeviceLayer;
 using namespace ::chip::DeviceLayer::Silabs;
 
 using TimeTraceOperation = chip::Tracing::Silabs::TimeTraceOperation;
-#if defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
-using BLEChannelImpl = chip::DeviceLayer::Internal::BLEChannelImpl;
-#endif // defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
 namespace {
 
 /**********************************************************
@@ -183,19 +186,9 @@ SilabsLCD slLCD;
 #ifdef MATTER_DM_PLUGIN_IDENTIFY_SERVER
 Clusters::Identify::EffectIdentifierEnum sIdentifyEffect = Clusters::Identify::EffectIdentifierEnum::kStopEffect;
 
-Identify gIdentify = {
-    chip::EndpointId{ 1 },
-    BaseApplication::OnIdentifyStart,
-    BaseApplication::OnIdentifyStop,
-    Clusters::Identify::IdentifyTypeEnum::kVisibleIndicator,
-    BaseApplication::OnTriggerIdentifyEffect,
-};
+ObjectPool<Identify, MATTER_DM_IDENTIFY_CLUSTER_SERVER_ENDPOINT_COUNT + CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT> IdentifyPool;
 
 #endif // MATTER_DM_PLUGIN_IDENTIFY_SERVER
-
-#if defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
-BLEChannelImpl sBleSideChannel;
-#endif // defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
 
 } // namespace
 
@@ -243,6 +236,7 @@ void BaseApplicationDelegate::OnCommissioningWindowClosed()
 #if SL_MATTER_ENABLE_APP_SLEEP_MANAGER
     app::Silabs::ApplicationSleepManager::GetInstance().OnCommissioningWindowClosed();
 #endif // SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+
     if (BaseApplication::GetProvisionStatus())
     {
         // After the device is provisioned and the commissioning passed
@@ -284,6 +278,11 @@ void BaseApplicationDelegate::OnFabricRemoved(const FabricTable & fabricTable, F
 
 CHIP_ERROR BaseApplication::StartAppTask(osThreadFunc_t taskFunction)
 {
+
+    // Fix OTA by registering the EvenHandler sooner
+    // MATTER-4889
+    PlatformMgr().AddEventHandler(OnPlatformEvent, 0);
+
     sAppEventQueue = osMessageQueueNew(APP_EVENT_QUEUE_SIZE, sizeof(AppEvent), &appEventQueueAttr);
     if (sAppEventQueue == NULL)
     {
@@ -318,7 +317,27 @@ CHIP_ERROR BaseApplication::Init()
         appError(err);
         return err;
     }
+    GetPlatform().WatchdogInit();
 
+#ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
+#ifdef SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT
+    chip::DeviceLayer::PlatformMgr().ScheduleWork([](intptr_t) { MultiProtocolDataModel::Initialize(); });
+#endif // SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT
+
+#ifdef SL_MATTER_ZIGBEE_SEQUENTIAL
+    PlatformMgr().LockChipStack();
+    uint16_t nbOfMatterFabric = Server::GetInstance().GetFabricTable().FabricCount();
+    PlatformMgr().UnlockChipStack();
+    if (nbOfMatterFabric != 0)
+    {
+        Zigbee::RequestLeave();
+    }
+    else
+#endif // SL_MATTER_ZIGBEE_SEQUENTIAL
+    {
+        Zigbee::RequestStart();
+    }
+#endif // SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
     SILABS_TRACE_END_ERROR(TimeTraceOperation::kAppInit, err);
     SILABS_TRACE_END_ERROR(TimeTraceOperation::kBootup, err);
     return err;
@@ -386,32 +405,27 @@ CHIP_ERROR BaseApplication::BaseInit()
 #if MATTER_TRACING_ENABLED
     TracingCommands::RegisterCommands();
 #endif // MATTER_TRACING_ENABLED
-#if defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
+#if SL_USE_INTERNAL_BLE_SIDE_CHANNEL
     BLEShellCommands::RegisterCommands();
-#endif // defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
+#endif // SL_USE_INTERNAL_BLE_SIDE_CHANNEL
 #endif // ENABLE_CHIP_SHELL
 
 #ifdef PERFORMANCE_TEST_ENABLED
     RegisterPerfTestCommands();
 #endif // PERFORMANCE_TEST_ENABLED
 
-    PlatformMgr().AddEventHandler(OnPlatformEvent, 0);
 #ifdef SL_WIFI
     BaseApplication::sIsProvisioned = ConnectivityMgr().IsWiFiStationProvisioned();
 #endif /* SL_WIFI */
 #if CHIP_ENABLE_OPENTHREAD
     BaseApplication::sIsProvisioned = ConnectivityMgr().IsThreadProvisioned();
 #endif
-#if defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
-    ReturnErrorOnFailure(sBleSideChannel.Init());
-    DeviceLayer::Internal::BLEMgrImpl().InjectSideChannel(&sBleSideChannel);
-#endif
 
     err = chip::Server::GetInstance().GetFabricTable().AddFabricDelegate(&sAppDelegate);
     return err;
 }
 
-void BaseApplication::InitCompleteCallback([[maybe_unused]] CHIP_ERROR err)
+void BaseApplication::InitCompleteCallback(CHIP_ERROR err)
 {
     // A stub for backward compatibility
 }
@@ -450,7 +464,16 @@ bool BaseApplication::ActivateStatusLedPatterns()
     bool isPatternSet = false;
 #if (defined(ENABLE_WSTK_LEDS) && (defined(SL_CATALOG_SIMPLE_LED_LED1_PRESENT)))
 #ifdef MATTER_DM_PLUGIN_IDENTIFY_SERVER
-    if (gIdentify.mActive)
+    bool isIdentifyActive = false;
+    for (const auto & obj : IdentifyPool)
+    {
+        if (obj->mActive)
+        {
+            isIdentifyActive = true;
+            break;
+        }
+    }
+    if (isIdentifyActive)
     {
         // Identify in progress
         // Do a steady blink on the status led
@@ -803,6 +826,12 @@ void BaseApplication::OnTriggerIdentifyEffect(Identify * identify)
         ChipLogProgress(Zcl, "No identifier effect");
     }
 }
+
+void emberAfIdentifyClusterInitCallback(chip::EndpointId endpoint)
+{
+    IdentifyPool.CreateObject(endpoint, BaseApplication::OnIdentifyStart, BaseApplication::OnIdentifyStop,
+                              Clusters::Identify::IdentifyTypeEnum::kVisibleIndicator, BaseApplication::OnTriggerIdentifyEffect);
+}
 #endif // MATTER_DM_PLUGIN_IDENTIFY_SERVER
 
 void BaseApplication::LightTimerEventHandler(void * timerCbArg)
@@ -974,7 +1003,7 @@ void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
         {
             if (MATTER_AWS_OK != MatterAwsInit(matterAws::control::subscribeCB))
             {
-                ChipLogError(AppServer, "dic_init failed");
+                ChipLogError(AppServer, "MatterAwsInit failed");
             }
         }
 #endif // SL_MATTER_ENABLE_AWS
@@ -1019,21 +1048,16 @@ void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
 
     case DeviceEventType::kCommissioningComplete: {
 #if SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
-        // DUT is commissioned, removing the High Performance request
-        WifiSleepManager::GetInstance().RemoveHighPerformanceRequest();
         WifiSleepManager::GetInstance().VerifyAndTransitionToLowPowerMode(WifiSleepManager::PowerEvent::kCommissioningComplete);
 #endif // SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
 
 // SL-Only
 #ifdef SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
-#if defined(SL_MATTER_ZIGBEE_CMP) && !defined(SL_CATALOG_RAIL_UTIL_IEEE802154_FAST_CHANNEL_SWITCHING_PRESENT)
-        uint8_t channel = otLinkGetChannel(DeviceLayer::ThreadStackMgrImpl().OTInstance());
-        Zigbee::RequestStart(channel);     // leave handle internally
-#elif defined(SL_MATTER_ZIGBEE_SEQUENTIAL) // Matter Zigbee sequential
+#ifdef SL_MATTER_ZIGBEE_SEQUENTIAL // Matter Zigbee sequential
         Zigbee::RequestLeave();
         Zigbee::ZLLNotFactoryNew();
-#endif                                     // SL_MATTER_ZIGBEE_CMP
-#endif                                     // SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
+#endif // SL_MATTER_ZIGBEE_SEQUENTIAL
+#endif // SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
     }
     break;
     default:

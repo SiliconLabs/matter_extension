@@ -39,21 +39,32 @@ TimeTraceOperation MapMetricKeyToOperation(MetricKey metricKey)
         return TimeTraceOperation::kCaseSession;
     if (metricKey == kMetricDeviceRMPRetryCount)
         return TimeTraceOperation::kTransportLayer;
-
     return TimeTraceOperation::kNumTraces;
 }
 
 void BackendImpl::TraceBegin(const char * label, const char * group)
 {
-    SilabsTracer::Instance().TimeTraceBegin(MapMetricKeyToOperation(label));
+    TimeTraceOperation operation = MapMetricKeyToOperation(label);
+
+    if (operation < TimeTraceOperation::kNumTraces) // Operation was found
+        SilabsTracer::Instance().TimeTraceBegin(MapMetricKeyToOperation(label));
+    else
+        SilabsTracer::Instance().NamedTraceBegin(CharSpan::fromCharString(label), CharSpan::fromCharString(group));
 }
+
 void BackendImpl::TraceEnd(const char * label, const char * group)
 {
-    SilabsTracer::Instance().TimeTraceEnd(MapMetricKeyToOperation(label), CHIP_NO_ERROR);
+    TimeTraceOperation operation = MapMetricKeyToOperation(label);
+
+    if (operation < TimeTraceOperation::kNumTraces) // Operation was found
+        SilabsTracer::Instance().TimeTraceEnd(MapMetricKeyToOperation(label), CHIP_NO_ERROR);
+    else
+        SilabsTracer::Instance().NamedTraceEnd(CharSpan::fromCharString(label), CharSpan::fromCharString(group));
 }
+
 void BackendImpl::TraceInstant(const char * label, const char * group)
 {
-    SilabsTracer::Instance().TimeTraceInstant(MapMetricKeyToOperation(label), CHIP_NO_ERROR);
+    SilabsTracer::Instance().TimeTraceInstant(CharSpan::fromCharString(label), CharSpan::fromCharString(group), CHIP_NO_ERROR);
 }
 
 void BackendImpl::LogMetricEvent(const MetricEvent & event)

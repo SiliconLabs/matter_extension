@@ -182,9 +182,13 @@ void KeyValueStoreManagerImpl::ScheduleKeyMapSave(void)
         During commissioning, the key map will be modified multiples times subsequently.
         Commit the key map in nvm once it as stabilized.
     */
+
+    // SL-TEMP: StartTimer requires the chip stack to be locked, since ScheduleKeyMapSave might be called from a non-locked context.
+    PlatformMgr().LockChipStack();
     SystemLayer().StartTimer(
         std::chrono::duration_cast<System::Clock::Timeout>(System::Clock::Seconds32(SL_KVS_SAVE_DELAY_SECONDS)),
         KeyValueStoreManagerImpl::OnScheduledKeyMapSave, NULL);
+    PlatformMgr().UnlockChipStack();
 }
 
 CHIP_ERROR KeyValueStoreManagerImpl::_Get(const char * key, void * value, size_t value_size, size_t * read_bytes_size,
@@ -277,9 +281,9 @@ void KeyValueStoreManagerImpl::KvsMapMigration(void)
 {
 // this migration precedes Series 3, we don't need to run it in that case
 #ifndef _SILICON_LABS_32B_SERIES_3
-    size_t readlen                 = 0;
-    constexpr size_t oldMaxEntries = 120;
-    uint32_t maxStringLen          = 33; // determined by constant PersistentStorageDelegate::kKeyLengthMax + 1 before migration
+    size_t readlen                  = 0;
+    constexpr size_t oldMaxEntries  = 120;
+    constexpr uint32_t maxStringLen = 33; // value of PersistentStorageDelegate::kKeyLengthMax + 1 when migration was added
     Platform::ScopedMemoryBuffer<char> mKvsStoredKeyString;
     mKvsStoredKeyString.Alloc(oldMaxEntries * maxStringLen);
 
@@ -291,7 +295,8 @@ void KeyValueStoreManagerImpl::KvsMapMigration(void)
 
     if (err == CHIP_NO_ERROR)
     {
-        for (uint8_t i = 0; i < std::min(oldMaxEntries, KeyValueStoreManagerImpl::kMaxEntries); i++)
+        // Migrate the old String Based KvsKeyMap to the Hash based KvsKeyMap
+        for (size_t i = 0; i < std::min(oldMaxEntries, KeyValueStoreManagerImpl::kMaxEntries); i++)
         {
             char * keyString = mKvsStoredKeyString.Get() + (i * maxStringLen);
             if (keyString[0] != 0)

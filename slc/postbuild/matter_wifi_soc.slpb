@@ -21,3 +21,6 @@ steps:
 - task: copy
   input: "{{build_dir}}/{{project_name}}.rps"
   output: artifact/{{project_name}}.rps
+- task: copy
+  input: "{{build_dir}}/{{project_name}}.rps"
+  output: ../artifact/{{project_name}}.rps

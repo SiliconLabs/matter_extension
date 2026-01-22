@@ -1,0 +1,11 @@
+category: Stack
+description: This component sets up ZAP generation for custom clusters and extensions
+id: matter_zap_custom_generation
+label: Custom ZAP generation 
+package: matter
+provides:
+  - name: matter_zap_custom_generation
+quality: production
+metadata:
+  sbom:
+    license: Zlib

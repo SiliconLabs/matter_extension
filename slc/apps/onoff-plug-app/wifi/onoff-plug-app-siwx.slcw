@@ -1,0 +1,8 @@
+label: onoff-plug-app-siwx
+quality: production
+package: matter
+description: Solution for a Matter over WiFI OnOff Plug App Example
+project:
+  - path: ./onoff-plug-app-siwx.slcp
+    id: application
+    output: onoff-plug-app-siwx

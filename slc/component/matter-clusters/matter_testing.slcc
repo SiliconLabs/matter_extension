@@ -13,10 +13,14 @@ provides:
   - name: matter_testing
 source:
   - path: third_party/matter_sdk/src/app/clusters/testing/AttributeTesting.cpp
+  - path: third_party/matter_sdk/src/app/clusters/testing/MockCommandHandler.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/testing
     file_list:
       - path: AttributeTesting.h
+      - path: ClusterTester.h
+      - path: MockCommandHandler.h
+      - path: ValidateGlobalAttributes.h
 template_contribution:
   - name: component_catalog
     value: matter_testing

@@ -16,6 +16,8 @@ requires:
   - name: spidrv_core
   - name: freertos
   - name: psa_its
+  - name: lwip_api
+  - name: lwip_netif_ethernet
   - name: matter_lwip_support
 
 include:

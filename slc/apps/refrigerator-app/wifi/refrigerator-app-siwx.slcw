@@ -1,0 +1,8 @@
+label: refrigerator-app-siwx
+quality: production
+package: matter
+description: Solution for a Matter over WiFI Refrigerator App Example
+project:
+  - path: ./refrigerator-app-siwx.slcp
+    id: application
+    output: refrigerator-app-siwx

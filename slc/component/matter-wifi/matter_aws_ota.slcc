@@ -1,6 +1,8 @@
 id: matter_aws_ota
 package: matter
-description: This component enables MATTER AWS OTA feature for matter-wifi
+description: >
+  Enables firmware download and update functionality for Matter Wi-Fi devices using the AWS IoT OTA service.
+  This component integrates the AWS OTA Embedded SDK with the Silicon Labs Matter + AWS feature to download software images securely from the cloud using MQTT and TLS.
 label: OTA Download through AWS Cloud
 category: Matter-WiFi|Features
 quality: production
@@ -21,7 +23,6 @@ define:
 include:
   - path: third_party/aws_ota_sdk/demos/ota/ota_demo_core_mqtt
     file_list:
-      - path: core_mqtt_config.h
       - path: demo_config.h
       - path: ota_config.h
   - path: third_party/aws_ota_sdk/demos/ota/common/include

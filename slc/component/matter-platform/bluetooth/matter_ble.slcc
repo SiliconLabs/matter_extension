@@ -10,17 +10,30 @@ metadata:
 requires:
   - name: matter_libblelayer
   - name: matter
+  - name: matter_gatt_static
+  - name: bluetooth_feature_gatt
   - name: bluetooth_feature_gatt_server
   - name: bluetooth_feature_legacy_advertiser
   - name: bluetooth_stack
+  - name: bluetooth_feature_sm
   - name: bluetooth_feature_system
   - name: bluetooth_feature_connection
   - name: bluetooth_feature_connection_role_peripheral
-  - name: matter_gatt
-recommends:
-  - id: matter_gatt_static
 provides:
   - name: matter_ble
+define:
+-   name: SL_BLE_SIDE_CHANNEL_ENABLED
+    value: '1'
+    condition: [matter_ble_side_channel]
+-   name: SL_BLE_SIDE_CHANNEL_ENABLED
+    value: '0'
+    unless: [matter_ble_side_channel]
+-   name: SL_USE_INTERNAL_BLE_SIDE_CHANNEL
+    value: '1'
+    condition: [matter_internal_ble_side_channel]
+-   name: SL_USE_INTERNAL_BLE_SIDE_CHANNEL
+    value: '0'
+    unless: [matter_internal_ble_side_channel]
 template_contribution:
   - name: component_catalog
     value: matter_ble

@@ -1,0 +1,13 @@
+label: lock-app-series-2
+quality: production
+package: matter
+description: Solution containing both a bootloader and a Matter over Thread Lock App Example
+project:
+  - path: ./lock-app.slcp
+    id: application
+    output: lock-app
+  - path: ../../bootloaders/bootloader-storage-external-single-series-2/bootloader-storage-external-single-series-2.slcp
+    id: bootloader
+    output: matter-bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

@@ -19,6 +19,8 @@ requires:
   # MATTER-4415: Workaround since openthread libs assume TCP is enable and associated crypto components are present
   - name: ot_stack_tcp_stubs
     condition: [ot_cert_libs]
+  - name: ot_stack_ftd
+    unless: [matter_icd_core]
 
 define:
   - name: SL_OPENTHREAD_CERT_LIB

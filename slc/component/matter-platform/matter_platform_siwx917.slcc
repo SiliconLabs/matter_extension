@@ -10,19 +10,20 @@ metadata:
 config_file:
   - path: third_party/matter_sdk/src/lwip/silabs/lwipopts.h
     override:
-      component: "%extension-wiseconnect3_sdk%wifi_resources"
+      component: "wifi_resources"
       file_id: lwipopts
+      vendor: silabs
 
 requires:
   - name: sl_main
   - name: matter_siwx917
   - name: matter_siwx917_common
   - name: sl_si91x_trng
-  - name: siwx917_soc_custom_hal
   - name: nvm3_default
   - name: memory_manager
   - name: memory_manager_pool
   - name: freertos_heap_4
+  - name: sl_si91x_memory_manager
   # TODO : psram components - should be removed with wiseconnect SDK support
   - name: psram_core
     condition: [brd4342a]
@@ -40,18 +41,18 @@ provides:
   - name: matter_si91x_common_flash_nvm3_enabled
 
 include:
-  - path: third_party/matter_sdk/examples/platform/silabs
-    file_list:
-      - path: PigweedLogger.h
-      - path: Rpc.h
-      - path: silabs_utils.h
-      - path: LEDWidget.h
-      - path: MatterConfig.h
-      - path: OTAConfig.h
-      - path: MemMonitoring.h
-      - path: BaseApplication.h
-      - path: BaseAppEvent.h
-      - path: SoftwareFaultReports.h
+- path: third_party/matter_sdk/examples/platform/silabs
+  file_list:
+  - path: PigweedLogger.h
+  - path: Rpc.h
+  - path: silabs_utils.h
+  - path: LEDWidget.h
+  - path: MatterConfig.h
+  - path: OTAConfig.h
+  - path: MemMonitoring.h
+  - path: BaseApplication.h
+  - path: BaseAppEvent.h
+  - path: SoftwareFaultReports.h
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/BaseApplication.cpp
   - path: third_party/matter_sdk/examples/platform/silabs/silabs_utils.cpp
@@ -66,7 +67,7 @@ define:
     value: 1
   - name: DEBUG_UART
     value: "1"
-  - name: RS911X_WIFI
+  - name: SL_MATTER_SIWX_WIFI_ENABLE
   - name: SL_SI91x_DUAL_INTERRUPTS_ERRATA
   - name: NVM3_LOCK_OVERRIDE
 toolchain_settings:

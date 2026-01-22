@@ -6,7 +6,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: nodatamodel
+description: Provides an empty Matter data model handler for controller-only or non-data-model use cases.
 id: nodatamodel
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

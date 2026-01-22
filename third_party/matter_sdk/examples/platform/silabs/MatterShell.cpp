@@ -17,7 +17,6 @@
 
 #include "MatterShell.h"
 #include "sl_component_catalog.h"
-#include "sl_status.h"
 #include <ChipShellCollection.h>
 #include <cmsis_os2.h>
 #include <lib/core/CHIPCore.h>
@@ -120,7 +119,7 @@ void startShellTask()
     // For now also register commands from shell_common (shell app).
     // TODO move at least OTCLI to default commands in lib/shell/commands
     cmd_misc_init();
-#ifndef SL_WIFI
+#ifdef SL_CATALOG_OPENTHREAD_CLI_PRESENT
     cmd_otcli_init();
 #endif
 

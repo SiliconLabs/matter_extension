@@ -10,7 +10,7 @@ define:
   - name: CHIP_CRYPTO_KEYSTORE_PSA
     value: "1"
     unless: [matter_crypto_tinycrypt_siwx917]
-description: libchipcrypto
+description: Provides the Matter cryptography framework for key management, secure storage, and cryptographic operations.
 id: libchipcrypto
 include:
   - path: third_party/matter_sdk/examples/platform/silabs
@@ -21,18 +21,18 @@ include:
   - path: third_party/nlio/include
   - path: third_party/matter_sdk/src/crypto
     file_list:
-      - path: OperationalKeystore.h
-      - path: RawKeySessionKeystore.h
-      - path: CHIPCryptoPAL.h
-      - path: RandUtils.h
-      - path: CHIPCryptoPALmbedTLS.h
-      - path: SessionKeystore.h
-      - path: PSAOperationalKeystore.h
-      - path: DefaultSessionKeystore.h
-      - path: CHIPCryptoPALPSA.h
-      - path: PersistentStorageOperationalKeystore.h
-      - path: PSASessionKeystore.h
-      - path: PSAKeyAllocator.h
+    -   path: OperationalKeystore.h
+    -   path: RawKeySessionKeystore.h
+    -   path: CHIPCryptoPAL.h
+    -   path: RandUtils.h
+    -   path: CHIPCryptoPALmbedTLS.h
+    -   path: SessionKeystore.h
+    -   path: PSAOperationalKeystore.h
+    -   path: DefaultSessionKeystore.h
+    -   path: CHIPCryptoPALPSA.h
+    -   path: PersistentStorageOperationalKeystore.h
+    -   path: PSASessionKeystore.h
+    -   path: PSAKeyAllocator.h
 label: libchipcrypto
 package: matter
 provides:

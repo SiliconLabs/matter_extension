@@ -12,7 +12,7 @@ define:
     value: \1.0.0\""
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libopenthread_efr32
+description: Provides the OpenThread platform integration for Matter devices running on Silicon Labs EFR32 hardware.
 id: libopenthread_efr32
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

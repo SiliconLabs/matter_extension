@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: check_in_message
+description: Implements Matter check-in message support used for secure session management and device availability signaling.
 id: matter_check_in_message
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

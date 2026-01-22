@@ -6,7 +6,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libchipappserver
+description: Provides the Matter application server framework for device commissioning, access control, and service advertisement.
 id: libchipappserver
 include:
   - path: third_party/matter_sdk/examples/platform/silabs
@@ -17,14 +17,19 @@ include:
   - path: third_party/nlio/include
   - path: third_party/matter_sdk/src/app/server
     file_list:
-      - path: AppDelegate.h
-      - path: EchoHandler.h
-      - path: AclStorage.h
-      - path: DefaultAclStorage.h
-      - path: CommissioningWindowManager.h
-      - path: Dnssd.h
-      - path: Server.h
-      - path: CommissioningModeProvider.h
+    -   path: AppDelegate.h
+    -   path: EchoHandler.h
+    -   path: AclStorage.h
+    -   path: DefaultAclStorage.h
+    -   path: CommissioningWindowManager.h
+    -   path: Dnssd.h
+    -   path: Server.h
+    -   path: CommissioningModeProvider.h
+  # TODO: Remove this once NFC dependency is removed
+  - path: third_party/matter_sdk/src/nfc
+    file_list:
+      - path: NFCReaderTransport.h
+      - path: NFCTag.h
 label: libchipappserver
 package: matter
 provides:
@@ -34,11 +39,11 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
-  - path: third_party/matter_sdk/src/app/server/AclStorage.cpp
-  - path: third_party/matter_sdk/src/app/server/CommissioningWindowManager.cpp
-  - path: third_party/matter_sdk/src/app/server/DefaultAclStorage.cpp
-  - path: third_party/matter_sdk/src/app/server/Dnssd.cpp
-  - path: third_party/matter_sdk/src/app/server/EchoHandler.cpp
-  - path: third_party/matter_sdk/src/app/server/Server.cpp
+-   path: third_party/matter_sdk/src/app/server/AclStorage.cpp
+-   path: third_party/matter_sdk/src/app/server/CommissioningWindowManager.cpp
+-   path: third_party/matter_sdk/src/app/server/DefaultAclStorage.cpp
+-   path: third_party/matter_sdk/src/app/server/Dnssd.cpp
+-   path: third_party/matter_sdk/src/app/server/EchoHandler.cpp
+-   path: third_party/matter_sdk/src/app/server/Server.cpp
 ui_hints:
   visibility: never

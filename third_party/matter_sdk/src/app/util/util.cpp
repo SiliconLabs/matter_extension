@@ -106,10 +106,10 @@ void MatterPollControlPluginServerInitCallback() {}
 void MatterProxyValidPluginServerInitCallback() {}
 void MatterProxyDiscoveryPluginServerInitCallback() {}
 void MatterProxyConfigurationPluginServerInitCallback() {}
+void MatterFanControlPluginServerInitCallback() {}
 void MatterActivatedCarbonFilterMonitoringPluginServerInitCallback() {}
 void MatterHepaFilterMonitoringPluginServerInitCallback() {}
 void MatterAirQualityPluginServerInitCallback() {}
-void MatterFanControlPluginServerInitCallback() {}
 void MatterCarbonMonoxideConcentrationMeasurementPluginServerInitCallback() {}
 void MatterCarbonDioxideConcentrationMeasurementPluginServerInitCallback() {}
 void MatterFormaldehydeConcentrationMeasurementPluginServerInitCallback() {}
@@ -140,8 +140,10 @@ void MatterServiceAreaPluginServerInitCallback() {}
 void MatterWaterHeaterManagementPluginServerInitCallback() {}
 void MatterWaterHeaterModePluginServerInitCallback() {}
 void MatterCommodityPricePluginServerInitCallback() {}
+void MatterCommodityTariffPluginServerInitCallback() {}
 void MatterElectricalGridConditionsPluginServerInitCallback() {}
 void MatterSoilMeasurementPluginServerInitCallback() {}
+void MatterLocalizationConfigurationPluginServerInitCallback() {}
 
 bool emberAfContainsAttribute(chip::EndpointId endpoint, chip::ClusterId clusterId, chip::AttributeId attributeId)
 {

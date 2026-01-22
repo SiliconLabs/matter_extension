@@ -10,14 +10,7 @@ metadata:
   sbom:
     license: Zlib
 provides:
--   name: gatt_configuration
--   name: matter_gatt
 -   name: matter_gatt_dynamic
 requires:
   - name: bluetooth_gattdb_definition
   - name: bluetooth_feature_dynamic_gattdb
-conflicts:
--   name: matter_gatt_static
-template_contribution:
-  - name: component_catalog
-    value: gatt_configuration

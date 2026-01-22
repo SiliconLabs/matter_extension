@@ -25,6 +25,11 @@
 #if (defined(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
 #include "RGBLEDWidget.h"
 #endif //(defined(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
+
+#include <app/persistence/AttributePersistenceProviderInstance.h>
+#include <app/persistence/DefaultAttributePersistenceProvider.h>
+#include <app/persistence/DeferredAttributePersistenceProvider.h>
+
 #include <app-common/zap-generated/attributes/Accessors.h>
 #include <app/clusters/on-off-server/on-off-server.h>
 #include <app/server/Server.h>
@@ -55,6 +60,7 @@
 
 using namespace chip;
 using namespace chip::app;
+using namespace chip::app::Clusters;
 using namespace ::chip::DeviceLayer;
 using namespace ::chip::DeviceLayer::Silabs;
 
@@ -64,6 +70,16 @@ RGBLEDWidget sLightLED; // Use RGBLEDWidget if RGB LED functionality is enabled
 #else
 LEDWidget sLightLED; // Use LEDWidget for basic LED functionality
 #endif
+
+// Array of attributes that will have their non-volatile storage deferred/delayed.
+// This is useful for attributes that change frequently over short periods of time, such as during transitions.
+// In this example, we defer the storage of the Level Control's CurrentLevel attribute and the Color Control's
+// CurrentHue and CurrentSaturation attributes for the LIGHT_ENDPOINT.
+DeferredAttribute gDeferredAttributeTable[] = {
+    DeferredAttribute(ConcreteAttributePath(LIGHT_ENDPOINT, LevelControl::Id, LevelControl::Attributes::CurrentLevel::Id)),
+    DeferredAttribute(ConcreteAttributePath(LIGHT_ENDPOINT, ColorControl::Id, ColorControl::Attributes::CurrentHue::Id)),
+    DeferredAttribute(ConcreteAttributePath(LIGHT_ENDPOINT, ColorControl::Id, ColorControl::Attributes::CurrentSaturation::Id))
+};
 } // namespace
 
 using namespace chip::TLV;
@@ -74,9 +90,6 @@ CHIP_ERROR AppTask::AppInit()
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
     chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(AppTask::ButtonEventHandler);
-    char rebootLightOnKey[] = "Reboot->LightOn";
-    CharSpan rebootLighOnSpan(rebootLightOnKey);
-    SILABS_TRACE_REGISTER(rebootLighOnSpan);
 
     err = LightMgr().Init();
     if (err != CHIP_NO_ERROR)
@@ -89,7 +102,7 @@ CHIP_ERROR AppTask::AppInit()
 
     sLightLED.Init(LIGHT_LED);
     sLightLED.Set(LightMgr().IsLightOn());
-    SILABS_TRACE_INSTANT(rebootLighOnSpan);
+    SILABS_TRACE_NAMED_INSTANT("LightOn", "Reboot");
 
 // Update the LCD with the Stored value. Show QR Code if not provisioned
 #ifdef DISPLAY_ENABLED
@@ -106,6 +119,7 @@ CHIP_ERROR AppTask::AppInit()
 #endif // QR_CODE_ENABLED
 #endif
 
+    BaseApplication::InitCompleteCallback(err);
     return err;
 }
 
@@ -118,6 +132,26 @@ void AppTask::AppTaskMain(void * pvParameter)
 {
     AppEvent event;
     osMessageQueueId_t sAppEventQueue = *(static_cast<osMessageQueueId_t *>(pvParameter));
+
+    // Initialization that needs to happen before the BaseInit is called here as the BaseApplication::Init() will call
+    // the AppInit() after BaseInit.
+
+    // Retrieve the existing AttributePersistenceProvider, which should already be created and initialized.
+    // This provider is typically set up by the CodegenDataModelProviderInstance constructor,
+    // which is called in InitMatter within MatterConfig.cpp.
+    // We use this as the base provider for deferred attribute persistence.
+    AttributePersistenceProvider * attributePersistence = GetAttributePersistenceProvider();
+    VerifyOrDie(attributePersistence != nullptr);
+
+    //  The DeferredAttributePersistenceProvider will persist the attribute value in non-volatile memory
+    //  once it remains constant for SL_MATTER_DEFERRED_ATTRIBUTE_STORE_DELAY_MS milliseconds.
+    //  For all other attributes not listed in gDeferredAttributeTable, the default PersistenceProvider is used.
+    sAppTask.pDeferredAttributePersister = new DeferredAttributePersistenceProvider(
+        *attributePersistence, Span<DeferredAttribute>(gDeferredAttributeTable, MATTER_ARRAY_SIZE(gDeferredAttributeTable)),
+        System::Clock::Milliseconds32(SL_MATTER_DEFERRED_ATTRIBUTE_STORE_DELAY_MS));
+    VerifyOrDie(sAppTask.pDeferredAttributePersister != nullptr);
+
+    app::SetAttributePersistenceProvider(sAppTask.pDeferredAttributePersister);
 
     CHIP_ERROR err = sAppTask.Init();
     if (err != CHIP_NO_ERROR)
@@ -134,11 +168,11 @@ void AppTask::AppTaskMain(void * pvParameter)
 
     while (true)
     {
-        osStatus_t eventReceived = osMessageQueueGet(sAppEventQueue, &event, NULL, osWaitForever);
+        osStatus_t eventReceived = osMessageQueueGet(sAppEventQueue, &event, nullptr, osWaitForever);
         while (eventReceived == osOK)
         {
             sAppTask.DispatchEvent(&event);
-            eventReceived = osMessageQueueGet(sAppEventQueue, &event, NULL, 0);
+            eventReceived = osMessageQueueGet(sAppEventQueue, &event, nullptr, 0);
         }
     }
 }
@@ -187,7 +221,7 @@ void AppTask::LightControlEventHandler(AppEvent * aEvent)
     Protocols::InteractionModel::Status status;
     app::DataModel::Nullable<uint8_t> currentlevel;
     // Read currentlevel value
-    status = Clusters::LevelControl::Attributes::CurrentLevel::Get(1, currentlevel);
+    status = LevelControl::Attributes::CurrentLevel::Get(LIGHT_ENDPOINT, currentlevel);
     PlatformMgr().UnlockChipStack();
     VerifyOrReturn(Protocols::InteractionModel::Status::Success == status,
                    ChipLogError(NotSpecified, "Failed to get CurrentLevel attribute"));
@@ -307,7 +341,7 @@ void AppTask::UpdateClusterState(intptr_t context)
     uint8_t newValue = LightMgr().IsLightOn();
 
     // write the new on/off value
-    Protocols::InteractionModel::Status status = OnOffServer::Instance().setOnOffValue(1, newValue, false);
+    Protocols::InteractionModel::Status status = OnOffServer::Instance().setOnOffValue(LIGHT_ENDPOINT, newValue, false);
 
     if (status != Protocols::InteractionModel::Status::Success)
     {

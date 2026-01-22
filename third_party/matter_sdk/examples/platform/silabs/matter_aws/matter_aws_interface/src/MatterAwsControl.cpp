@@ -199,9 +199,9 @@ void MatterAwsIncomingDataCb(void * arg, const char * topic, uint16_t topic_len,
     VerifyOrReturn(kMaxCommandStrLength > len);
     CopyString(cmd, len + 1, (const char *) data);
     std::string cmdString(cmd);
-    char * _cmd    = strtok(const_cast<char *>(cmdString.c_str()), "/");
-    char * value   = strtok(NULL, "/");
-    int32_t _value = 0;
+    char * _cmd                     = strtok(const_cast<char *>(cmdString.c_str()), "/");
+    char * value                    = strtok(NULL, "/");
+    [[maybe_unused]] int32_t _value = 0;
     if (value != NULL)
     {
         _value = std::stoi(value);

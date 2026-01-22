@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libinteractionmodel
+description: Provides core Matter Interaction Model definitions and status codes for protocol messaging.
 id: libinteractionmodel
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

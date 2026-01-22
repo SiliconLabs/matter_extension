@@ -1,0 +1,8 @@
+label: window-app-siwx
+quality: production
+package: matter
+description: Matter Window Wi-Fi SoC solution
+project:
+  - path: ./window-app-siwx.slcp
+    id: application
+    output: window-app-siwx

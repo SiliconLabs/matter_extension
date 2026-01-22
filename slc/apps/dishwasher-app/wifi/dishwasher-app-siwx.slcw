@@ -1,0 +1,8 @@
+label: dishwasher-app-siwx
+quality: production
+package: matter
+description: Solution for a Matter over WiFI Dishwasher App Example
+project:
+  - path: ./dishwasher-app-siwx.slcp
+    id: application
+    output: dishwasher-app-siwx

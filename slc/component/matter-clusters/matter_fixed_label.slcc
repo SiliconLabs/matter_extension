@@ -12,7 +12,12 @@ metadata:
 provides:
   - name: matter_fixed_label
 source:
-  - path: third_party/matter_sdk/src/app/clusters/fixed-label-server/fixed-label-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/fixed-label-server/CodegenIntegration.cpp
+  - path: third_party/matter_sdk/src/app/clusters/fixed-label-server/fixed-label-cluster.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/fixed-label-server
+    file_list:
+      - path: fixed-label-cluster.h
 template_contribution:
   - name: component_catalog
     value: matter_fixed_label

@@ -76,16 +76,23 @@ public:
     /** VerifyIfUpdated
      * @brief Verify if the device has been updated by OTA.
      *  This check requires the NVM3 to be initialized so it is not called during the platform init.
-     *  It is common to both WiseMCU and GSDK platforms so we have it in a separate cpp file.
+     *  It is common to both WiseMCU and SiSDK platforms so we have it in a separate cpp file.
      */
     CHIP_ERROR VerifyIfUpdated();
 
     /**
      * @brief Initialize the nvm driver (e.g., NVM3), and execute any needed migrations.
      *
-     * @return CHIP_ERROR : CHIP_NO_ERROR when succesful, a relevant CHIP_ERROR otherwise.
+     * @return CHIP_ERROR : CHIP_NO_ERROR when successful, a relevant CHIP_ERROR otherwise.
      */
     CHIP_ERROR NvmInit();
+
+#if SL_MATTER_DEBUG_WATCHDOG_ENABLE
+    void WatchdogInit();
+    void WatchdogFeed();
+    void WatchdogEnable();
+    void WatchdogDisable();
+#endif
 
 private:
     friend SilabsPlatform & GetPlatform(void);

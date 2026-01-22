@@ -18,7 +18,7 @@ define:
     value: \1.0.0\""
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libopenthread_cli_mtd
+description: Provides the OpenThread Minimal Thread Device (MTD) CLI support for Matter over Thread platforms.
 id: libopenthread_cli_mtd
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

@@ -30,7 +30,7 @@ if __name__ == '__main__':
         sys.exit()
 
     EXTENSION_NEW_VERSION = sys.argv[1]
-    GDSK_NEW_VERSION = sys.argv[2]
+    SISDK_NEW_VERSION = sys.argv[2]
     README = sys.argv[3]
     VERSION_REGEX_FORMAT="(\d+)\.(\d+)\.(\d+)"
     AUX_REGEX_FORMAT = "(\d+)\.(\d+)(\.(\d+))?"
@@ -47,9 +47,9 @@ if __name__ == '__main__':
 
     ROOT = pathlib.Path(sys.argv[0]).parent.parent.parent.absolute()
 
-    #Check if GSDK version is in (\d+)\.(\d+)\.(\d+) format
-    if len(GDSK_NEW_VERSION.split("."))!=3:
-        print("Error: Incorrect usage for GSDK version. Need (\d+)\.(\d+)\.(\d+) format")
+    #Check if SiSDK version is in (\d+)\.(\d+)\.(\d+) format
+    if len(SISDK_NEW_VERSION.split("."))!=3:
+        print("Error: Incorrect usage for SiSDK version. Need (\d+)\.(\d+)\.(\d+) format")
         sys.exit()
 
     #Check if updated to README.md files is required.
@@ -61,7 +61,7 @@ if __name__ == '__main__':
         UPDATE_README=True if readme_args[1].upper()=="TRUE" else False
 
     print("Updating the sdk_extension version to "+EXTENSION_NEW_VERSION)
-    print("Updating the simplicity_sdk version to "+GDSK_NEW_VERSION)
+    print("Updating the simplicity_sdk version to "+SISDK_NEW_VERSION)
     readme_str= "Updating" if UPDATE_README else "Not Updating"
     print(readme_str+" the README.md files")
 
@@ -88,7 +88,7 @@ if __name__ == '__main__':
     # sdk:
     #   id: simplicity_sdk
     #   version: 4.3.0
-    replace_text(str(ROOT)+"/matter.slce","  *id: simplicity_sdk\n  *version: "+VERSION_REGEX_FORMAT,"  id: simplicity_sdk\n  version: "+GDSK_NEW_VERSION)
+    replace_text(str(ROOT)+"/matter.slce","  *id: simplicity_sdk\n  *version: "+VERSION_REGEX_FORMAT,"  id: simplicity_sdk\n  version: "+SISDK_NEW_VERSION)
 
     # Update matter.slsdk
     #
@@ -98,12 +98,6 @@ if __name__ == '__main__':
     if FULL_VERSION:
         replace_text(str(ROOT)+"/matter.slsdk",FULL_VERSION_REGEX,EXTENSION_NEW_VERSION+"-"+AUX_VERSION)
     replace_text(str(ROOT)+"/matter.slsdk","version="+VERSION_REGEX_FORMAT,"version="+EXTENSION_NEW_VERSION)
-
-    # Update pipeline_metadata.yml
-    #
-    # REGEX FORMAT:
-    # matterExtensionVersion: '0.0.3'
-    replace_text(str(ROOT)+"/third_party/matter_private/jenkins/pipeline_metadata.yml","matterExtensionVersion: '"+VERSION_REGEX_FORMAT+"'","matterExtensionVersion: '"+EXTENSION_NEW_VERSION+"'")
 
     # Update .md files in slc/ directory
     #

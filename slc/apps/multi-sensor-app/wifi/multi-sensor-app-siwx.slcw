@@ -1,0 +1,8 @@
+label: multi-sensor-app-siwx
+quality: production
+package: matter
+description: Solution for a Matter over WiFI Multi-Sensor App Example
+project:
+  - path: ./multi-sensor-app-siwx.slcp
+    id: application
+    output: multi-sensor-app-siwx

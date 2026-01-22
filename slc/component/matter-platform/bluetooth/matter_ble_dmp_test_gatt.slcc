@@ -5,10 +5,13 @@ description: >
   Adds GATT Configuration required for Matter to commission over ble and adds the DMP Light
   service to the GATT database.
 category: Stack|Bluetooth
-quality: production
+quality: internal
 metadata:
   sbom:
     license: Zlib
+config_file:
+  - path: third_party/matter_sdk/examples/platform/silabs/cmp/config/btconf/gatt_configuration.btconf
+    directory: btconf
 provides:
 -   name: matter_ble_dmp_test
 requires:

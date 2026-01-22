@@ -1,7 +1,7 @@
 id: matter_minimal_mdns
 package: matter
 description: >
-  matter_minimal_mdns for wifi
+  Provides the minimal mDNS (multicast DNS) implementation used by Matter devices for service discovery and operational advertising over Wi-Fi.
 label: Matter Minimal mDNS
 category: Matter-WiFi|lwip
 quality: production

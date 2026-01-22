@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libsecurechannel
+description: Provides the Matter Secure Channel implementation for authenticated session establishment and message security.
 id: libsecurechannel
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

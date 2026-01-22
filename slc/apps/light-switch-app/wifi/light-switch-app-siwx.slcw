@@ -1,0 +1,8 @@
+label: light-switch-app-siwx
+quality: production
+package: matter
+description: Solution for a Matter over WiFI Light Switch App Example
+project:
+  - path: ./light-switch-app-siwx.slcp
+    id: application
+    output: light-switch-app-siwx

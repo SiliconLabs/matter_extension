@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: types
+description: Provides core Matter application and data model type definitions used across clusters and callbacks.
 id: types
 include:
   - path: third_party/matter_sdk/examples/platform/silabs
@@ -20,7 +20,6 @@ include:
     -   path: util/DataModelHandler.h
     -   path: util/cluster-config.h
     -   path: util/config.h
-    -   path: util/binding-table.h
     -   path: util/af-types.h
     -   path: util/im-client-callbacks.h
     -   path: util/attribute-storage.h

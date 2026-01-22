@@ -6,7 +6,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: address_resolve
+description: Implements the Matter address resolution framework for discovering and resolving IP addresses of Matter nodes.
 id: address_resolve
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

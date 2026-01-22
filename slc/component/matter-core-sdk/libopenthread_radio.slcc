@@ -18,7 +18,7 @@ define:
     value: \1.0.0\""
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libopenthread_radio
+description: Provides the OpenThread radio-only (RCP/NCP) implementation used by Matter Thread platforms.
 id: libopenthread_radio
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

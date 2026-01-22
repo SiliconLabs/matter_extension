@@ -1,0 +1,44 @@
+#******************************************************************************
+# @file BUILD.gn
+# @brief BUILD.gn to build the vendor-specific handlers tests
+#******************************************************************************
+# # License
+# <b>Copyright 2024 Silicon Laboratories Inc. www.silabs.com</b>
+#******************************************************************************
+#
+# The licensor of this software is Silicon Laboratories Inc. Your use of this
+# software is governed by the terms of Silicon Labs Master Software License
+# Agreement (MSLA) available at
+# www.silabs.com/about-us/legal/master-software-license-agreement. This
+# software is distributed to you in Source Code format and is governed by the
+# sections of the MSLA applicable to Source Code.
+#
+#*****************************************************************************/
+
+import("//build_overrides/build.gni")
+import("//build_overrides/chip.gni")
+import("//build_overrides/pigweed.gni")
+import("${chip_root}/build/chip/chip_test_group.gni")
+import("${chip_root}/build/chip/chip_test_suite.gni")
+
+chip_test_suite("vendor_handlers_tests") {
+  output_name = "libSilabsVendorHandlerTests"
+
+  test_sources = [
+    "TestAppleKeychainHandler.cpp",
+    "TestVendorHandler.cpp",
+    "TestVendorHandlerFactory.cpp",
+  ]
+
+  public_deps = [
+    "${chip_root}/examples/platform/silabs/wifi/icd/vendor-handlers",
+    "${chip_root}/src/credentials",
+    "${chip_root}/src/credentials/tests:cert_test_vectors",
+    "${chip_root}/src/lib/core",
+    "${chip_root}/src/lib/core:string-builder-adapters",
+    "${chip_root}/src/lib/support",
+    "${chip_root}/src/lib/support:testing",
+  ]
+
+  cflags = [ "-Wconversion" ]
+}

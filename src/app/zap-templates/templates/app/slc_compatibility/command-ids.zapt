@@ -9,6 +9,21 @@ namespace app {
 namespace Clusters {
 namespace {{asUpperCamelCase name}} {
 namespace Commands {
+
+{{#zcl_commands_source_client}}
+{{#first}}
+// Total number of client to server commands supported by the cluster
+inline constexpr uint32_t kAcceptedCommandsCount = {{count}};
+{{/first}}
+{{/zcl_commands_source_client}}
+
+{{#zcl_commands_source_server}}
+{{#first}}
+// Total number of server to client commands supported by the cluster (response commands)
+inline constexpr uint32_t kGeneratedCommandsCount = {{count}};
+{{/first}}
+{{/zcl_commands_source_server}}
+
 {{#zcl_commands}}
 namespace {{chip_name_for_id_usage name}} {
 inline constexpr CommandId Id = {{asHex code 8}};

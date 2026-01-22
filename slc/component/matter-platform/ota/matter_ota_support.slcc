@@ -1,6 +1,6 @@
 id: matter_ota_support
 label: OTA Requestor
-description: OTA Requestor functionality for Matter
+description: Enables the Matter OTA Requestor functionality, allowing a device to receive firmware updates using the Matter OTA protocol.
 package: matter
 category: Stack
 quality: production
@@ -21,7 +21,7 @@ source:
   - path: third_party/matter_sdk/examples/platform/silabs/OTAConfig.cpp
   - path: third_party/matter_sdk/src/platform/silabs/efr32/OTAImageProcessorImpl.cpp
     condition: [matter_platform_mg]
-  - path: third_party/matter_sdk/src/platform/silabs/SiWx917/OTAImageProcessorImpl.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/SiWx/OTAImageProcessorImpl.cpp
     condition: [matter_platform_siwx917]
 config_file:
   - path: slc/config/sl_matter_ota_config.h

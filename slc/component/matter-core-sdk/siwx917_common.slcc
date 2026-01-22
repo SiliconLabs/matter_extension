@@ -1,7 +1,7 @@
 id: siwx917_common
 package: matter
 label: siwx917_common
-description: siwx917_common
+description: Provides common Matter platform utilities and example application support for Silicon Labs SiWx917 Wi-Fi devices.
 category: Matter|Core
 quality: production
 metadata:
@@ -12,33 +12,35 @@ provides:
   - name: matter_siwx917_common
 
 include:
-  - path: .
-  - path: third_party/matter_sdk/examples/platform/silabs
-  - path: third_party/matter_sdk/examples/providers
-  - path: third_party/matter_sdk/src
-  - path: third_party/matter_sdk/src/include
-  - path: third_party/matter_sdk/src/lib
-  - path: third_party/matter_sdk/src/platform/silabs/wifi
-  - path: third_party/nlassert/include
-  - path: third_party/nlio/include
-  - path: third_party/matter_sdk/examples/platform/silabs
-    file_list:
-      - path: board_config.h
-      - path: OTAConfig.h
-      - path: SoftwareFaultReports.h
-      - path: silabs_utils.h
-      - path: MatterConfig.h
-      - path: LEDWidget.h
-      - path: sl_systemview_config.h
-      - path: PigweedLogger.h
-      - path: FreeRTOSConfig.h
-      - path: Rpc.h
-      - path: silabs_creds.h
-      - path: MemMonitoring.h
-      - path: BaseApplication.h
-  - path: third_party/matter_sdk/src/platform/silabs/SiWx917
-    file_list:
-      - path: SiWxPlatformInterface.h
+- path: .
+- path: third_party/matter_sdk/examples/platform/silabs
+- path: third_party/matter_sdk/examples/providers
+- path: third_party/matter_sdk/src
+- path: third_party/matter_sdk/src/include
+- path: third_party/matter_sdk/src/lib
+- path: third_party/matter_sdk/src/platform/silabs/wifi
+- path: third_party/nlassert/include
+- path: third_party/nlio/include
+- path: third_party/matter_sdk/examples/platform/silabs
+  file_list:
+  - path: board_config.h
+  - path: OTAConfig.h
+  - path: SoftwareFaultReports.h
+  - path: silabs_utils.h
+  - path: MatterConfig.h
+  - path: LEDWidget.h
+  - path: sl_systemview_config.h
+  - path: PigweedLogger.h
+  - path: FreeRTOSConfig.h
+  - path: Rpc.h
+  - path: silabs_creds.h
+  - path: MemMonitoring.h
+  - path: BaseApplication.h
+  - path: BaseAppEvent.h
+- path: third_party/matter_sdk/src/platform/silabs/SiWx
+  file_list:
+  - path: SiWxPlatformInterface.h
+
 
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/BaseApplication.cpp

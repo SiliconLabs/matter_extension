@@ -177,10 +177,6 @@ if __name__ == '__main__':
                         if 'third_party/silabs' in src:
                             continue
 
-                        # Skip any references to rs911x
-                        if 'examples/platform/silabs/efr32/rs911x' in src:
-                            continue
-
                         # Skip any sources under zzz_generated
                         if 'zzz_generated' in src:
                             continue
@@ -223,14 +219,6 @@ if __name__ == '__main__':
                         if 'pigweed' in inc:
                             continue
 
-                        # Skip any references to rs911x
-                        if 'examples/platform/silabs/efr32/rs911x' in inc or 'src/platform/silabs/rs911x' in inc:
-                            continue
-
-                        # Skip any references to rs911x
-                        if 'silabs/efr32/include' in inc:
-                            continue
-
                         # Skip any references to third_party/mbedtls
                         if 'third_party/mbedtls' in inc:
                             continue
@@ -251,7 +239,7 @@ if __name__ == '__main__':
                             continue
                         
                         # Skip wifi NCP extension includes
-                        if 'wifi' in inc or 'wf200' in inc or 'rs9116' in inc:
+                        if 'wifi' in inc or 'wf200' in inc:
                             # Adding for SiWx917 SoC
                             if 'siwx917' not in name:
                                 continue
@@ -276,7 +264,7 @@ if __name__ == '__main__':
                             # Skip defines related to LCD
                             continue
                         
-                        if define.startswith(('__', 'SL_', 'NVM3_', 'MBEDTLS_','SILABS_LOG', 'HARD_FAULT_LOG', 'EFR32', 'CORTEXM3', 'CONFIG', 'BOARD', 'BRD', 'PLATFORM', 'KVS', 'LWIP', 'WF200', 'CHIP_MINMDNS_', 'EFX32', 'RS911X', 'RSI', 'NDEBUG', 'CCP_', 'SIWX', 'TINYCRYPT', 'LITTLE_', 'OPTIMIZE_TINYCRYPT', 'CHIP_917', 'CHIP_9117', 'ENABLE_', 'BLE_', 'ROM_', 'DEBUG_', 'FLASH_', 'TA_DEEP_', 'ROM_WIRELESS' , 'EXECUTION_' , 'HARD_FAULT_LOG_ENABLE' , 'ROMDRIVER_PRESENT' , 'SILABS_LOG_ENABLED' , 'SI917' , 'SILABS_OTA_ENABLED' , '_CHIP_9118')) or define in ['USE_NVM3', 'MICRO', 'PLAT', 'PHY', 'CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI','ENABLE_WSTK_LEDS', 'OTA_PERIODIC_TIMEOUT']:
+                        if define.startswith(('__', 'SL_', 'NVM3_', 'MBEDTLS_','SILABS_LOG', 'HARD_FAULT_LOG', 'EFR32', 'CORTEXM3', 'CONFIG', 'BOARD', 'BRD', 'PLATFORM', 'KVS', 'LWIP', 'WF200', 'CHIP_MINMDNS_', 'EFX32', 'RSI', 'NDEBUG', 'CCP_', 'SIWX', 'TINYCRYPT', 'LITTLE_', 'OPTIMIZE_TINYCRYPT', 'CHIP_917', 'CHIP_9117', 'ENABLE_', 'BLE_', 'ROM_', 'DEBUG_', 'FLASH_', 'TA_DEEP_', 'ROM_WIRELESS' , 'EXECUTION_' , 'HARD_FAULT_LOG_ENABLE' , 'ROMDRIVER_PRESENT' , 'SILABS_LOG_ENABLED' , 'SI917' , 'SILABS_OTA_ENABLED' , '_CHIP_9118')) or define in ['USE_NVM3', 'MICRO', 'PLAT', 'PHY', 'CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI','ENABLE_WSTK_LEDS', 'OTA_PERIODIC_TIMEOUT']:
                             # Skip defines related to simplicity SDK and LWIP
                             continue
 

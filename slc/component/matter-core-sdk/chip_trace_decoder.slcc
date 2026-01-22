@@ -6,14 +6,13 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: chip_trace_decoder
+description: Provides a trace decoding tool for interpreting and analyzing Matter protocol tracing output.
 id: chip_trace_decoder
 include:
   - path: third_party/matter_sdk/examples/platform/silabs
   - path: third_party/matter_sdk/src
   - path: third_party/matter_sdk/src/include
   - path: third_party/matter_sdk/src/lib
-  - path: third_party/jsoncpp/repo/include
   - path: third_party/nlassert/include
   - path: third_party/nlio/include
   - path: third_party/matter_sdk/examples/common/tracing/decoder/udc

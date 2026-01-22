@@ -12,7 +12,7 @@ define:
     value: \1.0.0\""
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libopenthread_platform_utils
+description: Provides OpenThread platform utility functions required by Matter Thread integrations.
 id: libopenthread_platform_utils
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

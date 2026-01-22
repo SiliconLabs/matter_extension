@@ -72,7 +72,7 @@ Parser.add_argument("-a", "--alias", help="Alias of the targeted device.", type=
 Parser.add_argument("-h", "--help", help="Learn more about the options of mattertool", action="store_true")
 Parser.add_argument("-n", "--nodeId", help="Provide a node ID value", type=int)
 Parser.add_argument("-di", "--discriminator", help="Provide a discriminator value", type=int)
-Parser.add_argument("-e", "--endpoint", help="Provide an enpoint value", type=int)
+Parser.add_argument("-e", "--endpoint", help="Provide an endpoint value", type=int)
 Parser.add_argument("-d", "--dataset", help="Provide a OpenThread dataset value in HEX format", type=str)
 Parser.add_argument("-s", "--ssid", help="Provide the SSID of the WiFi network to use", type=str)
 Parser.add_argument("-p", "--password", help="Provide the password of the WiFi network to use", type = str)

@@ -4,7 +4,8 @@
 // <<< Use Configuration Wizard in Context Menu >>>
 
 // <o OTA_PERIODIC_TIMEOUT> OTA Requestor periodic timeout
-// <d> Default: 86400
+// <i> How often the device checks for available firmware updates
+// <d> Default: 86400 seconds (24 hours)
 #define OTA_PERIODIC_TIMEOUT 86400
 
 // <<< end of configuration section >>>

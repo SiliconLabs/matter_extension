@@ -1,0 +1,17 @@
+label: lighting-app-series-2
+description: >
+    Workspace to build the TrustZone-enabled application and accompanying bootloader.
+quality: production
+package: matter
+project:
+  - path: ./lighting-s.slcp
+    id: trustzone-secure
+    output: lighting-app-secure
+  - path: ./lighting-ns.slcp
+    id: application
+    output: lighting-app-nonsecure
+  - path: ../../../bootloaders/bootloader-storage-external-single-series-2/bootloader-storage-external-single-series-2.slcp
+    id: bootloader
+    output: matter-bootloader
+post_build:
+    profile: ot-tz-workspace

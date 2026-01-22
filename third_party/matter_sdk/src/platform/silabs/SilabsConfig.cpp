@@ -35,10 +35,13 @@
 
 #include <FreeRTOS.h>
 #include <semphr.h>
-// Substitute the GSDK weak nvm3_lockBegin and nvm3_lockEnd
+
+namespace {
+// Substitute the SiSDK weak nvm3_lockBegin and nvm3_lockEnd
 // for an application controlled re-entrance protection
-static SemaphoreHandle_t nvm3_Sem;
-static StaticSemaphore_t nvm3_SemStruct;
+SemaphoreHandle_t nvm3_Sem;
+StaticSemaphore_t nvm3_SemStruct;
+} // namespace
 
 void nvm3_lockBegin(void)
 {
@@ -284,11 +287,6 @@ CHIP_ERROR SilabsConfig::WriteConfigValueStr(Key key, const char * str, size_t s
 
     if (str != NULL)
     {
-        // Compute the length of the string if not provided.
-        if (strLen == 0)
-        {
-            strLen = strlen(str);
-        }
         // Write the string to nvm3 without the terminator char (apart from
         // empty strings where only the terminator char is stored in nvm3).
         err = MapNvm3Error(nvm3_writeData(nvm3_defaultHandle, key, str, (strLen > 0) ? strLen : 1));

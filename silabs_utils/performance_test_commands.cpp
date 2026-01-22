@@ -25,8 +25,6 @@
 #include <lib/support/CodeUtils.h>
 #include <controller/WriteInteraction.h>
 
-#include <app/clusters/general-diagnostics-server/general-diagnostics-server.h>
-
 #include "debug_channel.h"
 
 #include <performance_test_commands.h>
@@ -104,7 +102,7 @@ void MatterPerfTest::PingExecuteNextAction()
 {
     if(pingInProgress != true) {
         // Should not happen
-        ChipLogError(NotSpecified, "ERROR: Received a ping responce with no ping in progress");
+        ChipLogError(NotSpecified, "ERROR: Received a ping response with no ping in progress");
         return;
     }
 

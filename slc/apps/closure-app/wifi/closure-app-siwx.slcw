@@ -1,0 +1,8 @@
+label: closure-app-siwx
+quality: production
+package: matter
+description: Solution for a Matter over WiFI Closure App Example
+project:
+  - path: ./closure-app-siwx.slcp
+    id: application
+    output: closure-app-siwx

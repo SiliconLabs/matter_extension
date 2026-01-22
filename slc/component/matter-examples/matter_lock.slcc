@@ -5,6 +5,9 @@ description: >
   included in all Lock applications to help resolve SLC dependencies. Only applicable to Lock applications.
 id: matter_lock
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
 provides:
   - name: matter_lock
 define:

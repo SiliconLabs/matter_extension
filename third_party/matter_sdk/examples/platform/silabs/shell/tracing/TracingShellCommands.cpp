@@ -32,19 +32,6 @@ namespace {
 using TimeTraceOperation = Tracing::Silabs::TimeTraceOperation;
 using SilabsTracer       = Tracing::Silabs::SilabsTracer;
 
-TimeTraceOperation StringToTimeTraceOperation(const char * str)
-{
-    for (auto ttOp = 0; ttOp < to_underlying(TimeTraceOperation::kNumTraces); ttOp++)
-    {
-        TimeTraceOperation op = static_cast<TimeTraceOperation>(ttOp);
-        if (strcmp(str, TimeTraceOperationToString(op)) == 0)
-        {
-            return op;
-        }
-    }
-    return TimeTraceOperation::kNumTraces;
-}
-
 Engine sShellTracingSubCommands;
 
 /********************************************************
@@ -59,13 +46,7 @@ CHIP_ERROR TracingHelpHandler(int argc, char ** argv)
 
 CHIP_ERROR TracingListTimeOperations(int argc, char ** argv)
 {
-    size_t TotalTraceNumber =
-        to_underlying(TimeTraceOperation::kNumTraces) + SilabsTracer::Instance().GetRegisteredAppOperationsCount();
-    for (size_t i = 0; i < TotalTraceNumber; ++i)
-    {
-        streamer_printf(streamer_get(), "Operation: %s\r\n", Tracing::Silabs::TimeTraceOperationToString(i));
-    }
-    return CHIP_NO_ERROR;
+    return SilabsTracer::Instance().OutputAllCurrentOperations();
 }
 
 CHIP_ERROR TracingCommandHandler(int argc, char ** argv)
@@ -78,57 +59,49 @@ CHIP_ERROR TracingCommandHandler(int argc, char ** argv)
     return sShellTracingSubCommands.ExecCommand(argc, argv);
 }
 
-CHIP_ERROR WatermarksCommandHandler(int argc, char ** argv)
+CHIP_ERROR MetricsCommandHandler(int argc, char ** argv)
 {
-    CHIP_ERROR error = CHIP_NO_ERROR;
-    if (argc == 0 || argv == nullptr || argv[0] == nullptr)
-    {
-        streamer_printf(streamer_get(), "Usage: tracing watermarks <TimeTraceOperation>\r\n");
-        return CHIP_ERROR_INVALID_ARGUMENT;
-    }
+    VerifyOrReturnError((argc != 0) && (argv != nullptr) && (argv[0] != nullptr), CHIP_ERROR_INVALID_ARGUMENT,
+                        streamer_printf(streamer_get(), "Usage: tracing metrics <TimeTraceOperation>\r\n"));
 
+    CHIP_ERROR error = CHIP_NO_ERROR;
     if (strcmp(argv[0], "all") == 0)
     {
-        error = SilabsTracer::Instance().OutputAllWaterMarks();
+        error = SilabsTracer::Instance().OutputAllMetrics();
     }
     else
     {
-        TimeTraceOperation operation = StringToTimeTraceOperation(argv[0]);
-        error                        = SilabsTracer::Instance().OutputWaterMark(operation);
+        error = SilabsTracer::Instance().OutputMetric(CharSpan::fromCharString(argv[0]));
     }
     return error;
 }
 
 CHIP_ERROR FlushCommandHandler(int argc, char ** argv)
 {
-    CHIP_ERROR error = CHIP_NO_ERROR;
-    size_t index;
-    if (argc == 0 || argv == nullptr || argv[0] == nullptr)
-    {
-        streamer_printf(streamer_get(), "Usage: tracing flush <TimeTraceOperation>\r\n");
-        return CHIP_ERROR_INVALID_ARGUMENT;
-    }
+    VerifyOrReturnError((argc != 0) && (argv != nullptr) && (argv[0] != nullptr), CHIP_ERROR_INVALID_ARGUMENT,
+                        streamer_printf(streamer_get(), "Usage: tracing flush <TimeTraceOperation>\r\n"));
 
+    CHIP_ERROR error = CHIP_NO_ERROR;
     CharSpan opKey(argv[0], sizeof(argv[0]));
     if (strcmp(argv[0], "all") == 0)
     {
         error = SilabsTracer::Instance().TraceBufferFlushAll();
     }
-    else if (CHIP_NO_ERROR == SilabsTracer::Instance().FindAppOperationIndex(opKey, index))
-    {
-        SilabsTracer::Instance().TraceBufferFlushByOperation(opKey);
-    }
     else
     {
-        TimeTraceOperation operation = StringToTimeTraceOperation(argv[0]);
-        if (operation == TimeTraceOperation::kNumTraces)
-        {
-            streamer_printf(streamer_get(), "Unknown Operation Key\r\n");
-            return CHIP_ERROR_INVALID_ARGUMENT;
-        }
-        error = SilabsTracer::Instance().TraceBufferFlushByOperation(to_underlying(operation));
+        error = SilabsTracer::Instance().TraceBufferFlushByOperation(CharSpan::fromCharString(argv[0]));
     }
     return error;
+}
+
+CHIP_ERROR TasksCommandHandler(int argc, char ** argv)
+{
+    return SilabsTracer::Instance().OutputTaskStatistics();
+}
+
+CHIP_ERROR EnergyCommandHandler(int argc, char ** argv)
+{
+    return SilabsTracer::Instance().OutputPowerManagerStatistics();
 }
 
 } // namespace
@@ -140,8 +113,10 @@ void RegisterCommands()
     static const Shell::Command sTracingSubCommands[] = {
         { &TracingHelpHandler, "help", "Output the help menu" },
         { &TracingListTimeOperations, "list", "List all available TimeTraceOperations" },
-        { &WatermarksCommandHandler, "watermarks", "Display runtime watermarks. Usage: watermarks <TimeTraceOperation>" },
+        { &MetricsCommandHandler, "metrics", "Display runtime metrics. Usage: metrics <TimeTraceOperation>" },
         { &FlushCommandHandler, "flush", "Display buffered traces. Usage: flush <TimeTraceOperation>" },
+        { &TasksCommandHandler, "tasks", "Display FreeRTOS task statistics." },
+        { &EnergyCommandHandler, "energy", "Display energy mode statistics." },
     };
     static const Shell::Command cmds_silabs_tracing = { &TracingCommandHandler, "tracing",
                                                         "Dispatch Silicon Labs Tracing command" };

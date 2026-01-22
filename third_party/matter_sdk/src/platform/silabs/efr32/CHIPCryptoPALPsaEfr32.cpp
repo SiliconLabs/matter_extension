@@ -128,7 +128,6 @@ CHIP_ERROR AES_CCM_encrypt(const uint8_t * plaintext, size_t plaintext_length, c
     status = psa_aead_set_nonce(&operation, nonce, nonce_length);
     VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL, ChipLogError(Crypto, "psa_aead_set_nonce failed: %ld", status));
 
-
     if (0 == aad_length)
     {
         ChipLogDetail(Crypto, "AES_CCM_encrypt: Using aad == null path");

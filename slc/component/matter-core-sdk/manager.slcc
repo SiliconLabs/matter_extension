@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: manager
+description: Provides the Matter Idle Mode Device (ICD) manager for coordinating check-in, state tracking, and notifications.
 id: manager
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

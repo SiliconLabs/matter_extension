@@ -1,6 +1,8 @@
 category: Clusters|CHIP
 description: >
-  Implementation of the OTA Software Update Provider Cluster.
+  Implements the Matter OTA Software Update Provider Cluster, which allows a device to act as an OTA provider for other Matter nodes on the fabric.
+  This component enables serving firmware images and responding to OTA requests using the Matter OTA protocol.
+  Enable this component if your device is intended to distribute software updates to other Matter devices.
   The user has to enable the OTA Software Update Provider Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_ota_provider
 package: matter
@@ -14,7 +16,6 @@ provides:
 source:
   - path: third_party/matter_sdk/src/app/clusters/ota-provider/CodegenIntegration.cpp
   - path: third_party/matter_sdk/src/app/clusters/ota-provider/ota-provider-cluster.cpp
-  - path: third_party/matter_sdk/src/app/clusters/ota-provider/ota-provider.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/ota-provider
     file_list:

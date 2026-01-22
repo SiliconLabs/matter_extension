@@ -102,7 +102,7 @@ void WifiInterface::NotifyConnection(const MacAddress & ap)
     sl_wfx_connect_ind_t evt = {};
     evt.header.id            = to_underlying(WifiEvent::kConnect);
     evt.header.length        = sizeof evt;
-#ifdef RS911X_WIFI
+#ifdef SL_MATTER_SIWX_WIFI_ENABLE
     evt.body.channel = wfx_rsi.ap_chan;
 #endif
     std::copy(ap.begin(), ap.end(), evt.body.mac);
@@ -181,7 +181,7 @@ void WifiInterface::ScheduleConnectionAttempt()
 
 void WifiInterface::ResetConnectionRetryInterval()
 {
-    ChipLogDetail(DeviceLayer, "ScheduleConnectionAttempts: Resetting state to default");
+    ChipLogDetail(DeviceLayer, "ResetConnectionRetryInterval: Resetting state to default");
     retryInterval = kWlanMinRetryIntervalsInSec;
 }
 

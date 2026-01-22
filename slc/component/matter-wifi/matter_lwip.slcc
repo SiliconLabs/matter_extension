@@ -2,7 +2,8 @@
 id: matter_lwip
 package: matter
 description: >
-  matter lwip for wifi
+  Provides the LwIP TCP/IP networking stack configuration and FreeRTOS port used by Matter applications running over Wi-Fi on Silicon Labs platforms.
+  This component integrates Matter's LwIP adaptations with the Silicon Labs Wi-Fi SDK, enabling IPv6 networking required for Matter over Wi-Fi.
 label: Matter LwIP
 category: Matter-WiFi|lwip
 quality: production
@@ -13,11 +14,10 @@ provides:
   - name: matter_lwip
   - name: lwip
   - name: lwip_port_freertos
+  - name: netstack_silabs_lwip_port_freertos
   - name: sl_si91x_errno
 
 requires:
-  - name: lwip_api
-  - name: lwip_netif_ethernet
   - name: sl_si91x_lwip_stack
     condition: [sl_si91x_wireless]
 
@@ -26,13 +26,18 @@ include:
     file_list:
       - path: lwipopts.h
       - path: lwipopts-wf200.h
-      - path: lwipopts-rs911x.h
+      - path: lwipopts-siwx.h
       - path: arch/cc.h
       - path: arch/perf.h
       - path: lwippools.h
   - path: slc/inc/lwip
     file_list:
       - path: lwip_buildconfig.h
+  - path: slc/inc/wifi
+    file_list:
+      - path: brd4186c.h
+      - path: brd4187c.h
+      - path: sl_custom_board.h
   - path: third_party/matter_sdk/src/lwip/freertos
     file_list:
       - path: arch/sys_arch.h

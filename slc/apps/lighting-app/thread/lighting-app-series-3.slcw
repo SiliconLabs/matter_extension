@@ -1,0 +1,13 @@
+label: lighting-app-series-3
+quality: production
+package: matter
+description: Solution containing both a bootloader and a Matter over Thread Lighting App Example on Series 3
+project:
+  - path: ./lighting-app.slcp
+    id: application
+    output: lighting-app
+  - path: ../../bootloaders/bootloader-storage-single-4096k-series-3/bootloader-storage-single-4096k-series-3.slcp
+    id: bootloader
+    output: matter-bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

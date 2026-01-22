@@ -1,172 +1,288 @@
 #!/usr/bin/env python3
+"""
+@file validate_components.py
+@brief Validate SLC components (.slcc) and optional upgrade file using Silicon Labs SLC tool.
+
+This script recursively scans a components directory for .slcc files and invokes the
+SLC validator for each. It can also validate an optional upgrade file (upgrade.slcu)
+located at the repository root.
+
+Usage examples (from repository root):
+  - Validate with defaults:
+      ./slc/script/validate_components.py
+
+  - Validate a custom directory with a specific SLC binary:
+      ./slc/script/validate_components.py -d slc/component -s /path/to/slc
+
+  - Backwards-compatible positional args (directory [slc]):
+      ./slc/script/validate_components.py slc/component /path/to/slc
+"""
+
+import argparse
+import logging
 import os
 import subprocess
 import sys
+from typing import Iterable, List
 
-# Example usage from the root matter directory:
-# $ ./slc/script/validate_components.py [optional directory to search] [optional SLC location - absolute path]
 
-# Or to save output to a log file:
-# $ python -u "./slc/script/validate_components.py" | tee component_validation.log
+logger = logging.getLogger(__name__)
 
-# Default values
-slc = "slc"
-componentDir = "slc/component"
 
-# Allow user to pass in directory to validate and/or location of SLC to use
-if len(sys.argv) > 3:
-    print("Too many arguments. Expecting directory of components to validate and/or location of SLC to use.")
-    sys.exit()
-elif len(sys.argv) == 1:
-    print("Using default 'slc' as command.")
-elif len(sys.argv) == 2:
-    componentDir = sys.argv[1]
-    print("Using default 'slc' as command.")
-elif len(sys.argv) == 3:
-    componentDir = sys.argv[1]
-    slc = sys.argv[2]
-    print(f"Using {slc} as command.")
+def _sanitize_slc_path(slc_path: str) -> str:
+    """!
+    @brief Validate and sanitize the SLC binary path.
 
-    # Sanitize input
-    if (not slc) or ("slc" != os.path.basename(slc)):
+    @param slc_path Path to the SLC binary (or just "slc" on PATH).
+    @return The sanitized SLC path.
+    @throws ValueError If the path is invalid or potentially unsafe.
+    """
+    if not slc_path:
         raise ValueError("Binary location cannot be empty.")
-    invalid_chars = [';', '&', '|', '<', '>', '$', '`', '(', ')', '{', '}', '[', ']', '\\', '\'', '\"', '..']
-    for char in invalid_chars:
-        if char in slc:
+
+    # Require the basename to be exactly 'slc' to match original behavior
+    if os.path.basename(slc_path) != "slc":
+        raise ValueError("Binary location must point to an 'slc' executable.")
+
+    # Basic character screening (extra-safe even though we avoid shell=True)
+    invalid_chars = [';', '&', '|', '<', '>', '$', '`', '(', ')', '{', '}', '[', ']', '\\', '\'', '"', '..']
+    for ch in invalid_chars:
+        if ch in slc_path:
             raise ValueError("Binary location contains invalid characters.")
-    slc = slc.strip()
+
+    return slc_path.strip()
 
 
+def has_non_toolchain_issues(output: str) -> bool:
+    """!
+    @brief Check if output contains issues other than toolchain warnings.
+    
+    @param output The validation output string to check.
+    @return True if there are non-toolchain issues; False otherwise.
+    """
+    lines = output.split('\n')
+    
+    # Filter out toolchain warnings, "No issues detected", and empty lines
+    significant_lines = [
+        line for line in lines
+        if line.strip() and
+           not line.strip().startswith("toolchain_settings:") and
+           "No toolchain setting schema is defined" not in line and
+           "No issues detected" not in line
+    ]
+    
+    return len(significant_lines) > 0
 
-# Parses the components within a given directory and validates them with slc
-# Returns a list with the results of the validation at the end of the test
-def validate_slcc_files(directory):
-    # Checking if the provided directory exists
+
+def print_cleansed(output: Iterable[str], stash: bool = False) -> None:
+    """!
+    @brief Print validator output while removing extra noise.
+
+    Do not print logs for components without any issues (those that end with
+    "No issues detected"). Also filters out toolchain-related warnings.
+
+    @param output Iterable of output strings to cleanse and log.
+    @param stash  If True, drop the first 2 lines from SLC output (stash-mode formatting).
+    """
+    for item in output:
+        lines = item.split('\n')
+        if lines and "No issues detected" in lines[-1]:
+            break
+        
+        # Filter out toolchain warnings
+        filtered_lines = [
+            line for line in lines 
+            if not line.strip().startswith("toolchain_settings:") and
+               "No toolchain setting schema is defined" not in line
+        ]
+        
+        cleaned_output = '\n'.join(filtered_lines[2:]) if stash else '\n'.join(filtered_lines)
+        cleaned_output = cleaned_output.strip()
+        if cleaned_output:
+            logger.info("%s\n", cleaned_output)
+
+
+def validate_slcc_files(directory: str, slc_cmd: str, stash: bool = False) -> bool:
+    """!
+    @brief Validate all .slcc component files under a directory using SLC.
+
+    @param directory Directory to search recursively for .slcc files.
+    @param slc_cmd Path to the SLC executable (or 'slc' if on PATH).
+    @param stash If True, enable stash-mode output formatting when printing.
+    @return True if all validations succeeded; False if any failed.
+    @throws ValueError If the directory does not exist.
+    """
     if not os.path.isdir(directory):
         raise ValueError("Directory does not exist.")
 
     success = True
-    print(f"Validating components within {directory}.\n")
+    logger.info("Validating components within %s.\n", directory)
 
-    # Recursively search the directory for .slcc files
-    for root, dirs, files in os.walk(directory):
+    for root, _dirs, files in os.walk(directory):
         for file in files:
-            results = []
+            results: List[str] = []
             if file.endswith(".slcc"):
-                # Constructing the command to validate the file
-                command = f"{slc} --daemon validate {os.path.join(root, file)} --extension-path='./'"
- 
-                # Running the command using subprocess
+                file_path = os.path.join(root, file)
+                cmd = [slc_cmd, "--daemon", "validate", file_path, "--extension-path=./"]
                 try:
-                    output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, universal_newlines=True)
-                    results.append(output.strip())
+                    completed = subprocess.run(
+                        cmd,
+                        check=True,
+                        capture_output=True,
+                        text=True,
+                    )
+                    output = (completed.stdout or "").strip()
+                    results.append(output)
+                    # Only mark as failure if there are non-toolchain issues
+                    if has_non_toolchain_issues(output):
+                        success = False
                 except subprocess.CalledProcessError as e:
-                    # If the command fails, append the error message to the results
-                    results.append(e.output.strip())
+                    out = (e.stdout or "")
+                    err = (e.stderr or "")
+                    combined = (out + ("\n" if out and err else "") + err).strip()
+                    results.append(combined)
+                    # Only mark as failure if there are non-toolchain issues
+                    if has_non_toolchain_issues(combined):
+                        success = False
+                except FileNotFoundError as e:
+                    # slc not installed or not found on PATH
+                    results.append(str(e))
                     success = False
-            printCleansed(results)
+            # Keep printing behavior per original script
+            print_cleansed(results, stash)
 
     return success
 
-# Validates the upgrade file within the root directory
-def validate_upgrade_file(directory):
-    # Validate upgrade.slcu
-    command = (f"{slc} validate-upgrade {directory}/upgrade.slcu")
-    results = []
+
+def validate_upgrade_file(directory: str, slc_cmd: str, stash: bool = False) -> None:
+    """!
+    @brief Validate an upgrade.slcu file at the repository root (if present).
+
+    @param directory Root directory where 'upgrade.slcu' is expected.
+    @param slc_cmd Path to the SLC executable (or 'slc' if on PATH).
+    @param stash If True, enable stash-mode output formatting when printing.
+    """
+    upgrade_path = os.path.join(directory, "upgrade.slcu")
+    if not os.path.isfile(upgrade_path):
+        logger.debug("No upgrade.slcu found at %s; skipping upgrade validation.", upgrade_path)
+        return
+
+    cmd = [slc_cmd, "validate-upgrade", upgrade_path]
+    results: List[str] = []
     try:
-        output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, universal_newlines=True)
-        results.append(output.strip())
-        print("Upgrade file validation successful.\n")
+        completed = subprocess.run(cmd, check=True, capture_output=True, text=True)
+        results.append((completed.stdout or "").strip())
+        logger.info("Upgrade file validation successful.\n")
     except subprocess.CalledProcessError as e:
-        # If the command fails, append the error message to the results
-        results.append(e.output.strip())
-        print("Upgrade file validation unsuccessful.\n")
+        out = (e.stdout or "")
+        err = (e.stderr or "")
+        combined = (out + ("\n" if out and err else "") + err).strip()
+        results.append(combined)
+        logger.info("Upgrade file validation unsuccessful.\n")
+        print_cleansed(results, stash)
+    except FileNotFoundError as e:
+        results.append(str(e))
+        logger.info("Upgrade file validation unsuccessful.\n")
+        print_cleansed(results, stash)
 
-        printCleansed(results)
 
-# Print results and remove extra noise from SLC and suppress toolchain warnings            
-def printCleansed(output):
-    # Constants for cleaner code
-    SLC_HEADER_LINES = 2
-    TOOLCHAIN_PATTERNS = [
-        'toolchain_settings', 'gcc_compiler_option', 'gcc_linker_option', 
-        'toolchain', 'linker option', 'compiler option', 'toolchains.slct', 'slct', 'toolchain file'
-    ]
-    TOOLCHAIN_WARNING_MESSAGES = [
-        'toolchain_settings: No toolchain setting schema is defined',
-        'Please add a *.slct file that defines the allowed toolchain_settings',
-        'No toolchain setting schema is defined'
-    ]
-    WARNING_PATTERNS = ['warning:', 'warn:', '[warning]', 'warning -', 'warning found', 'warnings detected']
-    
-    for item in output:
-        lines = item.split('\n')
-        # Do not print logs for components without any issues
-        if "No issues detected" in lines[-1]:
-            break
-        
-        filtered_lines = []
-        
-        for i, line in enumerate(lines[SLC_HEADER_LINES:], start=SLC_HEADER_LINES):
-            # Skip specific toolchain warning patterns
-            if any(toolchain_warning in line for toolchain_warning in TOOLCHAIN_WARNING_MESSAGES):
-                continue
-            
-            # Check if this line is toolchain-related
-            is_toolchain_related = any(pattern in line.lower() for pattern in TOOLCHAIN_PATTERNS)
-            
-            # Skip toolchain warnings but keep toolchain errors
-            if is_toolchain_related:
-                is_warning = any(warning_pattern in line.lower() for warning_pattern in WARNING_PATTERNS)
-                if is_warning:
-                    continue
-            
-            # Handle "Warnings" headers that precede only toolchain warnings
-            if line.strip().lower() in ['warnings', '- warnings']:
-                if skip_toolchain_warnings_header(lines, i, TOOLCHAIN_WARNING_MESSAGES, TOOLCHAIN_PATTERNS):
-                    continue
-            
-            filtered_lines.append(line)
-        
-        if filtered_lines:
-            cleanedOutput = '\n'.join(filtered_lines)
-            print(cleanedOutput + "\n")
+def parse_args(argv: List[str]) -> argparse.Namespace:
+    """!
+    @brief Parse command line arguments.
 
-def skip_toolchain_warnings_header(lines, current_index, toolchain_messages, toolchain_patterns):
-    """Helper function to determine if a warnings header should be skipped"""
-    upcoming_lines = lines[current_index + 1:]
-    all_toolchain_warnings = True
-    has_warnings = False
-    
-    for upcoming_line in upcoming_lines:
-        if upcoming_line.strip() == "":
-            continue
-            
-        if any(msg in upcoming_line for msg in toolchain_messages):
-            has_warnings = True
-            continue
-            
-        # Stop at next section header
-        if upcoming_line.strip() and not upcoming_line.startswith(' '):
-            break
-            
-        if upcoming_line.strip():
-            has_warnings = True
-            is_upcoming_toolchain = any(pattern in upcoming_line.lower() for pattern in toolchain_patterns)
-            if not is_upcoming_toolchain:
-                all_toolchain_warnings = False
-                break
-    
-    return has_warnings and all_toolchain_warnings
+    @param argv The list of command-line arguments (excluding program name).
+    @return Parsed arguments namespace.
+    """
+    parser = argparse.ArgumentParser(
+        description="Validate SLC components (.slcc) and optional upgrade file using SLC.",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    # Backwards-compatible positional arguments: [directory] [slc]
+    parser.add_argument(
+        "pos_directory",
+        nargs="?",
+        help="Positional: directory to search recursively for .slcc files",
+    )
+    parser.add_argument(
+        "pos_slc",
+        nargs="?",
+        help="Positional: path to SLC binary or 'slc' if available on PATH",
+    )
+    parser.add_argument(
+        "-d",
+        "--directory",
+        default=None,
+        help="Directory to search recursively for .slcc files",
+    )
+    parser.add_argument(
+        "-s",
+        "--slc",
+        default=None,
+        help="Path to SLC binary or 'slc' if available on PATH",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Enable verbose logging",
+    )
+    parser.add_argument(
+        "--stash",
+        action="store_true",
+        help="Trim first two lines of SLC output (stash-mode formatting)",
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv: List[str]) -> int:
+    """!
+    @brief Program entry point.
+
+    @param argv Command-line arguments (excluding program name).
+    @return Exit code compatible with shell conventions (0 success, non-zero otherwise).
+    """
+    args = parse_args(argv)
+
+    # Logging setup
+    logging.basicConfig(
+        level=logging.DEBUG if args.verbose else logging.INFO,
+        format="%(levelname)s: %(message)s",
+    )
+
+    # Resolve effective inputs with backward compatibility
+    directory = args.pos_directory or args.directory or "slc/component"
+    slc_arg = args.pos_slc or args.slc or "slc"
+
+    # Legacy-style info messages
+    if (args.pos_slc is None) and (args.slc is None):
+        logger.info("Using default 'slc' as command.")
+    else:
+        logger.info("Using %s as command.", slc_arg)
+
+    try:
+        slc_cmd = _sanitize_slc_path(slc_arg)
+    except ValueError as ex:
+        logger.error(str(ex))
+        return 2
+
+    root_dir = os.getcwd()
+    dir_to_search = os.path.join(root_dir, directory)
+
+    # Validate optional upgrade file
+    validate_upgrade_file(root_dir, slc_cmd, args.stash)
+
+    # Validate components
+    try:
+        if validate_slcc_files(dir_to_search, slc_cmd, args.stash):
+            logger.info("Validation successful! No issues detected.")
+            return 0
+        else:
+            logger.info("Validation warnings/errors. Please see the above logs.")
+            return 1
+    except ValueError as ex:
+        logger.error(str(ex))
+        return 2
+
 
 if __name__ == "__main__":
-    rootDir  = os.getcwd()
-    dirToSearch = rootDir + "/" + componentDir
-    validate_upgrade_file(rootDir)
- 
-    if validate_slcc_files(dirToSearch):
-        print("Validation successful! No issues detected.")
-        sys.exit()
-    else:
-        print("Validation warnings/errors. Please see the above logs.")
-        sys.exit(1)
+    sys.exit(main(sys.argv[1:]))

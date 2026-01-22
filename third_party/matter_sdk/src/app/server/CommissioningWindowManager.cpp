@@ -119,6 +119,9 @@ void CommissioningWindowManager::Shutdown()
 void CommissioningWindowManager::ResetState()
 {
     mUseECM = false;
+#if CHIP_DEVICE_CONFIG_ENABLE_JOINT_FABRIC
+    mJCM = false;
+#endif // CHIP_DEVICE_CONFIG_ENABLE_JOINT_FABRIC
 
     mECMDiscriminator = 0;
     mECMIterations    = 0;
@@ -134,8 +137,6 @@ void CommissioningWindowManager::ResetState()
 
     DeviceLayer::SystemLayer().CancelTimer(HandleCommissioningWindowTimeout, this);
     mCommissioningTimeoutTimerArmed = false;
-
-    DeviceLayer::PlatformMgr().RemoveEventHandler(OnPlatformEventWrapper, reinterpret_cast<intptr_t>(this));
 }
 
 void CommissioningWindowManager::Cleanup()
@@ -207,8 +208,6 @@ void CommissioningWindowManager::OnSessionEstablished(const SessionHandle & sess
         mAppDelegate->OnCommissioningSessionStarted();
     }
 
-    DeviceLayer::PlatformMgr().AddEventHandler(OnPlatformEventWrapper, reinterpret_cast<intptr_t>(this));
-
     StopAdvertisement(/* aShuttingDown = */ false);
 
     auto & failSafeContext = Server::GetInstance().GetFailSafeContext();
@@ -239,6 +238,7 @@ void CommissioningWindowManager::OnSessionEstablished(const SessionHandle & sess
         // When the now-armed fail-safe is disarmed or expires it will handle
         // clearing out mPASESession.
         mPASESession.Grab(session);
+        DeviceLayer::PlatformMgr().AddEventHandler(OnPlatformEventWrapper, reinterpret_cast<intptr_t>(this));
     }
 }
 
@@ -390,6 +390,21 @@ CHIP_ERROR CommissioningWindowManager::OpenEnhancedCommissioningWindow(Seconds32
     return err;
 }
 
+#if CHIP_DEVICE_CONFIG_ENABLE_JOINT_FABRIC
+CHIP_ERROR CommissioningWindowManager::OpenJointCommissioningWindow(Seconds32 commissioningTimeout, uint16_t discriminator,
+                                                                    Spake2pVerifier & verifier, uint32_t iterations, ByteSpan salt,
+                                                                    FabricIndex fabricIndex, VendorId vendorId)
+{
+    mJCM = true;
+    return OpenEnhancedCommissioningWindow(commissioningTimeout, discriminator, verifier, iterations, salt, fabricIndex, vendorId);
+}
+
+bool CommissioningWindowManager::IsJCM() const
+{
+    return mJCM;
+}
+#endif // CHIP_DEVICE_CONFIG_ENABLE_JOINT_FABRIC
+
 void CommissioningWindowManager::CloseCommissioningWindow()
 {
     if (IsCommissioningWindowOpen())
@@ -450,7 +465,11 @@ Dnssd::CommissioningMode CommissioningWindowManager::GetCommissioningMode() cons
     switch (mWindowStatus)
     {
     case CommissioningWindowStatusEnum::kEnhancedWindowOpen:
+#if CHIP_DEVICE_CONFIG_ENABLE_JOINT_FABRIC
+        return mJCM ? Dnssd::CommissioningMode::kEnabledJointFabric : Dnssd::CommissioningMode::kEnabledEnhanced;
+#else
         return Dnssd::CommissioningMode::kEnabledEnhanced;
+#endif // CHIP_DEVICE_CONFIG_ENABLE_JOINT_FABRIC
     case CommissioningWindowStatusEnum::kBasicWindowOpen:
         return Dnssd::CommissioningMode::kEnabledBasic;
     default:
@@ -566,6 +585,8 @@ void CommissioningWindowManager::OnSessionReleased()
     // session, since we arm it when the PASE session is set up, and anything
     // that disarms the fail-safe would also tear down the PASE session.
     ExpireFailSafeIfArmed();
+
+    DeviceLayer::PlatformMgr().RemoveEventHandler(OnPlatformEventWrapper, reinterpret_cast<intptr_t>(this));
 }
 
 void CommissioningWindowManager::ExpireFailSafeIfArmed()

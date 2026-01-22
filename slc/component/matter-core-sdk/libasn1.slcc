@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libasn1
+description: Provides ASN.1 encoding and decoding utilities used by Matter security and certificate handling.
 id: libasn1
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

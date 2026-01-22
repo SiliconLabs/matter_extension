@@ -1,0 +1,49 @@
+{
+ "remotes": [
+  {
+   "name": "silabs-conan-production",
+   "url": "https://artifactory-local.silabs.net/artifactory/api/conan/silabs-conan-production",
+   "verify_ssl": true
+  },
+  {
+   "name": "gsdk-conan-production",
+   "url": "https://artifactory-local.silabs.net/artifactory/api/conan/gsdk-conan-production",
+   "verify_ssl": true
+  },
+  {
+   "name": "gsdk-conan-development",
+   "url": "https://artifactory-local.silabs.net/artifactory/api/conan/gsdk-conan-development",
+   "verify_ssl": true
+  },
+  {
+   "name": "sw-arch-conan-staging",
+   "url": "https://artifactory-local.silabs.net/artifactory/api/conan/sw-arch-conan-staging",
+   "verify_ssl": true
+  },
+  {
+   "name": "studio-conan-development",
+   "url": "https://artifactory-local.silabs.net/artifactory/api/conan/studio-conan-development",
+   "verify_ssl": true
+  },
+  {
+   "name": "nwk-15-4-conan-sqa",
+   "url": "https://artifactory.silabs.net/artifactory/api/conan/nwk-15-4-conan-sqa",
+   "verify_ssl": true
+  },
+  {
+   "name": "wiseconnect-conan-sqa",
+   "url": "https://artifactory.silabs.net/artifactory/api/conan/wiseconnect-conan-sqa",
+   "verify_ssl": true
+  },
+  {
+   "name": "conan-silabs-net",
+   "url": "https://conan.silabs.net",
+   "verify_ssl": true
+  },
+  {
+    "name": "netstack-conan-sqa",
+    "url": "https://artifactory.silabs.net/artifactory/api/conan/netstack-conan-sqa",
+    "verify_ssl": true 
+  }
+ ]
+}

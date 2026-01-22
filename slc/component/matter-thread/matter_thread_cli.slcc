@@ -1,6 +1,6 @@
 id: matter_thread_cli
 label: OpenThread CLI
-description: Enables OpenThread CLI for Matter projects
+description: Enables the OpenThread Command Line Interface (CLI) for Matter devices that use Thread as their network transport.
 package: matter
 category: Matter-Thread
 quality: production

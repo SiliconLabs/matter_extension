@@ -218,7 +218,7 @@ void MigrateS3Certificates()
         MutableByteSpan cdBufferSpan(cdBuffer.Get(), cdSize);
 
         provision.Init();
-        // Read All certificates are the current location
+        // Read all certificates at the current location
         VerifyOrReturn(provision.GetStorage().GetDeviceAttestationCert(dacBufferSpan) == CHIP_NO_ERROR);
         VerifyOrReturn(provision.GetStorage().GetProductAttestationIntermediateCert(paiBufferSpan) == CHIP_NO_ERROR);
         VerifyOrReturn(provision.GetStorage().GetCertificationDeclaration(cdBufferSpan) == CHIP_NO_ERROR);

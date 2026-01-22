@@ -77,5 +77,4 @@ private:
 protected:
     uint32_t GetAccumulatorLength() const override { return mLength; }
 };
-
 } // namespace chip

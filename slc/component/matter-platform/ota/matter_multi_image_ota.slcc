@@ -1,6 +1,6 @@
 id: matter_multi_image_ota
 label: OTA Multi Image Requestor
-description: OTA Multi Image Requestor functionality for Matter
+description: Enables the Matter OTA Multi-Image Requestor functionality, allowing a device to receive and process updates containing multiple firmware images in a single OTA transaction.
 package: matter
 category: Stack
 quality: production
@@ -52,7 +52,7 @@ config_file:
 
 define:
   - name: SILABS_OTA_ENABLED
-  - name: CHIP_DEVICE_CONFIG_ENABLE_MULTI_OTA_REQUESTOR
+  - name: SL_MATTER_ENABLE_MULTI_OTA_REQUESTOR
 
 conflicts:
   - name: matter_ota_support

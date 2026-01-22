@@ -1,5 +1,5 @@
 category: Matter|Core
-description: data_model_provider
+description: Defines the Matter data model provider framework for accessing cluster metadata, actions, and events.
 id: data_model_provider
 include:
   - path: third_party/matter_sdk/src/app/data-model-provider
@@ -24,9 +24,10 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
-  - path: third_party/matter_sdk/src/app/data-model-provider/ActionReturnStatus.cpp
-  - path: third_party/matter_sdk/src/app/data-model-provider/ProviderMetadataTree.cpp
-  - path: third_party/matter_sdk/src/app/data-model-provider/MetadataLookup.cpp
+-   path: third_party/matter_sdk/src/app/data-model-provider/ActionReturnStatus.cpp
+-   path: third_party/matter_sdk/src/app/data-model-provider/EventsGenerator.cpp
+-   path: third_party/matter_sdk/src/app/data-model-provider/ProviderMetadataTree.cpp
+-   path: third_party/matter_sdk/src/app/data-model-provider/MetadataLookup.cpp
 
 ui_hints:
   visibility: never

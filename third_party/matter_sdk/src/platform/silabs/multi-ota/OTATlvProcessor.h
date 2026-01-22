@@ -1,6 +1,6 @@
 /*
  *
- *    Copyright (c) 2023 Project CHIP Authors
+ *    Copyright (c) 2025 Project CHIP Authors
  *    All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,7 @@
 namespace chip {
 
 #define CHIP_ERROR_TLV_PROCESSOR(e)                                                                                                \
-    ChipError(ChipError::Range::kLastRange, ((uint8_t) ChipError::Range::kLastRange << 3) | e, __FILE__, __LINE__)
+    CHIP_GENERIC_ERROR(ChipError::Range::kLastRange, ((uint8_t) ChipError::Range::kLastRange << 3) | e)
 
 #define CHIP_OTA_TLV_CONTINUE_PROCESSING CHIP_ERROR_TLV_PROCESSOR(0x01)
 #define CHIP_OTA_CHANGE_PROCESSOR CHIP_ERROR_TLV_PROCESSOR(0x02)
@@ -152,9 +152,10 @@ public:
     void SetWasSelected(bool selected) { mWasSelected = selected; }
     bool WasSelected() { return mWasSelected; }
     bool IsValidTag(OTAProcessorTag tag);
-    bool IsLastBlock() const { return mLastBlock; }
 
 #ifdef SL_MATTER_ENABLE_OTA_ENCRYPTION
+    bool IsLastBlock() const { return mLastBlock; }
+
     CHIP_ERROR vOtaProcessInternalEncryption(MutableByteSpan & block);
     /**
      * @brief Remove padding from the given block.
@@ -165,7 +166,7 @@ public:
      * @note The method assumes the block is padded using PKCS7 padding.
      */
     CHIP_ERROR RemovePadding(MutableByteSpan & block);
-#endif
+#endif // SL_MATTER_ENABLE_OTA_ENCRYPTION
 
 protected:
     /**
@@ -205,13 +206,13 @@ protected:
     static constexpr size_t kOTAEncryptionKeyLength = 16;
     uint32_t mUnalignmentNum                        = 0;
 #endif
+    bool mLastBlock                              = false;
     uint32_t mLength                             = 0;
     uint32_t mProcessedLength                    = 0;
     bool mWasSelected                            = false;
     ProcessDescriptor mCallbackProcessDescriptor = nullptr;
-    bool mDescriptorProcessed                    = false;
-    bool mLastBlock                              = false;
     OTADataAccumulator mAccumulator;
+    bool mDescriptorProcessed = false;
 };
 
 } // namespace chip

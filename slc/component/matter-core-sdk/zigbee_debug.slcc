@@ -1,0 +1,20 @@
+id: matter_zigbee_debug
+package: matter
+label: zigbee debug cli
+description: >
+  Enables Zigbee components to enable the zigbee cli through the matter_shell component
+category: Matter|Core
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+requires:
+  - name: zigbee_ble_dmp_cli
+  - name: zigbee_debug_print
+  - name: zigbee_zcl_cli
+  - name: zigbee_core_cli
+provides:
+  - name: matter_zigbee_debug
+define:
+  - name: SL_CLI_TICK_ENABLE
+    value: 0

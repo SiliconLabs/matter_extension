@@ -8,16 +8,6 @@ description: >-
   encryption/decryption as well signature generation/verification.
 category: Platform|Security|Mbed TLS|Upper Layer
 quality: production
-source:
-  # The group of source files below contain code that is required for the PK
-  # abstraction layer to function. Normally, these would be included through
-  # their corresponding mbedtls_ components. We can't rely on those being
-  # included now that the PK layer uses PSA Crypto APIs.   
-  - path: slc/component/sdk-content/simplicity-sdk/util/third_party/mbedtls/library/pk.c
-  - path: slc/component/sdk-content/simplicity-sdk/util/third_party/mbedtls/library/pk_ecc.c
-  - path: slc/component/sdk-content/simplicity-sdk/util/third_party/mbedtls/library/pkparse.c
-  - path: slc/component/sdk-content/simplicity-sdk/util/third_party/mbedtls/library/pkwrite.c
-  - path: slc/component/sdk-content/simplicity-sdk/util/third_party/mbedtls/library/pk_wrap.c
 provides:
   - name: mbedtls_pki
     condition: [matter_aws]

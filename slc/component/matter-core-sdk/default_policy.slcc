@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: default_policy
+description: Provides the default address selection policy used by Matter minimal mDNS discovery.
 id: default_policy
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

@@ -1,7 +1,7 @@
 id: matter_wifi
 package: matter
 description: >
-  matter wifi
+  Adds Wi-Fi network layer for Matter devices
 label: Matter WiFi
 category: Matter-WiFi
 quality: production
@@ -24,5 +24,6 @@ config_file:
 provides:
   - name: matter_wifi
 requires:
+  - name: matter_lwip
   - name: matter_minimal_mdns
   - name: matter_power_save_interface

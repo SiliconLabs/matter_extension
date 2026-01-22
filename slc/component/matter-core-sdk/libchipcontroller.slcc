@@ -4,7 +4,7 @@ define:
     value: <lib/address_resolve/AddressResolve_DefaultImpl.h>
   - name: CHIP_HAVE_CONFIG_H
     value: "1"
-description: libchipcontroller
+description: Provides the Matter controller framework for commissioning, discovering, and managing Matter devices.
 id: libchipcontroller
 include:
   - path: third_party/matter_sdk/src/include

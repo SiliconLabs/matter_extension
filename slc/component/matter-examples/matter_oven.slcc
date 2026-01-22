@@ -1,0 +1,11 @@
+category: Matter|Examples
+package: matter
+description: >
+  Provides example component for a Oven application. This component should be 
+  included in all oven applications to help resolve SLC dependencies. Only applicable to oven applications.
+id: matter_oven
+quality: production
+provides:
+  - name: matter_oven
+ui_hints:
+  visibility: never

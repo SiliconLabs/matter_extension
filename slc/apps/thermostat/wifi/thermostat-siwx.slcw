@@ -1,0 +1,8 @@
+label: thermostat-siwx
+quality: production
+package: matter
+description: Matter Thermostat Wi-Fi SoC solution
+project:
+  - path: ./thermostat-siwx.slcp
+    id: application
+    output: thermostat-siwx

@@ -12,11 +12,13 @@ metadata:
 provides:
   - name: matter_access_control
 source:
-  - path: third_party/matter_sdk/src/app/clusters/access-control-server/access-control-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/access-control-server/access-control-cluster.cpp
   - path: third_party/matter_sdk/src/app/clusters/access-control-server/ArlEncoder.cpp
+  - path: third_party/matter_sdk/src/app/clusters/access-control-server/CodegenIntegration.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/access-control-server
     file_list:
+      - path: access-control-cluster.h
       - path: ArlEncoder.h
 template_contribution:
   - name: component_catalog

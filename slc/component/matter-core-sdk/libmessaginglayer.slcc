@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libmessaginglayer
+description: Provides the Matter messaging layer for reliable exchange management and protocol message delivery.
 id: libmessaginglayer
 include:
   - path: third_party/matter_sdk/examples/platform/silabs
@@ -15,20 +15,20 @@ include:
   - path: third_party/nlio/include
   - path: third_party/matter_sdk/src/messaging
     file_list:
-      - path: SessionParameters.h
-      - path: ExchangeDelegate.h
-      - path: ReliableMessageAnalyticsDelegate.h
-      - path: ReliableMessageMgr.h
-      - path: ExchangeMessageDispatch.h
-      - path: ReliableMessageContext.h
-      - path: ExchangeContext.h
-      - path: ErrorCategory.h
-      - path: Flags.h
-      - path: ReliableMessageProtocolConfig.h
-      - path: ApplicationExchangeDispatch.h
-      - path: ExchangeMgr.h
-      - path: ExchangeHolder.h
-      - path: EphemeralExchangeDispatch.h
+    -   path: SessionParameters.h
+    -   path: ExchangeDelegate.h
+    -   path: ReliableMessageMgr.h
+    -   path: ExchangeMessageDispatch.h
+    -   path: ReliableMessageContext.h
+    -   path: ExchangeContext.h
+    -   path: ErrorCategory.h
+    -   path: Flags.h
+    -   path: ReliableMessageProtocolConfig.h
+    -   path: ApplicationExchangeDispatch.h
+    -   path: ExchangeMgr.h
+    -   path: ExchangeHolder.h
+    -   path: EphemeralExchangeDispatch.h
+    -   path: ReliableMessageAnalyticsDelegate.h
 label: libmessaginglayer
 package: matter
 provides:

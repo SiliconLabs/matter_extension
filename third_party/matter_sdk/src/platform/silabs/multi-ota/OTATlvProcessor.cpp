@@ -1,6 +1,6 @@
 /*
  *
- *    Copyright (c) 2023 Project CHIP Authors
+ *    Copyright (c) 2023-2025 Project CHIP Authors
  *    All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,7 +37,7 @@ CHIP_ERROR OTATlvProcessor::Init()
 {
     VerifyOrReturnError(mCallbackProcessDescriptor != nullptr, CHIP_OTA_PROCESSOR_CB_NOT_REGISTERED);
     mAccumulator.Init(GetAccumulatorLength());
-#ifdef SL_MATTER_ENABLE_OTA_ENCRYPTION
+#if defined(SL_MATTER_ENABLE_OTA_ENCRYPTION) && SL_MATTER_ENABLE_OTA_ENCRYPTION
     mUnalignmentNum = 0;
 #endif
     return CHIP_NO_ERROR;
@@ -48,7 +48,7 @@ CHIP_ERROR OTATlvProcessor::Clear()
     OTATlvProcessor::ClearInternal();
     mAccumulator.Clear();
     mDescriptorProcessed = false;
-#ifdef SL_MATTER_ENABLE_OTA_ENCRYPTION
+#if defined(SL_MATTER_ENABLE_OTA_ENCRYPTION) && SL_MATTER_ENABLE_OTA_ENCRYPTION
     mUnalignmentNum = 0;
 #endif
     return CHIP_NO_ERROR;
@@ -80,7 +80,6 @@ CHIP_ERROR OTATlvProcessor::Process(ByteSpan & block)
             }
         }
     }
-
     return status;
 }
 
@@ -89,10 +88,10 @@ void OTATlvProcessor::ClearInternal()
     mLength          = 0;
     mProcessedLength = 0;
     mWasSelected     = false;
-    mLastBlock       = false;
-#if SL_MATTER_ENABLE_OTA_ENCRYPTION
-    mIVOffset = 0;
-#endif
+#if defined(SL_MATTER_ENABLE_OTA_ENCRYPTION) && SL_MATTER_ENABLE_OTA_ENCRYPTION
+    mIVOffset  = 0;
+    mLastBlock = false;
+#endif // SL_MATTER_ENABLE_OTA_ENCRYPTION
 }
 
 bool OTATlvProcessor::IsError(CHIP_ERROR & status)
@@ -137,7 +136,7 @@ CHIP_ERROR OTADataAccumulator::Accumulate(ByteSpan & block)
     return CHIP_NO_ERROR;
 }
 
-#if SL_MATTER_ENABLE_OTA_ENCRYPTION
+#if defined(SL_MATTER_ENABLE_OTA_ENCRYPTION) && SL_MATTER_ENABLE_OTA_ENCRYPTION
 CHIP_ERROR OTATlvProcessor::vOtaProcessInternalEncryption(MutableByteSpan & block)
 {
 #if defined(SL_MBEDTLS_USE_TINYCRYPT)
@@ -169,13 +168,21 @@ CHIP_ERROR OTATlvProcessor::RemovePadding(MutableByteSpan & block)
     }
 
     // Verify padding bytes
+    uint8_t mismatch = 0;
     for (size_t i = 0; i < padLength; ++i)
     {
         if (block.data()[block.size() - 1 - i] != padLength)
         {
-            ChipLogError(DeviceLayer, "PKCS7 padding verification failed");
-            return CHIP_ERROR_INVALID_ARGUMENT;
+            // not returning early here, we want to check all padding bytes
+            // preventing timing side-channel attacks
+            mismatch = 1;
         }
+    }
+
+    if (mismatch != 0)
+    {
+        ChipLogError(DeviceLayer, "PKCS7 padding verification failed");
+        return CHIP_ERROR_INVALID_ARGUMENT;
     }
 
     block.reduce_size(block.size() - padLength);

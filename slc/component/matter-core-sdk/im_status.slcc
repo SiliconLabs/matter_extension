@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: im_status
+description: Defines Interaction Model status codes used for reporting Matter protocol operation results.
 id: im_status
 include:
   - path: third_party/matter_sdk/examples/lighting-app/silabs/include

@@ -12,11 +12,17 @@ metadata:
 provides:
   - name: matter_identify
 source:
-  - path: third_party/matter_sdk/src/app/clusters/identify-server/identify-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/identify-server/CodegenIntegration.cpp
+  - path: third_party/matter_sdk/src/app/clusters/identify-server/IdentifyCluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/identify-server
     file_list:
+      - path: CodegenIntegration.h
       - path: identify-server.h
+      - path: IdentifyCluster.h
+  - path: third_party/matter_sdk/src/lib/support
+    file_list:
+      - path: TimerDelegate.h
 template_contribution:
   - name: component_catalog
     value: matter_identify

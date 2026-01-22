@@ -1,6 +1,8 @@
 id: matter_multi_image_custom_processor
 label: OTA Multi Image Requestor Custom Processor for Testing
-description: OTA Multi Image Requestor Custom Processor for Testing
+description: >
+  Provides a custom OTA image processor implementation used for testing Matter multi-image OTA update flows.
+  This component extends the Matter multi-image OTA requestor to allow validation of custom TLV handling and image processing behavior.
 package: matter
 category: Stack
 quality: production

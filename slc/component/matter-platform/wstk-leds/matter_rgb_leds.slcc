@@ -9,6 +9,14 @@ metadata:
     license: Zlib
 provides:
   - name: matter_rgb_leds
+requires:
+  - name: simple_rgb_pwm_led
+    condition: [hardware_board_has_rgb]
+recommends:
+  - id: simple_rgb_pwm_led
+    vendor: silabs
+    instance: [rgb_led0]
+    condition: [hardware_board_has_rgb]
 include:
   - path: third_party/matter_sdk/examples/platform/silabs/rgb_led
     file_list:

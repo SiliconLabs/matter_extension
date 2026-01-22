@@ -1,0 +1,93 @@
+/*******************************************************************
+*
+*		Custom JLink Script for Caracal EFR32XG26XFULL parts
+*
+*******************************************************************/
+
+__constant U32 MSC_BASE     	= 0x40030000;
+__constant U32 MSC_LOCK     	= MSC_BASE+0x3C;
+__constant U32 MSC_MISCLOCKWORD = MSC_BASE+0x40;
+
+__constant U32 MSC_MISCLOCKWORD_MELOCK = (0x1 << 0);
+__constant U32 MSC_MISCLOCKWORD_UDLOCK = (0x1 << 4);
+
+__constant U16 MSC_UNLOCK_CODE = 0x1B71;
+
+__constant U32 CMU_BASE        = 0x40008000;
+__constant U32 CMU_CLKEN1      = CMU_BASE + 0x68;
+__constant U32 CMU_CLKEN1_MSC  = 0x1 << 16;
+
+/*******************************************************************
+*
+*       ConfigTargetSettings
+*
+*       Set default erase operation to erase all flash banks.
+*
+*   Ref - https://wiki.segger.com/Using_J-Link_Command_Strings
+*******************************************************************/
+int ConfigTargetSettings(void) {
+  // Enable erase for all flash banks
+  JLINK_SYS_Report("--EnableEraseAllFlashBanks--");
+  JLINK_ExecCommand("EnableEraseAllFlashBanks");
+  return 0;
+}
+
+/*******************************************************************
+*
+*       InitTarget
+*
+*       Setup target AP-layout.
+*
+*******************************************************************/
+void InitTarget(void) {
+  Report("----------------------------------------------------------------\n");
+  Report("  EFR32XG26 family J-Link Script: InitTarget()\n");
+  Report("  Setting M33 AP[0] as default AHB-AP index\n");
+  Report("----------------------------------------------------------------\n");
+  JLINK_CORESIGHT_AddAP(0, CORESIGHT_AHB_AP);
+  JLINK_CORESIGHT_AddAP(1, CORESIGHT_CUSTOM_AP);
+  JLINK_CORESIGHT_AddAP(2, CORESIGHT_AHB_AP);
+  JLINK_CORESIGHT_AddAP(3, CORESIGHT_AHB_AP);
+  //
+  // Use AP[0] as AHB-AP for target communication
+  //
+  CORESIGHT_IndexAHBAPToUse = 0;
+}
+
+/*******************************************************************
+*
+*       HandleBeforeFlashProg
+*
+*		Turn on MSC clock and unlock MSC for writing.
+*
+*******************************************************************/
+int HandleBeforeFlashProg(void)
+{
+  U32 miscLock;
+  U32 clken;
+
+  clken = JLINK_MEM_ReadU32(CMU_CLKEN1);
+  if ((clken & CMU_CLKEN1_MSC) == 0){
+    clken |= CMU_CLKEN1_MSC;
+    JLINK_MEM_WriteU32(CMU_CLKEN1, clken);
+  }
+
+  // Unlock MSC
+  JLINK_MEM_WriteU32(MSC_LOCK, MSC_UNLOCK_CODE);
+
+  miscLock = JLINK_MEM_ReadU32(MSC_MISCLOCKWORD);
+
+  JLINK_SYS_Report1("MISCLOCK_UDLOCK ", (miscLock & MSC_MISCLOCKWORD_UDLOCK));
+
+  if (miscLock & MSC_MISCLOCKWORD_UDLOCK) {
+    JLINK_SYS_Report("Unlocking userdata page...");
+
+    miscLock &= ~MSC_MISCLOCKWORD_UDLOCK;
+
+    JLINK_MEM_WriteU32(MSC_MISCLOCKWORD, miscLock);
+    miscLock = JLINK_MEM_ReadU32(MSC_MISCLOCKWORD);
+    JLINK_SYS_Report1("MISCLOCK_UDLOCK ", (miscLock & MSC_MISCLOCKWORD_UDLOCK));
+  }
+
+  return 0;
+}

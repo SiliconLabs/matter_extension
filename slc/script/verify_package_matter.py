@@ -23,6 +23,7 @@ import os
 import argparse
 import logging
 import sys
+import re
 
 from verify_vendor_silabs import VerifyVendorSilabs
 
@@ -120,6 +121,11 @@ def main():
     missing_vendor_files = []
 
     for file_path in files:
+        # Skip TrustZone secure project
+        if re.search(r'/trustzone/.*-s\.slcp$', file_path):
+            logger.info(f"Skipping TrustZone secure project: {file_path}")
+            continue
+
         # Verify 'package: matter' or 'id: matter'
         if not verify_package_matter(file_path):
             if file_path.endswith(".slce"):

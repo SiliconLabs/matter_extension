@@ -12,11 +12,12 @@ metadata:
 provides:
   - name: matter_wifi_network_diagnostics
 source:
-  - path: third_party/matter_sdk/src/app/clusters/wifi-network-diagnostics-server/wifi-network-diagnostics-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/wifi-network-diagnostics-server/CodegenIntegration.cpp
+  - path: third_party/matter_sdk/src/app/clusters/wifi-network-diagnostics-server/wifi-network-diagnostics-cluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/wifi-network-diagnostics-server
     file_list:
-      - path: wifi-network-diagnostics-server.h
+      - path: wifi-network-diagnostics-cluster.h
       - path: WiFiDiagnosticsTestEventTriggerHandler.h
 template_contribution:
   - name: component_catalog

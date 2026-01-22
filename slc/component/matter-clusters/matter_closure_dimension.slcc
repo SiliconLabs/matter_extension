@@ -1,4 +1,4 @@
-category: Clusters|Closures
+category: Clusters|General
 description: >
   Implementation of the Closure Dimension Server Cluster.
   The user has to enable the Closure Dimension Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
@@ -9,6 +9,8 @@ quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
+requires:
+  - name: matter_cluster_building_blocks
 provides:
   - name: matter_closure_dimension
 source:

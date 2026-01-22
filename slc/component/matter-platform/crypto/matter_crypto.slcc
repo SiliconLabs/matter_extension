@@ -31,6 +31,8 @@ requires:
     condition: [matter_provision]
   - name: mbedtls_ecdsa_deterministic
     condition: [matter_provision]
+    unless: [matter_aws]
+
 
   # OT CoAP Cert libs
   - name: mbedtls_tls
@@ -42,9 +44,23 @@ requires:
   - name: mbedtls_jpake
     condition: [ot_coap_cert_libs]
 
+  # OT Multi-Instance Cert libs
+  - name: mbedtls_tls
+    condition: [ot_multi_instance_cert_libs]
+  - name: mbedtls_dtls
+    condition: [ot_multi_instance_cert_libs]
+  - name: mbedtls_tls_server
+    condition: [ot_multi_instance_cert_libs]
+  - name: mbedtls_jpake
+    condition: [ot_multi_instance_cert_libs]
+
 config_file:
   - path: slc/config/sli_psa_builtin_config.h
     file_id: sli_psa_builtin_config
+  - path: third_party/matter_sdk/src/platform/silabs/efr32
+    file_list:
+      - path: efr32-chip-mbedtls-config.h
+      - path: efr32-psa-crypto-config.h
 
 define:
   - name: OPENTHREAD_CONFIG_ENABLE_BUILTIN_MBEDTLS
@@ -53,9 +69,19 @@ define:
     value: 0
   - name: MBEDTLS_USER_CONFIG_FILE
     value: "<sli_psa_builtin_config.h>"
+    unless: [matter_aws]
+  - name: MBEDTLS_USER_CONFIG_FILE
+    value: "<efr32-chip-mbedtls-config.h>"
+    condition: [matter_aws]
+  - name: MBEDTLS_PSA_CRYPTO_USER_CONFIG_FILE
+    value: <efr32-psa-crypto-config.h>
+    condition: [matter_aws]
   # OT CoAP Cert libs
   - name: MBEDTLS_SSL_HANDSHAKE_WITH_CERT_ENABLED
     condition: [ot_coap_cert_libs]
+  # OT Multi-Instance Cert libs
+  - name: MBEDTLS_SSL_HANDSHAKE_WITH_CERT_ENABLED
+    condition: [ot_multi_instance_cert_libs]
 
 template_contribution:
   - name: mbedtls_config

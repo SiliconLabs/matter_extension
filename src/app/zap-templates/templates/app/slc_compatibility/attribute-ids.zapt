@@ -10,7 +10,13 @@ namespace app {
 namespace Clusters {
 namespace {{asUpperCamelCase name}} {
 namespace Attributes {
+
 {{#zcl_attributes_server}}
+{{#first}}
+// Total number of attributes supported by the cluster, including global attributes
+inline constexpr uint32_t kAttributesCount = {{count}};
+{{/first}}
+
 namespace {{chip_name_for_id_usage label}} {
 {{#if clusterRef}}
 inline constexpr AttributeId Id = {{asHex code 8}};

@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: naming
+description: Provides Matter service naming utilities used for DNS-SD advertisement and discovery.
 id: naming
 include:
   - path: third_party/matter_sdk/examples/platform/silabs

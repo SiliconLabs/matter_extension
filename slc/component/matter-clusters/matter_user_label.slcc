@@ -12,7 +12,12 @@ metadata:
 provides:
   - name: matter_user_label
 source:
-  - path: third_party/matter_sdk/src/app/clusters/user-label-server/user-label-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/user-label-server/CodegenIntegration.cpp
+  - path: third_party/matter_sdk/src/app/clusters/user-label-server/user-label-cluster.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/user-label-server
+    file_list:
+      - path: user-label-cluster.h
 template_contribution:
   - name: component_catalog
     value: matter_user_label

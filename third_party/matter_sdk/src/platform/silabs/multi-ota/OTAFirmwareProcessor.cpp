@@ -47,12 +47,12 @@ CHIP_ERROR OTAFirmwareProcessor::ProcessInternal(ByteSpan & block)
     if (!mDescriptorProcessed)
     {
         ReturnErrorOnFailure(ProcessDescriptor(block));
-#if SL_MATTER_ENABLE_OTA_ENCRYPTION
+#ifdef SL_MATTER_ENABLE_OTA_ENCRYPTION
         /* 16 bytes to used to store undecrypted data because of unalignment */
         mAccumulator.Init(requestedOtaMaxBlockSize + 16);
 #endif
     }
-#if SL_MATTER_ENABLE_OTA_ENCRYPTION
+#ifdef SL_MATTER_ENABLE_OTA_ENCRYPTION
     MutableByteSpan byteBlock = MutableByteSpan(mAccumulator.data(), mAccumulator.GetThreshold());
     memcpy(&byteBlock[0], &byteBlock[requestedOtaMaxBlockSize], mUnalignmentNum);
     memcpy(&byteBlock[mUnalignmentNum], block.data(), block.size());
@@ -72,7 +72,7 @@ CHIP_ERROR OTAFirmwareProcessor::ProcessInternal(ByteSpan & block)
     }
 
     OTATlvProcessor::vOtaProcessInternalEncryption(byteBlock);
-    if (IsLastBlock() == true)
+    if (IsLastBlock())
     {
         // Remove padding from the last block since if the file was padded, last block will contain padding bytes.
         VerifyOrReturnError(OTATlvProcessor::RemovePadding(byteBlock) == CHIP_NO_ERROR, CHIP_ERROR_WRONG_ENCRYPTION_TYPE,

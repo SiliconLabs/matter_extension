@@ -4,7 +4,7 @@ define:
     value: "1"
   - name: RADIO_CONFIG_DMP_SUPPORT
     value: "1"
-description: libsetuppayload
+description: Provides utilities for generating and parsing Matter setup payloads used in commissioning and onboarding.
 id: libsetuppayload
 include:
   - path: third_party/matter_sdk/examples/platform/silabs
@@ -15,19 +15,19 @@ include:
   - path: third_party/nlio/include
   - path: third_party/matter_sdk/src/setup_payload
     file_list:
-      - path: Base38Encode.h
-      - path: Base38Decode.h
-      - path: AdditionalDataPayloadParser.h
-      - path: QRCodeSetupPayloadGenerator.h
-      - path: AdditionalDataPayloadGenerator.h
-      - path: SetupPayload.h
-      - path: SetupPayloadHelper.h
-      - path: Base38.h
-      - path: ManualSetupPayloadParser.h
-      - path: QRCodeSetupPayloadParser.h
-      - path: ManualSetupPayloadGenerator.h
-      - path: AdditionalDataPayload.h
-      - path: OnboardingCodesUtil.h
+    -   path: Base38Encode.h
+    -   path: Base38Decode.h
+    -   path: AdditionalDataPayloadParser.h
+    -   path: QRCodeSetupPayloadGenerator.h
+    -   path: AdditionalDataPayloadGenerator.h
+    -   path: SetupPayload.h
+    -   path: SetupPayloadHelper.h
+    -   path: Base38.h
+    -   path: ManualSetupPayloadParser.h
+    -   path: QRCodeSetupPayloadParser.h
+    -   path: ManualSetupPayloadGenerator.h
+    -   path: AdditionalDataPayload.h
+    -   path: OnboardingCodesUtil.h
 label: libsetuppayload
 package: matter
 provides:
@@ -37,14 +37,14 @@ metadata:
   sbom:
     license: "Apache 2.0"
 source:
-  - path: third_party/matter_sdk/src/setup_payload/Base38Decode.cpp
-  - path: third_party/matter_sdk/src/setup_payload/Base38Encode.cpp
-  - path: third_party/matter_sdk/src/setup_payload/ManualSetupPayloadGenerator.cpp
-  - path: third_party/matter_sdk/src/setup_payload/ManualSetupPayloadParser.cpp
-  - path: third_party/matter_sdk/src/setup_payload/OnboardingCodesUtil.cpp
-  - path: third_party/matter_sdk/src/setup_payload/QRCodeSetupPayloadGenerator.cpp
-  - path: third_party/matter_sdk/src/setup_payload/QRCodeSetupPayloadParser.cpp
-  - path: third_party/matter_sdk/src/setup_payload/SetupPayload.cpp
-  - path: third_party/matter_sdk/src/setup_payload/SetupPayloadHelper.cpp
+-   path: third_party/matter_sdk/src/setup_payload/Base38Decode.cpp
+-   path: third_party/matter_sdk/src/setup_payload/Base38Encode.cpp
+-   path: third_party/matter_sdk/src/setup_payload/ManualSetupPayloadGenerator.cpp
+-   path: third_party/matter_sdk/src/setup_payload/ManualSetupPayloadParser.cpp
+-   path: third_party/matter_sdk/src/setup_payload/OnboardingCodesUtil.cpp
+-   path: third_party/matter_sdk/src/setup_payload/QRCodeSetupPayloadGenerator.cpp
+-   path: third_party/matter_sdk/src/setup_payload/QRCodeSetupPayloadParser.cpp
+-   path: third_party/matter_sdk/src/setup_payload/SetupPayload.cpp
+-   path: third_party/matter_sdk/src/setup_payload/SetupPayloadHelper.cpp
 ui_hints:
   visibility: never

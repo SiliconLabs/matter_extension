@@ -1,0 +1,12 @@
+# Platform-specific data model GN for silabs oven example
+# Mirrors lighting-app/silabs/data_model/BUILD.gn
+
+import("//build_overrides/chip.gni")
+import("${chip_root}/src/app/chip_data_model.gni")
+import("${chip_root}/src/platform/device.gni")
+
+chip_data_model("silabs-oven") {
+  zap_file = "oven-wifi-app.zap"
+  is_server = true
+  public_deps = [ "${chip_root}/src/app/clusters/bindings:binding-manager" ]
+}

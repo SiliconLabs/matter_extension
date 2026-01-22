@@ -2,7 +2,8 @@ id: matter_lwip_support
 package: matter
 label: Src Platform LWIP Support Components
 description: >
-  LWIP support for Matter
+  Provides platform-specific LwIP support code used by Matter applications running over Wi-Fi on Silicon Labs devices.
+  This component implements network interface, DHCP client, and Ethernet adaptation layers that connect the Matter platform layer to the underlying LwIP TCP/IP stack.
 category: Matter-WiFi|Platform
 quality: production
 metadata:
@@ -16,11 +17,11 @@ requires:
   - name: matter_lwip
 
 include:
-  - path: third_party/matter_sdk/src/platform/silabs/wifi/lwip-support
-    file_list:
-      - path: dhcp_client.h
-      - path: ethernetif.h
-      - path: lwip_netif.h
+- path: third_party/matter_sdk/src/platform/silabs/wifi/lwip-support
+  file_list:
+  - path: dhcp_client.h
+  - path: ethernetif.h
+  - path: lwip_netif.h
 
 source:
   - path: third_party/matter_sdk/src/platform/silabs/wifi/lwip-support/ethernetif.cpp
