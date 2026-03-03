@@ -113,7 +113,6 @@ include:
   - path: LEDWidget.h
   - path: sl_systemview_config.h
   - path: PigweedLogger.h
-  - path: FreeRTOSConfig.h
   - path: Rpc.h
   - path: silabs_creds.h
   - path: MemMonitoring.h
@@ -190,7 +189,7 @@ source:
 - path: third_party/matter_sdk/src/platform/silabs/SiWx/ble/sl_si91x_ble_init.cpp
 - path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp
 - path: third_party/matter_sdk/src/platform/silabs/wifi/WifiInterface.cpp
-
+- path: third_party/matter_sdk/src/platform/silabs/ChipDie.cpp
 define:
   - name: CHIP_HAVE_CONFIG_H
     value: "1"

@@ -770,15 +770,15 @@
 		<property key="core.quality" value="PRODUCTION"/>
 		<description>This is a Zigbee Matter Light Application over Thread for BRD4187C</description>
 	</demo>
-	<demo name="brd4187c.demo.lighting_app_thread_multipan" label="Matter - SoC Lighting over Thread multipan">
-		<property key="demos.blurb" value="Matter - SoC Lighting app"/>
+	<demo name="brd4187c.demo.lighting_app_thread_multipan" label="Matter - SoC Lighting multipan over Thread">
+		<property key="demos.blurb" value="Matter - SoC Lighting multipan app"/>
 		<property key="core.partCompatibility" value=".*"/>
 		<property key="core.boardCompatibility" value="brd4187c"/>
 		<property key="demos.imageFile" value="asset://extension.matter_2.8.0/demos/brd4187c/lighting-app-series-2-solution-multipan/artifact/lighting-app-series-2-full.s37"/>
 		<property key="core.readmeFiles" value="slc/apps/lighting-app/thread/README.md"/>
 		<property key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
 		<property key="core.quality" value="PRODUCTION"/>
-		<description>This is a Matter Lighting Application over Thread for BRD4187C</description>
+		<description>This is a Matter Lighting multipan Application over Thread for BRD4187C</description>
 	</demo>
 	<demo name="brd4187c.demo.refrigerator_app_thread" label="Matter - SoC Refrigerator over Thread">
 		<property key="demos.blurb" value="Matter - SoC Refrigerator app"/>

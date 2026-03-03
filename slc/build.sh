@@ -332,7 +332,7 @@ if [ "$skip_gen" = false ]; then
 			fi
 		fi
 
-		if [ "$GENERATE_APPLICATION" = true ]; then
+		if [[ "$SILABS_APP_PATH" != *bootloader* ]] && [ "$GENERATE_APPLICATION" = true ]; then
 			# Get application args
 			APP_WITH_ARG=$(build_with_arg "$SILABS_BOARD" "$WITH_APP_COMPONENTS")
 			APP_WITHOUT_ARG=$(build_without_arg "$WITHOUT_APP_COMPONENTS")

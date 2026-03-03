@@ -3993,8 +3993,9 @@ endpoint 0 {
 
 }
 endpoint 1 {
-  device type cba_tstat = 769, version 1;
+  device type ha_tstat = 769, version 1;
 
+  binding cluster Identify;
 
   server cluster Basic {
     ram      attribute zclVersion default = 0x08;
@@ -4054,6 +4055,7 @@ endpoint 1 {
 
   server cluster Thermostat {
     ram      attribute localTemperature;
+    ram      attribute absMinHeatSetpointLimit default = 0x02BC;
     ram      attribute absMaxHeatSetpointLimit default = 0x0BB8;
     ram      attribute absMinCoolSetpointLimit default = 0x0640;
     ram      attribute absMaxCoolSetpointLimit default = 0x0C80;

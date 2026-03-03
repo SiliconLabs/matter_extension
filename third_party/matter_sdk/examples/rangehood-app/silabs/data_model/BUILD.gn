@@ -21,6 +21,11 @@ config("config") {
 }
 
 chip_data_model("silabs-rangehood") {
-  zap_file = "rangehood-wifi-app.zap"
+  if (chip_enable_wifi) {
+    zap_file = "rangehood-wifi-app.zap"
+  } else {
+    zap_file = "rangehood-thread-app.zap"
+  }
+
   is_server = true
 }

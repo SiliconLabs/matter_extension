@@ -60,6 +60,10 @@ include:
     file_list:
       - path: ClosureUI.h
       - path: ClosureUIStrings.h
+  - path: third_party/matter_sdk/examples/rangehood-app/silabs/include
+    condition: [matter_rangehood]
+    file_list:
+      - path: RangeHoodUI.h
 
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/display/demo-ui.c
@@ -82,5 +86,8 @@ source:
   - path: third_party/matter_sdk/examples/closure-app/silabs/src/ClosureUI.cpp
     condition:
       - matter_closure
+  - path: third_party/matter_sdk/examples/rangehood-app/silabs/src/RangeHoodUI.cpp
+    condition:
+      - matter_rangehood
 define:
   - name: DISPLAY_ENABLED

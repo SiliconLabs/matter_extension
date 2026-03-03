@@ -27,6 +27,7 @@ class BLEChannelImpl : public BLEChannel
 public:
     CHIP_ERROR Init(void) override;
     CHIP_ERROR ConfigureAdvertising(const AdvConfigStruct & config) override;
+    CHIP_ERROR PrintAdvertisingInfo() override;
     CHIP_ERROR StartAdvertising(void) override;
     CHIP_ERROR StopAdvertising(void) override;
 

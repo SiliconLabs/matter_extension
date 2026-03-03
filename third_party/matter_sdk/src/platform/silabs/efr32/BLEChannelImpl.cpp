@@ -146,6 +146,22 @@ CHIP_ERROR BLEChannelImpl::ConfigureAdvertising(const AdvConfigStruct & config)
     mAdvMaxEvents       = config.maxEvents;
     mAdvConnectableMode = config.advConnectableMode;
 
+    mFlags.Set(Flags::kConfigured);
+    return CHIP_NO_ERROR;
+}
+
+CHIP_ERROR BLEChannelImpl::PrintAdvertisingInfo()
+{
+    ChipLogProgress(DeviceLayer, "Advertising Info:");
+    ChipLogProgress(DeviceLayer, "  Interval Min: %ld", mAdvIntervalMin);
+    ChipLogProgress(DeviceLayer, "  Interval Max: %ld", mAdvIntervalMax);
+    ChipLogProgress(DeviceLayer, "  Duration: %d", mAdvDuration);
+    ChipLogProgress(DeviceLayer, "  Max Events: %d", mAdvMaxEvents);
+    ChipLogProgress(DeviceLayer, "  Connectable Mode: %d", mAdvConnectableMode);
+    ChipLogProgress(DeviceLayer, "  Advertising Handle: %d", mAdvHandle);
+    ChipLogProgress(DeviceLayer, "  Random Static Address: %02X:%02X:%02X:%02X:%02X:%02X", mConnectionState.address.addr[5],
+                    mConnectionState.address.addr[4], mConnectionState.address.addr[3], mConnectionState.address.addr[2],
+                    mConnectionState.address.addr[1], mConnectionState.address.addr[0]);
     return CHIP_NO_ERROR;
 }
 

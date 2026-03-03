@@ -2675,10 +2675,6 @@ endpoint 1 {
     ram      attribute activePresetHandle;
     callback attribute presets;
     ram      attribute setpointHoldExpiryTimestamp;
-    callback attribute maxThermostatSuggestions;
-    callback attribute thermostatSuggestions;
-    callback attribute currentThermostatSuggestion;
-    callback attribute thermostatSuggestionNotFollowingReason;
     callback attribute generatedCommandList;
     callback attribute acceptedCommandList;
     callback attribute attributeList;
@@ -2686,10 +2682,7 @@ endpoint 1 {
     callback attribute clusterRevision;
 
     handle command SetpointRaiseLower;
-    handle command AddThermostatSuggestionResponse;
     handle command SetActivePresetRequest;
-    handle command AddThermostatSuggestion;
-    handle command RemoveThermostatSuggestion;
     handle command AtomicResponse;
     handle command AtomicRequest;
   }

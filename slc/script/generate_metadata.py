@@ -159,10 +159,16 @@ for brd, val in demos_map['demos'].items():
                 demo_name_ = ' '.join(elem.capitalize() for elem in demo_name_.split())
 
                 variant_suffix = ""
+                name_suffix = ""
                 if "sequential" in demo_path:
                     variant_suffix = " Sequential"
+                    name_suffix = "_sequential"
                 elif "concurrent" in demo_path:
                     variant_suffix = " Concurrent"
+                    name_suffix = "_concurrent"
+                elif "multipan" in demo_path:
+                    variant_suffix = " multipan"
+                    name_suffix = "_multipan"
                 
                 if variant_suffix:
                     demo_name_ = demo_name_ + variant_suffix
@@ -177,7 +183,7 @@ for brd, val in demos_map['demos'].items():
                 qualityProp = ET.SubElement(demo, 'property')
                 description = ET.SubElement(demo, 'description')
 
-                demo.set('name', brd.lower()+".demo."+(demo_name + " app thread").replace(" ", "_"))
+                demo.set('name', brd.lower()+".demo."+(demo_name + " app thread").replace(" ", "_") + name_suffix)
                 demo.set('label', "Matter" + " - " + "SoC " +
                         demo_name_ + " over Thread")
 
@@ -258,6 +264,14 @@ for brd, val in demos_map['demos'].items():
 
                     demo_name_ = ' '.join(elem.capitalize() for elem in demo_name_.split())
                     demo_name = demo_name.strip()
+                    
+                    # Handle brd4357a suffix for name and label (check if -brd4357a is in path)
+                    name_suffix = ""
+                    label_suffix = ""
+                    if "-brd4357a" in demo_path:
+                        name_suffix = "_brd4357a"
+                        label_suffix = " brd4357a"
+                    
                     demo = ET.SubElement(demos, 'demo')
                     blurbProp = ET.SubElement(demo, 'property')
                     partCompatibilityProp = ET.SubElement(demo, 'property')
@@ -269,9 +283,9 @@ for brd, val in demos_map['demos'].items():
                     description = ET.SubElement(demo, 'description')
 
                     demo.set('name', brd.lower()+".demo." +
-                                "".join(demo_name.replace(" ", "_")) + "_app_" +  ("siwx917" if "soc" in board_type else board_type.replace("-", "_")))
+                                "".join(demo_name.replace(" ", "_")) + "_app_" +  ("siwx917" if "soc" in board_type else board_type.replace("-", "_")) + name_suffix)
                     demo.set('label', "Matter" + " - " + ("SoC" if "soc" in board_type else "NCP") + " " +
-                                demo_name_ + " over Wi-Fi")
+                                demo_name_ + " over Wi-Fi" + label_suffix)
 
                     blurbProp.set('key', 'demos.blurb')
                     blurbProp.set('value', "Matter"+ " - " + ("SiWx917 SoC" if "soc" in board_type else "NCP") + " " +

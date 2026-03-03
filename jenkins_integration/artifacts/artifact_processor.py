@@ -288,7 +288,7 @@ def _upload_individual_artifacts(extracted_folder, branch_name, build_number):
 def _create_filtered_artifact(artifact_file, artifact_name):
     """
     Create a filtered version of the artifact containing only .s37, .asset, and .rps files.
-    The filtered artifact has the structure: extension.matter<version>/demos/<contents>
+    The filtered artifact has the structure: extension.matter_<version>/demos/<contents>
     
     Args:
         artifact_file (str): Path to the original artifact ZIP file
@@ -303,17 +303,16 @@ def _create_filtered_artifact(artifact_file, artifact_name):
     try:
         # Get version for folder structure
         version = _get_matter_extension_version()
-        # Zip filename: extension.matter<version>.zip (no dot before version)
-        filtered_artifact_name = f"extension.matter{version}.zip"
+        # Zip filename: extension.matter_<version>.zip
+        filtered_artifact_name = f"extension.matter_{version}.zip"
         filtered_artifact_file = os.path.join('.', filtered_artifact_name)
         
         # Remove existing filtered artifact if it exists
         if os.path.exists(filtered_artifact_file):
             print(f"Removing existing filtered artifact file: {filtered_artifact_file}")
             os.remove(filtered_artifact_file)
-        
-        # Internal folder structure: extension.matter.<version>/demos/ (with dot before version)
-        base_folder = f"extension.matter.{version}/demos"
+        # Internal folder structure: extension.matter_<version>/demos/
+        base_folder = f"extension.matter_{version}/demos"
         
         print(f"Creating filtered artifact {filtered_artifact_name} with structure {base_folder}/")
         print(f"Including only .s37, .asset, and .rps files")
@@ -325,7 +324,7 @@ def _create_filtered_artifact(artifact_file, artifact_name):
                     if item.filename.endswith('.s37') or item.filename.endswith('.asset') or item.filename.endswith('.rps'):
                         # Read the file data
                         data = source_zip.read(item.filename)
-                        # Create new path: extension.matter.<version>/demos/<original_path>
+                        # Create new path: extension.matter_<version>/demos/<original_path>
                         new_path = os.path.join(base_folder, item.filename).replace('\\', '/')
                         # Create a new ZipInfo with the new path
                         new_item = zipfile.ZipInfo(new_path)
@@ -371,7 +370,7 @@ def _upload_merged_artifacts(artifact_file, artifact_name, branch_name, build_nu
         # Create and upload filtered artifact (only .s37 and .asset files) to Artifactory only
         if not sqa:
             filtered_artifact_file = _create_filtered_artifact(artifact_file, artifact_name)
-            # Use the filename from the filtered artifact (extension.matter<version>.zip)
+            # Use the filename from the filtered artifact (extension.matter_<version>.zip)
             filtered_artifactory_artifact_name = os.path.basename(filtered_artifact_file)
             upload_to_artifactory(filtered_artifact_file, filtered_artifactory_artifact_name, branch_name, str(build_number))
     except Exception as e:
@@ -522,7 +521,9 @@ def _process_board_app(app_name_folder, app_name_path, board_id, branch_name, bu
             _upload_board_artifact_files(artifact_solution_folder, ubai_app_name, board_id, branch_name, build_number)
         # For OTA, we need the application without bootloader uploaded to UBAI as well (not applicable to 917SoC).
         if ("ota" in ubai_app_name or "series-3" in app_name_path) and "siwx" not in app_name_path:
-            if "-series" in app_name_folder: # Thread
+            if app_name_folder.startswith("bootloader-"):
+                app_name_base = "matter-bootloader"
+            elif "-series" in app_name_folder: # Thread
                 app_name_base = app_name_folder.split("-series")[0]
             else: # WIFI NCP
                 app_name_base = app_name_folder.split("-solution")[0]

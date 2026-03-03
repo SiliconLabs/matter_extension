@@ -58,6 +58,7 @@ public:
 
     void HandleBootEvent(void);
 
+    CHIP_ERROR PrintBLEInfo();
 #if SLI_SI91X_ENABLE_BLE
     // Used for posting the event in the BLE queue
     void BlePostEvent(SilabsBleWrapper::BleEvent_t * event);
@@ -91,8 +92,7 @@ public:
     BLEChannel * GetSideChannel() { return mBleSideChannel; }
     CHIP_ERROR InjectSideChannel(BLEChannel * channel);
     CHIP_ERROR SideChannelConfigureAdvertisingDefaultData(void);
-    CHIP_ERROR SideChannelConfigureAdvertising(ByteSpan advData, ByteSpan responseData, uint32_t intervalMin, uint32_t intervalMax,
-                                               uint16_t duration, uint8_t maxEvents);
+    CHIP_ERROR SideChannelConfigureAdvertising(const AdvConfigStruct & config);
     CHIP_ERROR SideChannelStartAdvertising(void);
     CHIP_ERROR SideChannelStopAdvertising(void);
 

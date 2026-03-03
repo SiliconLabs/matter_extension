@@ -8,7 +8,7 @@ metadata:
   sbom:
     license: Zlib
 config_file:
-  - path: third_party/matter_sdk/examples/platform/silabs/FreeRTOSConfig.h
+  - path: third_party/matter_sdk/examples/platform/silabs/freertos_config/FreeRTOSConfig.h
     override:
       component: freertos
       file_id: freertos_config

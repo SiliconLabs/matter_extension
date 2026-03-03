@@ -7,7 +7,7 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.8.0"
+    version: "2.8.1"
     vendor: silabs
 
 component:
@@ -106,7 +106,6 @@ include:
     file_list:
       - path: thermostat-delegate-impl.h
     directory: include
-    unless: [matter_zigbee_multiprotocol_common]
 
 source:
   - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/src/AppTask.cpp
@@ -121,7 +120,6 @@ source:
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/thermostat/thermostat-common/src/thermostat-delegate-impl.cpp
     directory: src
-    unless: [matter_zigbee_multiprotocol_common]
 
 define:
   - name: CHIP_CRYPTO_PLATFORM

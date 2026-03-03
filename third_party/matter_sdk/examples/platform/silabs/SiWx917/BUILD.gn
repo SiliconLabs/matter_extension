@@ -156,6 +156,8 @@ source_set("siwx917-common") {
     if (chip_enable_icd_server) {
       deps += [ "${silabs_common_plat_dir}/shell:icd" ]
     }
+
+    deps += [ "${silabs_common_plat_dir}/shell:ble" ]
   }
 
   # MATTER_AWS

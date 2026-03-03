@@ -456,7 +456,7 @@
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
-    <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter|TrustZone"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader-storage-external-single-series-2.bootloader-storage-external-single-series-2.slcp slc.apps.lighting-app.thread.trustzone.lighting-s.slcp slc.apps.lighting-app.thread.trustzone.lighting-ns.slcp"/>
   </descriptors>
   <descriptors name="MatterLightSwitchOverThreadSolution" label="Matter - SoC Light Switch over Thread with external Bootloader"

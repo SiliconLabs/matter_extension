@@ -19,7 +19,7 @@
  *
  * @section usage Usage
  *   @code{.sh}
- *   python3 sl_setup_env.py [--verbose]
+ *   python3 slc/sl_setup_env.py [--verbose]
  *   @endcode
  *
  * @section options Options
