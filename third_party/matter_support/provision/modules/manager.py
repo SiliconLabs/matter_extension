@@ -110,10 +110,6 @@ class ProvisionManager:
         args.get(ID.kFlashAddress).set(dev.flash_addr)
         # Flash size
         args.get(ID.kFlashSize).set(dev.flash_size)
-        # Firmware
-        fw = args.get(ID.kGeneratorFW)
-        if fw.value is None:
-            fw.set(dev.firmware)
         return dev
 
     def computeDefaults(self, paths, args):
@@ -178,6 +174,8 @@ class ProvisionManager:
     def writeProductionFirmware(self, args, comm):
         prod_fw = args.str(ID.kProductionFW)
         if prod_fw is not None:
+            if not os.path.exists(prod_fw) or not os.path.isfile(prod_fw):
+                raise ValueError("Missing Production firmware \"{}\"".format(prod_fw))
             print("Writing Production Firmware...")
             comm.flash(prod_fw)
 

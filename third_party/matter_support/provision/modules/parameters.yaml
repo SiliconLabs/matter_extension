@@ -152,6 +152,12 @@ options:
       short: "rs"
       type: "flag"
 
+    - id: 0x013d
+      desc: "Commander --noclose"
+      name: "noclose"
+      short: "nc"
+      type: "flag"
+
 instance_info:
     - id: 0x0141
       desc: "Serial Number"

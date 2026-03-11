@@ -54,7 +54,6 @@ component:
   - id: matter_ota_requestor
   - id: matter_occupancy_sensor
   - id: matter_ota_support
-  - id: toolchain_gcc_common
   - id: matter_shell
   - id: matter_default_lcd_config
   - id: matter_log_uart

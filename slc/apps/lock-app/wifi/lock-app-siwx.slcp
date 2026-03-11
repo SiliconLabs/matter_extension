@@ -59,7 +59,6 @@ component:
   - id: matter_ota_requestor
   - id: matter_ota_support
   - id: matter_lock
-  - id: toolchain_gcc_common
   - id: matter_shell
   - id: matter_default_lcd_config
   - id: matter_icd_core

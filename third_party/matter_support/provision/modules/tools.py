@@ -2,6 +2,7 @@ import base64
 import datetime
 import hashlib
 import os
+import re
 import shutil
 import struct
 import time
@@ -15,6 +16,7 @@ class Commander:
 
     def __init__(self, args, conn):
         # The "device" argument's value may be reconfigured later
+        self.no_close = args.bool(ID.kCommanderNoClose)
         self.device = args.get(ID.kDevice)
         self.auto = ('auto' == args.str(ID.kAction))
         self.conn = conn
@@ -46,16 +48,20 @@ class Commander:
         return DeviceInfo(res)
 
     def flash(self, path):
+        dev = self.device.str().lower()
         image_path = _util.Paths.quote(path)
         _, ext = os.path.splitext(path)
-        if self.auto and ('si917' == self.device):
+        if self.auto and ('si917' == dev):
             self.execute(['manufacturing', 'erase', 'userdata'], False, True)
         if '.rps' == ext:
-            self.execute(['rps', 'load', image_path], False, True)
+            args = ['rps', 'load', image_path]
             # Si917 needs time to start
             time.sleep(1)
         else:
-            self.execute(['flash', image_path], False, True)
+            args = ['flash', image_path]
+        if re.match(r'^si.g301', dev) and self.no_close:
+            args.append('--noclose')
+        self.execute(args, False, True)
 
     def reset(self):
         self.execute(['device', 'reset'], False, False)

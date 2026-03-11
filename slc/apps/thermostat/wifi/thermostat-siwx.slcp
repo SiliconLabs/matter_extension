@@ -57,7 +57,6 @@ component:
   - id: matter_unit_localization
   - id: matter_wifi_network_diagnostics
   #- id: matter_si70xx_sensor
-  - id: toolchain_gcc_common
   - id: matter_default_lcd_config
   - id: matter_log_uart
   - id: matter_lwip

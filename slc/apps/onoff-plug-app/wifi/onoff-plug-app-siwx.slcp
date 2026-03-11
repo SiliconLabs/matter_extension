@@ -55,7 +55,6 @@ component:
   - id: matter_user_label
   - id: matter_wifi_network_diagnostics
   - id: matter_bindings
-  - id: toolchain_gcc_common
   - id: matter_shell
   - id: matter_default_lcd_config
   - id: matter_log_uart

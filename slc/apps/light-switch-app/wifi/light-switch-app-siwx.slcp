@@ -56,8 +56,6 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
   - id: segger_rtt
-
-  - id: toolchain_gcc_common
   - id: matter_ota_requestor
   - id: matter_ota_support
   - id: matter_shell

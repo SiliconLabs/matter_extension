@@ -41,7 +41,6 @@ component:
   - id: matter_operational_credentials
   - id: matter_ota_support
   - id: matter_ota_requestor
-  - id: toolchain_gcc_common
   - id: matter_power_source
   - id: matter_software_diagnostics
   - id: matter_wifi_network_diagnostics
