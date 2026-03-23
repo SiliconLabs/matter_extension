@@ -20,6 +20,16 @@ For more general information on running matter applications and pre-requisites p
 documentation for Matter available on docs.silabs.com. Follow Wi-Fi instructions depending on the example you are running.
 [Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.8.1/matter-wifi)
 
+## Region code Setting (917 WiFi projects)
+
+In Wifi configurations, the region code can be set in this
+[file](https://github.com/SiliconLabsSoftware/matter_sdk/blob/v2.8.0/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp).
+Search for `REGION_CODE` (build-time default) or `region_code` in the Wi-Fi configuration struct.
+
+The available region codes are defined by the `sl_wifi_region_code_t` enum in
+[sl_wifi_constants.h](https://github.com/SiliconLabs/wiseconnect/blob/v3.5.3/components/protocol/wifi/inc/sl_wifi_constants.h).
+Search for `sl_wifi_region_code_t` or the `SL_WIFI_REGION_` enumerator names.
+
 ## Sample Endpoint Configuration for Closure
 ![Closure Sample Endpoint](/slc/image/closure-sample-endpoint.png)
 

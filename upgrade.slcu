@@ -358,6 +358,7 @@ upgrade:
         status: user_verification
 
   - sdk:
+      vendor: silabs
       id: matter
       version: "2.8.1"
     component:

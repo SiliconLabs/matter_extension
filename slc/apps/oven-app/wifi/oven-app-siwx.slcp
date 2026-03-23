@@ -138,10 +138,6 @@ source:
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/oven-app/oven-app-common/src/CookEndpoints.cpp
     directory: src
-  - path: ../../../../third_party/matter_sdk/examples/oven-app/oven-app-common/src/CookSurfaceEndpoint.cpp
-    directory: src
-  - path: ../../../../third_party/matter_sdk/examples/oven-app/oven-app-common/src/CookTopEndpoint.cpp
-    directory: src
   - path: ../../../../third_party/matter_sdk/examples/oven-app/oven-app-common/src/OvenEndpoint.cpp
     directory: src
 

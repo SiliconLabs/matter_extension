@@ -194,7 +194,8 @@ uint16_t BLEManagerImpl::_NumConnections(void)
 
 CHIP_ERROR BLEManagerImpl::PrintBLEInfo()
 {
-    ChipLogProgress(DeviceLayer, "BLE Info:");
+    ChipLogProgress(DeviceLayer, "Matter BLE Info:");
+    ChipLogProgress(DeviceLayer, "  Handle: %d", mAdvertisingSetHandle);
     ChipLogProgress(DeviceLayer, "  Service Mode: %d", mServiceMode);
     ChipLogProgress(DeviceLayer, "  Device Name: %s", mDeviceName);
     ChipLogProgress(DeviceLayer, "  Random Static Address: %02X:%02X:%02X:%02X:%02X:%02X", randomizedAddr.addr[5],

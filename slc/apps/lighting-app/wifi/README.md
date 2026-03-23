@@ -23,9 +23,12 @@ documentation for Matter available on docs.silabs.com. Follow Wi-Fi instructions
 ## Region code Setting (917 WiFi projects)
 
 In Wifi configurations, the region code can be set in this
-[file](https://github.com/SiliconLabsSoftware/matter_sdk/blob/085bd03532990e5b1f99ff4b08ebce4f4ca5edf6/src/platform/silabs/wifi/SiWx/WifiInterface.cpp#L125).
-The available region codes can be found
-[here](https://github.com/SiliconLabs/wiseconnect/blob/f675628eefa1ac4990e94146abb75dd08b522571/components/device/silabs/si91x/wireless/inc/sl_si91x_types.h#L71)
+[file](https://github.com/SiliconLabsSoftware/matter_sdk/blob/v2.8.0/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp).
+Search for `REGION_CODE` (build-time default) or `region_code` in the Wi-Fi configuration struct.
+
+The available region codes are defined by the `sl_wifi_region_code_t` enum in
+[sl_wifi_constants.h](https://github.com/SiliconLabs/wiseconnect/blob/v3.5.3/components/protocol/wifi/inc/sl_wifi_constants.h).
+Search for `sl_wifi_region_code_t` or the `SL_WIFI_REGION_` enumerator names.
 
 ## Lighting Example User Interface
 

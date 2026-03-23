@@ -5,9 +5,12 @@ def pipelineProperties = []
 
 // Configure pollSCM triggers
 if(env.BRANCH_NAME == 'release_2.8-1.5'){
-    // Trigger daily at 11pm EST (2 hrs after github trigger)
-    pipelineProperties << pipelineTriggers([pollSCM('0 4 * * *')])
-}
+    // Trigger daily at 10:05pm EDT (2 hrs after github trigger)
+    pipelineProperties << pipelineTriggers([pollSCM('5 2 * * *')])
+} else if(env.BRANCH_NAME == 'main'){
+    // Trigger Thursday at 10:05pm EDT (2 hrs after github trigger)
+    pipelineProperties << pipelineTriggers([pollSCM('5 2 * * 5')])
+} 
 
 properties(pipelineProperties)
 
@@ -215,7 +218,7 @@ pipeline
             }
             steps {
                 script {
-                    retry(9) {
+                    retry(12) {
                         withDockerContainer(image: 'artifactory.silabs.net/gsdk-docker-production/gsdk_nomad_containers/gsdk_ubai:latest') {
                             def result = pipelineFunctions.upload_artifacts(sqa=true, commit_sha=commit_sha, workflow_id=workflow_id)
                         }

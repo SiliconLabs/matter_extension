@@ -149,7 +149,7 @@ configuration:
     condition: [matter_ble_side_channel]
     unless: [matter_ble_dmp_test]
   - name: SL_BT_CONFIG_USER_ADVERTISERS
-    value: 3
+    value: 4
     condition: [matter_ble_dmp_test]
   - name: SL_BT_CONFIG_MAX_CONNECTIONS
     value: 4

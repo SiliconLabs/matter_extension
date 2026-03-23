@@ -193,12 +193,17 @@ def _get_artifact_info(workflow_id, sqa):
     print(f"Fetching artifacts from URL: {workflow_artifact_url}")
     response = _make_github_api_request(workflow_artifact_url)
     artifacts_data = response.json()
-    if not artifacts_data.get('artifacts'):
+    artifacts = artifacts_data.get('artifacts') or []
+    if not artifacts:
         raise RuntimeError(f"No artifacts found for workflow {workflow_id}")
-    if not sqa:
-        artifact = artifacts_data['artifacts'][0]
+    if sqa:
+        artifact = next((a for a in artifacts if a['name'] == 'sqa-artifacts'), None)
+        if not artifact:
+            raise RuntimeError(f"No SQA artifact (sqa-artifacts) found for workflow {workflow_id}. Available: {[a['name'] for a in artifacts]}")
     else:
-        artifact = artifacts_data['artifacts'][1]
+        artifact = next((a for a in artifacts if a['name'].startswith('dev-artifacts')), None)
+        if not artifact:
+            raise RuntimeError(f"No dev artifact (dev-artifacts-*) found for workflow {workflow_id}. Available: {[a['name'] for a in artifacts]}")
     return {
         'download_url': artifact['archive_download_url'],
         'name': artifact['name'] + '.zip'
