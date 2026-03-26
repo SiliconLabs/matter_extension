@@ -25,12 +25,12 @@ The Performance Testing commands are enabled on the sender and receiver nodes by
 Simplicity Studio:
 - Create any Matter over Thread project.
 - Install the Performance Testing Utilities component under Silicon Labs Matter->Platform. In ZAP ( Configuration Tools -> Zigbee Cluster Configurator) enable the Groups cluster server on Endpoint 0 (this step is only needed for the multicast command).
-- Follow the "Defining a Custom Cluster" steps in https://docs.silabs.com/matter/latest/matter-references/matter-zap#defining-a-custom-cluster to add the following custom cluster to the project: https://github.com/SiliconLabsSoftware/matter_extension/blob/v2.8.0-rc3/slc/apps/performance-test-app/thread/performance-test-cluster.xml
+- Follow the "Defining a Custom Cluster" steps in https://docs.silabs.com/matter/latest/matter-references/matter-zap#defining-a-custom-cluster to add the following custom cluster to the project: https://github.com/SiliconLabsSoftware/matter_extension/blob/v2.8.1-rc3/slc/apps/performance-test-app/thread/performance-test-cluster.xml
 - Build the project, the resulting binary can be used as both the sender and the receiver.
 
 SLC CLI:
 - In any Thread sample app edit the ZAP file specified in the project's .slcp file under config_file and set "enabled:" to 1 in the "Groups" "server" cluster entry in the "MA-rootdevice" endpoint array entry.
-- Follow the "Defining a Custom Cluster" steps in https://docs.silabs.com/matter/latest/matter-references/matter-zap#defining-a-custom-cluster to add the following custom cluster to the project: https://github.com/SiliconLabsSoftware/matter_extension/blob/v2.8.0-rc3/slc/apps/performance-test-app/thread/performance-test-cluster.xml
+- Follow the "Defining a Custom Cluster" steps in https://docs.silabs.com/matter/latest/matter-references/matter-zap#defining-a-custom-cluster to add the following custom cluster to the project: https://github.com/SiliconLabsSoftware/matter_extension/blob/v2.8.1-rc3/slc/apps/performance-test-app/thread/performance-test-cluster.xml
 - Generate the project supplying the `--with "matter_performance_testing"` parameter to the `slc generate` command. The resulting binary can be used as both the sender and the receiver.
 
 ## Network Configuration

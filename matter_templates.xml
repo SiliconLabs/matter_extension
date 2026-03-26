@@ -136,8 +136,8 @@
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="core.hidden" value="true"/>
   </descriptors>
-  <descriptors name="MatterClosureControlOverThread" label="Matter - Closure Control over Thread"
-           description="This project builds a Matter Closure Control app that can be developed inside Simplicity Studio">
+  <descriptors name="MatterClosureOverThread" label="Matter - Closure over Thread"
+           description="This project builds a Matter Closure app that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.apps.closure-app.thread.closure-app.slcp"/>
@@ -145,6 +145,23 @@
     <properties key="readmeFiles" value="slc/apps/closure-app/thread/README.md"/>
     <properties key="boardCompatibility" value="brd4116a brd4117a brd4118a brd4186c brd4187c brd4316a brd4317a brd4318a brd4337a brd2601b brd2608a brd2703a brd4350a brd4351a brd2709a brd2704a brd1019a brd4319a:0.0.0.A00 com.silabs.board.none "/>
     <properties key="partCompatibility" value=".*efr32mg24.* .*efr32mg26.* .*mgm24.* .*simg301.*"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
+    <properties key="core.hidden" value="true"/>
+  </descriptors>
+  <descriptors name="MatterRangehoodOverThread" label="Matter - SoC Rangehood over Thread"
+               description="This project builds a Matter Rangehood app that can be developed inside Simplicity Studio">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.apps.rangehood-app.thread.rangehood-app.slcp"/>
+    <properties key="projectFilePaths" value="slc/apps/rangehood-app/thread/rangehood-app.slcp"/>
+    <properties key="readmeFiles" value="slc/apps/rangehood-app/thread/README.md"/>
+    <properties key="boardCompatibility" value="brd1019a brd2719a brd4116a brd4117a brd4118a brd4120a brd4121a brd4186c brd4187c brd4316a brd4317a brd4318a brd4337a brd4407a brd4408a brd2601b brd2608a brd2703a brd4350a brd4351a brd2709a brd2704a brd4319a:0.0.0.A00 com.silabs.board.none "/>
+    <properties key="partCompatibility" value=".*efr32mg24.* .*efr32mg26.* .*mgm24.* .*mgm26.* .*simg301.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -211,8 +228,8 @@
     <properties key="solutionReferenceId" value="slc.apps.refrigerator-app.wifi.refrigerator-app-siwx.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/refrigerator-app/wifi/refrigerator-app-siwx.slcp"/>
     <properties key="readmeFiles" value="slc/apps/refrigerator-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -228,8 +245,8 @@
     <properties key="solutionReferenceId" value="slc.apps.oven-app.wifi.oven-app-siwx.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/oven-app/wifi/oven-app-siwx.slcp"/>
     <properties key="readmeFiles" value="slc/apps/oven-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -245,8 +262,8 @@
     <properties key="solutionReferenceId" value="slc.apps.rangehood-app.wifi.rangehood-app-siwx.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/rangehood-app/wifi/rangehood-app-siwx.slcp"/>
     <properties key="readmeFiles" value="slc/apps/rangehood-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -279,8 +296,8 @@
     <properties key="solutionReferenceId" value="slc.apps.lighting-app.wifi.lighting-app-siwx.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/lighting-app/wifi/lighting-app-siwx.slcp"/>
     <properties key="readmeFiles" value="slc/apps/lighting-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -296,8 +313,8 @@
     <properties key="solutionReferenceId" value="slc.apps.lock-app.wifi.lock-app-siwx.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/lock-app/wifi/lock-app-siwx.slcp"/>
     <properties key="readmeFiles" value="slc/apps/lock-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -313,8 +330,8 @@
     <properties key="solutionReferenceId" value="slc.apps.light-switch-app.wifi.light-switch-app-siwx.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/light-switch-app/wifi/light-switch-app-siwx.slcp"/>
     <properties key="readmeFiles" value="slc/apps/light-switch-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -330,8 +347,8 @@
     <properties key="solutionReferenceId" value="slc.apps.window-app.wifi.window-app-siwx.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/window-app/wifi/window-app-siwx.slcp"/>
     <properties key="readmeFiles" value="slc/apps/window-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -347,8 +364,8 @@
     <properties key="solutionReferenceId" value="slc.apps.thermostat.wifi.thermostat-siwx.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/thermostat/wifi/thermostat-siwx.slcp"/>
     <properties key="readmeFiles" value="slc/apps/thermostat/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -415,8 +432,8 @@
     <properties key="solutionReferenceId" value="slc.apps.onoff-plug-app.wifi.onoff-plug-app-siwx.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/onoff-plug-app/wifi/onoff-plug-app-siwx.slcp"/>
     <properties key="readmeFiles" value="slc/apps/onoff-plug-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -456,7 +473,7 @@
     <properties key="category" value="Matter Application"/>
     <properties key="quality" value="PRODUCTION"/>
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
-    <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter|TrustZone"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader-storage-external-single-series-2.bootloader-storage-external-single-series-2.slcp slc.apps.lighting-app.thread.trustzone.lighting-s.slcp slc.apps.lighting-app.thread.trustzone.lighting-ns.slcp"/>
   </descriptors>
   <descriptors name="MatterLightSwitchOverThreadSolution" label="Matter - SoC Light Switch over Thread with external Bootloader"
@@ -483,8 +500,8 @@
       <properties key="solutionReferenceId" value="slc.apps.refrigerator-app.wifi.refrigerator-app-siwx.slcw"/>
       <properties key="projectFilePaths" value="slc/apps/refrigerator-app/wifi/refrigerator-app-siwx.slcw"/>
       <properties key="readmeFiles" value="slc/apps/refrigerator-app/wifi/README.md"/>
-      <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-      <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+      <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+      <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
       <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
       <properties key="toolchainCompatibility" value="gcc"/>
       <properties key="category" value="Matter Application"/>
@@ -501,8 +518,8 @@
       <properties key="solutionReferenceId" value="slc.apps.oven-app.wifi.oven-app-siwx.slcw"/>
       <properties key="projectFilePaths" value="slc/apps/oven-app/wifi/oven-app-siwx.slcw"/>
       <properties key="readmeFiles" value="slc/apps/oven-app/wifi/README.md"/>
-      <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-      <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+      <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+      <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
       <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
       <properties key="toolchainCompatibility" value="gcc"/>
       <properties key="category" value="Matter Application"/>
@@ -519,8 +536,8 @@
       <properties key="solutionReferenceId" value="slc.apps.rangehood-app.wifi.rangehood-app-siwx.slcw"/>
       <properties key="projectFilePaths" value="slc/apps/rangehood-app/wifi/rangehood-app-siwx.slcw"/>
       <properties key="readmeFiles" value="slc/apps/rangehood-app/wifi/README.md"/>
-      <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-      <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+      <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+      <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
       <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
       <properties key="toolchainCompatibility" value="gcc"/>
       <properties key="category" value="Matter Application"/>
@@ -614,6 +631,23 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader-storage-external-single-series-2.bootloader-storage-external-single-series-2.slcp slc.apps.fan-control-app.thread.fan-control-app.slcp"/>
+  </descriptors>
+  <descriptors name="MatterRangehoodOverThreadSolution" label="Matter - SoC Rangehood over Thread with external Bootloader"
+               description="This project builds a Matter Rangehood app and Matter External Bootloader that can be developed inside Simplicity Studio">
+    <properties key="namespace" value="template.solution.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.apps.rangehood-app.thread.rangehood-app-series-2.slcw"/>
+    <properties key="projectFilePaths" value="slc/apps/rangehood-app/thread/rangehood-app-series-2.slcw"/>
+    <properties key="readmeFiles" value="slc/apps/rangehood-app/thread/README.md"/>
+    <properties key="boardCompatibility" value="brd4116a brd4117a brd4118a brd4120a brd4121a brd4186c brd4187c brd4316a brd4317a brd4318a brd2601b brd2608a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*efr32mg24.* .*efr32mg26.* .*mgm24.*"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
+    <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader-storage-external-single-series-2.bootloader-storage-external-single-series-2.slcp slc.apps.rangehood-app.thread.rangehood-app.slcp"/>
   </descriptors>
   <descriptors name="MatterLockOverWifiSolution" label="Matter - NCP Lock over Wi-Fi with internal Bootloader"
                description="This project builds a Matter Lock app for Wi-Fi SiWx917 NCP and Matter Internal Bootloader that can be developed inside Simplicity Studio.">
@@ -792,8 +826,8 @@
     <properties key="solutionReferenceId" value="slc.apps.multi-sensor-app.wifi.multi-sensor-app-siwx.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/multi-sensor-app/wifi/multi-sensor-app-siwx.slcp"/>
     <properties key="readmeFiles" value="slc/apps/multi-sensor-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -809,8 +843,8 @@
     <properties key="solutionReferenceId" value="slc.apps.fan-control-app.wifi.fan-control-app-siwx.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/fan-control-app/wifi/fan-control-app-siwx.slcp"/>
     <properties key="readmeFiles" value="slc/apps/fan-control-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -819,15 +853,15 @@
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="core.hidden" value="true"/>
   </descriptors>
-    <descriptors name="MatterClosureControlOverWiFi" label="Matter - SoC Closure-Control over  Wi-Fi"
+    <descriptors name="MatterClosureOverWiFi" label="Matter - SoC Closure-Control over  Wi-Fi"
                description="This project builds a Matter  Closure-Control app for Wi-Fi SiWx917 that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.apps.closure-app.wifi.closure-app-siwx.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/closure-app/wifi/closure-app-siwx.slcp"/>
     <properties key="readmeFiles" value="slc/apps/closure-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -920,6 +954,40 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader-storage-single-4096k-series-3.bootloader-storage-single-4096k-series-3.slcp slc.apps.fan-control-app.thread.fan-control-app.slcp"/>
+  </descriptors>
+  <descriptors name="MatterRangehoodOverThreadSolution" label="Matter - SoC Rangehood over Thread with internal Bootloader"
+               description="This project builds a Matter Rangehood app and Matter Internal Bootloader that can be developed inside Simplicity Studio">
+    <properties key="namespace" value="template.solution.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.apps.rangehood-app.thread.rangehood-app-series-2-internal.slcw"/>
+    <properties key="projectFilePaths" value="slc/apps/rangehood-app/thread/rangehood-app-series-2-internal.slcw"/>
+    <properties key="readmeFiles" value="slc/apps/rangehood-app/thread/README.md"/>
+    <properties key="boardCompatibility" value="brd4337a brd2703a brd2704a brd4319a:0.0.0.A00 brd4350a brd4351a brd2709a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*mgm24.* .*efr32mg24.* .*efr32mg26.* .*mgm26.* "/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
+    <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader-storage-internal-single-series-2.bootloader-storage-internal-single-series-2.slcp slc.apps.rangehood-app.thread.rangehood-app.slcp"/>
+  </descriptors>
+  <descriptors name="MatterRangehoodOverThreadSolution" label="Matter - SoC Rangehood over Thread with internal Bootloader"
+               description="This project builds a Matter Rangehood app and Matter Internal Bootloader that can be developed inside Simplicity Studio">
+    <properties key="namespace" value="template.solution.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.apps.rangehood-app.thread.rangehood-app-series-3.slcw"/>
+    <properties key="projectFilePaths" value="slc/apps/rangehood-app/thread/rangehood-app-series-3.slcw"/>
+    <properties key="readmeFiles" value="slc/apps/rangehood-app/thread/README.md"/>
+    <properties key="boardCompatibility" value="brd1019a brd2719a brd4407a brd4408a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*mgm24.* .*efr32mg24.* .*efr32mg26.* .*mgm26.* .*simg301.*"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
+    <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader-storage-single-4096k-series-3.bootloader-storage-single-4096k-series-3.slcp slc.apps.rangehood-app.thread.rangehood-app.slcp"/>
   </descriptors>
   <descriptors name="MatterLockOverThreadSolution" label="Matter - SoC Lock over Thread with internal Bootloader"
                description="This project builds a Matter Lock and Matter Internal Bootloader that can be developed inside Simplicity Studio">
@@ -1148,8 +1216,8 @@
     <properties key="solutionReferenceId" value="slc.apps.lighting-app.wifi.lighting-app-siwx.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/lighting-app/wifi/lighting-app-siwx.slcw"/>
     <properties key="readmeFiles" value="slc/apps/lighting-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -1165,8 +1233,8 @@
     <properties key="solutionReferenceId" value="slc.apps.lock-app.wifi.lock-app-siwx.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/lock-app/wifi/lock-app-siwx.slcw"/>
     <properties key="readmeFiles" value="slc/apps/lock-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -1182,8 +1250,8 @@
     <properties key="solutionReferenceId" value="slc.apps.light-switch-app.wifi.light-switch-app-siwx.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/light-switch-app/wifi/light-switch-app-siwx.slcw"/>
     <properties key="readmeFiles" value="slc/apps/light-switch-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -1199,8 +1267,8 @@
     <properties key="solutionReferenceId" value="slc.apps.window-app.wifi.window-app-siwx.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/window-app/wifi/window-app-siwx.slcw"/>
     <properties key="readmeFiles" value="slc/apps/window-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -1216,8 +1284,8 @@
     <properties key="solutionReferenceId" value="slc.apps.thermostat.wifi.thermostat-siwx.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/thermostat/wifi/thermostat-siwx.slcw"/>
     <properties key="readmeFiles" value="slc/apps/thermostat/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -1233,8 +1301,8 @@
     <properties key="solutionReferenceId" value="slc.apps.onoff-plug-app.wifi.onoff-plug-app-siwx.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/onoff-plug-app/wifi/onoff-plug-app-siwx.slcw"/>
     <properties key="readmeFiles" value="slc/apps/onoff-plug-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -1250,8 +1318,8 @@
     <properties key="solutionReferenceId" value="slc.apps.multi-sensor-app.wifi.multi-sensor-app-siwx.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/multi-sensor-app/wifi/multi-sensor-app-siwx.slcw"/>
     <properties key="readmeFiles" value="slc/apps/multi-sensor-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -1267,8 +1335,8 @@
     <properties key="solutionReferenceId" value="slc.apps.fan-control-app.wifi.fan-control-app-siwx.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/fan-control-app/wifi/fan-control-app-siwx.slcw"/>
     <properties key="readmeFiles" value="slc/apps/fan-control-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -1277,15 +1345,15 @@
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.apps.fan-control-app.wifi.fan-control-app-siwx.slcp"/>
   </descriptors>
-<descriptors name="MatterClosureControlOverWiFiSolution" label="Matter - SoC Closure Control over Wi-Fi"
-               description="This project builds a Matter Closure Control App that can be developed inside Simplicity Studio">
+<descriptors name="MatterClosureOverWiFiSolution" label="Matter - SoC Closure over Wi-Fi"
+               description="This project builds a Matter Closure app that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.solution.uc"/>
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.apps.closure-app.wifi.closure-app-siwx.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/closure-app/wifi/closure-app-siwx.slcw"/>
     <properties key="readmeFiles" value="slc/apps/closure-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -1335,8 +1403,8 @@
     <properties key="solutionReferenceId" value="slc.apps.air-quality-sensor-app.wifi.air-quality-sensor-app-siwx.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/air-quality-sensor-app/wifi/air-quality-sensor-app-siwx.slcp"/>
     <properties key="readmeFiles" value="slc/apps/air-quality-sensor-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -1352,8 +1420,8 @@
     <properties key="solutionReferenceId" value="slc.apps.air-quality-sensor-app.wifi.air-quality-sensor-app-siwx.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/air-quality-sensor-app/wifi/air-quality-sensor-app-siwx.slcw"/>
     <properties key="readmeFiles" value="slc/apps/air-quality-sensor-app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -1464,8 +1532,8 @@
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader-storage-single-4096k-series-3.bootloader-storage-single-4096k-series-3.slcp slc.apps.lighting-app.thread.lighting-app.slcp"/>
   </descriptors>
-  <descriptors name="MatterClosureControlOverThreadSolution" label="Matter - Closure Control over Thread with internal Bootloader"
-           description="This project builds a Matter Closure Control and Matter Internal Bootloader that can be developed inside Simplicity Studio">
+  <descriptors name="MatterClosureOverThreadSolution" label="Matter - Closure over Thread with internal Bootloader"
+           description="This project builds a Matter Closure app and Matter Internal Bootloader that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.solution.uc"/>
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.apps.closure-app.thread.closure-app-series-2-internal.slcw"/>
@@ -1481,8 +1549,8 @@
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader-storage-internal-single-series-2.bootloader-storage-internal-single-series-2.slcp slc.apps.closure-app.thread.closure-app.slcp"/>
   </descriptors>
-  <descriptors name="MatterClosureControlOverThreadSolution" label="Matter - Closure Control over Thread with external Bootloader"
-           description="This project builds a Matter Closure Control and Matter External Bootloader that can be developed inside Simplicity Studio">
+  <descriptors name="MatterClosureOverThreadSolution" label="Matter - Closure over Thread with external Bootloader"
+           description="This project builds a Matter Closure app and Matter External Bootloader that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.solution.uc"/>
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.apps.closure-app.thread.closure-app-series-2.slcw"/>
@@ -1498,8 +1566,8 @@
     <properties key="filters" value="Type|SoC Project\ Difficulty|Advanced Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader-storage-external-single-series-2.bootloader-storage-external-single-series-2.slcp slc.apps.closure-app.thread.closure-app.slcp"/>
   </descriptors>
-  <descriptors name="MatterClosureControlOverThreadSolution" label="Matter - Closure Control over Thread with internal Bootloader"
-           description="This project builds a Matter Closure Control and Matter Bootloader that can be developed inside Simplicity Studio">
+  <descriptors name="MatterClosureOverThreadSolution" label="Matter - Closure over Thread with internal Bootloader"
+           description="This project builds a Matter Closure app and Matter Bootloader that can be developed inside Simplicity Studio">
     <properties key="namespace" value="template.solution.uc"/>
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.apps.closure-app.thread.closure-app-series-3.slcw"/>
@@ -1556,8 +1624,8 @@
     <properties key="solutionReferenceId" value="slc.apps.platform-template.wifi.platform-template-siwx.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/platform-template/wifi/platform-template-siwx.slcp"/>
     <properties key="readmeFiles" value="slc/apps/platform-template/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>
@@ -1624,8 +1692,8 @@
     <properties key="solutionReferenceId" value="slc.apps.platform-template.wifi.platform-template-siwx.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/platform-template/wifi/platform-template-siwx.slcw"/>
     <properties key="readmeFiles" value="slc/apps/platform-template/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd4338a brd4342a brd4343a brd2605a brd2708a brd2911a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=" .*si917.* .*siwg917.*"/>
+    <properties key="boardCompatibility" value="com.silabs.board.none brd2605a brd2708a brd2911a brd4338a brd4343a brd4343b brd4339b brd4340b brd4342a" />
+    <properties key="partCompatibility" value=" .*si917.* .*siwg917m111mgtba.* .*siwg917m141xgtba.* .*siwg917y111mgab.* .*siwg917y111mgnba.* .*siwg917y121mgnb.* .*siwg917m121xgtba.* .*siwg917m111xgtba.* .*siwg917m100mgtba.* .*siwg917m110lgtba.* .*siwg917y111mgnba.* .*siwg917y110lgnba.* .*siwg917y121mgnba.* .*siwg917y111mgaba.* .*siwg917y110lgaba.* .*siwg917y121mgaba.*" />
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="Matter Application"/>

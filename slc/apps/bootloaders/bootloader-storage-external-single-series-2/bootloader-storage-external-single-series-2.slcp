@@ -7,7 +7,7 @@ description: >
 
 sdk_extension:
   - id: matter
-    version: "2.8.0"
+    version: "2.8.1"
     vendor: silabs
 
 component:

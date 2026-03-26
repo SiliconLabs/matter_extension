@@ -192,7 +192,7 @@ CHIP_ERROR OTAMultiImageProcessorImpl::SelectProcessor(ByteSpan & block)
         return CHIP_OTA_PROCESSOR_NOT_REGISTERED;
     }
 
-    ChipLogDetail(SoftwareUpdate, "Selected processor with tag: %lu", static_cast<uint32_t>(pair->first));
+    ChipLogProgress(SoftwareUpdate, "Selected processor with tag: %lu", static_cast<uint32_t>(pair->first));
     mCurrentProcessor = pair->second;
     mCurrentProcessor->SetLength(header.length);
     mCurrentProcessor->SetWasSelected(true);
@@ -386,7 +386,7 @@ void OTAMultiImageProcessorImpl::HandleApply(intptr_t context)
 
     ChipLogProgress(SoftwareUpdate, "HandleApply: started");
 
-    // Force KVS to store pending keys such as data from StoreCurrentUpdateInfo()
+    // Force KVS to store pending keys such as the data from StoreCurrentUpdateInfo()
     chip::DeviceLayer::PersistedStorage::KeyValueStoreMgrImpl().ForceKeyMapSave();
 
     if (imageProcessor == nullptr)

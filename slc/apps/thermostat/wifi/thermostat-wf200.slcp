@@ -7,7 +7,7 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.8.0"
+    version: "2.8.1"
     vendor: silabs
 
 component:
@@ -78,7 +78,7 @@ requires:
       - device_series_2
 
 config_file:
-  - path: ../../../../third_party/matter_sdk/examples/thermostat/thermostat-common/thermostat.zap
+  - path: ../../../../third_party/matter_sdk/examples/thermostat/silabs/data_model/thermostat-wifi-app.zap
     directory: common
     file_id: zap_config
   - path: ../../../../provision.mattpconf

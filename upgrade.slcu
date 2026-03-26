@@ -356,3 +356,14 @@ upgrade:
         description: >
            !!! WARNING !!! Automatic upgrades to Matter 2.8.0 are not recommended. Instead create a new project and manually port your changes. 
         status: user_verification
+
+  - sdk:
+      vendor: silabs
+      id: matter
+      version: "2.8.1"
+    component:
+      - trigger: toolchain_gcc_common
+        description: >
+           !!! WARNING !!! By default Wiseconnect linker is enabled for 917SoC, to use the matter linker file add toolchain_gcc_common component 
+        remove:
+          - toolchain_gcc_common

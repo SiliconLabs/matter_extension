@@ -44,11 +44,9 @@
 #endif // ENABLE_CHIP_SHELL
 #endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 
-#if SL_USE_INTERNAL_BLE_SIDE_CHANNEL
 #ifdef ENABLE_CHIP_SHELL
 #include <BLEShellCommands.h>
 #endif // ENABLE_CHIP_SHELL
-#endif // SL_USE_INTERNAL_BLE_SIDE_CHANNEL
 
 #include <assert.h>
 #include <headers/ProvisionManager.h>
@@ -321,7 +319,8 @@ CHIP_ERROR BaseApplication::Init()
 
 #ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
 #ifdef SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT
-    chip::DeviceLayer::PlatformMgr().ScheduleWork([](intptr_t) { MultiProtocolDataModel::Initialize(); });
+    // Scheduler work
+    PlatformMgr().ScheduleWork([](intptr_t) { MultiProtocolDataModel::Initialize(); });
 #endif // SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT
 
 #ifdef SL_MATTER_ZIGBEE_SEQUENTIAL
@@ -405,9 +404,7 @@ CHIP_ERROR BaseApplication::BaseInit()
 #if MATTER_TRACING_ENABLED
     TracingCommands::RegisterCommands();
 #endif // MATTER_TRACING_ENABLED
-#if SL_USE_INTERNAL_BLE_SIDE_CHANNEL
     BLEShellCommands::RegisterCommands();
-#endif // SL_USE_INTERNAL_BLE_SIDE_CHANNEL
 #endif // ENABLE_CHIP_SHELL
 
 #ifdef PERFORMANCE_TEST_ENABLED

@@ -9,7 +9,7 @@
  * and ensures all required trust and configuration steps are performed for the new app.
 
  * Recommended usage (flags):
- *   python3 sl_create_new_app.py \
+ *   python3 slc/sl_create_new_app.py \
  *       --new_app_name <NewAppName> \
  *       --reference_project_file <PathToReferenceProjectFile(.slcp or .slcw)> \
  *       --silabs_board <SilabsBoard> \

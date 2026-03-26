@@ -13,14 +13,17 @@ information for the BLE connection and starting the Rendez-vous procedure.
   
 For more general information on running matter applications and pre-requisites please look at online 
 documentation for Matter available on docs.silabs.com. Follow Wi-Fi instructions depending on the example you are running.
-[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.8.0/matter-wifi)
+[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.8.1/matter-wifi)
 
 ## Region code Setting (917 WiFi projects)
 
 In Wifi configurations, the region code can be set in this
-[file](https://github.com/SiliconLabsSoftware/matter_sdk/blob/085bd03532990e5b1f99ff4b08ebce4f4ca5edf6/src/platform/silabs/wifi/SiWx/WifiInterface.cpp#L125).
-The available region codes can be found
-[here](https://github.com/SiliconLabs/wiseconnect/blob/f675628eefa1ac4990e94146abb75dd08b522571/components/device/silabs/si91x/wireless/inc/sl_si91x_types.h#L71)
+[file](https://github.com/SiliconLabsSoftware/matter_sdk/blob/v2.8.1/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp).
+Search for `REGION_CODE` (build-time default) or `region_code` in the Wi-Fi configuration struct.
+
+The available region codes are defined by the `sl_wifi_region_code_t` enum in
+[sl_wifi_constants.h](https://github.com/SiliconLabs/wiseconnect/blob/v4.0.1-content-for-docs/components/protocol/wifi/inc/sl_wifi_constants.h).
+Search for `sl_wifi_region_code_t` or the `SL_WIFI_REGION_` enumerator names.
 
 ## RangeHood Application User Interface
 
@@ -57,7 +60,7 @@ After 15 minutes, the advertisement stops. In addition, this button should also 
 
 ## Provision and Control
 
-You can provision and control the Matter device using the python controller, chip-tool (standalone or pre-built), Android, iOS app or the mattertool utility from the Matter Hub package provided by Silicon Labs. The pre-built chip-tool instance ships with the Matter Hub image. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.8.0/matter-thread/raspi-img)
+You can provision and control the Matter device using the python controller, chip-tool (standalone or pre-built), Android, iOS app or the mattertool utility from the Matter Hub package provided by Silicon Labs. The pre-built chip-tool instance ships with the Matter Hub image. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.8.1/matter-thread/raspi-img)
 
 
     

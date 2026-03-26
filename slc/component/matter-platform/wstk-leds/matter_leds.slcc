@@ -1,5 +1,5 @@
 id: matter_leds
-label: matter LED Support
+label: Matter LED Support
 package: matter
 description: Simple LED Support for Matter applications
 category: Platform

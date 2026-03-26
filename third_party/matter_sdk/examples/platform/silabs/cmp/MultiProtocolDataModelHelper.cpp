@@ -124,7 +124,7 @@ void SynchMultiProtocolAttributes(chip::EndpointId endpointId, const MpClusterMe
 // Timer callback to retry Multiprotocol initial data model synchronization
 static void InitializeRetryCallback(chip::System::Layer * systemLayer, void * appState)
 {
-    chip::DeviceLayer::PlatformMgr().ScheduleWork([](intptr_t) { Initialize(); });
+    Initialize();
 }
 
 void Initialize()

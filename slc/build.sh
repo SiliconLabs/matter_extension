@@ -268,6 +268,10 @@ while [ $# -gt 0 ]; do
 	esac
 done
 
+if [[ "$OUTPUT_DIR" == *"cmp-concurrent-high-bw-phy-em1" ]]; then
+	python3 slc/script/em1-augmentation.py EM2 ## to change the sleep.c file from EM1 to EM2
+fi
+
 # Validate required tools and environment
 
 if ! [ -x "$(command -v slc)" ]; then
@@ -332,7 +336,7 @@ if [ "$skip_gen" = false ]; then
 			fi
 		fi
 
-		if [ "$GENERATE_APPLICATION" = true ]; then
+		if [[ "$SILABS_APP_PATH" != *bootloader* ]] && [ "$GENERATE_APPLICATION" = true ]; then
 			# Get application args
 			APP_WITH_ARG=$(build_with_arg "$SILABS_BOARD" "$WITH_APP_COMPONENTS")
 			APP_WITHOUT_ARG=$(build_without_arg "$WITHOUT_APP_COMPONENTS")
@@ -388,4 +392,8 @@ else
 		echo "ERROR: Failed to build solution"
 		exit 1
 	fi
+fi
+
+if [[ "$OUTPUT_DIR" == *"cmp-concurrent-high-bw-phy-em1" ]]; then
+	python3 slc/script/em1-augmentation.py EM1 ## to revert the changes made to the sleep.c file from EM2 to EM1
 fi

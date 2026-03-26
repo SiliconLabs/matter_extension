@@ -24,20 +24,11 @@ requires:
   - name: memory_manager_pool
   - name: freertos_heap_4
   - name: sl_si91x_memory_manager
-  # TODO : psram components - should be removed with wiseconnect SDK support
   - name: psram_core
-    condition: [brd4342a]
-  - name: psram_aps6404l_sqh
-    condition: [brd4342a]
-  - name: device_needs_ram_execution
-    condition: [brd4342a]
-  # Configure a text segment in the PSRAM region for boards with PSRAM support
-  - name: siwx917_text_segment_in_psram
-    condition: [brd4342a]
+    condition: [device_supports_psram, device_supports_external_flash]
 
 provides:
   - name: matter_platform_siwx917
-  - name: wiseconnect_toolchain_gcc_override
   - name: matter_si91x_common_flash_nvm3_enabled
 
 include:

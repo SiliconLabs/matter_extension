@@ -76,7 +76,7 @@
         }
       ],
       "deviceVersions": [
-        3,
+        4,
         1
       ],
       "deviceIdentifiers": [
@@ -3787,17 +3787,17 @@
       "name": "Anonymous Endpoint Type",
       "deviceTypeRef": {
         "code": 769,
-        "profileId": 261,
-        "label": "CBA-tstat",
-        "name": "CBA-tstat",
+        "profileId": 260,
+        "label": "HA-tstat",
+        "name": "HA-tstat",
         "deviceTypeOrder": 0
       },
       "deviceTypes": [
         {
           "code": 769,
-          "profileId": 261,
-          "label": "CBA-tstat",
-          "name": "CBA-tstat",
+          "profileId": 260,
+          "label": "HA-tstat",
+          "name": "HA-tstat",
           "deviceTypeOrder": 0
         }
       ],
@@ -3807,9 +3807,9 @@
       "deviceIdentifiers": [
         769
       ],
-      "deviceTypeName": "CBA-tstat",
+      "deviceTypeName": "HA-tstat",
       "deviceTypeCode": 769,
-      "deviceTypeProfileId": 261,
+      "deviceTypeProfileId": 260,
       "clusters": [
         {
           "name": "Basic",
@@ -3862,6 +3862,58 @@
               "singleton": 1,
               "bounded": 0,
               "defaultValue": "3",
+              "reportable": 0,
+              "minInterval": 1,
+              "maxInterval": 65534,
+              "reportableChange": 0
+            }
+          ]
+        },
+        {
+          "name": "Identify",
+          "code": 3,
+          "mfgCode": null,
+          "define": "IDENTIFY_CLUSTER",
+          "side": "client",
+          "enabled": 1,
+          "commands": [
+            {
+              "name": "IdentifyQueryResponse",
+              "code": 0,
+              "mfgCode": null,
+              "source": "server",
+              "isIncoming": 1,
+              "isEnabled": 1
+            },
+            {
+              "name": "Identify",
+              "code": 0,
+              "mfgCode": null,
+              "source": "client",
+              "isIncoming": 0,
+              "isEnabled": 1
+            },
+            {
+              "name": "IdentifyQuery",
+              "code": 1,
+              "mfgCode": null,
+              "source": "client",
+              "isIncoming": 0,
+              "isEnabled": 1
+            }
+          ],
+          "attributes": [
+            {
+              "name": "cluster revision",
+              "code": 65533,
+              "mfgCode": null,
+              "side": "client",
+              "type": "int16u",
+              "included": 1,
+              "storageOption": "RAM",
+              "singleton": 0,
+              "bounded": 0,
+              "defaultValue": "2",
               "reportable": 0,
               "minInterval": 1,
               "maxInterval": 65534,
@@ -4588,6 +4640,22 @@
               "reportableChange": 0
             },
             {
+              "name": "abs min heat setpoint limit",
+              "code": 3,
+              "mfgCode": null,
+              "side": "server",
+              "type": "int16s",
+              "included": 1,
+              "storageOption": "RAM",
+              "singleton": 0,
+              "bounded": 0,
+              "defaultValue": "0x02BC",
+              "reportable": 0,
+              "minInterval": 1,
+              "maxInterval": 65534,
+              "reportableChange": 0
+            },
+            {
               "name": "abs max heat setpoint limit",
               "code": 4,
               "mfgCode": null,
@@ -5275,32 +5343,8 @@
               "isEnabled": 1
             },
             {
-              "name": "AddThermostatSuggestionResponse",
-              "code": 2,
-              "mfgCode": null,
-              "source": "server",
-              "isIncoming": 0,
-              "isEnabled": 1
-            },
-            {
               "name": "SetActivePresetRequest",
               "code": 6,
-              "mfgCode": null,
-              "source": "client",
-              "isIncoming": 1,
-              "isEnabled": 1
-            },
-            {
-              "name": "AddThermostatSuggestion",
-              "code": 7,
-              "mfgCode": null,
-              "source": "client",
-              "isIncoming": 1,
-              "isEnabled": 1
-            },
-            {
-              "name": "RemoveThermostatSuggestion",
-              "code": 8,
               "mfgCode": null,
               "source": "client",
               "isIncoming": 1,
@@ -5645,70 +5689,6 @@
               "reportableChange": 0
             },
             {
-              "name": "MaxThermostatSuggestions",
-              "code": 83,
-              "mfgCode": null,
-              "side": "server",
-              "type": "int8u",
-              "included": 1,
-              "storageOption": "External",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": null,
-              "reportable": 1,
-              "minInterval": 1,
-              "maxInterval": 65534,
-              "reportableChange": 0
-            },
-            {
-              "name": "ThermostatSuggestions",
-              "code": 84,
-              "mfgCode": null,
-              "side": "server",
-              "type": "array",
-              "included": 1,
-              "storageOption": "External",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": null,
-              "reportable": 1,
-              "minInterval": 1,
-              "maxInterval": 65534,
-              "reportableChange": 0
-            },
-            {
-              "name": "CurrentThermostatSuggestion",
-              "code": 85,
-              "mfgCode": null,
-              "side": "server",
-              "type": "ThermostatSuggestionStruct",
-              "included": 1,
-              "storageOption": "External",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": null,
-              "reportable": 1,
-              "minInterval": 1,
-              "maxInterval": 65534,
-              "reportableChange": 0
-            },
-            {
-              "name": "ThermostatSuggestionNotFollowingReason",
-              "code": 86,
-              "mfgCode": null,
-              "side": "server",
-              "type": "ThermostatSuggestionNotFollowingReasonBitmap",
-              "included": 1,
-              "storageOption": "External",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": null,
-              "reportable": 1,
-              "minInterval": 1,
-              "maxInterval": 65534,
-              "reportableChange": 0
-            },
-            {
               "name": "GeneratedCommandList",
               "code": 65528,
               "mfgCode": null,
@@ -5927,7 +5907,7 @@
     {
       "endpointTypeName": "Anonymous Endpoint Type",
       "endpointTypeIndex": 1,
-      "profileId": 261,
+      "profileId": 260,
       "endpointId": 1,
       "networkId": 0,
       "parentEndpointIdentifier": null

@@ -112,7 +112,6 @@ include:
   - path: LEDWidget.h
   - path: sl_systemview_config.h
   - path: PigweedLogger.h
-  - path: FreeRTOSConfig.h
   - path: Rpc.h
   - path: silabs_creds.h
   - path: MemMonitoring.h
@@ -180,6 +179,7 @@ source:
   - path: third_party/matter_sdk/src/platform/silabs/PlatformManagerImpl.cpp
   - path: third_party/matter_sdk/src/platform/silabs/platformAbstraction/GsdkSpam.cpp
   - path: third_party/matter_sdk/src/platform/silabs/platformAbstraction/SilabsPlatform.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/ChipDie.cpp
 define:
   - name: CHIP_HAVE_CONFIG_H
     value: "1"

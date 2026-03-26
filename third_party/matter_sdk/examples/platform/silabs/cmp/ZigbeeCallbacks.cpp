@@ -42,6 +42,7 @@
 #include "AppConfig.h"
 #include "sl_cmp_config.h"
 
+#include "MultiProtocolDataModelHelper.h"
 #include "ZigbeeCallbacks.h"
 
 #if SL_MATTER_CMP_SECURE_ZIGBEE
@@ -319,3 +320,13 @@ extern "C" void zb_ble_dmp_print_ble_connections(void)
     (void) index;
 }
 #endif
+
+extern "C" void sl_zigbee_af_zll_commissioning_common_reset_to_factory_new_cb(void)
+{
+#ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
+#if defined(GENERATED_MULTI_PROTOCOL_ATTRIBUTE_MAPPING) && defined(SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT)
+    // need to resync matter datamodel to zb data model
+    MultiProtocolDataModel::Initialize();
+#endif // defined(GENERATED_MULTI_PROTOCOL_ATTRIBUTE_MAPPING) && defined(SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT)
+#endif // SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
+}

@@ -77,6 +77,7 @@ public:
      *  the minimum and maximum advertising intervals, the duration of the advertising, and the maximum number of events.
      */
     virtual CHIP_ERROR ConfigureAdvertising(const AdvConfigStruct & config) = 0;
+    virtual CHIP_ERROR PrintAdvertisingInfo()                               = 0;
 
     /** @brief StartAdvertising
      *  Start the advertising process for the BLE channel using configured parameters. ConfigureAdvertising must be called before
@@ -174,10 +175,13 @@ public:
     bd_addr GetRandomizedAddr(void) const { return mConnectionState.address; }
     BLEConState GetConnectionState() const { return mConnectionState; }
 
+    bool IsConfigured(void) const { return mFlags.Has(Flags::kConfigured); }
+
 protected:
     enum class Flags : uint16_t
     {
         kAdvertising = 0x0001, // Todo : See about flags for connection, subscription, etc.
+        kConfigured  = 0x0002, // Indicates that the channel has been configured
     };
 
     BLEConState mConnectionState;

@@ -1,5 +1,5 @@
 id: matter_rgb_leds
-label: matter LED Support
+label: Matter RGB LED Support
 package: matter
 description: RGB LED Support for Matter applications
 category: Platform

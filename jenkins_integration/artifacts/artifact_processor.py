@@ -193,12 +193,17 @@ def _get_artifact_info(workflow_id, sqa):
     print(f"Fetching artifacts from URL: {workflow_artifact_url}")
     response = _make_github_api_request(workflow_artifact_url)
     artifacts_data = response.json()
-    if not artifacts_data.get('artifacts'):
+    artifacts = artifacts_data.get('artifacts') or []
+    if not artifacts:
         raise RuntimeError(f"No artifacts found for workflow {workflow_id}")
-    if not sqa:
-        artifact = artifacts_data['artifacts'][0]
+    if sqa:
+        artifact = next((a for a in artifacts if a['name'] == 'sqa-artifacts'), None)
+        if not artifact:
+            raise RuntimeError(f"No SQA artifact (sqa-artifacts) found for workflow {workflow_id}. Available: {[a['name'] for a in artifacts]}")
     else:
-        artifact = artifacts_data['artifacts'][1]
+        artifact = next((a for a in artifacts if a['name'].startswith('dev-artifacts')), None)
+        if not artifact:
+            raise RuntimeError(f"No dev artifact (dev-artifacts-*) found for workflow {workflow_id}. Available: {[a['name'] for a in artifacts]}")
     return {
         'download_url': artifact['archive_download_url'],
         'name': artifact['name'] + '.zip'
@@ -521,7 +526,9 @@ def _process_board_app(app_name_folder, app_name_path, board_id, branch_name, bu
             _upload_board_artifact_files(artifact_solution_folder, ubai_app_name, board_id, branch_name, build_number)
         # For OTA, we need the application without bootloader uploaded to UBAI as well (not applicable to 917SoC).
         if ("ota" in ubai_app_name or "series-3" in app_name_path) and "siwx" not in app_name_path:
-            if "-series" in app_name_folder: # Thread
+            if app_name_folder.startswith("bootloader-"):
+                app_name_base = "matter-bootloader"
+            elif "-series" in app_name_folder: # Thread
                 app_name_base = app_name_folder.split("-series")[0]
             else: # WIFI NCP
                 app_name_base = app_name_folder.split("-solution")[0]

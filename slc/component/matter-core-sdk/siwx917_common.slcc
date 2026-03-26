@@ -31,7 +31,6 @@ include:
   - path: LEDWidget.h
   - path: sl_systemview_config.h
   - path: PigweedLogger.h
-  - path: FreeRTOSConfig.h
   - path: Rpc.h
   - path: silabs_creds.h
   - path: MemMonitoring.h
