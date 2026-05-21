@@ -32,28 +32,29 @@
 #endif // SL_MATTER_ENABLE_AWS
 
 using namespace ::chip;
+using namespace ::chip::app;
 using namespace ::chip::app::Clusters;
 
-void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
+void MatterPostAttributeChangeCallback(const ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
                                        uint8_t * value)
 {
     ClusterId clusterId     = attributePath.mClusterId;
     AttributeId attributeId = attributePath.mAttributeId;
-    ChipLogProgress(Zcl, "Cluster callback: " ChipLogFormatMEI, ChipLogValueMEI(clusterId));
+    ChipLogDetail(Zcl, "Cluster callback: " ChipLogFormatMEI, ChipLogValueMEI(clusterId));
 
     switch (clusterId)
     {
-    case app::Clusters::Identify::Id:
+    case Clusters::Identify::Id:
         ChipLogProgress(Zcl, "Identify cluster ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u",
                         ChipLogValueMEI(attributePath.mAttributeId), type, *value, size);
         break;
-    case app::Clusters::RefrigeratorAlarm::Id:
+    case Clusters::RefrigeratorAlarm::Id:
         RefrigeratorMgr().RefAlarmAttributeChangeHandler(attributePath.mEndpointId, attributeId, value, size);
 #ifdef SL_MATTER_ENABLE_AWS
         matterAws::control::AttributeHandler(attributePath.mEndpointId, attributeId);
 #endif // SL_MATTER_ENABLE_AWS
         break;
-    case app::Clusters::TemperatureControl::Id:
+    case Clusters::TemperatureControl::Id:
         RefrigeratorMgr().TempCtrlAttributeChangeHandler(attributePath.mEndpointId, attributeId, value, size);
 #ifdef SL_MATTER_ENABLE_AWS
         matterAws::control::AttributeHandler(attributePath.mEndpointId, attributeId);

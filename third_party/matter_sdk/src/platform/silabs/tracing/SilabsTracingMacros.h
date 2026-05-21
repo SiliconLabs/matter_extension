@@ -52,21 +52,27 @@ private:
 } // namespace Diagnostics
 } // namespace Tracing
 } // namespace chip
+
 #define _CONCAT_IMPL(a, b) a##b
 #define _MACRO_CONCAT(a, b) _CONCAT_IMPL(a, b)
 #define MATTER_TRACE_SCOPE(label, group) ::chip::Tracing::Diagnostics::Scoped _MACRO_CONCAT(_trace_scope, __COUNTER__)(label, group)
 
-#define SILABS_TRACE_BEGIN(operation) ::chip::Tracing::Silabs::SilabsTracer::Instance().TimeTraceBegin(operation)
-#define SILABS_TRACE_END(operation) ::chip::Tracing::Silabs::SilabsTracer::Instance().TimeTraceEnd(operation)
-#define SILABS_TRACE_END_ERROR(operation, error) ::chip::Tracing::Silabs::SilabsTracer::Instance().TimeTraceEnd(operation, error)
-#define SILABS_TRACE_INSTANT(operation) ::chip::Tracing::Silabs::SilabsTracer::Instance().TimeTraceInstant(operation)
+#define SILABS_TRACE_BEGIN(operation)                                                                                              \
+    TEMPORARY_RETURN_IGNORED ::chip::Tracing::Silabs::SilabsTracer::Instance().TimeTraceBegin(operation)
+#define SILABS_TRACE_END(operation)                                                                                                \
+    TEMPORARY_RETURN_IGNORED ::chip::Tracing::Silabs::SilabsTracer::Instance().TimeTraceEnd(operation)
+#define SILABS_TRACE_END_ERROR(operation, error)                                                                                   \
+    TEMPORARY_RETURN_IGNORED ::chip::Tracing::Silabs::SilabsTracer::Instance().TimeTraceEnd(operation, error)
+#define SILABS_TRACE_INSTANT(operation)                                                                                            \
+    TEMPORARY_RETURN_IGNORED ::chip::Tracing::Silabs::SilabsTracer::Instance().TimeTraceInstant(operation)
 #define SILABS_TRACE_NAMED_INSTANT(label, group)                                                                                   \
+    TEMPORARY_RETURN_IGNORED                                                                                                       \
     ::chip::Tracing::Silabs::SilabsTracer::Instance().TimeTraceInstant(CharSpan::fromCharString(label),                            \
                                                                        CharSpan::fromCharString(group))
 #define SILABS_TRACE_INSTANT_ERROR(operation, error)                                                                               \
     ::chip::Tracing::Silabs::SilabsTracer::Instance().TimeTraceInstant(operation, error)
 
-#define SILABS_TRACE_FLUSH_ALL() ::chip::Tracing::Silabs::SilabsTracer::Instance().TraceBufferFlushAll()
+#define SILABS_TRACE_FLUSH_ALL() TEMPORARY_RETURN_IGNORED ::chip::Tracing::Silabs::SilabsTracer::Instance().TraceBufferFlushAll()
 
 #else // MATTER_TRACING_ENABLED
 

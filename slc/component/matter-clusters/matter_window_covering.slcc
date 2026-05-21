@@ -12,12 +12,14 @@ metadata:
 provides:
   - name: matter_window_covering
 source:
-  - path: third_party/matter_sdk/src/app/clusters/window-covering-server/window-covering-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/window-covering-server/WindowCoveringCluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/window-covering-server
     file_list:
       - path: window-covering-delegate.h
       - path: window-covering-server.h
+      - path: WindowCoveringCluster.h
+      - path: WindowCoveringDelegate.h
 template_contribution:
   - name: component_catalog
     value: matter_window_covering

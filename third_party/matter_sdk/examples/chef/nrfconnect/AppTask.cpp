@@ -37,7 +37,7 @@
 #include <credentials/DeviceAttestationCredsProvider.h>
 #include <credentials/examples/DeviceAttestationCredsExample.h>
 
-#ifdef CONFIG_NET_L2_OPENTHREAD
+#ifdef CONFIG_OPENTHREAD
 #include <platform/OpenThread/GenericNetworkCommissioningThreadDriver.h>
 #endif
 #ifdef CONFIG_CHIP_CRYPTO_PSA
@@ -84,7 +84,7 @@ chip::Crypto::PSAOperationalKeystore sPSAOperationalKeystore{};
 bool sIsSitModeRequested = false;
 #endif
 
-#ifdef CONFIG_NET_L2_OPENTHREAD
+#ifdef CONFIG_OPENTHREAD
 Clusters::NetworkCommissioning::InstanceAndDriver<NetworkCommissioning::GenericThreadDriver> sThreadNetworkDriver(0 /*endpointId*/);
 #endif
 } // namespace
@@ -147,7 +147,7 @@ CHIP_ERROR AppTask::Init()
     }
 
     // Network connectivity
-#if defined(CONFIG_NET_L2_OPENTHREAD)
+#if defined(CONFIG_OPENTHREAD)
     err = ThreadStackMgr().InitThreadStack();
     if (err != CHIP_NO_ERROR)
     {
@@ -166,10 +166,10 @@ CHIP_ERROR AppTask::Init()
         return err;
     }
 
-    sThreadNetworkDriver.Init();
+    TEMPORARY_RETURN_IGNORED sThreadNetworkDriver.Init();
 #else
     return CHIP_ERROR_INTERNAL;
-#endif // CONFIG_NET_L2_OPENTHREAD
+#endif // CONFIG_OPENTHREAD
 
     // Initialize LEDs
     LEDWidget::InitGpio();
@@ -219,7 +219,7 @@ CHIP_ERROR AppTask::Init()
     // Add CHIP event handler and start CHIP thread.
     // Note that all the initialization code should happen prior to this point to avoid data races
     // between the main and the CHIP threads
-    PlatformMgr().AddEventHandler(ChipEventHandler, 0);
+    TEMPORARY_RETURN_IGNORED PlatformMgr().AddEventHandler(ChipEventHandler, 0);
 
     err = PlatformMgr().StartEventLoopTask();
     if (err != CHIP_NO_ERROR)
@@ -240,7 +240,7 @@ CHIP_ERROR AppTask::StartApp()
 {
     ReturnErrorOnFailure(Init());
 
-    chip::DeviceLayer::PlatformMgr().ScheduleWork(AppTask::InitServer);
+    TEMPORARY_RETURN_IGNORED chip::DeviceLayer::PlatformMgr().ScheduleWork(AppTask::InitServer);
 
     return CHIP_NO_ERROR;
 }
@@ -314,14 +314,15 @@ void AppTask::IcdDslsEventHandler(const AppEvent &)
     if (sIsSitModeRequested)
     {
         ChipLogProgress(AppServer, "IcdDslsEventHandler: NotifySITModeRequestWithdrawal");
-        PlatformMgr().ScheduleWork([](intptr_t arg) { chip::app::ICDNotifier::GetInstance().NotifySITModeRequestWithdrawal(); }, 0);
+        TEMPORARY_RETURN_IGNORED PlatformMgr().ScheduleWork(
+            [](intptr_t arg) { chip::app::ICDNotifier::GetInstance().NotifySITModeRequestWithdrawal(); }, 0);
         sIsSitModeRequested = false;
     }
     else
     {
         ChipLogProgress(AppServer, "IcdDslsEventHandler: NotifySITModeRequestNotification");
-        PlatformMgr().ScheduleWork([](intptr_t arg) { chip::app::ICDNotifier::GetInstance().NotifySITModeRequestNotification(); },
-                                   0);
+        TEMPORARY_RETURN_IGNORED PlatformMgr().ScheduleWork(
+            [](intptr_t arg) { chip::app::ICDNotifier::GetInstance().NotifySITModeRequestNotification(); }, 0);
         sIsSitModeRequested = true;
     }
 }
@@ -331,7 +332,8 @@ void AppTask::IcdUatEventHandler(const AppEvent &)
 {
 #ifdef CONFIG_CHIP_ICD_UAT_SUPPORT
     // Temporarily claim network activity, until we implement a "user trigger" reason for ICD wakeups.
-    PlatformMgr().ScheduleWork([](intptr_t) { ICDNotifier::GetInstance().NotifyNetworkActivityNotification(); });
+    TEMPORARY_RETURN_IGNORED PlatformMgr().ScheduleWork(
+        [](intptr_t) { ICDNotifier::GetInstance().NotifyNetworkActivityNotification(); });
 #endif
 }
 
@@ -437,13 +439,13 @@ void AppTask::ChipEventHandler(const ChipDeviceEvent * event, intptr_t /* arg */
         sHaveBLEConnections = ConnectivityMgr().NumBLEConnections() != 0;
         UpdateStatusLED();
         break;
-#if defined(CONFIG_NET_L2_OPENTHREAD)
+#if defined(CONFIG_OPENTHREAD)
     case DeviceEventType::kThreadStateChange:
         sIsNetworkProvisioned = ConnectivityMgr().IsThreadProvisioned();
         sIsNetworkEnabled     = ConnectivityMgr().IsThreadEnabled();
         UpdateStatusLED();
         break;
-#endif // CONFIG_NET_L2_OPENTHREAD
+#endif // CONFIG_OPENTHREAD
     default:
         break;
     }
@@ -469,7 +471,7 @@ void AppTask::PostEvent(const AppEvent & event)
         return;
     }
     ChipLogProgress(AppServer, "MsgQ set event.Type = %u", chip::to_underlying(event.Type));
-    chip::DeviceLayer::PlatformMgr().ScheduleWork(AppTask::MsgQConsume);
+    TEMPORARY_RETURN_IGNORED chip::DeviceLayer::PlatformMgr().ScheduleWork(AppTask::MsgQConsume);
 }
 
 void AppTask::DispatchEvent(const AppEvent & event)

@@ -12,11 +12,18 @@ metadata:
 provides:
   - name: matter_actions
 source:
-  - path: third_party/matter_sdk/src/app/clusters/actions-server/actions-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/actions-server/ActionsCluster.cpp
+  - path: third_party/matter_sdk/src/app/clusters/actions-server/CodegenIntegration.cpp
+    unless: [matter_code_driven_dm]
 include:
   - path: third_party/matter_sdk/src/app/clusters/actions-server
     file_list:
       - path: actions-server.h
+      - path: ActionsCluster.h
+      - path: ActionsDelegate.h
+      - path: ActionsStructs.h
+      - path: CodegenIntegration.h
+        unless: [matter_code_driven_dm]
 template_contribution:
   - name: component_catalog
     value: matter_actions

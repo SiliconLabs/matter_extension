@@ -83,7 +83,7 @@ void ICDManager::Init()
     }
 #endif // CHIP_CONFIG_ENABLE_ICD_LIT
 
-    VerifyOrDie(ICDNotifier::GetInstance().Subscribe(this) == CHIP_NO_ERROR);
+    SuccessOrDie(ICDNotifier::GetInstance().Subscribe(this));
 
     UpdateICDMode();
     UpdateOperationState(OperationalState::IdleMode);
@@ -452,7 +452,8 @@ void ICDManager::UpdateOperationState(OperationalState state)
 #endif // CHIP_CONFIG_ENABLE_ICD_CIP
         )
         {
-            DeviceLayer::SystemLayer().StartTimer(configData.GetModeBasedIdleModeDuration(), OnIdleModeDone, this);
+            TEMPORARY_RETURN_IGNORED DeviceLayer::SystemLayer().StartTimer(configData.GetModeBasedIdleModeDuration(),
+                                                                           OnIdleModeDone, this);
         }
 
 #if CHIP_CONFIG_ENABLE_ICD_CIP
@@ -486,7 +487,7 @@ void ICDManager::UpdateOperationState(OperationalState state)
                 activeModeDuration = configData.GetActiveModeThreshold();
             }
 
-            DeviceLayer::SystemLayer().StartTimer(activeModeDuration, OnActiveModeDone, this);
+            TEMPORARY_RETURN_IGNORED DeviceLayer::SystemLayer().StartTimer(activeModeDuration, OnActiveModeDone, this);
 
             Milliseconds32 activeModeJitterInterval = Milliseconds32(ICD_ACTIVE_TIME_JITTER_MS);
             // TODO(#33074): Edge case when we transition to IdleMode with this condition being true
@@ -497,7 +498,7 @@ void ICDManager::UpdateOperationState(OperationalState state)
             // Reset this flag when we enter ActiveMode to avoid having a feedback loop that keeps us indefinitly in
             // ActiveMode.
             mTransitionToIdleCalled = false;
-            DeviceLayer::SystemLayer().StartTimer(activeModeJitterInterval, OnTransitionToIdle, this);
+            TEMPORARY_RETURN_IGNORED DeviceLayer::SystemLayer().StartTimer(activeModeJitterInterval, OnTransitionToIdle, this);
 
             CHIP_ERROR err = DeviceLayer::ConnectivityMgr().SetPollingInterval(configData.GetFastPollingInterval());
             if (err != CHIP_NO_ERROR)
@@ -686,23 +687,22 @@ void ICDManager::OnSubscriptionReport()
 }
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER && CHIP_CONFIG_ENABLE_ICD_CIP && CHIP_CONFIG_ENABLE_ICD_CHECK_IN_ON_REPORT_TIMEOUT
-void ICDManager::OnSendCheckIn(const Access::SubjectDescriptor & subject)
+void ICDManager::OnSendCheckIn(Optional<Access::SubjectDescriptor> specificSubject)
 {
-    ChipLogProgress(AppServer, "Received OnSendCheckIn for subject: " ChipLogFormatX64, ChipLogValueX64(subject.subject));
-    SendCheckInMsgs(MakeOptional(subject));
+    SendCheckInMsgs(specificSubject);
 }
 #endif // CHIP_CONFIG_ENABLE_ICD_SERVER && CHIP_CONFIG_ENABLE_ICD_CIP && CHIP_CONFIG_ENABLE_ICD_CHECK_IN_ON_REPORT_TIMEOUT
 
 void ICDManager::ExtendActiveMode(Milliseconds16 extendDuration)
 {
-    DeviceLayer::SystemLayer().ExtendTimerTo(extendDuration, OnActiveModeDone, this);
+    TEMPORARY_RETURN_IGNORED DeviceLayer::SystemLayer().ExtendTimerTo(extendDuration, OnActiveModeDone, this);
 
     Milliseconds32 activeModeJitterThreshold = Milliseconds32(ICD_ACTIVE_TIME_JITTER_MS);
     activeModeJitterThreshold = (extendDuration >= activeModeJitterThreshold) ? extendDuration - activeModeJitterThreshold : kZero;
 
     if (!mTransitionToIdleCalled)
     {
-        DeviceLayer::SystemLayer().ExtendTimerTo(activeModeJitterThreshold, OnTransitionToIdle, this);
+        TEMPORARY_RETURN_IGNORED DeviceLayer::SystemLayer().ExtendTimerTo(activeModeJitterThreshold, OnTransitionToIdle, this);
     }
 }
 

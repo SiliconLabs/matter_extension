@@ -1,8 +1,0 @@
-label: rangehood-app-siwx
-quality: production
-package: matter
-description: Matter Rangehood Wi-Fi SoC solution
-project:
-  - path: ./rangehood-app-siwx.slcp
-    id: application
-    output: rangehood-app-siwx

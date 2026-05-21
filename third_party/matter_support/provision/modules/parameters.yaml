@@ -158,6 +158,13 @@ options:
       short: "nc"
       type: "flag"
 
+    - id: 0x013e
+      desc: "RTT Address"
+      name: "rtt_addr"
+      short: "ra"
+      type: "int32u"
+      format: "hex"
+
 instance_info:
     - id: 0x0141
       desc: "Serial Number"

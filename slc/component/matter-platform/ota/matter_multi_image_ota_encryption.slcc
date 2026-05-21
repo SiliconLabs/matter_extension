@@ -15,6 +15,7 @@ provides:
 
 requires:
   - name: matter_multi_image_ota
+  - name: mbedtls_cipher_ctr
 
 source:
   - path: third_party/matter_sdk/src/platform/silabs/multi-ota/OtaTlvEncryptionKeyPSA.cpp

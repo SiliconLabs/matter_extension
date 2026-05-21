@@ -1,0 +1,14 @@
+workspace_name: matter_thread_soc_performance_test_app_series_2_freertos
+label: Matter Thread - SoC Performance Test with external Bootloader FreeRTOS
+quality: internal
+package: matter
+description: Demonstrates a sample implementation of a Matter over Thread performance test app with external bootloader
+project:
+  - path: ./matter_thread_soc_performance_test_app_freertos.slcp
+    id: application
+    output: performance_test_app
+  - path: ../../bootloaders/bootloader_storage_external_single_series_2/matter_bootloader_external_series_2.slcp
+    id: bootloader
+    output: matter_bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

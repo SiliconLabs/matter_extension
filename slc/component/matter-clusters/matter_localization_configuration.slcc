@@ -13,11 +13,12 @@ provides:
   - name: matter_localization_configuration
 source:
   - path: third_party/matter_sdk/src/app/clusters/localization-configuration-server/CodegenIntegration.cpp
-  - path: third_party/matter_sdk/src/app/clusters/localization-configuration-server/localization-configuration-cluster.cpp
+    unless: [matter_code_driven_dm]
+  - path: third_party/matter_sdk/src/app/clusters/localization-configuration-server/LocalizationConfigurationCluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/localization-configuration-server
     file_list:
-      - path: localization-configuration-cluster.h
+      - path: LocalizationConfigurationCluster.h
 template_contribution:
   - name: component_catalog
     value: matter_localization_configuration

@@ -66,11 +66,6 @@ efr32_sdk("sdk") {
     "${examples_common_plat_dir}/freertos_config",
   ]
 
-  if (use_wf200) {
-    # TODO efr32_sdk should not need a header from this location
-    include_dirs += [ "${examples_plat_dir}/wf200" ]
-  }
-
   defines = []
   if (chip_enable_pw_rpc) {
     defines += [
@@ -146,7 +141,11 @@ silabs_executable("chef_app") {
     ]
   }
 
-  ldscript = "${examples_common_plat_dir}/ldscripts/${silabs_family}.ld"
+  if (is_clang) {
+    ldscript = "${examples_common_plat_dir}/ldscripts/${silabs_family}-clang.ld"
+  } else {
+    ldscript = "${examples_common_plat_dir}/ldscripts/${silabs_family}.ld"
+  }
 
   inputs = [ ldscript ]
 

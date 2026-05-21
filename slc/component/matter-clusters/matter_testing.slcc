@@ -14,6 +14,7 @@ provides:
 source:
   - path: third_party/matter_sdk/src/app/clusters/testing/AttributeTesting.cpp
   - path: third_party/matter_sdk/src/app/clusters/testing/MockCommandHandler.cpp
+  - path: third_party/matter_sdk/src/app/clusters/testing/ValidateGlobalAttributes.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/testing
     file_list:

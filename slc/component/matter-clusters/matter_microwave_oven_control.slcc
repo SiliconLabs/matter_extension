@@ -12,11 +12,19 @@ metadata:
 provides:
   - name: matter_microwave_oven_control
 source:
-  - path: third_party/matter_sdk/src/app/clusters/microwave-oven-control-server/microwave-oven-control-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/microwave-oven-control-server/CodegenIntegration.cpp
+    unless: [matter_code_driven_dm]
+  - path: third_party/matter_sdk/src/app/clusters/microwave-oven-control-server/MicrowaveOvenControlCluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/microwave-oven-control-server
     file_list:
+      - path: AppDelegate.h
+      - path: CodegenIntegration.h
+        unless: [matter_code_driven_dm]
+      - path: Delegate.h
+      - path: IntegrationDelegate.h
       - path: microwave-oven-control-server.h
+      - path: MicrowaveOvenControlCluster.h
 template_contribution:
   - name: component_catalog
     value: matter_microwave_oven_control

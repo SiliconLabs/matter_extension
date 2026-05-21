@@ -11,6 +11,8 @@ metadata:
     license: MSLA
 requires:
   - name: matter_zigbee_cmp
+  # CMP need feature_sm otherwise chip-tool fail to connect on series 3
+  - name: bluetooth_feature_sm 
   - name: matter_zigbee_type
     # RAIL components that enable Concurrent Listening on series 2.
     # We keep it in common to respect grandfather configuration

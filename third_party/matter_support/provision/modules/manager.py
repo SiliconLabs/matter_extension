@@ -122,7 +122,7 @@ class ProvisionManager:
         # Manufacturing Date
         mdate = args.get(ID.kManufacturingDate)
         if mdate.value is None:
-            mdate.set("{:%Y-%m-%d}".format(datetime.date.today()))
+            mdate.set("{:%Y%m%d}".format(datetime.date.today()))
 
         #
         # SPAKE2+

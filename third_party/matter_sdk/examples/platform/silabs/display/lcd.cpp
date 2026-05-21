@@ -21,11 +21,12 @@
 
 #include "demo-ui.h"
 #include "lcd.h"
+#include <platform/PlatformError.h>
 
 #include "dmd.h"
 #include "glib.h"
 
-#if (SLI_SI91X_MCU_INTERFACE)
+#if defined(SLI_SI91X_MCU_INTERFACE) && (SLI_SI91X_MCU_INTERFACE)
 #include "sl_memlcd.h"
 #endif
 
@@ -66,14 +67,14 @@ CHIP_ERROR SilabsLCD::Init(uint8_t * name, bool initialState)
     }
 
     /* Enable the memory lcd */
-#if (SLI_SI91X_MCU_INTERFACE)
+#if defined(SLI_SI91X_MCU_INTERFACE) && (SLI_SI91X_MCU_INTERFACE)
     sl_memlcd_display_enable();
 #else
     status = sl_board_enable_display();
     if (status != SL_STATUS_OK)
     {
-        SILABS_LOG("Board Display enable fail %d", status);
-        err = CHIP_ERROR_INTERNAL;
+        SILABS_LOG("Board Display enable fail %lx", status);
+        err = MATTER_PLATFORM_ERROR(status);
     }
 #endif
 
@@ -81,7 +82,7 @@ CHIP_ERROR SilabsLCD::Init(uint8_t * name, bool initialState)
     status = DMD_init(0);
     if (DMD_OK != status)
     {
-        SILABS_LOG("DMD init failed %d", status);
+        SILABS_LOG("DMD init failed %lx", status);
         err = MATTER_PLATFORM_ERROR(status);
     }
 
@@ -89,7 +90,7 @@ CHIP_ERROR SilabsLCD::Init(uint8_t * name, bool initialState)
     status = GLIB_contextInit(&glibContext);
     if (GLIB_OK != status)
     {
-        SILABS_LOG("Glib context init failed %d", status);
+        SILABS_LOG("Glib context init failed %lx", status);
         err = MATTER_PLATFORM_ERROR(status);
     }
 
@@ -98,7 +99,7 @@ CHIP_ERROR SilabsLCD::Init(uint8_t * name, bool initialState)
     status                      = GLIB_clear(&glibContext);
     if (GLIB_OK != status)
     {
-        SILABS_LOG("Glib clear failed %d", status);
+        SILABS_LOG("Glib clear failed %lx", status);
         err = MATTER_PLATFORM_ERROR(status);
     }
     demoUIInit(&glibContext);
@@ -172,7 +173,7 @@ void SilabsLCD::WriteStatus()
         memcpy(str, mStatus.networkName, sizeof(str));
     }
 
-#if SL_WIFI
+#if defined(SL_WIFI) && SL_WIFI
     GLIB_drawStringOnLine(&glibContext, "SSID : ", lineNb++, GLIB_ALIGN_LEFT, 0, 0, true);
     GLIB_drawStringOnLine(&glibContext, str, lineNb++, GLIB_ALIGN_LEFT, 0, 0, true);
 #else

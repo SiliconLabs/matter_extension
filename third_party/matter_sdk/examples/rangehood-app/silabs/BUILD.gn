@@ -133,7 +133,6 @@ silabs_executable("rangehood_app") {
   sources = [
     "${example_rangehood_dir}/rangehood-app-common/src/ExtractorHoodEndpoint.cpp",
     "${example_rangehood_dir}/rangehood-app-common/src/LightEndpoint.cpp",
-    "${examples_common_plat_dir}/main.cpp",
     "src/AppTask.cpp",
     "src/DataModelCallbacks.cpp",
     "src/RangeHoodManager.cpp",

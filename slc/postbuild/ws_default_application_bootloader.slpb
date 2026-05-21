@@ -10,9 +10,9 @@ steps:
     input:
       - "{{bootloader_binary}}"
       - "{{application_binary}}"
-    output: artifact/{{workspace_name}}-full.s37
+    output: artifact/{{workspace_name}}_full.s37
   
   # Create upgrade image (application only)
   - task: create_gbl
     app: "{{application_binary}}"
-    output: artifact/{{workspace_name}}-app-only.gbl
+    output: artifact/{{workspace_name}}_app_only.gbl

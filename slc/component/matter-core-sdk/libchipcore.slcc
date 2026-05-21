@@ -53,6 +53,7 @@ include:
       - path: TLVUtilities.h
       - path: CHIPPersistentStorageDelegate.h
       - path: TLV.h
+      - path: CriticalFailure.h
 label: libchipcore
 package: matter
 provides:

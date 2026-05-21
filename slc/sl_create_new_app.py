@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 
 """
@@ -103,7 +102,11 @@ class CreateApp:
         matter_sdk_src, matter_sdk_inc, project_name = self.extract_from_slcp(self.app_slcp_full_path)
 
         if self.use_solutions:
-            self.sample_app_out_path = os.path.join(self.new_app_name, project_name)
+            with open(self.reference_project_file, 'r') as f:
+                content = f.read()
+            match = re.search(r'id:\s*application.*?output:\s*(\S+)', content, re.DOTALL)
+            app_output_dir = match.group(1) if match else project_name
+            self.sample_app_out_path = os.path.join(self.new_app_name, app_output_dir)
         else:
             self.sample_app_out_path = self.new_app_name
 

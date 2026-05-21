@@ -29,12 +29,14 @@ void ProcessOnOffUnicast(CommandId commandId, const Binding::TableEntry & bindin
     {
     case Clusters::OnOff::Commands::On::Id: {
         Clusters::OnOff::Commands::On::Type cmd;
-        Controller::InvokeCommandRequest(exchangeMgr, sessionHandle, binding.remote, cmd, onSuccess, onFailure);
+        SuccessOrLog(Controller::InvokeCommandRequest(exchangeMgr, sessionHandle, binding.remote, cmd, onSuccess, onFailure),
+                     AppServer, "Failed to invoke On command");
         break;
     }
     case Clusters::OnOff::Commands::Off::Id: {
         Clusters::OnOff::Commands::Off::Type cmd;
-        Controller::InvokeCommandRequest(exchangeMgr, sessionHandle, binding.remote, cmd, onSuccess, onFailure);
+        SuccessOrLog(Controller::InvokeCommandRequest(exchangeMgr, sessionHandle, binding.remote, cmd, onSuccess, onFailure),
+                     AppServer, "Failed to invoke Off command");
         break;
     }
     default:
@@ -71,8 +73,10 @@ void ContextReleaseHandler(void * context)
 void InitBindingMgrWork(intptr_t)
 {
     auto & server = Server::GetInstance();
-    Binding::Manager::GetInstance().Init(
-        { &server.GetFabricTable(), server.GetCASESessionManager(), &server.GetPersistentStorage() });
+    VerifyOrDieWithMsg(CHIP_NO_ERROR ==
+                           Binding::Manager::GetInstance().Init(
+                               { &server.GetFabricTable(), server.GetCASESessionManager(), &server.GetPersistentStorage() }),
+                       AppServer, "Failed to initialize binding manager");
     Binding::Manager::GetInstance().RegisterBoundDeviceChangedHandler(BoundDeviceChangedHandler);
     Binding::Manager::GetInstance().RegisterBoundDeviceContextReleaseHandler(ContextReleaseHandler);
     ChipLogDetail(AppServer, "Oven binding manager initialized");
@@ -84,21 +88,20 @@ void TriggerBindingWork(intptr_t context)
     VerifyOrReturn(ctx != nullptr, ChipLogError(AppServer, "TriggerBindingWork: null context"));
 
     // Notify all OnOff bindings from the specified endpoint
-    Binding::Manager::GetInstance().NotifyBoundClusterChanged(ctx->localEndpointId, Clusters::OnOff::Id, ctx);
+    SuccessOrLog(Binding::Manager::GetInstance().NotifyBoundClusterChanged(ctx->localEndpointId, Clusters::OnOff::Id, ctx),
+                 AppServer, "Failed to notify bound cluster changed");
 }
 
 } // namespace
 
 CHIP_ERROR InitOvenBindingHandler()
 {
-    DeviceLayer::PlatformMgr().ScheduleWork(InitBindingMgrWork);
-    return CHIP_NO_ERROR;
+    return DeviceLayer::PlatformMgr().ScheduleWork(InitBindingMgrWork);
 }
 
 CHIP_ERROR CookTopOnOffBindingTrigger(OnOffBindingContext * context)
 {
     VerifyOrReturnError(context != nullptr, CHIP_ERROR_INVALID_ARGUMENT,
                         ChipLogError(AppServer, "CookTopOnOffBindingTrigger: null context"));
-    DeviceLayer::PlatformMgr().ScheduleWork(TriggerBindingWork, reinterpret_cast<intptr_t>(context));
-    return CHIP_NO_ERROR;
+    return DeviceLayer::PlatformMgr().ScheduleWork(TriggerBindingWork, reinterpret_cast<intptr_t>(context));
 }

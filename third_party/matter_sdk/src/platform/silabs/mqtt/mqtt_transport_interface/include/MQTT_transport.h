@@ -21,7 +21,11 @@
 #define MQTT_TRANSPORT_H
 
 #include "FreeRTOS.h"
+
+#if !(defined(SL_MATTER_ENABLE_DUAL_STACK) && SL_MATTER_ENABLE_DUAL_STACK)
 #include "altcp_tls.h"
+#endif // !(defined(SL_MATTER_ENABLE_DUAL_STACK) && SL_MATTER_ENABLE_DUAL_STACK)
+
 #include "event_groups.h"
 #include "lwip/err.h"
 #include "lwip/ip_addr.h"
@@ -41,6 +45,10 @@
  */
 #define MQTT_TRANSPORT_MAX_HOSTNAME_LEN 253
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef void (*matter_aws_connect_cb)(err_t);
 typedef struct MQTT_Transport_t MQTT_Transport_t;
 void transport_process_mbedtls_rx(MQTT_Transport_t * client);
@@ -50,5 +58,9 @@ err_t MQTT_Transport_SSLConfigure(MQTT_Transport_t * transP, const u8_t * ca, si
                                   size_t cert_len);
 err_t MQTT_Transport_Connect(MQTT_Transport_t * client, const char * host, size_t hostLen, u16_t port,
                              matter_aws_connect_cb matterAws_con_cb);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // MQTT_TRANSPORT_H

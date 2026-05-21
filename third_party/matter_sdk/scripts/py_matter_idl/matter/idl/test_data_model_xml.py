@@ -196,15 +196,15 @@ endpoint 2 {
         self.assertEqual(required_attributes[0].filter_cluster, 123)
         self.assertEqual(required_attributes[0].name, "MandatoryElement")
 
-        # The second attribute in the XML also is optional since
-        # it doesn't have any condition to it, so optional by default (change in latest XML)
-        # self.assertEqual(required_attributes[1].code, 1)
-        # self.assertEqual(required_attributes[1].filter_cluster, 123)
-        # self.assertEqual(required_attributes[1].name, "NoElements")
+        # The second attribute in the XML also is mandatory since
+        # it doesn't have any condition to it, so mandatory by default
+        self.assertEqual(required_attributes[1].code, 1)
+        self.assertEqual(required_attributes[1].filter_cluster, 123)
+        self.assertEqual(required_attributes[1].name, "NoElements")
 
         # Only two attributes should be added to the required
         # list, the others should be filtered out.
-        self.assertEqual(len(required_attributes), 1)
+        self.assertEqual(len(required_attributes), 2)
 
     def testClusterDerivation(self):
         # This test is based on a subset of ModeBase and Mode_Dishwasher original xml files
@@ -303,7 +303,7 @@ endpoint 2 {
                }
 
                struct ModeOptionStruct {
-                  char_string<64> label = 0;
+                  char_string label = 0;
                   int8u mode = 1;
                   ModeTagStruct modeTags[] = 2;
                }

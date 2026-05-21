@@ -14,28 +14,50 @@
 
 import("//build_overrides/chip.gni")
 import("${chip_root}/src/platform/silabs/wifi/args.gni")
+import("${chip_root}/third_party/silabs/efr32_sdk.gni")
 
-config("silabs_matterAws_config") {
+config("silabs_matter_aws_config") {
   include_dirs = [
     "${chip_root}/src/platform/silabs/mqtt/stack",
     "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/include",
     "${chip_root}/examples/platform/silabs/matter_aws/matter_aws_interface/include",
+    "${chip_root}/examples/platform/silabs",
     "${chip_root}/examples/platform/silabs/display",
   ]
+
+  if (enable_matter_aws_transport_nwp) {
+    include_dirs += [
+      "${wifi_sdk_root}/components/service/network_manager/inc",
+      "${wifi_sdk_root}/components/device/silabs/si91x/wireless/asynchronous_socket/inc",
+      "${wifi_sdk_root}/components/device/silabs/si91x/wireless/socket/inc",
+      "${wifi_sdk_root}/components/device/silabs/si91x/wireless/inc",
+      "${wifi_sdk_root}/components/service/bsd_socket/inc",
+      "${wifi_sdk_root}/components/common/inc",
+      "${wifi_sdk_root}/resources/certificates",
+    ]
+    defines = [ "SL_MATTER_AWS_TRANSPORT_SI91X_NWP=1" ]
+  }
 }
 
-source_set("silabs-matter-aws") {
+source_set("silabs_matter_aws") {
   sources = [
     "${chip_root}/examples/platform/silabs/matter_aws/matter_aws_interface/src/MatterAws.cpp",
     "${chip_root}/examples/platform/silabs/matter_aws/matter_aws_interface/src/MatterAwsControl.cpp",
     "${chip_root}/examples/platform/silabs/matter_aws/matter_aws_interface/src/MatterAwsNvmCert.cpp",
-    "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/src/MQTT_transport.c",
-    "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp.c",
-    "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_alloc.c",
-    "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_tcp.c",
-    "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls.c",
-    "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls_mem.c",
   ]
+
+  if (enable_matter_aws_transport_nwp) {
+    sources += [ "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/SiWx917/MqttTransportSi91xNwp.cpp" ]
+  } else {
+    sources += [
+      "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/lwip/altcp.c",
+      "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/lwip/altcp_alloc.c",
+      "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/lwip/altcp_tcp.c",
+      "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/lwip/altcp_tls_mbedtls.c",
+      "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/lwip/altcp_tls_mbedtls_mem.c",
+      "${chip_root}/src/platform/silabs/mqtt/mqtt_transport_interface/lwip/mqtt_transport_altcp.c",
+    ]
+  }
 
   public_deps = [
     "${chip_root}/src/inet",
@@ -43,7 +65,7 @@ source_set("silabs-matter-aws") {
     app_data_model,
   ]
 
-  public_configs = [ ":silabs_matterAws_config" ]
+  public_configs = [ ":silabs_matter_aws_config" ]
 }
 
 config("silabs_aws_sdk_ota_config") {

@@ -585,8 +585,7 @@ class WriteAttributeAction(BaseAction):
         if len(resp) == 1 and isinstance(resp[0], AttributeStatus):
             if resp[0].Status == MatterInteractionModel.Status.Success:
                 return _ActionResult(status=_ActionStatus.SUCCESS, response=None)
-            else:
-                return _ActionResult(status=_ActionStatus.ERROR, response=resp[0].Status)
+            return _ActionResult(status=_ActionStatus.ERROR, response=resp[0].Status)
 
         # We always expecte the response to be a list of length 1, for that reason we return error
         # here.
@@ -690,19 +689,19 @@ class DiscoveryCommandAction(BaseAction):
         args = test_step.arguments['values']
         request_data_as_dict = Converter.convert_list_of_name_value_pair_to_dict(args)
 
-        filter = request_data_as_dict['value']
+        flt = request_data_as_dict['value']
 
         if test_step.command == 'FindCommissionableByDeviceType':
-            return discovery.FilterType.DEVICE_TYPE, filter
+            return discovery.FilterType.DEVICE_TYPE, flt
 
         if test_step.command == 'FindCommissionableByLongDiscriminator':
-            return discovery.FilterType.LONG_DISCRIMINATOR, filter
+            return discovery.FilterType.LONG_DISCRIMINATOR, flt
 
         if test_step.command == 'FindCommissionableByShortDiscriminator':
-            return discovery.FilterType.SHORT_DISCRIMINATOR, filter
+            return discovery.FilterType.SHORT_DISCRIMINATOR, flt
 
         if test_step.command == 'FindCommissionableByVendorId':
-            return discovery.FilterType.VENDOR_ID, filter
+            return discovery.FilterType.VENDOR_ID, flt
 
         raise UnexpectedActionCreationError(f'Invalid command: {test_step.command}')
 
@@ -720,7 +719,7 @@ class DiscoveryCommandAction(BaseAction):
         if not devices:
             LOGGER.error("No devices found")
             return _ActionResult(status=_ActionStatus.ERROR, response="NO DEVICES FOUND")
-        elif len(devices) > 1:
+        if len(devices) > 1:
             LOGGER.warning("Commissionable discovery found multiple results!")
 
         return _ActionResult(status=_ActionStatus.SUCCESS, response=devices[0])
@@ -846,9 +845,9 @@ class ReplTestRunner:
         # Some of the tests contain 'cluster over-rides' that refer to a different
         # cluster than that specified in 'config'.
 
-        elif cluster == 'DiscoveryCommands':
+        if cluster == 'DiscoveryCommands':
             return DiscoveryCommandAction(request)
-        elif cluster == 'DelayCommands' and command == 'WaitForCommissionee':
+        if cluster == 'DelayCommands' and command == 'WaitForCommissionee':
             action = self._wait_for_commissionee_action_factory(request)
         elif command == 'writeAttribute':
             action = self._attribute_write_action_factory(request, cluster)
@@ -933,8 +932,7 @@ class ReplTestRunner:
             if not response.event_result_list:
                 # This means that the event result we got back was empty, below is how we
                 # represent this.
-                decoded_response = [{}]
-                return decoded_response
+                return [{}]
             decoded_response = []
             for event in response.event_result_list:
                 if event.Status != MatterInteractionModel.Status.Success:
@@ -994,8 +992,8 @@ class ReplTestRunner:
 
         return decoded_response
 
-    def _get_fabric_id(self, id):
-        return _TestFabricId[id.upper()].value
+    def _get_fabric_id(self, _id):
+        return _TestFabricId[_id.upper()].value
 
     def _get_dev_ctrl(self, action: BaseAction):
         if action.identity is not None:

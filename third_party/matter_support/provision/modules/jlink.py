@@ -43,10 +43,10 @@ class JLinkChannel(_base.Channel):
         self.link.set_tif(interface=pylink.JLinkInterfaces.SWD)
         self.link.connect(chip_name=self.part_number, speed="auto", verbose=True)
         # Use custom RTT control block address, if configured
-        if self.device.rtt_addr is None:
+        if self.device.rtt_addr.value is None:
             self.link.rtt_start()
         else:
-            self.link.rtt_start(self.device.rtt_addr)
+            self.link.rtt_start(self.device.rtt_addr.value)
 
     def close(self):
         print("* Connection closed.\n")

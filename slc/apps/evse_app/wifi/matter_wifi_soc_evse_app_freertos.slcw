@@ -1,0 +1,9 @@
+workspace_name: matter_wifi_soc_evse_app_freertos
+label: Matter WiFi - SoC EVSE FreeRTOS
+quality: production
+package: matter
+description: Demonstrates a sample implementation of a Matter over Wi-Fi EVSE app
+project:
+  - path: ./matter_wifi_soc_evse_app_freertos.slcp
+    id: application
+    output: evse_app_siwx

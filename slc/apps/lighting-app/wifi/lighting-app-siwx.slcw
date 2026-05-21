@@ -1,8 +1,0 @@
-label: lighting-app-siwx
-quality: production
-package: matter
-description: Solution for a Matter over WiFI Lighting App Example
-project:
-  - path: ./lighting-app-siwx.slcp
-    id: application
-    output: lighting-app-siwx

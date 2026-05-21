@@ -5,8 +5,6 @@ repo_name = "matter_extension"
 pr_sha_url = f'https://api.github.com/repos/{repo_owner}/{repo_name}/pulls'
 sha_url = f'https://api.github.com/repos/{repo_owner}/{repo_name}/commits?sha='
 commits_url = f'https://api.github.com/repos/{repo_owner}/{repo_name}/commits'
-actions_runs_url = f'https://api.github.com/repos/{repo_owner}/{repo_name}/actions/runs?per_page=100'
-actions_runs_url_pr = f'https://api.github.com/repos/{repo_owner}/{repo_name}/actions/runs?event=pull_request&per_page=100'
 actions_runs_base_url = f'https://api.github.com/repos/{repo_owner}/{repo_name}/actions/runs'
 github_auth = "Bearer " + os.environ["GITHUB_ACCESS_TOKEN"]
 github_headers = {

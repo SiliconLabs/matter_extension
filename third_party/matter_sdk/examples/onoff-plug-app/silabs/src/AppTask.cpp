@@ -20,23 +20,31 @@
 #include "AppTask.h"
 #include "AppConfig.h"
 #include "AppEvent.h"
+#include "CustomerAppTask.h"
 #include "LEDWidget.h"
 
+#include <app-common/zap-generated/ids/Attributes.h>
+#include <app-common/zap-generated/ids/Clusters.h>
 #include <app/clusters/on-off-server/on-off-server.h>
 #include <app/server/Server.h>
 #include <app/util/attribute-storage.h>
-
-#include <assert.h>
 
 #include <setup_payload/OnboardingCodesUtil.h>
 #include <setup_payload/QRCodeSetupPayloadGenerator.h>
 #include <setup_payload/SetupPayload.h>
 
 #include <lib/support/CodeUtils.h>
+#include <lib/support/TypeTraits.h>
+#include <lib/support/logging/CHIPLogging.h>
 
 #include <platform/CHIPDeviceLayer.h>
 
 #include <platform/silabs/platformAbstraction/SilabsPlatform.h>
+#include <platform/silabs/tracing/SilabsTracingMacros.h>
+
+#ifdef SL_MATTER_ENABLE_AWS
+#include "MatterAws.h"
+#endif // SL_MATTER_ENABLE_AWS
 
 #ifdef SL_CATALOG_SIMPLE_LED_LED1_PRESENT
 #define ONOFF_LED 1
@@ -48,40 +56,64 @@
 #define APP_ONOFF_BUTTON 1
 
 using namespace chip;
-using namespace ::chip::DeviceLayer;
-using namespace ::chip::DeviceLayer::Silabs;
+using namespace chip::app;
+using namespace chip::app::Clusters;
+using namespace chip::DeviceLayer;
+using namespace chip::DeviceLayer::Silabs;
 
 namespace {
 
+CustomerAppTask & appInstance()
+{
+    return CustomerAppTask::GetAppTask();
+}
+
 LEDWidget sOnOffLED;
+
+bool sPlugOn = false;
 
 } // namespace
 
-using namespace chip::TLV;
-using namespace ::chip::DeviceLayer;
+void AppTask::UpdateOnOffClusterState(intptr_t context)
+{
+    Protocols::InteractionModel::Status status =
+        OnOffServer::Instance().setOnOffValue(ONOFF_PLUG_ENDPOINT, static_cast<uint8_t>(context), false);
 
-AppTask AppTask::sAppTask;
+    if (status != Protocols::InteractionModel::Status::Success)
+    {
+        SILABS_LOG("ERR: updating on/off %x", to_underlying(status));
+    }
+}
+
+CHIP_ERROR AppTask::InitPlug()
+{
+    bool currentLedState;
+    chip::DeviceLayer::PlatformMgr().LockChipStack();
+    OnOffServer::Instance().getOnOffValue(ONOFF_PLUG_ENDPOINT, &currentLedState);
+    chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+
+    sPlugOn = currentLedState;
+
+    return CHIP_NO_ERROR;
+}
 
 CHIP_ERROR AppTask::AppInit()
 {
-    CHIP_ERROR err = CHIP_NO_ERROR;
-    chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(AppTask::ButtonEventHandler);
+    chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(&CustomerAppTask::ButtonEventHandler);
+    CHIP_ERROR err = appInstance().InitPlug();
 
-    err = PlugMgr().Init();
     if (err != CHIP_NO_ERROR)
     {
-        SILABS_LOG("PlugMgr().Init() failed");
+        SILABS_LOG("InitPlug() failed");
         appError(err);
     }
 
-    PlugMgr().SetCallbacks(ActionCallback);
-
     sOnOffLED.Init(ONOFF_LED);
-    sOnOffLED.Set(PlugMgr().IsPlugOn());
+    sOnOffLED.Set(sPlugOn);
 
 // Update the LCD with the Stored value. Show QR Code if not provisioned
 #ifdef DISPLAY_ENABLED
-    GetLCD().WriteDemoUI(PlugMgr().IsPlugOn());
+    GetLCD().WriteDemoUI(sPlugOn);
 #ifdef QR_CODE_ENABLED
 #ifdef SL_WIFI
     if (!ConnectivityMgr().IsWiFiStationProvisioned())
@@ -99,7 +131,7 @@ CHIP_ERROR AppTask::AppInit()
 
 CHIP_ERROR AppTask::StartAppTask()
 {
-    return BaseApplication::StartAppTask(AppTaskMain);
+    return BaseApplication::StartAppTask(&AppTask::AppTaskMain);
 }
 
 void AppTask::AppTaskMain(void * pvParameter)
@@ -107,7 +139,7 @@ void AppTask::AppTaskMain(void * pvParameter)
     AppEvent event;
     osMessageQueueId_t sAppEventQueue = *(static_cast<osMessageQueueId_t *>(pvParameter));
 
-    CHIP_ERROR err = sAppTask.Init();
+    CHIP_ERROR err = appInstance().Init();
     if (err != CHIP_NO_ERROR)
     {
         SILABS_LOG("AppTask.Init() failed");
@@ -115,46 +147,38 @@ void AppTask::AppTaskMain(void * pvParameter)
     }
 
 #if !(defined(CHIP_CONFIG_ENABLE_ICD_SERVER) && CHIP_CONFIG_ENABLE_ICD_SERVER)
-    sAppTask.StartStatusLEDTimer();
+    appInstance().StartStatusLEDTimer();
 #endif
 
     SILABS_LOG("App Task started");
 
     while (true)
     {
-        osStatus_t eventReceived = osMessageQueueGet(sAppEventQueue, &event, NULL, osWaitForever);
+        osStatus_t eventReceived = osMessageQueueGet(sAppEventQueue, &event, nullptr, osWaitForever);
         while (eventReceived == osOK)
         {
-            sAppTask.DispatchEvent(&event);
-            eventReceived = osMessageQueueGet(sAppEventQueue, &event, NULL, 0);
+            appInstance().DispatchEvent(&event);
+            eventReceived = osMessageQueueGet(sAppEventQueue, &event, nullptr, 0);
         }
     }
 }
 
 void AppTask::OnOffActionEventHandler(AppEvent * aEvent)
 {
-    bool initiated = false;
-    OnOffPlugManager::Action_t action;
-    CHIP_ERROR err = CHIP_NO_ERROR;
-
-    if (aEvent->Type == AppEvent::kEventType_Button)
+    if (aEvent->Type != AppEvent::kEventType_Button)
     {
-        action = (PlugMgr().IsPlugOn()) ? OnOffPlugManager::OFF_ACTION : OnOffPlugManager::ON_ACTION;
-    }
-    else
-    {
-        err = APP_ERROR_UNHANDLED_EVENT;
+        return;
     }
 
-    if (err == CHIP_NO_ERROR)
-    {
-        initiated = PlugMgr().InitiateAction(aEvent->Type, action);
+    sPlugOn = !sPlugOn;
+    sOnOffLED.Set(sPlugOn);
 
-        if (!initiated)
-        {
-            SILABS_LOG("Action is already in progress or active.");
-        }
-    }
+#ifdef DISPLAY_ENABLED
+    BaseApplication::GetLCD().WriteDemoUI(sPlugOn);
+#endif
+
+    TEMPORARY_RETURN_IGNORED chip::DeviceLayer::PlatformMgr().ScheduleWork(UpdateOnOffClusterState,
+                                                                           static_cast<intptr_t>(sPlugOn));
 }
 
 void AppTask::ButtonEventHandler(uint8_t button, uint8_t btnAction)
@@ -165,52 +189,57 @@ void AppTask::ButtonEventHandler(uint8_t button, uint8_t btnAction)
 
     if (button == APP_ONOFF_BUTTON && btnAction == static_cast<uint8_t>(SilabsPlatform::ButtonAction::ButtonPressed))
     {
-        button_event.Handler = OnOffActionEventHandler;
-        sAppTask.PostEvent(&button_event);
+        button_event.Handler = &CustomerAppTask::OnOffActionEventHandler;
+        appInstance().PostEvent(&button_event);
     }
     else if (button == APP_FUNCTION_BUTTON)
     {
         button_event.Handler = BaseApplication::ButtonHandler;
-        sAppTask.PostEvent(&button_event);
+        appInstance().PostEvent(&button_event);
     }
 }
 
-void AppTask::ActionCallback(OnOffPlugManager::Action_t aAction, int32_t aActor)
+void AppTask::DMPostAttributeChangeCallback(const ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
+                                            uint8_t * value)
 {
-    // Action initiated, update the light led
-    bool lightOn = aAction == OnOffPlugManager::ON_ACTION;
-    SILABS_LOG("Turning light %s", (lightOn) ? "On" : "Off")
+    ClusterId clusterId     = attributePath.mClusterId;
+    AttributeId attributeId = attributePath.mAttributeId;
+    ChipLogProgress(Zcl, "Cluster callback: " ChipLogFormatMEI, ChipLogValueMEI(clusterId));
 
-    sOnOffLED.Set(lightOn);
+    switch (clusterId)
+    {
+    case OnOff::Id:
+        if (attributeId == OnOff::Attributes::OnOff::Id && value != nullptr && size == sizeof(uint8_t))
+        {
+#ifdef SL_MATTER_ENABLE_AWS
+            ChipLogProgress(Zcl, "sending light state update");
+            MatterAwsSendMsg("light/state", (const char *) (value ? (*value ? "on" : "off") : "invalid"));
+#endif // SL_MATTER_ENABLE_AWS
 
+            const bool plugOn = (*value != 0);
+
+            sPlugOn = plugOn;
+            sOnOffLED.Set(sPlugOn);
 #ifdef DISPLAY_ENABLED
-    sAppTask.GetLCD().WriteDemoUI(lightOn);
+            BaseApplication::GetLCD().WriteDemoUI(sPlugOn);
 #endif
+        }
+        break;
 
-    if (aAction == OnOffPlugManager::ON_ACTION)
-    {
-        SILABS_LOG("Outlet ON")
-    }
-    else if (aAction == OnOffPlugManager::OFF_ACTION)
-    {
-        SILABS_LOG("Outlet OFF")
-    }
+    case LevelControl::Id:
+        ChipLogProgress(Zcl, "Level Control attribute ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u",
+                        ChipLogValueMEI(attributeId), type, value != nullptr ? static_cast<unsigned>(*value) : 0u, size);
+        break;
 
-    if (aActor == AppEvent::kEventType_Button)
-    {
-        chip::DeviceLayer::PlatformMgr().ScheduleWork(UpdateClusterState, reinterpret_cast<intptr_t>(nullptr));
-    }
-}
+    case Clusters::Identify::Id:
+        if (value != nullptr && size == sizeof(uint8_t))
+        {
+            ChipLogProgress(Zcl, "Identify attribute ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u",
+                            ChipLogValueMEI(attributeId), type, *value, size);
+        }
+        break;
 
-void AppTask::UpdateClusterState(intptr_t context)
-{
-    uint8_t newValue = PlugMgr().IsPlugOn();
-
-    // write the new on/off value
-    Protocols::InteractionModel::Status status = OnOffServer::Instance().setOnOffValue(1, newValue, false);
-
-    if (status != Protocols::InteractionModel::Status::Success)
-    {
-        SILABS_LOG("ERR: updating on/off %x", to_underlying(status));
+    default:
+        break;
     }
 }

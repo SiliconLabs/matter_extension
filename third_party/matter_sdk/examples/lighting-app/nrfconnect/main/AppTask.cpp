@@ -49,7 +49,7 @@
 #include <platform/nrfconnect/wifi/NrfWiFiDriver.h>
 #endif
 
-#ifdef CONFIG_NET_L2_OPENTHREAD
+#ifdef CONFIG_OPENTHREAD
 #include <platform/OpenThread/GenericNetworkCommissioningThreadDriver.h>
 #endif
 
@@ -130,7 +130,7 @@ DeferredAttributePersistenceProvider gDeferredAttributePersister(gSimpleAttribut
 chip::Crypto::PSAOperationalKeystore sPSAOperationalKeystore{};
 #endif
 
-#ifdef CONFIG_NET_L2_OPENTHREAD
+#ifdef CONFIG_OPENTHREAD
 Clusters::NetworkCommissioning::InstanceAndDriver<NetworkCommissioning::GenericThreadDriver> sThreadNetworkDriver(0 /*endpointId*/);
 #endif
 } // namespace
@@ -175,7 +175,7 @@ CHIP_ERROR AppTask::Init()
         return err;
     }
 
-#if defined(CONFIG_NET_L2_OPENTHREAD)
+#if defined(CONFIG_OPENTHREAD)
     err = ThreadStackMgr().InitThreadStack();
     if (err != CHIP_NO_ERROR)
     {
@@ -197,12 +197,12 @@ CHIP_ERROR AppTask::Init()
         return err;
     }
 
-    sThreadNetworkDriver.Init();
+    TEMPORARY_RETURN_IGNORED sThreadNetworkDriver.Init();
 #elif defined(CONFIG_CHIP_WIFI)
     sWiFiCommissioningInstance.Init();
 #else
     return CHIP_ERROR_INTERNAL;
-#endif // CONFIG_NET_L2_OPENTHREAD
+#endif // CONFIG_OPENTHREAD
 
     // Initialize LEDs
     LEDWidget::InitGpio();
@@ -284,6 +284,9 @@ CHIP_ERROR AppTask::Init()
     (void) initParams.InitializeStaticResourcesBeforeServerInit();
     VerifyOrDie(gSimpleAttributePersistence.Init(initParams.persistentStorageDelegate) == CHIP_NO_ERROR);
 
+    gExampleDeviceInfoProvider.SetStorageDelegate(initParams.persistentStorageDelegate);
+    chip::DeviceLayer::SetDeviceInfoProvider(&gExampleDeviceInfoProvider);
+
     initParams.dataModelProvider        = CodegenDataModelProviderInstance(initParams.persistentStorageDelegate);
     initParams.testEventTriggerDelegate = &sTestEventTriggerDelegate;
     ReturnErrorOnFailure(chip::Server::GetInstance().Init(initParams));
@@ -299,8 +302,6 @@ CHIP_ERROR AppTask::Init()
     }
 #endif
 
-    gExampleDeviceInfoProvider.SetStorageDelegate(&Server::GetInstance().GetPersistentStorage());
-    chip::DeviceLayer::SetDeviceInfoProvider(&gExampleDeviceInfoProvider);
     app::SetAttributePersistenceProvider(&gDeferredAttributePersister);
 
     ConfigurationMgr().LogDeviceConfig();
@@ -309,7 +310,7 @@ CHIP_ERROR AppTask::Init()
     // Add CHIP event handler and start CHIP thread.
     // Note that all the initialization code should happen prior to this point to avoid data races
     // between the main and the CHIP threads.
-    PlatformMgr().AddEventHandler(ChipEventHandler, 0);
+    TEMPORARY_RETURN_IGNORED PlatformMgr().AddEventHandler(ChipEventHandler, 0);
 
     err = PlatformMgr().StartEventLoopTask();
     if (err != CHIP_NO_ERROR)
@@ -630,13 +631,13 @@ void AppTask::ChipEventHandler(const ChipDeviceEvent * event, intptr_t /* arg */
         }
         else if (event->CHIPoBLEAdvertisingChange.Result == kActivity_Stopped)
         {
-            NFCOnboardingPayloadMgr().StopTagEmulation();
+            TEMPORARY_RETURN_IGNORED NFCOnboardingPayloadMgr().StopTagEmulation();
         }
 #endif
         sHaveBLEConnections = ConnectivityMgr().NumBLEConnections() != 0;
         UpdateStatusLED();
         break;
-#if defined(CONFIG_NET_L2_OPENTHREAD)
+#if defined(CONFIG_OPENTHREAD)
     case DeviceEventType::kDnssdInitialized:
 #if CONFIG_CHIP_OTA_REQUESTOR
         InitBasicOTARequestor();
@@ -733,7 +734,7 @@ void AppTask::DispatchEvent(const AppEvent & event)
 
 void AppTask::UpdateClusterState()
 {
-    SystemLayer().ScheduleLambda([this] {
+    TEMPORARY_RETURN_IGNORED SystemLayer().ScheduleLambda([this] {
         // write the new on/off value
         Protocols::InteractionModel::Status status =
             Clusters::OnOff::Attributes::OnOff::Set(kLightEndpointId, mPWMDevice.IsTurnedOn());

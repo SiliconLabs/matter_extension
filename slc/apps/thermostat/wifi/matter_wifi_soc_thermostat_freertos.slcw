@@ -1,0 +1,9 @@
+workspace_name: matter_wifi_soc_thermostat_freertos
+label: Matter WiFi - SoC Thermostat FreeRTOS
+quality: production
+package: matter
+description: Demonstrates a sample implementation of a Matter over Wi-Fi thermostat app
+project:
+  - path: ./matter_wifi_soc_thermostat_freertos.slcp
+    id: application
+    output: thermostat_siwx

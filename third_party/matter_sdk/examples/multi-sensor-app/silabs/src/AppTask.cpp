@@ -33,7 +33,7 @@
 #include <setup_payload/SetupPayload.h>
 #include <sl_cmsis_os2_common.h>
 
-#if DISPLAY_ENABLED
+#if defined (DISPLAY_ENABLED) && DISPLAY_ENABLED
 #include <SensorsUI.h>
 #endif
 
@@ -74,11 +74,6 @@ CHIP_ERROR AppTask::AppInit()
         ChipLogError(AppServer, "SensorManager::Init failed");
         appError(err);
     }
-
-    // Initialize mOccupancyInstance with the required feature map
-    BitMask<app::Clusters::OccupancySensing::Feature> featureMap(app::Clusters::OccupancySensing::Feature::kPassiveInfrared);
-    mOccupancyInstance = std::make_unique<chip::app::Clusters::OccupancySensing::Instance>(featureMap);
-    mOccupancyInstance->Init();
 
 #ifdef DISPLAY_ENABLED
     mCurrentSensorUI = kSensorUIEnum::kOccupancySensor;

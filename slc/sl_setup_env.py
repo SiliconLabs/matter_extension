@@ -19,11 +19,12 @@
  *
  * @section usage Usage
  *   @code{.sh}
- *   python3 slc/sl_setup_env.py [--verbose]
+ *   python3 slc/sl_setup_env.py [--verbose] [-c|--clean-reinstall]
  *   @endcode
  *
  * @section options Options
  *   - `--verbose` : Enable verbose (debug) logging output
+ *   - `-c` / `--clean-reinstall` : Remove `slc/tools` and reinstall all downloaded tools
  *
  * @section output Output
  *   Generates a `.env` file in `slc/tools/` containing all required environment
@@ -58,13 +59,15 @@ if sys.version_info < (3, 9):
 class MatterEnvSetup:
     """Class for setting up the Matter development environment with all required tools."""
 
-    def __init__(self, verbose=False):
+    def __init__(self, verbose=False, clean_reinstall=False):
         """Initialize MatterEnvSetup instance.
 
         Args:
             verbose: Enable verbose (debug) logging if True
+            clean_reinstall: If True, remove slc/tools before setup (fresh tool install)
         """
         self.verbose = verbose
+        self.clean_reinstall = clean_reinstall
         self.setup_logging()
         self.set_root_paths()
         self.set_platform_vars()
@@ -113,7 +116,7 @@ class MatterEnvSetup:
         else:
             logging.error(f"ERROR: Platform {platform} is not supported")
             sys.exit(1)
-        self.slt_cli_url = f"https://www.silabs.com/documents/public/software/slt-cli-1.0.1-{self.__platform}-x64.zip"
+        self.slt_cli_url = f"https://www.silabs.com/documents/public/software/slt-cli-1.1.1-{self.__platform}-x64.zip"
         if platform == "win32":
             self.slt_cli_path = os.path.join(self.tools_folder_path, "slt.exe")
         else:
@@ -121,6 +124,18 @@ class MatterEnvSetup:
         self.sisdk_root = os.path.join(self.silabs_chip_root, "third_party", "simplicity_sdk")
         self.wiseconnect_root = os.path.join(self.silabs_chip_root, "third_party", "wifi_sdk")
         self.zap_path = os.path.join(self.silabs_chip_root, "slc", "tools", "zap")
+
+    def remove_tools_directory(self):
+        """Remove slc/tools and recreate an empty directory (cross-platform)."""
+        tools = Path(self.tools_folder_path)
+        if tools.exists():
+            logging.info(f"Removing tools directory for clean reinstall: {tools}")
+            try:
+                shutil.rmtree(tools)
+            except OSError as e:
+                logging.error(f"Failed to remove tools directory {tools}: {e}")
+                sys.exit(1)
+        tools.mkdir(parents=True, exist_ok=True)
 
     def download_and_extract_slt_cli(self):
         """Download and extract SLT CLI tool."""
@@ -138,7 +153,7 @@ class MatterEnvSetup:
                 logging.error(f"Failed to download/extract slt-cli: {e}")
                 sys.exit(1)
 
-        update_cmd = [self.slt_cli_path, "update", "--self"]
+        update_cmd = [self.slt_cli_path, "--non-interactive", "update", "--self"]
         try:
             subprocess.run(update_cmd, check=True)
         except subprocess.CalledProcessError as e:
@@ -280,7 +295,12 @@ class MatterEnvSetup:
             SystemExit: If tool installation fails
         """
         try:
-            result = subprocess.run([self.slt_cli_path, "where", tool], capture_output=True, text=True, check=True)
+            result = subprocess.run(
+                [self.slt_cli_path, "--non-interactive", "where", tool],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
             tool_dir = result.stdout.strip()
         except subprocess.CalledProcessError as e:
             logging.error(f"Failed to query tool location for {tool}: {e}")
@@ -289,8 +309,13 @@ class MatterEnvSetup:
         if not tool_dir:
             logging.info(f"Downloading {tool}")
             try:
-                subprocess.run([self.slt_cli_path, "install", tool], check=True)
-                result = subprocess.run([self.slt_cli_path, "where", tool], capture_output=True, text=True, check=True)
+                subprocess.run([self.slt_cli_path, "--non-interactive", "install", tool], check=True)
+                result = subprocess.run(
+                    [self.slt_cli_path, "--non-interactive", "where", tool],
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
                 tool_dir = result.stdout.strip()
             except subprocess.CalledProcessError as e:
                 logging.error(f"Failed to install {tool}: {e}")
@@ -324,6 +349,8 @@ class MatterEnvSetup:
 
     def run_setup(self):
         """Execute the complete environment setup process."""
+        if self.clean_reinstall:
+            self.remove_tools_directory()
         self.sync_submodules()
         self.download_and_extract_slt_cli()
         self.setup_tools()
@@ -333,8 +360,14 @@ class MatterEnvSetup:
 def main():
     parser = argparse.ArgumentParser(description="Setup environment for Matter project using Silicon Labs Configurator.")
     parser.add_argument('--verbose', action='store_true', help='Enable verbose (debug) logging')
+    parser.add_argument(
+        '-c',
+        '--clean-reinstall',
+        action='store_true',
+        help='Remove slc/tools then run a full tool setup',
+    )
     args = parser.parse_args()
-    env_setup = MatterEnvSetup(verbose=args.verbose)
+    env_setup = MatterEnvSetup(verbose=args.verbose, clean_reinstall=args.clean_reinstall)
     env_setup.run_setup()
 
 

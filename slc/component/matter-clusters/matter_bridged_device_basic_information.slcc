@@ -12,7 +12,17 @@ metadata:
 provides:
   - name: matter_bridged_device_basic_information
 source:
-  - path: third_party/matter_sdk/src/app/clusters/bridged-device-basic-information-server/bridged-device-basic-information-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/bridged-device-basic-information-server/BridgedDeviceBasicInformationCluster.cpp
+  - path: third_party/matter_sdk/src/app/clusters/bridged-device-basic-information-server/CodegenIntegration.cpp
+    unless: [matter_code_driven_dm]
+include:
+  - path: third_party/matter_sdk/src/app/clusters/bridged-device-basic-information-server
+    file_list:
+      - path: BasicInformationClusterProxy.h
+      - path: BridgedDeviceBasicInformationCluster.h
+      - path: BridgedDeviceBasicInformationDelegate.h
+      - path: BridgedDeviceIcdDelegate.h
+      - path: ConfigurationVersionDelegate.h
 template_contribution:
   - name: component_catalog
     value: matter_bridged_device_basic_information

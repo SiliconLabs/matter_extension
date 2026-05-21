@@ -14,7 +14,7 @@ provides:
 requires:
   - name: iostream
   - name: iostream_rtt
-  - name: matter_crypto_tinycrypt_siwx917 # Provisioning Flash only support Tinycript crypto flavor
+  - name: matter_crypto_siwx917
     condition: [device_family_siwg917]
 
 conflicts:
@@ -59,6 +59,11 @@ library:
   - path: third_party/matter_support/provision/libs/libProvision_si917.a
     condition:
       - device_family_siwg917
+      - matter_crypto_tinycrypt_siwx917
+  - path: third_party/matter_support/provision/libs/libProvisionPSA_si917.a
+    condition:
+      - device_family_siwg917
+      - matter_crypto_psa_siwx917
 
 template_contribution:
   # Series-3 will use common token manager.

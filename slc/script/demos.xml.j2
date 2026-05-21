@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<demos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://www.silabs.com/ss/Studio.ecore" xsi:noNamespaceSchemaLocation="http://www.silabs.com/ss/Demo.ecore">
+{%- for example in examples %}
+{%- if (demos_exclude is not defined or example.name not in demos_exclude) and not example.hidden and example.projects %}
+{%- set matched_variants = [] %}
+{%- for rule in app_variant_rules %}
+{%- if rule.pattern.endswith('$') %}
+{%-   set pattern_base = rule.pattern[:-1] %}
+{%-   set matches = example.name.endswith(pattern_base) %}
+{%- else %}
+{%-   set matches = (rule.pattern in example.name) %}
+{%- endif %}
+{%- if matches %}
+{%- for variant in rule.variants %}
+{%- set _ = matched_variants.append({
+  'suffix': variant.suffix,
+  'label_suffix': variant.label_suffix,
+  'blurb_suffix': variant.blurb_suffix if variant.blurb_suffix is defined else '',
+  'description_suffix': variant.description_suffix if variant.description_suffix is defined else '',
+  'solution_suffix': variant.solution_suffix,
+  'boards': variant.boards if variant.boards is defined else []
+}) %}
+{%- endfor %}
+{%- endif %}
+{%- endfor %}
+{%- set _ = matched_variants.append({'suffix': '', 'label_suffix': '', 'blurb_suffix': '', 'description_suffix': '', 'solution_suffix': '', 'boards': []}) %}
+{%- for variant in matched_variants %}
+{%- if board_overrides is defined and example.name in board_overrides %}
+{%- set boards_to_process = board_overrides[example.name].boards %}
+{%- else %}
+{%- set boards_to_process = example.boards %}
+{%- endif %}
+{%- for board in boards_to_process %}
+{%- if not variant.boards or board in variant.boards %}
+{%- if board in wifi_boards %}
+{%- set image_file = 'asset://extension.matter_' + matter_version + '/demos/' + board + '/' + example.name + '_solution' + variant.solution_suffix + '/artifact/' + example.name + '.rps' %}
+{%- else %}
+{%- set image_file = 'asset://extension.matter_' + matter_version + '/demos/' + board + '/' + example.name + '_solution' + variant.solution_suffix + '/artifact/' + example.name + '_full.s37' %}
+{%- endif %}
+{%- set demo_name = board + '.demo.' + example.name + variant.suffix %}
+{%- if variant.label_suffix and ' over ' in example.label %}
+{%-   set label_parts = example.label.split(' over ', 1) %}
+{%-   set demo_label = label_parts[0] + variant.label_suffix + ' over ' + label_parts[1] %}
+{%- else %}
+{%-   set demo_label = example.label + variant.label_suffix %}
+{%- endif %}
+{%- set blurb_base = example.label.split(' over ')[0] if ' over ' in example.label else example.label %}
+{%- set demo_blurb = blurb_base + variant.blurb_suffix + ' app' %}
+{%- set demo_description = example.description + variant.description_suffix %}
+  <demo name="{{ demo_name }}" label="{{ demo_label }}">
+    <model:description>{{ demo_description }}</model:description>
+    <property key="demos.blurb" value="{{ demo_blurb }}"/>
+    <property key="core.partCompatibility" value=".*"/>
+    <property key="core.boardCompatibility" value="{{ board }}"/>
+    <property key="demos.imageFile" value="{{ image_file }}"/>
+    <property key="core.readmeFiles" value="{{ example.readme | path | list }}"/>
+    <property key="filters" value="{{ example.filter | filters | list }}"/>
+    <property key="core.quality" value="{{ example.quality | upper }}"/>
+  </demo>
+{%- endif %}
+{%- endfor %}
+{%- endfor %}
+{%- endif %}
+{%- endfor %}
+</demos>

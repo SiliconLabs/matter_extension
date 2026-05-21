@@ -1,0 +1,14 @@
+workspace_name: matter_thread_soc_air_quality_sensor_app_series_2_internal_freertos
+label: Matter Thread - SoC Air Quality Sensor with internal Bootloader FreeRTOS
+quality: production
+package: matter
+description: Demonstrates a sample implementation of a Matter over Thread air quality sensor app with internal bootloader
+project:
+  - path: ./matter_thread_soc_air_quality_sensor_app_freertos.slcp
+    id: application
+    output: air_quality_sensor_app
+  - path: ../../bootloaders/bootloader_storage_internal_single_series_2/matter_bootloader_internal_series_2.slcp
+    id: bootloader
+    output: matter_bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

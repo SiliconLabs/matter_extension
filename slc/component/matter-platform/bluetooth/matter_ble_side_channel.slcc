@@ -12,3 +12,4 @@ provides:
 -   name: matter_ble_side_channel
 requires:
 -   name: matter_gatt_dynamic
+-   name: bluetooth_feature_gatt

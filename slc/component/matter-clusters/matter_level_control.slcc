@@ -9,16 +9,19 @@ quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
-requires:
-  - name: matter_cluster_building_blocks
 provides:
   - name: matter_level_control
+requires:
+  - name: matter_cluster_building_blocks
 source:
-  - path: third_party/matter_sdk/src/app/clusters/level-control/level-control.cpp
+  - path: third_party/matter_sdk/src/app/clusters/level-control/codegen/level-control.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/level-control
     file_list:
+      - path: codegen/level-control.h
       - path: level-control.h
+      - path: LevelControlCluster.h
+      - path: LevelControlDelegate.h
 template_contribution:
   - name: component_catalog
     value: matter_level_control

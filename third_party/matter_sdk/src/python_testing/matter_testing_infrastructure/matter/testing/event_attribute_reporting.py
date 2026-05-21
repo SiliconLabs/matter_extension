@@ -26,7 +26,6 @@ Both classes allow tests to start and manage subscriptions, queue received updat
 block until epected reports are received or fail on timeouts
 """
 
-import asyncio
 import inspect
 import logging
 import queue
@@ -99,15 +98,19 @@ class EventSubscriptionHandler:
         LOGGER.info(f"[EventSubscriptionHandler] Received event: {header}")
         self._q.put(event_result)
 
-    async def start(self, dev_ctrl, node_id: int, endpoint: int, fabric_filtered: bool = False, min_interval_sec: int = 0, max_interval_sec: int = 30) -> Any:
+    async def start(self, dev_ctrl, node_id: int, endpoint: int, fabric_filtered: bool = False, min_interval_sec: int = 0, max_interval_sec: int = 30, keepSubscriptions: bool = True, autoResubscribe: bool = False) -> Any:
         """This starts a subscription for events on the specified node_id and endpoint. The cluster is specified when the class instance is created."""
         urgent = True
         self._subscription = await dev_ctrl.ReadEvent(node_id,
                                                       events=[(endpoint, self._expected_cluster, urgent)], reportInterval=(
                                                           min_interval_sec, max_interval_sec),
-                                                      fabricFiltered=fabric_filtered, keepSubscriptions=True, autoResubscribe=False)
+                                                      fabricFiltered=fabric_filtered, keepSubscriptions=keepSubscriptions, autoResubscribe=autoResubscribe)
         self._subscription.SetEventUpdateCallback(self.__call__)
         return self._subscription
+
+    def cancel(self):
+        """This cancels a subscription."""
+        self._subscription.Shutdown()
 
     def wait_for_event_report(self, expected_event: ClusterObjects.ClusterEvent, timeout_sec: float = 10.0) -> Any:
         """This function allows a test script to block waiting for the specific event to be the next event
@@ -122,6 +125,31 @@ class EventSubscriptionHandler:
         asserts.assert_equal(res.Header.EventId, expected_event.event_id, "Expected event ID not found in event report")
         LOGGER.info(f"Successfully waited for {expected_event}")
         return res.Data
+
+    def wait_for_event_report_with_duplication(self, expected_event: ClusterObjects.ClusterEvent, current_event_filter_func: Any, previous_event_filter_func: Optional[Any] = None, timeout_sec: float = 10.0) -> Any:
+        """
+        Blocks waiting for the specific event to arrive within a timeout.
+        It filters out leftover events matching previous_event_filter_func until an event
+        matches current_event_filter_func. Fails if a non-matching event arrives.
+
+        Parameters:
+            expected_event (ClusterObjects.ClusterEvent): The expected event to wait for.
+            current_event_filter_func (Callable[[Any], bool]): A filter function that returns True if the event data matches the current expectation.
+            previous_event_filter_func (Callable[[Any], bool], optional): A filter function that returns True if the event data matches a previous/leftover event to be discarded. Defaults to None.
+            timeout_sec (float, optional): The maximum time to wait for the event, in seconds. Defaults to 10.0.
+
+        Returns:
+            Any: The event data when the expected event is successfully captured.
+        """
+        while True:
+            event_data = self.wait_for_event_report(expected_event, timeout_sec=timeout_sec)
+            if current_event_filter_func(event_data):
+                LOGGER.info("Successfully captured the expected new event.")
+                return event_data
+            if previous_event_filter_func is not None and previous_event_filter_func(event_data):
+                LOGGER.warning(f"Discarding leftover/duplicate event from previous step: {event_data}")
+                continue
+            asserts.fail(f"Received unexpected event data neither matching the previous nor current expectation: {event_data}")
 
     def wait_for_event_expect_no_report(self, timeout_sec: float = 10.0):
         """This function returns if an event does not arrive within the timeout specified in seconds.
@@ -157,8 +185,7 @@ class EventSubscriptionHandler:
             if event.Header.EventId == event_type.event_id:
                 LOGGER.info(f"Event {event_type.__name__} received: {event}")
                 return event.Data
-            else:
-                LOGGER.info(f"Received other event: {event.Header.EventId}, ignoring and waiting for {event_type.__name__}.")
+            LOGGER.info(f"Received other event: {event.Header.EventId}, ignoring and waiting for {event_type.__name__}.")
 
     def get_last_event(self) -> Optional[Any]:
         """Flush entire queue, returning last (newest) event only."""
@@ -248,14 +275,9 @@ class AttributeSubscriptionHandler:
         self._subscription.SetAttributeUpdateCallback(self.__call__)
         return self._subscription
 
-    async def cancel(self):
+    def cancel(self):
         """This cancels a subscription."""
-        # Wait for the asyncio.CancelledError to be called before returning
-        try:
-            self._subscription.Shutdown()
-            await asyncio.sleep(5)
-        except asyncio.CancelledError:
-            pass
+        self._subscription.Shutdown()
 
     def __call__(self, path: TypedAttributePath, transaction: SubscriptionTransaction):
         """
@@ -288,24 +310,82 @@ class AttributeSubscriptionHandler:
                     self._attribute_report_counts[path.AttributeType] += 1
                     self._attribute_reports[path.AttributeType].append(value)
 
-    def wait_for_attribute_report(self):
+    def wait_next_report(self, timeout_sec: float = 10.0) -> AttributeValue:
         """
-        Blocks and waits for a single attribute report to arrive in the queue.
+        Wait for the next attribute report (any attribute in this subscription) and return it.
 
-        This method dequeues one report, validates it and return its value.
+        This is the lowest-level blocking wait that does NOT enforce expected_attribute matching.
+        Useful for wildcard / cluster-mode subscriptions where multiple attributes may arrive.
         """
-
         try:
-            item = self._q.get(block=True, timeout=10)
-            attribute_value = item.value
-            LOGGER.info(
-                f"[AttributeSubscriptionHandler] Got attribute subscription report. Attribute {item.attribute}. Updated value: {attribute_value}. SubscriptionId: {item.value}")
+            item: AttributeValue = self._q.get(block=True, timeout=timeout_sec)
         except queue.Empty:
             asserts.fail(
-                f"[AttributeSubscriptionHandler] Failed to receive a report for the {self._expected_attribute} attribute change")
+                f"[AttributeSubscriptionHandler] Timeout waiting for attribute report after {timeout_sec:.1f}s"
+            )
+        return item
 
-        asserts.assert_equal(item.attribute, self._expected_attribute,
-                             f"[AttributeSubscriptionHandler] Received incorrect report. Expected: {self._expected_attribute}, received: {item.attribute}")
+    def wait_for_attribute_report(self, timeout_sec: float = 10.0) -> AttributeValue:
+        """
+        Backward-compatible: Wait for one attribute report and (if expected_attribute was provided)
+        validate it matches. Returns the full AttributeValue item for callers that need the value.
+        """
+        item = self.wait_next_report(timeout_sec=timeout_sec)
+
+        LOGGER.info(
+            "[AttributeSubscriptionHandler] Got attribute subscription report. "
+            f"Attribute {item.attribute}. Updated value: {item.value}."
+        )
+
+        if self._expected_attribute is not None:
+            asserts.assert_equal(
+                item.attribute,
+                self._expected_attribute,
+                f"[AttributeSubscriptionHandler] Received incorrect report. Expected: {self._expected_attribute}, received: {item.attribute}",
+            )
+
+        return item
+
+    def wait_all_final_values_reported_persisted(self, expected_matchers: Iterable[AttributeMatcher], timeout_sec: float = 1.0):
+        """Expect that every predicate in `expected_matchers` matches, when run against all the incoming reports until timeout.
+
+        Waits for all `timeout_sec` seconds.
+
+        Verify the matcher does not change the expected attribute report during the timeout.
+        """
+        start_time = time.time()
+        elapsed = 0.0
+        time_remaining = timeout_sec
+
+        # Matchers are true as we expect them to be true during all the report time.
+        report_matches: dict[int, bool] = {idx: True for idx, _ in enumerate(expected_matchers)}
+
+        for matcher in expected_matchers:
+            LOGGER.info(
+                f"--> Matcher waiting: {matcher.description}")
+        LOGGER.info(f"Waiting for {timeout_sec:.1f} seconds for all reports.")
+
+        while time_remaining > 0:
+            # Snapshot copy at the beginning of the loop. This is thread-safe based on the design.
+            all_reports = self._attribute_reports
+
+            # Recompute all last-value matches
+            for expected_idx, matcher in enumerate(expected_matchers):
+                for attribute, reports in all_reports.items():
+                    for report in reports:
+                        # if one the report does not match, terminate the check.
+                        if not matcher.matches(report) and report_matches[expected_idx]:
+                            asserts.fail(f"Unexpected report value {report.value} found within the timeframe {timeout_sec}")
+                        if matcher.matches(report) and report_matches[expected_idx]:
+                            report_matches[expected_idx] = True
+                            # LOGGER.info(f"  --> Expected value still the same. : {matcher.description}")
+            elapsed = time.time() - start_time
+            time_remaining = timeout_sec - elapsed
+            time.sleep(0.1)
+
+        if all(report_matches.values()):
+            LOGGER.info(f"Found all expected matchers did match in the period of time {timeout_sec:.1f}.")
+            return
 
     def await_all_final_values_reported(self, expected_final_values: Iterable[AttributeValue], timeout_sec: float = 1.0):
         """Expect that every `expected_final_value` report is the last value reported for the given attribute, ignoring timestamps.
@@ -483,3 +563,127 @@ class AttributeSubscriptionHandler:
         """Flush entire queue, returning nothing."""
         _ = self.get_last_report()
         return
+
+    def await_first_value_asserting_no_forbidden(
+        self,
+        target_value: Any,
+        forbidden_values: set,
+        timeout_sec: float,
+        reporter=None,
+    ) -> float:
+        """Consume reports from the queue until ``target_value`` is first observed.
+
+        Fails immediately if any report whose ``.value`` is in ``forbidden_values`` arrives
+        before ``target_value``.  Fails with a timeout error if ``target_value`` is not seen
+        within ``timeout_sec``. Works with a single attribute subscription queue, so it is
+        the caller's responsibility to ensure that only relevant reports are enqueued (e.g.
+        by using a dedicated subscription or flushing irrelevant reports before calling this
+        method).
+
+        Unlike :meth:`await_all_expected_report_matches`, each report is evaluated exactly
+        once at dequeue time, with no polling re-evaluation drift. Works with a single
+        attribute subscription queue.
+
+        Args:
+            target_value: The ``.value`` to wait for.
+            forbidden_values: Set of ``.value`` objects that must not appear before
+                ``target_value``.
+            timeout_sec: Maximum time to wait for ``target_value``.
+            reporter: Optional ``StepReporter`` instance; each dequeued value is recorded.
+
+        Returns:
+            ``time.time()`` captured at the moment ``target_value`` was observed.
+        """
+        t_start = time.time()
+        deadline = t_start + timeout_sec
+
+        while True:
+            remaining = deadline - time.time()
+            if remaining <= 0:
+                asserts.fail(
+                    f"Timeout ({timeout_sec}s) waiting for {target_value!r}: "
+                    "target value not observed in time"
+                )
+            try:
+                report = self._q.get(block=True, timeout=min(1.0, remaining))
+            except queue.Empty:
+                continue
+
+            val = report.value
+            elapsed = time.time() - t_start
+            if reporter is not None:
+                reporter.record(f"UpdateState: {val} at +{elapsed:.1f}s")
+
+            if val in forbidden_values:
+                asserts.fail(
+                    f"Forbidden state {val!r} observed at +{elapsed:.1f}s "
+                    f"while waiting for {target_value!r}"
+                )
+
+            if val == target_value:
+                return time.time()
+
+    def await_duration_asserting_no_forbidden(
+        self,
+        duration_sec: float,
+        forbidden_values: set,
+        tolerance_sec: float = 0.0,
+        reporter=None,
+    ) -> list:
+        """Block for the full ``duration_sec``, consuming reports from the queue.
+
+        Fails immediately if any report whose ``.value`` is in ``forbidden_values`` arrives
+        within the strict guard window ``[0, duration_sec - tolerance_sec)``.  Reports that
+        arrive in the tolerance zone ``[duration_sec - tolerance_sec, duration_sec)`` are
+        collected but not checked, so a state that is forbidden early but expected near the
+        boundary (e.g. kDownloading once the minimum re-query delay has passed) will not
+        cause a spurious failure.  Reports arriving after ``duration_sec`` are not seen
+        because the method has already returned. Works with a single attribute subscription
+        queue, so it is the caller's responsibility to ensure that only relevant reports are
+        enqueued (e.g. by using a dedicated subscription or flushing irrelevant reports before
+        calling this method).
+
+        The method always waits the full ``duration_sec`` regardless of ``tolerance_sec``,
+        so the caller's elapsed-time assertion can use ``>= duration_sec`` without adjustment.
+
+        Unlike :meth:`await_all_expected_report_matches`, this method evaluates each report
+        exactly once, at the moment it is dequeued, so the check is immune to the polling
+        re-evaluation drift that occurs when ``time.time()`` is sampled inside a matcher
+        callback. Expected to work with a single attribute subscription queue.
+
+        Args:
+            duration_sec: Total time to block (e.g. 120 s).
+            forbidden_values: Set of ``.value`` objects that must not appear before
+                ``duration_sec - tolerance_sec`` seconds have elapsed.
+            tolerance_sec: Width of the tolerance zone at the end of the interval where
+                forbidden-state checks are suppressed (default 0.0 — no tolerance zone).
+            reporter: Optional ``StepReporter`` instance; each dequeued value is recorded.
+
+        Returns:
+            List of ``(elapsed_sec, value)`` tuples for every report observed during the window.
+        """
+        guard_window = duration_sec - tolerance_sec
+        observed: list = []
+        t_start = time.time()
+        deadline = t_start + duration_sec  # always wait the full interval
+
+        while True:
+            remaining = deadline - time.time()
+            if remaining <= 0:
+                return observed
+            try:
+                report = self._q.get(block=True, timeout=min(1.0, remaining))
+            except queue.Empty:
+                continue
+
+            elapsed = time.time() - t_start
+            val = report.value
+            if reporter is not None:
+                reporter.record(f"UpdateState: {val} at +{elapsed:.1f}s")
+            observed.append((elapsed, val))
+
+            if elapsed < guard_window and val in forbidden_values:
+                asserts.fail(
+                    f"Forbidden state {val!r} observed at +{elapsed:.1f}s "
+                    f"(guard window = {guard_window:.1f}s of {duration_sec:.1f}s interval)"
+                )

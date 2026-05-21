@@ -101,10 +101,7 @@ silabs_executable("platform_app") {
     defines += [ "SL_STATUS_LED=0" ]
   }
 
-  sources = [
-    "${examples_common_plat_dir}/main.cpp",
-    "src/AppTask.cpp",
-  ]
+  sources = [ "src/AppTask.cpp" ]
 
   deps = [
     ":sdk",

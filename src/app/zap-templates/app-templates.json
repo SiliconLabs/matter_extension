@@ -301,6 +301,21 @@
             "path": "templates/app/slc_compatibility/static-cluster-config-Descriptor.zapt",
             "name": "Descriptor static cluster configuration",
             "output": "app/static-cluster-config/Descriptor.h"
+        },
+        {
+            "path": "templates/app/slc_compatibility/static-cluster-config-Groups.zapt",
+            "name": "Groups static cluster configuration",
+            "output": "app/static-cluster-config/Groups.h"
+        },
+        {
+            "path": "templates/app/slc_compatibility/static-cluster-config-TemperatureControl.zapt",
+            "name": "TemperatureControl static cluster configuration",
+            "output": "app/static-cluster-config/TemperatureControl.h"
+        },
+        {
+            "path": "templates/app/slc_compatibility/static-cluster-config-TemperatureMeasurement.zapt",
+            "name": "TemperatureMeasurement static cluster configuration",
+            "output": "app/static-cluster-config/TemperatureMeasurement.h"
         }
 
     ],

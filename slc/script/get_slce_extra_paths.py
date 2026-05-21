@@ -39,6 +39,8 @@ Exit codes (@retval):
     @retval 7 Failure writing updated matter.slce.extra.
     @retval 8 Missing --output when not using --slce-extra.
     @retval 9 Required always-include file missing.
+    @retval 10 No extension paths returned by git ls-files.
+    @retval 11 'extra_files:' key not found in matter.slce.extra.
 
 @note If no --roots are supplied a built‑in list of default SDK template directories is used.
 @note The marker text is currently hard-coded as "# matter_sdk paths"; adjust if the file format evolves.
@@ -46,9 +48,153 @@ Exit codes (@retval):
 """
 import argparse
 import os
+import subprocess
 import sys
+import yaml
 from pathlib import Path
-from typing import Iterable, List, Optional
+from typing import Iterable, List, Optional, Set
+
+def _is_excluded_path(path: str) -> bool:
+    """Return True for paths that should not appear in the extension package."""
+    parts = path.split("/")
+    # Exclude hidden directories
+    if any(part.startswith(".") for part in parts[:-1]):
+        return True
+    # Exclude git meta files
+    basename = parts[-1]
+    if basename in (".gitignore", ".gitmodules"):
+        return True
+    # Exclude __pycache__ and bytecode
+    if "__pycache__" in parts or basename.endswith(".pyc"):
+        return True
+    return False
+
+def _git_tracked_extension_paths() -> List[str]:
+    """Return sorted list of git tracked files, excluding submodule entries."""
+    submodules = set()
+    stage = subprocess.run(
+        ["git", "ls-files", "--stage"],
+        capture_output=True, text=True, check=True,
+    )
+    for line in stage.stdout.splitlines():
+        if line.startswith("160000"):
+            submodules.add(line.split("\t", 1)[1])
+
+    result = subprocess.run(
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard"],
+        capture_output=True, text=True, check=True,
+    )
+    return sorted(
+        p for p in result.stdout.splitlines()
+        if p not in submodules and not _is_excluded_path(p) and os.path.exists(p)
+    )
+
+COMPONENT_ROOT = Path("slc/component")
+
+def _discover_component_ids(component_root: Path, repo_root: Path) -> Set[str]:
+    """Find all .slcc under component_root and collect their YAML id: values."""
+    base = repo_root / component_root
+    ids: Set[str] = set()
+    if not base.exists() or not base.is_dir():
+        return ids
+    for slcc in base.rglob("*.slcc"):
+        try:
+            data = yaml.safe_load(slcc.read_text(encoding="utf-8"))
+            if isinstance(data, dict) and data.get("id"):
+                ids.add(str(data["id"]).strip())
+        except (yaml.YAMLError, OSError):
+            continue
+    return ids
+
+def _add_path_refs(refs: Set[str], item: dict) -> None:
+    """Add path and any file_list paths from a single component list item."""
+    if not isinstance(item, dict) or not item.get("path"):
+        return
+    base = str(item["path"]).strip().replace("\\", "/")
+    if not base or base.startswith("#"):
+        return
+    refs.add(base)
+    for fl in item.get("file_list") or []:
+        if isinstance(fl, dict) and fl.get("path"):
+            sub = str(fl["path"]).strip().replace("\\", "/")
+            if sub:
+                refs.add(base.rstrip("/") + "/" + sub.lstrip("/"))
+        elif isinstance(fl, str):
+            refs.add(base.rstrip("/") + "/" + fl.strip().lstrip("/"))
+
+def _referenced_paths_from_slcc(component_root: Path, repo_root: Path) -> Set[str]:
+    """Collect paths referenced in components under component_root."""
+    refs: Set[str] = set()
+    base = repo_root / component_root
+    if not base.exists() or not base.is_dir():
+        return refs
+    for slcc in base.rglob("*.slcc"):
+        try:
+            data = yaml.safe_load(slcc.read_text(encoding="utf-8"))
+        except (yaml.YAMLError, OSError):
+            continue
+        if not isinstance(data, dict):
+            continue
+        for value in data.values():
+            if not isinstance(value, list):
+                continue
+            for item in value:
+                _add_path_refs(refs, item)
+    return refs
+
+def _update_components_block(text: List[str], component_ids: Set[str]) -> List[str]:
+    """Replace the components: list in text with sorted component_ids."""
+    try:
+        comp_idx = next(i for i, line in enumerate(text) if line.strip() == "components:")
+    except StopIteration:
+        return text
+    end = comp_idx + 1
+    while end < len(text):
+        line = text[end]
+        stripped = line.strip()
+        if stripped.startswith("- "):
+            end += 1
+            continue
+        if stripped and not stripped.startswith("#") and ":" in stripped.split()[0]:
+            break
+        end += 1
+    new_lines = [f"  - {cid}" for cid in sorted(component_ids)]
+    return text[: comp_idx + 1] + new_lines + text[end:]
+
+def _update_extension_paths(text: List[str], sdk_marker: str, referenced: Set[str]) -> List[str]:
+    """
+    Set extra_files to all extension files minus paths referenced by components.
+    """
+    all_paths = set(_git_tracked_extension_paths())
+    if not all_paths:
+        print("Error: git ls-files returned no extension paths", file=sys.stderr)
+        raise SystemExit(10)
+    try:
+        extra_idx = next(i for i, line in enumerate(text) if line.strip() == "extra_files:")
+    except StopIteration:
+        print("Error: 'extra_files:' not found", file=sys.stderr)
+        raise SystemExit(11)
+    try:
+        sdk_idx = next(i for i, line in enumerate(text) if line.strip() == sdk_marker)
+    except StopIteration:
+        print(f"Error: '{sdk_marker}' not found", file=sys.stderr)
+        raise SystemExit(6)
+
+    expanded_refs = set()
+    for ref in referenced:
+        if ref in all_paths:
+            expanded_refs.add(ref)
+        else:
+            ref_prefix = ref.rstrip("/") + "/"
+            for path in all_paths:
+                if path.startswith(ref_prefix):
+                    expanded_refs.add(path)
+    extra_files_set = all_paths - expanded_refs
+    all_paths_sorted = sorted(extra_files_set)
+    new_ext_lines = [f"  - {p}" for p in all_paths_sorted]
+    updated = text[: extra_idx + 1] + new_ext_lines + text[sdk_idx:]
+    print(f"Updated {len(new_ext_lines)} extra_files (all extension files minus component-referenced)")
+    return updated
 
 def collect_paths(root: Path, include_dirs: bool, absolute: bool, pattern: Optional[str]) -> List[Path]:
     results: List[Path] = []
@@ -204,6 +350,19 @@ def main(argv: Iterable[str]) -> int:
             return 5
 
         marker = "# matter_sdk paths"
+        repo_root = Path.cwd().resolve()
+
+        # Sync components block
+        component_ids = _discover_component_ids(COMPONENT_ROOT, repo_root)
+        if component_ids:
+            text = _update_components_block(text, component_ids)
+            print(f"Updated components block with {len(component_ids)} component ids")
+        referenced = _referenced_paths_from_slcc(COMPONENT_ROOT, repo_root)
+
+        # extra_files = all extension files minus referenced
+        text = _update_extension_paths(text, marker, referenced)
+
+        # Update sdk paths
         try:
             idx = next(i for i, line in enumerate(text) if line.strip() == marker)
         except StopIteration:
@@ -235,7 +394,7 @@ def main(argv: Iterable[str]) -> int:
         except Exception as e:
             print(f"Error writing {target_file}: {e}", file=sys.stderr)
             return 7
-        print(f"Inserted {len(paths)} paths under marker in {target_file}")
+        print(f"Inserted {len(paths)} SDK paths under marker in {target_file}")
     else:
         if not args.output:
             print("Error: output file required when --slce-extra is not used", file=sys.stderr)

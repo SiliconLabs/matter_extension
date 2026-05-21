@@ -26,7 +26,6 @@ include:
   - path: DeviceInfoProvider.h
   - path: ConnectivityManager.h
   - path: GeneralUtils.h
-  - path: AttributeList.h
   - path: DiagnosticDataProvider.h
   - path: PlatformManager.h
   - path: KeyValueStoreManager.h
@@ -38,6 +37,7 @@ include:
   - path: NetworkCommissioning.h
   - path: CHIPDeviceConfig.h
   - path: DeviceControlServer.h
+  - path: DefaultTimerDelegate.h
   - path: DeviceInstanceInfoProvider.h
   - path: CHIPDeviceLayer.h
   - path: ConfigurationManager.h
@@ -98,7 +98,6 @@ include:
   - path: CompatClusterObjects.h
 - path: third_party/matter_sdk/src/lwip/silabs
   file_list:
-  - path: lwipopts-wf200.h
   - path: lwipopts-siwx.h
   - path: lwippools.h
   - path: lwipopts.h
@@ -109,6 +108,7 @@ include:
   - path: SoftwareFaultReports.h
   - path: silabs_utils.h
   - path: MatterConfig.h
+  - path: CRTPHelpers.h
   - path: LEDWidget.h
   - path: sl_systemview_config.h
   - path: PigweedLogger.h
@@ -163,6 +163,7 @@ include:
 source:
   - path: third_party/matter_sdk/src/platform/FreeRTOS/SystemTimeSupport.cpp
   - path: third_party/matter_sdk/src/platform/SingletonConfigurationManager.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/ChipDie.cpp
   - path: third_party/matter_sdk/src/platform/silabs/CHIPMem-Platform.cpp
   - path: third_party/matter_sdk/src/platform/silabs/ConfigurationManagerImpl.cpp
   - path: third_party/matter_sdk/src/platform/silabs/ConnectivityManagerImpl_WIFI.cpp

@@ -13,13 +13,15 @@ provides:
   - name: matter_general_commissioning
 source:
   - path: third_party/matter_sdk/src/app/clusters/general-commissioning-server/CodegenIntegration.cpp
-  - path: third_party/matter_sdk/src/app/clusters/general-commissioning-server/general-commissioning-cluster.cpp
+    unless: [matter_code_driven_dm]
+  - path: third_party/matter_sdk/src/app/clusters/general-commissioning-server/GeneralCommissioningCluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/general-commissioning-server
     file_list:
       - path: BreadCrumbTracker.h
       - path: CodegenIntegration.h
-      - path: general-commissioning-cluster.h
+        unless: [matter_code_driven_dm]
+      - path: GeneralCommissioningCluster.h
 template_contribution:
   - name: component_catalog
     value: matter_general_commissioning

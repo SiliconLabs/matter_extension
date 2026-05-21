@@ -1,0 +1,7 @@
+steps:
+  # Mirrors simplicity_sdk tz_application.slpb, output artifact suffixes use _ not -
+  - task: convert
+    input:
+      - "{{trustzone_secure_binary}}"
+      - "{{trustzone_nonsecure_binary}}"
+    output: artifact/{{workspace_name}}_combined.s37

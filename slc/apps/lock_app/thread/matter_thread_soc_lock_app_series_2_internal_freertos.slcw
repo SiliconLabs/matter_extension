@@ -1,0 +1,14 @@
+workspace_name: matter_thread_soc_lock_app_series_2_internal_freertos
+label: Matter Thread - SoC Lock with internal Bootloader FreeRTOS
+quality: production
+package: matter
+description: Demonstrates a sample implementation of a Matter over Thread door lock app with internal bootloader
+project:
+  - path: ./matter_thread_soc_lock_app_freertos.slcp
+    id: application
+    output: lock_app
+  - path: ../../bootloaders/bootloader_storage_internal_single_series_2/matter_bootloader_internal_series_2.slcp
+    id: bootloader
+    output: matter_bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

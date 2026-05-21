@@ -33,27 +33,24 @@ class ChipUtility(object):
         return binascii.hexlify(val).decode()
 
     @staticmethod
-    def VoidPtrToByteArray(ptr, len):
+    def VoidPtrToByteArray(ptr, length):
         if ptr:
-            v = bytearray(len)
-            memmove((c_byte * len).from_buffer(v), ptr, len)
+            v = bytearray(length)
+            memmove((c_byte * length).from_buffer(v), ptr, length)
             return v
         return None
 
     @staticmethod
     def ByteArrayToVoidPtr(array):
         if array is not None:
-            if not (isinstance(array, bytes) or isinstance(array, bytearray)):
+            if not (isinstance(array, (bytes, bytearray))):
                 raise TypeError("Array must be an str or a bytearray")
             return cast((c_byte * len(array)).from_buffer_copy(array), c_void_p)
         return c_void_p(0)
 
     @staticmethod
     def IsByteArrayAllZeros(array):
-        for i in array:
-            if i != 0:
-                return False
-        return True
+        return all(i == 0 for i in array)
 
     @staticmethod
     def ByteArrayToHex(array):

@@ -11,11 +11,16 @@ metadata:
     license: "Apache 2.0"
 provides:
   - name: matter_concentration_measurement
+source:
+  - path: third_party/matter_sdk/src/app/clusters/concentration-measurement-server/ConcentrationMeasurementCluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/concentration-measurement-server
     file_list:
+      - path: CodegenIntegration.h
+        unless: [matter_code_driven_dm]
       - path: concentration-measurement-cluster-objects.h
       - path: concentration-measurement-server.h
+      - path: ConcentrationMeasurementCluster.h
 template_contribution:
   - name: component_catalog
     value: matter_concentration_measurement

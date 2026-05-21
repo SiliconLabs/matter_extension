@@ -201,9 +201,13 @@ static void MatterAwsTaskFn(void * args)
         else
         {
             if (event & SIGNAL_TRANSINTF_RX)
+            {
                 mqtt_process(mqtt_client, SIGNAL_TRANSINTF_TX);
+            }
             else if (event & SIGNAL_TRANSINTF_TX_ACK)
+            {
                 mqtt_process(mqtt_client, SIGNAL_TRANSINTF_TX_ACK);
+            }
             if (event & SIGNAL_TRANSINTF_MBEDTLS_RX)
                 transport_process_mbedtls_rx(transport);
         }

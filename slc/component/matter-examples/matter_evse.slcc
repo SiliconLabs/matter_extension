@@ -1,0 +1,39 @@
+category: Matter|Examples
+package: matter
+description: >
+  Provides example component for an EVSE application. This component should be 
+  included in all Evse applications to help resolve SLC dependencies. Only applicable to Evse applications.
+id: matter_evse
+quality: production
+metadata:
+  sbom:
+    license: MSLA
+requires:
+  - name: matter_electrical_sensor
+  - name: matter_energy_evse
+provides:
+  - name: matter_evse
+include:
+  - path: third_party/matter_sdk/examples/evse-app/evse-common/include
+    file_list:
+      - path: EnergyEvseManager.h
+      - path: EnergyEvseTargetsStore.h
+      - path: EnergyEvseDelegateImpl.h
+      - path: EnergyEvseMain.h
+      - path: EVSEManufacturerImpl.h
+      - path: EVSECallbacks.h
+      - path: EvseTargetsConfig.h
+      - path: ChargingTargetsMemMgr.h
+      - path: energy-evse-modes.h
+
+source:
+  - path: third_party/matter_sdk/examples/evse-app/evse-common/src/EVSEManufacturerImpl.cpp
+  - path: third_party/matter_sdk/examples/evse-app/evse-common/src/EnergyEvseDelegateImpl.cpp
+  - path: third_party/matter_sdk/examples/evse-app/evse-common/src/EnergyEvseEventTriggers.cpp
+  - path: third_party/matter_sdk/examples/evse-app/evse-common/src/EnergyEvseMain.cpp
+  - path: third_party/matter_sdk/examples/evse-app/evse-common/src/EnergyEvseManager.cpp
+  - path: third_party/matter_sdk/examples/evse-app/evse-common/src/EnergyEvseTargetsStore.cpp
+  - path: third_party/matter_sdk/examples/evse-app/evse-common/src/ChargingTargetsMemMgr.cpp
+  - path: third_party/matter_sdk/examples/evse-app/evse-common/src/energy-evse-mode.cpp
+ui_hints:
+  visibility: never

@@ -25,7 +25,7 @@ from lark.visitors import Discard, Transformer, v_args
 from .type_definitions import (AttributeRequirement, ClusterAttributeDeny, ClusterCommandRequirement, ClusterRequirement,
                                ClusterValidationRule, RequiredAttributesRule, RequiredCommandsRule)
 
-LOGGER = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 
 
 class ElementNotFoundError(Exception):
@@ -36,8 +36,7 @@ class ElementNotFoundError(Exception):
 def parseNumberString(n: str) -> int:
     if n.startswith('0x'):
         return int(n[2:], 16)
-    else:
-        return int(n)
+    return int(n)
 
 
 @dataclass
@@ -90,14 +89,14 @@ def _isRequired(attr: xml.etree.ElementTree.Element) -> bool:
     mandatory_element = attr.find('mandatoryConform')
 
     if mandatory_element is None:
-        return False
+        return True
 
     return mandatory_element.find('feature') is None
 
 
 def DecodeClusterFromXml(element: xml.etree.ElementTree.Element):
     if element.tag != 'cluster':
-        LOGGER.error("Not a cluster element: %r" % element)
+        log.error("Not a cluster element: %r", element)
         return None
 
     # cluster elements contain among other children
@@ -160,12 +159,12 @@ def DecodeClusterFromXml(element: xml.etree.ElementTree.Element):
             required_commands=required_commands
         )
     except Exception:
-        LOGGER.exception("Failed to decode cluster %r" % element)
+        log.exception("Failed to decode cluster %r", element)
         return None
 
 
 def ClustersInXmlFile(path: str):
-    LOGGER.info("Loading XML from %s" % path)
+    log.info("Loading XML from '%s'", path)
 
     # root is expected to be just a "configurator" object
     configurator = xml.etree.ElementTree.parse(path).getroot()
@@ -210,9 +209,8 @@ class LintRulesContext:
             try:
                 return "ID_%s" % name, parseNumberString(name)
             except ValueError:
-                LOGGER.error("UNKNOWN cluster name %s" % name)
-                LOGGER.error("Known names: %s" %
-                             (",".join(self._cluster_codes.keys()), ))
+                log.error("UNKNOWN cluster name '%s'", name)
+                log.error("Known names: '%s'", ",".join(self._cluster_codes.keys()))
                 return None
         else:
             return name, self._cluster_codes[name]
@@ -351,12 +349,12 @@ class LintRulesTransformer(Transformer):
         return Discard
 
     @v_args(inline=True)
-    def required_server_cluster(self, id):
-        return ServerClusterRequirement(ClusterActionEnum.REQUIRE, id)
+    def required_server_cluster(self, cluster_id):
+        return ServerClusterRequirement(ClusterActionEnum.REQUIRE, cluster_id)
 
     @v_args(inline=True)
-    def rejected_server_cluster(self, id):
-        return ServerClusterRequirement(ClusterActionEnum.REJECT, id)
+    def rejected_server_cluster(self, cluster_id):
+        return ServerClusterRequirement(ClusterActionEnum.REJECT, cluster_id)
 
     @v_args(inline=True)
     def denylist_cluster_attribute(self, cluster_id, attribute_id):
@@ -370,9 +368,8 @@ class Parser:
             propagate_positions=True, maybe_placeholders=True)
 
     def parse(self, file: str):
-        data = LintRulesTransformer().transform(
+        return LintRulesTransformer().transform(
             self.parser.parse(file))
-        return data
 
 
 def CreateParser():

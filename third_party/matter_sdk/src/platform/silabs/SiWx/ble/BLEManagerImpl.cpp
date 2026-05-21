@@ -32,6 +32,7 @@
 #include <lib/support/CodeUtils.h>
 #include <lib/support/logging/CHIPLogging.h>
 #include <platform/CommissionableDataProvider.h>
+#include <platform/PlatformError.h>
 #include <platform/internal/BLEManager.h>
 
 #if CHIP_ENABLE_ADDITIONAL_DATA_ADVERTISING
@@ -133,7 +134,13 @@ void rsi_ble_add_matter_service(void)
         new_serv_resp.serv_handler, new_serv_resp.start_handle + RSI_BLE_CHARACTERISTIC_RX_VALUE_HANDLE_LOCATION,
         custom_characteristic_RX,
         RSI_BLE_ATT_PROPERTY_WRITE | RSI_BLE_ATT_PROPERTY_READ, // Set read, write, write without response
-        data, sizeof(data), ATT_REC_IN_HOST);
+        data, sizeof(data),
+#if (SL_MATTER_GN_BUILD == 0)
+        ATT_REC_MAINTAIN_IN_HOST
+#else
+        ATT_REC_IN_HOST
+#endif // (SL_MATTER_GN_BUILD == 0)
+    );
 
     constexpr uuid_t custom_characteristic_TX = { .size     = RSI_BLE_CUSTOM_CHARACTERISTIC_TX_SIZE,
                                                   .reserved = { RSI_BLE_CUSTOM_CHARACTERISTIC_TX_RESERVED },
@@ -245,7 +252,7 @@ void BLEManagerImpl::BlePostEvent(SilabsBleWrapper::BleEvent_t * event)
     }
 }
 
-CHIP_ERROR BLEManagerImpl::PrintBLEInfo()
+CHIP_ERROR BLEManagerImpl::PrintBLEInfo() const
 {
     ChipLogProgress(DeviceLayer, "BLE Info:");
     ChipLogProgress(DeviceLayer, "  Service Mode: %d", mServiceMode);
@@ -327,7 +334,7 @@ CHIP_ERROR BLEManagerImpl::_Init()
 
     mFlags.ClearAll().Set(Flags::kAdvertisingEnabled, CHIP_DEVICE_CONFIG_CHIPOBLE_ENABLE_ADVERTISING_AUTOSTART);
     mFlags.Set(Flags::kFastAdvertisingEnabled, true);
-    PlatformMgr().ScheduleWork(DriveBLEState, 0);
+    TEMPORARY_RETURN_IGNORED PlatformMgr().ScheduleWork(DriveBLEState, 0);
 
 exit:
     return err;
@@ -368,7 +375,7 @@ CHIP_ERROR BLEManagerImpl::_SetAdvertisingEnabled(bool val)
     if (mFlags.Has(Flags::kAdvertisingEnabled) != val)
     {
         mFlags.Set(Flags::kAdvertisingEnabled, val);
-        PlatformMgr().ScheduleWork(DriveBLEState, 0);
+        TEMPORARY_RETURN_IGNORED PlatformMgr().ScheduleWork(DriveBLEState, 0);
     }
 
 exit:
@@ -389,7 +396,7 @@ CHIP_ERROR BLEManagerImpl::_SetAdvertisingMode(BLEAdvertisingMode mode)
         return CHIP_ERROR_INVALID_ARGUMENT;
     }
     mFlags.Set(Flags::kRestartAdvertising);
-    PlatformMgr().ScheduleWork(DriveBLEState, 0);
+    TEMPORARY_RETURN_IGNORED PlatformMgr().ScheduleWork(DriveBLEState, 0);
     return CHIP_NO_ERROR;
 }
 
@@ -427,7 +434,7 @@ CHIP_ERROR BLEManagerImpl::_SetDeviceName(const char * deviceName)
     {
         mDeviceName[0] = 0;
     }
-    PlatformMgr().ScheduleWork(DriveBLEState, 0);
+    TEMPORARY_RETURN_IGNORED PlatformMgr().ScheduleWork(DriveBLEState, 0);
     ChipLogProgress(DeviceLayer, "_SetDeviceName Ended");
     return CHIP_NO_ERROR;
 }
@@ -523,8 +530,8 @@ CHIP_ERROR BLEManagerImpl::SendIndication(BLE_CONNECTION_OBJECT conId, const Chi
     }
 
     // start timer for the indication Confirmation Event
-    DeviceLayer::SystemLayer().StartTimer(chip::System::Clock::Milliseconds32(BLE_SEND_INDICATION_TIMER_PERIOD_MS),
-                                          OnSendIndicationTimeout, this);
+    TEMPORARY_RETURN_IGNORED DeviceLayer::SystemLayer().StartTimer(
+        chip::System::Clock::Milliseconds32(BLE_SEND_INDICATION_TIMER_PERIOD_MS), OnSendIndicationTimeout, this);
     return CHIP_NO_ERROR;
 }
 
@@ -556,7 +563,7 @@ CHIP_ERROR BLEManagerImpl::MapBLEError(int bleErr)
     case SL_STATUS_NOT_SUPPORTED:
         return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE;
     default:
-        return CHIP_ERROR(ChipError::Range::kPlatform, bleErr + CHIP_DEVICE_CONFIG_SILABS_BLE_ERROR_MIN);
+        return MATTER_PLATFORM_ERROR(bleErr + CHIP_DEVICE_CONFIG_SILABS_BLE_ERROR_MIN);
     }
 }
 
@@ -832,13 +839,13 @@ void BLEManagerImpl::UpdateMtu(const SilabsBleWrapper::sl_wfx_msg_t & evt)
 void BLEManagerImpl::HandleBootEvent(void)
 {
     mFlags.Set(Flags::kSiLabsBLEStackInitialize);
-    PlatformMgr().ScheduleWork(DriveBLEState, 0);
+    TEMPORARY_RETURN_IGNORED PlatformMgr().ScheduleWork(DriveBLEState, 0);
 }
 
 void BLEManagerImpl::HandleConnectEvent(const SilabsBleWrapper::sl_wfx_msg_t & evt)
 {
     AddConnection(evt.connectionHandle, evt.bondingHandle);
-    PlatformMgr().ScheduleWork(DriveBLEState, 0);
+    TEMPORARY_RETURN_IGNORED PlatformMgr().ScheduleWork(DriveBLEState, 0);
 }
 
 void BLEManagerImpl::HandleConnectionCloseEvent(const SilabsBleWrapper::sl_wfx_msg_t & evt)
@@ -871,7 +878,7 @@ void BLEManagerImpl::HandleConnectionCloseEvent(const SilabsBleWrapper::sl_wfx_m
         // maximum connection limit being reached.
         mFlags.Set(Flags::kRestartAdvertising);
         mFlags.Set(Flags::kFastAdvertisingEnabled);
-        PlatformMgr().ScheduleWork(DriveBLEState, 0);
+        TEMPORARY_RETURN_IGNORED PlatformMgr().ScheduleWork(DriveBLEState, 0);
     }
 }
 
@@ -885,6 +892,16 @@ void BLEManagerImpl::HandleWriteEvent(const SilabsBleWrapper::sl_wfx_msg_t & evt
     }
     else
     {
+#if (SL_MATTER_GN_BUILD == 0)
+        if (evt.rsi_ble_write.pkt_type == RSI_BLE_WRITE_REQUEST_EVENT)
+        {
+            int32_t status = rsi_ble_gatt_write_response(const_cast<uint8_t *>(evt.rsi_ble_write.dev_addr), 0);
+            if (status != RSI_SUCCESS)
+            {
+                ChipLogError(DeviceLayer, "Failed to send GATT write response: 0x%lx", static_cast<unsigned long>(status));
+            }
+        }
+#endif // (SL_MATTER_GN_BUILD == 0)
         HandleRXCharWrite(evt);
     }
 }
@@ -909,7 +926,18 @@ void BLEManagerImpl::HandleTXCharCCCDWrite(const SilabsBleWrapper::sl_wfx_msg_t 
 
     if (isIndicationEnabled)
     {
-        // If indications are not already enabled for the connection...
+#if (SL_MATTER_GN_BUILD == 0)
+        // Update the CCCD value in the TA firmware so it allows indications/notifications.
+        // With the new TA firmware, the TA no longer auto-updates TA-maintained
+        // attribute values on writes the host must explicitly sync the CCCD state
+        uint8_t cccd_val[2] = { static_cast<uint8_t>(evt.rsi_ble_write.att_value[0] | 0x02), 0x00 };
+        int32_t status      = rsi_ble_set_local_att_value(rsi_ble_gatt_server_client_config_hndl, sizeof(cccd_val), cccd_val);
+        if (status != RSI_SUCCESS)
+        {
+            ChipLogError(DeviceLayer, "Failed to set local CCCD att value: 0x%lx", static_cast<unsigned long>(status));
+        }
+#endif // (SL_MATTER_GN_BUILD == 0)
+       // If indications are not already enabled for the connection...
         if (!bleConnState->subscribed)
         {
             bleConnState->subscribed = 1;
@@ -1076,6 +1104,7 @@ void BLEManagerImpl::HandleC3ReadRequest(const SilabsBleWrapper::sl_wfx_msg_t & 
     size_t offset        = evt.rsi_ble_read_req->offset;
     if (offset >= dataLen)
     {
+        ChipLogError(DeviceLayer, "Read request offset (%u) out of bounds (dataLen=%u)", offset, dataLen);
         return;
     }
     sl_status_t ret = rsi_ble_gatt_read_response(evt.rsi_ble_read_req->dev_addr, readResponse, evt.rsi_ble_read_req->handle, offset,
@@ -1124,7 +1153,7 @@ void BLEManagerImpl::BleAdvTimeoutHandler(void * arg)
     if (BLEMgrImpl().mFlags.Has(Flags::kFastAdvertisingEnabled))
     {
         ChipLogDetail(DeviceLayer, "bleAdv Timeout : Start slow advertisement");
-        BLEMgr().SetAdvertisingMode(BLEAdvertisingMode::kSlowAdvertising);
+        TEMPORARY_RETURN_IGNORED BLEMgr().SetAdvertisingMode(BLEAdvertisingMode::kSlowAdvertising);
     }
 }
 

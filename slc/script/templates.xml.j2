@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ASCII"?>
+<model:MDescriptors xmlns:model="http://www.silabs.com/ss/Studio.ecore">
+{%- for example in examples %}
+{%- if templates_exclude is not defined or example.name not in templates_exclude %}
+{%- if board_overrides is defined and example.name in board_overrides %}
+{%- set board_list = board_overrides[example.name].boards %}
+{%- else %}
+{%- set board_list = example.boards %}
+{%- endif %}
+{%- set part_list = [] %}
+{%- for part in example.parts %}
+  {%- set _ = part_list.append(".*" + part + ".*") %}
+{%- endfor %}
+{%- if not example.board_only %}
+  {%- set _ = board_list.append("com.silabs.board.none") %}
+{%- endif %}
+{%- set ide_list = ["generic-template", "makefile-ide", "simplicity-ide", "visual-studio-code", "visual-studio-code-cmake"] %}
+{%- if example.projects %}
+  {%- set namespace = "template.solution.uc" %}
+  {%- set project_ref_list = [] %}
+  {%- for project in example.projects %}
+    {%- set _ = project_ref_list.append(project.path.replace('/', '.')) %}
+  {%- endfor %}
+{%- else %}
+  {%- set namespace = "template.uc" %}
+{%- endif %}
+{%- set keywords = "Matter Zigbee" if "zigbee" in example.name else "Matter" %}
+  <descriptors name="{{ example.name }}" label="{{ example.label }}" description="{{ example.description }}">
+    <properties key="namespace" value="{{ namespace }}"/>
+    <properties key="keywords" value="{{ keywords }}"/>
+    <properties key="solutionReferenceId" value="{{ example.path.replace('/', '.') }}"/>
+    <properties key="projectFilePaths" value="{{ example.path | path }}"/>
+    <properties key="readmeFiles" value="{{ example.readme | path | list }}"/>
+    <properties key="boardCompatibility" value="{{ board_list | list }}"/>
+    <properties key="partCompatibility" value="{{ part_list | list }}"/>
+    <properties key="ideCompatibility" value="{{ ide_list | list }}"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="{{ example.category }}"/>
+    <properties key="quality" value="{{ example.quality | upper }}"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="{{ example.filter | filters | list }}"/>
+{%- if example.projects %}
+    <properties key="solutionProjects" value="{{ project_ref_list | list }}"/>
+{%- elif 'matter_thread_host_openthread_border_router_doc' not in example.name %}
+    <properties key="core.hidden" value="true"/>
+{%- endif %}
+  </descriptors>
+{%- endif %}
+{%- endfor %}
+</model:MDescriptors>

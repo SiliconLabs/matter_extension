@@ -365,7 +365,7 @@ CHIP_ERROR SilabsTracer::TimeTraceEnd(TimeTraceOperation aOperation, CHIP_ERROR 
 
         auto & metric = mMetrics[to_underlying(aOperation)];
 
-        FinishMetric(metric, duration);
+        TEMPORARY_RETURN_IGNORED FinishMetric(metric, duration);
     }
     return OutputTrace(tracker);
 }
@@ -477,7 +477,7 @@ CHIP_ERROR SilabsTracer::OutputTimeTracker(const TimeTracker & tracker)
 CHIP_ERROR SilabsTracer::OutputTrace(const TimeTracker & tracker)
 {
     // We allow error here as we want to buffer even if the logs are currently uninitialized
-    OutputTimeTracker(tracker);
+    TEMPORARY_RETURN_IGNORED OutputTimeTracker(tracker);
 
     if (mBufferedTrackerCount < kMaxBufferedTraces - 1)
     {
@@ -764,7 +764,12 @@ CHIP_ERROR SilabsTracer::FindExistingTrace(const CharSpan label, const CharSpan 
         if (t.labelLen == 0)
             return CHIP_ERROR_NOT_FOUND; // empty slot
 
-        // prefix semantics: stored must fit within incoming, then bytes must match
+        // Prefix match: only compare up to stored length; incoming must span at least that many bytes.
+        if (group.size() < t.groupLen || label.size() < t.labelLen)
+        {
+            continue;
+        }
+
         if (std::memcmp(t.group, group.data(), t.groupLen) == 0 && std::memcmp(t.label, label.data(), t.labelLen) == 0)
         {
             outIdx = i;

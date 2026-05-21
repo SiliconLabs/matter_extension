@@ -120,7 +120,6 @@ silabs_executable("multi-sensor-app") {
   }
 
   sources = [
-    "${examples_common_plat_dir}/main.cpp",
     "src/AppTask.cpp",
     "src/DataModelCallbacks.cpp",
     "src/SensorManager.cpp",

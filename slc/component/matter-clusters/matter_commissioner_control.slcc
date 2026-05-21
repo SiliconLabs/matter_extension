@@ -12,11 +12,17 @@ metadata:
 provides:
   - name: matter_commissioner_control
 source:
-  - path: third_party/matter_sdk/src/app/clusters/commissioner-control-server/commissioner-control-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/commissioner-control-server/CodegenIntegration.cpp
+    unless: [matter_code_driven_dm]
+  - path: third_party/matter_sdk/src/app/clusters/commissioner-control-server/CommissionerControlCluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/commissioner-control-server
     file_list:
+      - path: CodegenIntegration.h
+        unless: [matter_code_driven_dm]
       - path: commissioner-control-server.h
+      - path: CommissionerControlCluster.h
+      - path: Delegate.h
 template_contribution:
   - name: component_catalog
     value: matter_commissioner_control

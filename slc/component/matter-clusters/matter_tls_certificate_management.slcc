@@ -13,14 +13,18 @@ provides:
   - name: matter_tls_certificate_management
 source:
   - path: third_party/matter_sdk/src/app/clusters/tls-certificate-management-server/CertificateTableImpl.cpp
-  - path: third_party/matter_sdk/src/app/clusters/tls-certificate-management-server/tls-certificate-management-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/tls-certificate-management-server/CodegenIntegration.cpp
+    unless: [matter_code_driven_dm]
+  - path: third_party/matter_sdk/src/app/clusters/tls-certificate-management-server/TLSCertificateManagementCluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/tls-certificate-management-server
     file_list:
       - path: CertificateTable.h
       - path: CertificateTableImpl.h
+      - path: CodegenIntegration.h
+        unless: [matter_code_driven_dm]
       - path: IncrementingIdHelper.h
-      - path: tls-certificate-management-server.h
+      - path: TLSCertificateManagementCluster.h
 template_contribution:
   - name: component_catalog
     value: matter_tls_certificate_management

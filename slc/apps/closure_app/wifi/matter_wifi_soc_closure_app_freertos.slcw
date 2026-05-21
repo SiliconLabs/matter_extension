@@ -1,0 +1,9 @@
+workspace_name: matter_wifi_soc_closure_app_freertos
+label: Matter WiFi - SoC Closure FreeRTOS
+quality: production
+package: matter
+description: Demonstrates a sample implementation of a Matter over Wi-Fi closure app
+project:
+  - path: ./matter_wifi_soc_closure_app_freertos.slcp
+    id: application
+    output: closure_app_siwx

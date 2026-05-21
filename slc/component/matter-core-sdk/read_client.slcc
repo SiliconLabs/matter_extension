@@ -1,0 +1,27 @@
+category: Matter|Interaction Model
+
+description: Implements the Matter Interaction Model for the read client. Mostly used for subcription/reading attributes.
+id: matter_read_client
+label: read_client
+package: matter
+provides:
+  - name: matter_read_client
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+
+    
+define:
+  - name: CHIP_CONFIG_ENABLE_READ_CLIENT
+    value: 1
+include:
+  - path: third_party/matter_sdk/src/app
+    file_list:
+      - path: BufferedReadCallback.h
+      - path: ReadClient.h
+      - path: ClusterStateCache.h
+source:
+- path: third_party/matter_sdk/src/app/ReadClient.cpp
+- path: third_party/matter_sdk/src/app/BufferedReadCallback.cpp
+- path: third_party/matter_sdk/src/app/ClusterStateCache.cpp

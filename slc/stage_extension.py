@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 This script copies the contents of the current working directory to a specified target location,
 excluding certain directories and files based on predefined rules.
@@ -64,7 +65,8 @@ def should_exclude(root, path):
         # print(f"Excluding hidden path: {path}")
         return True
 
-    full_path = os.path.join(root, path)
+    # Normalize separators so exclusion rules (written with '/') work on Windows.
+    full_path = os.path.join(root, path).replace(os.sep, "/")
 
     # Exclude submodules
     if "third_party/" in full_path:
@@ -97,7 +99,7 @@ def should_exclude(root, path):
             return True
 
     # Exclude directories if any part of the path matches exclude_directory
-    if any(exclude in full_path.split(os.sep) for exclude in exclude_root_directories):
+    if any(exclude in full_path.split("/") for exclude in exclude_root_directories):
         # print(f"Excluding directory from split path: {full_path}")
         return True
 

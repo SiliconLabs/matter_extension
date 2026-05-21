@@ -32,17 +32,21 @@ def run_code_size_analysis() {
                     local path=$1
                     local app_name
                     
-                    local solution_dir=\$(echo "\$path" | grep -oE "[^/]*-solution(-lto)?" | head -1)
+                    local solution_dir=\$(echo "\$path" | grep -oE "[^/]*_solution(_lto)?" | head -1)
                     
                     if [ -n "$solution_dir" ]; then
-                        local base_name=\$(echo "\$solution_dir" | sed -E 's/-solution(-lto)?\$//')
+                        local base_name=\$(echo "\$solution_dir" | sed -E 's/_solution(_lto)?\$//')
                         
+                        # Extract app name from file name
                         case "\$base_name" in
-                            *zigbee-matter-light*)
+                            *zigbee_light*)
                                 app_name="zigbee-matter-light"
                                 ;;
-                            *)
-                                app_name=\$(echo "\$base_name" | sed -E 's/^([^-]+-[^-]+)-.*/\\1/')
+                            *lighting_app*)
+                                app_name="lighting-app"
+                                ;;
+                            *lock_app*)
+                                app_name="lock-app"
                                 ;;
                         esac
                     else
@@ -55,7 +59,7 @@ def run_code_size_analysis() {
                 
                 determine_protocol() {
                     local path=$1
-                    if [[ "$path" == *"siwx"* ]]; then
+                    if [[ "$path" == *"wifi_soc"* ]]; then
                         echo "wifi"
                     else
                         echo "thread"
@@ -64,7 +68,7 @@ def run_code_size_analysis() {
                 
                 determine_build_options() {
                     local path=$1
-                    if [[ "$path" == *"-solution-lto/"* ]]; then
+                    if [[ "$path" == *"_solution_lto/"* ]]; then
                         echo "-lto"
                     else
                         echo ""
@@ -180,15 +184,30 @@ def run_code_size_analysis() {
                 echo "$map_files_found"
                 echo ""
                 
-                target_apps="lighting-app|lock-app|zigbee-matter-light"
-                echo "Filtering for target apps: $target_apps"
-                filtered_map_files=\$(echo "\$map_files_found" | grep -E "($target_apps)" | grep -v -E "(-ncp-|-wf200-|-sequential)")
+                CODE_SIZE_BUILDS='
+                    brd4187c/matter_thread_soc_lighting_app_series_2_freertos_solution   
+                    brd4187c/matter_thread_soc_lock_app_series_2_freertos_solution   
+                    brd4187c/matter_thread_soc_zigbee_light_series_2_freertos_solution   
+                    brd4407a/matter_thread_soc_lighting_app_series_3_freertos_solution   
+                    brd4407a/matter_thread_soc_lock_app_series_3_freertos_solution   
+                    brd4407a/matter_thread_soc_zigbee_light_series_3_freertos_solution   
+                    brd4338a/matter_wifi_soc_lighting_app_freertos_solution   
+                    brd4338a/matter_wifi_soc_lock_app_freertos_solution   
+                '
                 
+                PATTERN=""
+                for build in $CODE_SIZE_BUILDS; do
+                [ -n "$PATTERN" ] && PATTERN="${PATTERN}|"
+                PATTERN="${PATTERN}${build}/.*\\.map\\$|${build}_lto/.*\\.map\\$"
+                done
+
+                filtered_map_files=$(echo "$map_files_found" | grep -E "$PATTERN")
+
                 if [ -z "$filtered_map_files" ]; then
-                    echo "WARNING: No map files found for target apps ($target_apps)"
-                    echo "Available apps in map files:"
-                    echo "$map_files_found" | sed -E 's|.*/([^/]*-solution[^/]*)/.*|\1|' | sort -u
-                    exit 0
+                echo "WARNING: No map files found matching target build patterns"
+                echo "Available apps in map files:"
+                echo "$map_files_found" | sed -E 's|.*/([^/]*_solution[^/]*)/.*|\1|' | sort -u
+                exit 0
                 fi
                 
                 echo "Target app map files to process:"
@@ -263,7 +282,7 @@ def execute_sanity_tests(nomadNode, deviceGroup, deviceGroupId, appName, matterT
                     def commanderDir = ""
                     sshagent(['svc_gsdk-ssh']) {
                         checkout scm: [$class                            : 'GitSCM',
-                                        branches                         : [[name: 'release_2.8-1.5']],
+                                        branches                         : [[name: 'main']],
                                         browser                          : [$class: 'Stash',
                                         repoUrl: 'https://stash.silabs.com/scm/utf/utf_app_matter.git/'],
                                         userRemoteConfigs                : [[credentialsId: 'svc_gsdk-ssh',
@@ -507,4 +526,24 @@ def actionWithRetry(Closure action)
 	    }
 	}
 }
+
+/**
+ * Slack-formatted summary of commits since last Jenkins run (parent repo + matter_sdk gitlink only).
+ * Baseline: GIT_PREVIOUS_SUCCESSFUL_COMMIT, then GIT_PREVIOUS_COMMIT if unset.
+ */
+def buildCommitChangeSummaryForSlack() {
+    def prev = (env.GIT_PREVIOUS_SUCCESSFUL_COMMIT ?: '').trim()
+    if (!prev) {
+        prev = (env.GIT_PREVIOUS_COMMIT ?: '').trim()
+    }
+    def summary = ''
+    withEnv(["PREV_BASELINE=${prev}"]) {
+        summary = sh(script: 'bash jenkins_integration/commit_change_summary.sh', returnStdout: true).trim()
+    }
+    if (summary.length() > 3500) {
+        summary = summary.substring(0, 3500) + '\n...(truncated)'
+    }
+    return summary
+}
+
 return this

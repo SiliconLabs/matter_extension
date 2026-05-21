@@ -27,9 +27,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#if SL_WIFI && !SLI_SI91X_MCU_INTERFACE
+#if defined (SL_WIFI) && SL_WIFI && !defined(SLI_SI91X_MCU_INTERFACE)
 #include <platform/silabs/wifi/ncp/spi_multiplex.h>
-#endif // SL_WIFI && !SLI_SI91X_MCU_INTERFACE
+#endif // defined (SL_WIFI) && SL_WIFI && !defined(SLI_SI91X_MCU_INTERFACE)
 
 using namespace chip::Protocols::InteractionModel;
 
@@ -134,31 +134,31 @@ void GetTemperatureHumidityWork(intptr_t contextPtr)
         }
     }
 
-#if SL_LCDCTRL_MUX
+#if defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     VerifyOrReturn(sl_wfx_host_pre_lcd_spi_transfer == SL_STATUS_OK);
-#endif // SL_LCDCTRL_MUX
+#endif // defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
 
     DMD_updateDisplay();
 
-#if SL_LCDCTRL_MUX
+#if defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     VerifyOrReturn(sl_wfx_host_post_lcd_spi_transfer() == SL_STATUS_OK);
-#endif // SL_LCDCTRL_MUX
+#endif // defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
 
-#if SLI_SI91X_MCU_INTERFACE && CHIP_CONFIG_ENABLE_ICD_SERVER
+#if defined (SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE && defined (CHIP_CONFIG_ENABLE_ICD_SERVER) && CHIP_CONFIG_ENABLE_ICD_SERVER
     // MEMLCD is not a UULP component and not available in sleep so powering down before sleep and need to be re-initialized after
     // sleep-wakeup
     sl_memlcd_power_on(NULL, false);
-#endif // SLI_SI91X_MCU_INTERFACE && CHIP_CONFIG_ENABLE_ICD_SERVER
+#endif // defined (SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE && defined (CHIP_CONFIG_ENABLE_ICD_SERVER) && CHIP_CONFIG_ENABLE_ICD_SERVER
 }
 
 void SensorUI(GLIB_Context_t * glibContext)
 {
     uint8_t line = 1;
 
-#if SLI_SI91X_MCU_INTERFACE && CHIP_CONFIG_ENABLE_ICD_SERVER
+#if defined (SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE && defined (CHIP_CONFIG_ENABLE_ICD_SERVER) && CHIP_CONFIG_ENABLE_ICD_SERVER
     // In sleep, memlcd will not be retained so re-initialize MEMLCD interface after sleep wakeup
     sl_memlcd_post_wakeup_init();
-#endif // SLI_SI91X_MCU_INTERFACE && SL_ICD_ENABLED && CHIP_CONFIG_ENABLE_ICD_SERVER
+#endif // defined (SLI_SI91X_MCU_INTERFACE) && SLI_SI91X_MCU_INTERFACE && defined (CHIP_CONFIG_ENABLE_ICD_SERVER) && CHIP_CONFIG_ENABLE_ICD_SERVER
 
     GLIB_clear(glibContext);
 
@@ -173,7 +173,7 @@ void SensorUI(GLIB_Context_t * glibContext)
     WorkContext * context = new WorkContext{ glibContext, line };
 
     // Schedule work to get and write temperature and Humidity values
-    chip::DeviceLayer::PlatformMgr().ScheduleWork(
+    TEMPORARY_RETURN_IGNORED chip::DeviceLayer::PlatformMgr().ScheduleWork(
         [](intptr_t contextPtr) {
             GetTemperatureHumidityWork(contextPtr);
             delete reinterpret_cast<WorkContext *>(contextPtr); // Clean up the context

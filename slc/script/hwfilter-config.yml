@@ -1,0 +1,53 @@
+# High-level configuration of hwfilter parameters
+hwfilter:
+  quality_excludes: 
+    - internal
+  min_flash_size: 1536k
+  devices: 
+    - ${THREAD_DEVICE_PATH}
+    - ${SI91X_DEVICE_PATH}
+  boards: 
+    - ${THREAD_BOARD_PATH}
+    - ${SI91X_BOARD_PATH}
+  # Exclude boards and devices that are not supported by matter and won't filter out correctly
+  board_excludes:
+    - brd4346a
+    - brd4353a
+    - brd4357a
+  device_excludes:
+    - device_generic_family_efr32xg21
+    - device_family_bgm24
+    - device_family_bgm26
+    - device_family_sibg301
+    - device_family_efm32pg22
+    - device_family_efm32pg26
+board_allowlist:
+    - brd1019a
+    - brd2601b
+    - brd2605a
+    - brd2608a
+    - brd2703a
+    - brd2704a
+    - brd2708a
+    - brd2709a
+    - brd2719a
+    - brd2911a
+    - brd4116a
+    - brd4117a
+    - brd4118a
+    - brd4120a
+    - brd4121a
+    - brd4186c
+    - brd4187c
+    - brd4316a
+    - brd4317a
+    - brd4318a
+    - brd4319a
+    - brd4337a
+    - brd4338a
+    - brd4342a
+    - brd4343a
+    - brd4350a
+    - brd4351a
+    - brd4407a
+    - brd4408a

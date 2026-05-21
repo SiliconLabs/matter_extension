@@ -81,11 +81,11 @@ def get_bluez_objects(bluez, bus, interface, prefix_path):
         delegates = item[1].get(interface)
         if not delegates:
             continue
-        slice = {}
         if item[0].startswith(prefix_path):
-            slice["object"] = bus.get_object(BLUEZ_NAME, item[0])
-            slice["path"] = item[0]
-            results.append(slice)
+            results.append({
+                "object": bus.get_object(BLUEZ_NAME, item[0]),
+                "path": item[0]
+            })
     return results
 
 
@@ -187,8 +187,7 @@ class BluezDbusAdapter:
     @property
     def Address(self):
         try:
-            result = self.adapter_properties.Get(ADAPTER_INTERFACE, "Address")
-            return result
+            return self.adapter_properties.Get(ADAPTER_INTERFACE, "Address")
         except dbus.exceptions.DBusException as ex:
             LOGGER.debug(str(ex))
             return None
@@ -207,9 +206,9 @@ class BluezDbusAdapter:
             LOGGER.debug(traceback.format_exc())
             return None
 
-    def SetDiscoveryFilter(self, dict):
+    def SetDiscoveryFilter(self, f: dict):
         try:
-            self.adapter.SetDiscoveryFilter(dict)
+            self.adapter.SetDiscoveryFilter(f)
         except dbus.exceptions.DBusException as ex:
             LOGGER.debug(str(ex))
         except Exception:
@@ -455,8 +454,7 @@ class BluezDbusDevice:
     @property
     def Name(self):
         try:
-            name = self.device_properties.Get(DEVICE_INTERFACE, "Name")
-            return name
+            return self.device_properties.Get(DEVICE_INTERFACE, "Name")
         except dbus.exceptions.DBusException as ex:
             LOGGER.debug(str(ex))
             return None
@@ -490,8 +488,7 @@ class BluezDbusDevice:
     @property
     def RSSI(self):
         try:
-            result = self.device_properties.Get(DEVICE_INTERFACE, "RSSI")
-            return result
+            return self.device_properties.Get(DEVICE_INTERFACE, "RSSI")
         except dbus.exceptions.DBusException as ex:
             LOGGER.debug(str(ex))
             return None
@@ -559,10 +556,9 @@ class BluezDbusGattService:
     @property
     def uuid(self):
         try:
-            result = uuid.UUID(
+            return uuid.UUID(
                 str(self.service_properties.Get(SERVICE_INTERFACE, "UUID"))
             )
-            return result
         except dbus.exceptions.DBusException as ex:
             LOGGER.debug(str(ex))
             return None
@@ -573,9 +569,8 @@ class BluezDbusGattService:
     @property
     def Primary(self):
         try:
-            result = bool(self.service_properties.Get(
+            return bool(self.service_properties.Get(
                 SERVICE_INTERFACE, "Primary"))
-            return result
         except dbus.exceptions.DBusException as ex:
             LOGGER.debug(str(ex))
             return False
@@ -586,8 +581,7 @@ class BluezDbusGattService:
     @property
     def Device(self):
         try:
-            result = self.service_properties.Get(SERVICE_INTERFACE, "Device")
-            return result
+            return self.service_properties.Get(SERVICE_INTERFACE, "Device")
         except dbus.exceptions.DBusException as ex:
             LOGGER.debug(str(ex))
             return None
@@ -707,13 +701,12 @@ class BluezDbusGattCharacteristic:
     @property
     def uuid(self):
         try:
-            result = uuid.UUID(
+            return uuid.UUID(
                 str(
                     self.characteristic_properties.Get(
                         CHARACTERISTIC_INTERFACE, "UUID")
                 )
             )
-            return result
         except dbus.exceptions.DBusException as ex:
             LOGGER.debug(str(ex))
             return None

@@ -1,0 +1,17 @@
+workspace_name: matter_thread_soc_lighting_app_trustzone_series_2_freertos
+label: Matter Thread - SoC Lighting TrustZone with external Bootloader FreeRTOS
+description: Demonstrates a sample implementation of a Matter over Thread lighting app with TrustZone and external bootloader
+quality: production
+package: matter
+project:
+  - path: ./matter_thread_soc_lighting_app_trustzone_s_freertos.slcp
+    id: trustzone-secure
+    output: lighting_app_secure
+  - path: ./matter_thread_soc_lighting_app_trustzone_ns_freertos.slcp
+    id: application
+    output: lighting_app_nonsecure
+  - path: ../../../bootloaders/bootloader_storage_external_single_series_2/matter_bootloader_external_series_2.slcp
+    id: bootloader
+    output: matter_bootloader
+post_build:
+  path: ../../../../postbuild/ws_trustzone_series2_workspace.slpb

@@ -14,7 +14,7 @@ class Device:
         self.flash_addr = None
         self.flash_size = None
         self.stack_size = None
-        self.rtt_addr = None
+        self.rtt_addr = args.get(ID.kRttAddr)
         self.gen_fw = args.get(ID.kGeneratorFW)
         self.override = False  # Override commander's part_num with devices.yaml label
         self.load(paths, part_num, args.str(ID.kVersion))
@@ -65,7 +65,12 @@ class Device:
                 _util.fail("Missing firmware for \"{}\" in version \"{}\"".format(part_num, version))
             firmware = paths.base(f"{image_dir}/{image}")
             self.gen_fw.set(firmware)
-            self.rtt_addr = rtt_addr
+            if self.rtt_addr.value is None:
+                self.rtt_addr.set(rtt_addr)
+        elif not os.path.isfile(self.gen_fw.value):
+            _util.fail("Invalid firmware path \"{}\"".format(self.gen_fw.value))
+        elif self.rtt_addr.value is None:
+            _util.warn("Missing RTT address")
 
     def match(self, pn, id, y):
         if pn.startswith(id.lower()):

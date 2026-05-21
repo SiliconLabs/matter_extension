@@ -31,8 +31,6 @@ include:
     -   path: util/privilege-storage.h
     -   path: util/MatterCallbacks.h
     -   path: util/basic-types.h
-    -   path: util/attribute-storage-null-handling.h
-    -   path: util/odd-sized-integers.h
     -   path: util/generic-callbacks.h
 label: types
 package: matter
@@ -46,5 +44,6 @@ source:
 -   path: third_party/matter_sdk/src/app/util/attribute-metadata.cpp
 -   path: third_party/matter_sdk/src/app/util/ember-strings.cpp
 -   path: third_party/matter_sdk/src/app/util/ember-io-storage.cpp
+    unless: [matter_code_driven_dm]
 ui_hints:
   visibility: never

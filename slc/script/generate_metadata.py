@@ -95,11 +95,10 @@ def recurse_dir(file_or_dir):
                 board_type = "917-ncp-brd4357a"
             elif board_type == "soc" or board_type == "example" or board_type == "siwx":
                 board_type = "917-soc"
-            elif board_type == "wf200":
-                board_type = "wf200"
+
 
             if brd not in demos_map['demos'].keys():
-                demos_map['demos'][brd] = {'OpenThread': [], 'WiFi': {'917-soc': [], '917-ncp': [], '917-ncp-brd4357a': [], 'wf200': []}}
+                demos_map['demos'][brd] = {'OpenThread': [], 'WiFi': {'917-soc': [], '917-ncp': [], '917-ncp-brd4357a': []}}
 
             rel_path = os.path.relpath(file_or_dir, out_folder_dir)
             

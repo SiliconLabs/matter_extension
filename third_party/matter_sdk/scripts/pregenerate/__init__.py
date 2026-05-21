@@ -24,6 +24,8 @@ from .using_codegen import (CodegenCppAppPregenerator, CodegenCppClustersTLVMeta
                             CodegenCppProtocolsTLVMetaPregenerator, CodegenJavaClassPregenerator, CodegenJavaJNIPregenerator)
 from .using_zap import ZapApplicationPregenerator
 
+log = logging.getLogger(__name__)
+
 
 def _IdlsInDirectory(top_directory_name: str, truncate_length: int):
     for root, dirs, files in os.walk(top_directory_name):
@@ -51,7 +53,7 @@ def _FindAllIdls(sdk_root: str, external_roots: Optional[List[str]]) -> Iterator
     # first go over SDK items
     for subdir_name in relevant_subdirs:
         top_directory_name = os.path.join(sdk_root, subdir_name)
-        logging.debug(f"Searching {top_directory_name}")
+        log.debug("Searching '%s'", top_directory_name)
         for idl in _IdlsInDirectory(top_directory_name, sdk_root_length+1):
             yield idl
 
@@ -82,7 +84,7 @@ class GlobMatcher:
         return fnmatch.fnmatch(s, self.pattern)
 
 
-def FindPregenerationTargets(sdk_root: str, external_roots: Optional[List[str]], filter: TargetFilter, runner):
+def FindPregenerationTargets(sdk_root: str, external_roots: Optional[List[str]], tgt_filter: TargetFilter, runner):
     """Finds all relevand pre-generation targets in the given
        SDK root.
 
@@ -102,17 +104,17 @@ def FindPregenerationTargets(sdk_root: str, external_roots: Optional[List[str]],
         ZapApplicationPregenerator(sdk_root),
     ]
 
-    path_matchers = [GlobMatcher(pattern) for pattern in filter.path_glob]
+    path_matchers = [GlobMatcher(pattern) for pattern in tgt_filter.path_glob]
 
     for idl in _FindAllIdls(sdk_root, external_roots):
-        if filter.file_type is not None:
-            if idl.file_type != filter.file_type:
-                logging.debug(f"Will not process file of type {idl.file_type}: {idl.relative_path}")
+        if tgt_filter.file_type is not None:
+            if idl.file_type != tgt_filter.file_type:
+                log.debug("Will not process file of type '%s': '%s'", idl.file_type, idl.relative_path)
                 continue
 
         if path_matchers:
             if all(not matcher.matches(idl.relative_path) for matcher in path_matchers):
-                logging.debug(f"Glob not matched for {idl.relative_path}")
+                log.debug("Glob not matched for '%s'", idl.relative_path)
                 continue
 
         for generator in generators:

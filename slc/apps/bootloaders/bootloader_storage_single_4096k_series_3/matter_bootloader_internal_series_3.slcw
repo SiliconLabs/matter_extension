@@ -1,0 +1,9 @@
+workspace_name: matter_bootloader_internal_series_3
+label: Matter - SoC Bootloader Internal Storage Series 3
+quality: internal
+package: matter
+description: Demonstrates a bootloader solution using internal storage for Matter firmware updates on Series 3 devices
+project:
+  - path: ./matter_bootloader_internal_series_3.slcp
+    id: bootloader
+    output: matter_bootloader

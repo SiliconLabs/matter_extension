@@ -106,11 +106,6 @@ if (wifi_soc) {
       "${examples_common_plat_dir}/freertos_config",
     ]
 
-    if (use_wf200) {
-      # TODO efr32_sdk should not need a header from this location
-      include_dirs += [ "${examples_plat_dir}/wf200" ]
-    }
-
     defines = []
     if (chip_enable_pw_rpc) {
       defines += [
@@ -135,7 +130,6 @@ silabs_executable("closure_app") {
   sources = [
     "${example_closure_dir}/closure-common/src/ClosureControlEndpoint.cpp",
     "${example_closure_dir}/closure-common/src/ClosureDimensionEndpoint.cpp",
-    "${examples_common_plat_dir}/main.cpp",
     "src/AppTask.cpp",
     "src/ClosureManager.cpp",
     "src/DataModelCallbacks.cpp",
@@ -202,7 +196,11 @@ silabs_executable("closure_app") {
     ]
   }
 
-  ldscript = "${examples_common_plat_dir}/ldscripts/${silabs_family}.ld"
+  if (is_clang) {
+    ldscript = "${examples_common_plat_dir}/ldscripts/${silabs_family}-clang.ld"
+  } else {
+    ldscript = "${examples_common_plat_dir}/ldscripts/${silabs_family}.ld"
+  }
 
   inputs = [ ldscript ]
 

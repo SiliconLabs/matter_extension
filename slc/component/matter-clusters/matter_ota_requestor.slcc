@@ -1,8 +1,6 @@
 category: Clusters|CHIP
 description: >
-  Implements the Matter OTA Software Update Requestor Cluster, which allows a device to discover an OTA Provider and request software updates over the Matter fabric.
-  This component handles querying for available updates, downloading images using the Matter OTA and BDX protocols, and coordinating the update process.
-  Enable this component if your device should receive firmware updates locally over Matter, such as when updates are provided by a hub or controller rather than directly from the internet.
+  Implementation of the OTA Software Update Requestor Cluster.
   The user has to enable the OTA Software Update Requestor Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
 id: matter_ota_requestor
 package: matter
@@ -15,37 +13,49 @@ provides:
   - name: matter_ota_requestor
 source:
   - path: third_party/matter_sdk/src/app/clusters/ota-requestor/BDXDownloader.cpp
+  - path: third_party/matter_sdk/src/app/clusters/ota-requestor/CodegenIntegration.cpp
+    unless: [matter_code_driven_dm]
   - path: third_party/matter_sdk/src/app/clusters/ota-requestor/DefaultOTARequestor.cpp
   - path: third_party/matter_sdk/src/app/clusters/ota-requestor/DefaultOTARequestorDriver.cpp
   - path: third_party/matter_sdk/src/app/clusters/ota-requestor/DefaultOTARequestorStorage.cpp
   - path: third_party/matter_sdk/src/app/clusters/ota-requestor/ExtendedOTARequestorDriver.cpp
-  - path: third_party/matter_sdk/src/app/clusters/ota-requestor/ota-requestor-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/ota-requestor/OTARequestorAttributes.cpp
+  - path: third_party/matter_sdk/src/app/clusters/ota-requestor/OTARequestorCluster.cpp
   - path: third_party/matter_sdk/src/app/clusters/ota-requestor/OTATestEventTriggerHandler.cpp
 include:
-  - path: third_party/matter_sdk/src/controller
-    file_list:
-      - path: CHIPCluster.h
-      - path: CommandSenderAllocator.h
-      - path: InvokeInteraction.h
-      - path: ReadInteraction.h
-      - path: TypedCommandCallback.h
-      - path: TypedReadCallback.h
-      - path: WriteInteraction.h
   - path: third_party/matter_sdk/src/app/clusters/ota-requestor
     file_list:
       - path: BDXDownloader.h
+      - path: CodegenIntegration.h
+        unless: [matter_code_driven_dm]
+      - path: CodegenIntegrationInternal.h
       - path: DefaultOTARequestor.h
       - path: DefaultOTARequestorDriver.h
+      - path: DefaultOTARequestorEventGenerator.h
       - path: DefaultOTARequestorStorage.h
       - path: DefaultOTARequestorUserConsent.h
       - path: ExtendedOTARequestorDriver.h
-      - path: ota-requestor-server.h
       - path: OTADownloader.h
+      - path: OTARequestorAttributes.h
+      - path: OTARequestorCluster.h
       - path: OTARequestorDriver.h
       - path: OTARequestorInterface.h
       - path: OTARequestorStorage.h
       - path: OTARequestorUserConsentDelegate.h
       - path: OTATestEventTriggerHandler.h
+# TODO these dependencies need to be fixed on CSA
+  - path: third_party/matter_sdk/src/controller
+    file_list:
+      - path: CHIPCluster.h
+      - path: InvokeInteraction.h
+      - path: TypedCommandCallback.h
+      - path: ReadInteraction.h
+      - path: TypedReadCallback.h
+      - path: WriteInteraction.h
+      - path: CommandSenderAllocator.h
+  - path: third_party/matter_sdk/src/app
+    file_list:
+      - path: BufferedReadCallback.h
 template_contribution:
   - name: component_catalog
     value: matter_ota_requestor

@@ -165,11 +165,11 @@ struct Storage : public GenericStorage,
 
 public:
     friend class Manager;
-    friend class Protocol1;
-    friend class Command;
-    friend class CsrCommand;
-    friend class ReadCommand;
-    friend class WriteCommand;
+    friend struct Protocol1;
+    friend struct Command;
+    friend struct CsrCommand;
+    friend struct ReadCommand;
+    friend struct WriteCommand;
 
     //
     // Initialization
@@ -238,7 +238,7 @@ public:
     CHIP_ERROR SetTestEventTriggerKey(const ByteSpan & value);
     CHIP_ERROR GetTestEventTriggerKey(MutableByteSpan & keySpan) override;
 
-    CHIP_ERROR DecryptUsingOtaTlvEncryptionKey(MutableByteSpan & block, uint32_t & mIVOffset);
+    CHIP_ERROR DecryptUsingOtaTlvEncryptionKey(MutableByteSpan & block, uint32_t & mIVOffset) override;
     CHIP_ERROR GetOtaTlvEncryptionKeyId(uint32_t & value) override;
 
     //

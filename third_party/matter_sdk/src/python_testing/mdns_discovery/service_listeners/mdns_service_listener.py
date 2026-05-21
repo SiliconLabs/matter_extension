@@ -16,11 +16,11 @@
 #
 
 import logging
-from asyncio import Event, TimeoutError, wait_for
+from asyncio import Event, TimeoutError, wait_for  # noqa: A004
 
 from zeroconf import ServiceListener, Zeroconf
 
-logger = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 
 
 class MdnsServiceListener(ServiceListener):
@@ -64,10 +64,10 @@ class MdnsServiceListener(ServiceListener):
             None
         """
         try:
-            logger.info(f"Service record information lookup {rec_types} for '{service_name}' in progress...")
+            log.info(f"Service record information lookup {rec_types} for '{service_name}' in progress...")
             await wait_for(self.updated_event.wait(), timeout)
         except TimeoutError:
-            logger.info(
+            log.info(
                 f"Service record information lookup {rec_types} for '{service_name}' timeout ({timeout} seconds) reached without an update."
             )
             raise

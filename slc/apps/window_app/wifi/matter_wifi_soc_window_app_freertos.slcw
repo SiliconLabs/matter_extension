@@ -1,0 +1,9 @@
+workspace_name: matter_wifi_soc_window_app_freertos
+label: Matter WiFi - SoC Window App FreeRTOS
+quality: production
+package: matter
+description: Demonstrates a sample implementation of a Matter over Wi-Fi window covering app
+project:
+  - path: ./matter_wifi_soc_window_app_freertos.slcp
+    id: application
+    output: window_app_siwx

@@ -120,6 +120,7 @@ class ID:
     kBufferSize = 0x013b
     kReset = 0x013c
     kCommanderNoClose = 0x013d
+    kRttAddr = 0x013e
     # Instance Info
     kSerialNumber = 0x0141
     kVendorId = 0x0142

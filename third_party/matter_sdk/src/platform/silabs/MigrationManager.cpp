@@ -21,7 +21,7 @@
 #include <headers/ProvisionManager.h>
 #include <headers/ProvisionStorage.h>
 #include <lib/support/CodeUtils.h>
-#include <lib/support/ScopedBuffer.h>
+#include <lib/support/ScopedMemoryBuffer.h>
 #include <lib/support/Span.h>
 #include <platform/CHIPDeviceLayer.h>
 #include <platform/silabs/SilabsConfig.h>
@@ -80,7 +80,7 @@ void MigrationManager::ApplyMigrations()
 #endif // SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
 
     uint32_t lastMigationGroupDone = 0;
-    SilabsConfig::ReadConfigValue(SilabsConfig::kConfigKey_MigrationCounter, lastMigationGroupDone);
+    TEMPORARY_RETURN_IGNORED SilabsConfig::ReadConfigValue(SilabsConfig::kConfigKey_MigrationCounter, lastMigationGroupDone);
 
     uint32_t completedMigrationGroup = lastMigationGroupDone;
     for (uint32_t i = 0; i < MATTER_ARRAY_SIZE(migrationTable); i++)
@@ -91,7 +91,7 @@ void MigrationManager::ApplyMigrations()
             completedMigrationGroup = std::max(migrationTable[i].migrationGroup, completedMigrationGroup);
         }
     }
-    SilabsConfig::WriteConfigValue(SilabsConfig::kConfigKey_MigrationCounter, completedMigrationGroup);
+    TEMPORARY_RETURN_IGNORED SilabsConfig::WriteConfigValue(SilabsConfig::kConfigKey_MigrationCounter, completedMigrationGroup);
 
 #ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
     // resume all threads
@@ -117,7 +117,7 @@ void MigrationManager::MigrateUint16(uint32_t old_key, uint32_t new_key)
         if (CHIP_NO_ERROR == SilabsConfig::WriteConfigValue(new_key, value))
         {
             // Free memory of old key location
-            SilabsConfig::ClearConfigValue(old_key);
+            TEMPORARY_RETURN_IGNORED SilabsConfig::ClearConfigValue(old_key);
         }
     }
 }
@@ -130,7 +130,7 @@ void MigrationManager::MigrateUint32(uint32_t old_key, uint32_t new_key)
         if (CHIP_NO_ERROR == SilabsConfig::WriteConfigValue(new_key, value))
         {
             // Free memory of old key location
-            SilabsConfig::ClearConfigValue(old_key);
+            TEMPORARY_RETURN_IGNORED SilabsConfig::ClearConfigValue(old_key);
         }
     }
 }
@@ -217,19 +217,19 @@ void MigrateS3Certificates()
         MutableByteSpan paiBufferSpan(paiBuffer.Get(), paiSize);
         MutableByteSpan cdBufferSpan(cdBuffer.Get(), cdSize);
 
-        provision.Init();
+        ReturnOnFailure(provision.Init());
         // Read all certificates at the current location
         VerifyOrReturn(provision.GetStorage().GetDeviceAttestationCert(dacBufferSpan) == CHIP_NO_ERROR);
         VerifyOrReturn(provision.GetStorage().GetProductAttestationIntermediateCert(paiBufferSpan) == CHIP_NO_ERROR);
         VerifyOrReturn(provision.GetStorage().GetCertificationDeclaration(cdBufferSpan) == CHIP_NO_ERROR);
 
-        provision.GetStorage().Initialize(0, 0);
-        provision.GetStorage().SetCredentialsBaseAddress(secondPageAddr);
+        ReturnOnFailure(provision.GetStorage().Initialize(0, 0));
+        ReturnOnFailure(provision.GetStorage().SetCredentialsBaseAddress(secondPageAddr));
         // Write all certs back to the second page
         // The first set/write, after an Initialize, erases the new page. We don't need to do it explicitly.
-        provision.GetStorage().SetDeviceAttestationCert(dacBufferSpan);
-        provision.GetStorage().SetProductAttestationIntermediateCert(paiBufferSpan);
-        provision.GetStorage().SetCertificationDeclaration(cdBufferSpan);
+        ReturnOnFailure(provision.GetStorage().SetDeviceAttestationCert(dacBufferSpan));
+        ReturnOnFailure(provision.GetStorage().SetProductAttestationIntermediateCert(paiBufferSpan));
+        ReturnOnFailure(provision.GetStorage().SetCertificationDeclaration(cdBufferSpan));
     }
 #endif //_SILICON_LABS_32B_SERIES_3
 }

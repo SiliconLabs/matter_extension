@@ -20,6 +20,7 @@
 #include <lib/support/logging/CHIPLogging.h>
 #include <platform/CHIPDeviceLayer.h>
 #include <platform/internal/CHIPDeviceLayerInternal.h>
+#include <cinttypes>
 
 namespace chip {
 namespace DeviceLayer {
@@ -153,8 +154,8 @@ CHIP_ERROR BLEChannelImpl::ConfigureAdvertising(const AdvConfigStruct & config)
 CHIP_ERROR BLEChannelImpl::PrintAdvertisingInfo()
 {
     ChipLogProgress(DeviceLayer, "Advertising Info:");
-    ChipLogProgress(DeviceLayer, "  Interval Min: %ld", mAdvIntervalMin);
-    ChipLogProgress(DeviceLayer, "  Interval Max: %ld", mAdvIntervalMax);
+    ChipLogProgress(DeviceLayer, "  Interval Min: %" PRIu32, mAdvIntervalMin);
+    ChipLogProgress(DeviceLayer, "  Interval Max: %" PRIu32, mAdvIntervalMax);
     ChipLogProgress(DeviceLayer, "  Duration: %d", mAdvDuration);
     ChipLogProgress(DeviceLayer, "  Max Events: %d", mAdvMaxEvents);
     ChipLogProgress(DeviceLayer, "  Connectable Mode: %d", mAdvConnectableMode);
@@ -172,7 +173,7 @@ CHIP_ERROR BLEChannelImpl::StartAdvertising(void)
     // If already advertising, stop it, before changing values
     if (mFlags.Has(Flags::kAdvertising))
     {
-        sl_bt_advertiser_stop(mAdvHandle);
+        RETURN_SAFELY_IGNORED sl_bt_advertiser_stop(mAdvHandle);
     }
 
     sl_status_t ret;

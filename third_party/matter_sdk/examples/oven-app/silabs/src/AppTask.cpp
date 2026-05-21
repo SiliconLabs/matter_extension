@@ -78,7 +78,7 @@ CHIP_ERROR AppTask::AppInit()
     chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(AppTask::ButtonEventHandler);
 
 #ifdef DISPLAY_ENABLED
-    GetLCD().Init((uint8_t *) "Oven-App");
+    SuccessOrLog(GetLCD().Init((uint8_t *) "Oven-App"), AppServer, "Failed to initialize LCD");
     GetLCD().SetCustomUI(OvenUI::DrawUI);
 #endif
     DeviceLayer::PlatformMgr().LockChipStack();
@@ -165,7 +165,8 @@ void AppTask::OvenButtonHandler(AppEvent * aEvent)
         bool newOnOffState = !OvenManager::GetInstance().GetCookTopState();
 
         // Schedule work to set the OnOff attribute.
-        chip::DeviceLayer::PlatformMgr().ScheduleWork(UpdateClusterState, static_cast<intptr_t>(newOnOffState));
+        SuccessOrLog(chip::DeviceLayer::PlatformMgr().ScheduleWork(UpdateClusterState, static_cast<intptr_t>(newOnOffState)),
+                     AppServer, "Failed to schedule work UpdateClusterState");
     }
 }
 

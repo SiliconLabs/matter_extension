@@ -23,5 +23,18 @@
 
 struct AppEvent : public BaseAppEvent
 {
-    // Implemented for compatibility but doesn't define any app specific events
+    enum AppEventTypes
+    {
+        kEventType_FanControl = BaseAppEvent::kEventType_Max + 1,
+        kEventType_Install,
+    };
+
+    union
+    {
+        struct
+        {
+            uint8_t Action;
+            int32_t Actor;
+        } FanEvent;
+    };
 };

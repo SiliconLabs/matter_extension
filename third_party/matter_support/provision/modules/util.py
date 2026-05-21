@@ -1,5 +1,6 @@
 import json
 import os
+import shlex
 import subprocess
 import sys
 import traceback
@@ -60,7 +61,7 @@ class Paths:
     @staticmethod
     def quote(path):
         s = path and path.strip().strip('"') or ''
-        return '"{}"'.format(os.path.normpath(s))
+        return os.path.normpath(s)
 
 
 class File:
@@ -121,14 +122,13 @@ class YamlFile(File):
 def execute(args, output=False, check=True, env=None, retry=1, dir=None):
     sys.stdout.reconfigure(encoding='utf-8')
     args = [str(x) for x in args]
-    cmd = ' '.join(args)
-    print("{}> {}\n".format(MARGIN, cmd))
+    print("{}> {}\n".format(MARGIN, shlex.join(args)))
     if env is None:
         env = os.environ.copy()
 
     if output:
         try:
-            return subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT, env=env, cwd=dir)
+            return subprocess.check_output(args, shell=False, stderr=subprocess.STDOUT, env=env, cwd=dir)
         except subprocess.CalledProcessError as err:
             print("{}Command output:\n{}".format(MARGIN, err.output.decode() if err.output else "No output"))
             print("{}Return code: {}".format(MARGIN, err.returncode))
@@ -145,7 +145,7 @@ def execute(args, output=False, check=True, env=None, retry=1, dir=None):
             retry = retry - 1
             try:
                 # Capture both stdout and stderr for better debugging
-                result = subprocess.run(cmd, shell=True, env=env, cwd=dir,
+                result = subprocess.run(args, shell=False, env=env, cwd=dir,
                                         capture_output=True, text=True)
                 if result.returncode == 0:
                     return 0

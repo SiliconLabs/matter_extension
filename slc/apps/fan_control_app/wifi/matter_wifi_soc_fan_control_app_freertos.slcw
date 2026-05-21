@@ -1,0 +1,9 @@
+workspace_name: matter_wifi_soc_fan_control_app_freertos
+label: Matter WiFi - SoC Fan Control FreeRTOS
+quality: production
+package: matter
+description: Demonstrates a sample implementation of a Matter over Wi-Fi fan control app
+project:
+  - path: ./matter_wifi_soc_fan_control_app_freertos.slcp
+    id: application
+    output: fan_control_app_siwx

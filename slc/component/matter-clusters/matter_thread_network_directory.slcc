@@ -12,13 +12,18 @@ metadata:
 provides:
   - name: matter_thread_network_directory
 source:
+  - path: third_party/matter_sdk/src/app/clusters/thread-network-directory-server/CodegenIntegration.cpp
+    unless: [matter_code_driven_dm]
   - path: third_party/matter_sdk/src/app/clusters/thread-network-directory-server/DefaultThreadNetworkDirectoryStorage.cpp
-  - path: third_party/matter_sdk/src/app/clusters/thread-network-directory-server/thread-network-directory-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/thread-network-directory-server/ThreadNetworkDirectoryCluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/thread-network-directory-server
     file_list:
+      - path: CodegenIntegration.h
+        unless: [matter_code_driven_dm]
       - path: DefaultThreadNetworkDirectoryStorage.h
       - path: thread-network-directory-server.h
+      - path: ThreadNetworkDirectoryCluster.h
       - path: ThreadNetworkDirectoryStorage.h
 template_contribution:
   - name: component_catalog

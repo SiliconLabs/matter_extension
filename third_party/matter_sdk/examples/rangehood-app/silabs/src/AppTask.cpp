@@ -78,7 +78,7 @@ CHIP_ERROR AppTask::AppInit()
     chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(AppTask::ButtonEventHandler);
 
 #ifdef DISPLAY_ENABLED
-    GetLCD().Init((uint8_t *) "Rangehood-App");
+    SuccessOrLog(GetLCD().Init((uint8_t *) "Rangehood-App"), AppServer, "Failed to initialize LCD");
     GetLCD().SetCustomUI(RangeHoodUI::DrawUI);
 #endif // DISPLAY_ENABLED
 
@@ -226,7 +226,8 @@ void AppTask::FanControlButtonHandler(AppEvent * aEvent)
         static_cast<uint8_t>(::chip::DeviceLayer::Silabs::SilabsPlatform::ButtonAction::ButtonPressed))
     {
         // Schedule fan mode toggle on CHIP stack thread to avoid direct access causing locking errors.
-        chip::DeviceLayer::PlatformMgr().ScheduleWork([](intptr_t) { RangeHoodMgr().GetExtractorHoodEndpoint().ToggleFanMode(); },
-                                                      0);
+        SuccessOrLog(chip::DeviceLayer::PlatformMgr().ScheduleWork(
+                         [](intptr_t) { RETURN_SAFELY_IGNORED RangeHoodMgr().GetExtractorHoodEndpoint().ToggleFanMode(); }, 0),
+                     AppServer, "Failed to schedule work to toggle fan mode");
     }
 }

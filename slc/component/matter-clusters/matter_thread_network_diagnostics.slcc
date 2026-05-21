@@ -12,12 +12,15 @@ metadata:
 provides:
   - name: matter_thread_network_diagnostics
 source:
-  - path: third_party/matter_sdk/src/app/clusters/thread-network-diagnostics-server/thread-network-diagnostics-provider.cpp
-  - path: third_party/matter_sdk/src/app/clusters/thread-network-diagnostics-server/thread-network-diagnostics-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/thread-network-diagnostics-server/CodegenIntegration.cpp
+    unless: [matter_code_driven_dm]
+  - path: third_party/matter_sdk/src/app/clusters/thread-network-diagnostics-server/ThreadNetworkDiagnosticsCluster.cpp
+  - path: third_party/matter_sdk/src/app/clusters/thread-network-diagnostics-server/ThreadNetworkDiagnosticsProvider.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/thread-network-diagnostics-server
     file_list:
-      - path: thread-network-diagnostics-provider.h
+      - path: ThreadNetworkDiagnosticsCluster.h
+      - path: ThreadNetworkDiagnosticsProvider.h
 template_contribution:
   - name: component_catalog
     value: matter_thread_network_diagnostics

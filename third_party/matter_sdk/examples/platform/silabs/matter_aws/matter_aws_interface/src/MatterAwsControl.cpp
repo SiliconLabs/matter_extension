@@ -291,7 +291,8 @@ void SubscribeMQTT(intptr_t context)
 
 void subscribeCB(void)
 {
-    chip::DeviceLayer::PlatformMgr().ScheduleWork(SubscribeMQTT, reinterpret_cast<intptr_t>(nullptr));
+    CHIP_ERROR err = chip::DeviceLayer::PlatformMgr().ScheduleWork(SubscribeMQTT, reinterpret_cast<intptr_t>(nullptr));
+    VerifyOrReturn(CHIP_NO_ERROR == err, ChipLogError(AppServer, "[MATTER_AWS] failed to schedule work: %s", err.AsString()));
 }
 
 #ifdef ZCL_USING_THERMOSTAT_CLUSTER_SERVER

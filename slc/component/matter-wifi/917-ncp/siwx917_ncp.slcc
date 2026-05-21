@@ -2,7 +2,7 @@ id: siwx917_ncp
 package: matter
 label: SiWx917 NCP Extension
 description: >
-  Adds support for the HAL and WiFi Driver layer for SiWx917 NCP devices
+  Adds support for the HAL, BLE and WiFi Driver layer for SiWx917 NCP devices
 category: Matter-WiFi|Platform|Drivers
 quality: production
 metadata:
@@ -37,6 +37,7 @@ include:
   file_list:
   - path: spi_multiplex.h
 - path: third_party/matter_sdk/src/platform/silabs/SiWx/ble
+  unless: [matter_ble]
   file_list:
   - path: ble_config.h
   - path: sl_si91x_ble_init.h
@@ -55,7 +56,11 @@ source:
 - path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp
 - path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx/ncp/sl_si91x_ncp_utility.c
 - path: third_party/matter_sdk/src/platform/silabs/SiWx/ble/BLEManagerImpl.cpp
+  unless: [matter_ble]
 - path: third_party/matter_sdk/src/platform/silabs/SiWx/ble/sl_si91x_ble_init.cpp
+  unless: [matter_ble]
+- path: third_party/matter_sdk/src/platform/silabs/efr32/BLEManagerImpl.cpp
+  condition: [matter_ble]
 
 define:
 - name: SL_MATTER_SIWX_WIFI_ENABLE

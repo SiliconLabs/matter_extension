@@ -12,11 +12,17 @@ metadata:
 provides:
   - name: matter_temperature_control
 source:
-  - path: third_party/matter_sdk/src/app/clusters/temperature-control-server/temperature-control-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/temperature-control-server/CodegenIntegration.cpp
+    unless: [matter_code_driven_dm]
+  - path: third_party/matter_sdk/src/app/clusters/temperature-control-server/TemperatureControlCluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/temperature-control-server
     file_list:
+      - path: CodegenIntegration.h
+        unless: [matter_code_driven_dm]
       - path: supported-temperature-levels-manager.h
+      - path: temperature-control-server.h
+      - path: TemperatureControlCluster.h
 template_contribution:
   - name: component_catalog
     value: matter_temperature_control

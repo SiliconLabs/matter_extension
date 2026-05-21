@@ -61,8 +61,8 @@ namespace Provision {
 namespace {
 // Miss-aligned certificates is a common error, and printing the first few bytes is
 // useful to verify proper alignment. Eight bytes is enough for this purpose.
-constexpr size_t kDebugLength = 8;
-size_t sCredentialsOffset     = 0;
+[[maybe_unused]] constexpr size_t kDebugLength = 8;
+size_t sCredentialsOffset                      = 0;
 
 CHIP_ERROR ErasePage(uint32_t addr)
 {
@@ -164,7 +164,7 @@ CHIP_ERROR Storage::Initialize(uint32_t flash_addr, uint32_t flash_size)
 #ifndef SLI_SI91X_MCU_INTERFACE
         base_addr = (flash_addr + flash_size - FLASH_PAGE_SIZE);
 #endif // SLI_SI91X_MCU_INTERFACE
-        chip::DeviceLayer::Silabs::GetPlatform().FlashInit();
+        TEMPORARY_RETURN_IGNORED chip::DeviceLayer::Silabs::GetPlatform().FlashInit();
 #ifdef SL_PROVISION_GENERATOR
         setNvm3End(base_addr);
 #endif

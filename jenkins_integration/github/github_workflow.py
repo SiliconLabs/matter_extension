@@ -12,6 +12,7 @@ import requests
 import time
 import os
 import sys
+from urllib.parse import quote
 
 # Add the workspace root to Python path to enable importing internal modules
 workspace_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -68,18 +69,22 @@ def get_workflow_info(branch_name):
     """
     if branch_name.startswith("PR"):
         head_branch = _get_pr_latest_sha(branch_name)
+        pr_base = f"{config.actions_runs_base_url}?event=pull_request&per_page=100"
         if head_branch:
-            pr_url = f"{config.actions_runs_url_pr}&branch={head_branch}"
+            pr_url = f"{pr_base}&branch={quote(head_branch, safe='')}"
         else:
-            pr_url = config.actions_runs_url_pr
+            pr_url = pr_base
         print(f"Fetching workflow runs from actions/runs event Pull Request URL: {pr_url}")
         response = _make_github_api_request(pr_url)
         workflow_runs = response.json().get('workflow_runs', [])
         pr_number = branch_name.split('-')[1]
         return _find_pr_workflow(workflow_runs, pr_number)
     else:
-        print(f"Fetching workflow runs from actions/runs URL: {config.actions_runs_url}")
-        response = _make_github_api_request(config.actions_runs_url)
+        branch_runs_url = (
+            f"{config.actions_runs_base_url}?per_page=100&branch={quote(branch_name, safe='')}"
+        )
+        print(f"Fetching workflow runs for branch from URL: {branch_runs_url}")
+        response = _make_github_api_request(branch_runs_url)
         workflow_runs = response.json().get('workflow_runs', [])
         return _find_branch_workflow(workflow_runs, branch_name)
 
@@ -390,7 +395,6 @@ def _handle_test_timeout():
     """
     print("Waiting for test results timed out for the latest workflow run. "
           "Jenkins job running on completed workflow. Bypass sending test results to GitHub.")
-
 
 def _is_artifact_job_complete(check_run):
     """

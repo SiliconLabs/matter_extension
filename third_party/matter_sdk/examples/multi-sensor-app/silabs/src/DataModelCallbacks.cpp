@@ -30,9 +30,10 @@
 #include <lib/support/logging/CHIPLogging.h>
 
 using namespace ::chip;
+using namespace ::chip::app;
 using namespace ::chip::app::Clusters;
 
-void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
+void MatterPostAttributeChangeCallback(const ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
                                        uint8_t * value)
 {
     ClusterId clusterId     = attributePath.mClusterId;
@@ -41,7 +42,7 @@ void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & 
 
     switch (clusterId)
     {
-    case Identify::Id:
+    case Clusters::Identify::Id:
         ChipLogProgress(Zcl, "Identify attribute ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u",
                         ChipLogValueMEI(attributeId), type, *value, size);
         break;

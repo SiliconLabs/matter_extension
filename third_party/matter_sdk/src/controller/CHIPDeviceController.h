@@ -71,12 +71,22 @@
 #include <platform/CHIPDeviceLayer.h>
 #endif
 
+#if CHIP_SUPPORT_THREAD_MESHCOP
+#include <controller/ThreadMeshcopCommissionProxy.h>
+#endif
+
 #if CONFIG_NETWORK_LAYER_BLE
 #include <ble/Ble.h>
 #endif
 #include <controller/DeviceDiscoveryDelegate.h>
 
 namespace chip {
+
+namespace Testing {
+
+class DeviceCommissionerTestAccess;
+
+} // namespace Testing
 
 namespace Controller {
 
@@ -476,6 +486,8 @@ class DLL_EXPORT DeviceCommissioner : public DeviceController,
 #endif
                                       public SessionEstablishmentDelegate
 {
+    friend class chip::Testing::DeviceCommissionerTestAccess;
+
 public:
     DeviceCommissioner();
     ~DeviceCommissioner() override {}
@@ -523,7 +535,8 @@ public:
                           Optional<Dnssd::CommonResolutionData> resolutionData = NullOptional);
     CHIP_ERROR PairDevice(NodeId remoteDeviceId, const char * setUpCode, const CommissioningParameters & CommissioningParameters,
                           DiscoveryType discoveryType                          = DiscoveryType::kAll,
-                          Optional<Dnssd::CommonResolutionData> resolutionData = NullOptional);
+                          Optional<Dnssd::CommonResolutionData> resolutionData = NullOptional,
+                          Optional<SetUpCodePairer::ThreadMeshcopCommissionParameters> meshcopCommissionParams = NullOptional);
 
     /**
      * @brief
@@ -588,9 +601,10 @@ public:
      * @param[in] discoveryType         The network discovery type, defaults to DiscoveryType::kAll.
      * @param[in] resolutionData        Optional resolution data previously discovered on the network for the target device.
      */
-    CHIP_ERROR EstablishPASEConnection(NodeId remoteDeviceId, const char * setUpCode,
-                                       DiscoveryType discoveryType                          = DiscoveryType::kAll,
-                                       Optional<Dnssd::CommonResolutionData> resolutionData = NullOptional);
+    CHIP_ERROR
+    EstablishPASEConnection(NodeId remoteDeviceId, const char * setUpCode, DiscoveryType discoveryType = DiscoveryType::kAll,
+                            Optional<Dnssd::CommonResolutionData> resolutionData                                 = NullOptional,
+                            Optional<SetUpCodePairer::ThreadMeshcopCommissionParameters> meshcopCommissionParams = NullOptional);
 
     /**
      * @brief
@@ -784,7 +798,7 @@ public:
      * @param instanceName DNS-SD instance name for the client requesting commissioning
      *
      */
-    void FindCommissionableNode(char * instanceName) override;
+    void FindCommissionableNode(const char * instanceName) override;
 
     /**
      * @brief
@@ -862,7 +876,7 @@ protected:
 
     /* This function start the JCM verification steps
      */
-    virtual CHIP_ERROR StartJCMTrustVerification() { return CHIP_ERROR_NOT_IMPLEMENTED; }
+    virtual CHIP_ERROR StartJCMTrustVerification(DeviceProxy * proxy) { return CHIP_ERROR_NOT_IMPLEMENTED; }
 
 #if CHIP_CONFIG_ENABLE_READ_CLIENT
     virtual CHIP_ERROR ParseExtraCommissioningInfo(ReadCommissioningInfo & info, const CommissioningParameters & params)
@@ -885,6 +899,9 @@ private:
     Optional<System::Clock::Timeout> mCommissioningStepTimeout; // Note: For multi-interaction steps this is per interaction
     CommissioningStage mCommissioningStage = CommissioningStage::kSecurePairing;
     uint8_t mReadCommissioningInfoProgress = 0; // see ContinueReadingCommissioningInfo()
+
+    // Stores the PASE session address to use as fallback during operational discovery
+    Optional<AddressResolve::ResolveResult> mFallbackOperationalResolveResult;
 
     bool mRunCommissioningAfterConnection = false;
     Internal::InvokeCancelFn mInvokeCancelFn;
@@ -1133,6 +1150,12 @@ private:
     void ExtendFailsafeBeforeNetworkEnable(DeviceProxy * device, CommissioningParameters & params, CommissioningStage step);
 
     bool IsAttestationInformationMissing(const CommissioningParameters & params);
+
+#if CHIP_SUPPORT_THREAD_MESHCOP
+    CHIP_ERROR PairThreadMeshcop(RendezvousParameters & rendezvousParams, CommissioningParameters & commissioningParams);
+
+    ThreadMeshcopCommissionProxy mThreadMeshcopCommissionProxy;
+#endif
 
     chip::Callback::Callback<OnDeviceConnected> mOnDeviceConnectedCallback;
     chip::Callback::Callback<OnDeviceConnectionFailure> mOnDeviceConnectionFailureCallback;

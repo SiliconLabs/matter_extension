@@ -3,6 +3,7 @@ package: matter
 description: >
   Enables the Silicon Labs Matter + AWS feature for Matter devices using Wi-Fi, allowing a device to connect directly to proprietary cloud services such as AWS.
   This component integrates MQTT and TLS support with the Matter Wi-Fi platform to enable secure cloud connectivity alongside standard Matter functionality.
+  Install exactly one transport: matter_aws_transport_lwip (SoC Wi-Fi) or matter_aws_transport_nwp (917 NCP / dual-stack NWP offload).
 label: AWS for Matter WiFi
 category: Matter-WiFi|Features
 quality: production
@@ -14,6 +15,7 @@ provides:
   - name: matter_aws
 
 requires:
+  - name: matter_aws_transport
   - name: mbedtls_sha1
   - name: mbedtls_tls
   - name: mbedtls_rsa
@@ -24,13 +26,6 @@ requires:
   - name: mbedtls_ecc_secp256r1
   - name: mbedtls_gcm
   - name: mbedtls_debug
-
-config_file:
-  - path: slc/config/matter_aws/sl_matter_wifi_config.h
-    override:
-      component: matter_wifi
-      file_id: matter_wifi_config
-      vendor: silabs
 
 define:
   - name: SL_MATTER_ENABLE_AWS
@@ -59,16 +54,7 @@ include:
       - path: mqtt_opts.h
   - path: third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/include
     file_list:
-      - path: altcp.h
-      - path: altcp_opt.h
-      - path: altcp_priv.h
-      - path: altcp_tcp.h
-      - path: altcp_tls.h
-      - path: altcp_tls_mbedtls_mem.h
-      - path: altcp_tls_mbedtls_opts.h
-      - path: altcp_tls_mbedtls_structs.h
       - path: MQTT_transport.h
-      - path: tcpbase.h
 
 template_contribution:
   - name: mbedtls_ssl_content_len_in_requirement
@@ -80,12 +66,6 @@ source:
   - path: third_party/matter_sdk/examples/platform/silabs/matter_aws/matter_aws_interface/src/MatterAws.cpp
   - path: third_party/matter_sdk/examples/platform/silabs/matter_aws/matter_aws_interface/src/MatterAwsControl.cpp
   - path: third_party/matter_sdk/examples/platform/silabs/matter_aws/matter_aws_interface/src/MatterAwsNvmCert.cpp
-  - path: third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/src/MQTT_transport.c
-  - path: third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp.c
-  - path: third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_alloc.c
-  - path: third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_tcp.c
-  - path: third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls.c
-  - path: third_party/matter_sdk/src/platform/silabs/mqtt/mqtt_transport_interface/src/altcp_tls_mbedtls_mem.c
   - path: third_party/matter_sdk/src/platform/silabs/mqtt/stack/mqtt.c
 
 toolchain_settings:

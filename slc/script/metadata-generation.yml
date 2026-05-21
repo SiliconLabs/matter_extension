@@ -1,0 +1,65 @@
+# List any variants built in CI that should have an exposed demo
+enabled_variants:
+  cmp-concurrent:
+    demo_suffix: "_concurrent"         
+    label_suffix: " Concurrent"         
+    blurb_suffix: " Concurrent"         
+    description_suffix: " Concurrent"   
+
+  sequential:
+    demo_suffix: "_sequential"
+    label_suffix: " Sequential"
+    blurb_suffix: " Sequential"
+    description_suffix: " Sequential"
+
+  brd4357a:
+    demo_suffix: "_brd4357a"
+    label_suffix: " brd4357a"
+    blurb_suffix: ""
+    description_suffix: ""
+
+  multipan:
+    demo_suffix: "_multipan"
+    label_suffix: " Multipan"
+    blurb_suffix: ""
+    description_suffix: ""
+
+# Apps that should appear in demos xml but not in templates xml
+templates_exclude:
+  - matter_thread_soc_zigbee_light_series_2_freertos
+  - matter_thread_soc_lighting_app_trustzone_ns_freertos
+  - matter_thread_soc_lighting_app_trustzone_s_freertos
+  - matter_thread_soc_code_size_sensor_freertos
+
+# Apps that should appear in templates xml but not in demos xml (as they are not built in ci)
+demos_exclude:
+  - matter_thread_soc_lighting_app_trustzone_series_3_freertos
+
+# Hard-coded board lists for templates for any corner cases
+templates_board_overrides:
+  matter_wifi_917_ncp_lock_app_freertos:
+    boards: [brd4186c, brd4187c]
+  matter_wifi_917_ncp_thermostat_freertos:
+    boards: [brd4186c, brd4187c]
+  matter_wifi_917_ncp_fan_control_app_freertos:
+    boards: [brd4186c, brd4187c]
+  matter_wifi_917_ncp_window_app_freertos:
+    boards: [brd4186c, brd4187c]
+  
+  matter_thread_soc_zigbee_light_series_2_internal_freertos:
+    boards: [brd2608a, brd4116a, brd4117a, brd4118a, brd4120a, brd4121a, brd4187c]
+
+# Apps where demo boards should be derived from CI json files instead of hwfilter
+# Handles special cases where CI only builds subset of boards that support the app based on hwfilter tags
+#
+# Format: workspace_name: ci_source
+#   - For regular apps: ci_source is the app name in silabs-builds-*.json
+#   - For ncp apps: ci_source is "_ncp_917" (reads from silabs-builds-917-ncp.json)
+#   - For json files handling special cases (eg ncp and trustzone): ci_source is end of json filename (eg "_ncp_917" for silabs-builds-917-ncp.json)
+use_ci_boards_for_demos:
+  matter_thread_soc_zigbee_light_series_2_internal_freertos: zigbee_light
+  matter_wifi_917_ncp_lock_app_freertos: _ncp_917
+  matter_wifi_917_ncp_thermostat_freertos: _ncp_917
+  matter_wifi_917_ncp_fan_control_app_freertos: _ncp_917
+  matter_wifi_917_ncp_window_app_freertos: _ncp_917
+  matter_thread_soc_lighting_app_trustzone_series_2_freertos: _trustzone

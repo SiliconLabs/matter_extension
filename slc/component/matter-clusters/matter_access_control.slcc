@@ -15,6 +15,7 @@ source:
   - path: third_party/matter_sdk/src/app/clusters/access-control-server/access-control-cluster.cpp
   - path: third_party/matter_sdk/src/app/clusters/access-control-server/ArlEncoder.cpp
   - path: third_party/matter_sdk/src/app/clusters/access-control-server/CodegenIntegration.cpp
+    unless: [matter_code_driven_dm]
 include:
   - path: third_party/matter_sdk/src/app/clusters/access-control-server
     file_list:

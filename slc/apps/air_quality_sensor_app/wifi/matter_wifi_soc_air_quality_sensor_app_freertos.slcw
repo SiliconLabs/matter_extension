@@ -1,0 +1,9 @@
+workspace_name: matter_wifi_soc_air_quality_sensor_app_freertos
+label: Matter WiFi - SoC Air Quality Sensor FreeRTOS
+quality: production
+package: matter
+description: Demonstrates a sample implementation of a Matter over Wi-Fi air quality sensor app
+project:
+  - path: ./matter_wifi_soc_air_quality_sensor_app_freertos.slcp
+    id: application
+    output: air_quality_sensor_app_siwx

@@ -36,6 +36,7 @@ include:
       - path: TransportMgrBase.h
       - path: SecureSession.h
       - path: SessionManager.h
+      - path: MessageStats.h
 label: libtransportlayer
 package: matter
 provides:

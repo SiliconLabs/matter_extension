@@ -48,7 +48,7 @@ namespace {
 using namespace chip;
 using namespace chip::Inet;
 using namespace chip::Transport;
-using namespace chip::Test;
+using namespace chip::Testing;
 using namespace chip::Credentials;
 
 using GroupInfo      = GroupDataProvider::GroupInfo;
@@ -56,7 +56,7 @@ using GroupKey       = GroupDataProvider::GroupKey;
 using KeySet         = GroupDataProvider::KeySet;
 using SecurityPolicy = GroupDataProvider::SecurityPolicy;
 
-using TestContext = chip::Test::LoopbackTransportManager;
+using TestContext = LoopbackTransportManager;
 
 struct MessageTestEntry
 {
@@ -357,6 +357,36 @@ struct MessageTestEntry theMessageTestVector[] = {
 
         .nonce        = "\x01\x79\x56\x34\x12\x01\x00\x00\x00\x00\x00\x00\x00",
         .privacyNonce = "\xdb\x7d\x40\x82\x17\xb3\xc0\xc9\x21\xa2\xfc\xa4\xe1",
+
+        .sessionId    = 0xdb7d, // 56189
+        .peerNodeId   = 0x0000000000000000ULL,
+        .groupId      = 2,
+        .sourceNodeId = 0x0000000000000002ULL,
+
+        .expectedMessageCount = 0,
+    },
+    {
+        // Buffer is truncated to exactly 16 bytes (the MIC size), so it passes
+        // the MIC extraction check but is far too short to hold the privacy header.
+        //
+        // msgFlags  = 0x06: version=0, kSourceNodeIdPresent (0x04), kDestinationGroupIdPresent (0x02)
+        // sessionId = 0xdb7d (matches the group key set up by the epoch key below)
+        // secFlags  = 0x81: kPrivacyFlag (0x80) | kGroupSession (0x01)
+        //
+        // PrivacyHeaderLength() = 4 (min) + 8 (source NodeId) + 2 (dest GroupId) = 14
+        // Required buffer for privacy region: offset 4 + length 14 = 18 bytes > 16 bytes → OOB
+        .name     = "private group message (privacy header exceeds buffer length)",
+        .peerAddr = "::1",
+
+        .payload = "",
+        .plain   = "",
+        .privacy = "\x06\x7d\xdb\x81\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00",
+
+        .payloadLength = 0,
+        .plainLength   = 0,
+        .privacyLength = 16,
+
+        .epochKey = "\xb0\xb1\xb2\xb3\xb4\xb5\xb6\xb7\xb8\xb9\xba\xbb\xbc\xbd\xbe\xbf",
 
         .sessionId    = 0xdb7d, // 56189
         .peerNodeId   = 0x0000000000000000ULL,

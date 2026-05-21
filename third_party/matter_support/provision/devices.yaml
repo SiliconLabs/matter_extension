@@ -192,7 +192,7 @@ simg301l:
           rtt_addr: 0x2000822c
         - version: "2.8"
           file: "sixg3l_csr_oids.s37"
-          rtt_addr: 0x20008d10
+          rtt_addr: 0x20008518
 
 # w implies 3mb part.
 simg301w:
@@ -217,7 +217,7 @@ simg301w:
           rtt_addr: 0x2000822c
         - version: "2.8"
           file: "sixg3w_csr_oids.s37"
-          rtt_addr: 0x20008d10
+          rtt_addr: 0x20008518
 
 # k implies 2mb part.
 simg301k:
@@ -236,7 +236,7 @@ simg301k:
           rtt_addr: 0x200088ac
         - version: "2.8"
           file: "sixg3k_csr_oids.s37"
-          rtt_addr: 0x20008d10 # RTT control block in the SIMG301M114KIH
+          rtt_addr: 0x20008518 # RTT control block in the SIMG301M114KIH
 
 # x is currently used for 8mb parts, however there are x parts of every size so this is temporary (x means external flash).
 simg301x:
@@ -255,4 +255,4 @@ simg301x:
           rtt_addr: 0x200088ac
         - version: "2.8"
           file: "sixg3x8m_csr_oids.s37"
-          rtt_addr: 0x20008d10 # RTT control block in the SIMG301M114X
+          rtt_addr: 0x20008518 # RTT control block in the SIMG301M114X

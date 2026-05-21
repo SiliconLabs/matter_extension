@@ -84,17 +84,17 @@ TEST_F(TestSilabsTracing, TestTimeTrackerMethods)
     gMockClock.SetMonotonic(0_ms64);
     size_t traceCount = 0;
 
-    SilabsTracer::Instance().Init();
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().Init();
 
     traceCount = SilabsTracer::Instance().GetTimeTracesCount();
     EXPECT_EQ(traceCount, 0u);
 
     // Start tracking time for a specific event
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSpake2p);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSpake2p);
     // Simulate some delay or work
     gMockClock.AdvanceMonotonic(100_ms64);
     // Stop tracking time for the event
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSpake2p);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSpake2p);
 
     // Retrieve the tracked time
     auto timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kSpake2p);
@@ -115,9 +115,9 @@ TEST_F(TestSilabsTracing, TestTimeTrackerMethods)
     EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Repeat and verify the count and moving average, high and low got updated properly
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSpake2p);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSpake2p);
     gMockClock.AdvanceMonotonic(150_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSpake2p);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSpake2p);
 
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kSpake2p);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
@@ -131,9 +131,9 @@ TEST_F(TestSilabsTracing, TestTimeTrackerMethods)
     EXPECT_EQ(metric.mCountAboveAvg, uint32_t(1));
 
     // Repeat for another event to verify multiple tracking works
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kPake1);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kPake1);
     gMockClock.AdvanceMonotonic(50_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kPake1);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kPake1);
 
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kPake1);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
@@ -149,9 +149,9 @@ TEST_F(TestSilabsTracing, TestTimeTrackerMethods)
     EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Repeat Again for first event to verify multiple tracking works
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSpake2p);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSpake2p);
     gMockClock.AdvanceMonotonic(200_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSpake2p);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSpake2p);
 
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kSpake2p);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
@@ -165,11 +165,11 @@ TEST_F(TestSilabsTracing, TestTimeTrackerMethods)
     EXPECT_EQ(metric.mCountAboveAvg, uint32_t(2));
 
     // Verify a double start to simulate a failure
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSpake2p);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSpake2p);
     gMockClock.AdvanceMonotonic(150_ms64);
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSpake2p);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSpake2p);
     gMockClock.AdvanceMonotonic(110_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSpake2p);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSpake2p);
 
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kSpake2p);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
@@ -190,24 +190,24 @@ TEST_F(TestSilabsTracing, TestTimeTrackerMethods)
 TEST_F(TestSilabsTracing, TestBootupSequence)
 {
     gMockClock.SetMonotonic(0_ms64);
-    SilabsTracer::Instance().Init();
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().Init();
 
     size_t traceCount = 0;
     traceCount        = SilabsTracer::Instance().GetTimeTracesCount();
     EXPECT_EQ(traceCount, 0u);
 
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kBootup);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kBootup);
     // Simulate Silabs Init
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSilabsInit);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSilabsInit);
     gMockClock.AdvanceMonotonic(200_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSilabsInit);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSilabsInit);
 
     // Simulate Matter Init
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kMatterInit);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kMatterInit);
     gMockClock.AdvanceMonotonic(300_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kMatterInit);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kMatterInit);
 
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kBootup);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kBootup);
 
     // Verify the time tracker values for each operation
     auto timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kBootup);
@@ -256,24 +256,24 @@ TEST_F(TestSilabsTracing, TestBootupSequence)
     // traceCount = SilabsTracer::Instance().GetTimeTracesCount();
     // EXPECT_EQ(traceCount, 0u);
 
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kBootup);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kBootup);
 
     // Simulate Silabs Init
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSilabsInit);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSilabsInit);
     gMockClock.AdvanceMonotonic(150_ms64);
     gMockClock.SetMonotonic(0_ms64); // Resetting to 0 since reboot should reset the monotonic clock
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kBootup);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kBootup);
     // Simulate Silabs Init
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSilabsInit);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSilabsInit);
     gMockClock.AdvanceMonotonic(350_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSilabsInit);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSilabsInit);
 
     // Simulate Matter Init
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kMatterInit);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kMatterInit);
     gMockClock.AdvanceMonotonic(250_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kMatterInit);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kMatterInit);
 
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kBootup);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kBootup);
 
     // Verify the time tracker values for each operation after reboot
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kBootup);
@@ -317,30 +317,30 @@ TEST_F(TestSilabsTracing, TestBootupSequence)
 TEST_F(TestSilabsTracing, TestCommissioning)
 {
     gMockClock.SetMonotonic(0_ms64);
-    SilabsTracer::Instance().Init();
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().Init();
 
     size_t traceCount = 0;
     traceCount        = SilabsTracer::Instance().GetTimeTracesCount();
     EXPECT_EQ(traceCount, 0u);
 
     // Simulate Spake2p steps
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSpake2p);
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kPake1);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSpake2p);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kPake1);
     gMockClock.AdvanceMonotonic(50_ms64);
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kPake1);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kPake1);
     gMockClock.AdvanceMonotonic(100_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kPake1);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kPake1);
 
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kPake2);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kPake2);
     gMockClock.AdvanceMonotonic(150_ms64);
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kPake2);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kPake2);
     gMockClock.AdvanceMonotonic(200_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kPake2);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kPake2);
 
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kPake3);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kPake3);
     gMockClock.AdvanceMonotonic(200_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kPake3);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSpake2p);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kPake3);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSpake2p);
 
     // Verify the time tracker values for Spake2p
     auto timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kSpake2p);
@@ -394,9 +394,9 @@ TEST_F(TestSilabsTracing, TestCommissioning)
     EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Simulate Operational Credentials steps
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kOperationalCredentials);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kOperationalCredentials);
     gMockClock.AdvanceMonotonic(300_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kOperationalCredentials);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kOperationalCredentials);
 
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kOperationalCredentials);
     trackedTime = timeTracker.mEndTime.count() - timeTracker.mStartTime.count();
@@ -410,15 +410,15 @@ TEST_F(TestSilabsTracing, TestCommissioning)
     EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Simulate Transport Layer steps
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kTransportLayer);
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kTransportSetup);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kTransportLayer);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kTransportSetup);
     gMockClock.AdvanceMonotonic(100_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kTransportSetup);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kTransportSetup);
 
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kFindOperational);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kFindOperational);
     gMockClock.AdvanceMonotonic(150_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kFindOperational);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kTransportLayer);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kFindOperational);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kTransportLayer);
 
     // Verify the time tracker values for Transport Layer
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kTransportLayer);
@@ -457,21 +457,21 @@ TEST_F(TestSilabsTracing, TestCommissioning)
     EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Simulate Case Session steps
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kCaseSession);
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSigma1);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kCaseSession);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSigma1);
     gMockClock.AdvanceMonotonic(100_ms64);
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSigma1);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSigma1);
     gMockClock.AdvanceMonotonic(100_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSigma1);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSigma1);
 
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSigma2);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSigma2);
     gMockClock.AdvanceMonotonic(150_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSigma2);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSigma2);
 
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSigma3);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kSigma3);
     gMockClock.AdvanceMonotonic(200_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSigma3);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kCaseSession);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kSigma3);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kCaseSession);
 
     // Verify the time tracker values for Case Session
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kCaseSession);
@@ -529,15 +529,15 @@ TEST_F(TestSilabsTracing, TestCommissioning)
 TEST_F(TestSilabsTracing, TestOTA)
 {
     gMockClock.SetMonotonic(0_ms64);
-    SilabsTracer::Instance().Init();
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().Init();
     size_t traceCount = 0;
     traceCount        = SilabsTracer::Instance().GetTimeTracesCount();
     EXPECT_EQ(traceCount, 0u);
 
     // Simulate OTA steps
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kOTA);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kOTA);
     gMockClock.AdvanceMonotonic(100_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kOTA);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kOTA);
 
     // Verify the time tracker values for OTA
     auto timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kOTA);
@@ -555,9 +555,9 @@ TEST_F(TestSilabsTracing, TestOTA)
     EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Simulate OTA steps with failure
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kOTA);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kOTA);
     gMockClock.AdvanceMonotonic(150_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kOTA, CHIP_ERROR_INTERNAL);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kOTA, CHIP_ERROR_INTERNAL);
 
     // Verify the time tracker values for OTA after failure
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kOTA);
@@ -573,9 +573,9 @@ TEST_F(TestSilabsTracing, TestOTA)
 
     // Simulate Bootup steps after OTA failure
     gMockClock.SetMonotonic(0_ms64); // Resetting to 0 since reboot should reset the monotonic clock
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kBootup);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kBootup);
     gMockClock.AdvanceMonotonic(200_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kBootup);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kBootup);
 
     // Verify the time tracker values for Bootup
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kBootup);
@@ -590,9 +590,9 @@ TEST_F(TestSilabsTracing, TestOTA)
     EXPECT_EQ(metric.mCountAboveAvg, uint32_t(0));
 
     // Simulate subsequent OTA steps that succeed
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kOTA);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kOTA);
     gMockClock.AdvanceMonotonic(120_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kOTA);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kOTA);
 
     // Verify the time tracker values for OTA after success
     timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kOTA);
@@ -614,7 +614,7 @@ TEST_F(TestSilabsTracing, TestOTA)
 TEST_F(TestSilabsTracing, TestLogs)
 {
     gMockClock.SetMonotonic(0_ms64);
-    SilabsTracer::Instance().Init();
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().Init();
 
 #ifndef SILABS_LOG_ENABLED
     logInitialized = true;
@@ -622,15 +622,15 @@ TEST_F(TestSilabsTracing, TestLogs)
     size_t traceCount = 0;
 
     // Simulate OTA steps
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kOTA);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kOTA);
     gMockClock.AdvanceMonotonic(100_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kOTA);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kOTA);
 
     // Simulate Bootup steps
     gMockClock.SetMonotonic(0_ms64); // Resetting to 0 since reboot should reset the monotonic clock
-    SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kBootup);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceBegin(TimeTraceOperation::kBootup);
     gMockClock.AdvanceMonotonic(200_ms64);
-    SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kBootup);
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TimeTraceEnd(TimeTraceOperation::kBootup);
 
     // Verify the time tracker values for OTA
     auto timeTracker = SilabsTracer::Instance().GetTimeTracker(TimeTraceOperation::kOTA);
@@ -732,7 +732,7 @@ TEST_F(TestSilabsTracing, TestLogs)
 TEST_F(TestSilabsTracing, TestBufferBusting)
 {
     gMockClock.SetMonotonic(0_ms64);
-    SilabsTracer::Instance().Init();
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().Init();
     size_t traceCount = 0;
     traceCount        = SilabsTracer::Instance().GetTimeTracesCount();
     EXPECT_EQ(traceCount, 0u);
@@ -792,7 +792,7 @@ TEST_F(TestSilabsTracing, TestBufferBusting)
 TEST_F(TestSilabsTracing, TestNamedTraces)
 {
     gMockClock.SetMonotonic(0_ms64);
-    SilabsTracer::Instance().Init();
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().Init();
     size_t traceCount = 0;
 
     // Test creating named traces
@@ -833,10 +833,10 @@ TEST_F(TestSilabsTracing, TestNamedTraces)
         SilabsTracer::Instance().NamedTraceEnd(CharSpan::fromCharString("NonExistent"), CharSpan::fromCharString("TestGroup")));
 
     // Flush trace buffer before trying to fill named trace buffer
-    SilabsTracer::Instance().TraceBufferFlushAll();
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TraceBufferFlushAll();
 
     // Re-initialize the tracer to clear named traces before buffer overflow test
-    SilabsTracer::Instance().Init();
+    TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().Init();
 
     // Test buffer overflow for named traces
     for (size_t i = 0; i < SilabsTracer::kMaxNamedTraces + 1; i++)
@@ -845,7 +845,7 @@ TEST_F(TestSilabsTracing, TestNamedTraces)
         snprintf(label, sizeof(label), "Op%04zu", i);
         auto result =
             SilabsTracer::Instance().TimeTraceInstant(CharSpan::fromCharString(label), CharSpan::fromCharString("OverflowTest"));
-        SilabsTracer::Instance().TraceBufferFlushAll(); // empty trace buffer as we are testing the NamedTrace one
+            TEMPORARY_RETURN_IGNORED SilabsTracer::Instance().TraceBufferFlushAll(); // empty trace buffer as we are testing the NamedTrace one
         if (i < SilabsTracer::kMaxNamedTraces)
         {
             EXPECT_EQ(CHIP_NO_ERROR, result);

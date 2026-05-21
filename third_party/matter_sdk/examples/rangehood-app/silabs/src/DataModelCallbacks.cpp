@@ -34,9 +34,10 @@
 #include <app-common/zap-generated/attributes/Accessors.h>
 
 using namespace ::chip;
+using namespace ::chip::app;
 using namespace ::chip::app::Clusters;
 
-void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
+void MatterPostAttributeChangeCallback(const ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
                                        uint8_t * value)
 {
     ClusterId clusterId     = attributePath.mClusterId;
@@ -61,7 +62,7 @@ void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & 
         RangeHoodManager::GetInstance().OnOffAttributeChangeHandler(endpointId, attributeId, value, size);
         break;
 
-    case Identify::Id:
+    case Clusters::Identify::Id:
         ChipLogDetail(Zcl, "Identify attribute ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u on endpoint %u",
                       ChipLogValueMEI(attributeId), type, *value, size, endpointId);
         break;

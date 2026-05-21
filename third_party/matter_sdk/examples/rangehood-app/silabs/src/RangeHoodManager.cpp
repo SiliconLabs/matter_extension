@@ -28,7 +28,7 @@
 #include <app/clusters/fan-control-server/fan-control-server.h>
 #include <platform/CHIPDeviceLayer.h>
 
-#if DISPLAY_ENABLED
+#if defined (DISPLAY_ENABLED) && DISPLAY_ENABLED
 #include "RangeHoodUI.h"
 #endif
 

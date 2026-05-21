@@ -11,7 +11,7 @@ namespace Silabs {
 namespace {
 void OnPowerManagerStatisticsTimer(void * argument)
 {
-    SilabsPowerTracing::Instance().OutputPowerManagerTraces();
+    TEMPORARY_RETURN_IGNORED SilabsPowerTracing::Instance().OutputPowerManagerTraces();
 }
 } // namespace
 

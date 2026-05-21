@@ -292,7 +292,7 @@ void MatterPerfTest::MxPerfTest(intptr_t  params)
     Clusters::PerformanceTesting::Commands::EmptyCommand::Type EmptyCommand;
     EmptyCommand.payload =  chip::MakeOptional(chip::Span<const uint8_t>(buf, MAX(4, data->length)));
 
-    Controller::InvokeGroupCommandRequest(&exchangeMgr, data->fabricIndex, data->groupId, EmptyCommand);
+    TEMPORARY_RETURN_IGNORED Controller::InvokeGroupCommandRequest(&exchangeMgr, data->fabricIndex, data->groupId, EmptyCommand);
 
     Platform::Delete(data);
 }
