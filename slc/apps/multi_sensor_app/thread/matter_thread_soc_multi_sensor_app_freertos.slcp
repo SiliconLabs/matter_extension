@@ -39,7 +39,6 @@ component:
   - id: matter_administrator_commissioning
   - id: matter_basic_information
   - id: matter_descriptor
-  - id: matter_ethernet_network_diagnostics
   - id: matter_fixed_label
   - id: matter_general_commissioning
   - id: matter_general_diagnostics
@@ -57,7 +56,6 @@ component:
     from: matter
   - id: matter_time_format_localization
   - id: matter_user_label
-  - id: matter_wifi_network_diagnostics
   - id: matter_default_lcd_config
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo

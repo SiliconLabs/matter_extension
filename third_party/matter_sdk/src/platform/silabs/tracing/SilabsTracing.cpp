@@ -758,19 +758,18 @@ CHIP_ERROR SilabsTracer::FindOrCreateTrace(const CharSpan label, const CharSpan 
 
 CHIP_ERROR SilabsTracer::FindExistingTrace(const CharSpan label, const CharSpan group, size_t & outIdx) const
 {
+    const size_t groupLen = std::min(group.size(), NamedTrace::kMaxGroupLength - 1);
+    const size_t labelLen = std::min(label.size(), NamedTrace::kMaxLabelLength - 1);
+
     for (size_t i = 0; i < kMaxNamedTraces; ++i)
     {
         const auto & t = mNamedTraces[i];
         if (t.labelLen == 0)
             return CHIP_ERROR_NOT_FOUND; // empty slot
 
-        // Prefix match: only compare up to stored length; incoming must span at least that many bytes.
-        if (group.size() < t.groupLen || label.size() < t.labelLen)
-        {
-            continue;
-        }
-
-        if (std::memcmp(t.group, group.data(), t.groupLen) == 0 && std::memcmp(t.label, label.data(), t.labelLen) == 0)
+        if (groupLen == t.groupLen && labelLen == t.labelLen &&
+            std::memcmp(t.group, group.data(), groupLen) == 0 &&
+            std::memcmp(t.label, label.data(), labelLen) == 0)
         {
             outIdx = i;
             return CHIP_NO_ERROR;

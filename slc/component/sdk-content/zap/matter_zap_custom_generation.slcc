@@ -3,6 +3,8 @@ description: This component sets up ZAP generation for custom clusters and exten
 id: matter_zap_custom_generation
 label: Custom ZAP generation 
 package: matter
+requires:
+  - name: matter_zap_include
 provides:
   - name: matter_zap_custom_generation
 quality: production

@@ -27,13 +27,12 @@ enabled_variants:
 # Apps that should appear in demos xml but not in templates xml
 templates_exclude:
   - matter_thread_soc_zigbee_light_series_2_freertos
-  - matter_thread_soc_lighting_app_trustzone_ns_freertos
-  - matter_thread_soc_lighting_app_trustzone_s_freertos
   - matter_thread_soc_code_size_sensor_freertos
 
 # Apps that should appear in templates xml but not in demos xml (as they are not built in ci)
 demos_exclude:
   - matter_thread_soc_lighting_app_trustzone_series_3_freertos
+  - matter_wifi_917_ncp_lock_app_dual_stack_freertos
 
 # Hard-coded board lists for templates for any corner cases
 templates_board_overrides:
@@ -45,6 +44,8 @@ templates_board_overrides:
     boards: [brd4186c, brd4187c]
   matter_wifi_917_ncp_window_app_freertos:
     boards: [brd4186c, brd4187c]
+  matter_wifi_917_ncp_lock_app_dual_stack_freertos:
+    boards: [brd4186c, brd4187c, brd4120a]
   
   matter_thread_soc_zigbee_light_series_2_internal_freertos:
     boards: [brd2608a, brd4116a, brd4117a, brd4118a, brd4120a, brd4121a, brd4187c]

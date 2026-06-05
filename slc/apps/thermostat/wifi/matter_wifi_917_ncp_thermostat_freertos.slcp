@@ -45,11 +45,7 @@ component:
   - id: matter_access_control
   - id: matter_administrator_commissioning
   - id: matter_basic_information
-  - id: matter_bindings
   - id: matter_descriptor
-  - id: matter_diagnostic_logs
-  - id: matter_ethernet_network_diagnostics
-  - id: matter_fixed_label
   - id: matter_general_commissioning
   - id: matter_general_diagnostics
   - id: matter_group_key_mgmt
@@ -62,13 +58,8 @@ component:
   - id: matter_software_diagnostics
   - id: matter_thermostat
   - id: matter_thermostat_user_interface_configuration
-  - id: matter_thread_network_diagnostics
   - id: matter_time_format_localization
     from: matter
-  - id: matter_time_synchronization
-    from: matter
-  - id: matter_user_label
-  - id: matter_unit_localization
   - id: matter_wifi_network_diagnostics
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo

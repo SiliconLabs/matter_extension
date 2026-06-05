@@ -144,7 +144,7 @@
     ]
   },
   {
-    "clusterCode": "radon concentration measurement-server",
+    "clusterCode": "smoke concentration measurement-server",
     "value": [
       "%extension-matter%matter_concentration_measurement"
     ]
@@ -291,6 +291,12 @@
     "clusterCode": "groups-server",
     "value": [
       "%extension-matter%matter_groups"
+    ]
+  },
+  {
+    "clusterCode": "humidistat-server",
+    "value": [
+      "%extension-matter%matter_humidistat"
     ]
   },
   {

@@ -69,10 +69,17 @@ common_include_dirs = [
   "${examples_plat_dir}",
   "${chip_root}/src/lib",
   "${examples_common_plat_dir}",
+  "${examples_common_plat_dir}/customer",
   "${examples_common_plat_dir}/freertos_config",
 ]
 
 common_defines = []
+if (wifi_soc) {
+  common_defines += [ "CHIP_CONFIG_ICD_OBSERVERS_POOL_SIZE=5" ]
+} else {
+  common_defines += [ "CHIP_CONFIG_ICD_OBSERVERS_POOL_SIZE=4" ]
+}
+
 if (wifi_soc) {
   siwx917_sdk("sdk") {
     sources = common_sources
@@ -101,7 +108,10 @@ silabs_executable("platform_app") {
     defines += [ "SL_STATUS_LED=0" ]
   }
 
-  sources = [ "src/AppTask.cpp" ]
+  sources = [
+    "${examples_common_plat_dir}/customer/CustomerAppTask.cpp",
+    "src/AppTask.cpp",
+  ]
 
   deps = [
     ":sdk",

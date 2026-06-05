@@ -13,12 +13,10 @@ provides:
   - name: matter_power_source
 source:
   - path: third_party/matter_sdk/src/app/clusters/power-source-server/codegen/power-source-server.cpp
-    unless: [matter_code_driven_dm]
 include:
   - path: third_party/matter_sdk/src/app/clusters/power-source-server
     file_list:
       - path: codegen/power-source-server.h
-        unless: [matter_code_driven_dm]
       - path: power-source-server.h
 template_contribution:
   - name: component_catalog

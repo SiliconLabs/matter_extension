@@ -44,16 +44,13 @@ component:
   - id: matter_administrator_commissioning
   - id: matter_basic_information
   - id: matter_descriptor
-  - id: matter_fixed_label
   - id: matter_general_commissioning
   - id: matter_general_diagnostics
   - id: matter_group_key_mgmt
   - id: matter_identify
-  - id: matter_localization_configuration
   - id: matter_network_commissioning
   - id: matter_operational_credentials
   - id: matter_ota_requestor
-  - id: matter_power_source
   - id: matter_software_diagnostics
   - id: matter_thread_network_diagnostics
     from: matter
@@ -89,9 +86,11 @@ include:
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
-      - path: AppTask.h
       - path: CHIPProjectConfig.h
-      - path: SensorManager.h
+    directory: include
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/customer
+    file_list:
+      - path: CustomerAppTask.h
     directory: include
   - path: ../../../../third_party/matter_sdk/examples/air-quality-sensor-app/air-quality-sensor-common/include/
     file_list:
@@ -101,15 +100,11 @@ include:
     directory: include
 
 source:
-  - path: ../../../../third_party/matter_sdk/examples/air-quality-sensor-app/silabs/src/AppTask.cpp
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/customer/CustomerAppTask.cpp
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/air-quality-sensor-app/air-quality-sensor-common/src/air-quality-sensor-manager.cpp
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
-    directory: src
-  - path: ../../../../third_party/matter_sdk/examples/air-quality-sensor-app/silabs/src/DataModelCallbacks.cpp
-    directory: src
-  - path: ../../../../third_party/matter_sdk/examples/air-quality-sensor-app/silabs/src/SensorManager.cpp
     directory: src
 
 define:

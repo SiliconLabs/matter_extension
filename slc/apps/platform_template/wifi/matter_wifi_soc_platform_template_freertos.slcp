@@ -31,7 +31,6 @@ component:
   - id: matter_administrator_commissioning
   - id: matter_basic_information
   - id: matter_descriptor
-  - id: matter_fixed_label
   - id: matter_general_commissioning
   - id: matter_general_diagnostics
   - id: matter_group_key_mgmt
@@ -42,11 +41,9 @@ component:
   - id: matter_operational_credentials
   - id: matter_ota_support
   - id: matter_ota_requestor
-  - id: matter_power_source
   - id: matter_software_diagnostics
   - id: matter_wifi_network_diagnostics
   - id: matter_time_format_localization
-  - id: matter_user_label
   - id: matter_platform_template
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
@@ -95,12 +92,16 @@ include:
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
-      - path: AppTask.h
       - path: CHIPProjectConfig.h
     directory: include
 
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/customer
+    file_list:
+      - path: CustomerAppTask.h
+    directory: include
+
 source:
-  - path: ../../../../third_party/matter_sdk/examples/base-platform-app/silabs/src/AppTask.cpp
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/customer/CustomerAppTask.cpp
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src
@@ -119,6 +120,9 @@ define:
     value: "4092"
   - name: SI917_SOC
     value: 1
+  - name: CHIP_CONFIG_ICD_OBSERVERS_POOL_SIZE
+    value: 5
+    condition: [matter_icd_core]
   
 configuration:
   - name: SL_ULPUART_DMA_CONFIG_ENABLE

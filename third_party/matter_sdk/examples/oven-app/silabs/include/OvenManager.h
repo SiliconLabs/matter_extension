@@ -71,6 +71,11 @@ public:
     CHIP_ERROR SetTemperatureControlledCabinetInitialState(chip::EndpointId temperatureControlledCabinetEndpoint);
 
     /**
+     * @brief Force CookTop and CookSurface OnOff attributes to Off at startup.
+     */
+    void EnforceCookTopOffAtStartup();
+
+    /**
      * @brief Handles on/off attribute changes.
      *
      * @param endpointId The ID of the endpoint.

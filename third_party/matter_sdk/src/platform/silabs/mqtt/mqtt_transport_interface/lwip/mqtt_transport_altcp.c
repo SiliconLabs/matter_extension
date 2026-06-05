@@ -35,7 +35,7 @@ struct MQTT_Transport_t
     struct altcp_tls_config * tls_config;
     struct altcp_pcb * conn;
 
-    matter_aws_connect_cb matter_aws_conn_cb;
+    matter_aws_connect_cb connect_cb;
     ip_addr_t * ipaddr;
     /** received buffers from tcp */
     struct pbuf * pcbRxStart;
@@ -105,7 +105,7 @@ err_t MQTT_Transport_SSLConfigure(MQTT_Transport_t * transP, const u8_t * ca, si
                                   size_t cert_len)
 {
     struct altcp_tls_config * altcp_tls_config;
-    altcp_tls_config = altcp_tls_create_config_client_2wayauth(ca, ca_len, privkey, privkey_len, NULL, 0, cert, cert_len);
+    altcp_tls_config = matter_aws_altcp_tls_create_config_client_2wayauth(ca, ca_len, privkey, privkey_len, NULL, 0, cert, cert_len);
     if (NULL == altcp_tls_config)
     {
         return ERR_FAIL;
@@ -115,7 +115,7 @@ err_t MQTT_Transport_SSLConfigure(MQTT_Transport_t * transP, const u8_t * ca, si
 }
 
 err_t MQTT_Transport_Connect(MQTT_Transport_t * transP, const char * host, size_t hostLen, u16_t port,
-                             matter_aws_connect_cb matter_aws_conn_cb)
+                             matter_aws_connect_cb connect_cb)
 {
     err_t ret;
     err_t dns_ret;
@@ -165,7 +165,7 @@ err_t MQTT_Transport_Connect(MQTT_Transport_t * transP, const char * host, size_
             return dns_ret;
         }
     }
-    transP->matter_aws_conn_cb = matter_aws_conn_cb;
+    transP->connect_cb = connect_cb;
     ret                        = connection_new(transP, &ipaddr, port);
     return ret;
 }
@@ -175,7 +175,7 @@ static uint16_t transport_get_sendlen_cb(void * conn)
     MQTT_Transport_t * client = (MQTT_Transport_t *) conn;
     if (!client)
         return 0;
-    return altcp_sndbuf(client->conn);
+    return matter_aws_altcp_sndbuf(client->conn);
 }
 
 static int8_t transport_write_cb(void * conn, void * buff, uint16_t len, uint8_t flags, uint8_t isFinal)
@@ -183,10 +183,10 @@ static int8_t transport_write_cb(void * conn, void * buff, uint16_t len, uint8_t
     MQTT_Transport_t * client = (MQTT_Transport_t *) conn;
     if (!client)
         return ERR_FAIL;
-    if (ERR_OK != altcp_write(client->conn, buff, len, convert_write_flags(flags)))
+    if (ERR_OK != matter_aws_altcp_write(client->conn, buff, len, convert_write_flags(flags)))
         return ERR_FAIL;
     if (isFinal)
-        altcp_output(client->conn);
+        matter_aws_altcp_output(client->conn);
     return ERR_OK;
 }
 
@@ -236,13 +236,13 @@ static void transport_close_cb(void * arg)
     if (conn != NULL && client->conn_state == TRANSPORT_CONNECTED)
     {
         err_t res;
-        altcp_recv(conn, NULL);
-        altcp_err(conn, NULL);
-        altcp_sent(conn, NULL);
-        res = altcp_close(conn);
+        matter_aws_altcp_recv(conn, NULL);
+        matter_aws_altcp_err(conn, NULL);
+        matter_aws_altcp_sent(conn, NULL);
+        res = matter_aws_altcp_close(conn);
         if (res != ERR_OK)
         {
-            altcp_abort(conn);
+            matter_aws_altcp_abort(conn);
             TRANSPORT_DEBUGF(("transport_close_cb: Close err=%s\n", lwip_strerr(res)));
         }
         client->conn = NULL;
@@ -280,9 +280,9 @@ static void transport_err_cb(void * arg, err_t err)
     client->conn_state = TRANSPORT_NOT_CONNECTED;
 
     /* Safety check: ensure callback is not NULL before calling */
-    if (client->matter_aws_conn_cb != NULL)
+    if (client->connect_cb != NULL)
     {
-        client->matter_aws_conn_cb(err);
+        client->connect_cb(err);
     }
 }
 
@@ -308,7 +308,7 @@ static err_t transport_recv_cb(void * arg, struct altcp_pcb * pcb, struct pbuf *
 
 #if 0
     /* Tell remote that data has been received */
-    altcp_recved(pcb, p->tot_len);
+    matter_aws_altcp_recved(pcb, p->tot_len);
     res = mqtt_parse_incoming(client, p);
     pbuf_free(p);
 
@@ -398,19 +398,19 @@ static err_t transport_connect_cb(void * arg, struct altcp_pcb * tpcb, err_t err
         TRANSPORT_DEBUGF(("transport_connect_cb: TCP connect error %d\n", err));
         SILABS_LOG("TCP connect error");
         client->conn_state = TRANSPORT_NOT_CONNECTED;
-        client->matter_aws_conn_cb(err);
+        client->connect_cb(err);
         return err;
     }
     /* Setup TCP callbacks */
-    altcp_recv(tpcb, transport_recv_cb);
-    altcp_sent(tpcb, transport_sent_cb);
+    matter_aws_altcp_recv(tpcb, transport_recv_cb);
+    matter_aws_altcp_sent(tpcb, transport_sent_cb);
     // tcp_poll(tpcb, tcp_poll_cb, 2);
     TRANSPORT_DEBUGF(("transport_connect_cb: TCP connection established to server\n"));
     SILABS_LOG("tcp_cb: TCP connection established to server\n");
     client->conn_state = TRANSPORT_CONNECTED;
-    if (client->matter_aws_conn_cb != NULL)
+    if (client->connect_cb != NULL)
     {
-        client->matter_aws_conn_cb(ERR_OK);
+        client->connect_cb(ERR_OK);
     }
     return ERR_OK;
 }
@@ -420,11 +420,11 @@ void mbedtls_signal_app(void * arg)
     MQTT_Transport_t * client = (MQTT_Transport_t *) arg;
     xEventGroupSetBits(client->events, SIGNAL_TRANSINTF_MBEDTLS_RX);
 }
-extern err_t altcp_mbedtls_lower_recv_process(struct altcp_pcb * conn);
+extern err_t matter_aws_altcp_mbedtls_lower_recv_process(struct altcp_pcb * conn);
 
 void transport_process_mbedtls_rx(MQTT_Transport_t * client)
 {
-    altcp_mbedtls_lower_recv_process(client->conn);
+    matter_aws_altcp_mbedtls_lower_recv_process(client->conn);
 }
 
 static err_t connection_new(MQTT_Transport_t * client, const ip_addr_t * ipaddr, u16_t port)
@@ -445,11 +445,11 @@ static err_t connection_new(MQTT_Transport_t * client, const ip_addr_t * ipaddr,
     if (client->tls_config)
     {
         SILABS_LOG("executing tls new");
-        client->conn = altcp_tls_new(client->tls_config, IP_GET_TYPE(ipaddr));
+        client->conn = matter_aws_altcp_tls_new(client->tls_config, IP_GET_TYPE(ipaddr));
         if (client->conn != NULL && client->hostname != NULL)
         {
             /* Set hostname for TLS certificate verification */
-            mbedtls_ssl_context * ssl = (mbedtls_ssl_context *) altcp_tls_context(client->conn);
+            mbedtls_ssl_context * ssl = (mbedtls_ssl_context *) matter_aws_altcp_tls_context(client->conn);
             if (ssl != NULL)
             {
                 int ret = mbedtls_ssl_set_hostname(ssl, client->hostname);
@@ -469,16 +469,16 @@ static err_t connection_new(MQTT_Transport_t * client, const ip_addr_t * ipaddr,
 #endif
     {
         SILABS_LOG("not executing");
-        client->conn = altcp_tcp_new_ip_type(IP_GET_TYPE(ipaddr));
+        client->conn = matter_aws_altcp_tcp_new_ip_type(IP_GET_TYPE(ipaddr));
     }
     if (client->conn == NULL)
     {
         return ERR_MEM;
     }
     /* Set arg pointer for callbacks */
-    altcp_arg(client->conn, client);
+    matter_aws_altcp_arg(client->conn, client);
     /* Any local address, pick random local port number */
-    err = altcp_bind(client->conn, IP_ADDR_ANY, 0);
+    err = matter_aws_altcp_bind(client->conn, IP_ADDR_ANY, 0);
     if (err != ERR_OK)
     {
         TRANSPORT_DEBUGF(("client_connect: Error binding to local ip/port, %d\n", err));
@@ -486,20 +486,20 @@ static err_t connection_new(MQTT_Transport_t * client, const ip_addr_t * ipaddr,
     }
 
     /* Connect to server */
-    err = altcp_connect(client->conn, ipaddr, port, transport_connect_cb);
+    err = matter_aws_altcp_connect(client->conn, ipaddr, port, transport_connect_cb);
     if (err != ERR_OK)
     {
         TRANSPORT_DEBUGF(("client_connect: Error connecting to remote ip/port, %d\n", err));
         goto transport_fail;
     }
     /* Set error callback */
-    altcp_err(client->conn, transport_err_cb);
+    matter_aws_altcp_err(client->conn, transport_err_cb);
     client->conn_state = TRANSPORT_NOT_CONNECTED;
 
     return ERR_OK;
 
 transport_fail:
-    altcp_abort(client->conn);
+    matter_aws_altcp_abort(client->conn);
     client->conn = NULL;
     return err;
 }

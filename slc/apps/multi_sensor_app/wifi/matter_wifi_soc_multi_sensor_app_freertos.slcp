@@ -32,7 +32,6 @@ component:
   - id: matter_administrator_commissioning
   - id: matter_basic_information
   - id: matter_descriptor
-  - id: matter_ethernet_network_diagnostics
   - id: matter_fixed_label
   - id: matter_general_commissioning
   - id: matter_general_diagnostics
@@ -41,8 +40,6 @@ component:
   - id: matter_localization_configuration
   - id: matter_network_commissioning
   - id: matter_operational_credentials
-  - id: matter_power_source_configuration
-  - id: matter_power_source
   - id: matter_software_diagnostics
     from: matter
   - id: matter_temperature_measurement
@@ -54,7 +51,7 @@ component:
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
   - id: segger_rtt
-
+  - id: matter_si70xx_sensor
   - id: matter_ota_requestor
   - id: matter_occupancy_sensor
   - id: matter_ota_support
@@ -82,6 +79,9 @@ component:
   - id: wiseconnect_common
   - id: sl_si91x_soc_soft_reset
   - id: ble
+  - id: i2c_instance
+    instance: [i2c2]
+    condition: [sl_i2c]
   - id: sl_si91x_button_917
     instance: [btn0, btn1]
   - id: sl_si91x_led_917

@@ -5,7 +5,7 @@ description: >
 id: matter_scenes
 package: matter
 label: Scenes Management Server Cluster
-quality: experimental
+quality: production
 metadata:
   sbom:
     license: "Apache 2.0"

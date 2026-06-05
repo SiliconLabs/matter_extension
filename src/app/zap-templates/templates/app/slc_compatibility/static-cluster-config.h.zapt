@@ -1,0 +1,142 @@
+{{> header excludeZapComment=true}}
+
+// DO NOT EDIT - Generated file
+//
+// Application configuration for {{asUpperCamelCase name}} based on EMBER configuration
+#pragma once
+
+#include <app/util/cluster-config.h>
+#include <clusters/{{asUpperCamelCase name}}/AttributeIds.h>
+#include <clusters/{{asUpperCamelCase name}}/CommandIds.h>
+#include <clusters/{{asUpperCamelCase name}}/Enums.h>
+
+#include <array>
+
+namespace chip {
+namespace app {
+namespace Clusters {
+namespace {{asUpperCamelCase name}} {
+namespace StaticApplicationConfig {
+namespace detail {
+{{#user_endpoints}}
+{{#user_clusters}}
+{{#if enabled}}
+{{#if (isServer side)}}
+{{#if (isStrEqual name ../../name)}}
+{{#user_cluster_attributes}}
+{{#first}}
+inline constexpr AttributeId kEndpoint{{../../endpointId}}EnabledAttributes[] = {
+{{/first}}
+{{#if included}}
+    Attributes::{{asUpperCamelCase name}}::Id,
+{{/if}}
+{{#last}}
+};
+{{/last}}
+{{/user_cluster_attributes}}
+{{#user_cluster_commands}}
+{{#first}}
+inline constexpr CommandId kEndpoint{{../../endpointId}}EnabledCommands[] = {
+{{/first}}
+{{#if (is_str_equal source "client")}}
+    Commands::{{asUpperCamelCase name}}::Id,
+{{/if}}
+{{#last}}
+};
+{{/last}}
+{{/user_cluster_commands}}
+{{/if}}
+{{/if}}
+{{/if}}
+{{/user_clusters}}
+{{/user_endpoints}}
+} // namespace detail
+
+{{#if_cluster_has_feature_bitmap}}
+using FeatureBitmapType = Feature;
+{{else}}
+using FeatureBitmapType = Clusters::StaticApplicationConfig::NoFeatureFlagsDefined;
+{{/if_cluster_has_feature_bitmap}}
+
+inline constexpr std::array<Clusters::StaticApplicationConfig::ClusterConfiguration<FeatureBitmapType>, {{#user_endpoints}}{{#user_clusters}}{{#if enabled}}{{#if (isServer side)}}{{#if (isStrEqual name ../../name)}}1 + {{/if}}{{/if}}{{/if}}{{/user_clusters}}{{/user_endpoints}}0> kFixedClusterConfig = { {
+{{#user_endpoints}}
+{{#user_clusters}}
+{{#if enabled}}
+{{#if (isServer side)}}
+{{#if (isStrEqual name ../../name)}}
+    {
+        .endpointNumber = {{../endpointId}},
+        .featureMap = BitFlags<FeatureBitmapType> {
+{{#user_cluster_attributes}}
+{{#if (is_str_equal name "FeatureMap")}}
+{{#cluster_feature_items ../code}}
+{{#if_feature_bit_enabled ../defaultValue mask}}
+            FeatureBitmapType::k{{asUpperCamelCase label preserveAcronyms=true}}, // feature bit {{as_hex mask}}
+{{/if_feature_bit_enabled}}
+{{/cluster_feature_items}}
+{{/if}}
+{{/user_cluster_attributes}}
+        },
+        .enabledAttributes =
+{{#user_cluster_attributes}}
+{{#first}}
+            Span<const AttributeId>(detail::kEndpoint{{../../endpointId}}EnabledAttributes),
+{{/first}}
+{{else}}
+            Span<const AttributeId>(),
+{{/user_cluster_attributes}}
+        .enabledCommands =
+{{#user_cluster_commands}}
+{{#first}}
+            Span<const CommandId>(detail::kEndpoint{{../../endpointId}}EnabledCommands),
+{{/first}}
+{{else}}
+            Span<const CommandId>(),
+{{/user_cluster_commands}}
+    },
+{{/if}}
+{{/if}}
+{{/if}}
+{{/user_clusters}}
+{{/user_endpoints}}
+} };
+
+// If a specific attribute is supported at all across all endpoint static instantiations
+inline constexpr bool IsAttributeEnabledOnSomeEndpoint(AttributeId attributeId) {
+  switch (attributeId) {
+{{#all_user_cluster_generated_attributes}}
+{{#if (is_str_equal clusterName ../name)}}
+{{#if (is_str_equal clusterSide "server")}}
+    case Attributes::{{asUpperCamelCase name}}::Id:
+      return true;
+{{/if}}
+{{/if}}
+{{/all_user_cluster_generated_attributes}}
+    default:
+      return false;
+  }
+}
+
+// If a specific command is supported at all across all endpoint static instantiations
+inline constexpr bool IsCommandEnabledOnSomeEndpoint(CommandId commandId) {
+  switch (commandId) {
+{{#all_user_cluster_generated_commands}}
+{{#if (is_str_equal clusterName ../name)}}
+{{#if (is_str_equal clusterSide "server")}}
+{{#if (is_str_equal source "client")}}
+    case Commands::{{asUpperCamelCase name}}::Id:
+      return true;
+{{/if}}
+{{/if}}
+{{/if}}
+{{/all_user_cluster_generated_commands}}
+    default:
+      return false;
+  }
+}
+
+} // namespace StaticApplicationConfig
+} // namespace {{asUpperCamelCase name}}
+} // namespace Clusters
+} // namespace app
+} // namespace chip

@@ -26,6 +26,7 @@ _SCRIPT_DIR = Path(__file__).resolve().parent
 
 HWFILTER_REPO = "https://github.com/SiliconLabsInternal/hwfilter.git"
 HWFILTER_BRANCH = "main"
+HWFILTER_PIP_URL = f"git+{HWFILTER_REPO}@{HWFILTER_BRANCH}"
 
 # Maps use_ci_boards_for_demos ci_source values to json glob pattern
 CI_SOURCE_JSON_GLOBS: Dict[str, str] = {
@@ -206,12 +207,6 @@ def run_command(cmd: list, check: bool = True, capture: bool = False, cwd: Path 
 def check_command_exists(command: str) -> bool:
     return shutil.which(command) is not None
 
-def check_hwfilter_installed() -> bool:
-    if check_command_exists("hwstudio"):
-        log_info(f"hwfilter tools found: {shutil.which('hwstudio')}")
-        return True
-    return False
-
 def check_virtualenv():
     """Check if running inside a virtual environment"""
     in_venv = (
@@ -225,33 +220,24 @@ def check_virtualenv():
         log_error("  source .venv/bin/activate")
         sys.exit(1)
 
-def install_hwfilter():
-    """Install hwfilter from GitHub"""
-    log_info("Installing hwfilter from GitHub...")
+def update_hwfilter():
+    """Install or update hwfilter from the latest GitHub main branch"""
+    log_info(f"Updating hwfilter from {HWFILTER_BRANCH}...")
+    returncode, _, stderr = run_command(
+        [sys.executable, "-m", "pip", "install", "--force-reinstall", HWFILTER_PIP_URL],
+        check=False,
+        capture=True,
+    )
 
-    with tempfile.TemporaryDirectory() as temp_dir:
-        log_info("Cloning hwfilter repository...")
-        returncode, _, stderr = run_command(
-            ["git", "clone", "--depth", "1", "-b", HWFILTER_BRANCH, HWFILTER_REPO, "hwfilter"],
-            check=False, capture=True, cwd=Path(temp_dir)
-        )
+    if returncode != 0:
+        log_error(f"Failed to install/update hwfilter: {stderr}")
+        sys.exit(1)
 
-        if returncode != 0:
-            log_error(f"Failed to clone hwfilter: {stderr}")
-            sys.exit(1)
+    if not check_command_exists("hwstudio"):
+        log_error("hwfilter tools not found after install")
+        sys.exit(1)
 
-        hwfilter_dir = Path(temp_dir) / "hwfilter"
-        log_info("Installing hwfilter package...")
-        returncode, _, stderr = run_command(
-            [sys.executable, "-m", "pip", "install", "."],
-            check=False, capture=True, cwd=hwfilter_dir
-        )
-
-        if returncode != 0:
-            log_error(f"Failed to install hwfilter: {stderr}")
-            sys.exit(1)
-
-    log_info("hwfilter installed successfully")
+    log_info(f"hwfilter updated: {shutil.which('hwstudio')}")
 
 def check_prerequisites():
     """Check all prerequisites"""
@@ -270,19 +256,9 @@ def check_prerequisites():
     if not check_command_exists("conan"):
         log_error("Conan is not installed")
         sys.exit(1)
-    
-    if not check_hwfilter_installed():
-        log_warn("hwfilter tools not found")
-        try:
-            response = input("Install hwfilter now? (y/n) ").strip().lower()
-            if response in ['y', 'yes']:
-                install_hwfilter()
-            else:
-                log_error("hwfilter is required")
-                sys.exit(1)
-        except (EOFError, KeyboardInterrupt):
-            sys.exit(1)
-    
+
+    update_hwfilter()
+
     if not check_command_exists("envsubst"):
         log_error("envsubst not installed (part of gettext package)")
         sys.exit(1)

@@ -65,6 +65,9 @@ void OvenManager::Init()
     // Initialize binding manager
     VerifyOrReturn(InitOvenBindingHandler() == CHIP_NO_ERROR, ChipLogError(AppServer, "Initializing OvenBindingHandler failed"));
 
+    // Cooktop is a cooking appliance. Setting the state to false after reboot to avoid fire/safety hazards.
+    EnforceCookTopOffAtStartup();
+
     // Register supported temperature levels (Low, Medium, High) for CookSurface endpoints 1 and 2
     static const CharSpan kCookSurfaceLevels[] = { CharSpan::fromCharString("Low"), CharSpan::fromCharString("Medium"),
                                                    CharSpan::fromCharString("High") };
@@ -121,6 +124,19 @@ CHIP_ERROR OvenManager::SetTemperatureControlledCabinetInitialState(EndpointId t
     return cluster->SetTemperatureSetpoint(cluster->GetMinTemperature());
 }
 
+void OvenManager::EnforceCookTopOffAtStartup()
+{
+    for (EndpointId ep : { kCookTopEndpoint, kCookSurfaceEndpoint1, kCookSurfaceEndpoint2 })
+    {
+        Status status = OnOffServer::Instance().setOnOffValue(ep, OnOff::Commands::Off::Id, /*initiatedByLevelChange=*/false);
+        if (status != Status::Success)
+        {
+            ChipLogError(AppServer, "EnforceCookTopOffAtStartup: setOnOffValue(ep=%u) failed: %u", ep,
+                         to_underlying(status));
+        }
+    }
+}
+
 void OvenManager::OnOffAttributeChangeHandler(EndpointId endpointId, AttributeId attributeId, uint8_t * value, uint16_t size)
 {
     VerifyOrReturn(value != nullptr, ChipLogError(AppServer, "OnOffAttributeChangeHandler: value pointer is null"));
@@ -137,17 +153,34 @@ void OvenManager::OnOffAttributeChangeHandler(EndpointId endpointId, AttributeId
                        ChipLogError(AppServer, "Failed to set CookSurfaceEndpoint2 state"));
 
         action = (*value != 0) ? COOK_TOP_ON_ACTION : COOK_TOP_OFF_ACTION;
-        // Trigger binding for CookTop OnOff changes
-        OnOffBindingContext * context = Platform::New<OnOffBindingContext>();
-        if (context != nullptr)
-        {
-            context->localEndpointId = kCookTopEndpoint;
-            context->commandId       = *value ? Clusters::OnOff::Commands::On::Id : Clusters::OnOff::Commands::Off::Id;
 
-            if (CookTopOnOffBindingTrigger(context) != CHIP_NO_ERROR)
+        // Propagate CookTop state to bound peers for both OnOff (RangeHood
+        // Light) and FanControl (Extractor Hood) clusters. One context per
+        // cluster is required because BindingManager invokes the context
+        // release handler once per NotifyBoundClusterChanged call.
+        {
+            const bool isOn = (*value != 0);
+            for (ClusterId clusterId : { OnOff::Id, FanControl::Id })
             {
-                Platform::Delete(context);
-                ChipLogError(AppServer, "Failed to schedule CookTopOnOffBindingTrigger, context freed");
+                CookTopBindingContext * context = Platform::New<CookTopBindingContext>();
+                if (context == nullptr)
+                {
+                    ChipLogError(AppServer,
+                                 "Failed to allocate CookTopBindingContext for cluster " ChipLogFormatMEI,
+                                 ChipLogValueMEI(clusterId));
+                    continue;
+                }
+                context->localEndpointId = kCookTopEndpoint;
+                context->clusterId       = clusterId;
+                context->cookTopOn       = isOn;
+
+                if (CookTopBindingTrigger(context) != CHIP_NO_ERROR)
+                {
+                    Platform::Delete(context);
+                    ChipLogError(AppServer,
+                                 "Failed to schedule CookTopBindingTrigger for cluster " ChipLogFormatMEI ", context freed",
+                                 ChipLogValueMEI(clusterId));
+                }
             }
         }
         break;

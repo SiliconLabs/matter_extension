@@ -44,7 +44,6 @@ source:
   - path: third_party/matter_sdk/examples/platform/silabs/OTAConfig.cpp
   - path: third_party/matter_sdk/examples/platform/silabs/SoftwareFaultReports.cpp
   - path: third_party/matter_sdk/examples/platform/silabs/silabs_utils.cpp
-  - path: third_party/matter_sdk/examples/platform/silabs/syscalls_stubs.cpp
 
 define:
   - name: CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER

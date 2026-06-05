@@ -12,7 +12,7 @@ metadata:
 provides:
   - name: matter_groups
 requires:
-  - name: matter_scenes
+  - name: matter_scenes_support
 source:
   - path: third_party/matter_sdk/src/app/clusters/groups-server/CodegenIntegration.cpp
     unless: [matter_code_driven_dm]

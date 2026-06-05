@@ -42,25 +42,19 @@ component:
   - id: matter_basic_information
   - id: matter_color_control
   - id: matter_descriptor
-  - id: matter_diagnostic_logs
-  - id: matter_fixed_label
   - id: matter_general_commissioning
   - id: matter_general_diagnostics
   - id: matter_group_key_mgmt
   - id: matter_groups
-  - id: matter_groupcast
   - id: matter_identify
   - id: matter_level_control
-  - id: matter_localization_configuration
   - id: matter_network_commissioning
   - id: matter_on_off
   - id: matter_operational_credentials
   - id: matter_ota_requestor
   - id: matter_power_source
-  - id: matter_software_diagnostics
+  - id: matter_scenes
   - id: matter_thread_network_diagnostics
-  - id: matter_time_format_localization
-  - id: matter_user_label
   - id: matter_default_lcd_config
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
@@ -77,7 +71,7 @@ requires:
   - name: matter_drivers_series_2
     condition:
       - device_series_3
-      
+
 include:
   - path: ../../../../third_party/matter_sdk/examples/lighting-app/silabs/include
     file_list:

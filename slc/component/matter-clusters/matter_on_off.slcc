@@ -12,7 +12,7 @@ metadata:
 provides:
   - name: matter_on_off
 requires:
-  - name: matter_scenes
+  - name: matter_scenes_support
 source:
   - path: third_party/matter_sdk/src/app/clusters/on-off-server/codegen/level-control-integration.cpp
   - path: third_party/matter_sdk/src/app/clusters/on-off-server/codegen/mode-base-integration.cpp

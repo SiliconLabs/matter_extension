@@ -52,8 +52,8 @@
 extern "C" {
 #endif
 
-struct altcp_pcb * altcp_alloc(void);
-void altcp_free(struct altcp_pcb * conn);
+struct altcp_pcb * matter_aws_altcp_alloc(void);
+void matter_aws_altcp_free(struct altcp_pcb * conn);
 
 /* Function prototypes for application layers */
 typedef void (*altcp_set_poll_fn)(struct altcp_pcb * conn, u8_t interval);
@@ -117,25 +117,25 @@ struct altcp_functions
 #endif
 };
 
-void altcp_default_set_poll(struct altcp_pcb * conn, u8_t interval);
-void altcp_default_recved(struct altcp_pcb * conn, u16_t len);
-err_t altcp_default_bind(struct altcp_pcb * conn, const ip_addr_t * ipaddr, u16_t port);
-err_t altcp_default_shutdown(struct altcp_pcb * conn, int shut_rx, int shut_tx);
-err_t altcp_default_write(struct altcp_pcb * conn, const void * dataptr, u16_t len, u8_t apiflags);
-err_t altcp_default_output(struct altcp_pcb * conn);
-u16_t altcp_default_mss(struct altcp_pcb * conn);
-u16_t altcp_default_sndbuf(struct altcp_pcb * conn);
-u16_t altcp_default_sndqueuelen(struct altcp_pcb * conn);
-void altcp_default_nagle_disable(struct altcp_pcb * conn);
-void altcp_default_nagle_enable(struct altcp_pcb * conn);
-int altcp_default_nagle_disabled(struct altcp_pcb * conn);
-void altcp_default_setprio(struct altcp_pcb * conn, u8_t prio);
-void altcp_default_dealloc(struct altcp_pcb * conn);
-err_t altcp_default_get_tcp_addrinfo(struct altcp_pcb * conn, int local, ip_addr_t * addr, u16_t * port);
-ip_addr_t * altcp_default_get_ip(struct altcp_pcb * conn, int local);
-u16_t altcp_default_get_port(struct altcp_pcb * conn, int local);
+void matter_aws_altcp_default_set_poll(struct altcp_pcb * conn, u8_t interval);
+void matter_aws_altcp_default_recved(struct altcp_pcb * conn, u16_t len);
+err_t matter_aws_altcp_default_bind(struct altcp_pcb * conn, const ip_addr_t * ipaddr, u16_t port);
+err_t matter_aws_altcp_default_shutdown(struct altcp_pcb * conn, int shut_rx, int shut_tx);
+err_t matter_aws_altcp_default_write(struct altcp_pcb * conn, const void * dataptr, u16_t len, u8_t apiflags);
+err_t matter_aws_altcp_default_output(struct altcp_pcb * conn);
+u16_t matter_aws_altcp_default_mss(struct altcp_pcb * conn);
+u16_t matter_aws_altcp_default_sndbuf(struct altcp_pcb * conn);
+u16_t matter_aws_altcp_default_sndqueuelen(struct altcp_pcb * conn);
+void matter_aws_altcp_default_nagle_disable(struct altcp_pcb * conn);
+void matter_aws_altcp_default_nagle_enable(struct altcp_pcb * conn);
+int matter_aws_altcp_default_nagle_disabled(struct altcp_pcb * conn);
+void matter_aws_altcp_default_setprio(struct altcp_pcb * conn, u8_t prio);
+void matter_aws_altcp_default_dealloc(struct altcp_pcb * conn);
+err_t matter_aws_altcp_default_get_tcp_addrinfo(struct altcp_pcb * conn, int local, ip_addr_t * addr, u16_t * port);
+ip_addr_t * matter_aws_altcp_default_get_ip(struct altcp_pcb * conn, int local);
+u16_t matter_aws_altcp_default_get_port(struct altcp_pcb * conn, int local);
 #ifdef ALTCP_DEBUG
-enum tcp_state altcp_default_dbg_get_tcp_state(struct altcp_pcb * conn);
+enum tcp_state matter_aws_altcp_default_dbg_get_tcp_state(struct altcp_pcb * conn);
 #endif
 
 #ifdef __cplusplus

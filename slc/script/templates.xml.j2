@@ -11,7 +11,7 @@
 {%- for part in example.parts %}
   {%- set _ = part_list.append(".*" + part + ".*") %}
 {%- endfor %}
-{%- if not example.board_only %}
+{%- if not example.board_only and "com.silabs.board.none" not in board_list %}
   {%- set _ = board_list.append("com.silabs.board.none") %}
 {%- endif %}
 {%- set ide_list = ["generic-template", "makefile-ide", "simplicity-ide", "visual-studio-code", "visual-studio-code-cmake"] %}
@@ -25,7 +25,11 @@
   {%- set namespace = "template.uc" %}
 {%- endif %}
 {%- set keywords = "Matter Zigbee" if "zigbee" in example.name else "Matter" %}
-  <descriptors name="{{ example.name }}" label="{{ example.label }}" description="{{ example.description }}">
+{%- set descriptor_name = example.name %}
+{%- if example.projects and example.name.startswith('matter_wifi') %}
+{%- set descriptor_name = example.name ~ '_solution' %}
+{%- endif %}
+  <descriptors name="{{ descriptor_name }}" label="{{ example.label }}" description="{{ example.description }}">
     <properties key="namespace" value="{{ namespace }}"/>
     <properties key="keywords" value="{{ keywords }}"/>
     <properties key="solutionReferenceId" value="{{ example.path.replace('/', '.') }}"/>

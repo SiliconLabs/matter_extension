@@ -4008,7 +4008,6 @@ endpoint 1 {
     ram      attribute clusterRevision default = 2;
 
     handle command Identify;
-    handle command IdentifyQueryResponse;
     handle command IdentifyQuery;
   }
 
@@ -4017,13 +4016,9 @@ endpoint 1 {
     ram      attribute clusterRevision default = 3;
 
     handle command AddGroup;
-    handle command AddGroupResponse;
     handle command ViewGroup;
-    handle command ViewGroupResponse;
     handle command GetGroupMembership;
-    handle command GetGroupMembershipResponse;
     handle command RemoveGroup;
-    handle command RemoveGroupResponse;
     handle command RemoveAllGroups;
     handle command AddGroupIfIdentifying;
   }
@@ -4055,15 +4050,11 @@ endpoint 1 {
     ram      attribute clusterRevision default = 2;
 
     handle command RestartDevice;
-    handle command RestartDeviceResponse;
-    handle command SaveStartupParametersResponse;
-    handle command RestoreStartupParametersResponse;
     handle command ResetStartupParameters;
-    handle command ResetStartupParametersResponse;
   }
 
   server cluster Thermostat {
-    ram      attribute localTemperature;
+    ram      attribute localTemperature default = 2550;
     ram      attribute absMinHeatSetpointLimit default = 0x02BC;
     ram      attribute absMaxHeatSetpointLimit default = 0x0BB8;
     ram      attribute absMinCoolSetpointLimit default = 0x0640;
@@ -4081,9 +4072,7 @@ endpoint 1 {
     ram      attribute clusterRevision default = 3;
 
     handle command SetpointRaiseLower;
-    handle command CurrentWeeklySchedule;
     handle command SetWeeklySchedule;
-    handle command RelayStatusLog;
     handle command GetWeeklySchedule;
     handle command ClearWeeklySchedule;
     handle command GetRelayStatusLog;
@@ -4113,13 +4102,9 @@ endpoint 1 {
     ram      attribute clusterRevision default = 4;
 
     handle command AddGroup;
-    handle command AddGroupResponse;
     handle command ViewGroup;
-    handle command ViewGroupResponse;
     handle command GetGroupMembership;
-    handle command GetGroupMembershipResponse;
     handle command RemoveGroup;
-    handle command RemoveGroupResponse;
     handle command RemoveAllGroups;
     handle command AddGroupIfIdentifying;
   }

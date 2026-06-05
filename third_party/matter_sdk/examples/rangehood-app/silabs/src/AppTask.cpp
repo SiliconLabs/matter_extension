@@ -20,6 +20,8 @@
 #include "AppTask.h"
 #include "AppConfig.h"
 #include "AppEvent.h"
+#include "CustomerAppTask.h"
+#include "RangeHoodConfig.h"
 
 #include "LEDWidget.h"
 
@@ -31,23 +33,15 @@
 #endif // QR_CODE_ENABLED
 #endif // DISPLAY_ENABLED
 
-#include "RangeHoodManager.h"
 #include <app-common/zap-generated/attribute-type.h>
 #include <app-common/zap-generated/attributes/Accessors.h>
 #include <app-common/zap-generated/ids/Attributes.h>
+#include <app-common/zap-generated/ids/Clusters.h>
 #include <app/clusters/fan-control-server/fan-control-server.h>
 #include <app/server/Server.h>
 #include <app/util/attribute-storage.h>
-#include <lib/support/logging/CHIPLogging.h>
-
-#include <assert.h>
-
-#include <setup_payload/OnboardingCodesUtil.h>
-#include <setup_payload/QRCodeSetupPayloadGenerator.h>
-#include <setup_payload/SetupPayload.h>
-
 #include <lib/support/CodeUtils.h>
-
+#include <lib/support/logging/CHIPLogging.h>
 #include <platform/CHIPDeviceLayer.h>
 #include <platform/silabs/platformAbstraction/SilabsPlatform.h>
 
@@ -58,39 +52,110 @@
 
 using namespace chip;
 using namespace chip::app;
-using namespace chip::TLV;
-using namespace ::chip::DeviceLayer;
-using namespace chip::app::Clusters::FanControl;
 using namespace chip::app::Clusters;
+using namespace chip::app::Clusters::FanControl;
 using namespace chip::app::Clusters::FanControl::Attributes;
+using namespace ::chip::DeviceLayer;
 
-LEDWidget sLightLED; // Use LEDWidget for basic LED functionality
+namespace {
 
-/**********************************************************
- * AppTask Definitions
- *********************************************************/
+CustomerAppTask & AppInstance()
+{
+    return CustomerAppTask::GetAppTask();
+}
 
-AppTask AppTask::sAppTask;
+// Defaults live in RangeHoodConfig.h; consumers tune via the Configuration Wizard.
+constexpr chip::EndpointId kExtractorHoodEndpoint = EXTRACTOR_HOOD_ENDPOINT;
+constexpr chip::EndpointId kLightEndpoint         = LIGHT_ENDPOINT;
+
+ExtractorHoodEndpoint sExtractorHoodEndpoint{ kExtractorHoodEndpoint, FAN_MODE_LOW_PERCENT, FAN_MODE_MEDIUM_PERCENT,
+                                            FAN_MODE_HIGH_PERCENT };
+LightEndpoint sLightEndpoint{ kLightEndpoint };
+
+LEDWidget sLightLED;
+
+void FanControlAttributeChangeHandler(chip::EndpointId endpointId, chip::AttributeId attributeId, uint8_t * value, uint16_t size)
+{
+    VerifyOrReturn(endpointId == kExtractorHoodEndpoint,
+                   ChipLogError(NotSpecified, "FanControlAttributeChangeHandler: Invalid endpoint %u, expected %u", endpointId,
+                                kExtractorHoodEndpoint));
+
+    AppTask::Action_t action = AppTask::INVALID_ACTION;
+
+    switch (attributeId)
+    {
+    case chip::app::Clusters::FanControl::Attributes::PercentSetting::Id: {
+        CHIP_ERROR err = sExtractorHoodEndpoint.HandlePercentSettingChange(*value);
+        VerifyOrReturn(err == CHIP_NO_ERROR,
+                       ChipLogError(NotSpecified, "FanControlAttributeChangeHandler: HandlePercentSettingChange failed: %ld",
+                                    err.Format()));
+        action = AppTask::FAN_PERCENT_CHANGE_ACTION;
+        break;
+    }
+
+    case chip::app::Clusters::FanControl::Attributes::FanMode::Id: {
+        CHIP_ERROR err = sExtractorHoodEndpoint.HandleFanModeChange(*reinterpret_cast<FanModeEnum *>(value));
+        VerifyOrReturn(err == CHIP_NO_ERROR,
+                       ChipLogError(NotSpecified, "FanControlAttributeChangeHandler: HandleFanModeChange failed: %ld",
+                                    err.Format()));
+        action = AppTask::FAN_MODE_CHANGE_ACTION;
+        break;
+    }
+
+    default:
+        return;
+    }
+
+    AppEvent event;
+    event.Type                  = AppEvent::kEventType_RangeHood;
+    event.RangeHoodEvent.Action = static_cast<uint8_t>(action);
+    event.Handler               = &CustomerAppTask::ActionTriggerHandler;
+    AppInstance().PostEvent(&event);
+}
+
+void OnOffAttributeChangeHandler(chip::EndpointId endpointId, chip::AttributeId attributeId, uint8_t * value, uint16_t size)
+{
+    VerifyOrReturn(
+        endpointId == kLightEndpoint,
+        ChipLogError(NotSpecified, "OnOffAttributeChangeHandler: Invalid endpoint %u, expected %u", endpointId, kLightEndpoint));
+
+    VerifyOrReturn(value != nullptr, ChipLogError(NotSpecified, "OnOffAttributeChangeHandler: value is null"));
+    VerifyOrReturn(size >= sizeof(uint8_t), ChipLogError(NotSpecified, "OnOffAttributeChangeHandler: Invalid size %u", size));
+
+    AppTask::Action_t action = *value ? AppTask::LIGHT_ON_ACTION : AppTask::LIGHT_OFF_ACTION;
+
+    AppEvent event;
+    event.Type                  = AppEvent::kEventType_RangeHood;
+    event.RangeHoodEvent.Action = static_cast<uint8_t>(action);
+    event.Handler               = &CustomerAppTask::ActionTriggerHandler;
+    AppInstance().PostEvent(&event);
+}
+
+} // namespace
+
+ExtractorHoodEndpoint & AppTask::GetExtractorHoodEndpoint()
+{
+    return sExtractorHoodEndpoint;
+}
+
+LightEndpoint & AppTask::GetLightEndpoint()
+{
+    return sLightEndpoint;
+}
 
 CHIP_ERROR AppTask::AppInit()
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
-    chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(AppTask::ButtonEventHandler);
+    chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(&CustomerAppTask::ButtonEventHandler);
 
 #ifdef DISPLAY_ENABLED
     SuccessOrLog(GetLCD().Init((uint8_t *) "Rangehood-App"), AppServer, "Failed to initialize LCD");
     GetLCD().SetCustomUI(RangeHoodUI::DrawUI);
 #endif // DISPLAY_ENABLED
 
-    // Initialization of RangeHoodManager and endpoints of range hood.
-    err = RangeHoodManager::GetInstance().Init();
-    if (err != CHIP_NO_ERROR)
-    {
-        ChipLogError(AppServer, "RangeHoodManager initialization failed");
-        return err;
-    }
+    err = AppInstance().InitRangeHood();
+    VerifyOrReturnError(err == CHIP_NO_ERROR, err, ChipLogError(AppServer, "InitRangeHood failed"));
 
-// Update the LCD with the Stored value. Show QR Code if not provisioned
 #ifdef DISPLAY_ENABLED
     GetLCD().WriteDemoUI(false);
 #ifdef QR_CODE_ENABLED
@@ -104,11 +169,19 @@ CHIP_ERROR AppTask::AppInit()
     }
 #endif // QR_CODE_ENABLED
 #endif // DISPLAY_ENABLED
+
+    return err;
+}
+
+CHIP_ERROR AppTask::InitRangeHood()
+{
+    VerifyOrReturnError(sExtractorHoodEndpoint.Init() == CHIP_NO_ERROR, CHIP_ERROR_INTERNAL);
+
     sLightLED.Init(LIGHT_LED);
     bool lightState = false;
 
     chip::DeviceLayer::PlatformMgr().LockChipStack();
-    CHIP_ERROR status = RangeHoodManager::GetInstance().GetLightEndpoint().GetOnOffState(lightState);
+    CHIP_ERROR status = sLightEndpoint.GetOnOffState(lightState);
     chip::DeviceLayer::PlatformMgr().UnlockChipStack();
     if (status == CHIP_NO_ERROR)
     {
@@ -116,15 +189,15 @@ CHIP_ERROR AppTask::AppInit()
     }
     else
     {
-        ChipLogError(AppServer, "AppTask.Init: failed to  read initial light state");
+        ChipLogError(AppServer, "InitRangeHood: failed to read initial light state");
     }
 
-    return err;
+    return CHIP_NO_ERROR;
 }
 
 CHIP_ERROR AppTask::StartAppTask()
 {
-    return BaseApplication::StartAppTask(AppTaskMain);
+    return BaseApplication::StartAppTask(&AppTask::AppTaskMain);
 }
 
 void AppTask::AppTaskMain(void * pvParameter)
@@ -132,7 +205,7 @@ void AppTask::AppTaskMain(void * pvParameter)
     AppEvent event;
     osMessageQueueId_t sAppEventQueue = *(static_cast<osMessageQueueId_t *>(pvParameter));
 
-    CHIP_ERROR err = sAppTask.Init();
+    CHIP_ERROR err = AppInstance().Init();
     if (err != CHIP_NO_ERROR)
     {
         ChipLogError(AppServer, "AppTask.Init() failed");
@@ -140,7 +213,7 @@ void AppTask::AppTaskMain(void * pvParameter)
     }
 
 #if !(defined(CHIP_CONFIG_ENABLE_ICD_SERVER) && CHIP_CONFIG_ENABLE_ICD_SERVER)
-    sAppTask.StartStatusLEDTimer();
+    AppInstance().StartStatusLEDTimer();
 #endif
 
     ChipLogProgress(AppServer, "App Task started");
@@ -150,7 +223,7 @@ void AppTask::AppTaskMain(void * pvParameter)
         osStatus_t eventReceived = osMessageQueueGet(sAppEventQueue, &event, NULL, osWaitForever);
         while (eventReceived == osOK)
         {
-            sAppTask.DispatchEvent(&event);
+            AppInstance().DispatchEvent(&event);
             eventReceived = osMessageQueueGet(sAppEventQueue, &event, NULL, 0);
         }
     }
@@ -161,29 +234,26 @@ void AppTask::ButtonEventHandler(uint8_t button, uint8_t btnAction)
     AppEvent button_event           = {};
     button_event.Type               = AppEvent::kEventType_Button;
     button_event.ButtonEvent.Action = btnAction;
-    // Only invoke our RangeHood ButtonHandler for BTN1 (APP_ACTION_BUTTON) presses.
     if (button == APP_ACTION_BUTTON &&
         btnAction == static_cast<uint8_t>(::chip::DeviceLayer::Silabs::SilabsPlatform::ButtonAction::ButtonPressed))
     {
-        button_event.Handler = FanControlButtonHandler;
-        AppTask::GetAppTask().PostEvent(&button_event);
+        button_event.Handler = &CustomerAppTask::FanControlButtonHandler;
+        AppInstance().PostEvent(&button_event);
     }
     else if (button == APP_FUNCTION_BUTTON)
     {
-        // Defer other button events to generic base handler
         button_event.Handler = BaseApplication::ButtonHandler;
-        AppTask::GetAppTask().PostEvent(&button_event);
+        AppInstance().PostEvent(&button_event);
     }
 }
 
 void AppTask::ActionTriggerHandler(AppEvent * aEvent)
 {
-    // Direct action trigger without initiated/completed separation
-    RangeHoodManager::Action_t action = static_cast<RangeHoodManager::Action_t>(aEvent->RangeHoodEvent.Action);
+    Action_t action = static_cast<Action_t>(aEvent->RangeHoodEvent.Action);
 
     switch (action)
     {
-    case RangeHoodManager::LIGHT_ON_ACTION:
+    case LIGHT_ON_ACTION:
         ChipLogProgress(AppServer, "Light ON");
         sLightLED.Set(true);
 #ifdef DISPLAY_ENABLED
@@ -191,7 +261,7 @@ void AppTask::ActionTriggerHandler(AppEvent * aEvent)
 #endif // DISPLAY_ENABLED
         break;
 
-    case RangeHoodManager::LIGHT_OFF_ACTION:
+    case LIGHT_OFF_ACTION:
         ChipLogProgress(AppServer, "Light OFF");
         sLightLED.Set(false);
 #ifdef DISPLAY_ENABLED
@@ -199,13 +269,13 @@ void AppTask::ActionTriggerHandler(AppEvent * aEvent)
 #endif // DISPLAY_ENABLED
         break;
 
-    case RangeHoodManager::FAN_MODE_CHANGE_ACTION:
+    case FAN_MODE_CHANGE_ACTION:
 #ifdef DISPLAY_ENABLED
         GetLCD().WriteDemoUI(false);
 #endif // DISPLAY_ENABLED
         break;
 
-    case RangeHoodManager::FAN_PERCENT_CHANGE_ACTION:
+    case FAN_PERCENT_CHANGE_ACTION:
         // TODO: Update LCD with new fan percent
         break;
 
@@ -217,17 +287,47 @@ void AppTask::ActionTriggerHandler(AppEvent * aEvent)
 
 void AppTask::FanControlButtonHandler(AppEvent * aEvent)
 {
-    /**
-     * Handle button press events for range hood control
-     * This function processes button events specifically for the action button (BTN1)
-     * which controls the fan operation in the range hood application.
-     */
     if (aEvent->ButtonEvent.Action ==
         static_cast<uint8_t>(::chip::DeviceLayer::Silabs::SilabsPlatform::ButtonAction::ButtonPressed))
     {
-        // Schedule fan mode toggle on CHIP stack thread to avoid direct access causing locking errors.
         SuccessOrLog(chip::DeviceLayer::PlatformMgr().ScheduleWork(
-                         [](intptr_t) { RETURN_SAFELY_IGNORED RangeHoodMgr().GetExtractorHoodEndpoint().ToggleFanMode(); }, 0),
+                         [](intptr_t) { RETURN_SAFELY_IGNORED sExtractorHoodEndpoint.ToggleFanMode(); }, 0),
                      AppServer, "Failed to schedule work to toggle fan mode");
+    }
+}
+
+void AppTask::DMPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
+                                            uint8_t * value)
+{
+    ClusterId clusterId     = attributePath.mClusterId;
+    AttributeId attributeId = attributePath.mAttributeId;
+    EndpointId endpointId   = attributePath.mEndpointId;
+
+    VerifyOrReturn(value != nullptr);
+
+    ChipLogDetail(Zcl, "Cluster callback: " ChipLogFormatMEI " on endpoint %u", ChipLogValueMEI(clusterId), endpointId);
+
+    switch (clusterId)
+    {
+    case FanControl::Id:
+        ChipLogDetail(Zcl, "FanControl attribute ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u on endpoint %u",
+                      ChipLogValueMEI(attributeId), type, *value, size, endpointId);
+        FanControlAttributeChangeHandler(endpointId, attributeId, value, size);
+        break;
+
+    case OnOff::Id:
+        ChipLogDetail(Zcl, "OnOff attribute ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u on endpoint %u",
+                      ChipLogValueMEI(attributeId), type, *value, size, endpointId);
+        OnOffAttributeChangeHandler(endpointId, attributeId, value, size);
+        break;
+
+    case Clusters::Identify::Id:
+        ChipLogDetail(Zcl, "Identify attribute ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u on endpoint %u",
+                      ChipLogValueMEI(attributeId), type, *value, size, endpointId);
+        break;
+
+    default:
+        ChipLogDetail(Zcl, "Unhandled cluster " ChipLogFormatMEI " on endpoint %u", ChipLogValueMEI(clusterId), endpointId);
+        break;
     }
 }

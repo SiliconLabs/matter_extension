@@ -20,6 +20,7 @@
 #include "AppTask.h"
 #include "AppConfig.h"
 #include "AppEvent.h"
+#include "CustomerAppTask.h"
 
 #include "LEDWidget.h"
 
@@ -30,10 +31,7 @@
 #endif // QR_CODE_ENABLED
 #endif // DISPLAY_ENABLED
 
-#include <app-common/zap-generated/attributes/Accessors.h>
 #include <app/server/Server.h>
-#include <app/util/attribute-storage.h>
-#include <assert.h>
 #include <lib/support/CodeUtils.h>
 #include <platform/CHIPDeviceLayer.h>
 #include <platform/silabs/platformAbstraction/SilabsPlatform.h>
@@ -53,18 +51,21 @@ using namespace chip;
 using namespace chip::app;
 using namespace ::chip::DeviceLayer;
 using namespace ::chip::DeviceLayer::Silabs;
-using namespace chip::TLV;
-using namespace ::chip::DeviceLayer;
 
 namespace {
+
+CustomerAppTask & AppInstance()
+{
+    return CustomerAppTask::GetAppTask();
+}
+
 LEDWidget sLightLED;
 } // namespace
 
-AppTask AppTask::sAppTask;
 CHIP_ERROR AppTask::AppInit()
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
-    GetPlatform().SetButtonsCb(AppTask::ButtonEventHandler);
+    GetPlatform().SetButtonsCb(&CustomerAppTask::ButtonEventHandler);
 
     sLightLED.Init(LIGHT_LED);
     sLightLED.Set(false);
@@ -96,7 +97,7 @@ void AppTask::AppTaskMain(void * pvParameter)
     AppEvent event;
     osMessageQueueId_t sAppEventQueue = *(static_cast<osMessageQueueId_t *>(pvParameter));
 
-    CHIP_ERROR err = sAppTask.Init();
+    CHIP_ERROR err = AppInstance().Init();
 
     if (err != CHIP_NO_ERROR)
     {
@@ -105,9 +106,9 @@ void AppTask::AppTaskMain(void * pvParameter)
     }
 
 #if (defined(CHIP_CONFIG_ENABLE_ICD_SERVER) && CHIP_CONFIG_ENABLE_ICD_SERVER)
-    Server::GetInstance().GetICDManager().RegisterObserver(&sAppTask);
+    Server::GetInstance().GetICDManager().RegisterObserver(&AppInstance());
 #else
-    sAppTask.StartStatusLEDTimer();
+    AppInstance().StartStatusLEDTimer();
 #endif
 
     SILABS_LOG("App Task started");
@@ -117,7 +118,7 @@ void AppTask::AppTaskMain(void * pvParameter)
         osStatus_t eventReceived = osMessageQueueGet(sAppEventQueue, &event, NULL, osWaitForever);
         while (eventReceived == osOK)
         {
-            sAppTask.DispatchEvent(&event);
+            AppInstance().DispatchEvent(&event);
             eventReceived = osMessageQueueGet(sAppEventQueue, &event, NULL, 0);
         }
     }
@@ -139,39 +140,39 @@ void AppTask::ButtonEventHandler(uint8_t button, uint8_t btnAction)
 
     if (button == APP_USER_ACTION)
     {
-        button_event.Handler = ApplicationEventHandler;
-        sAppTask.PostEvent(&button_event);
+        button_event.Handler = &CustomerAppTask::ApplicationEventHandler;
+        AppInstance().PostEvent(&button_event);
     }
     if (button == APP_FUNCTION_BUTTON)
     {
         button_event.Handler = BaseApplication::ButtonHandler;
-        AppTask::GetAppTask().PostEvent(&button_event);
+        AppInstance().PostEvent(&button_event);
     }
 }
 
 #if defined(CHIP_CONFIG_ENABLE_ICD_SERVER) && CHIP_CONFIG_ENABLE_ICD_SERVER
 // DO NOT COPY for product logic. This is only a showcase of the Platform app support for the LIT ICD feature in test.
-void AppTask::OnEnterActiveMode()
+void AppTask::OnEnterActiveModeDefault()
 {
 #ifdef DISPLAY_ENABLED
-    sAppTask.GetLCD().WriteDemoUI(true);
+    AppInstance().GetLCD().WriteDemoUI(true);
 #endif
 }
 
 // DO NOT COPY for product logic. This is only a showcase of the Platform app support for the LIT ICD feature in test.
-void AppTask::OnEnterIdleMode()
+void AppTask::OnEnterIdleModeDefault()
 {
 #ifdef DISPLAY_ENABLED
-    sAppTask.GetLCD().WriteDemoUI(false);
+    AppInstance().GetLCD().WriteDemoUI(false);
 #endif
 }
 
-void AppTask::OnTransitionToIdle()
+void AppTask::OnTransitionToIdleDefault()
 {
     ChipLogDetail(DeviceLayer, "AppTask transitioning to idle");
 }
 
-void AppTask::OnICDModeChange()
+void AppTask::OnICDModeChangeDefault()
 {
     if (ICDConfigurationData::GetInstance().GetICDMode() == ICDConfigurationData::ICDMode::SIT)
     {

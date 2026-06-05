@@ -185,7 +185,7 @@ void MatterPerfTest::PingPerfTestOnConnnection(Messaging::ExchangeManager & exch
     requestsSent++;
     pingStartTime = chip::System::SystemClock().GetMonotonicMilliseconds64().count();
 
-    err = Controller::InvokeCommandRequest(&exchangeMgr, sessionHandle, chip::EndpointId(0), EmptyCommand, onSuccess, onFailure,
+    err = Controller::InvokeCommandRequest(&exchangeMgr, sessionHandle, chip::EndpointId(1), EmptyCommand, onSuccess, onFailure,
                                            NullOptional,
                                            MakeOptional(chip::System::Clock::Timeout(timeoutMs)));
 

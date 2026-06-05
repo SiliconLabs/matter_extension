@@ -21,7 +21,6 @@
 
 #include "AppConfig.h"
 #include "AppTask.h"
-#include "RangeHoodManager.h"
 #include "RangeHoodUI.h"
 #include "demo-ui-bitmaps.h"
 #include "dmd.h"
@@ -106,8 +105,8 @@ void RangeHoodUI::DrawRangehoodStatus(GLIB_Context_t * glibContext)
     bool lightOn     = false;
 
     PlatformMgr().LockChipStack();
-    CHIP_ERROR fanStatus   = RangeHoodMgr().GetExtractorHoodEndpoint().GetFanMode(mode);
-    CHIP_ERROR lightStatus = RangeHoodMgr().GetLightEndpoint().GetOnOffState(lightOn);
+    CHIP_ERROR fanStatus   = AppTask::GetExtractorHoodEndpoint().GetFanMode(mode);
+    CHIP_ERROR lightStatus = AppTask::GetLightEndpoint().GetOnOffState(lightOn);
     PlatformMgr().UnlockChipStack();
 
     if (fanStatus != CHIP_NO_ERROR)

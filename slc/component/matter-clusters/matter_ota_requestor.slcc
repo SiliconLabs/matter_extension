@@ -23,6 +23,18 @@ source:
   - path: third_party/matter_sdk/src/app/clusters/ota-requestor/OTARequestorCluster.cpp
   - path: third_party/matter_sdk/src/app/clusters/ota-requestor/OTATestEventTriggerHandler.cpp
 include:
+  - path: third_party/matter_sdk/src/controller
+    file_list:
+      - path: CHIPCluster.h
+      - path: CommandSenderAllocator.h
+      - path: InvokeInteraction.h
+      - path: ReadInteraction.h
+      - path: TypedCommandCallback.h
+      - path: TypedReadCallback.h
+      - path: WriteInteraction.h
+  - path: third_party/matter_sdk/src/app
+    file_list:
+      - path: BufferedReadCallback.h
   - path: third_party/matter_sdk/src/app/clusters/ota-requestor
     file_list:
       - path: BDXDownloader.h
@@ -43,19 +55,6 @@ include:
       - path: OTARequestorStorage.h
       - path: OTARequestorUserConsentDelegate.h
       - path: OTATestEventTriggerHandler.h
-# TODO these dependencies need to be fixed on CSA
-  - path: third_party/matter_sdk/src/controller
-    file_list:
-      - path: CHIPCluster.h
-      - path: InvokeInteraction.h
-      - path: TypedCommandCallback.h
-      - path: ReadInteraction.h
-      - path: TypedReadCallback.h
-      - path: WriteInteraction.h
-      - path: CommandSenderAllocator.h
-  - path: third_party/matter_sdk/src/app
-    file_list:
-      - path: BufferedReadCallback.h
 template_contribution:
   - name: component_catalog
     value: matter_ota_requestor

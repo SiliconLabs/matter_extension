@@ -50,7 +50,6 @@ component:
   - id: matter_operational_credentials
   - id: matter_ota_support
   - id: matter_ota_requestor
-  - id: matter_power_source
   - id: matter_software_diagnostics
   - id: matter_thread_network_diagnostics
   - id: matter_time_format_localization

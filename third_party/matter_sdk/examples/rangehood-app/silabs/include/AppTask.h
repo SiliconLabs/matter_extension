@@ -19,88 +19,54 @@
 
 #pragma once
 
-/**********************************************************
- * Includes
- *********************************************************/
-
-#include <stdbool.h>
-#include <stdint.h>
-
 #include "AppEvent.h"
 #include "BaseApplication.h"
+#include "ExtractorHoodEndpoint.h"
+#include "LightEndpoint.h"
 
-#include "FreeRTOS.h"
-#include "timers.h" // provides FreeRTOS timer support
-#include <ble/BLEEndPoint.h>
+#include <app/ConcreteAttributePath.h>
 #include <lib/core/CHIPError.h>
-#include <platform/CHIPDeviceLayer.h>
-
-#include "RangeHoodManager.h"
-
-/**********************************************************
- * Defines
- *********************************************************/
-
-// Application-defined error codes in the CHIP_ERROR space.
-#define APP_ERROR_EVENT_QUEUE_FAILED CHIP_APPLICATION_ERROR(0x01)
-#define APP_ERROR_CREATE_TASK_FAILED CHIP_APPLICATION_ERROR(0x02)
-#define APP_ERROR_UNHANDLED_EVENT CHIP_APPLICATION_ERROR(0x03)
-#define APP_ERROR_CREATE_TIMER_FAILED CHIP_APPLICATION_ERROR(0x04)
-#define APP_ERROR_START_TIMER_FAILED CHIP_APPLICATION_ERROR(0x05)
-#define APP_ERROR_STOP_TIMER_FAILED CHIP_APPLICATION_ERROR(0x06)
-
-/**********************************************************
- * AppTask Declaration
- *********************************************************/
 
 class AppTask : public BaseApplication
 {
-
 public:
+    enum Action_t : uint8_t
+    {
+        LIGHT_ON_ACTION = 0,
+        LIGHT_OFF_ACTION,
+        FAN_PERCENT_CHANGE_ACTION,
+        FAN_MODE_CHANGE_ACTION,
+
+        INVALID_ACTION
+    };
+
     AppTask() = default;
 
-    static AppTask & GetAppTask() { return sAppTask; }
+    static AppTask & GetAppTask();
 
-    /**
-     * @brief AppTask task main loop function
-     *
-     * @param pvParameter FreeRTOS task parameter
-     */
     static void AppTaskMain(void * pvParameter);
 
     CHIP_ERROR StartAppTask();
 
-    /**
-     * @brief Event handler when a button is pressed
-     * Function posts an event for button processing
-     *
-     * @param buttonHandle APP_FUNCTION_BUTTON
-     * @param btnAction button action - SL_SIMPLE_BUTTON_PRESSED,
-     *                  SL_SIMPLE_BUTTON_RELEASED or SL_SIMPLE_BUTTON_DISABLED
-     */
+    /** @brief Platform button callback; posts fan-control or base application events. */
     static void ButtonEventHandler(uint8_t button, uint8_t btnAction);
 
-    /**
-     * @brief Handle range hood action trigger event (unified handler for light and fan actions)
-     *
-     * @param aEvent event received
-     */
+    /** @brief Applies range-hood actions (light/fan) to LED and display after attribute changes. */
     static void ActionTriggerHandler(AppEvent * aEvent);
 
-private:
-    static AppTask sAppTask;
-
-    /**
-     * @brief Override of BaseApplication::AppInit() virtual method, called by BaseApplication::Init()
-     *
-     * @return CHIP_ERROR
-     */
-    CHIP_ERROR AppInit() override;
-
-    /**
-     * @brief Handle FAN ON/OFF when BTN1 pressed
-     *
-     * @param aEvent event received
-     */
+    /** @brief Action-button handler; toggles extractor-hood fan mode. */
     static void FanControlButtonHandler(AppEvent * aEvent);
+
+    /** @brief Data-model attribute-change hook; forwards FanControl and OnOff updates. */
+    void DMPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
+                                       uint8_t * value);
+
+    /** @brief Returns the extractor-hood endpoint (EP1) helper. */
+    static ExtractorHoodEndpoint & GetExtractorHoodEndpoint();
+    /** @brief Returns the light endpoint (EP2) helper. */
+    static LightEndpoint & GetLightEndpoint();
+
+protected:
+    CHIP_ERROR AppInit() override;
+    CHIP_ERROR InitRangeHood();
 };

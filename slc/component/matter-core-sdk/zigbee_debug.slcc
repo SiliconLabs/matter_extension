@@ -13,7 +13,6 @@ requires:
   - name: zigbee_debug_print
   - name: zigbee_zcl_cli
   - name: zigbee_core_cli
-  - name: rail_mux_aux
 provides:
   - name: matter_zigbee_debug
 define:

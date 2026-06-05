@@ -29,11 +29,13 @@
 #endif // DISPLAY_ENABLED
 
 #include <app-common/zap-generated/attributes/Accessors.h>
+#include <app-common/zap-generated/callback.h>
 #include <app-common/zap-generated/cluster-objects.h>
 #include <app-common/zap-generated/ids/Attributes.h>
 #include <app-common/zap-generated/ids/Clusters.h>
 #include <app/clusters/thermostat-server/ThermostatCluster.h>
 #include <app/server/Server.h>
+#include <thermostat-delegate-impl.h>
 #include <app/util/attribute-storage.h>
 #include <cmsis_os2.h>
 #include <lib/support/CodeUtils.h>
@@ -62,7 +64,7 @@ namespace ThermAttr = chip::app::Clusters::Thermostat::Attributes;
 
 namespace {
 
-CustomerAppTask & appInstance()
+CustomerAppTask & AppInstance()
 {
     return CustomerAppTask::GetAppTask();
 }
@@ -102,7 +104,7 @@ CHIP_ERROR AppTask::AppInit()
     GetLCD().SetCustomUI(ThermostatUI::DrawUI);
 #endif
 
-    err = appInstance().InitThermostat();
+    err = AppInstance().InitThermostat();
     if (err != CHIP_NO_ERROR)
     {
         ChipLogError(AppServer, "InitThermostat() failed: %" CHIP_ERROR_FORMAT, err.Format());
@@ -121,7 +123,7 @@ CHIP_ERROR AppTask::InitThermostat()
         return APP_ERROR_CREATE_TIMER_FAILED;
     }
 
-    CHIP_ERROR err = appInstance().InitSensor();
+    CHIP_ERROR err = AppInstance().InitSensor();
     VerifyOrReturnError(err == CHIP_NO_ERROR, err,
                         ChipLogError(AppServer, "InitSensor() failed: %" CHIP_ERROR_FORMAT, err.Format()));
 
@@ -222,7 +224,7 @@ void AppTask::ButtonEventHandler(uint8_t button, uint8_t btnAction)
     if (button == APP_FUNCTION_BUTTON)
     {
         aEvent.Handler = BaseApplication::ButtonHandler;
-        appInstance().PostEvent(&aEvent);
+        AppInstance().PostEvent(&aEvent);
     }
 }
 
@@ -231,7 +233,7 @@ void AppTask::SensorTimerEventHandler(void * /* arg */)
     AppEvent event;
     event.Type    = AppEvent::kEventType_Timer;
     event.Handler = &CustomerAppTask::TemperatureUpdateEventHandler;
-    appInstance().PostEvent(&event);
+    AppInstance().PostEvent(&event);
 }
 
 void AppTask::TemperatureUpdateEventHandler(AppEvent * /* aEvent */)
@@ -241,7 +243,7 @@ void AppTask::TemperatureUpdateEventHandler(AppEvent * /* aEvent */)
     static int16_t sLastTemperature = 0;
 
     int16_t temperature = 0;
-    CHIP_ERROR err      = appInstance().GetTemperature(temperature);
+    CHIP_ERROR err      = AppInstance().GetTemperature(temperature);
     VerifyOrReturn(
         err == CHIP_NO_ERROR,
         ChipLogError(AppServer, "GetTemperature() failed: %" CHIP_ERROR_FORMAT ", skipping LocalTemperature::Set", err.Format()));
@@ -349,4 +351,17 @@ void AppTask::DMPostAttributeChangeCallback(const ConcreteAttributePath & attrib
 #ifdef SL_MATTER_ENABLE_AWS
     matterAws::control::AttributeHandler(attributePath.mEndpointId, attributeId);
 #endif // SL_MATTER_ENABLE_AWS
+}
+
+void AppTask::DMThermostatClusterInit(chip::EndpointId endpoint)
+{
+    using namespace chip::app::Clusters::Thermostat;
+    auto & delegate = ThermostatDelegate::GetInstance();
+    SetDefaultDelegate(endpoint, &delegate);
+}
+
+// emberAfThermostatClusterInitCallback — weak ZAP entry point. CRTP forwarder into AppTask.
+void emberAfThermostatClusterInitCallback(EndpointId endpoint)
+{
+    CustomerAppTask::GetAppTask().DMThermostatClusterInit(endpoint);
 }

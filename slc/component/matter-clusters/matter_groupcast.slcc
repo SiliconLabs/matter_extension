@@ -23,6 +23,3 @@ include:
 template_contribution:
   - name: component_catalog
     value: matter_groupcast
-define:
-  - name: CHIP_CONFIG_ENABLE_GROUPCAST
-    value: 1

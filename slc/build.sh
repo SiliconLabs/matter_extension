@@ -154,6 +154,8 @@ if [ -z "$POST_BUILD_EXE" ]; then
 	export POST_BUILD_EXE=$(which commander)
 fi
 
+USE_SOLUTION=false
+
 # Determine vars based on project type provided (.slcw solution example or .slcp project example file)
 if [[ "$SILABS_APP_PATH" == *.slcw ]]; then
 	SILABS_APP=$(basename "$SILABS_APP_PATH" .slcw)
@@ -162,6 +164,7 @@ if [[ "$SILABS_APP_PATH" == *.slcw ]]; then
 	OUTPUT_DIR="out/$BRD_ONLY/${SILABS_APP}_solution"
 	# CMake subdir under OUTPUT_DIR for solution (only used when USE_LLVM=true).
 	CMAKE_SUBDIR="cmake_llvm"
+	USE_SOLUTION=true
 
 elif [[ "$SILABS_APP_PATH" == *.slcp ]]; then
 	SILABS_APP=$(basename "$SILABS_APP_PATH" .slcp)
@@ -169,7 +172,7 @@ elif [[ "$SILABS_APP_PATH" == *.slcp ]]; then
 	OUTPUT_DIR="out/$BRD_ONLY/$SILABS_APP"
 	MAKE_FILE=$SILABS_APP.Makefile
 	CMAKE_SUBDIR="cmake_llvm"
-
+	USE_SOLUTION=false
 else
 	echo "ERROR: Did not provide a valid path for a .slcw or .slcp project file."
 	exit 1
@@ -450,8 +453,12 @@ else
 	echo "Building solution..."
 	if [ "$USE_LLVM" = true ]; then
 		# Note: When slc-cli 6.0.21 releases, need to revert back to: 
-		# cmake_configure_and_build "$OUTPUT_DIR/$CMAKE_SUBDIR" "solution" || exit 1 
-		cmake_configure_and_build "$OUTPUT_DIR/${SILABS_APP}_llvm_cmake" "solution" || exit 1        
+		# cmake_configure_and_build "$OUTPUT_DIR/$CMAKE_SUBDIR" "solution" || exit 1
+		if [ "$USE_SOLUTION" = true ]; then
+			cmake_configure_and_build "$OUTPUT_DIR/${SILABS_APP}_llvm_cmake" "solution" || exit 1        
+		else
+			cmake_configure_and_build "$OUTPUT_DIR/cmake_llvm" "application" || exit 1
+		fi
 	else
 		if ! make all -C "$OUTPUT_DIR" -f "$MAKE_FILE" -j13; then
 			echo "ERROR: Failed to build solution"

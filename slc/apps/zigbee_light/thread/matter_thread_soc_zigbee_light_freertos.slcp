@@ -9,7 +9,6 @@ component:
   - id: device_init
   - id: clock_manager
   - id: rail_mux
-  - id: rail_mux_aux
   - id: sl_main
   # Needed to use Network Analyser
   #- id: rail_util_pti
@@ -82,15 +81,12 @@ component:
   - { id: matter }
   - { id: matter_ota_support }
   - { id: matter_ota_requestor }
-  - { id: matter_software_diagnostics }
   - { id: matter_access_control }
   - { id: matter_general_commissioning }
   - { id: matter_identify }
   - { id: matter_general_diagnostics }
   - { id: matter_color_control }
   - { id: matter_level_control }
-  - { id: matter_user_label }
-  - { id: matter_fixed_label }
   - { id: matter_shell }
   - { id: matter_power_source }
   - { id: app_common }
@@ -106,7 +102,6 @@ component:
   - { id: matter_buttons }
   - { id: matter_configuration_over_swo }
   - { id: matter_ble }
-  - { id: matter_thread_network_diagnostics }
   - { id: matter_thread }
   - { id: matter_leds }
 
@@ -183,11 +178,11 @@ configuration:
     value: 16
   - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS
     value: 1
-# Additional config when using ot_coap_cert_libs
+  # Additional config when using ot_coap_cert_libs
   - name: SL_MBEDTLS_KEY_EXCHANGE_PSK_ENABLED
     value: 1
     condition: [ot_coap_cert_libs]
-# series 3 requires more stack in zb stacks
+  # series 3 requires more stack in zb stacks
   - name: SL_CLI_EXAMPLE_TASK_STACK_SIZE
     value: 1500
     condition:

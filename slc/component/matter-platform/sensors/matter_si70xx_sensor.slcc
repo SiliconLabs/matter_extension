@@ -31,3 +31,5 @@ requires:
     condition: [matter_platform_mg]
   - name: sl_si70xx
     condition: [matter_platform_siwx917]
+  - name: sl_i2c
+    condition: [matter_platform_siwx917]

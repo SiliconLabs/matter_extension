@@ -45,7 +45,16 @@ FanControlManager FanControlManager::sFan(FanControlMgr().GetEndPoint());
 
 namespace {
 LEDWidget sFanLED;
+
+uint8_t SpeedToPercent(uint8_t speed, uint8_t speedMax)
+{
+    if (speedMax == 0)
+    {
+        return 0;
+    }
+    return static_cast<uint8_t>((static_cast<uint16_t>(speed) * 100) / speedMax);
 }
+} // namespace
 
 CHIP_ERROR FanControlManager::Init()
 {
@@ -118,7 +127,7 @@ Status FanControlManager::HandleStep(StepDirectionEnum aDirection, bool aWrap, b
     }
 
     // Convert SpeedSetting to PercentSetting
-    uint8_t curPercentSetting = ((static_cast<uint16_t>(curSpeedSetting) * 100) / mSpeedMax);
+    uint8_t curPercentSetting = SpeedToPercent(curSpeedSetting, mSpeedMax);
 
     AttributeUpdateInfo * data = chip::Platform::New<AttributeUpdateInfo>();
     data->percentSetting       = curPercentSetting;
@@ -260,45 +269,48 @@ void FanControlManager::UpdateFanMode()
 void FanControlManager::FanModeWriteCallback(FanModeEnum aNewFanMode)
 {
     ChipLogDetail(NotSpecified, "FanControlManager::FanModeWriteCallback: %d", (uint8_t) aNewFanMode);
-    // Set Percent Settings, which will update the Speed Settings through callback.
+    // If PercentSetting is null, use an out-of-bounds value to force an update.
+    uint8_t percentSettingCurrent = GetPercentSetting().ValueOr(101);
     switch (aNewFanMode)
     {
     case FanModeEnum::kOff: {
-        if (speedCurrent != 0)
+        if (percentSettingCurrent != 0)
         {
-            Percent percentSetting = 0;
-            SetPercentSetting(percentSetting);
+            SetPercentSetting(0);
         }
         break;
     }
     case FanModeEnum::kLow: {
-        if (speedCurrent < kFanModeLowLowerBound || speedCurrent > kFanModeLowUpperBound)
+        const uint8_t lowPercentMin = SpeedToPercent(static_cast<uint8_t>(kFanModeLowLowerBound), mSpeedMax);
+        const uint8_t lowPercentMax = SpeedToPercent(static_cast<uint8_t>(kFanModeLowUpperBound), mSpeedMax);
+        if (percentSettingCurrent < lowPercentMin || percentSettingCurrent > lowPercentMax)
         {
-            Percent percentSetting = kFanModeLowUpperBound * mSpeedMax;
-            SetPercentSetting(percentSetting);
+            SetPercentSetting(lowPercentMin);
         }
         break;
     }
     case FanModeEnum::kMedium: {
-        if (speedCurrent < kFanModeMediumLowerBound || speedCurrent > kFanModeMediumUpperBound)
+        const uint8_t mediumPercentMin = SpeedToPercent(static_cast<uint8_t>(kFanModeMediumLowerBound), mSpeedMax);
+        const uint8_t mediumPercentMax = SpeedToPercent(static_cast<uint8_t>(kFanModeMediumUpperBound), mSpeedMax);
+        if (percentSettingCurrent < mediumPercentMin || percentSettingCurrent > mediumPercentMax)
         {
-            Percent percentSetting = kFanModeMediumLowerBound * mSpeedMax;
-            SetPercentSetting(percentSetting);
+            SetPercentSetting(mediumPercentMin);
         }
         break;
     }
     case FanModeEnum::kOn:
     case FanModeEnum::kHigh: {
-        if (speedCurrent < kFanModeHighLowerBound || speedCurrent > kFanModeHighUpperBound)
+        const uint8_t highPercentMin = SpeedToPercent(static_cast<uint8_t>(kFanModeHighLowerBound), mSpeedMax);
+        const uint8_t highPercentMax = SpeedToPercent(static_cast<uint8_t>(kFanModeHighUpperBound), mSpeedMax);
+        if (percentSettingCurrent < highPercentMin || percentSettingCurrent > highPercentMax)
         {
-            Percent percentSetting = kFanModeHighLowerBound * mSpeedMax;
-            SetPercentSetting(percentSetting);
+            SetPercentSetting(highPercentMin);
         }
         break;
     }
     case FanModeEnum::kSmart:
     case FanModeEnum::kAuto: {
-        UpdateFanMode();
+        ChipLogProgress(NotSpecified, "FanControlManager::FanModeWriteCallback: Auto");
         break;
     }
     case FanModeEnum::kUnknownEnumValue: {
@@ -312,16 +324,19 @@ void FanControlManager::FanModeWriteCallback(FanModeEnum aNewFanMode)
 
 void FanControlManager::SetPercentSetting(Percent aNewPercentSetting)
 {
-    if (aNewPercentSetting != percentCurrent)
+    DataModel::Nullable<Percent> percentSettingNullable = GetPercentSetting();
+    if (!percentSettingNullable.IsNull() && percentSettingNullable.Value() == aNewPercentSetting)
     {
-        AttributeUpdateInfo * data = chip::Platform::New<AttributeUpdateInfo>();
-        data->percentCurrent       = aNewPercentSetting;
-        data->endPoint             = GetEndPoint();
-        data->isPercentCurrent     = true;
-        if (chip::DeviceLayer::PlatformMgr().ScheduleWork(UpdateClusterState, reinterpret_cast<intptr_t>(data)) != CHIP_NO_ERROR)
-        {
-            ChipLogError(NotSpecified, "FanControlManager::SetPercentSetting: failed to update PercentSetting attribute");
-        }
+        return;
+    }
+
+    AttributeUpdateInfo * data = chip::Platform::New<AttributeUpdateInfo>();
+    data->percentSetting       = aNewPercentSetting;
+    data->endPoint             = GetEndPoint();
+    data->isPercentSetting     = true;
+    if (chip::DeviceLayer::PlatformMgr().ScheduleWork(UpdateClusterState, reinterpret_cast<intptr_t>(data)) != CHIP_NO_ERROR)
+    {
+        ChipLogError(NotSpecified, "FanControlManager::SetPercentSetting: failed to update PercentSetting attribute");
     }
 }
 

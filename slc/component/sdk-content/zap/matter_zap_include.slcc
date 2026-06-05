@@ -1,4 +1,3 @@
-# TODO: Remove once zap issue is fixed
 category: Matter|Stack
 description: Includes PM25 Zap configuration for Matter applications
 id: matter_zap_include
@@ -12,35 +11,6 @@ metadata:
     license: Zlib
 include:
   - path: slc/component/sdk-content/zap
-  - path: slc/component/sdk-content/zap/app/static-cluster-config
-    file_list:
-    - path: AdministratorCommissioning.h
-    - path: BasicInformation.h
-    - path: Binding.h
-    - path: ClosureControl.h
-    # Descriptor.h is now generated dynamically via ZAP template - see src/app/zap-templates/templates/app/slc_compatibility/static-cluster-config-Descriptor.zapt
-    - path: EthernetNetworkDiagnostics.h
-    - path: FixedLabel.h
-    - path: GeneralCommissioning.h
-    - path: GeneralDiagnostics.h
-    - path: Groupcast.h
-    - path: GroupKeyManagement.h
-    - path: IcdManagement.h
-    - path: LocalizationConfiguration.h
-    - path: RelativeHumidityMeasurement.h
-    - path: ScenesManagement.h
-    - path: SoftwareDiagnostics.h
-    - path: Switch.h
-    - path: WiFiNetworkDiagnostics.h
-    - path: TimeFormatLocalization.h
-    - path: TimeSynchronization.h
-    - path: AccessControl.h
-    - path: OperationalCredentials.h
-    - path: OtaSoftwareUpdateRequestor.h
-    - path: UserLabel.h
-    - path: UnitLocalization.h
-    - path: OccupancySensing.h
-    - path: ThreadNetworkDiagnostics.h
   - path: slc/component/sdk-content/zap/clusters/Pm25ConcentrationMeasurement
     file_list:
     - path: AttributeIds.h

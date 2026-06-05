@@ -216,7 +216,7 @@ for clustercomponentname in sorted(cluster_data.keys()):
         if len(current_include_data)>1:
             include = {}
             for i in range(len(current_include_data)):
-                if current_include_data[i]["path"] not in cluster_data[clustercomponentname]["include"]:
+                if current_include_data[i]["path"] != cluster_data[clustercomponentname]["include"]:
                     headers = []
                     for header in current_include_data[i]["file_list"]:
                         headers.append(header["path"])
@@ -259,11 +259,7 @@ for clustercomponentname in sorted(cluster_data.keys()):
     
     label_str = "label: {}".format(label)
     filedata.append(label_str)
-    # special case as only component with experimental quality
-    if clustername == "scenes":
-        filedata.append("quality: experimental")
-    else:
-        filedata.append("quality: production")
+    filedata.append("quality: production")
 
     filedata.append("metadata:")
     filedata.append("  sbom:")

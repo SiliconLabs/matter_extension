@@ -40,7 +40,6 @@ component:
   - id: matter_basic_information
   - id: matter_bindings
   - id: matter_descriptor
-  - id: matter_fixed_label
   - id: matter_general_commissioning
   - id: matter_general_diagnostics
   - id: matter_group_key_mgmt
@@ -50,10 +49,8 @@ component:
   - id: matter_operational_credentials
   - id: matter_operational_state
   - id: matter_ota_requestor
-  - id: matter_power_source
   - id: matter_software_diagnostics
   - id: matter_thread_network_diagnostics
-  - id: matter_time_format_localization
   - id: matter_user_label
   - id: matter_unit_localization
   - id: matter_default_lcd_config

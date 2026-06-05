@@ -40,7 +40,7 @@
  * * Replace "struct tcp_pcb" with "struct altcp_pcb"
  * * Prefix all called tcp API functions with "altcp_" instead of "tcp_" to link
  *   against the altcp functions
- * * @ref altcp_new (and @ref altcp_new_ip_type/@ref altcp_new_ip6) take
+ * * @ref matter_aws_altcp_new (and @ref matter_aws_altcp_new_ip_type/@ref matter_aws_altcp_new_ip6) take
  *   an @ref altcp_allocator_t as an argument, whereas the original tcp API
  *   functions take no arguments.
  * * An @ref altcp_allocator_t allocator is an object that holds a pointer to an
@@ -49,7 +49,7 @@
  *   even need to know if it uses TLS or pure TCP, this is handled at runtime
  *   by passing a specific allocator.
  * * An application can alternatively bind hard to the altcp_tls API by calling
- *   @ref altcp_tls_new or @ref altcp_tls_wrap.
+ *   @ref matter_aws_altcp_tls_new or @ref matter_aws_altcp_tls_wrap.
  * * The TLS layer is not directly implemented by lwIP, but a port to mbedTLS is
  *   provided.
  * * Another altcp layer is proxy-connect to use TLS behind a HTTP proxy (see
@@ -60,9 +60,9 @@
  * An altcp allocator is created by the application by combining an allocator
  * callback function and a corresponding state, e.g.:\code{.c}
  * static const unsigned char cert[] = {0x2D, ... (see mbedTLS doc for how to create this)};
- * struct altcp_tls_config * conf = altcp_tls_create_config_client(cert, sizeof(cert));
+ * struct altcp_tls_config * conf = matter_aws_altcp_tls_create_config_client(cert, sizeof(cert));
  * altcp_allocator_t tls_allocator = {
- *   altcp_tls_alloc, conf
+ *   matter_aws_altcp_tls_alloc, conf
  * };
  * \endcode
  *
@@ -74,8 +74,8 @@
  *
  * It is not defined by lwIP itself but by the TLS port (e.g. altcp_tls to mbedTLS
  * adaption). However, the parameters used to create it are defined in @ref
- * altcp_tls.h (see @ref altcp_tls_create_config_server_privkey_cert for servers
- * and @ref altcp_tls_create_config_client/@ref altcp_tls_create_config_client_2wayauth
+ * altcp_tls.h (see @ref matter_aws_altcp_tls_create_config_server_privkey_cert for servers
+ * and @ref matter_aws_altcp_tls_create_config_client/@ref matter_aws_altcp_tls_create_config_client_2wayauth
  * for clients).
  *
  * For mbedTLS, ensure that certificates can be parsed by 'mbedtls_x509_crt_parse()' and
@@ -126,13 +126,13 @@
 
 #include <string.h>
 
-extern const struct altcp_functions altcp_tcp_functions;
+extern const struct altcp_functions matter_aws_altcp_tcp_functions;
 
 /**
  * For altcp layer implementations only: allocate a new struct altcp_pcb from the pool
  * and zero the memory
  */
-struct altcp_pcb * altcp_alloc(void)
+struct altcp_pcb * matter_aws_altcp_alloc(void)
 {
     struct altcp_pcb * ret = (struct altcp_pcb *) pvPortMalloc(sizeof(struct altcp_pcb));
     if (ret != NULL)
@@ -145,7 +145,7 @@ struct altcp_pcb * altcp_alloc(void)
 /**
  * For altcp layer implementations only: return a struct altcp_pcb to the pool
  */
-void altcp_free(struct altcp_pcb * conn)
+void matter_aws_altcp_free(struct altcp_pcb * conn)
 {
     if (conn)
     {
@@ -159,38 +159,38 @@ void altcp_free(struct altcp_pcb * conn)
 
 /**
  * @ingroup altcp
- * altcp_new_ip6: @ref altcp_new for IPv6
+ * matter_aws_altcp_new_ip6: @ref matter_aws_altcp_new for IPv6
  */
-struct altcp_pcb * altcp_new_ip6(altcp_allocator_t * allocator)
+struct altcp_pcb * matter_aws_altcp_new_ip6(altcp_allocator_t * allocator)
 {
-    return altcp_new_ip_type(allocator, IPADDR_TYPE_V6);
+    return matter_aws_altcp_new_ip_type(allocator, IPADDR_TYPE_V6);
 }
 
 /**
  * @ingroup altcp
- * altcp_new: @ref altcp_new for IPv4
+ * matter_aws_altcp_new: @ref matter_aws_altcp_new for IPv4
  */
-struct altcp_pcb * altcp_new(altcp_allocator_t * allocator)
+struct altcp_pcb * matter_aws_altcp_new(altcp_allocator_t * allocator)
 {
-    return altcp_new_ip_type(allocator, IPADDR_TYPE_V4);
+    return matter_aws_altcp_new_ip_type(allocator, IPADDR_TYPE_V4);
 }
 
 /**
  * @ingroup altcp
- * altcp_new_ip_type: called by applications to allocate a new pcb with the help of an
+ * matter_aws_altcp_new_ip_type: called by applications to allocate a new pcb with the help of an
  * allocator function.
  *
  * @param allocator allocator function and argument
  * @param ip_type IP version of the pcb (@ref lwip_ip_addr_type)
  * @return a new altcp_pcb or NULL on error
  */
-struct altcp_pcb * altcp_new_ip_type(altcp_allocator_t * allocator, u8_t ip_type)
+struct altcp_pcb * matter_aws_altcp_new_ip_type(altcp_allocator_t * allocator, u8_t ip_type)
 {
     struct altcp_pcb * conn;
     if (allocator == NULL)
     {
         /* no allocator given, create a simple TCP connection */
-        return altcp_tcp_new_ip_type(ip_type);
+        return matter_aws_altcp_tcp_new_ip_type(ip_type);
     }
     if (allocator->alloc == NULL)
     {
@@ -210,7 +210,7 @@ struct altcp_pcb * altcp_new_ip_type(altcp_allocator_t * allocator, u8_t ip_type
  * @ingroup altcp
  * @see tcp_arg()
  */
-void altcp_arg(struct altcp_pcb * conn, void * arg)
+void matter_aws_altcp_arg(struct altcp_pcb * conn, void * arg)
 {
     if (conn)
     {
@@ -222,7 +222,7 @@ void altcp_arg(struct altcp_pcb * conn, void * arg)
  * @ingroup altcp
  * @see tcp_accept()
  */
-void altcp_accept(struct altcp_pcb * conn, altcp_accept_fn accept)
+void matter_aws_altcp_accept(struct altcp_pcb * conn, altcp_accept_fn accept)
 {
     if (conn != NULL)
     {
@@ -234,7 +234,7 @@ void altcp_accept(struct altcp_pcb * conn, altcp_accept_fn accept)
  * @ingroup altcp
  * @see tcp_recv()
  */
-void altcp_recv(struct altcp_pcb * conn, altcp_recv_fn recv)
+void matter_aws_altcp_recv(struct altcp_pcb * conn, altcp_recv_fn recv)
 {
     if (conn)
     {
@@ -246,7 +246,7 @@ void altcp_recv(struct altcp_pcb * conn, altcp_recv_fn recv)
  * @ingroup altcp
  * @see tcp_sent()
  */
-void altcp_sent(struct altcp_pcb * conn, altcp_sent_fn sent)
+void matter_aws_altcp_sent(struct altcp_pcb * conn, altcp_sent_fn sent)
 {
     if (conn)
     {
@@ -258,7 +258,7 @@ void altcp_sent(struct altcp_pcb * conn, altcp_sent_fn sent)
  * @ingroup altcp
  * @see tcp_poll()
  */
-void altcp_poll(struct altcp_pcb * conn, altcp_poll_fn poll, u8_t interval)
+void matter_aws_altcp_poll(struct altcp_pcb * conn, altcp_poll_fn poll, u8_t interval)
 {
     if (conn)
     {
@@ -275,7 +275,7 @@ void altcp_poll(struct altcp_pcb * conn, altcp_poll_fn poll, u8_t interval)
  * @ingroup altcp
  * @see tcp_err()
  */
-void altcp_err(struct altcp_pcb * conn, altcp_err_fn err)
+void matter_aws_altcp_err(struct altcp_pcb * conn, altcp_err_fn err)
 {
     if (conn)
     {
@@ -289,7 +289,7 @@ void altcp_err(struct altcp_pcb * conn, altcp_err_fn err)
  * @ingroup altcp
  * @see tcp_recved()
  */
-void altcp_recved(struct altcp_pcb * conn, u16_t len)
+void matter_aws_altcp_recved(struct altcp_pcb * conn, u16_t len)
 {
     if (conn && conn->fns && conn->fns->recved)
     {
@@ -301,7 +301,7 @@ void altcp_recved(struct altcp_pcb * conn, u16_t len)
  * @ingroup altcp
  * @see tcp_bind()
  */
-err_t altcp_bind(struct altcp_pcb * conn, const ip_addr_t * ipaddr, u16_t port)
+err_t matter_aws_altcp_bind(struct altcp_pcb * conn, const ip_addr_t * ipaddr, u16_t port)
 {
     if (conn && conn->fns && conn->fns->bind)
     {
@@ -314,7 +314,7 @@ err_t altcp_bind(struct altcp_pcb * conn, const ip_addr_t * ipaddr, u16_t port)
  * @ingroup altcp
  * @see tcp_connect()
  */
-err_t altcp_connect(struct altcp_pcb * conn, const ip_addr_t * ipaddr, u16_t port, altcp_connected_fn connected)
+err_t matter_aws_altcp_connect(struct altcp_pcb * conn, const ip_addr_t * ipaddr, u16_t port, altcp_connected_fn connected)
 {
     if (conn && conn->fns && conn->fns->connect)
     {
@@ -327,7 +327,7 @@ err_t altcp_connect(struct altcp_pcb * conn, const ip_addr_t * ipaddr, u16_t por
  * @ingroup altcp
  * @see tcp_listen_with_backlog_and_err()
  */
-struct altcp_pcb * altcp_listen_with_backlog_and_err(struct altcp_pcb * conn, u8_t backlog, err_t * err)
+struct altcp_pcb * matter_aws_altcp_listen_with_backlog_and_err(struct altcp_pcb * conn, u8_t backlog, err_t * err)
 {
     if (conn && conn->fns && conn->fns->listen)
     {
@@ -340,7 +340,7 @@ struct altcp_pcb * altcp_listen_with_backlog_and_err(struct altcp_pcb * conn, u8
  * @ingroup altcp
  * @see tcp_abort()
  */
-void altcp_abort(struct altcp_pcb * conn)
+void matter_aws_altcp_abort(struct altcp_pcb * conn)
 {
     if (conn && conn->fns && conn->fns->abort)
     {
@@ -352,7 +352,7 @@ void altcp_abort(struct altcp_pcb * conn)
  * @ingroup altcp
  * @see tcp_close()
  */
-err_t altcp_close(struct altcp_pcb * conn)
+err_t matter_aws_altcp_close(struct altcp_pcb * conn)
 {
     if (conn && conn->fns && conn->fns->close)
     {
@@ -365,7 +365,7 @@ err_t altcp_close(struct altcp_pcb * conn)
  * @ingroup altcp
  * @see tcp_shutdown()
  */
-err_t altcp_shutdown(struct altcp_pcb * conn, int shut_rx, int shut_tx)
+err_t matter_aws_altcp_shutdown(struct altcp_pcb * conn, int shut_rx, int shut_tx)
 {
     if (conn && conn->fns && conn->fns->shutdown)
     {
@@ -378,7 +378,7 @@ err_t altcp_shutdown(struct altcp_pcb * conn, int shut_rx, int shut_tx)
  * @ingroup altcp
  * @see tcp_write()
  */
-err_t altcp_write(struct altcp_pcb * conn, const void * dataptr, u16_t len, u8_t apiflags)
+err_t matter_aws_altcp_write(struct altcp_pcb * conn, const void * dataptr, u16_t len, u8_t apiflags)
 {
     if (conn && conn->fns && conn->fns->write)
     {
@@ -391,7 +391,7 @@ err_t altcp_write(struct altcp_pcb * conn, const void * dataptr, u16_t len, u8_t
  * @ingroup altcp
  * @see tcp_output()
  */
-err_t altcp_output(struct altcp_pcb * conn)
+err_t matter_aws_altcp_output(struct altcp_pcb * conn)
 {
     if (conn && conn->fns && conn->fns->output)
     {
@@ -404,7 +404,7 @@ err_t altcp_output(struct altcp_pcb * conn)
  * @ingroup altcp
  * @see tcp_mss()
  */
-u16_t altcp_mss(struct altcp_pcb * conn)
+u16_t matter_aws_altcp_mss(struct altcp_pcb * conn)
 {
     if (conn && conn->fns && conn->fns->mss)
     {
@@ -417,7 +417,7 @@ u16_t altcp_mss(struct altcp_pcb * conn)
  * @ingroup altcp
  * @see tcp_sndbuf()
  */
-u16_t altcp_sndbuf(struct altcp_pcb * conn)
+u16_t matter_aws_altcp_sndbuf(struct altcp_pcb * conn)
 {
     if (conn && conn->fns && conn->fns->sndbuf)
     {
@@ -430,7 +430,7 @@ u16_t altcp_sndbuf(struct altcp_pcb * conn)
  * @ingroup altcp
  * @see tcp_sndqueuelen()
  */
-u16_t altcp_sndqueuelen(struct altcp_pcb * conn)
+u16_t matter_aws_altcp_sndqueuelen(struct altcp_pcb * conn)
 {
     if (conn && conn->fns && conn->fns->sndqueuelen)
     {
@@ -439,7 +439,7 @@ u16_t altcp_sndqueuelen(struct altcp_pcb * conn)
     return 0;
 }
 
-void altcp_nagle_disable(struct altcp_pcb * conn)
+void matter_aws_altcp_nagle_disable(struct altcp_pcb * conn)
 {
     if (conn && conn->fns && conn->fns->nagle_disable)
     {
@@ -447,7 +447,7 @@ void altcp_nagle_disable(struct altcp_pcb * conn)
     }
 }
 
-void altcp_nagle_enable(struct altcp_pcb * conn)
+void matter_aws_altcp_nagle_enable(struct altcp_pcb * conn)
 {
     if (conn && conn->fns && conn->fns->nagle_enable)
     {
@@ -455,7 +455,7 @@ void altcp_nagle_enable(struct altcp_pcb * conn)
     }
 }
 
-int altcp_nagle_disabled(struct altcp_pcb * conn)
+int matter_aws_altcp_nagle_disabled(struct altcp_pcb * conn)
 {
     if (conn && conn->fns && conn->fns->nagle_disabled)
     {
@@ -468,7 +468,7 @@ int altcp_nagle_disabled(struct altcp_pcb * conn)
  * @ingroup altcp
  * @see tcp_setprio()
  */
-void altcp_setprio(struct altcp_pcb * conn, u8_t prio)
+void matter_aws_altcp_setprio(struct altcp_pcb * conn, u8_t prio)
 {
     if (conn && conn->fns && conn->fns->setprio)
     {
@@ -476,7 +476,7 @@ void altcp_setprio(struct altcp_pcb * conn, u8_t prio)
     }
 }
 
-err_t altcp_get_tcp_addrinfo(struct altcp_pcb * conn, int local, ip_addr_t * addr, u16_t * port)
+err_t matter_aws_altcp_get_tcp_addrinfo(struct altcp_pcb * conn, int local, ip_addr_t * addr, u16_t * port)
 {
     if (conn && conn->fns && conn->fns->addrinfo)
     {
@@ -485,7 +485,7 @@ err_t altcp_get_tcp_addrinfo(struct altcp_pcb * conn, int local, ip_addr_t * add
     return ERR_VAL;
 }
 
-ip_addr_t * altcp_get_ip(struct altcp_pcb * conn, int local)
+ip_addr_t * matter_aws_altcp_get_ip(struct altcp_pcb * conn, int local)
 {
     if (conn && conn->fns && conn->fns->getip)
     {
@@ -494,7 +494,7 @@ ip_addr_t * altcp_get_ip(struct altcp_pcb * conn, int local)
     return NULL;
 }
 
-u16_t altcp_get_port(struct altcp_pcb * conn, int local)
+u16_t matter_aws_altcp_get_port(struct altcp_pcb * conn, int local)
 {
     if (conn && conn->fns && conn->fns->getport)
     {
@@ -504,7 +504,7 @@ u16_t altcp_get_port(struct altcp_pcb * conn, int local)
 }
 
 #ifdef ALTCP_DEBUG
-enum tcp_state altcp_dbg_get_tcp_state(struct altcp_pcb * conn)
+enum tcp_state matter_aws_altcp_dbg_get_tcp_state(struct altcp_pcb * conn)
 {
     if (conn && conn->fns && conn->fns->dbg_get_tcp_state)
     {
@@ -516,32 +516,32 @@ enum tcp_state altcp_dbg_get_tcp_state(struct altcp_pcb * conn)
 
 /* Default implementations for the "virtual" functions */
 
-void altcp_default_set_poll(struct altcp_pcb * conn, u8_t interval)
+void matter_aws_altcp_default_set_poll(struct altcp_pcb * conn, u8_t interval)
 {
     if (conn && conn->inner_conn)
     {
-        altcp_poll(conn->inner_conn, conn->poll, interval);
+        matter_aws_altcp_poll(conn->inner_conn, conn->poll, interval);
     }
 }
 
-void altcp_default_recved(struct altcp_pcb * conn, u16_t len)
+void matter_aws_altcp_default_recved(struct altcp_pcb * conn, u16_t len)
 {
     if (conn && conn->inner_conn)
     {
-        altcp_recved(conn->inner_conn, len);
+        matter_aws_altcp_recved(conn->inner_conn, len);
     }
 }
 
-err_t altcp_default_bind(struct altcp_pcb * conn, const ip_addr_t * ipaddr, u16_t port)
+err_t matter_aws_altcp_default_bind(struct altcp_pcb * conn, const ip_addr_t * ipaddr, u16_t port)
 {
     if (conn && conn->inner_conn)
     {
-        return altcp_bind(conn->inner_conn, ipaddr, port);
+        return matter_aws_altcp_bind(conn->inner_conn, ipaddr, port);
     }
     return ERR_VAL;
 }
 
-err_t altcp_default_shutdown(struct altcp_pcb * conn, int shut_rx, int shut_tx)
+err_t matter_aws_altcp_default_shutdown(struct altcp_pcb * conn, int shut_rx, int shut_tx)
 {
     if (conn)
     {
@@ -552,129 +552,129 @@ err_t altcp_default_shutdown(struct altcp_pcb * conn, int shut_rx, int shut_tx)
         }
         if (conn->inner_conn)
         {
-            return altcp_shutdown(conn->inner_conn, shut_rx, shut_tx);
+            return matter_aws_altcp_shutdown(conn->inner_conn, shut_rx, shut_tx);
         }
     }
     return ERR_VAL;
 }
 
-err_t altcp_default_write(struct altcp_pcb * conn, const void * dataptr, u16_t len, u8_t apiflags)
+err_t matter_aws_altcp_default_write(struct altcp_pcb * conn, const void * dataptr, u16_t len, u8_t apiflags)
 {
     if (conn && conn->inner_conn)
     {
-        return altcp_write(conn->inner_conn, dataptr, len, apiflags);
+        return matter_aws_altcp_write(conn->inner_conn, dataptr, len, apiflags);
     }
     return ERR_VAL;
 }
 
-err_t altcp_default_output(struct altcp_pcb * conn)
+err_t matter_aws_altcp_default_output(struct altcp_pcb * conn)
 {
     if (conn && conn->inner_conn)
     {
-        return altcp_output(conn->inner_conn);
+        return matter_aws_altcp_output(conn->inner_conn);
     }
     return ERR_VAL;
 }
 
-u16_t altcp_default_mss(struct altcp_pcb * conn)
+u16_t matter_aws_altcp_default_mss(struct altcp_pcb * conn)
 {
     if (conn && conn->inner_conn)
     {
-        return altcp_mss(conn->inner_conn);
+        return matter_aws_altcp_mss(conn->inner_conn);
     }
     return 0;
 }
 
-u16_t altcp_default_sndbuf(struct altcp_pcb * conn)
+u16_t matter_aws_altcp_default_sndbuf(struct altcp_pcb * conn)
 {
     if (conn && conn->inner_conn)
     {
-        return altcp_sndbuf(conn->inner_conn);
+        return matter_aws_altcp_sndbuf(conn->inner_conn);
     }
     return 0;
 }
 
-u16_t altcp_default_sndqueuelen(struct altcp_pcb * conn)
+u16_t matter_aws_altcp_default_sndqueuelen(struct altcp_pcb * conn)
 {
     if (conn && conn->inner_conn)
     {
-        return altcp_sndqueuelen(conn->inner_conn);
+        return matter_aws_altcp_sndqueuelen(conn->inner_conn);
     }
     return 0;
 }
 
-void altcp_default_nagle_disable(struct altcp_pcb * conn)
+void matter_aws_altcp_default_nagle_disable(struct altcp_pcb * conn)
 {
     if (conn && conn->inner_conn)
     {
-        altcp_nagle_disable(conn->inner_conn);
+        matter_aws_altcp_nagle_disable(conn->inner_conn);
     }
 }
 
-void altcp_default_nagle_enable(struct altcp_pcb * conn)
+void matter_aws_altcp_default_nagle_enable(struct altcp_pcb * conn)
 {
     if (conn && conn->inner_conn)
     {
-        altcp_nagle_enable(conn->inner_conn);
+        matter_aws_altcp_nagle_enable(conn->inner_conn);
     }
 }
 
-int altcp_default_nagle_disabled(struct altcp_pcb * conn)
+int matter_aws_altcp_default_nagle_disabled(struct altcp_pcb * conn)
 {
     if (conn && conn->inner_conn)
     {
-        return altcp_nagle_disabled(conn->inner_conn);
+        return matter_aws_altcp_nagle_disabled(conn->inner_conn);
     }
     return 0;
 }
 
-void altcp_default_setprio(struct altcp_pcb * conn, u8_t prio)
+void matter_aws_altcp_default_setprio(struct altcp_pcb * conn, u8_t prio)
 {
     if (conn && conn->inner_conn)
     {
-        altcp_setprio(conn->inner_conn, prio);
+        matter_aws_altcp_setprio(conn->inner_conn, prio);
     }
 }
 
-void altcp_default_dealloc(struct altcp_pcb * conn)
+void matter_aws_altcp_default_dealloc(struct altcp_pcb * conn)
 {
     TRANSPORT_UNUSED_ARG(conn);
     /* nothing to do */
 }
 
-err_t altcp_default_get_tcp_addrinfo(struct altcp_pcb * conn, int local, ip_addr_t * addr, u16_t * port)
+err_t matter_aws_altcp_default_get_tcp_addrinfo(struct altcp_pcb * conn, int local, ip_addr_t * addr, u16_t * port)
 {
     if (conn && conn->inner_conn)
     {
-        return altcp_get_tcp_addrinfo(conn->inner_conn, local, addr, port);
+        return matter_aws_altcp_get_tcp_addrinfo(conn->inner_conn, local, addr, port);
     }
     return ERR_VAL;
 }
 
-ip_addr_t * altcp_default_get_ip(struct altcp_pcb * conn, int local)
+ip_addr_t * matter_aws_altcp_default_get_ip(struct altcp_pcb * conn, int local)
 {
     if (conn && conn->inner_conn)
     {
-        return altcp_get_ip(conn->inner_conn, local);
+        return matter_aws_altcp_get_ip(conn->inner_conn, local);
     }
     return NULL;
 }
 
-u16_t altcp_default_get_port(struct altcp_pcb * conn, int local)
+u16_t matter_aws_altcp_default_get_port(struct altcp_pcb * conn, int local)
 {
     if (conn && conn->inner_conn)
     {
-        return altcp_get_port(conn->inner_conn, local);
+        return matter_aws_altcp_get_port(conn->inner_conn, local);
     }
     return 0;
 }
 
 #ifdef ALTCP_DEBUG
-enum tcp_state altcp_default_dbg_get_tcp_state(struct altcp_pcb * conn)
+enum tcp_state matter_aws_altcp_default_dbg_get_tcp_state(struct altcp_pcb * conn)
 {
     if (conn && conn->inner_conn)
     {
-        return altcp_dbg_get_tcp_state(conn->inner_conn);
+        return matter_aws_altcp_dbg_get_tcp_state(conn->inner_conn);
     }
     return CLOSED;
 }

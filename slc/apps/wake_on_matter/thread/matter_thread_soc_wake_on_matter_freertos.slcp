@@ -4,16 +4,6 @@ description: Demonstrates a POC of receiving Matter subscription on a Thread NCP
 quality: experimental
 package: matter
 category: Matter Application
-filter:  
-  - name: Type    
-    value: 
-      - SoC Project
-  - name: Difficulty
-    value: 
-      - Advanced
-  - name: Wireless Technology
-    value: 
-      - Matter
 
 sdk_extension:
   - id: matter
@@ -256,6 +246,29 @@ toolchain_settings:
     value: gnu++17
   - option: optimize
     value: debug
+
+filter:  
+  - name: Type    
+    value: 
+      - SoC Project
+  - name: Difficulty
+    value: 
+      - Advanced
+  - name: Wireless Technology
+    value: 
+      - Matter
+
+tag:
+  - hardware:rf:band:2400
+  - hardware:component:button:2+
+  - hardware:component:led:2+
+  - hwfilter:device:device_supports_bluetooth
+  - hwfilter:device:device_supports_thread
+  - hwfilter:!device:device_series_3
+  - hwfilter:!device:device_family_mgm24
+  - hwfilter:!device:device_family_mgm26
+  - hidden
+
 readme:
   - path: ./README.md
 ui_hints:

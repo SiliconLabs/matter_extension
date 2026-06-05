@@ -7,12 +7,14 @@ handling serial communication and coordinating between the UI and parser modules
 """
 
 import argparse
+import os
 import sys
 import threading
 import time
 from typing import Optional
 
 import serial
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
 
 from console_log_parser import LogParser, MessageBuffer
@@ -25,12 +27,16 @@ class SilabsMatterConsole:
     def __init__(self, port: str, baudrate: int) -> None:
         """
         Initialize the Matter console application.
+        
         Args:
-            port: Serial port name.
+            port: Serial port name (may be empty to be chosen at connect time).
             baudrate: Serial baudrate.
         """
         self.port: str = port
         self.baudrate: int = baudrate
+        self.stopbits: float = serial.STOPBITS_ONE
+        self.parity: str = serial.PARITY_NONE
+        self.flowcontrol: str = 'rtscts'
         self.serial_conn: Optional[serial.Serial] = None
         self.running: bool = False
         self.serial_thread: Optional[threading.Thread] = None
@@ -44,22 +50,32 @@ class SilabsMatterConsole:
         self.ui.set_callbacks(
             on_connect=self.connect_serial,
             on_disconnect=self.disconnect_serial,
-            on_send_command=self.send_command
+            on_send_command=self.send_command,
+            on_settings_changed=self.apply_serial_settings,
+            on_port_changed=self.set_port
         )
     
     def open_serial(self) -> bool:
         """
-        Open the serial port connection with flow control enabled.
+        Open the serial port connection with configured settings.
+        
         Returns:
             True if successful, False otherwise.
         """
         try:
+            rtscts = self.flowcontrol == 'rtscts'
+            dsrdtr = self.flowcontrol == 'dsrdtr'
+            xonxoff = self.flowcontrol == 'xonxoff'
+            
             self.serial_conn = serial.Serial(
                 self.port,
                 self.baudrate,
+                stopbits=self.stopbits,
+                parity=self.parity,
                 timeout=0.1,
-                rtscts=True,
-                dsrdtr=True
+                rtscts=rtscts,
+                dsrdtr=dsrdtr,
+                xonxoff=xonxoff
             )
             return True
         except serial.SerialException as e:
@@ -150,6 +166,40 @@ class SilabsMatterConsole:
             except (serial.SerialException, OSError) as e:
                 self.ui.signals.error_message.emit(f"Error sending command: {e}")
     
+    def set_port(self, port: str) -> None:
+        """
+        Update the serial port to use for the connection.
+        
+        Args:
+            port: New serial port name.
+        """
+        self.port = port
+    
+    def apply_serial_settings(self, baudrate: int, stopbits: float, parity: str, flowcontrol: str) -> None:
+        """
+        Apply new serial communication settings.
+        
+        Args:
+            baudrate: New baudrate value.
+            stopbits: Number of stop bits (1, 1.5, or 2).
+            parity: Parity setting ('N', 'E', 'O', 'M', 'S').
+            flowcontrol: Flow control type ('none', 'rtscts', 'dsrdtr', 'xonxoff').
+        """
+        was_connected = self.running
+        
+        if was_connected:
+            self.disconnect_serial()
+        
+        self.baudrate = baudrate
+        self.stopbits = stopbits
+        self.parity = parity
+        self.flowcontrol = flowcontrol
+        
+        self.ui.baudrate = baudrate
+        
+        if was_connected:
+            self.connect_serial()
+    
     def run(self) -> bool:
         """
         Start the console application.
@@ -185,11 +235,14 @@ with a Silicon Labs device over a serial connection.
 Features:
   - Dedicated log terminal for framed messages (SOF 0x01 ... EOF 0x04)
   - Interactive terminal for unframed messages
-  - Color-coded log levels: [error] (red), [silabs] (blue), [info]/[detail] (white)
+  - Color-coded log levels: [error] (red), [silabs] (blue), [ZB] (light purple),
+    [info]/[detail] (white)
   - Auto-scrolling terminals with smooth rendering
   - Command input with history
   - Hardware flow control (RTS/CTS) enabled
   - Resizable window
+  - Serial port can be selected at runtime via the Connect button if not provided
+    on the command line
 
 Message Format:
   Framed logs: SOF(0x01) + message + EOF(0x04) + \\r\\n
@@ -203,7 +256,10 @@ Requirements:
     
     parser.add_argument(
         "port",
-        help="Serial port to connect to (e.g., /dev/ttyACM0 or COM3)"
+        nargs="?",
+        default="",
+        help="Serial port to connect to (e.g., /dev/ttyACM0 or COM3). "
+             "Optional: if omitted, you will be prompted to pick a port when clicking Connect."
     )
     
     parser.add_argument(
@@ -219,6 +275,12 @@ Requirements:
     
     # Set dark theme
     app.setStyle('Fusion')
+    
+    # Set application icon
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    icon_path = os.path.join(script_dir, 'icon', 'console_logo.png')
+    if os.path.exists(icon_path):
+        app.setWindowIcon(QIcon(icon_path))
     
     console = SilabsMatterConsole(args.port, args.baudrate)
     

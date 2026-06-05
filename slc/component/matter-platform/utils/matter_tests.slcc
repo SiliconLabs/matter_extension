@@ -1,0 +1,18 @@
+id: matter_tests
+label: Matter Test Event Trigger
+description: Enable Test defines for internal tests.
+package: matter
+category: Matter|Utils
+quality: internal
+metadata:
+  sbom:
+    license: MSLA
+
+provides:
+  - name: matter_tests
+
+define:
+  - name: SL_MATTER_TEST_WATCHDOG
+    condition: [watchdog_manager]
+ui_hints:
+  visibility: never

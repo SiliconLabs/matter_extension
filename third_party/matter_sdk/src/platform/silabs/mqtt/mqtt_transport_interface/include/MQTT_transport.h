@@ -57,7 +57,7 @@ err_t MQTT_Transport_SSLConfigure(MQTT_Transport_t * transP, const u8_t * ca, si
                                   size_t privkey_len, const u8_t * privkey_pass, size_t privkey_pass_len, const u8_t * cert,
                                   size_t cert_len);
 err_t MQTT_Transport_Connect(MQTT_Transport_t * client, const char * host, size_t hostLen, u16_t port,
-                             matter_aws_connect_cb matterAws_con_cb);
+                             matter_aws_connect_cb connect_cb);
 
 #ifdef __cplusplus
 }

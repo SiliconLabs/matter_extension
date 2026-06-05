@@ -21,6 +21,9 @@
 // <q CHIP_CONFIG_ENABLE_SESSION_RESUMPTION> Session Resumption
 #define CHIP_CONFIG_ENABLE_SESSION_RESUMPTION 1
 
+// <i> Default: 0
+// <q CHIP_CONFIG_ENABLE_GROUPCAST> Groupcast
+#define CHIP_CONFIG_ENABLE_GROUPCAST 0
 // <<< end of configuration section >>>
 
 #endif  // APP_APPBUILDCONFIG_H_

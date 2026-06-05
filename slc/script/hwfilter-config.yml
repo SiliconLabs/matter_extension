@@ -47,6 +47,7 @@ board_allowlist:
     - brd4338a
     - brd4342a
     - brd4343a
+    - brd4343c
     - brd4350a
     - brd4351a
     - brd4407a

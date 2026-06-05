@@ -43,7 +43,7 @@
  * Missing things / @todo:
  * - RX data is acknowledged after receiving (tcp_recved is called when enqueueing
  *   the pbuf for mbedTLS receive, not when processed by mbedTLS or the inner
- *   connection; altcp_recved() from inner connection does nothing)
+ *   connection; matter_aws_altcp_recved() from inner connection does nothing)
  * - TX data is marked as 'sent' (i.e. acknowledged; sent callback is called) right
  *   after enqueueing for transmission, not when actually ACKed be the remote host.
  */
@@ -98,7 +98,7 @@ altcp_mbedtls_malloc_stats_t altcp_mbedtls_malloc_stats;
 volatile int altcp_mbedtls_malloc_clear_stats;
 #endif
 
-static void * tls_malloc(size_t c, size_t len)
+static void * matter_aws_tls_malloc(size_t c, size_t len)
 {
     altcp_mbedtls_malloc_helper_t * hlpr;
     void * ret;
@@ -142,7 +142,7 @@ static void * tls_malloc(size_t c, size_t len)
     return ret;
 }
 
-static void tls_free(void * ptr)
+static void matter_aws_tls_free(void * ptr)
 {
     altcp_mbedtls_malloc_helper_t * hlpr;
     if (ptr == NULL)
@@ -161,17 +161,17 @@ static void tls_free(void * ptr)
 }
 #endif /* ALTCP_MBEDTLS_PLATFORM_ALLOC*/
 
-void altcp_mbedtls_mem_init(void)
+void matter_aws_altcp_mbedtls_mem_init(void)
 {
     /* not much to do here when using the heap */
 
 #if ALTCP_MBEDTLS_PLATFORM_ALLOC
     /* set mbedtls allocation methods */
-    mbedtls_platform_set_calloc_free(&tls_malloc, &tls_free);
+    mbedtls_platform_set_calloc_free(&matter_aws_tls_malloc, &matter_aws_tls_free);
 #endif
 }
 
-altcp_mbedtls_state_t * altcp_mbedtls_alloc(void * conf)
+altcp_mbedtls_state_t * matter_aws_altcp_mbedtls_alloc(void * conf)
 {
     altcp_mbedtls_state_t * ret = (altcp_mbedtls_state_t *) pvPortMalloc(sizeof(altcp_mbedtls_state_t));
     if (ret != NULL)
@@ -182,14 +182,14 @@ altcp_mbedtls_state_t * altcp_mbedtls_alloc(void * conf)
     return ret;
 }
 
-void altcp_mbedtls_free(void * conf, altcp_mbedtls_state_t * state)
+void matter_aws_altcp_mbedtls_free(void * conf, altcp_mbedtls_state_t * state)
 {
     TRANSPORT_UNUSED_ARG(conf);
     TRANSPORT_ASSERT("state != NULL", state != NULL);
     vPortFree(state);
 }
 
-void * altcp_mbedtls_alloc_config(size_t size)
+void * matter_aws_altcp_mbedtls_alloc_config(size_t size)
 {
     void * ret;
     size_t checked_size = (mem_size_t) size;
@@ -206,7 +206,7 @@ void * altcp_mbedtls_alloc_config(size_t size)
     return ret;
 }
 
-void altcp_mbedtls_free_config(void * item)
+void matter_aws_altcp_mbedtls_free_config(void * item)
 {
     TRANSPORT_ASSERT("item != NULL", item != NULL);
     vPortFree(item);

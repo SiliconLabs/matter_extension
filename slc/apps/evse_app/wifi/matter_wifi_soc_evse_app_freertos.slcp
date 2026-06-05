@@ -15,155 +15,82 @@ sdk_extension:
 
 component:
   - id: matter_leds
-    from: matter
   - id: matter
-    from: matter
   - id: matter_wifi_ble
-    from: matter
   - id: matter_crypto_tinycrypt_siwx917
-    from: matter
 
   - id: mbedtls_pki_aws
     condition: [matter_aws]
-    from: matter
   - id: mbedtls_entropy_default_aws
     condition: [matter_aws]
-    from: matter
   - id: matter_wifi
-    from: matter
   - id: app_common
-    from: matter
   - id: matter_provision_flash
-    from: matter
 
   - id: matter_codegen_dm
   - id: matter_access_control
-    from: matter
   - id: matter_administrator_commissioning
-    from: matter
   - id: matter_basic_information
-    from: matter
   - id: matter_descriptor
-    from: matter
-  - id: matter_diagnostic_logs
-    from: matter
-  - id: matter_fixed_label
-    from: matter
   - id: matter_general_commissioning
-    from: matter
   - id: matter_general_diagnostics
-    from: matter
   - id: matter_group_key_mgmt
-    from: matter
   - id: matter_identify
-    from: matter
   - id: matter_localization_configuration
-    from: matter
   - id: matter_network_commissioning
-    from: matter
   - id: matter_operational_credentials
-    from: matter
-  - id: matter_software_diagnostics
-    from: matter
-  - id: matter_time_format_localization
-    from: matter
-  - id: matter_user_label
-    from: matter
-  - id: matter_wifi_network_diagnostics
-    from: matter
-  # Override configuration for JTAG use
+  - id: matter_test_event_trigger
   - id: matter_configuration_over_swo
-    from: matter
   - id: segger_rtt
 
   - id: matter_ota_requestor
-    from: matter
   - id: matter_ota_support
-    from: matter
   - id: matter_power_source
-    from: matter
   - id: matter_shell
-    from: matter
   - id: matter_default_lcd_config
-    from: matter
   - id: matter_log_uart
-    from: matter
   - id: matter_lwip
-    from: matter
-  # TODO: Remove this in the SiSDK 25Q4 release, where the LwIP fix will be included in the SiSDK.
-  - id: sl_si91x_lwip_stack
-    from: wiseconnect3_sdk
 
   - id: matter_evse
-    from: matter
   - id: matter_energy_evse
-    from: matter
   - id: matter_unit_localization
-    from: matter
   - id: matter_em_utils
-    from: matter
   - id: matter_em_triggers
-    from: matter
   - id: matter_dem
-    from: matter
   - id: matter_electrical_sensor
-    from: matter
   - id: matter_device_energy_management
-    from: matter
   - id: matter_electrical_energy_measurement
-    from: matter
   - id: matter_electrical_power_measurement
-    from: matter
   - id: matter_mode_base
-    from: matter
 
   - id: wifi_resources
-    from: wiseconnect3_sdk
   - id: sl_si91x_common_flash_nvm3
-    from: wiseconnect3_sdk
-  - id: sl_si91x_lwip_stack
-    from: wiseconnect3_sdk
   - id: sl_si91x_wireless
-    from: wiseconnect3_sdk
   - id: wifi
-    from: wiseconnect3_sdk
   - id: basic_network_config_manager
-    from: wiseconnect3_sdk
   - id: si91x_mem_config_3
-    from: wiseconnect3_sdk
   - id: sl_si91x_basic_buffers
-    from: wiseconnect3_sdk
   - id: sl_si91x_mcu
-    from: wiseconnect3_sdk
   - id: freertos
   - id: slist
   - id: sl_assert
   - id: cmsis_rtos2_init
   - id: matter_platform_siwx917
-    from: matter
-  - id: wiseconnect3_common
-    from: wiseconnect3_sdk
+  - id: wiseconnect_common
   - id: sl_si91x_soc_soft_reset
-    from: wiseconnect3_sdk
   - id: ble
-    from: wiseconnect3_sdk
   - id: sl_si91x_button_917
     instance: [btn0, btn1]
-    from: wiseconnect3_sdk
   - id: sl_si91x_led_917
     instance: [led0]
     condition: [si917_dev_board]
-    from: wiseconnect3_sdk
   - id: sl_si91x_led_917
     instance: [led0, led1]
     condition: [si917_prod_board]
-    from: wiseconnect3_sdk
   - id: sl_si91x_led_917
     instance: [led0, led1]
     condition: [device_is_917_module_dev_kit]
-    from: wiseconnect3_sdk
   - instance: [timer0]
-    from: wiseconnect3_sdk
     id: ulp_timers_instance
 
 configuration:
