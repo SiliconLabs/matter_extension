@@ -96,6 +96,11 @@ private:
     CHIP_ERROR AppInit() override;
 
     /**
+     * @brief After reboot, send CookTop Off to bound rangehood peers once IP and DNS-SD are ready.
+     */
+    static void ConnectivityEventHandler(const chip::DeviceLayer::ChipDeviceEvent * event, intptr_t arg);
+
+    /**
      * @brief PB1 Button event processing function for oven functionality
      *        Press and release will toggle cooktop and cook surface states
      *

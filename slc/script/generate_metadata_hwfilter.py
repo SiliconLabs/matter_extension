@@ -39,13 +39,19 @@ class Colors:
     YELLOW = '\033[1;33m'
     NC = '\033[0m'
 
-def log_info(message: str):
+def log_info(message: str, *args):
+    if args:
+        message = message % args
     print(f"{Colors.GREEN}[INFO]{Colors.NC} {message}")
 
-def log_warn(message: str):
+def log_warn(message: str, *args):
+    if args:
+        message = message % args
     print(f"{Colors.YELLOW}[WARN]{Colors.NC} {message}")
 
-def log_error(message: str):
+def log_error(message: str, *args):
+    if args:
+        message = message % args
     print(f"{Colors.RED}[ERROR]{Colors.NC} {message}")
 @dataclass(frozen=True)
 class CiJsonRecord:
@@ -509,8 +515,29 @@ def _run_hwstudio(
         "-t", str(template_path),
         "-q", "internal",
     ])
-    run_command(cmd, check=False, capture=True)
-    return Path(output_file).exists()
+
+    out_path = Path(output_file)
+    mtime_before = out_path.stat().st_mtime if out_path.exists() else None
+
+    returncode, stdout, stderr = run_command(cmd, check=False, capture=True)
+
+    if returncode != 0:
+        log_error("hwstudio failed for %s (exit code %s)", output_file, returncode)
+        if stderr.strip():
+            log_error("hwstudio stderr:\n%s", stderr.strip())
+        if stdout.strip():
+            log_error("hwstudio stdout:\n%s", stdout.strip())
+        return False
+
+    if not out_path.exists():
+        log_error("hwstudio exited 0 but %s was not created", output_file)
+        return False
+
+    if mtime_before is not None and out_path.stat().st_mtime == mtime_before:
+        log_error("hwstudio exited 0 but %s was not updated (stale output)", output_file)
+        return False
+
+    return True
 
 def generate_metadata(
     repo_root: Path,
@@ -522,6 +549,7 @@ def generate_metadata(
     os.chdir(repo_root)
 
     temp_files = []
+    failures: List[str] = []
 
     try:
         temp_templates = prepare_template_with_version(
@@ -532,6 +560,8 @@ def generate_metadata(
         log_info("Generating templates XML...")
         if _run_hwstudio("matter_templates.xml", config_path, temp_templates):
             log_info("Generated matter_templates.xml")
+        else:
+            failures.append("matter_templates.xml")
 
         temp_demos = prepare_template_with_version(
             repo_root, "demos.xml.j2", slt_paths, ci_records, variants_config
@@ -541,20 +571,40 @@ def generate_metadata(
         log_info("Generating demos XML...")
         if _run_hwstudio("matter_demos.xml", config_path, temp_demos, demo=True):
             log_info("Generated matter_demos.xml")
+        else:
+            failures.append("matter_demos.xml")
 
         log_info("Generating board compatibility matrix...")
-        run_command(
-            ["hwmatrix", "-o", "board_compatibility_matrix.html",
+        matrix = "board_compatibility_matrix.html"
+        matrix_path = repo_root / matrix
+        matrix_mtime_before = matrix_path.stat().st_mtime if matrix_path.exists() else None
+        rc, _, matrix_stderr = run_command(
+            ["hwmatrix", "-o", matrix,
              "slc/apps/**/*.slc[pw]", "-c", str(config_path)],
             check=False, capture=True,
         )
-        if (repo_root / "board_compatibility_matrix.html").exists():
-            log_info("Generated board_compatibility_matrix.html")
+        if rc != 0:
+            log_error("hwmatrix failed (exit code %s)", rc)
+            if matrix_stderr.strip():
+                log_error("hwmatrix stderr:\n%s", matrix_stderr.strip())
+            failures.append(matrix)
+        elif not matrix_path.exists() or (
+            matrix_mtime_before is not None
+            and matrix_path.stat().st_mtime == matrix_mtime_before
+        ):
+            log_error("hwmatrix exited 0 but %s was not updated", matrix)
+            failures.append(matrix)
+        else:
+            log_info("Generated %s", matrix)
 
     finally:
         for f in temp_files:
             if f and f.exists():
                 f.unlink()
+
+    if failures:
+        log_error("Metadata generation failed for: %s", ", ".join(failures))
+        sys.exit(1)
 
 def main():
     repo_root = _SCRIPT_DIR.parent.parent

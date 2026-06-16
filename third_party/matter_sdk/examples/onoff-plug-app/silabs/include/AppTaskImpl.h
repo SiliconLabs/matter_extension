@@ -39,20 +39,25 @@ template <typename Derived>
 class AppTaskImpl : public AppTask
 {
 public:
+    // Common AppTask bring up
     CHIP_ERROR AppInit() override { CRTP_OPTIONAL_DISPATCH(AppTaskImpl, Derived, AppInitImpl); }
 
+    // Plug specific initialization
     CHIP_ERROR InitPlug() { CRTP_OPTIONAL_DISPATCH(AppTaskImpl, Derived, InitPlugImpl); }
 
+    // Handle button press
     static void ButtonEventHandler(uint8_t button, uint8_t btnAction)
     {
         CRTP_OPTIONAL_STATIC_DISPATCH(AppTaskImpl, Derived, ButtonEventHandlerImpl, button, btnAction);
     }
 
+    // AppTask thread event handler that applies an OnOff action
     static void OnOffActionEventHandler(AppEvent * aEvent)
     {
         CRTP_OPTIONAL_STATIC_DISPATCH(AppTaskImpl, Derived, OnOffActionEventHandlerImpl, aEvent);
     }
 
+    // Data model hook invoked when a cluster attribute changes
     void DMPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
                                        uint8_t * value)
     {
@@ -62,7 +67,8 @@ public:
 private:
     friend Derived;
 
-    /** Default implementations - override in Derived to customize. **/
+    // Default *Impl() hooks, each forwards to the matching AppTask method
+    // Override the corresponding hook in CustomerAppTask to customize behavior
 
     CHIP_ERROR AppInitImpl() { return AppTask::AppInit(); }
 

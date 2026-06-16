@@ -241,7 +241,7 @@ extern "C" void sl_button_on_change(uint8_t btn, uint8_t btnAction)
         // if the btn was not pressed and only a release event came, ignore it
         // if the btn was already pressed and another press event came, ignore it
         // essentially, if both of them are in the same state then ignore it.
-        VerifyOrReturn(btnAction != GetPlatform().GetButtonState(SL_BUTTON_BTN0_NUMBER));
+        VerifyOrReturn(btnAction != sButtonStates[SL_BUTTON_BTN0_NUMBER]);
     }
 #endif // SL_ICD_ENABLED
     VerifyOrReturn(GetPlatform().mButtonCallback != nullptr);

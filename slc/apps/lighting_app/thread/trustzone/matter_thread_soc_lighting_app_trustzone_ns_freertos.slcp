@@ -183,6 +183,7 @@ tag:
   - hardware:component:led:2+
   - hwfilter:device:device_supports_bluetooth
   - hwfilter:device:device_supports_thread
+  - hwfilter:device:device_family_efr32mg24
   - hidden
 
 readme:

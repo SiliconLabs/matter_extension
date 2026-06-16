@@ -13,16 +13,20 @@ MARGIN = '  '
 class Paths:
     MODULES_DIR = 'modules'
     TEMP_DIR = 'temp'
-    SUPPORT_DIR = 'support'
-    MATTER_DIR = '../third_party/matter_sdk'
+    FIRMWARE_DIR = 'firmware'
+    CONFIG_DIR = 'config'
+    MATTER_DIR = 'third_party/matter_sdk'
 
-    def __init__(self, base_dir) -> None:
+    def __init__(self, base_dir=None) -> None:
+        base_dir = os.path.dirname(base_dir) if base_dir and os.path.isfile(base_dir) else base_dir
+        home_dir = os.path.dirname(__file__)
         self.current_dir = os.getcwd()
-        self.base_dir = self.normalize(base_dir)
-        self.root_dir = "{}/..".format(self.base_dir)
-        self.temp_dir = "{}/{}".format(self.current_dir, Paths.TEMP_DIR)
-        self.support_dir = "{}/{}".format(self.base_dir, Paths.SUPPORT_DIR)
-        self.matter_dir = "{}/{}".format(self.base_dir, Paths.MATTER_DIR)
+        self.root_dir = self.normalize(os.path.join(home_dir, '../../..'))
+        self.base_dir = self.normalize(base_dir or self.current_dir)
+        self.temp_dir = os.path.join(self.current_dir, Paths.TEMP_DIR)
+        self.firmware_dir = os.path.join(self.root_dir, Paths.FIRMWARE_DIR)
+        self.support_dir = os.path.join(self.firmware_dir, 'support')
+        self.matter_dir = os.path.join(self.root_dir, Paths.MATTER_DIR)
 
     def setTemp(self, temp):
         self.temp_dir = temp
@@ -36,6 +40,9 @@ class Paths:
     def root(self, path=None):
         return self.normalize(self.root_dir, path)
 
+    def firmware(self, path=None):
+        return self.normalize(self.firmware_dir, path)
+
     def support(self, path=None):
         return self.normalize(self.support_dir, path)
 
@@ -44,6 +51,14 @@ class Paths:
 
     def temp(self, path=None):
         return self.normalize(self.temp_dir, path)
+
+    def config(self, path=None):
+        full_path = self.base(f"{Paths.CONFIG_DIR}/{path}")
+        if not os.path.exists(full_path):
+            full_path = self.base(f"../{Paths.CONFIG_DIR}/{path}")
+            if not os.path.exists(full_path):
+                full_path = self.base(path)
+        return full_path
 
     def normalize(self, base, path=None):
         if os.path.isfile(base):

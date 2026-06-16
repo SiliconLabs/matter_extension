@@ -12,9 +12,10 @@
 // <0..4294967295:30>
 // <i> The application will check the sensor value every SL_MATTER_SENSOR_TIMER_PERIOD_S seconds
 // <i> and update the data model attributes each time. Reading the sensor value and updating it
-// <i> does not always trigger an update to the controller.
-// <d> 60
-#define SL_MATTER_SENSOR_TIMER_PERIOD_S 60
+// <i> does not always trigger an update to the controller. Should be sync with the Idle interval
+// <i> to maximaze power savings.
+// <d> 600
+#define SL_MATTER_SENSOR_TIMER_PERIOD_S 600 
 
 // <o SL_MATTER_SENSOR_REPORT_THRESHOLD> Attribute report centi-unit change threshold
 // <0..255:1>

@@ -1150,6 +1150,26 @@
     <property key="filters" value="Difficulty|Advanced Type|NCP\ Project Wireless\ Technology|Matter"/>
     <property key="core.quality" value="PRODUCTION"/>
   </demo>
+  <demo name="brd4186c.demo.matter_wifi_917_ncp_fan_control_app_freertos_brd4357c" label="Matter WiFi - 917 NCP Fan Control FreeRTOS brd4357c">
+    <model:description>Demonstrates a sample implementation of a 917 NCP Matter over Wi-Fi fan control app with internal bootloader</model:description>
+    <property key="demos.blurb" value="Matter WiFi - 917 NCP Fan Control FreeRTOS app"/>
+    <property key="core.partCompatibility" value=".*"/>
+    <property key="core.boardCompatibility" value="brd4186c"/>
+    <property key="demos.imageFile" value="asset://extension.matter_2.9.0/demos/brd4186c/matter_wifi_917_ncp_fan_control_app_freertos_solution_brd4357c/artifact/matter_wifi_917_ncp_fan_control_app_freertos_full.s37"/>
+    <property key="core.readmeFiles" value="slc/apps/fan_control_app/wifi/README_WiFi.md"/>
+    <property key="filters" value="Difficulty|Advanced Type|NCP\ Project Wireless\ Technology|Matter"/>
+    <property key="core.quality" value="PRODUCTION"/>
+  </demo>
+  <demo name="brd4187c.demo.matter_wifi_917_ncp_fan_control_app_freertos_brd4357c" label="Matter WiFi - 917 NCP Fan Control FreeRTOS brd4357c">
+    <model:description>Demonstrates a sample implementation of a 917 NCP Matter over Wi-Fi fan control app with internal bootloader</model:description>
+    <property key="demos.blurb" value="Matter WiFi - 917 NCP Fan Control FreeRTOS app"/>
+    <property key="core.partCompatibility" value=".*"/>
+    <property key="core.boardCompatibility" value="brd4187c"/>
+    <property key="demos.imageFile" value="asset://extension.matter_2.9.0/demos/brd4187c/matter_wifi_917_ncp_fan_control_app_freertos_solution_brd4357c/artifact/matter_wifi_917_ncp_fan_control_app_freertos_full.s37"/>
+    <property key="core.readmeFiles" value="slc/apps/fan_control_app/wifi/README_WiFi.md"/>
+    <property key="filters" value="Difficulty|Advanced Type|NCP\ Project Wireless\ Technology|Matter"/>
+    <property key="core.quality" value="PRODUCTION"/>
+  </demo>
   <demo name="brd4186c.demo.matter_wifi_917_ncp_fan_control_app_freertos" label="Matter WiFi - 917 NCP Fan Control FreeRTOS">
     <model:description>Demonstrates a sample implementation of a 917 NCP Matter over Wi-Fi fan control app with internal bootloader</model:description>
     <property key="demos.blurb" value="Matter WiFi - 917 NCP Fan Control FreeRTOS app"/>
@@ -2106,6 +2126,26 @@
     <property key="core.partCompatibility" value=".*"/>
     <property key="core.boardCompatibility" value="brd4187c"/>
     <property key="demos.imageFile" value="asset://extension.matter_2.9.0/demos/brd4187c/matter_wifi_917_ncp_lock_app_freertos_solution_brd4357a/artifact/matter_wifi_917_ncp_lock_app_freertos_full.s37"/>
+    <property key="core.readmeFiles" value="slc/apps/lock_app/wifi/README_WiFi.md"/>
+    <property key="filters" value="Difficulty|Advanced Type|NCP\ Project Wireless\ Technology|Matter"/>
+    <property key="core.quality" value="PRODUCTION"/>
+  </demo>
+  <demo name="brd4186c.demo.matter_wifi_917_ncp_lock_app_freertos_brd4357c" label="Matter WiFi - 917 NCP Lock FreeRTOS brd4357c">
+    <model:description>Demonstrates a sample implementation of a 917 NCP Matter over Wi-Fi door lock app with internal bootloader</model:description>
+    <property key="demos.blurb" value="Matter WiFi - 917 NCP Lock FreeRTOS app"/>
+    <property key="core.partCompatibility" value=".*"/>
+    <property key="core.boardCompatibility" value="brd4186c"/>
+    <property key="demos.imageFile" value="asset://extension.matter_2.9.0/demos/brd4186c/matter_wifi_917_ncp_lock_app_freertos_solution_brd4357c/artifact/matter_wifi_917_ncp_lock_app_freertos_full.s37"/>
+    <property key="core.readmeFiles" value="slc/apps/lock_app/wifi/README_WiFi.md"/>
+    <property key="filters" value="Difficulty|Advanced Type|NCP\ Project Wireless\ Technology|Matter"/>
+    <property key="core.quality" value="PRODUCTION"/>
+  </demo>
+  <demo name="brd4187c.demo.matter_wifi_917_ncp_lock_app_freertos_brd4357c" label="Matter WiFi - 917 NCP Lock FreeRTOS brd4357c">
+    <model:description>Demonstrates a sample implementation of a 917 NCP Matter over Wi-Fi door lock app with internal bootloader</model:description>
+    <property key="demos.blurb" value="Matter WiFi - 917 NCP Lock FreeRTOS app"/>
+    <property key="core.partCompatibility" value=".*"/>
+    <property key="core.boardCompatibility" value="brd4187c"/>
+    <property key="demos.imageFile" value="asset://extension.matter_2.9.0/demos/brd4187c/matter_wifi_917_ncp_lock_app_freertos_solution_brd4357c/artifact/matter_wifi_917_ncp_lock_app_freertos_full.s37"/>
     <property key="core.readmeFiles" value="slc/apps/lock_app/wifi/README_WiFi.md"/>
     <property key="filters" value="Difficulty|Advanced Type|NCP\ Project Wireless\ Technology|Matter"/>
     <property key="core.quality" value="PRODUCTION"/>
@@ -4080,6 +4120,26 @@
     <property key="filters" value="Difficulty|Advanced Type|NCP\ Project Wireless\ Technology|Matter"/>
     <property key="core.quality" value="PRODUCTION"/>
   </demo>
+  <demo name="brd4186c.demo.matter_wifi_917_ncp_thermostat_freertos_brd4357c" label="Matter WiFi - 917 NCP Thermostat FreeRTOS brd4357c">
+    <model:description>Demonstrates a sample implementation of a 917 NCP Matter over Wi-Fi thermostat app with internal bootloader</model:description>
+    <property key="demos.blurb" value="Matter WiFi - 917 NCP Thermostat FreeRTOS app"/>
+    <property key="core.partCompatibility" value=".*"/>
+    <property key="core.boardCompatibility" value="brd4186c"/>
+    <property key="demos.imageFile" value="asset://extension.matter_2.9.0/demos/brd4186c/matter_wifi_917_ncp_thermostat_freertos_solution_brd4357c/artifact/matter_wifi_917_ncp_thermostat_freertos_full.s37"/>
+    <property key="core.readmeFiles" value="slc/apps/thermostat/wifi/README_WiFi.md"/>
+    <property key="filters" value="Difficulty|Advanced Type|NCP\ Project Wireless\ Technology|Matter"/>
+    <property key="core.quality" value="PRODUCTION"/>
+  </demo>
+  <demo name="brd4187c.demo.matter_wifi_917_ncp_thermostat_freertos_brd4357c" label="Matter WiFi - 917 NCP Thermostat FreeRTOS brd4357c">
+    <model:description>Demonstrates a sample implementation of a 917 NCP Matter over Wi-Fi thermostat app with internal bootloader</model:description>
+    <property key="demos.blurb" value="Matter WiFi - 917 NCP Thermostat FreeRTOS app"/>
+    <property key="core.partCompatibility" value=".*"/>
+    <property key="core.boardCompatibility" value="brd4187c"/>
+    <property key="demos.imageFile" value="asset://extension.matter_2.9.0/demos/brd4187c/matter_wifi_917_ncp_thermostat_freertos_solution_brd4357c/artifact/matter_wifi_917_ncp_thermostat_freertos_full.s37"/>
+    <property key="core.readmeFiles" value="slc/apps/thermostat/wifi/README_WiFi.md"/>
+    <property key="filters" value="Difficulty|Advanced Type|NCP\ Project Wireless\ Technology|Matter"/>
+    <property key="core.quality" value="PRODUCTION"/>
+  </demo>
   <demo name="brd4186c.demo.matter_wifi_917_ncp_thermostat_freertos" label="Matter WiFi - 917 NCP Thermostat FreeRTOS">
     <model:description>Demonstrates a sample implementation of a 917 NCP Matter over Wi-Fi thermostat app with internal bootloader</model:description>
     <property key="demos.blurb" value="Matter WiFi - 917 NCP Thermostat FreeRTOS app"/>
@@ -4506,6 +4566,26 @@
     <property key="core.partCompatibility" value=".*"/>
     <property key="core.boardCompatibility" value="brd4187c"/>
     <property key="demos.imageFile" value="asset://extension.matter_2.9.0/demos/brd4187c/matter_wifi_917_ncp_window_app_freertos_solution_brd4357a/artifact/matter_wifi_917_ncp_window_app_freertos_full.s37"/>
+    <property key="core.readmeFiles" value="slc/apps/window_app/wifi/README_WiFi.md"/>
+    <property key="filters" value="Difficulty|Advanced Type|NCP\ Project Wireless\ Technology|Matter"/>
+    <property key="core.quality" value="PRODUCTION"/>
+  </demo>
+  <demo name="brd4186c.demo.matter_wifi_917_ncp_window_app_freertos_brd4357c" label="Matter WiFi - 917 NCP Window App FreeRTOS brd4357c">
+    <model:description>Demonstrates a sample implementation of a 917 NCP Matter over Wi-Fi window covering app with internal bootloader</model:description>
+    <property key="demos.blurb" value="Matter WiFi - 917 NCP Window App FreeRTOS app"/>
+    <property key="core.partCompatibility" value=".*"/>
+    <property key="core.boardCompatibility" value="brd4186c"/>
+    <property key="demos.imageFile" value="asset://extension.matter_2.9.0/demos/brd4186c/matter_wifi_917_ncp_window_app_freertos_solution_brd4357c/artifact/matter_wifi_917_ncp_window_app_freertos_full.s37"/>
+    <property key="core.readmeFiles" value="slc/apps/window_app/wifi/README_WiFi.md"/>
+    <property key="filters" value="Difficulty|Advanced Type|NCP\ Project Wireless\ Technology|Matter"/>
+    <property key="core.quality" value="PRODUCTION"/>
+  </demo>
+  <demo name="brd4187c.demo.matter_wifi_917_ncp_window_app_freertos_brd4357c" label="Matter WiFi - 917 NCP Window App FreeRTOS brd4357c">
+    <model:description>Demonstrates a sample implementation of a 917 NCP Matter over Wi-Fi window covering app with internal bootloader</model:description>
+    <property key="demos.blurb" value="Matter WiFi - 917 NCP Window App FreeRTOS app"/>
+    <property key="core.partCompatibility" value=".*"/>
+    <property key="core.boardCompatibility" value="brd4187c"/>
+    <property key="demos.imageFile" value="asset://extension.matter_2.9.0/demos/brd4187c/matter_wifi_917_ncp_window_app_freertos_solution_brd4357c/artifact/matter_wifi_917_ncp_window_app_freertos_full.s37"/>
     <property key="core.readmeFiles" value="slc/apps/window_app/wifi/README_WiFi.md"/>
     <property key="filters" value="Difficulty|Advanced Type|NCP\ Project Wireless\ Technology|Matter"/>
     <property key="core.quality" value="PRODUCTION"/>

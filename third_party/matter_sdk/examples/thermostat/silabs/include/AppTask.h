@@ -33,6 +33,7 @@ class AppTask : public BaseApplication
 public:
     AppTask() = default;
 
+    /** @brief Returns the active app instance */
     static AppTask & GetAppTask();
 
     /**
@@ -42,8 +43,10 @@ public:
      */
     static void AppTaskMain(void * pvParameter);
 
+    /** @brief Creates and starts the AppTask thread */
     CHIP_ERROR StartAppTask();
 
+    /** @brief Requests a refresh of the thermostat LCD UI */
     static void UpdateThermoStatUI();
 
     /**
@@ -97,7 +100,7 @@ public:
     CHIP_ERROR GetTemperature(int16_t & temperature);
 
 protected:
-    /** Override of `BaseApplication::AppInit()`. */
+    /** @brief Override of `BaseApplication::AppInit()` */
     CHIP_ERROR AppInit() override;
 
     /** Bring up the thermostat app: sensor timer, sensor driver, first UI paint. */

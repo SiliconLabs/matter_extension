@@ -42,10 +42,17 @@ public:
 
     AppTask() = default;
 
+    /** @brief Returns the active app instance */
     static AppTask & GetAppTask();
 
+    /**
+     * @brief AppTask task main loop function
+     *
+     * @param pvParameter FreeRTOS task parameter
+     */
     static void AppTaskMain(void * pvParameter);
 
+    /** @brief Creates and starts the AppTask thread */
     CHIP_ERROR StartAppTask();
 
     /** @brief Platform button callback; posts fan-control or base application events. */
@@ -67,6 +74,9 @@ public:
     static LightEndpoint & GetLightEndpoint();
 
 protected:
+    /** @brief Override of `BaseApplication::AppInit()` */
     CHIP_ERROR AppInit() override;
+
+    /** @brief Rangehood specific initialization */
     CHIP_ERROR InitRangeHood();
 };

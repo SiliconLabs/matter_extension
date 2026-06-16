@@ -286,7 +286,7 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 #ifdef SL_WIFI
 #ifdef SL_MATTER_ENABLE_AWS
 #ifdef SLI_SI91X_MCU_INTERFACE
-#define configTOTAL_HEAP_SIZE ((size_t) ((65 + EXTRA_HEAP_k) * 1024))
+#define configTOTAL_HEAP_SIZE ((size_t) ((60 + EXTRA_HEAP_k) * 1024))
 #else
 #define configTOTAL_HEAP_SIZE ((size_t) ((68 + EXTRA_HEAP_k) * 1024))
 #endif // SLI_SI91X_MCU_INTERFACE

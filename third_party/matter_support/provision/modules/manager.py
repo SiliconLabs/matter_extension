@@ -151,7 +151,7 @@ class ProvisionManager:
     def generateIterations(self, arg):
         # Upper limit is reduced here to improve performace by default
         min_value = arg.min
-        max_value = arg.min + (arg.max - arg.min) / 4
+        max_value = int(arg.min + (arg.max - arg.min) / 4)
         arg.set(random.randint(min_value, max_value))
 
     def generatePasscode(self, arg):

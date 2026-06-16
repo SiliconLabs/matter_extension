@@ -1,10 +1,10 @@
-from modules.parameters import Types, Formats, ID
-from bleak import BleakClient
-from bleak import BleakScanner
-import modules.channel as _base
-import modules.util as _util
 import asyncio
 import time
+
+import modules.channel as _base
+import modules.util as _util
+from bleak import BleakClient, BleakScanner
+from modules.parameters import ID, Formats, Types
 
 
 class BluetoothChannel(_base.Channel):
@@ -22,7 +22,8 @@ class BluetoothChannel(_base.Channel):
     async def connect(self):
         scanner = BleakScanner()
         dev = await scanner.find_device_by_address(self.address)
-        if dev is None: raise AssertionError("Device not found: {}".format(self.address))
+        if dev is None:
+            raise AssertionError("Device not found: {}".format(self.address))
         self.client = BleakClient(dev.address)
         await self.client.connect()
         self.tx_charact = self.findCharact(BluetoothChannel.PROVISION_TX_UUID)

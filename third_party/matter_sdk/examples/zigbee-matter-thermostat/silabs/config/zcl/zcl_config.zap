@@ -4961,7 +4961,7 @@
         }
       ],
       "deviceVersions": [
-        4
+        6
       ],
       "deviceIdentifiers": [
         769
@@ -5337,22 +5337,6 @@
             {
               "name": "SetpointRaiseLower",
               "code": 0,
-              "mfgCode": null,
-              "source": "client",
-              "isIncoming": 1,
-              "isEnabled": 1
-            },
-            {
-              "name": "AtomicResponse",
-              "code": 253,
-              "mfgCode": null,
-              "source": "server",
-              "isIncoming": 0,
-              "isEnabled": 1
-            },
-            {
-              "name": "AtomicRequest",
-              "code": 254,
               "mfgCode": null,
               "source": "client",
               "isIncoming": 1,

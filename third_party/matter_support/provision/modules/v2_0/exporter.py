@@ -1,4 +1,5 @@
 import modules.exporter as _base
+
 from .encoding import *
 
 
@@ -6,7 +7,6 @@ class Exporter(_base.Exporter):
 
     def __init__(self, paths, args):
         super().__init__(paths, args)
-
 
     def encodeInt8u(self, a):
         self.data.extend(Coder.encode(a, a.value))

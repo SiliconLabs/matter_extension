@@ -160,6 +160,9 @@ const sl_wifi_device_configuration_t config = {
 #endif // defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE
                                                 ),
                      .ext_custom_feature_bit_map = (SL_SI91X_EXT_FEAT_SSL_VERSIONS_SUPPORT
+#if WIFI_ENABLE_SECURITY_WPA3_TRANSITION
+                                                    | SL_SI91X_EXT_FEAT_IEEE_80211W
+#endif // WIFI_ENABLE_SECURITY_WPA3_TRANSITION
 #if defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE
                                                     | RSI_EXT_CUSTOM_FEATURE_BIT_MAP | SL_SI91X_EXT_FEAT_BT_CUSTOM_FEAT_ENABLE
 #endif // defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE

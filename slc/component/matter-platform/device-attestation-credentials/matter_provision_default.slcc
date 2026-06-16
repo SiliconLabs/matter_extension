@@ -45,7 +45,7 @@ source:
   - path: third_party/matter_sdk/examples/platform/silabs/provision/ProvisionStorageCustom.cpp
 
 library:
-  - path: third_party/matter_support/provision/libs/libProvision_efr32mg24.a
+  - path: third_party/matter_support/provision/libs/libProvision-efr32mg24.a
     condition:
       - device_family_efr32mg24
     unless: 
@@ -54,7 +54,7 @@ library:
     condition:
       - device_family_efr32mg24
       - toolchain_llvm
-  - path: third_party/matter_support/provision/libs/libProvision_efr32mg26.a
+  - path: third_party/matter_support/provision/libs/libProvision-efr32mg26.a
     condition:
       - device_family_efr32mg26
     unless:
@@ -63,7 +63,7 @@ library:
     condition:
       - device_family_efr32mg26
       - toolchain_llvm
-  - path: third_party/matter_support/provision/libs/libProvision_mgm24.a
+  - path: third_party/matter_support/provision/libs/libProvision-mgm24.a
     condition:
       - device_family_mgm24
     unless:
@@ -72,19 +72,15 @@ library:
     condition:
       - device_family_mgm24
       - toolchain_llvm
-  - path: third_party/matter_support/provision/libs/libProvision_efr32mg26.a
+  - path: third_party/matter_support/provision/libs/libProvision-efr32mg26.a
     condition:
       - device_family_mgm26
     unless:
       - toolchain_llvm
-  - path: third_party/matter_support/provision/libs/libProvision-mgm26-clang.a
-    condition:
-      - device_family_mgm26
-      - toolchain_llvm
-  - path: third_party/matter_support/provision/libs/libProvisionPSA_si917.a
+  - path: third_party/matter_support/provision/libs/libProvisionPSA-si917.a
     condition:
       - device_family_siwg917
-  - path: third_party/matter_support/provision/libs/libProvision_efr32mg24.a
+  - path: third_party/matter_support/provision/libs/libProvision-efr32mg24.a
     condition:
       - device_family_simg301
     unless:

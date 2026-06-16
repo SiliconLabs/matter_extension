@@ -14,8 +14,8 @@ from modules.parameters import (ID, Actions, Formats, Parameter, ParameterList,
 
 class Argument(Parameter):
 
-    def __init__(self, parent, paths, y) -> None:
-        super().__init__(y)
+    def __init__(self, parent, paths) -> None:
+        super().__init__()
         self.parent = parent
         self.paths = paths
         self.value = None
@@ -63,7 +63,7 @@ class Argument(Parameter):
                 if x[0].isnumeric():
                     values.append(x)
         if len(values) > 1:
-            raise ValueError("Multiple version arguments: {}".format(values))
+            _util.fail("Multiple version arguments: {}".format(values))
         self.value = (1 == len(values)) and values[0] or None
         return self
 
@@ -71,7 +71,7 @@ class Argument(Parameter):
         if v is None:
             v = default_value
         if validate:
-            self.value = self._validate(v)
+            self.value = self.validate(v)
         else:
             self.value = v
 
@@ -105,21 +105,26 @@ class Argument(Parameter):
             return str(self.value).lower()
         return str(self.value)
 
-    def _validate(self, x):
+    def validate(self, x=None):
         if x is None:
-            return None
+            # validate current value
+            return None if (self.value is None) else self.validate(self.value)
         if not self.check:
             return x
+        # Exclusion set
         h = (x is not None) and (x.__hash__) or None
         if (self.invalid is not None) and (h is not None) and (x in self.invalid):
-            raise ValueError("Invalid \"{}\" value: {}".format(self.name, x))
+            _util.fail(f'Invalid "{self.name}" value: {x}')
+        # U8, bool
         elif Types.INT8U == self.type:
             if (Formats.BOOL == self.format):
                 return self._validateBool(x)
             else:
                 return self._validateInt(x)
+        # U16, U32
         elif (Types.INT16U == self.type) or (Types.INT32U == self.type):
             return self._validateInt(x)
+        # Binary, string, path
         elif (Types.BINARY == self.type):
             if (Formats.STRING == self.format):
                 return self._validateString(x)
@@ -133,18 +138,18 @@ class Argument(Parameter):
         try:
             i = isinstance(x, str) and int(x, 0) or int(x)
         except Exception as e:
-            raise ValueError("Invalid \"{}\" integer value: {}; {}".format(self.name, x, e))
+            _util.fail(f"Invalid \"{self.name}\" integer value: {x}; {e}")
         r = self.range()
         if r is not None:
             if i not in r:
-                raise ValueError("Integer \"{}\" out of range: {} [{}, {}]".format(self.name, x, self.min or 0, self.max))
+                _util.fail(f'Integer "{self.name}" out of range: {x} [{self.min or 0}, {self.max}]')
         return i
 
     def _validateBool(self, x):
         try:
             return bool(x)
         except Exception as e:
-            raise ValueError("Invalid \"{}\" boolean value: {}; {}".format(self.name, x, e))
+            _util.fail(f'Invalid "{self.name}" boolean value: {x}; {e}')
 
     def _validateString(self, x):
         s = None
@@ -154,14 +159,14 @@ class Argument(Parameter):
             try:
                 s = x.decode()
             except:
-                raise ValueError("Invalid \"{}\" string value: {}".format(self.name, x))
+                _util.fail(f'Invalid "{self.name}" string value: {x}')
         else:
             s = str(x)
         r = self.range()
         if r is not None:
             l = (s is not None) and len(s) or 0
             if l not in r:
-                raise ValueError("String \"{}\" size out of range: {} [{}, {}]".format(self.name, l, self.min, self.max))
+                _util.fail(f'String "{self.name}" size out of range: {l} [{self.min}, {self.max}]')
         return s
 
     def _validatePath(self, x):
@@ -173,19 +178,19 @@ class Argument(Parameter):
                 os.makedirs(dir)
         elif not os.path.exists(s):
             # Write mode, the input path must exist
-            raise ValueError("Invalid \"{}\" path: {}".format(self.name, s))
+            _util.fail(f'Invalid "{self.name}" path: {s}')
         return s
 
     def _validateBinary(self, x):
         if isinstance(x, str):
             x = bytes.fromhex(x.removeprefix('0x'))
         if not isinstance(x, bytes):
-            raise ValueError("Invalid \"{}\" binary value: {}".format(self.name, x))
+            _util.fail(f'Invalid "{self.name}" binary value: {x}')
         r = self.range()
         if r is not None:
             sz = len(x)
             if sz not in r:
-                raise ValueError("Binary \"{}\" size out of range: {} [{}, {}]".format(self.name, sz, self.min, self.max))
+                _util.fail(f'Binary "{self.name}" size out of range: {sz} [{self.min}, {self.max}]')
         return x
 
 
@@ -194,11 +199,14 @@ class ArgumentList(ParameterList):
     DEFAULT_OUTPUT_PATH = 'latest.json'
 
     def __init__(self, paths) -> None:
-        super().__init__(paths)
+        super().__init__(paths, None)
         self.formatter = None
 
     def create(self, y):
-        return Argument(self, self.paths, y)
+        id = y['id'] if 'id' in y else None
+        if ID.kManufacturingDate == id:
+            return ManufacturingDateArgument(self, self.paths)
+        return Argument(self, self.paths)
 
     def set(self, k, v, default_value=None, validate=True):
         self.get(k).set(v, default_value, validate)
@@ -239,7 +247,9 @@ class ArgumentList(ParameterList):
         for k, a in self.ids.items():
             if (a.value is None) and (a.default is not None):
                 a.value = a.default
-        # print("VERSION: {} (file), {} (command-line)".format(file_ver.tag, cmd_ver.tag))
+        # Validate compiled arguments (unless help is requested)
+        if not self.bool(ID.kHelp):
+            self.validate()
         return cmd_ver
 
     def compileFileInputs(self, versions, inputs_path, is_user_input=False):
@@ -312,3 +322,24 @@ class ArgumentList(ParameterList):
                     content += "\n{}+ {}".format(_util.MARGIN, a)
             if len(content) > 0:
                 print("* {}({}/{}):{}\n".format(n, count, len(g), content))
+
+    # Validate all arguments
+    def validate(self):
+        for n, a in self.names.items():
+            a.validate()
+
+
+class ManufacturingDateArgument(Argument):
+
+    def validate(self, x=None):
+        v = super().validate(x)
+        if isinstance(v, str):
+            ymd = v[:8]
+            if ymd.isnumeric():
+                ymd = int(ymd)
+                year = ymd // 10000
+                month = (ymd % 10000) // 100
+                day = ymd % 100
+                if year > 0 and month in range(1, 13) and day in range(1, 32):
+                    return v
+            _util.fail(f"Invalid \"{self.name}\": {v}")

@@ -41,6 +41,9 @@
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="{{ example.category }}"/>
     <properties key="quality" value="{{ example.quality | upper }}"/>
+{%- if example.name == 'matter_thread_host_openthread_border_router_doc' %}
+    <properties key="noBuild" value="true"/>
+{%- endif %}
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="{{ example.filter | filters | list }}"/>
 {%- if example.projects %}

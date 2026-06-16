@@ -18,8 +18,6 @@ component:
   - id: matter_wifi_ble
   - id: matter_crypto_tinycrypt_siwx917
 
-  - id: mbedtls_pki_aws
-    condition: [matter_aws]
   - id: mbedtls_entropy_default_aws
     condition: [matter_aws]
   - id: matter_wifi

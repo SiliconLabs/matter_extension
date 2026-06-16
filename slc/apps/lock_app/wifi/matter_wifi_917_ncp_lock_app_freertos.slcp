@@ -32,7 +32,9 @@ component:
   - id: app_common
   - id: matter_provision_default
 
-  - id: mbedtls_pki_aws
+  - id: mbedtls_x509_use_aws
+    condition: [matter_aws]
+  - id: mbedtls_x509_create_aws
     condition: [matter_aws]
   - id: mbedtls_entropy_default_aws
     condition: [matter_aws]

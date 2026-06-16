@@ -1,0 +1,23 @@
+id: mbedtls_x509_create_aws
+package: matter
+label: X.509 Create certificates for Matter + AWS
+description: >-
+  This component provides support for X.509 certificate creation in
+  Mbed TLS specifically for Matter+AWS component. This component avoids tight
+  coupling of mbedtls and PSA.
+category: Platform|Security|Mbed TLS|Upper Layer
+quality: production
+provides:
+- name: mbedtls_x509_create
+  condition: [matter_aws]
+requires:
+- name: mbedtls_asn1_write
+- name: mbedtls_oid
+- name: mbedtls_pk_parse
+template_contribution:
+- name: mbedtls_config
+  value: MBEDTLS_X509_CREATE_C
+metadata:
+  sbom:
+    reference: mbedtls_sbom
+root_path: platform_core

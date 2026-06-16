@@ -203,6 +203,7 @@ public:
     CHIP_ERROR GetHardwareVersion(uint16_t & value) override;
     CHIP_ERROR GetHardwareVersionString(char * value, size_t max) override;
     CHIP_ERROR GetManufacturingDate(uint16_t & year, uint8_t & month, uint8_t & day) override;
+    CHIP_ERROR GetManufacturingDateSuffix(MutableCharSpan & suffixBuffer) override;
     CHIP_ERROR GetRotatingDeviceIdUniqueId(MutableByteSpan & value) override;
 
     //

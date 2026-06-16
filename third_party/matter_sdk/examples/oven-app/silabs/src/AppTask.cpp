@@ -70,6 +70,10 @@ using namespace chip::TLV;
 
 LEDWidget sLightLED; // Use LEDWidget for basic LED functionality
 
+namespace {
+bool sDnssdReady          = false;
+} // namespace
+
 AppTask AppTask::sAppTask;
 
 CHIP_ERROR AppTask::AppInit()
@@ -86,6 +90,8 @@ CHIP_ERROR AppTask::AppInit()
     OvenManager::GetInstance().Init();
     DeviceLayer::PlatformMgr().UnlockChipStack();
 
+    ReturnErrorOnFailure(PlatformMgr().AddEventHandler(ConnectivityEventHandler, 0));
+
     sLightLED.Init(LIGHT_LED);
     sLightLED.Set(OvenManager::GetInstance().GetCookTopState());
 
@@ -101,6 +107,25 @@ CHIP_ERROR AppTask::AppInit()
 #endif
 
     return err;
+}
+
+void AppTask::ConnectivityEventHandler(const ChipDeviceEvent * event, intptr_t)
+{
+    VerifyOrReturn(event != nullptr);
+
+    switch (event->Type)
+    {
+    case DeviceEventType::kDnssdInitialized:
+        if (sDnssdReady)
+        {
+            return;
+        }
+        sDnssdReady = true;
+        CookTopBindingPropagateState(OvenManager::GetCookTopEndpoint(), false);
+        break;
+    default:
+        break;
+    }
 }
 
 CHIP_ERROR AppTask::StartAppTask()

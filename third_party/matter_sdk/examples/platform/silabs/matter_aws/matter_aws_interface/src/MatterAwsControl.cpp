@@ -35,7 +35,6 @@ extern void aws_ota_init(void);
 #endif // ZCL_USING_ON_OFF_CLUSTER_SERVER
 
 #ifdef ZCL_USING_DOOR_LOCK_CLUSTER_SERVER
-#include <LockManager.h>
 #include <app/clusters/door-lock-server/door-lock-server.h>
 #endif // ZCL_USING_DOOR_LOCK_CLUSTER_SERVER
 
@@ -44,8 +43,7 @@ extern void aws_ota_init(void);
 #endif // ZCL_USING_WINDOW_COVERING_CLUSTER_SERVER
 
 #ifdef ZCL_USING_THERMOSTAT_CLUSTER_SERVER
-#include "TemperatureManager.h"
-#include <app/clusters/thermostat-server/thermostat-server.h>
+#include <app/clusters/thermostat-server/ThermostatCluster.h>
 #endif // ZCL_USING_THERMOSTAT_CLUSTER_SERVER
 
 #ifdef ZCL_USING_THERMOSTAT_CLUSTER_SERVER
@@ -242,14 +240,22 @@ void MatterAwsIncomingDataCb(void * arg, const char * topic, uint16_t topic_len,
     cmdIndex = GetCommandStringIndex(DlMqttControlCmd, COUNT_OF(DlMqttControlCmd), _cmd);
     if (cmdIndex != kStringNotFound)
     {
+        OperationErrorEnum err = OperationErrorEnum::kUnspecified;
+        const chip::app::DataModel::Nullable<chip::FabricIndex> fabricIdx = chip::app::DataModel::NullNullable;
+        const chip::app::DataModel::Nullable<chip::NodeId> nodeId         = chip::app::DataModel::NullNullable;
+        const chip::Optional<chip::ByteSpan> pinCode                      = chip::NullOptional;
+        const bool wantLock = (DlMqttControlCmd[cmdIndex].action.lockState == DlLockState::kLocked);
+
         chip::DeviceLayer::PlatformMgr().LockChipStack();
-        LockMgr().InitiateAction(AppEvent::kEventType_Lock,
-                                 (DlMqttControlCmd[cmdIndex].action.lockState == DlLockState::kLocked)
-                                     ? LockManager::LOCK_ACTION
-                                     : LockManager::UNLOCK_ACTION);
-        DoorLockServer::Instance().SetLockState(kEndpointId, DlMqttControlCmd[cmdIndex].action.lockState,
-                                                OperationSourceEnum::kProprietaryRemote);
+        const bool success = wantLock
+            ? emberAfPluginDoorLockOnDoorLockCommand(kEndpointId, fabricIdx, nodeId, pinCode, err)
+                                      : emberAfPluginDoorLockOnDoorUnlockCommand(kEndpointId, fabricIdx, nodeId, pinCode, err);
         chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+
+        if (!success)
+        {
+            ChipLogError(AppServer, "[MATTER_AWS] door lock command failed, err=%u", to_underlying(err));
+        }
         return;
     }
 #endif // ZCL_USING_DOOR_LOCK_CLUSTER_SERVER
@@ -298,58 +304,62 @@ void subscribeCB(void)
 #ifdef ZCL_USING_THERMOSTAT_CLUSTER_SERVER
 void AttributeHandler(EndpointId endpointId, AttributeId attributeId)
 {
+    chip::app::DataModel::Nullable<int16_t> currentTempRaw;
+    int16_t coolingSetpointRaw            = 0;
+    int16_t heatingSetpointRaw            = 0;
+    Thermostat::SystemModeEnum systemMode = Thermostat::SystemModeEnum::kOff;
+    char buffer[MSG_SIZE];
+
     switch (attributeId)
     {
     case ThermAttr::LocalTemperature::Id: {
-        int8_t CurrentTemp = TempMgr().GetCurrentTemp();
-        char buffer[MSG_SIZE];
-        itoa(CurrentTemp, buffer, DECIMAL);
-        MatterAwsSendMsg("LocalTemperature/Temp", (const char *) (buffer));
+        ThermAttr::LocalTemperature::Get(endpointId, currentTempRaw);
+        const int16_t tempCenti = currentTempRaw.IsNull() ? 0 : currentTempRaw.Value();
+        itoa(tempCenti / 100, buffer, DECIMAL);
+        MatterAwsSendMsg("thermostat/LocalTemperature/Temp", buffer);
     }
     break;
 
     case ThermAttr::OccupiedCoolingSetpoint::Id: {
-        int8_t coolingTemp = TempMgr().GetCoolingSetPoint();
-        char buffer[MSG_SIZE];
-        itoa(coolingTemp, buffer, DECIMAL);
-        MatterAwsSendMsg("OccupiedCoolingSetpoint/coolingTemp", (const char *) (buffer));
+        ThermAttr::OccupiedCoolingSetpoint::Get(endpointId, &coolingSetpointRaw);
+        itoa(coolingSetpointRaw / 100, buffer, DECIMAL);
+        MatterAwsSendMsg("thermostat/OccupiedCoolingSetpoint/coolingTemp", buffer);
     }
     break;
 
     case ThermAttr::OccupiedHeatingSetpoint::Id: {
-        int8_t heatingTemp = TempMgr().GetHeatingSetPoint();
-        char buffer[MSG_SIZE];
-        itoa(heatingTemp, buffer, DECIMAL);
-        MatterAwsSendMsg("OccupiedHeatingSetpoint/heatingTemp", (const char *) (buffer));
+        ThermAttr::OccupiedHeatingSetpoint::Get(endpointId, &heatingSetpointRaw);
+        itoa(heatingSetpointRaw / 100, buffer, DECIMAL);
+        MatterAwsSendMsg("thermostat/OccupiedHeatingSetpoint/heatingTemp", buffer);
     }
     break;
 
     case ThermAttr::SystemMode::Id: {
-        int8_t mode = TempMgr().GetMode();
-        char buffer[MSG_SIZE];
-        const char * Mode;
-        switch (mode)
+        const char * modeStr;
+        ThermAttr::SystemMode::Get(endpointId, &systemMode);
+        ThermAttr::LocalTemperature::Get(endpointId, currentTempRaw);
+        switch (systemMode)
         {
-        case 0:
-            Mode = "OFF";
+        case Thermostat::SystemModeEnum::kOff:
+            modeStr = "OFF";
             break;
-        case 1:
-            Mode = "HEAT&COOL";
+        case Thermostat::SystemModeEnum::kAuto:
+            modeStr = "HEAT&COOL";
             break;
-        case 3:
-            Mode = "COOL";
+        case Thermostat::SystemModeEnum::kCool:
+            modeStr = "COOL";
             break;
-        case 4:
-            Mode = "HEAT";
+        case Thermostat::SystemModeEnum::kHeat:
+            modeStr = "HEAT";
             break;
         default:
-            Mode = "INVALID MODE";
+            modeStr = "INVALID MODE";
             break;
         }
-        uint16_t current_temp = TempMgr().GetCurrentTemp();
-        itoa(current_temp, buffer, DECIMAL);
-        MatterAwsSendMsg("thermostat/systemMode", Mode);
-        MatterAwsSendMsg("thermostat/currentTemp", (const char *) (buffer));
+        const int16_t tempCenti = currentTempRaw.IsNull() ? 0 : currentTempRaw.Value();
+        itoa(tempCenti / 100, buffer, DECIMAL);
+        MatterAwsSendMsg("thermostat/systemMode", modeStr);
+        MatterAwsSendMsg("thermostat/currentTemp", buffer);
     }
     break;
 

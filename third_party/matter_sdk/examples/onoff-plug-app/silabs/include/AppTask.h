@@ -35,6 +35,7 @@ class AppTask : public BaseApplication
 public:
     AppTask() = default;
 
+    /** @brief Returns the active app instance */
     static AppTask & GetAppTask();
 
     /**
@@ -44,6 +45,7 @@ public:
      */
     static void AppTaskMain(void * pvParameter);
 
+    /** @brief Creates and starts the AppTask thread */
     CHIP_ERROR StartAppTask();
 
     /**
@@ -54,14 +56,20 @@ public:
      */
     static void ButtonEventHandler(uint8_t button, uint8_t btnAction);
 
+    /** @brief Data model hook invoked when a cluster attribute changes */
     void DMPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
                                        uint8_t * value);
 
+    /** @brief AppTask thread event handler that applies an OnOff action */
     static void OnOffActionEventHandler(AppEvent * aEvent);
 
 protected:
+    /** @brief Override of `BaseApplication::AppInit()` */
     CHIP_ERROR AppInit() override;
+
+    /** @brief Plug specific initialization */
     CHIP_ERROR InitPlug();
 
+    /** @brief Chip-thread work item: push the OnOff cluster state via `OnOffServer::setOnOffValue` */
     static void UpdateOnOffClusterState(intptr_t context);
 };

@@ -18,6 +18,12 @@ enabled_variants:
     blurb_suffix: ""
     description_suffix: ""
 
+  brd4357c:
+    demo_suffix: "_brd4357c"
+    label_suffix: " brd4357c"
+    blurb_suffix: ""
+    description_suffix: ""
+
   multipan:
     demo_suffix: "_multipan"
     label_suffix: " Multipan"

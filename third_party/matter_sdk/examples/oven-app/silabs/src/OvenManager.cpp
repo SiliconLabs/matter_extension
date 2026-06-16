@@ -154,35 +154,8 @@ void OvenManager::OnOffAttributeChangeHandler(EndpointId endpointId, AttributeId
 
         action = (*value != 0) ? COOK_TOP_ON_ACTION : COOK_TOP_OFF_ACTION;
 
-        // Propagate CookTop state to bound peers for both OnOff (RangeHood
-        // Light) and FanControl (Extractor Hood) clusters. One context per
-        // cluster is required because BindingManager invokes the context
-        // release handler once per NotifyBoundClusterChanged call.
-        {
-            const bool isOn = (*value != 0);
-            for (ClusterId clusterId : { OnOff::Id, FanControl::Id })
-            {
-                CookTopBindingContext * context = Platform::New<CookTopBindingContext>();
-                if (context == nullptr)
-                {
-                    ChipLogError(AppServer,
-                                 "Failed to allocate CookTopBindingContext for cluster " ChipLogFormatMEI,
-                                 ChipLogValueMEI(clusterId));
-                    continue;
-                }
-                context->localEndpointId = kCookTopEndpoint;
-                context->clusterId       = clusterId;
-                context->cookTopOn       = isOn;
-
-                if (CookTopBindingTrigger(context) != CHIP_NO_ERROR)
-                {
-                    Platform::Delete(context);
-                    ChipLogError(AppServer,
-                                 "Failed to schedule CookTopBindingTrigger for cluster " ChipLogFormatMEI ", context freed",
-                                 ChipLogValueMEI(clusterId));
-                }
-            }
-        }
+        // Propagate CookTop state to bound OnOff (RangeHood Light) and FanControl (Extractor Hood) peers.
+        CookTopBindingPropagateState(kCookTopEndpoint, *value != 0);
         break;
     }
     case kCookSurfaceEndpoint1:

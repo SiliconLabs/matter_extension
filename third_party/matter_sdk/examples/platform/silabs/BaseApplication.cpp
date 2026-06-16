@@ -175,6 +175,8 @@ bool sHaveBLEConnections = false;
 
 constexpr uint32_t kLightTimerPeriod = static_cast<uint32_t>(pdMS_TO_TICKS(10));
 
+constexpr System::Clock::Milliseconds32 kZbLeaveAnnouceDelay = System::Clock::Milliseconds32(1000);
+
 uint8_t sAppEventQueueBuffer[APP_EVENT_QUEUE_SIZE * sizeof(AppEvent)];
 osMessageQueue_t sAppEventQueueStruct;
 constexpr osMessageQueueAttr_t appEventQueueAttr = { .cb_mem  = &sAppEventQueueStruct,
@@ -199,7 +201,10 @@ SilabsLCD slLCD;
 #ifdef MATTER_DM_PLUGIN_IDENTIFY_SERVER
 Clusters::Identify::EffectIdentifierEnum sIdentifyEffect = Clusters::Identify::EffectIdentifierEnum::kStopEffect;
 
-ObjectPool<Identify, MATTER_DM_IDENTIFY_CLUSTER_SERVER_ENDPOINT_COUNT + CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT> IdentifyPool;
+ObjectPool<Identify,
+           MATTER_DM_IDENTIFY_CLUSTER_SERVER_ENDPOINT_COUNT + MATTER_DM_IDENTIFY_CLUSTER_CLIENT_ENDPOINT_COUNT +
+               CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT>
+    IdentifyPool;
 
 #endif // MATTER_DM_PLUGIN_IDENTIFY_SERVER
 
@@ -345,6 +350,8 @@ CHIP_ERROR BaseApplication::Init()
     if (nbOfMatterFabric != 0)
     {
         Zigbee::RequestLeave();
+        RETURN_SAFELY_IGNORED DeviceLayer::SystemLayer().StartTimer(
+            kZbLeaveAnnouceDelay, [](System::Layer *, void *) { Zigbee::ZLLNotFactoryNew(); }, nullptr);
     }
     else
 #endif // SL_MATTER_ZIGBEE_SEQUENTIAL
@@ -354,7 +361,10 @@ CHIP_ERROR BaseApplication::Init()
 #endif // SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
     SILABS_TRACE_END_ERROR(TimeTraceOperation::kAppInit, err);
     SILABS_TRACE_END_ERROR(TimeTraceOperation::kBootup, err);
-    if (err == CHIP_NO_ERROR) { mIsApplicationInitialized = true; }
+    if (err == CHIP_NO_ERROR)
+    {
+        mIsApplicationInitialized = true;
+    }
     return err;
 }
 
@@ -1007,6 +1017,16 @@ void BaseApplication::InitOTARequestorHandler(System::Layer * systemLayer, void 
 }
 #endif // defined(SILABS_OTA_ENABLED) && SILABS_OTA_ENABLED
 
+#ifdef SL_MATTER_ENABLE_AWS
+namespace {
+void InitMatterAwsHandler(System::Layer * systemLayer, void * appState)
+{
+    VerifyOrReturn(MATTER_AWS_OK == MatterAwsInit(matterAws::control::subscribeCB),
+                   ChipLogError(AppServer, "MatterAwsInit failed"));
+}
+} // namespace
+#endif // SL_MATTER_ENABLE_AWS
+
 void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
 {
     switch (event->Type)
@@ -1026,10 +1046,9 @@ void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
 #endif
         )
         {
-            if (MATTER_AWS_OK != MatterAwsInit(matterAws::control::subscribeCB))
-            {
-                ChipLogError(AppServer, "MatterAwsInit failed");
-            }
+            ChipLogProgress(AppServer, "Scheduling Matter AWS initialization");
+            RETURN_SAFELY_IGNORED chip::DeviceLayer::SystemLayer().StartTimer(
+                chip::System::Clock::Seconds32(MATTER_AWS_INIT_DELAY_SEC), InitMatterAwsHandler, nullptr);
         }
 #endif // SL_MATTER_ENABLE_AWS
 #ifdef DISPLAY_ENABLED
@@ -1082,8 +1101,9 @@ void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
 #ifdef SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
 #ifdef SL_MATTER_ZIGBEE_SEQUENTIAL // Matter Zigbee sequential
         Zigbee::RequestLeave();
-        Zigbee::ZLLNotFactoryNew();
 #endif // SL_MATTER_ZIGBEE_SEQUENTIAL
+        RETURN_SAFELY_IGNORED DeviceLayer::SystemLayer().StartTimer(
+            kZbLeaveAnnouceDelay, [](System::Layer *, void *) { Zigbee::ZLLNotFactoryNew(); }, nullptr);
 #endif // SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
     }
     break;

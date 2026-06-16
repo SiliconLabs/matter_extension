@@ -1,6 +1,7 @@
 from enum import Enum
-from modules.parameters import Types, Formats, Parameter
+
 import modules.util as _util
+from modules.parameters import Formats, Parameter, Types
 
 
 # Since Python automatically allicates the buffer,
@@ -15,7 +16,7 @@ import modules.util as _util
 #
 class Buffer(object):
 
-    def __init__(self, limit = None, data = None):
+    def __init__(self, limit=None, data=None):
         self.max_size = limit
         self.data = (data is not None) and data or bytearray()
         self.out = 0
@@ -23,13 +24,18 @@ class Buffer(object):
     def clear(self):
         self.data = bytearray()
         self.out = 0
-    def limit(self):  return self.max_size
-    def size(self):   return len(self.data)
+
+    def limit(self): return self.max_size
+    def size(self): return len(self.data)
     def offset(self): return self.out
-    def left(self):   return self.size() - self.offset()
+    def left(self): return self.size() - self.offset()
+
     def spare(self):
-        if self.limit() is None: return None
-        else: return self.limit() - self.size()
+        if self.limit() is None:
+            return None
+        else:
+            return self.limit() - self.size()
+
     def serialize(self): return self.data
 
     @staticmethod
@@ -46,32 +52,32 @@ class Buffer(object):
 
     @staticmethod
     def encodeBinary(x):
-        return (x is not None) and bytes(x)  or None
+        return (x is not None) and bytes(x) or None
 
     @staticmethod
     def encodeString(x):
-        return (x is not None) and x.encode('utf-8')  or None
+        return (x is not None) and x.encode('utf-8') or None
 
     @staticmethod
     def decodeInt(x):
         return int.from_bytes(x, byteorder='big')
 
     def addInt8u(self, x):
-        assert((self.spare() is None) or (self.spare() > 0))
+        assert ((self.spare() is None) or (self.spare() > 0))
         self.data.extend(Buffer.encodeInt8u((x is not None) and x or 0))
         return True
 
     def addInt16u(self, x):
-        assert((self.spare() is None) or (self.spare() >= 2))
+        assert ((self.spare() is None) or (self.spare() >= 2))
         self.data.extend(Buffer.encodeInt16u((x is not None) and x or 0))
 
     def addInt32u(self, x):
-        assert((self.spare() is None) or (self.spare() >= 4))
+        assert ((self.spare() is None) or (self.spare() >= 4))
         self.data.extend(Buffer.encodeInt32u((x is not None) and x or 0))
 
     def addBinary(self, x):
         if (x is not None) and (len(x) > 0):
-            assert((self.spare() is None) or (self.spare() >= len(x)))
+            assert ((self.spare() is None) or (self.spare() >= len(x)))
             self.data.extend(x)
 
     def addBuffer(self, x, size):
@@ -79,19 +85,19 @@ class Buffer(object):
             self.addBinary(x.getBinary(size))
 
     def getInt8u(self):
-        assert(self.left() > 0)
+        assert (self.left() > 0)
         x = Buffer.decodeInt(self.data[self.out:self.out + 1])
         self.out += 1
         return x
 
     def getInt16u(self):
-        assert(self.left() >= 2)
+        assert (self.left() >= 2)
         x = Buffer.decodeInt(self.data[self.out:self.out + 2])
         self.out += 2
         return x
 
     def getInt32u(self):
-        assert(self.left() >= 2)
+        assert (self.left() >= 2)
         x = Buffer.decodeInt(self.data[self.out:self.out + 4])
         self.out += 4
         return x
@@ -99,7 +105,7 @@ class Buffer(object):
     def getInt32s(self):
         x = self.getUint32()
         if x & 0x80000000:
-            return -(0x7fffffff & x);
+            return -(0x7fffffff & x)
         else:
             return x
 
@@ -149,28 +155,28 @@ class Context(Buffer):
 
 class Coder:
     # Command flags
-    kResponseFlag  = 0x80
+    kResponseFlag = 0x80
     # Payload flags
-    kCustomIdMin   = 0x0000
-    kCustomIdMax   = 0x00ff
-    kKnownIdMin    = 0x0100
-    kKnownIdMax    = 0x01ff
-    kIdMask        = 0x01ff
+    kCustomIdMin = 0x0000
+    kCustomIdMax = 0x00ff
+    kKnownIdMin = 0x0100
+    kKnownIdMax = 0x01ff
+    kIdMask = 0x01ff
     kWellKnownMask = 0x0100
-    kSizeBit       = 10
-    kSizeMask      = 0x0c00
-    kFeedbackMask  = 0x0200
-    kTypeBit       = 12
-    kTypeMask      = 0xf000
+    kSizeBit = 10
+    kSizeMask = 0x0c00
+    kFeedbackMask = 0x0200
+    kTypeBit = 12
+    kTypeMask = 0xf000
 
     @staticmethod
-    def encode(arg, val, feedback = False, out = Buffer()):
+    def encode(arg, val, feedback=False, out=Buffer()):
         out.clear()
         value = Coder.encodeValue(arg, val)
         size = len(value)
         # ID + Flags
         size_len = Coder.calcSizeLength(size)
-        flags  = (arg.id & Coder.kIdMask)
+        flags = (arg.id & Coder.kIdMask)
         flags |= (feedback and Coder.kFeedbackMask or 0)
         flags |= ((size_len << Coder.kSizeBit) & Coder.kSizeMask)
         flags |= ((arg.type.value << Coder.kTypeBit) & Coder.kTypeMask)
@@ -195,14 +201,16 @@ class Coder:
 
             if States.Flags == ctx.state:
                 # ID + flags
-                if not Coder.defragment(ctx, input, 2): break
+                if not Coder.defragment(ctx, input, 2):
+                    break
                 Coder.decodeFlags(ctx, ctx)
                 ctx.state = ctx.is_null and States.Ready or States.Size
 
             elif States.Size == ctx.state:
                 if ctx.is_binary:
                     # Decode variable size
-                    if not Coder.defragment(ctx, input, ctx.size_len): break
+                    if not Coder.defragment(ctx, input, ctx.size_len):
+                        break
                     ctx.data_size = Coder.decodeVariableSize(ctx, ctx)
                 else:
                     # Fixed-length argument
@@ -213,7 +221,8 @@ class Coder:
                 assert not ctx.is_null, 'Decode error: Unexpected null'
                 assert ctx.data_size > 0, 'Decode error: Non-null with zero-size'
                 # De-fragment value
-                if not Coder.defragment(ctx, input, ctx.data_size): break
+                if not Coder.defragment(ctx, input, ctx.data_size):
+                    break
                 # Decode value
                 ctx.value = Coder.decodeValue(ctx, ctx)
                 ctx.state = States.Ready
@@ -236,9 +245,10 @@ class Coder:
     @staticmethod
     def encodeValue(a, x):
         # print("[{}]: {}".format(a.name, x))
-        if x is None: return bytes()
+        if x is None:
+            return bytes()
         if Types.INT8U == a.type:
-           return Buffer.encodeInt8u(x)
+            return Buffer.encodeInt8u(x)
         elif Types.INT16U == a.type:
             return Buffer.encodeInt16u(x)
         elif Types.INT32U == a.type:
@@ -258,14 +268,14 @@ class Coder:
 
     @staticmethod
     def decodeFlags(ctx, input):
-        flags         = input.getInt16u()
-        ctx.id        = (flags & Coder.kIdMask)
-        ctx.type      = Types((flags & Coder.kTypeMask) >> Coder.kTypeBit)
-        ctx.size_len  = Coder.decodeSizeLength(flags)
-        ctx.data_size      = 0
-        ctx.is_null   = (0 == ctx.size_len)
+        flags = input.getInt16u()
+        ctx.id = (flags & Coder.kIdMask)
+        ctx.type = Types((flags & Coder.kTypeMask) >> Coder.kTypeBit)
+        ctx.size_len = Coder.decodeSizeLength(flags)
+        ctx.data_size = 0
+        ctx.is_null = (0 == ctx.size_len)
         ctx.is_binary = (Types.BINARY == ctx.type)
-        ctx.is_known  = (flags & Coder.kWellKnownMask) > 0
+        ctx.is_known = (flags & Coder.kWellKnownMask) > 0
 
     @staticmethod
     def decodeSizeLength(flags):
@@ -286,9 +296,12 @@ class Coder:
 
     @staticmethod
     def decodeFixedSize(t):
-        if Types.INT8U == t: return 1
-        if Types.INT16U == t: return 2
-        if Types.INT32U == t: return 4
+        if Types.INT8U == t:
+            return 1
+        if Types.INT16U == t:
+            return 2
+        if Types.INT32U == t:
+            return 4
         return 0
 
     @staticmethod

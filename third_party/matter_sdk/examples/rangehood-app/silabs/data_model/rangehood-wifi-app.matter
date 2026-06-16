@@ -2208,7 +2208,7 @@ endpoint 1 {
   }
 
   server cluster FanControl {
-    ram      attribute fanMode default = 0;
+    persist  attribute fanMode default = 0;
     ram      attribute fanModeSequence;
     ram      attribute percentSetting default = 0;
     ram      attribute percentCurrent;
@@ -2253,7 +2253,7 @@ endpoint 2 {
   }
 
   server cluster OnOff {
-    ram      attribute onOff;
+    persist  attribute onOff;
     callback attribute generatedCommandList;
     callback attribute acceptedCommandList;
     callback attribute attributeList;

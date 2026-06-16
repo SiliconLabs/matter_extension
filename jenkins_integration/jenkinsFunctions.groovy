@@ -13,6 +13,15 @@ def upload_artifacts(sqa=false, commit_sha="null", workflow_id="null", run_numbe
     }
 }
 
+def download_coverage_artifact(workflow_id) {
+    withCredentials([
+        usernamePassword(credentialsId: 'Matter-Extension-GitHub', usernameVariable: 'GITHUB_APP', passwordVariable: 'GITHUB_ACCESS_TOKEN')
+    ])
+    {
+        sh "python3 -u jenkins_integration/artifacts/download_coverage_artifact.py --workflow_id ${workflow_id} --dest_dir ./coverage"
+    }
+}
+
 def run_code_size_analysis() {
     echo "Starting code size analysis for branch: ${env.BRANCH_NAME}"
         
@@ -32,10 +41,10 @@ def run_code_size_analysis() {
                     local path=$1
                     local app_name
                     
-                    local solution_dir=\$(echo "\$path" | grep -oE "[^/]*_solution(_lto)?" | head -1)
+                    local solution_dir=\$(echo "\$path" | grep -oE "[^/]*_solution(_lto|_llvm(-lto)?)?" | head -1)
                     
                     if [ -n "$solution_dir" ]; then
-                        local base_name=\$(echo "\$solution_dir" | sed -E 's/_solution(_lto)?\$//')
+                        local base_name=\$(echo "\$solution_dir" | sed -E 's/_solution(_lto|_llvm(-lto)?)?\$//')
                         
                         # Extract app name from file name
                         case "\$base_name" in
@@ -70,8 +79,19 @@ def run_code_size_analysis() {
                     local path=$1
                     if [[ "$path" == *"_solution_lto/"* ]]; then
                         echo "-lto"
+                    elif [[ "$path" == *"_solution_llvm-lto/"* ]]; then
+                        echo "-lto"
                     else
                         echo ""
+                    fi
+                }
+
+                determine_compiler() {
+                    local path=$1
+                    if [[ "$path" == *"_solution_llvm"* ]]; then
+                        echo "llvm"
+                    else
+                        echo "gcc"
                     fi
                 }
                 
@@ -103,9 +123,10 @@ def run_code_size_analysis() {
                     
                     local protocol=\$(determine_protocol "\$map_file_path")
                     local options=\$(determine_build_options "\$map_file_path")
+                    local compiler=\$(determine_compiler "\$map_file_path")
                     
                     echo "Processing: $map_file_path"
-                    echo "  Board: $brd, App: $app, Protocol: $protocol, Options: $options"
+                    echo "  Board: $brd, App: $app, Protocol: $protocol, Options: $options, Compiler: $compiler"
                     
                     if [ "$brd" = "BRD4338A" ]; then
                         if [[ "$app" == *"-app" ]]; then
@@ -156,7 +177,7 @@ def run_code_size_analysis() {
                         --map_file "$map_file_path" \\
                         --stack_name matter \\
                         --target_part "$target_part" \\
-                        --compiler gcc \\
+                        --compiler "$compiler" \\
                         --target_board "$brd" \\
                         --app_name "$application_name" \\
                         --service_url https://code-size-analyzer.silabs.net \\

@@ -7,8 +7,14 @@ import termios
 import time
 import tty
 
-import modules.util as _util
 from bleak import BleakClient, BleakScanner
+
+sys.path.insert(0, os.path.normpath(
+    os.path.join(os.path.dirname(__file__), '..', 'client', 'python')))
+# fmt: off
+import modules.util as _util
+
+# fmt: on
 
 
 class Bluetooth:

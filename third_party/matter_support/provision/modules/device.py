@@ -23,9 +23,9 @@ class Device:
         return "({}) ram:0x{:08x}, flash:0x{:08x}|0x{:08x}, stack:0x{:04x}, image:{}".format(self.label, self.ram_addr, self.flash_addr, self.flash_size, self.stack_size, self.gen_fw.value or "?")
 
     def load(self, paths, part_num, version):
-        filename = paths.base(Device.CONFIG_FILE)
         if part_num is None:
             _util.fail("Missing target part number")
+        filename = paths.config(Device.CONFIG_FILE)
         if not os.path.exists(filename):
             _util.fail("Missing device configuration ({})".format(Device.CONFIG_FILE))
 
