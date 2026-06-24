@@ -1,0 +1,24 @@
+category: Matter|Examples
+package: matter
+description: >
+  Provides example component that enables support for the Energy Management Utilities.
+id: matter_em_utils
+quality: production
+metadata:
+  sbom:
+    license: MSLA
+requires:
+  - name: matter_evse
+provides:
+  - name: matter_em_utils
+include:
+  - path: third_party/matter_sdk/examples/energy-management/utils/include
+    file_list:
+      - path: EnergyTimeUtils.h
+      - path: Identify.h
+
+source:
+  - path: third_party/matter_sdk/examples/energy-management/utils/src/EnergyTimeUtils.cpp
+  - path: third_party/matter_sdk/examples/energy-management/utils/src/Identify.cpp
+ui_hints:
+  visibility: never

@@ -1,12 +1,12 @@
-import modules.parameters as _params
 import modules.formatter as _format
+import modules.parameters as _params
 
 
 class ParameterList(_params.ParameterList):
 
     PARAMS_PATH = 'modules/v1_0/parameters.yaml'
 
-    def __init__(self, paths, custom_path = None) -> None:
+    def __init__(self, paths, custom_path=None) -> None:
         super().__init__(paths, custom_path)
         self.load(paths.base(ParameterList.PARAMS_PATH))
 
@@ -55,7 +55,7 @@ class Formatter(_format.Formatter):
         self.extract(attest, 'certification')
         self.extract(attest, 'common_name')
 
-    def format(self, main = {}):
+    def format(self, main={}):
         main = super().format(main)
         # Matter
         matter = main['matter']
@@ -80,7 +80,8 @@ class Formatter(_format.Formatter):
         self.insert(spake, 'spake2p_iterations', 'iterations')
         self.insert(spake, 'spake2p_salt', 'salt')
         self.insert(spake, 'spake2p_verifier', 'verifier')
-        if len(spake) > 0: matter['spake2p'] = spake
+        if len(spake) > 0:
+            matter['spake2p'] = spake
         # Attestation
         attest = {}
         self.insert(attest, 'pkcs12')
@@ -96,5 +97,6 @@ class Formatter(_format.Formatter):
         self.insert(attest, 'dac_key')
         self.insert(attest, 'certification')
         self.insert(attest, 'common_name')
-        if len(attest) > 0: matter['attestation'] = attest
+        if len(attest) > 0:
+            matter['attestation'] = attest
         return main

@@ -10,13 +10,6 @@ metadata:
     license: Zlib
 provides:
   - name: matter_minimal_mdns
-define:
-  - name: CHIP_MINMDNS_USE_EPHEMERAL_UNICAST_PORT
-    value: 0
-  - name: CHIP_MINMDNS_HIGH_VERBOSITY
-    value: 0
-  - name: CHIP_MINMDNS_DEFAULT_POLICY
-    value: 1
 requires:
   - name: matter_core
   - name: matter_default_policy

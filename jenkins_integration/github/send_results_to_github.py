@@ -41,6 +41,7 @@ MAX_RETRIES = 5
 RETRY_DELAY = 300  # seconds
 JOB_NAME = "Wait for Test Results"
 CHECK_RUN_TITLE = "SQA Test Results"
+EXPECTED_STATUS = "in_progress"
 
 
 def main():
@@ -164,7 +165,7 @@ def get_check_run_id(commit_sha):
             if check_run_id:
                 return check_run_id
             
-            print(f"Attempt {attempt + 1}/{MAX_RETRIES}: No matching check run found for job: {JOB_NAME}.")
+            print(f"Attempt {attempt + 1}/{MAX_RETRIES}: No '{EXPECTED_STATUS}' check run found for job: {JOB_NAME}.")
         else:
             print(f"Attempt {attempt + 1}/{MAX_RETRIES}: Failed to retrieve check runs. "
                   f"Status code: {response.status_code}, Response: {response.text}")
@@ -178,17 +179,26 @@ def get_check_run_id(commit_sha):
 
 def find_check_run_by_name(check_runs):
     """
-    Find a check run by its name.
+    Find a check run by its name and verify it is currently in progress.
+    
+    Skipping completed check runs avoids overwriting results from a previous
+    run when GitHub returns multiple check runs with the same name.
     
     Args:
         check_runs (list): List of check run objects.
     
     Returns:
-        int or None: The check run ID if found, otherwise None.
+        int or None: The check run ID if a matching in-progress run is found,
+        otherwise None.
     """
     for check_run in check_runs:
-        if check_run["name"] == JOB_NAME:
-            return check_run["id"]
+        if check_run["name"] != JOB_NAME:
+            continue
+        if check_run.get("status") != EXPECTED_STATUS:
+            print(f"Skipping check run {check_run['id']} with status "
+                  f"'{check_run.get('status')}' (expected '{EXPECTED_STATUS}').")
+            continue
+        return check_run["id"]
     return None
 
 

@@ -45,6 +45,12 @@
 #include "MultiProtocolDataModelHelper.h"
 #include "ZigbeeCallbacks.h"
 
+#define ZB_LOG 0x00 // Zigbee Log default category
+
+#if SILABS_LOG_ENABLED
+#include "zcl-debug-print.h"
+#endif
+
 #if SL_MATTER_CMP_SECURE_ZIGBEE
 #include "sl_token_manager_api.h"
 #include "sl_token_manager_defines.h"
@@ -132,7 +138,7 @@ extern "C" void option_install_code(sl_zigbee_sec_man_key_t * key, sl_802154_lon
 #endif
 }
 
-extern "C" void open_network_with_key()
+extern "C" sl_status_t open_network_with_key()
 {
     sl_zigbee_key_data_t keyData;
     sl_status_t status;
@@ -147,8 +153,7 @@ extern "C" void open_network_with_key()
     {
         if (sizeof(tokInstallCode.value) != SL_ZIGBEE_ENCRYPTION_KEY_SIZE)
         {
-            SILABS_LOG("ERR: Install Code size in token does not match expected size");
-            return;
+            return SL_STATUS_INVALID_KEY;
         }
 
         memcpy(installCode, tokInstallCode.value, SL_ZIGBEE_ENCRYPTION_KEY_SIZE);
@@ -161,30 +166,15 @@ extern "C" void open_network_with_key()
     status = sli_zigbee_af_install_code_to_key(installCode, installCodeLength, &keyData);
     if (SL_STATUS_OK != status)
     {
-        if (SL_STATUS_INVALID_CONFIGURATION == status)
-        {
-            SILABS_LOG("ERR: Calculated CRC does not match");
-        }
-        else if (SL_STATUS_INVALID_PARAMETER == status)
-        {
-            SILABS_LOG("ERR: Install Code must be 8, 10, 14, or 18 bytes in "
-                       "length");
-        }
-        else
-        {
-            SILABS_LOG("ERR: AES-MMO hash failed: 0x%x", status);
-        }
-        return;
+        return status;
     }
 
     status = sl_zigbee_af_network_creator_security_open_network_with_key_pair(eui64, keyData);
-
-    SILABS_LOG("%s: Open network: 0x%X", SL_ZIGBEE_AF_PLUGIN_NETWORK_CREATOR_SECURITY_PLUGIN_NAME, status);
-
     if (SL_STATUS_OK == status)
     {
         option_install_code((sl_zigbee_sec_man_key_t *) &keyData, eui64);
     }
+    return status;
 }
 #endif // SL_MATTER_CMP_SECURE_ZIGBEE
 
@@ -209,27 +199,23 @@ extern "C" void start_zigbee_event_handler(sl_zigbee_af_event_t * event)
             if (sl_zigbee_af_network_state() == SL_ZIGBEE_JOINED_NETWORK)
             {
                 pendingRestart = true;
-                SILABS_LOG(" [ZB] Leaving Network");
                 sl_zigbee_leave_network(SL_ZIGBEE_LEAVE_NWK_WITH_NO_OPTION);
                 return;
             }
             sl_status_t status = sl_zigbee_af_network_creator_network_form(distributedNetwork, 0xABCD, 1, channel);
-            SILABS_LOG(" [ZB] Form network start: 0x%X", status);
         }
     }
     else if (sl_zigbee_af_network_state() == SL_ZIGBEE_JOINED_NETWORK)
     {
 #if SL_MATTER_CMP_SECURE_ZIGBEE
-        open_network_with_key();
+        sl_zigbee_af_print(ZB_LOG,"Open network with key status: 0x%X", open_network_with_key());
 #else
-        SILABS_LOG(" [ZB] Start_evt_handler: Permitting Join");
-        sl_zigbee_af_permit_join(254, NULL);
+        sl_zigbee_af_permit_join(254, false);
 #endif
     }
     else
     {
         sl_status_t status = sl_zigbee_af_network_creator_network_form(distributedNetwork, 0xABCD, 1, 11);
-        SILABS_LOG(" [ZB] Form network start: 0x%X", status);
     }
 }
 
@@ -239,7 +225,7 @@ extern "C" void finding_and_binding_event_handler(sl_zigbee_af_event_t * event)
     {
         sl_zigbee_af_event_set_inactive(&finding_and_binding_event);
 
-        SILABS_LOG(" [ZB] Find and bind target start: 0x%X", sl_zigbee_af_find_and_bind_target_start(SL_CMP_ENDPOINT));
+        sl_zigbee_af_print(ZB_LOG,"Find and bind target start: 0x%X", sl_zigbee_af_find_and_bind_target_start(SL_CMP_ENDPOINT));
     }
 }
 
@@ -291,12 +277,10 @@ extern "C" void sl_zigbee_af_main_init_cb(void)
  */
 extern "C" void sl_zigbee_af_network_creator_complete_cb(const sl_zigbee_network_parameters_t * network, bool usedSecondaryChannels)
 {
-    SILABS_LOG(" [ZB] Form Network Complete: 0x%X", SL_STATUS_OK);
 #if SL_MATTER_CMP_SECURE_ZIGBEE
-    open_network_with_key();
+    sl_zigbee_af_print(ZB_LOG,"Open network with key status: 0x%X", open_network_with_key());
 #else
-    SILABS_LOG(" [ZB] af_network_creator_complete: Permitting Join");
-    sl_zigbee_af_permit_join(254, NULL);
+    sl_zigbee_af_permit_join(254, false);
 #endif // SL_MATTER_CMP_SECURE_ZIGBEE
 }
 

@@ -11,13 +11,20 @@ metadata:
     license: "Apache 2.0"
 provides:
   - name: matter_electrical_energy_measurement
+requires:
+  - name: matter_cluster_building_blocks
 source:
+  - path: third_party/matter_sdk/src/app/clusters/electrical-energy-measurement-server/CodegenIntegration.cpp
+    unless: [matter_code_driven_dm]
   - path: third_party/matter_sdk/src/app/clusters/electrical-energy-measurement-server/ElectricalEnergyMeasurementCluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/electrical-energy-measurement-server
     file_list:
+      - path: CodegenIntegration.h
+        unless: [matter_code_driven_dm]
       - path: electrical-energy-measurement-server.h
       - path: ElectricalEnergyMeasurementCluster.h
+      - path: ElectricalEnergyMeasurementDelegate.h
       - path: EnergyReportingTestEventTriggerHandler.h
 template_contribution:
   - name: component_catalog

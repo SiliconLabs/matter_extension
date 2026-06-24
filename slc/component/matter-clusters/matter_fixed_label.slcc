@@ -13,11 +13,12 @@ provides:
   - name: matter_fixed_label
 source:
   - path: third_party/matter_sdk/src/app/clusters/fixed-label-server/CodegenIntegration.cpp
-  - path: third_party/matter_sdk/src/app/clusters/fixed-label-server/fixed-label-cluster.cpp
+    unless: [matter_code_driven_dm]
+  - path: third_party/matter_sdk/src/app/clusters/fixed-label-server/FixedLabelCluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/fixed-label-server
     file_list:
-      - path: fixed-label-cluster.h
+      - path: FixedLabelCluster.h
 template_contribution:
   - name: component_catalog
     value: matter_fixed_label

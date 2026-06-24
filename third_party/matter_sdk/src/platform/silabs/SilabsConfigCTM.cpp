@@ -25,6 +25,7 @@
 
 #include <lib/core/CHIPEncoding.h>
 #include <lib/support/CodeUtils.h>
+#include <platform/PlatformError.h>
 #include <platform/internal/testing/ConfigUnitTest.h>
 #include <platform/silabs/CHIPDevicePlatformConfig.h>
 
@@ -38,7 +39,7 @@
 #include <sl_token_manager_interface.h>
 
 namespace {
-// Substitute the SiSDK weak nvm3_lockBegin and nvm3_lockEnd
+// Substitute the GSDK weak nvm3_lockBegin and nvm3_lockEnd
 // for an application controlled re-entrance protection
 SemaphoreHandle_t nvm3_Sem;
 StaticSemaphore_t nvm3_SemStruct;
@@ -79,7 +80,7 @@ CHIP_ERROR MapNvm3Error(sl_status_t nvm3Res)
         err = CHIP_DEVICE_ERROR_CONFIG_NOT_FOUND;
         break;
     default:
-        err = CHIP_ERROR(ChipError::Range::kPlatform, (nvm3Res & 0xFF) + CHIP_DEVICE_CONFIG_SILABS_NVM3_ERROR_MIN);
+        err = MATTER_PLATFORM_ERROR((nvm3Res & 0xFF) + CHIP_DEVICE_CONFIG_SILABS_NVM3_ERROR_MIN);
         break;
     }
 

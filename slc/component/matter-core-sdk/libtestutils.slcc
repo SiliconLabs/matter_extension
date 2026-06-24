@@ -20,7 +20,7 @@ include:
     -   path: PersistentStorageAudit.h
     -   path: CHIPPlatformMemory.h
     -   path: SafeString.h
-    -   path: ScopedBuffer.h
+    -   path: ScopedMemoryBuffer.h
     -   path: IntrusiveList.h
     -   path: Pool.h
     -   path: CHIPMemString.h
@@ -67,7 +67,6 @@ include:
     -   path: SortUtils.h
     -   path: ZclString.h
     -   path: PersistentStorageMacros.h
-    -   path: VerificationMacrosNoLogging.h
     -   path: CommonIterator.h
     -   path: Iterators.h
     -   path: PersistentData.h

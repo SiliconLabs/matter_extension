@@ -144,7 +144,7 @@
     ]
   },
   {
-    "clusterCode": "radon concentration measurement-server",
+    "clusterCode": "smoke concentration measurement-server",
     "value": [
       "%extension-matter%matter_concentration_measurement"
     ]
@@ -258,6 +258,12 @@
     ]
   },
   {
+    "clusterCode": "flow measurement-server",
+    "value": [
+      "%extension-matter%matter_flow_measurement"
+    ]
+  },
+  {
     "clusterCode": "general commissioning-server",
     "value": [
       "%extension-matter%matter_general_commissioning"
@@ -288,6 +294,12 @@
     ]
   },
   {
+    "clusterCode": "humidistat-server",
+    "value": [
+      "%extension-matter%matter_humidistat"
+    ]
+  },
+  {
     "clusterCode": "icd management-server",
     "value": [
       "%extension-matter%matter_icd_management"
@@ -297,6 +309,12 @@
     "clusterCode": "identify-server",
     "value": [
       "%extension-matter%matter_identify"
+    ]
+  },
+  {
+    "clusterCode": "illuminance measurement-server",
+    "value": [
+      "%extension-matter%matter_illuminance_measurement"
     ]
   },
   {
@@ -396,6 +414,12 @@
     ]
   },
   {
+    "clusterCode": "network identity management-server",
+    "value": [
+      "%extension-matter%matter_network_identity_management"
+    ]
+  },
+  {
     "clusterCode": "occupancy sensing-server",
     "value": [
       "%extension-matter%matter_occupancy_sensor"
@@ -450,6 +474,18 @@
     ]
   },
   {
+    "clusterCode": "pressure measurement-server",
+    "value": [
+      "%extension-matter%matter_pressure_measurement"
+    ]
+  },
+  {
+    "clusterCode": "proximity ranging-server",
+    "value": [
+      "%extension-matter%matter_proximity_ranging"
+    ]
+  },
+  {
     "clusterCode": "pump configuration and control-server",
     "value": [
       "%extension-matter%matter_pump_configuration_and_control"
@@ -468,7 +504,13 @@
     ]
   },
   {
-    "clusterCode": "activated carbon filter monitoring-server",
+    "clusterCode": "relative humidity measurement-server",
+    "value": [
+      "%extension-matter%matter_relative_humidity_measurement"
+    ]
+  },
+  {
+    "clusterCode": "water tank level monitoring-server",
     "value": [
       "%extension-matter%matter_resource_monitoring"
     ]
@@ -528,15 +570,15 @@
     ]
   },
   {
-    "clusterCode": "unit testing-server",
+    "clusterCode": "temperature measurement-server",
     "value": [
-      "%extension-matter%matter_test_cluster"
+      "%extension-matter%matter_temperature_measurement"
     ]
   },
   {
-    "clusterCode": "testing-server",
+    "clusterCode": "unit testing-server",
     "value": [
-      "%extension-matter%matter_testing"
+      "%extension-matter%matter_test_cluster"
     ]
   },
   {

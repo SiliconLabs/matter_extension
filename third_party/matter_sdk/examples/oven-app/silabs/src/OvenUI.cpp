@@ -63,13 +63,13 @@ void OvenUI::DrawUI(GLIB_Context_t * glibContext)
     DrawCookTopState(glibContext);
     DrawOvenMode(glibContext);
 
-#if SL_LCDCTRL_MUX
+#if defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     sl_wfx_host_pre_lcd_spi_transfer();
-#endif // SL_LCDCTRL_MUX
+#endif // defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     DMD_updateDisplay();
-#if SL_LCDCTRL_MUX
+#if defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     sl_wfx_host_post_lcd_spi_transfer();
-#endif // SL_LCDCTRL_MUX
+#endif // defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
 }
 
 void OvenUI::DrawHeader(GLIB_Context_t * glibContext)

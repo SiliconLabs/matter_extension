@@ -1,6 +1,7 @@
 #! /usr/bin/python3
-import sys
 import os
+import sys
+
 if 'STUDIO_PYTHONPATH' in os.environ.keys():
     [sys.path.append(path) for path in os.environ['STUDIO_PYTHONPATH'].split(os.pathsep)]
 import modules.arguments as _args

@@ -27,7 +27,7 @@ An example showing the use of CHIP on the Silicon Labs SiWx917
 ## Introduction
 
 The SiWx917 Closure example provides a baseline demonstration of a closure base
-device type, built using Matter and the Silicon Labs Simplicity SDK. It can be
+device type, built using Matter and the Silicon Labs gecko SDK. It can be
 controlled by a Chip controller over Wifi network.
 
 The SiWx917 device can be commissioned over Bluetooth Low Energy where the
@@ -177,7 +177,7 @@ passed to the build scripts.
 
 show_qr_code
 
-    $ ./scripts/examples/gn_silabs_example.sh ./examples/window-app/silabs ./out/window-app BRD4164A "show_qr_code=false"
+    $ ./scripts/examples/gn_silabs_example.sh ./examples/closure-app/silabs ./out/closure-app BRD4338A "show_qr_code=false"
 
 ### KVS maximum entry count
 

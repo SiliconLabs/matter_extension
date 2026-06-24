@@ -35,5 +35,3 @@ source:
 define:
   - name: SL_MATTER_ENABLE_APP_SLEEP_MANAGER
     value: 1
-  - name: CHIP_CONFIG_ICD_OBSERVERS_POOL_SIZE
-    value: 3

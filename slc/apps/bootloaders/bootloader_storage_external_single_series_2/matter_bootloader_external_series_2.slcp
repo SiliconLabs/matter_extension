@@ -1,0 +1,63 @@
+project_name: matter_bootloader_external_series_2
+package: matter
+quality: production
+label: Matter - SoC Bootloader External Storage Series 2
+description: Demonstrates a bootloader configuration using external SPI flash storage for Matter firmware updates on Series 2 devices
+category: Matter Application
+sdk_extension:
+  - id: matter
+    version: "2.9.0"
+    vendor: silabs
+
+component:
+  - id: bootloader_core
+  - id: bootloader_crc
+  - id: bootloader_aes_sha_ecdsa
+  - id: bootloader_delay_driver
+  - id: bootloader_image_parser
+  - id: bootloader_common_storage_single
+  - id: bootloader_token_management
+  - id: bootloader_spiflash_storage
+  - id: bootloader_spi_controller_driver
+  - id: bootloader_debug
+  - id: bootloader_compression_lzma
+  - id: bootloader_gbl_compression_lz4
+  - id: psa_crypto_config
+  - id: matter_syscall_stubs
+
+configuration:
+  - name: BTL_STORAGE_BASE_ADDRESS
+    value: 0
+  - name: SLOT0_ENABLE
+    value: 1
+  - name: SLOT0_START
+    value: 0
+  - name: SLOT0_SIZE
+    value: 1048576
+
+filter:
+  - name: Type
+    value:
+      - SoC Project
+  - name: Difficulty
+    value:
+      - Advanced
+  - name: Wireless Technology
+    value:
+      - Matter
+
+tag:
+  - prebuilt_demo
+  - hwfilter:board:hardware_board_has_spiflash
+  - hwfilter:device:device_series_2
+  - hidden
+
+post_build:
+  profile: bootloader_series_2
+
+readme:
+  - path: ./readme.md
+ui_hints:
+  highlight:
+    - path: readme.md
+      focus: false

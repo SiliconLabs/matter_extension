@@ -11,6 +11,7 @@ metadata:
 
 provides:
   - name: matter_crypto_psa_siwx917
+  - name: matter_crypto_siwx917
 
 conflicts:
   - name: matter_crypto_tinycrypt_siwx917
@@ -25,7 +26,7 @@ requires:
   - name: psa_crypto_hkdf
   - name: psa_crypto_sha256
 
-  # Mbedtls components
+  # mbedTLS components
   - name: mbedtls_platform_dynamic_memory_allocation_config_init_runtime
   - name: mbedtls_base64
   - name: mbedtls_cmac
@@ -35,14 +36,11 @@ requires:
   - name: mbedtls_version
   - name: mbedtls_pkcs5
 
-  # Wiseconnect SDK 3.xx.xx components
+  # wiseconnect SDK components
   - name: psa_driver
   - name: psa_crypto
   - name: psa_crypto_ecc_secp192r1
-  - name: psa_crypto_ecc_secp224r1
   - name: psa_crypto_ecc_secp256r1
-  - name: psa_crypto_ecc_secp384r1
-  - name: psa_crypto_ecc_secp521r1
   - name: psa_crypto_common
   - name: psa_crypto_source
   - name: psa_crypto_trng
@@ -86,9 +84,9 @@ include:
       - path: siwx917-chip-psa-config.h
 
 define:
-  - name: MBEDTLS_CONFIG_FILE
-    value: \"siwx917-chip-mbedtls-config.h\"
-  - name: MBEDTLS_PSA_CRYPTO_CONFIG_FILE
-    value: \"siwx917-psa-crypto-config.h\"
+  - name: MBEDTLS_USER_CONFIG_FILE
+    value: <siwx917-chip-mbedtls-config.h>
+  - name: MBEDTLS_PSA_CRYPTO_USER_CONFIG_FILE
+    value: <siwx917-chip-psa-config.h>
   - name: SLI_SI91X_TRNG_DUPLICATE_CHECK
     value: 0

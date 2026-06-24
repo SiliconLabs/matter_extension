@@ -1,0 +1,9 @@
+workspace_name: matter_wifi_soc_rangehood_app_freertos
+label: Matter WiFi - SoC Rangehood FreeRTOS
+quality: production
+package: matter
+description: Demonstrates a sample implementation of a Matter over Wi-Fi rangehood app
+project:
+  - path: ./matter_wifi_soc_rangehood_app_freertos.slcp
+    id: application
+    output: rangehood_app_siwx

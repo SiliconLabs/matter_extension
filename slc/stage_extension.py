@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 This script copies the contents of the current working directory to a specified target location,
 excluding certain directories and files based on predefined rules.

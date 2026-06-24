@@ -97,7 +97,7 @@ public:
         if (!wasCommissioningInProgress)
         {
             // TODO: Remove High Performance Req during commissioning when sleep issues are resolved
-            WifiSleepManager::GetInstance().RequestHighPerformanceWithTransition();
+            TEMPORARY_RETURN_IGNORED WifiSleepManager::GetInstance().RequestHighPerformanceWithTransition();
         }
     }
 
@@ -109,7 +109,7 @@ public:
         if (wasCommissioningInProgress)
         {
             // TODO: Remove High Performance Req during commissioning when sleep issues are resolved
-            WifiSleepManager::GetInstance().RemoveHighPerformanceRequest();
+            TEMPORARY_RETURN_IGNORED WifiSleepManager::GetInstance().RemoveHighPerformanceRequest();
         }
     }
 

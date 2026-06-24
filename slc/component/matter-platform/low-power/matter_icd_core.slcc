@@ -30,12 +30,6 @@ requires:
 conflicts:
   - name: ot_stack_ftd
 
-recommends:
-  - id: ot_stack_mtd
-    vendor: silabs
-    condition:
-      - matter_thread
-
 config_file:
   - path: slc/config/sl_matter_icd_config.h
     file_id: matter_icd_config

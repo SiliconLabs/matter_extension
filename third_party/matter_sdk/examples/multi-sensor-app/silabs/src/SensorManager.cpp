@@ -28,11 +28,12 @@
 #include <AppConfig.h>
 #include <AppTask.h>
 #include <SensorManager.h>
-#include <app-common/zap-generated/attributes/Accessors.h>
 #include <app-common/zap-generated/ids/Attributes.h>
 #include <app-common/zap-generated/ids/Clusters.h>
-#include <app/clusters/occupancy-sensor-server/occupancy-hal.h>
-#include <app/clusters/occupancy-sensor-server/occupancy-sensor-server.h>
+#include <app/data-model-provider/AttributeChangeListener.h>
+#include <app/clusters/relative-humidity-measurement-server/CodegenIntegration.h>
+#include <app/clusters/temperature-measurement-server/CodegenIntegration.h>
+#include <data-model-providers/codegen/CodegenDataModelProvider.h>
 #include <platform/silabs/platformAbstraction/SilabsPlatform.h>
 #include <sl_cmsis_os2_common.h>
 
@@ -74,6 +75,45 @@ uint16_t mLastReportedHumidityValue   = 0;
 int16_t mLastReportedTemperatureValue = 0;
 bool isInitialised                    = false;
 
+class SensorManagerAttributeChangeListener : public DataModel::AttributeChangeListener
+{
+public:
+    void OnAttributeChanged(const ConcreteAttributePath & path, DataModel::AttributeChangeType) override
+    {
+        const bool isOccupancyUpdate = path.mEndpointId == kOccupancySensorEndpoint && path.mClusterId == OccupancySensing::Id &&
+            path.mAttributeId == OccupancySensing::Attributes::Occupancy::Id;
+        const bool isTemperatureUpdate = path.mEndpointId == kTemperatureSensorEndpoint &&
+            path.mClusterId == TemperatureMeasurement::Id &&
+            path.mAttributeId == TemperatureMeasurement::Attributes::MeasuredValue::Id;
+        const bool isHumidityUpdate = path.mEndpointId == kHumiditySensorEndpoint &&
+            path.mClusterId == RelativeHumidityMeasurement::Id &&
+            path.mAttributeId == RelativeHumidityMeasurement::Attributes::MeasuredValue::Id;
+
+        if (isOccupancyUpdate)
+        {
+            OccupancySensingCluster * cluster = OccupancySensing::FindClusterOnEndpoint(path.mEndpointId);
+            VerifyOrReturn(cluster != nullptr);
+
+            AppEvent event                         = {};
+            event.Type                             = AppEvent::kEventType_OccupancyAttributeUpdate;
+            event.Handler                          = AppTask::OccupancyAttributeUpdateEvent;
+            event.OccupancyEvent.occupancyDetected = cluster->IsOccupied();
+            AppTask::GetAppTask().PostEvent(&event);
+            return;
+        }
+
+        if (isTemperatureUpdate || isHumidityUpdate)
+        {
+            AppEvent event = {};
+            event.Type     = AppEvent::kEventType_SensorAttributeUpdate;
+            event.Handler  = AppTask::SensorAttributeUpdateEvent;
+            AppTask::GetAppTask().PostEvent(&event);
+        }
+    }
+};
+
+SensorManagerAttributeChangeListener gAttributeChangeListener;
+
 /**
  * @brief Process function when the Sensor Timer event is triggered.
  *        This update the Data Model sensor values with the latest measurements.
@@ -87,23 +127,27 @@ void SensorActionTriggered(chip::System::Layer * aLayer, void * aAppState)
 {
     VerifyOrDieWithMsg(isInitialised, AppServer, "Sensor Action was triggered before the Sensor Manager was initialised!");
 
-    int16_t temperature            = 0;
-    uint16_t humidity              = 0;
-    MarkAttributeDirty reportState = MarkAttributeDirty::kNo;
+    int16_t temperature = 0;
+    uint16_t humidity   = 0;
 
 #if defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
     // Read sensor values
     VerifyOrReturn(SL_STATUS_OK == Si70xxSensor::GetSensorData(humidity, temperature));
 #else
 
-    DataModel::Nullable<int16_t> maxTempMeasuredValue;
-    TemperatureMeasurement::Attributes::MaxMeasuredValue::Get(kTemperatureSensorEndpoint, maxTempMeasuredValue);
+    TemperatureMeasurementCluster * tempCluster = TemperatureMeasurement::FindClusterOnEndpoint(kTemperatureSensorEndpoint);
+    DataModel::Nullable<int16_t> maxTempMeasuredValue =
+        (tempCluster != nullptr) ? tempCluster->GetMaxMeasuredValue() : DataModel::Nullable<int16_t>{};
 
-    DataModel::Nullable<uint16_t> maxMeasuredHumidityValue;
-    RelativeHumidityMeasurement::Attributes::MaxMeasuredValue::Get(kHumiditySensorEndpoint, maxMeasuredHumidityValue);
+    RelativeHumidityMeasurementCluster * rhCluster = RelativeHumidityMeasurement::FindClusterOnEndpoint(kHumiditySensorEndpoint);
+    DataModel::Nullable<uint16_t> maxMeasuredHumidityValue =
+        (rhCluster != nullptr) ? rhCluster->GetMaxMeasuredValue() : DataModel::Nullable<uint16_t>{};
 
     DataModel::Nullable<int16_t> currentTempValue;
-    TemperatureMeasurement::Attributes::MeasuredValue::Get(kTemperatureSensorEndpoint, currentTempValue);
+    if (tempCluster != nullptr)
+    {
+        currentTempValue = tempCluster->GetMeasuredValue();
+    }
     if (currentTempValue.IsNull())
     {
         // This configures the initial value for the simulated sensor values
@@ -111,7 +155,10 @@ void SensorActionTriggered(chip::System::Layer * aLayer, void * aAppState)
     }
 
     DataModel::Nullable<uint16_t> currentHumidityValue;
-    RelativeHumidityMeasurement::Attributes::MeasuredValue::Get(kHumiditySensorEndpoint, currentHumidityValue);
+    if (rhCluster != nullptr)
+    {
+        currentHumidityValue = rhCluster->GetMeasuredValue();
+    }
     if (currentHumidityValue.IsNull())
     {
         // This configures the initial value for the simulated sensor values
@@ -139,20 +186,25 @@ void SensorActionTriggered(chip::System::Layer * aLayer, void * aAppState)
     if (abs(mLastReportedTemperatureValue - temperature) > kAttributeChangeReportThreshold)
     {
         mLastReportedTemperatureValue = temperature;
-        reportState                   = MarkAttributeDirty::kIfChanged;
     }
-    TemperatureMeasurement::Attributes::MeasuredValue::Set(kTemperatureSensorEndpoint, temperature, reportState);
+    {
+        DataModel::Nullable<int16_t> tempVal;
+        tempVal.SetNonNull(temperature);
+        VerifyOrReturn(TemperatureMeasurement::SetMeasuredValue(kTemperatureSensorEndpoint, tempVal) == CHIP_NO_ERROR);
+    }
 
     // Check if humidity change requires a report - Checks if delta with last reported value is greater
     // than kAttributeChangeReportThreshold. If it is, the attribute is marked as dirty.
     // The goal is to only report when the difference as an impact on the application behavior.
-    reportState = MarkAttributeDirty::kNo;
     if (abs(mLastReportedHumidityValue - humidity) > kAttributeChangeReportThreshold)
     {
         mLastReportedHumidityValue = humidity;
-        reportState                = MarkAttributeDirty::kIfChanged;
     }
-    RelativeHumidityMeasurement::Attributes::MeasuredValue::Set(kHumiditySensorEndpoint, humidity, reportState);
+    {
+        DataModel::Nullable<uint16_t> humVal;
+        humVal.SetNonNull(humidity);
+        VerifyOrReturn(RelativeHumidityMeasurement::SetMeasuredValue(kHumiditySensorEndpoint, humVal) == CHIP_NO_ERROR);
+    }
 
     VerifyOrDieWithMsg(aLayer->StartTimer(kSensorReadPeriod, SensorActionTriggered, nullptr) == CHIP_NO_ERROR, AppServer,
                        "Failed to start recurring timer!");
@@ -170,6 +222,11 @@ CHIP_ERROR Init()
 #if defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
     VerifyOrDieWithMsg(Si70xxSensor::Init() == SL_STATUS_OK, AppServer, "Failed to initialize the sensor!");
 #endif // defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
+
+    DeviceLayer::PlatformMgr().LockChipStack();
+    CodegenDataModelProvider::Instance().RegisterAttributeChangeListener(gAttributeChangeListener);
+    DeviceLayer::PlatformMgr().UnlockChipStack();
+
     isInitialised = true;
 
     VerifyOrDieWithMsg(DeviceLayer::PlatformMgr().ScheduleWork([](intptr_t arg) {
@@ -184,67 +241,88 @@ void ButtonActionTriggered(AppEvent * aEvent)
 {
     VerifyOrReturn(aEvent->Type == AppEvent::kEventType_Button);
 
-    DeviceLayer::PlatformMgr().ScheduleWork([](intptr_t arg) {
-        chip::BitMask<OccupancySensing::OccupancyBitmap> state;
-        OccupancySensing::Attributes::Occupancy::Get(kOccupancySensorEndpoint, &state);
-
-        if (state.Has(OccupancySensing::OccupancyBitmap::kOccupied))
-        {
-            state.Clear(OccupancySensing::OccupancyBitmap::kOccupied);
-        }
-        else
-        {
-            state.Set(OccupancySensing::OccupancyBitmap::kOccupied);
-        }
-
-        OccupancySensing::Attributes::Occupancy::Set(kOccupancySensorEndpoint, state);
+    TEMPORARY_RETURN_IGNORED DeviceLayer::PlatformMgr().ScheduleWork([](intptr_t arg) {
+        OccupancySensingCluster * cluster = OccupancySensing::FindClusterOnEndpoint(kOccupancySensorEndpoint);
+        VerifyOrReturn(cluster != nullptr);
+        bool state = cluster->IsOccupied();
+        cluster->SetOccupancy(!state);
     });
 }
 
 Status GetMeasuredTemperature(chip::app::DataModel::Nullable<int16_t> & value)
 {
-    Status status = TemperatureMeasurement::Attributes::MeasuredValue::Get(kTemperatureSensorEndpoint, value);
-    return status;
+    TemperatureMeasurementCluster * cluster = TemperatureMeasurement::FindClusterOnEndpoint(kTemperatureSensorEndpoint);
+    if (cluster == nullptr)
+    {
+        return Status::UnsupportedEndpoint;
+    }
+    value = cluster->GetMeasuredValue();
+    return Status::Success;
 }
 
 Status GetMaxMeasuredTemperature(chip::app::DataModel::Nullable<int16_t> & value)
 {
-    Status status = TemperatureMeasurement::Attributes::MaxMeasuredValue::Get(kTemperatureSensorEndpoint, value);
-    return status;
+    TemperatureMeasurementCluster * cluster = TemperatureMeasurement::FindClusterOnEndpoint(kTemperatureSensorEndpoint);
+    if (cluster == nullptr)
+    {
+        return Status::UnsupportedEndpoint;
+    }
+    value = cluster->GetMaxMeasuredValue();
+    return Status::Success;
 }
 
 Status GetMinMeasuredTemperature(chip::app::DataModel::Nullable<int16_t> & value)
 {
-    Status status = TemperatureMeasurement::Attributes::MinMeasuredValue::Get(kTemperatureSensorEndpoint, value);
-    return status;
+    TemperatureMeasurementCluster * cluster = TemperatureMeasurement::FindClusterOnEndpoint(kTemperatureSensorEndpoint);
+    if (cluster == nullptr)
+    {
+        return Status::UnsupportedEndpoint;
+    }
+    value = cluster->GetMinMeasuredValue();
+    return Status::Success;
 }
 
 Status GetMeasuredHumidity(chip::app::DataModel::Nullable<uint16_t> & value)
 {
-    Status status = RelativeHumidityMeasurement::Attributes::MeasuredValue::Get(kHumiditySensorEndpoint, value);
-    return status;
+    RelativeHumidityMeasurementCluster * cluster = RelativeHumidityMeasurement::FindClusterOnEndpoint(kHumiditySensorEndpoint);
+    if (cluster == nullptr)
+    {
+        return Status::UnsupportedEndpoint;
+    }
+    value = cluster->GetMeasuredValue();
+    return Status::Success;
 }
 
 Status GetMaxMeasuredHumidity(chip::app::DataModel::Nullable<uint16_t> & value)
 {
-    Status status = RelativeHumidityMeasurement::Attributes::MaxMeasuredValue::Get(kHumiditySensorEndpoint, value);
-    return status;
+    RelativeHumidityMeasurementCluster * cluster = RelativeHumidityMeasurement::FindClusterOnEndpoint(kHumiditySensorEndpoint);
+    if (cluster == nullptr)
+    {
+        return Status::UnsupportedEndpoint;
+    }
+    value = cluster->GetMaxMeasuredValue();
+    return Status::Success;
 }
 
 Status GetMinMeasuredHumidity(chip::app::DataModel::Nullable<uint16_t> & value)
 {
-    Status status = RelativeHumidityMeasurement::Attributes::MinMeasuredValue::Get(kHumiditySensorEndpoint, value);
-    return status;
+    RelativeHumidityMeasurementCluster * cluster = RelativeHumidityMeasurement::FindClusterOnEndpoint(kHumiditySensorEndpoint);
+    if (cluster == nullptr)
+    {
+        return Status::UnsupportedEndpoint;
+    }
+    value = cluster->GetMinMeasuredValue();
+    return Status::Success;
 }
 
 bool IsOccupancyDetected()
 {
-    chip::BitMask<OccupancySensing::OccupancyBitmap> state;
     DeviceLayer::PlatformMgr().LockChipStack();
-    OccupancySensing::Attributes::Occupancy::Get(kOccupancySensorEndpoint, &state);
+    OccupancySensingCluster * cluster = OccupancySensing::FindClusterOnEndpoint(kOccupancySensorEndpoint);
+    bool occupied = (cluster != nullptr) ? cluster->IsOccupied() : false;
     DeviceLayer::PlatformMgr().UnlockChipStack();
 
-    return state.Has(OccupancySensing::OccupancyBitmap::kOccupied);
+    return occupied;
 }
 
 } // namespace SensorManager

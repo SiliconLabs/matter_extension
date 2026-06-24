@@ -4644,7 +4644,6 @@ endpoint 1 {
     ram      attribute clusterRevision default = 5;
 
     handle command Identify;
-    handle command IdentifyQueryResponse;
     handle command IdentifyQuery;
     handle command TriggerEffect;
   }
@@ -4654,13 +4653,9 @@ endpoint 1 {
     ram      attribute clusterRevision default = 3;
 
     handle command AddGroup;
-    handle command AddGroupResponse;
     handle command ViewGroup;
-    handle command ViewGroupResponse;
     handle command GetGroupMembership;
-    handle command GetGroupMembershipResponse;
     handle command RemoveGroup;
-    handle command RemoveGroupResponse;
     handle command RemoveAllGroups;
     handle command AddGroupIfIdentifying;
   }
@@ -4674,18 +4669,12 @@ endpoint 1 {
     ram      attribute clusterRevision default = 3;
 
     handle command AddScene;
-    handle command AddSceneResponse;
     handle command ViewScene;
-    handle command ViewSceneResponse;
     handle command RemoveScene;
-    handle command RemoveSceneResponse;
     handle command RemoveAllScenes;
-    handle command RemoveAllScenesResponse;
     handle command StoreScene;
-    handle command StoreSceneResponse;
     handle command RecallScene;
     handle command GetSceneMembership;
-    handle command GetSceneMembershipResponse;
     handle command EnhancedAddScene;
     handle command EnhancedViewScene;
     handle command CopyScene;
@@ -4731,23 +4720,15 @@ endpoint 1 {
     ram      attribute clusterRevision default = 0x0001;
 
     handle command ScanRequest;
-    handle command ScanResponse;
     handle command DeviceInformationRequest;
-    handle command DeviceInformationResponse;
     handle command IdentifyRequest;
     handle command ResetToFactoryNewRequest;
     handle command NetworkStartRequest;
-    handle command NetworkStartResponse;
     handle command NetworkJoinRouterRequest;
-    handle command NetworkJoinRouterResponse;
     handle command NetworkJoinEndDeviceRequest;
-    handle command NetworkJoinEndDeviceResponse;
     handle command NetworkUpdateRequest;
-    handle command EndpointInformation;
     handle command GetGroupIdentifiersRequest;
-    handle command GetGroupIdentifiersResponse;
     handle command GetEndpointListRequest;
-    handle command GetEndpointListResponse;
   }
 }
 endpoint 1 {
@@ -4767,13 +4748,9 @@ endpoint 1 {
     ram      attribute clusterRevision default = 4;
 
     handle command AddGroup;
-    handle command AddGroupResponse;
     handle command ViewGroup;
-    handle command ViewGroupResponse;
     handle command GetGroupMembership;
-    handle command GetGroupMembershipResponse;
     handle command RemoveGroup;
-    handle command RemoveGroupResponse;
     handle command RemoveAllGroups;
     handle command AddGroupIfIdentifying;
   }
@@ -4806,7 +4783,7 @@ endpoint 1 {
     ram      attribute offTransitionTime;
     ram      attribute defaultMoveRate;
     persist  attribute startUpCurrentLevel;
-    ram      attribute clusterRevision default = 6;
+    ram      attribute clusterRevision default = 7;
 
     handle command MoveToLevel;
     handle command Move;
@@ -4840,7 +4817,7 @@ endpoint 1 {
     ram      attribute colorTempPhysicalMax default = 0x01C6;
     ram      attribute coupleColorTempToLevelMinMireds default = 0x009A;
     persist  attribute startUpColorTemperatureMireds;
-    ram      attribute clusterRevision default = 8;
+    ram      attribute clusterRevision default = 9;
 
     handle command MoveToHue;
     handle command MoveHue;

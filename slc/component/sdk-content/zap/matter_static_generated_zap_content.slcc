@@ -137,6 +137,46 @@ include:
   - path: third_party/matter_sdk/zzz_generated/app-common
     unless: [matter_zap_custom_generation]
     file_list:
+      - path: clusters/AmbientContextSensing/AttributeIds.h
+      - path: clusters/AmbientContextSensing/Attributes.h
+      - path: clusters/AmbientContextSensing/Attributes.ipp
+      - path: clusters/AmbientContextSensing/ClusterId.h
+      - path: clusters/AmbientContextSensing/CommandIds.h
+      - path: clusters/AmbientContextSensing/Commands.h
+      - path: clusters/AmbientContextSensing/Commands.ipp
+      - path: clusters/AmbientContextSensing/Enums.h
+      - path: clusters/AmbientContextSensing/EnumsCheck.h
+      - path: clusters/AmbientContextSensing/EventIds.h
+      - path: clusters/AmbientContextSensing/Events.h
+      - path: clusters/AmbientContextSensing/Events.ipp
+      - path: clusters/AmbientContextSensing/Ids.h
+      - path: clusters/AmbientContextSensing/Metadata.h
+      - path: clusters/AmbientContextSensing/MetadataProvider.h
+      - path: clusters/AmbientContextSensing/Structs.h
+      - path: clusters/AmbientContextSensing/Structs.ipp
+  - path: third_party/matter_sdk/zzz_generated/app-common
+    unless: [matter_zap_custom_generation]
+    file_list:
+      - path: clusters/AmbientSensingUnion/AttributeIds.h
+      - path: clusters/AmbientSensingUnion/Attributes.h
+      - path: clusters/AmbientSensingUnion/Attributes.ipp
+      - path: clusters/AmbientSensingUnion/ClusterId.h
+      - path: clusters/AmbientSensingUnion/CommandIds.h
+      - path: clusters/AmbientSensingUnion/Commands.h
+      - path: clusters/AmbientSensingUnion/Commands.ipp
+      - path: clusters/AmbientSensingUnion/Enums.h
+      - path: clusters/AmbientSensingUnion/EnumsCheck.h
+      - path: clusters/AmbientSensingUnion/EventIds.h
+      - path: clusters/AmbientSensingUnion/Events.h
+      - path: clusters/AmbientSensingUnion/Events.ipp
+      - path: clusters/AmbientSensingUnion/Ids.h
+      - path: clusters/AmbientSensingUnion/Metadata.h
+      - path: clusters/AmbientSensingUnion/MetadataProvider.h
+      - path: clusters/AmbientSensingUnion/Structs.h
+      - path: clusters/AmbientSensingUnion/Structs.ipp
+  - path: third_party/matter_sdk/zzz_generated/app-common
+    unless: [matter_zap_custom_generation]
+    file_list:
       - path: clusters/ApplicationBasic/AttributeIds.h
       - path: clusters/ApplicationBasic/Attributes.h
       - path: clusters/ApplicationBasic/Attributes.ipp
@@ -194,6 +234,26 @@ include:
       - path: clusters/AudioOutput/MetadataProvider.h
       - path: clusters/AudioOutput/Structs.h
       - path: clusters/AudioOutput/Structs.ipp
+  - path: third_party/matter_sdk/zzz_generated/app-common
+    unless: [matter_zap_custom_generation]
+    file_list:
+      - path: clusters/AvAnalysis/AttributeIds.h
+      - path: clusters/AvAnalysis/Attributes.h
+      - path: clusters/AvAnalysis/Attributes.ipp
+      - path: clusters/AvAnalysis/ClusterId.h
+      - path: clusters/AvAnalysis/CommandIds.h
+      - path: clusters/AvAnalysis/Commands.h
+      - path: clusters/AvAnalysis/Commands.ipp
+      - path: clusters/AvAnalysis/Enums.h
+      - path: clusters/AvAnalysis/EnumsCheck.h
+      - path: clusters/AvAnalysis/EventIds.h
+      - path: clusters/AvAnalysis/Events.h
+      - path: clusters/AvAnalysis/Events.ipp
+      - path: clusters/AvAnalysis/Ids.h
+      - path: clusters/AvAnalysis/Metadata.h
+      - path: clusters/AvAnalysis/MetadataProvider.h
+      - path: clusters/AvAnalysis/Structs.h
+      - path: clusters/AvAnalysis/Structs.ipp
   - path: third_party/matter_sdk/zzz_generated/app-common
     unless: [matter_zap_custom_generation]
     file_list:
@@ -777,6 +837,26 @@ include:
   - path: third_party/matter_sdk/zzz_generated/app-common
     unless: [matter_zap_custom_generation]
     file_list:
+      - path: clusters/DynamicLighting/AttributeIds.h
+      - path: clusters/DynamicLighting/Attributes.h
+      - path: clusters/DynamicLighting/Attributes.ipp
+      - path: clusters/DynamicLighting/ClusterId.h
+      - path: clusters/DynamicLighting/CommandIds.h
+      - path: clusters/DynamicLighting/Commands.h
+      - path: clusters/DynamicLighting/Commands.ipp
+      - path: clusters/DynamicLighting/Enums.h
+      - path: clusters/DynamicLighting/EnumsCheck.h
+      - path: clusters/DynamicLighting/EventIds.h
+      - path: clusters/DynamicLighting/Events.h
+      - path: clusters/DynamicLighting/Events.ipp
+      - path: clusters/DynamicLighting/Ids.h
+      - path: clusters/DynamicLighting/Metadata.h
+      - path: clusters/DynamicLighting/MetadataProvider.h
+      - path: clusters/DynamicLighting/Structs.h
+      - path: clusters/DynamicLighting/Structs.ipp
+  - path: third_party/matter_sdk/zzz_generated/app-common
+    unless: [matter_zap_custom_generation]
+    file_list:
       - path: clusters/EcosystemInformation/AttributeIds.h
       - path: clusters/EcosystemInformation/Attributes.h
       - path: clusters/EcosystemInformation/Attributes.ipp
@@ -794,6 +874,46 @@ include:
       - path: clusters/EcosystemInformation/MetadataProvider.h
       - path: clusters/EcosystemInformation/Structs.h
       - path: clusters/EcosystemInformation/Structs.ipp
+  - path: third_party/matter_sdk/zzz_generated/app-common
+    unless: [matter_zap_custom_generation]
+    file_list:
+      - path: clusters/ElectricalAlarm/AttributeIds.h
+      - path: clusters/ElectricalAlarm/Attributes.h
+      - path: clusters/ElectricalAlarm/Attributes.ipp
+      - path: clusters/ElectricalAlarm/ClusterId.h
+      - path: clusters/ElectricalAlarm/CommandIds.h
+      - path: clusters/ElectricalAlarm/Commands.h
+      - path: clusters/ElectricalAlarm/Commands.ipp
+      - path: clusters/ElectricalAlarm/Enums.h
+      - path: clusters/ElectricalAlarm/EnumsCheck.h
+      - path: clusters/ElectricalAlarm/EventIds.h
+      - path: clusters/ElectricalAlarm/Events.h
+      - path: clusters/ElectricalAlarm/Events.ipp
+      - path: clusters/ElectricalAlarm/Ids.h
+      - path: clusters/ElectricalAlarm/Metadata.h
+      - path: clusters/ElectricalAlarm/MetadataProvider.h
+      - path: clusters/ElectricalAlarm/Structs.h
+      - path: clusters/ElectricalAlarm/Structs.ipp
+  - path: third_party/matter_sdk/zzz_generated/app-common
+    unless: [matter_zap_custom_generation]
+    file_list:
+      - path: clusters/ElectricalDistribution/AttributeIds.h
+      - path: clusters/ElectricalDistribution/Attributes.h
+      - path: clusters/ElectricalDistribution/Attributes.ipp
+      - path: clusters/ElectricalDistribution/ClusterId.h
+      - path: clusters/ElectricalDistribution/CommandIds.h
+      - path: clusters/ElectricalDistribution/Commands.h
+      - path: clusters/ElectricalDistribution/Commands.ipp
+      - path: clusters/ElectricalDistribution/Enums.h
+      - path: clusters/ElectricalDistribution/EnumsCheck.h
+      - path: clusters/ElectricalDistribution/EventIds.h
+      - path: clusters/ElectricalDistribution/Events.h
+      - path: clusters/ElectricalDistribution/Events.ipp
+      - path: clusters/ElectricalDistribution/Ids.h
+      - path: clusters/ElectricalDistribution/Metadata.h
+      - path: clusters/ElectricalDistribution/MetadataProvider.h
+      - path: clusters/ElectricalDistribution/Structs.h
+      - path: clusters/ElectricalDistribution/Structs.ipp
   - path: third_party/matter_sdk/zzz_generated/app-common
     unless: [matter_zap_custom_generation]
     file_list:
@@ -854,6 +974,26 @@ include:
       - path: clusters/ElectricalPowerMeasurement/MetadataProvider.h
       - path: clusters/ElectricalPowerMeasurement/Structs.h
       - path: clusters/ElectricalPowerMeasurement/Structs.ipp
+  - path: third_party/matter_sdk/zzz_generated/app-common
+    unless: [matter_zap_custom_generation]
+    file_list:
+      - path: clusters/ElectricalProtectionAlarm/AttributeIds.h
+      - path: clusters/ElectricalProtectionAlarm/Attributes.h
+      - path: clusters/ElectricalProtectionAlarm/Attributes.ipp
+      - path: clusters/ElectricalProtectionAlarm/ClusterId.h
+      - path: clusters/ElectricalProtectionAlarm/CommandIds.h
+      - path: clusters/ElectricalProtectionAlarm/Commands.h
+      - path: clusters/ElectricalProtectionAlarm/Commands.ipp
+      - path: clusters/ElectricalProtectionAlarm/Enums.h
+      - path: clusters/ElectricalProtectionAlarm/EnumsCheck.h
+      - path: clusters/ElectricalProtectionAlarm/EventIds.h
+      - path: clusters/ElectricalProtectionAlarm/Events.h
+      - path: clusters/ElectricalProtectionAlarm/Events.ipp
+      - path: clusters/ElectricalProtectionAlarm/Ids.h
+      - path: clusters/ElectricalProtectionAlarm/Metadata.h
+      - path: clusters/ElectricalProtectionAlarm/MetadataProvider.h
+      - path: clusters/ElectricalProtectionAlarm/Structs.h
+      - path: clusters/ElectricalProtectionAlarm/Structs.ipp
   - path: third_party/matter_sdk/zzz_generated/app-common
     unless: [matter_zap_custom_generation]
     file_list:
@@ -1154,6 +1294,26 @@ include:
       - path: clusters/HepaFilterMonitoring/MetadataProvider.h
       - path: clusters/HepaFilterMonitoring/Structs.h
       - path: clusters/HepaFilterMonitoring/Structs.ipp
+  - path: third_party/matter_sdk/zzz_generated/app-common
+    unless: [matter_zap_custom_generation]
+    file_list:
+      - path: clusters/Humidistat/AttributeIds.h
+      - path: clusters/Humidistat/Attributes.h
+      - path: clusters/Humidistat/Attributes.ipp
+      - path: clusters/Humidistat/ClusterId.h
+      - path: clusters/Humidistat/CommandIds.h
+      - path: clusters/Humidistat/Commands.h
+      - path: clusters/Humidistat/Commands.ipp
+      - path: clusters/Humidistat/Enums.h
+      - path: clusters/Humidistat/EnumsCheck.h
+      - path: clusters/Humidistat/EventIds.h
+      - path: clusters/Humidistat/Events.h
+      - path: clusters/Humidistat/Events.ipp
+      - path: clusters/Humidistat/Ids.h
+      - path: clusters/Humidistat/Metadata.h
+      - path: clusters/Humidistat/MetadataProvider.h
+      - path: clusters/Humidistat/Structs.h
+      - path: clusters/Humidistat/Structs.ipp
   - path: third_party/matter_sdk/zzz_generated/app-common
     unless: [matter_zap_custom_generation]
     file_list:
@@ -1557,6 +1717,26 @@ include:
   - path: third_party/matter_sdk/zzz_generated/app-common
     unless: [matter_zap_custom_generation]
     file_list:
+      - path: clusters/NetworkIdentityManagement/AttributeIds.h
+      - path: clusters/NetworkIdentityManagement/Attributes.h
+      - path: clusters/NetworkIdentityManagement/Attributes.ipp
+      - path: clusters/NetworkIdentityManagement/ClusterId.h
+      - path: clusters/NetworkIdentityManagement/CommandIds.h
+      - path: clusters/NetworkIdentityManagement/Commands.h
+      - path: clusters/NetworkIdentityManagement/Commands.ipp
+      - path: clusters/NetworkIdentityManagement/Enums.h
+      - path: clusters/NetworkIdentityManagement/EnumsCheck.h
+      - path: clusters/NetworkIdentityManagement/EventIds.h
+      - path: clusters/NetworkIdentityManagement/Events.h
+      - path: clusters/NetworkIdentityManagement/Events.ipp
+      - path: clusters/NetworkIdentityManagement/Ids.h
+      - path: clusters/NetworkIdentityManagement/Metadata.h
+      - path: clusters/NetworkIdentityManagement/MetadataProvider.h
+      - path: clusters/NetworkIdentityManagement/Structs.h
+      - path: clusters/NetworkIdentityManagement/Structs.ipp
+  - path: third_party/matter_sdk/zzz_generated/app-common
+    unless: [matter_zap_custom_generation]
+    file_list:
       - path: clusters/NitrogenDioxideConcentrationMeasurement/AttributeIds.h
       - path: clusters/NitrogenDioxideConcentrationMeasurement/Attributes.h
       - path: clusters/NitrogenDioxideConcentrationMeasurement/Attributes.ipp
@@ -1894,6 +2074,26 @@ include:
       - path: clusters/PressureMeasurement/MetadataProvider.h
       - path: clusters/PressureMeasurement/Structs.h
       - path: clusters/PressureMeasurement/Structs.ipp
+  - path: third_party/matter_sdk/zzz_generated/app-common
+    unless: [matter_zap_custom_generation]
+    file_list:
+      - path: clusters/ProximityRanging/AttributeIds.h
+      - path: clusters/ProximityRanging/Attributes.h
+      - path: clusters/ProximityRanging/Attributes.ipp
+      - path: clusters/ProximityRanging/ClusterId.h
+      - path: clusters/ProximityRanging/CommandIds.h
+      - path: clusters/ProximityRanging/Commands.h
+      - path: clusters/ProximityRanging/Commands.ipp
+      - path: clusters/ProximityRanging/Enums.h
+      - path: clusters/ProximityRanging/EnumsCheck.h
+      - path: clusters/ProximityRanging/EventIds.h
+      - path: clusters/ProximityRanging/Events.h
+      - path: clusters/ProximityRanging/Events.ipp
+      - path: clusters/ProximityRanging/Ids.h
+      - path: clusters/ProximityRanging/Metadata.h
+      - path: clusters/ProximityRanging/MetadataProvider.h
+      - path: clusters/ProximityRanging/Structs.h
+      - path: clusters/ProximityRanging/Structs.ipp
   - path: third_party/matter_sdk/zzz_generated/app-common
     unless: [matter_zap_custom_generation]
     file_list:
@@ -2237,6 +2437,26 @@ include:
   - path: third_party/matter_sdk/zzz_generated/app-common
     unless: [matter_zap_custom_generation]
     file_list:
+      - path: clusters/SmokeConcentrationMeasurement/AttributeIds.h
+      - path: clusters/SmokeConcentrationMeasurement/Attributes.h
+      - path: clusters/SmokeConcentrationMeasurement/Attributes.ipp
+      - path: clusters/SmokeConcentrationMeasurement/ClusterId.h
+      - path: clusters/SmokeConcentrationMeasurement/CommandIds.h
+      - path: clusters/SmokeConcentrationMeasurement/Commands.h
+      - path: clusters/SmokeConcentrationMeasurement/Commands.ipp
+      - path: clusters/SmokeConcentrationMeasurement/Enums.h
+      - path: clusters/SmokeConcentrationMeasurement/EnumsCheck.h
+      - path: clusters/SmokeConcentrationMeasurement/EventIds.h
+      - path: clusters/SmokeConcentrationMeasurement/Events.h
+      - path: clusters/SmokeConcentrationMeasurement/Events.ipp
+      - path: clusters/SmokeConcentrationMeasurement/Ids.h
+      - path: clusters/SmokeConcentrationMeasurement/Metadata.h
+      - path: clusters/SmokeConcentrationMeasurement/MetadataProvider.h
+      - path: clusters/SmokeConcentrationMeasurement/Structs.h
+      - path: clusters/SmokeConcentrationMeasurement/Structs.ipp
+  - path: third_party/matter_sdk/zzz_generated/app-common
+    unless: [matter_zap_custom_generation]
+    file_list:
       - path: clusters/SoftwareDiagnostics/AttributeIds.h
       - path: clusters/SoftwareDiagnostics/Attributes.h
       - path: clusters/SoftwareDiagnostics/Attributes.ipp
@@ -2334,6 +2554,26 @@ include:
       - path: clusters/TemperatureControl/MetadataProvider.h
       - path: clusters/TemperatureControl/Structs.h
       - path: clusters/TemperatureControl/Structs.ipp
+  - path: third_party/matter_sdk/zzz_generated/app-common
+    unless: [matter_zap_custom_generation]
+    file_list:
+      - path: clusters/TemperatureControlledCabinetTopology/AttributeIds.h
+      - path: clusters/TemperatureControlledCabinetTopology/Attributes.h
+      - path: clusters/TemperatureControlledCabinetTopology/Attributes.ipp
+      - path: clusters/TemperatureControlledCabinetTopology/ClusterId.h
+      - path: clusters/TemperatureControlledCabinetTopology/CommandIds.h
+      - path: clusters/TemperatureControlledCabinetTopology/Commands.h
+      - path: clusters/TemperatureControlledCabinetTopology/Commands.ipp
+      - path: clusters/TemperatureControlledCabinetTopology/Enums.h
+      - path: clusters/TemperatureControlledCabinetTopology/EnumsCheck.h
+      - path: clusters/TemperatureControlledCabinetTopology/EventIds.h
+      - path: clusters/TemperatureControlledCabinetTopology/Events.h
+      - path: clusters/TemperatureControlledCabinetTopology/Events.ipp
+      - path: clusters/TemperatureControlledCabinetTopology/Ids.h
+      - path: clusters/TemperatureControlledCabinetTopology/Metadata.h
+      - path: clusters/TemperatureControlledCabinetTopology/MetadataProvider.h
+      - path: clusters/TemperatureControlledCabinetTopology/Structs.h
+      - path: clusters/TemperatureControlledCabinetTopology/Structs.ipp
   - path: third_party/matter_sdk/zzz_generated/app-common
     unless: [matter_zap_custom_generation]
     file_list:
@@ -2494,26 +2734,6 @@ include:
       - path: clusters/TimeSynchronization/MetadataProvider.h
       - path: clusters/TimeSynchronization/Structs.h
       - path: clusters/TimeSynchronization/Structs.ipp
-  - path: third_party/matter_sdk/zzz_generated/app-common
-    unless: [matter_zap_custom_generation]
-    file_list:
-      - path: clusters/Timer/AttributeIds.h
-      - path: clusters/Timer/Attributes.h
-      - path: clusters/Timer/Attributes.ipp
-      - path: clusters/Timer/ClusterId.h
-      - path: clusters/Timer/CommandIds.h
-      - path: clusters/Timer/Commands.h
-      - path: clusters/Timer/Commands.ipp
-      - path: clusters/Timer/Enums.h
-      - path: clusters/Timer/EnumsCheck.h
-      - path: clusters/Timer/EventIds.h
-      - path: clusters/Timer/Events.h
-      - path: clusters/Timer/Events.ipp
-      - path: clusters/Timer/Ids.h
-      - path: clusters/Timer/Metadata.h
-      - path: clusters/Timer/MetadataProvider.h
-      - path: clusters/Timer/Structs.h
-      - path: clusters/Timer/Structs.ipp
   - path: third_party/matter_sdk/zzz_generated/app-common
     unless: [matter_zap_custom_generation]
     file_list:

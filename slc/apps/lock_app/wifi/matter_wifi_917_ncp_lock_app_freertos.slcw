@@ -1,0 +1,14 @@
+workspace_name: matter_wifi_917_ncp_lock_app_freertos
+label: Matter WiFi - 917 NCP Lock FreeRTOS
+quality: production
+package: matter
+description: Demonstrates a sample implementation of a 917 NCP Matter over Wi-Fi door lock app with internal bootloader
+project:
+  - path: ./matter_wifi_917_ncp_lock_app_freertos.slcp
+    id: application
+    output: lock_app_917_ncp
+  - path: ../../bootloaders/bootloader_storage_internal_single_series_2/matter_bootloader_internal_series_2.slcp
+    id: bootloader
+    output: matter_bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

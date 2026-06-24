@@ -1,0 +1,37 @@
+category: Clusters|Network Infrastructure
+description: >
+  Implementation of the Network Identity Management Server Cluster.
+  The user has to enable the Network Identity Management Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_network_identity_management
+package: matter
+label: Network Identity Management Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_network_identity_management
+source:
+  - path: third_party/matter_sdk/src/app/clusters/network-identity-management-server/CodegenIntegration.cpp
+    unless: [matter_code_driven_dm]
+  - path: third_party/matter_sdk/src/app/clusters/network-identity-management-server/DefaultNetworkIdentityStorage.cpp
+  - path: third_party/matter_sdk/src/app/clusters/network-identity-management-server/NetworkAdministratorSecret.cpp
+  - path: third_party/matter_sdk/src/app/clusters/network-identity-management-server/NetworkIdentityManagementCluster.cpp
+  - path: third_party/matter_sdk/src/app/clusters/network-identity-management-server/NetworkIdentityStorage.cpp
+  - path: third_party/matter_sdk/src/app/clusters/network-identity-management-server/RawKeyNetworkIdentityKeystore.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/network-identity-management-server
+    file_list:
+      - path: AuthenticatorDriver.h
+      - path: CodegenIntegration.h
+        unless: [matter_code_driven_dm]
+      - path: DefaultNetworkIdentityStorage.h
+      - path: Logging.h
+      - path: NetworkAdministratorSecret.h
+      - path: NetworkIdentityKeystore.h
+      - path: NetworkIdentityManagementCluster.h
+      - path: NetworkIdentityStorage.h
+      - path: RawKeyNetworkIdentityKeystore.h
+template_contribution:
+  - name: component_catalog
+    value: matter_network_identity_management

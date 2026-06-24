@@ -23,16 +23,16 @@
 #include "AppConfig.h"
 
 #include "AppTask.h"
-#include <SensorManager.h>
 #include <app-common/zap-generated/ids/Attributes.h>
 #include <app-common/zap-generated/ids/Clusters.h>
 #include <app/ConcreteAttributePath.h>
 #include <lib/support/logging/CHIPLogging.h>
 
 using namespace ::chip;
+using namespace ::chip::app;
 using namespace ::chip::app::Clusters;
 
-void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
+void MatterPostAttributeChangeCallback(const ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
                                        uint8_t * value)
 {
     ClusterId clusterId     = attributePath.mClusterId;
@@ -41,35 +41,10 @@ void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & 
 
     switch (clusterId)
     {
-    case Identify::Id:
+    case Clusters::Identify::Id:
         ChipLogProgress(Zcl, "Identify attribute ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u",
                         ChipLogValueMEI(attributeId), type, *value, size);
         break;
-
-    case OccupancySensing::Id: {
-        VerifyOrReturn(attributeId == OccupancySensing::Attributes::Occupancy::Id);
-
-        BitMask<OccupancySensing::OccupancyBitmap> state = *reinterpret_cast<BitMask<OccupancySensing::OccupancyBitmap> *>(value);
-
-        AppEvent event                         = {};
-        event.Type                             = AppEvent::kEventType_OccupancyAttributeUpdate;
-        event.Handler                          = AppTask::OccupancyAttributeUpdateEvent;
-        event.OccupancyEvent.occupancyDetected = state.Has(OccupancySensing::OccupancyBitmap::kOccupied);
-        AppTask().PostEvent(&event);
-    }
-    break;
-
-    case TemperatureMeasurement::Id:
-    case RelativeHumidityMeasurement::Id: {
-        VerifyOrReturn(attributeId == TemperatureMeasurement::Attributes::MeasuredValue::Id ||
-                       attributeId == RelativeHumidityMeasurement::Attributes::MeasuredValue::Id);
-
-        AppEvent event = {};
-        event.Type     = AppEvent::kEventType_SensorAttributeUpdate;
-        event.Handler  = AppTask::SensorAttributeUpdateEvent;
-        AppTask().PostEvent(&event);
-    }
-    break;
 
     default:
         // Handle default case if needed

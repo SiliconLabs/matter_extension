@@ -20,6 +20,7 @@ include:
       - path: inet/InetBuildConfig.h
       - path: lwip/lwip_buildconfig.h
       - path: matter/tracing/build_config.h
+      - path: minmdns/MinMdnsBuildConfig.h
       - path: openthread/platform/openthread-system.h
       - path: platform/CHIPDeviceBuildConfig.h
       - path: setup_payload/CHIPAdditionalDataPayloadBuildConfig.h

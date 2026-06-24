@@ -24,7 +24,9 @@
 #include "AppConfig.h"
 #include "AppEvent.h"
 #include "AppTask.h"
+#if defined(SILABS_OTA_ENABLED) && SILABS_OTA_ENABLED
 #include "OTAConfig.h"
+#endif // SILABS_OTA_ENABLED
 #include <app/server/Dnssd.h>
 #include <app/server/Server.h>
 
@@ -36,6 +38,12 @@
 #include "qrcodegen.h"
 #endif // QR_CODE_ENABLED
 #endif // DISPLAY_ENABLED
+
+#ifdef ENABLE_CHIP_SHELL
+#if defined(CHIP_CONFIG_ENABLE_READ_CLIENT) && CHIP_CONFIG_ENABLE_READ_CLIENT
+#include <shell/im/IMShellCommands.h> // nogncheck
+#endif                                // CHIP_CONFIG_ENABLE_READ_CLIENT
+#endif                                // ENABLE_CHIP_SHELL
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
 #include <app/icd/server/ICDNotifier.h> // nogncheck
@@ -89,6 +97,9 @@
 #include <app-common/zap-generated/callback.h>
 #endif
 
+#ifdef CHIP_SILABS_APP_USE_CUSTOMER_APP_TASK
+#include "CustomerAppTask.h"
+#endif // CHIP_SILABS_APP_USE_CUSTOMER_APP_TASK
 // SL-Only
 #include "sl_component_catalog.h"
 #ifdef SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
@@ -106,10 +117,14 @@
 #include <TracingShellCommands.h>
 #endif // MATTER_TRACING_ENABLED
 
+#ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
+#include <MultiProtocolDataModelHelper.h>
+#endif // SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
+
 // sl-only
-#if SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+#if defined(SL_MATTER_ENABLE_APP_SLEEP_MANAGER) && SL_MATTER_ENABLE_APP_SLEEP_MANAGER
 #include <ApplicationSleepManager.h>
-#endif // SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+#endif // defined(SL_MATTER_ENABLE_APP_SLEEP_MANAGER) && SL_MATTER_ENABLE_APP_SLEEP_MANAGER
 
 /**********************************************************
  * Defines and Constants
@@ -160,6 +175,8 @@ bool sHaveBLEConnections = false;
 
 constexpr uint32_t kLightTimerPeriod = static_cast<uint32_t>(pdMS_TO_TICKS(10));
 
+constexpr System::Clock::Milliseconds32 kZbLeaveAnnouceDelay = System::Clock::Milliseconds32(1000);
+
 uint8_t sAppEventQueueBuffer[APP_EVENT_QUEUE_SIZE * sizeof(AppEvent)];
 osMessageQueue_t sAppEventQueueStruct;
 constexpr osMessageQueueAttr_t appEventQueueAttr = { .cb_mem  = &sAppEventQueueStruct,
@@ -184,7 +201,10 @@ SilabsLCD slLCD;
 #ifdef MATTER_DM_PLUGIN_IDENTIFY_SERVER
 Clusters::Identify::EffectIdentifierEnum sIdentifyEffect = Clusters::Identify::EffectIdentifierEnum::kStopEffect;
 
-ObjectPool<Identify, MATTER_DM_IDENTIFY_CLUSTER_SERVER_ENDPOINT_COUNT + CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT> IdentifyPool;
+ObjectPool<Identify,
+           MATTER_DM_IDENTIFY_CLUSTER_SERVER_ENDPOINT_COUNT + MATTER_DM_IDENTIFY_CLUSTER_CLIENT_ENDPOINT_COUNT +
+               CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT>
+    IdentifyPool;
 
 #endif // MATTER_DM_PLUGIN_IDENTIFY_SERVER
 
@@ -199,7 +219,7 @@ void BaseApplicationDelegate::OnCommissioningSessionStarted()
 {
     isComissioningStarted = true;
 
-#if SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
+#if defined(SL_WIFI) && SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
     WifiSleepManager::GetInstance().HandleCommissioningSessionStarted();
 #endif // SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
 }
@@ -208,7 +228,7 @@ void BaseApplicationDelegate::OnCommissioningSessionStopped()
 {
     isComissioningStarted = false;
 
-#if SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
+#if defined(SL_WIFI) && SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
     WifiSleepManager::GetInstance().HandleCommissioningSessionStopped();
 #endif // SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
 }
@@ -217,23 +237,23 @@ void BaseApplicationDelegate::OnCommissioningSessionEstablishmentError(CHIP_ERRO
 {
     isComissioningStarted = false;
 
-#if SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
+#if defined(SL_WIFI) && SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
     WifiSleepManager::GetInstance().HandleCommissioningSessionStopped();
 #endif // SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
 }
 
 void BaseApplicationDelegate::OnCommissioningWindowOpened()
 {
-#if SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+#if defined(SL_MATTER_ENABLE_APP_SLEEP_MANAGER) && SL_MATTER_ENABLE_APP_SLEEP_MANAGER
     app::Silabs::ApplicationSleepManager::GetInstance().OnCommissioningWindowOpened();
-#endif // SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+#endif // defined(SL_MATTER_ENABLE_APP_SLEEP_MANAGER) && SL_MATTER_ENABLE_APP_SLEEP_MANAGER
 }
 
 void BaseApplicationDelegate::OnCommissioningWindowClosed()
 {
-#if SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+#if defined(SL_MATTER_ENABLE_APP_SLEEP_MANAGER) && SL_MATTER_ENABLE_APP_SLEEP_MANAGER
     app::Silabs::ApplicationSleepManager::GetInstance().OnCommissioningWindowClosed();
-#endif // SL_MATTER_ENABLE_APP_SLEEP_MANAGER
+#endif // defined(SL_MATTER_ENABLE_APP_SLEEP_MANAGER) && SL_MATTER_ENABLE_APP_SLEEP_MANAGER
 
     if (BaseApplication::GetProvisionStatus())
     {
@@ -279,7 +299,7 @@ CHIP_ERROR BaseApplication::StartAppTask(osThreadFunc_t taskFunction)
 
     // Fix OTA by registering the EvenHandler sooner
     // MATTER-4889
-    PlatformMgr().AddEventHandler(OnPlatformEvent, 0);
+    ReturnErrorOnFailure(PlatformMgr().AddEventHandler(OnPlatformEvent, 0));
 
     sAppEventQueue = osMessageQueueNew(APP_EVENT_QUEUE_SIZE, sizeof(AppEvent), &appEventQueueAttr);
     if (sAppEventQueue == NULL)
@@ -303,7 +323,7 @@ CHIP_ERROR BaseApplication::Init()
     CHIP_ERROR err = BaseInit();
     if (err != CHIP_NO_ERROR)
     {
-        SILABS_LOG("BaseInit() failed");
+        ChipLogError(DeviceLayer, "BaseInit() failed");
         appError(err);
         return err;
     }
@@ -311,16 +331,16 @@ CHIP_ERROR BaseApplication::Init()
     err = AppInit();
     if (err != CHIP_NO_ERROR)
     {
-        SILABS_LOG("AppInit() failed");
+        ChipLogError(DeviceLayer, "AppInit() failed");
         appError(err);
         return err;
     }
-    GetPlatform().WatchdogInit();
-
 #ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
 #ifdef SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT
-    // Scheduler work
-    PlatformMgr().ScheduleWork([](intptr_t) { MultiProtocolDataModel::Initialize(); });
+    if (PlatformMgr().ScheduleWork([](intptr_t) { MultiProtocolDataModel::Initialize(); }) != CHIP_NO_ERROR)
+    {
+        ChipLogError(AppServer, "Failed to Schedule MultiProtocol DataModel Initialization");
+    }
 #endif // SL_CATALOG_MULTIPROTOCOL_ZIGBEE_MATTER_COMMON_PRESENT
 
 #ifdef SL_MATTER_ZIGBEE_SEQUENTIAL
@@ -330,6 +350,10 @@ CHIP_ERROR BaseApplication::Init()
     if (nbOfMatterFabric != 0)
     {
         Zigbee::RequestLeave();
+        PlatformMgr().LockChipStack();
+        RETURN_SAFELY_IGNORED DeviceLayer::SystemLayer().StartTimer(
+            kZbLeaveAnnouceDelay, [](System::Layer *, void *) { Zigbee::ZLLNotFactoryNew(); }, nullptr);
+        PlatformMgr().UnlockChipStack();
     }
     else
 #endif // SL_MATTER_ZIGBEE_SEQUENTIAL
@@ -339,6 +363,10 @@ CHIP_ERROR BaseApplication::Init()
 #endif // SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
     SILABS_TRACE_END_ERROR(TimeTraceOperation::kAppInit, err);
     SILABS_TRACE_END_ERROR(TimeTraceOperation::kBootup, err);
+    if (err == CHIP_NO_ERROR)
+    {
+        mIsApplicationInitialized = true;
+    }
     return err;
 }
 
@@ -347,19 +375,19 @@ CHIP_ERROR BaseApplication::BaseInit()
     CHIP_ERROR err = CHIP_NO_ERROR;
 
 #ifdef DISPLAY_ENABLED
-    GetLCD().Init((uint8_t *) APP_TASK_NAME);
+    TEMPORARY_RETURN_IGNORED GetLCD().Init((uint8_t *) APP_TASK_NAME);
 #endif
 
 #ifdef SL_WIFI
     /*
      * Wait for the WiFi to be initialized
      */
-    ChipLogProgress(AppServer, "APP: Wait WiFi Init");
+    ChipLogDetail(AppServer, "APP: Wait WiFi Init");
     while (!WifiInterface::GetInstance().IsStationReady())
     {
         osDelay(pdMS_TO_TICKS(10));
     }
-    ChipLogProgress(AppServer, "APP: Done WiFi Init");
+    ChipLogDetail(AppServer, "APP: Done WiFi Init");
 #endif
 
     // Create cmsis os sw timer for Function Selection.
@@ -389,7 +417,9 @@ CHIP_ERROR BaseApplication::BaseInit()
     ChipLogProgress(AppServer, "Current Software Version String: %s", CHIP_DEVICE_CONFIG_DEVICE_SOFTWARE_VERSION_STRING);
     ChipLogProgress(AppServer, "Current Software Version: %d", CHIP_DEVICE_CONFIG_DEVICE_SOFTWARE_VERSION);
 
-    ConfigurationMgr().LogDeviceConfig();
+    // TODO FIXME: ConfigurationMgr().LogDeviceConfig() fills the UART log queue.
+    // Write an optimized version to reduce the number of calls to ChipLogProgress.
+    // ConfigurationMgr().LogDeviceConfig();
 
     OutputQrCode(true /*refreshLCD at init*/);
 #if (defined(ENABLE_WSTK_LEDS) && (defined(SL_CATALOG_SIMPLE_LED_LED1_PRESENT)))
@@ -398,6 +428,9 @@ CHIP_ERROR BaseApplication::BaseInit()
 #endif // ENABLE_WSTK_LEDS
 
 #ifdef ENABLE_CHIP_SHELL
+#if defined(CHIP_CONFIG_ENABLE_READ_CLIENT) && CHIP_CONFIG_ENABLE_READ_CLIENT
+    IMShellCommands::RegisterCommands();
+#endif // CHIP_CONFIG_ENABLE_READ_CLIENT
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
     ICDCommands::RegisterCommands();
 #endif // CHIP_CONFIG_ENABLE_ICD_SERVER
@@ -666,7 +699,8 @@ void BaseApplication::ButtonHandler(AppEvent * aEvent)
                 ChipLogProgress(AppServer, "Network is already provisioned, Ble advertisement not enabled");
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
                 // Temporarily claim network activity, until we implement a "user trigger" reason for ICD wakeups.
-                PlatformMgr().ScheduleWork([](intptr_t) { ICDNotifier::GetInstance().NotifyNetworkActivityNotification(); });
+                TEMPORARY_RETURN_IGNORED PlatformMgr().ScheduleWork(
+                    [](intptr_t) { ICDNotifier::GetInstance().NotifyNetworkActivityNotification(); });
 #endif // CHIP_CONFIG_ENABLE_ICD_SERVER
             }
             // Print the QR Code
@@ -759,7 +793,7 @@ void BaseApplication::StopStatusLEDTimer()
 #ifdef MATTER_DM_PLUGIN_IDENTIFY_SERVER
 void BaseApplication::OnIdentifyStart(Identify * identify)
 {
-    ChipLogProgress(Zcl, "onIdentifyStart");
+    ChipLogDetail(Zcl, "onIdentifyStart");
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
     StartStatusLEDTimer();
@@ -768,7 +802,7 @@ void BaseApplication::OnIdentifyStart(Identify * identify)
 
 void BaseApplication::OnIdentifyStop(Identify * identify)
 {
-    ChipLogProgress(Zcl, "onIdentifyStop");
+    ChipLogDetail(Zcl, "onIdentifyStop");
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
     StopStatusLEDTimer();
@@ -777,7 +811,7 @@ void BaseApplication::OnIdentifyStop(Identify * identify)
 
 void BaseApplication::OnTriggerIdentifyEffectCompleted(chip::System::Layer * systemLayer, void * appState)
 {
-    ChipLogProgress(Zcl, "Trigger Identify Complete");
+    ChipLogDetail(Zcl, "Trigger Identify Complete");
     sIdentifyEffect = Clusters::Identify::EffectIdentifierEnum::kStopEffect;
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
@@ -820,7 +854,7 @@ void BaseApplication::OnTriggerIdentifyEffect(Identify * identify)
         break;
     default:
         sIdentifyEffect = Clusters::Identify::EffectIdentifierEnum::kStopEffect;
-        ChipLogProgress(Zcl, "No identifier effect");
+        ChipLogDetail(Zcl, "No identifier effect");
     }
 }
 
@@ -878,7 +912,7 @@ void BaseApplication::UpdateLCDStatusScreen()
     attached = ConnectivityMgr().IsWiFiStationConnected();
     chip::DeviceLayer::NetworkCommissioning::Network network;
     memset(reinterpret_cast<void *>(&network), 0, sizeof(network));
-    chip::DeviceLayer::NetworkCommissioning::GetConnectedNetwork(network);
+    TEMPORARY_RETURN_IGNORED chip::DeviceLayer::NetworkCommissioning::GetConnectedNetwork(network);
     if (network.networkIDLen)
     {
         chip::Platform::CopyString(status.networkName, sizeof(status.networkName),
@@ -919,38 +953,41 @@ void BaseApplication::PostEvent(const AppEvent * aEvent)
 
 void BaseApplication::DispatchEvent(AppEvent * aEvent)
 {
-    if (aEvent->Handler)
+    if (aEvent != nullptr && aEvent->Handler)
     {
         aEvent->Handler(aEvent);
     }
     else
     {
-        ChipLogProgress(AppServer, "Event received with no handler. Dropping event.");
+        ChipLogError(AppServer, "Nullptr event received or no handler. Dropping it.");
     }
 }
 
 void BaseApplication::ScheduleFactoryReset()
 {
-    PlatformMgr().ScheduleWork([](intptr_t) {
+    TEMPORARY_RETURN_IGNORED PlatformMgr().ScheduleWork([](intptr_t) {
         // Press both buttons to request provisioning
         if (GetPlatform().GetButtonState(APP_ACTION_BUTTON))
         {
-            Provision::Manager::GetInstance().SetProvisionRequired(true);
+            TEMPORARY_RETURN_IGNORED Provision::Manager::GetInstance().SetProvisionRequired(true);
         }
-#if SL_WIFI
+#if defined(SL_WIFI) && SL_WIFI
         // Removing the matter services on factory reset
-        chip::Dnssd::ServiceAdvertiser::Instance().RemoveServices();
+        TEMPORARY_RETURN_IGNORED chip::Dnssd::ServiceAdvertiser::Instance().RemoveServices();
 #endif
         PlatformMgr().HandleServerShuttingDown(); // HandleServerShuttingDown calls OnShutdown() which is only implemented for the
                                                   // basic information cluster it seems. And triggers and Event flush, which is not
                                                   // relevant when there are no fabrics left
+#ifdef SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
+        Zigbee::TokenFactoryReset();
+#endif
         ConfigurationMgr().InitiateFactoryReset();
     });
 }
 
 void BaseApplication::DoProvisioningReset()
 {
-    PlatformMgr().ScheduleWork([](intptr_t) {
+    TEMPORARY_RETURN_IGNORED PlatformMgr().ScheduleWork([](intptr_t) {
         // Force the KeyMap update to make sure nvm3 is updated before anything happens.
         // If the device reboots before the timer update happens, "shadow" keys are left in nvm3 causing a reduction of the
         // overall available nvm3 - similar to a memory leak.
@@ -964,7 +1001,6 @@ void BaseApplication::DoProvisioningReset()
 #endif // CHIP_DEVICE_CONFIG_ENABLE_THREAD
 
 #if CHIP_DEVICE_CONFIG_ENABLE_WIFI_STATION
-        ChipLogProgress(DeviceLayer, "Clearing WiFi provision");
         chip::DeviceLayer::ConnectivityMgr().ClearWiFiStationProvision();
 #endif // CHIP_DEVICE_CONFIG_ENABLE_WIFI_STATION
 
@@ -976,12 +1012,22 @@ void BaseApplication::DoProvisioningReset()
     });
 }
 
-#if SILABS_OTA_ENABLED
+#if defined(SILABS_OTA_ENABLED) && SILABS_OTA_ENABLED
 void BaseApplication::InitOTARequestorHandler(System::Layer * systemLayer, void * appState)
 {
     OTAConfig::Init();
 }
-#endif
+#endif // defined(SILABS_OTA_ENABLED) && SILABS_OTA_ENABLED
+
+#ifdef SL_MATTER_ENABLE_AWS
+namespace {
+void InitMatterAwsHandler(System::Layer * systemLayer, void * appState)
+{
+    VerifyOrReturn(MATTER_AWS_OK == MatterAwsInit(matterAws::control::subscribeCB),
+                   ChipLogError(AppServer, "MatterAwsInit failed"));
+}
+} // namespace
+#endif // SL_MATTER_ENABLE_AWS
 
 void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
 {
@@ -996,12 +1042,15 @@ void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
     case DeviceEventType::kThreadConnectivityChange:
     case DeviceEventType::kInternetConnectivityChange: {
 #ifdef SL_MATTER_ENABLE_AWS
-        if (event->InternetConnectivityChange.IPv4 == kConnectivity_Established)
+        if (event->InternetConnectivityChange.IPv4 == kConnectivity_Established
+#if defined(SL_MATTER_ENABLE_DUAL_STACK) && SL_MATTER_ENABLE_DUAL_STACK
+            || event->InternetConnectivityChange.IPv6 == kConnectivity_Established
+#endif
+        )
         {
-            if (MATTER_AWS_OK != MatterAwsInit(matterAws::control::subscribeCB))
-            {
-                ChipLogError(AppServer, "MatterAwsInit failed");
-            }
+            ChipLogProgress(AppServer, "Scheduling Matter AWS initialization");
+            RETURN_SAFELY_IGNORED chip::DeviceLayer::SystemLayer().StartTimer(
+                chip::System::Clock::Seconds32(MATTER_AWS_INIT_DELAY_SEC), InitMatterAwsHandler, nullptr);
         }
 #endif // SL_MATTER_ENABLE_AWS
 #ifdef DISPLAY_ENABLED
@@ -1017,43 +1066,46 @@ void BaseApplication::OnPlatformEvent(const ChipDeviceEvent * event, intptr_t)
         if ((event->ThreadConnectivityChange.Result == kConnectivity_Established) ||
             (event->InternetConnectivityChange.IPv6 == kConnectivity_Established))
         {
-#if SL_WIFI
+#if defined(SL_WIFI) && SL_WIFI
             chip::app::DnssdServer::Instance().StartServer();
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
-            WifiSleepManager::GetInstance().VerifyAndTransitionToLowPowerMode(WifiSleepManager::PowerEvent::kConnectivityChange);
+            TEMPORARY_RETURN_IGNORED WifiSleepManager::GetInstance().VerifyAndTransitionToLowPowerMode(
+                WifiSleepManager::PowerEvent::kConnectivityChange);
 #endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 #endif // SL_WIFI
 
-#if SILABS_OTA_ENABLED
+#if defined(SILABS_OTA_ENABLED) && SILABS_OTA_ENABLED
             ChipLogProgress(AppServer, "Scheduling OTA Requestor initialization");
-            chip::DeviceLayer::SystemLayer().StartTimer(chip::System::Clock::Seconds32(OTAConfig::kInitOTARequestorDelaySec),
-                                                        InitOTARequestorHandler, nullptr);
-#endif // SILABS_OTA_ENABLED
+            TEMPORARY_RETURN_IGNORED chip::DeviceLayer::SystemLayer().StartTimer(
+                chip::System::Clock::Seconds32(OTAConfig::kInitOTARequestorDelaySec), InitOTARequestorHandler, nullptr);
+#endif // defined(SILABS_OTA_ENABLED) && SILABS_OTA_ENABLED
         }
     }
     break;
 
     case DeviceEventType::kDnssdInitialized: {
-#if SILABS_OTA_ENABLED
+#if defined(SILABS_OTA_ENABLED) && SILABS_OTA_ENABLED
         ChipLogProgress(AppServer, "DNS-SD initialized, scheduling OTA Requestor initialization");
-        chip::DeviceLayer::SystemLayer().StartTimer(chip::System::Clock::Seconds32(OTAConfig::kInitOTARequestorDelaySec),
-                                                    InitOTARequestorHandler, nullptr);
-#endif // SILABS_OTA_ENABLED
+        TEMPORARY_RETURN_IGNORED chip::DeviceLayer::SystemLayer().StartTimer(
+            chip::System::Clock::Seconds32(OTAConfig::kInitOTARequestorDelaySec), InitOTARequestorHandler, nullptr);
+#endif // defined(SILABS_OTA_ENABLED) && SILABS_OTA_ENABLED
     }
     break;
 
     case DeviceEventType::kCommissioningComplete: {
-#if SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
-        WifiSleepManager::GetInstance().VerifyAndTransitionToLowPowerMode(WifiSleepManager::PowerEvent::kCommissioningComplete);
+#if defined(SL_WIFI) && SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
+        TEMPORARY_RETURN_IGNORED WifiSleepManager::GetInstance().VerifyAndTransitionToLowPowerMode(
+            WifiSleepManager::PowerEvent::kCommissioningComplete);
 #endif // SL_WIFI && CHIP_CONFIG_ENABLE_ICD_SERVER
 
 // SL-Only
 #ifdef SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
 #ifdef SL_MATTER_ZIGBEE_SEQUENTIAL // Matter Zigbee sequential
         Zigbee::RequestLeave();
-        Zigbee::ZLLNotFactoryNew();
 #endif // SL_MATTER_ZIGBEE_SEQUENTIAL
+        RETURN_SAFELY_IGNORED DeviceLayer::SystemLayer().StartTimer(
+            kZbLeaveAnnouceDelay, [](System::Layer *, void *) { Zigbee::ZLLNotFactoryNew(); }, nullptr);
 #endif // SL_CATALOG_ZIGBEE_STACK_COMMON_PRESENT
     }
     break;
@@ -1094,3 +1146,21 @@ bool BaseApplication::GetProvisionStatus()
 {
     return BaseApplication::sIsProvisioned;
 }
+
+#if defined(CHIP_SILABS_APP_USE_CUSTOMER_APP_TASK) && !defined(CHIP_SILABS_APP_NO_DM_IMPLEMENTATION)
+void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
+                                       uint8_t * value)
+{
+#ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
+    EndpointId endpointId   = attributePath.mEndpointId;
+    ClusterId clusterId     = attributePath.mClusterId;
+    AttributeId attributeId = attributePath.mAttributeId;
+    MultiProtocolDataModel::WriteMatterAttributeValueToZigbee(endpointId, clusterId, attributeId, value, type);
+#endif // SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
+
+    // Verify that the App layer is initialized before propagating attribute changes callback to it.
+    VerifyOrReturn(CustomerAppTask::GetAppTask().IsApplicationInitialized());
+    // Route through CustomerAppTask / AppTaskImpl (CRTP) so overrides use DMPostAttributeChangeCallbackImpl.
+    CustomerAppTask::GetAppTask().DMPostAttributeChangeCallback(attributePath, type, size, value);
+}
+#endif // defined(CHIP_SILABS_APP_USE_CUSTOMER_APP_TASK) && !defined(CHIP_SILABS_APP_NO_DM_IMPLEMENTATION)

@@ -15,18 +15,14 @@
  *    limitations under the License.
  */
 
-#include "sl_clock_manager.h"
-#include "sl_hal_wdog.h"
 #include <em_device.h>
 #include <lib/support/CodeUtils.h>
 #include <platform/silabs/platformAbstraction/SilabsPlatform.h>
 #if defined(_SILICON_LABS_32B_SERIES_2)
-#include "em_cmu.h"
 #include "em_msc.h"
 #include "em_rmu.h"
 #elif defined(_SILICON_LABS_32B_SERIES_3)
 #include "sl_hal_emu.h"
-#include "sl_hal_wdog.h"
 #include "sl_se_manager.h"
 #include "sl_se_manager_types.h"
 #include <sl_se_manager_extmem.h>
@@ -72,7 +68,7 @@ extern "C" {
 #if CHIP_ENABLE_OPENTHREAD
 #include "platform-efr32.h"
 
-#if OPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE
+#if defined(OPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE) && OPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE
 #include "openthread/heap.h"
 #endif // OPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE
 
@@ -80,13 +76,15 @@ extern "C" {
 
 #include "sl_component_catalog.h"
 #include "sl_mbedtls.h"
-#if SILABS_LOG_OUT_UART || ENABLE_CHIP_SHELL || CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
+#if SILABS_LOG_OUT_UART || (defined(ENABLE_CHIP_SHELL) && ENABLE_CHIP_SHELL) ||                                                    \
+    defined(CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI) && CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
 #ifdef SL_CATALOG_CLI_PRESENT
 #include "sl_iostream.h"
 #include "sl_iostream_stdio.h"
-#endif //
+#endif // SL_CATALOG_CLI_PRESENT
 #include "uart.h"
-#endif
+#endif // SILABS_LOG_OUT_UART || (defined(ENABLE_CHIP_SHELL) && ENABLE_CHIP_SHELL) || defined(CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI)
+       // && CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
 
 #ifdef SL_CATALOG_SYSTEMVIEW_TRACE_PRESENT
 #include "SEGGER_SYSVIEW.h"
@@ -115,11 +113,9 @@ namespace Silabs {
 
 SilabsPlatform SilabsPlatform::sSilabsPlatformAbstractionManager;
 
-SilabsPlatform::SilabsButtonCb SilabsPlatform::mButtonCallback = nullptr;
-
 CHIP_ERROR SilabsPlatform::Init(void)
 {
-    NvmInit();
+    TEMPORARY_RETURN_IGNORED NvmInit();
 #ifdef _SILICON_LABS_32B_SERIES_2
     // Read the cause of last reset.
     mRebootCause = RMU_ResetCauseGet();
@@ -142,13 +138,15 @@ CHIP_ERROR SilabsPlatform::Init(void)
     SEGGER_SYSVIEW_Conf();
 #endif
 
-#if SILABS_LOG_OUT_UART || ENABLE_CHIP_SHELL || CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
+#if SILABS_LOG_OUT_UART || (defined(ENABLE_CHIP_SHELL) && ENABLE_CHIP_SHELL) ||                                                    \
+    defined(CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI) && CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
     uartConsoleInit();
-#endif
+#endif // SILABS_LOG_OUT_UART || (defined(ENABLE_CHIP_SHELL) && ENABLE_CHIP_SHELL) || defined(CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI)
+       // && CHIP_DEVICE_CONFIG_THREAD_ENABLE_CLI
 
 #if SILABS_LOG_ENABLED
     silabsInitLog();
-#endif
+#endif // SILABS_LOG_ENABLED
     return CHIP_NO_ERROR;
 }
 
@@ -276,6 +274,7 @@ CHIP_ERROR SilabsPlatform::GetLedColor(uint8_t led, uint16_t & r, uint16_t & g, 
 #endif // (defined(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
 
 #ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
+SilabsPlatform::SilabsButtonCb SilabsPlatform::mButtonCallback = nullptr;
 extern "C" void sl_button_on_change(const sl_button_t * handle)
 {
     if (Silabs::GetPlatform().mButtonCallback == nullptr)
@@ -298,53 +297,17 @@ uint8_t SilabsPlatform::GetButtonState(uint8_t button)
     const sl_button_t * handle = SL_SIMPLE_BUTTON_INSTANCE(button);
     return nullptr == handle ? 0 : sl_button_get_state(handle);
 }
-
-#else
-uint8_t SilabsPlatform::GetButtonState(uint8_t button)
-{
-    return 0;
-}
+#ifdef SL_ICD_ENABLED
+void SilabsPlatform::SleepButtonActionHandler() {}
+#endif // SL_ICD_ENABLED
 #endif // SL_CATALOG_SIMPLE_BUTTON_PRESENT
 
-#if SL_MATTER_DEBUG_WATCHDOG_ENABLE
-void SilabsPlatform::WatchdogInit()
+#if defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
+sl_status_t SilabsPlatform::EnableSi70xxSensorGpio()
 {
-    // Initialize WDOG with default configuration
-    sl_hal_wdog_init_t wdogInit = SL_HAL_WDOG_INIT_DEFAULT;
-    wdogInit.reset_disable      = true;                // For debug, do not trigger a system reset on timeout
-    wdogInit.period_select      = SL_WDOG_PERIOD_128k; // Set timeout period. 4s with our default LF clock at 32.768kHz
-
-    //  Initialize WDOG with our configuration
-    sl_clock_manager_enable_bus_clock(SL_BUS_CLOCK_WDOG0);
-    sl_hal_wdog_init(WDOG0, &wdogInit);
-
-    // Enable Watchdog Timeout interrupt
-    sl_hal_wdog_clear_interrupts(WDOG0, WDOG_IF_TOUT);
-    sl_hal_wdog_enable_interrupts(WDOG0, WDOG_IF_TOUT);
-
-    WatchdogEnable();
+    return SL_STATUS_OK;
 }
-
-void SilabsPlatform::WatchdogFeed()
-{
-    sl_hal_wdog_feed(WDOG0);
-}
-
-void SilabsPlatform::WatchdogEnable()
-{
-    // Enable NVIC interrupt for WDOG
-    sl_interrupt_manager_clear_irq_pending(WDOG0_IRQn);
-    sl_interrupt_manager_enable_irq(WDOG0_IRQn);
-
-    sl_hal_wdog_enable(WDOG0);
-}
-
-void SilabsPlatform::WatchdogDisable()
-{
-    sl_hal_wdog_disable(WDOG0);
-    sl_interrupt_manager_disable_irq(WDOG0_IRQn);
-}
-#endif // SL_MATTER_DEBUG_WATCHDOG_ENABLE
+#endif // defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
 
 } // namespace Silabs
 } // namespace DeviceLayer

@@ -13,14 +13,14 @@ provides:
   - name: matter_software_diagnostics
 source:
   - path: third_party/matter_sdk/src/app/clusters/software-diagnostics-server/CodegenIntegration.cpp
-  - path: third_party/matter_sdk/src/app/clusters/software-diagnostics-server/software-diagnostics-logic.cpp
+    unless: [matter_code_driven_dm]
   - path: third_party/matter_sdk/src/app/clusters/software-diagnostics-server/software-fault-listener.cpp
+  - path: third_party/matter_sdk/src/app/clusters/software-diagnostics-server/SoftwareDiagnosticsCluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/software-diagnostics-server
     file_list:
-      - path: software-diagnostics-cluster.h
-      - path: software-diagnostics-logic.h
       - path: software-fault-listener.h
+      - path: SoftwareDiagnosticsCluster.h
       - path: SoftwareDiagnosticsTestEventTriggerHandler.h
 template_contribution:
   - name: component_catalog

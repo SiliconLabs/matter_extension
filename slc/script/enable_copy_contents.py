@@ -380,15 +380,11 @@ def update_header_key(inc_dir, val, lib=""):
                 elif 'SilabsDeviceDataProvider.h' == val:
                     update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY,
                            'matter-core-sdk', 'silabs_factory_data_provider.slcc')))
-                elif 'spi_multiplex.h' == val.split('/')[-1] or 'wf200' in str(os.path.join(inc_dir, val)).lower():
-                    update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY, 'matter-wifi', 'wf200', 'wf200_ncp.slcc')))
                 elif 'creds' in val.lower():
                     update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY,
                            'matter-core-sdk', 'efr32_attestation_credentials.slcc')))
                 else:
                     update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY, 'matter-core-sdk', 'app_common.slcc')))
-            case 'wf200':
-                update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY, 'matter-wifi', 'wf200', 'wf200_ncp.slcc')))
             case 'nlunit-test':
                 update(inc_dir, val, file=str(os.path.join(COMPONENT_DIRECTORY, 'matter-core-sdk', 'libnlunit_test.slcc')))
             case 'setup_payload':
@@ -545,11 +541,6 @@ def update_components():
             elif 'examples/shell' in inc_root or 'src/lib/shell' in inc_root:
                 for header in headers_list:
                     update_header_key(inc_root, header,  lib='shell')
-            elif 'simplicity_sdk' in inc_root:
-                if 'wfx_fmac_driver' in inc_root:
-                    for header in headers_list:
-                        update_header_key(inc_root, header,  lib='wf200')
-                continue
             else:
                 if inc_root == 'examples/lighting-app/silabs/efr32/include':
                     continue

@@ -1,115 +1,137 @@
-# Matter EFR32 Thermostat Example
+# Matter over Wi-Fi Thermostat Example
 
-The EFR32 Thermostat example provides a baseline demonstration of a thermostat
-device, built using Matter and the Silicon Labs simplicity SDK. It can be controlled
-by a Matter controller over Wifi network.
+The Matter over Wi-Fi thermostat example is a baseline demonstration of a thermostat built with Simplicity SDK. It can be controlled by a Matter controller over a Wi-Fi network.
 
-The EFR32 device can be commissioned over Bluetooth Low Energy where the device
-and the Matter controller will exchange security information with the Rendez-vous
-procedure.
+## Table of Contents
 
-If the LCD is enabled, the LCD on the Silabs WSTK shows a QR Code containing the
-needed commissioning information for the BLE connection and starting the
-Rendez-vous procedure.
+- [Matter over Wi-Fi Thermostat Example](#matter-over-wi-fi-thermostat-example)
+  - [Table of Contents](#table-of-contents)
+  - [Purpose/Scope](#purposescope)
+  - [Prerequisites/Setup Requirements](#prerequisitessetup-requirements)
+    - [HW Requirements](#hw-requirements)
+    - [SW Requirements](#sw-requirements)
+  - [Steps to Run Demo](#steps-to-run-demo)
+    - [Configuration and Setup](#configuration-and-setup)
+    - [Steps for Execution](#steps-for-execution)
+  - [Troubleshooting](#troubleshooting)
+  - [Resources](#resources)
+  - [Report Bugs \& Get Support](#report-bugs--get-support)
 
-The thermostat example is intended to serve both as a means to explore the
-workings of Matter as well as a template for creating real products based on the
-Silicon Labs platform.
+## Purpose/Scope
 
-For more general information on running matter applications and pre-requisites please look at online 
-documentation for Matter available on docs.silabs.com. Follow Wi-Fi demo instructions depending on the example you are running.
-[Demo instructions for Wi-Fi](https://docs.silabs.com/matter/2.8.1/matter-wifi)
+This example provides a baseline demonstration of a thermostat device, built using Matter and the Silicon Labs Simplicity SDK. It can be controlled by a Matter controller over a Wi-Fi network.
 
-## Region code Setting (917 WiFi projects)
+The device can be commissioned over Bluetooth Low Energy, the device and the Matter controller exchange security information in the Rendez-vous procedure.
 
-In Wifi configurations, the region code can be set in this
-[file](https://github.com/SiliconLabsSoftware/matter_sdk/blob/v2.8.1/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp).
-Search for `REGION_CODE` (build-time default) or `region_code` in the Wi-Fi configuration struct.
+If the LCD is enabled, the LCD on the Silicon Labs WSTK shows a QR code containing the commissioning information for the BLE connection and Rendez-vous procedure.
 
-The available region codes are defined by the `sl_wifi_region_code_t` enum in
-[sl_wifi_constants.h](https://github.com/SiliconLabs/wiseconnect/blob/v4.0.1-content-for-docs/components/protocol/wifi/inc/sl_wifi_constants.h).
-Search for `sl_wifi_region_code_t` or the `SL_WIFI_REGION_` enumerator names.
+This example is intended to serve both as a means to explore Matter and as a template for creating real products based on the Silicon Labs platform.
 
-## Thermostat Application User Interface
+For general information on running Matter applications and prerequisites, see the [Matter Wi-Fi documentation](https://docs.silabs.com/matter/2.9.0/matter-wifi) on docs.silabs.com.
 
-**LCD** 
+## Prerequisites/Setup Requirements
 
-The LCD on Silabs WSTK shows a QR Code. This QR Code is be scanned by the CHIP Tool app For the Rendez-vous procedure over BLE.
+### HW Requirements
 
-![QR Code](qr_code_img.png)
+For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.0/matter-overview/#hardware-requirements) documentation.
 
-A URL can be found in the **RTT logs upon startup OR by pressing BTN0**
+### SW Requirements
 
-**The URL can also be printed by issuing the following matter shell command:**
+For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.0/matter-overview/#software-requirements) documentation.
 
-```shell
-matterCli> onboardingcodes ble qrcodeurl
-```
+## Steps to Run Demo
 
-Log output example:
+### Configuration and Setup
 
-```shell
-[SVR] Copy/paste the below URL in a browser to see the QR Code:
-[SVR] https://project-chip.github.io/connectedhomeip/qrcode.html?data=MT%3A6FCJ142C00KA0648G00
-```
+This sample app works out of the box with no additional configuration required. To customize the device, see the [Custom Matter Device Development](https://docs.silabs.com/matter/2.9.0/matter-references/custom-matter-device#custom-matter-device-development) guide.
 
-Note: This QR Code is only valid for an unprovisioned device. Provisioning may change the QR Code.
+**Region code (SiWx917 Wi-Fi):** In Wi-Fi configurations, the region code can be set in this [file](https://github.com/SiliconLabsSoftware/matter_sdk/blob/v2.9.0/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp). The available region codes can be found [here](https://github.com/SiliconLabs/wiseconnect/blob/v4.1.0-content-for-docs/components/protocol/wifi/inc/sl_wifi_constants.h#L739).
 
-**LED 0** 
+### Steps for Execution
 
-LED 0 shows the overall state of the device and its connectivity. The following states are possible:
+1. Build and flash the application to your board.
+2. On startup, **LED 0** flashes short-on (50 ms on / 950 ms off), indicating the
+   device is waiting for commissioning.
+3. Commission the device using one of the following methods:
 
--   Short Flash On (50 ms on/950 ms off): The device is in the unprovisioned (unpaired) state and is waiting for a commissioning application to connect.
+   **chip-tool (standalone or pre-built):** The pre-built chip-tool instance ships
+   with the Matter Hub image. More information on using the Matter Hub is in the
+   [Silicon Labs Matter Hub Documentation](https://docs.silabs.com/matter/2.9.0/matter-thread/raspi-img).
+   ```shell
+   chip-tool pairing ble-wifi <node-id> $SSID $PSK <PinCode> <Discriminator>
+   chip-tool pairing ble-wifi 1 $SSID $PSK 20202021 3840
+   ```
 
--   Rapid Even Flashing (100 ms on/100 ms off): The device is in the unprovisioned state and a commissioning application is connected through Bluetooth LE.
+   **Simplicity Connect mobile app:** Scan the QR code shown on the LCD or the URL
+   printed to RTT logs on startup or by pressing BTN0. The URL can also be retrieved
+   via the Matter shell:
+   ```shell
+   matterCli> onboardingcodes ble qrcodeurl
+   ```
+   Example RTT log output:
+   ```
+   [SVR] Copy/paste the below URL in a browser to see the QR Code:
+   [SVR] https://project-chip.github.io/connectedhomeip/qrcode.html?data=MT%3A6FCJ142C00KA0648G00
+   ```
+   This QR code is only valid for an unprovisioned device, provisioning may change it.
 
--   Short Flash Off (950ms on/50ms off): The device is fully provisioned, but does not yet have full service connectivity.
+   **Other:** The device can also be provisioned and controlled using the Python controller, Android, or iOS app.
 
--   Solid On: The device is fully provisioned and has full service connectivity.
+4. Read or write thermostat attributes. Examples:
 
-**Push Button 0**
+   Setting the occupied cooling setpoint:
+   ```shell
+   ./chip-tool thermostat write occupied-cooling-setpoint <temperature> <node-id> <endpoint-id>
+   ./chip-tool thermostat write occupied-cooling-setpoint 2500 1 1
+   ```
+   On chip-tool, verify that the DUT sends a success response. Example:
+   ```
+   [1676031143.386639][19597:19599] CHIP:DMG:                         StatusIB =
+   [1676031143.386683][19597:19599] CHIP:DMG:                         {
+   [1676031143.386729][19597:19599] CHIP:DMG:                                 status = 0x00 (SUCCESS),
+   [1676031143.386773][19597:19599] CHIP:DMG:                         },
+   ```
 
--   _Press and Release_ : Start, or restart, BLE advertisement in fast mode. It will advertise in this mode
-for 30 seconds. The device will then switch to a slower interval advertisement.
-After 15 minutes, the advertisement stops. In addition, this button should also print the QR Code URL to the RTT logs.
+   Read thermostat attributes:
+   ```shell
+   ./chip-tool thermostat read occupied-cooling-setpoint <node-id> <endpoint-id>
+   ./chip-tool thermostat read occupied-cooling-setpoint 1 1
+   ```
+   On chip-tool, verify the occupied cooling setpoint attribute value. Example:
+   ```
+   [1676028659.980049][19359:19361] CHIP:TOO:   OccupiedCoolingSetpoint: 2500
+   ```
 
--   _Pressed and hold for 6 s_ : Initiates the factory reset of the device. Releasing the button within the 6-second window cancels the factory reset procedure. **LEDs** blink in unison when the factory reset procedure is initiated.
+**Button and LED reference:**
 
-## Provision and Control
+| Control | Action            | Result                                                          |
+|---------|-------------------|-----------------------------------------------------------------|
+| BTN0    | Press and release | Start/restart BLE advertisement, print QR code URL to RTT logs |
+| BTN0    | Hold 6 s          | Initiate factory reset (release within 6 s to cancel)          |
+| LED 0   | Short flash on    | Unprovisioned, waiting for commissioning                        |
+| LED 0   | Rapid even flash  | BLE connected, commissioning in progress                        |
+| LED 0   | Short flash off   | Provisioned, no full Wi-Fi connectivity                          |
+| LED 0   | Solid on          | Fully provisioned with Wi-Fi connectivity                        |
 
-You can provision and control the Matter device using the python controller, chip-tool (standalone or pre-built), Android, iOS app or the mattertool utility from the Matter Hub package provided by Silicon Labs. The pre-built chip-tool instance ships with the Matter Hub image. More information on using the Matter Hub can be found in the online Matter documentation here: [Silicon Labs Matter Documentation](https://docs.silabs.com/matter/2.8.1/matter-thread/raspi-img)
+## Troubleshooting
 
+**Device does not advertise over BLE**
+- Press BTN0 to restart BLE advertisement.
 
-    
-More information on using the chip-tool directly can be found here: [CHIPTool](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
+**Commissioning fails**
+- Ensure the Wi-Fi SSID and PSK are correct and the network is reachable.
+- Factory reset the device (hold BTN0 for 6 s) and retry.
 
-Here is an example for provisioning the thermostat application with the chip-tool:
+**LCD or LEDs not working**
+- **LCD:** If the board supports an LCD but it is not enabled, install the _Display_ component under _Silicon Labs Matter > Matter > Platform > Display_. For the QR code on the LCD, install the _QR Code_ component under _Silicon Labs Matter > Matter > Platform > QR Code_ (Display is installed automatically).
+- **LEDs:** If the board supports LEDs but they are not enabled, install `led0` and `led1` instances of _Simple LED_ under _Platform > Driver > LED > Simple LED_, then install _WSTK LED Support_ under _Silicon Labs Matter > Matter > Platform > WSTK LED Support_.
 
-Pairing with chip-tool:
-```shell
-./chip-tool pairing ble-wifi <node-id> $SSID $PSK <PinCode> <Discriminator>
+## Resources
 
-./chip-tool pairing ble-wifi 1 $SSID $PSK 20202021 3840
-```
+- [Silicon Labs Matter over Wi-Fi Documentation](https://docs.silabs.com/matter/2.9.0/matter-wifi)
+- [Matter Hub Setup](https://docs.silabs.com/matter/2.9.0/matter-thread/raspi-img)
+- [chip-tool README](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
 
-Setting the occupied cooling setpoint:
-```shell
-./chip-tool thermostat write occupied-cooling-setpoint <temperature> <node-id> <endpoint-id>
+## Report Bugs & Get Support
 
-./chip-tool thermostat write occupied-cooling-setpoint 2500 1 1
-
-Note: On chip-tool verify that DUT sends a success response
-[1676031143.386639][19597:19599] CHIP:DMG:                         StatusIB =
-[1676031143.386683][19597:19599] CHIP:DMG:                         {
-[1676031143.386729][19597:19599] CHIP:DMG:                                 status = 0x00 (SUCCESS),
-[1676031143.386773][19597:19599] CHIP:DMG:                         },
-```
-Read thermostat attributes:
-```shell
-./chip-tool thermostat read occupied-cooling-setpoint <node-id> <endpoint-id>
-
-./chip-tool thermostat read occupied-cooling-setpoint 1 1
-
-Note: On chip-tool verify that the occupied cooling setpoint attribute value which is provided in previous step
-[1676028659.980049][19359:19361] CHIP:TOO:   OccupiedCoolingSetpoint: 2500
-```
+You are always encouraged and welcome to report any issues you found to us via [Silicon Labs Community](https://community.silabs.com).

@@ -70,6 +70,10 @@ using namespace chip::TLV;
 
 LEDWidget sLightLED; // Use LEDWidget for basic LED functionality
 
+namespace {
+bool sDnssdReady          = false;
+} // namespace
+
 AppTask AppTask::sAppTask;
 
 CHIP_ERROR AppTask::AppInit()
@@ -78,13 +82,15 @@ CHIP_ERROR AppTask::AppInit()
     chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(AppTask::ButtonEventHandler);
 
 #ifdef DISPLAY_ENABLED
-    GetLCD().Init((uint8_t *) "Oven-App");
+    SuccessOrLog(GetLCD().Init((uint8_t *) "Oven-App"), AppServer, "Failed to initialize LCD");
     GetLCD().SetCustomUI(OvenUI::DrawUI);
 #endif
     DeviceLayer::PlatformMgr().LockChipStack();
     // Initialization of Oven Manager and endpoints of oven.
     OvenManager::GetInstance().Init();
     DeviceLayer::PlatformMgr().UnlockChipStack();
+
+    ReturnErrorOnFailure(PlatformMgr().AddEventHandler(ConnectivityEventHandler, 0));
 
     sLightLED.Init(LIGHT_LED);
     sLightLED.Set(OvenManager::GetInstance().GetCookTopState());
@@ -101,6 +107,25 @@ CHIP_ERROR AppTask::AppInit()
 #endif
 
     return err;
+}
+
+void AppTask::ConnectivityEventHandler(const ChipDeviceEvent * event, intptr_t)
+{
+    VerifyOrReturn(event != nullptr);
+
+    switch (event->Type)
+    {
+    case DeviceEventType::kDnssdInitialized:
+        if (sDnssdReady)
+        {
+            return;
+        }
+        sDnssdReady = true;
+        CookTopBindingPropagateState(OvenManager::GetCookTopEndpoint(), false);
+        break;
+    default:
+        break;
+    }
 }
 
 CHIP_ERROR AppTask::StartAppTask()
@@ -165,7 +190,8 @@ void AppTask::OvenButtonHandler(AppEvent * aEvent)
         bool newOnOffState = !OvenManager::GetInstance().GetCookTopState();
 
         // Schedule work to set the OnOff attribute.
-        chip::DeviceLayer::PlatformMgr().ScheduleWork(UpdateClusterState, static_cast<intptr_t>(newOnOffState));
+        SuccessOrLog(chip::DeviceLayer::PlatformMgr().ScheduleWork(UpdateClusterState, static_cast<intptr_t>(newOnOffState)),
+                     AppServer, "Failed to schedule work UpdateClusterState");
     }
 }
 

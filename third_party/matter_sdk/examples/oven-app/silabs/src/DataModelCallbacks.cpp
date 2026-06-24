@@ -33,28 +33,29 @@
 #include <app/ConcreteCommandPath.h>
 
 using namespace ::chip;
+using namespace ::chip::app;
 
-void MatterPostAttributeChangeCallback(const app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
+void MatterPostAttributeChangeCallback(const ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
                                        uint8_t * value)
 {
     ClusterId clusterId     = attributePath.mClusterId;
     AttributeId attributeId = attributePath.mAttributeId;
     switch (clusterId)
     {
-    case app::Clusters::Identify::Id:
+    case Clusters::Identify::Id:
         ChipLogDetail(Zcl, "Identify cluster ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u", ChipLogValueMEI(attributeId),
                       type, *value, size);
         break;
-    case app::Clusters::OnOff::Id:
+    case Clusters::OnOff::Id:
         ChipLogDetail(Zcl, "OnOff cluster ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u", ChipLogValueMEI(attributeId),
                       type, *value, size);
         OvenManager::GetInstance().OnOffAttributeChangeHandler(attributePath.mEndpointId, attributeId, value, size);
         break;
-    case app::Clusters::TemperatureControl::Id:
+    case Clusters::TemperatureControl::Id:
         ChipLogDetail(Zcl, "TemperatureControl cluster ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u",
                       ChipLogValueMEI(attributeId), type, *value, size);
         break;
-    case app::Clusters::OvenMode::Id:
+    case Clusters::OvenMode::Id:
         ChipLogDetail(Zcl, "OvenMode cluster ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u", ChipLogValueMEI(attributeId),
                       type, *value, size);
         OvenManager::GetInstance().OvenModeAttributeChangeHandler(attributePath.mEndpointId, attributeId, value, size);

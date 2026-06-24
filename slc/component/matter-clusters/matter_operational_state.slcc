@@ -9,17 +9,21 @@ quality: production
 metadata:
   sbom:
     license: "Apache 2.0"
-requires:
-  - name: matter_cluster_building_blocks
 provides:
   - name: matter_operational_state
+requires:
+  - name: matter_cluster_building_blocks
 source:
-  - path: third_party/matter_sdk/src/app/clusters/operational-state-server/operational-state-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/operational-state-server/CodegenIntegration.cpp
+    unless: [matter_code_driven_dm]
 include:
   - path: third_party/matter_sdk/src/app/clusters/operational-state-server
     file_list:
+      - path: CodegenIntegration.h
+        unless: [matter_code_driven_dm]
       - path: operational-state-cluster-objects.h
       - path: operational-state-server.h
+      - path: OperationalStateDelegate.h
 template_contribution:
   - name: component_catalog
     value: matter_operational_state

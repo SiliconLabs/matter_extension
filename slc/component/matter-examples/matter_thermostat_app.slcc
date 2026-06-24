@@ -10,5 +10,12 @@ provides:
 define:
   - name: IS_DEMO_THERMOSTAT
     value: "1"
+metadata:
+  sbom:
+    license: "Apache 2.0"
+template_file:
+  - path: third_party/matter_sdk/examples/thermostat/silabs/include/AppTask.h
+  - path: third_party/matter_sdk/examples/thermostat/silabs/include/AppTaskImpl.h
+  - path: third_party/matter_sdk/examples/thermostat/silabs/src/AppTask.cpp
 ui_hints:
   visibility: never

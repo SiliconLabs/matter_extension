@@ -34,6 +34,12 @@
 #define MATTER_AWS_TASK_STACK_SIZE (2 * 1024) // 2k
 #define MATTER_AWS_TASK_PRIORITY (osPriorityAboveNormal)
 
+/* Delay before MatterAwsInit() when SL_MATTER_ENABLE_AWS is enabled and internet
+ * connectivity (IPv4, or IPv6 if dual-stack) is first reported as established. */
+#ifndef MATTER_AWS_INIT_DELAY_SEC
+#define MATTER_AWS_INIT_DELAY_SEC (5)
+#endif
+
 /* Network Configuration */
 #define MATTER_AWS_SERVER_HOST ""
 #define MATTER_AWS_SERVER_PORT (8883)
@@ -48,10 +54,16 @@
 #define MQTT_QOS_0 (0)
 #define MQTT_SUBSCRIBE_TOPIC "command"
 
-/* MQTT Client Certification Configuration */
+/* MQTT Client Certification Configuration (stack buffer sizes in MatterAwsTaskFn) */
+#if defined(SL_MATTER_ENABLE_DUAL_STACK) && SL_MATTER_ENABLE_DUAL_STACK
+#define MATTER_AWS_CA_CERT_LENGTH (1400)
+#define MATTER_AWS_DEV_CERT_LENGTH (1400)
+#define MATTER_AWS_DEV_KEY_LENGTH (1800)
+#else
 #define MATTER_AWS_CA_CERT_LENGTH (800)
 #define MATTER_AWS_DEV_CERT_LENGTH (1400)
 #define MATTER_AWS_DEV_KEY_LENGTH (500)
+#endif
 #define MATTER_AWS_HOSTNAME_LENGTH (55)
 #define MATTER_AWS_CLIENTID_LENGTH (30)
 
@@ -59,7 +71,5 @@
 #define AWS_OTA_TASK_STACK_SIZE (1024)
 #define AWS_OTA_TASK_PRIORITY (1)
 #endif // SL_MATTER_ENABLE_AWS_OTA_FEAT
-
-#define ZCL_USING_ON_OFF_CLUSTER_SERVER
 
 #endif // __MATTER_AWS_CONFIG_H

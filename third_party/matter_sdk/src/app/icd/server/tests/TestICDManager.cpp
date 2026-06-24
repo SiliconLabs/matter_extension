@@ -35,11 +35,12 @@
 #include <lib/core/StringBuilderAdapters.h>
 #include <lib/support/TestPersistentStorageDelegate.h>
 #include <lib/support/TimeUtils.h>
+#include <lib/support/tests/ExtraPwTestMacros.h>
 #include <messaging/tests/MessagingContext.h>
 #include <system/SystemLayerImpl.h>
 
 using namespace chip;
-using namespace chip::Test;
+using namespace chip::Testing;
 using namespace chip::app;
 using namespace chip::AddressResolve;
 using namespace chip::System;
@@ -138,7 +139,7 @@ System::Clock::ClockBase * pRealClock           = nullptr;
 namespace chip {
 namespace app {
 
-class TestICDManager : public Test::LoopbackMessagingContext
+class TestICDManager : public LoopbackMessagingContext
 {
 public:
     /*
@@ -273,7 +274,7 @@ TEST_F(TestICDManager, TestICDModeDurationsWith0ActiveModeDurationWithoutActiveS
 
     // Set New durations for test case
     Milliseconds32 oldActiveModeDuration = icdConfigData.GetActiveModeDuration();
-    mICDManager.SetModeDurations(MakeOptional<Milliseconds32>(0), NullOptional);
+    TEMPORARY_RETURN_IGNORED mICDManager.SetModeDurations(MakeOptional<Milliseconds32>(0), NullOptional);
 
     // Verify That ICDManager starts in Idle
     EXPECT_EQ(mICDManager.GetOperaionalState(), ICDManager::OperationalState::IdleMode);
@@ -331,7 +332,7 @@ TEST_F(TestICDManager, TestICDModeDurationsWith0ActiveModeDurationWithoutActiveS
     EXPECT_EQ(mICDManager.GetOperaionalState(), ICDManager::OperationalState::IdleMode);
 
     // Reset Old durations
-    mICDManager.SetModeDurations(MakeOptional(oldActiveModeDuration), NullOptional);
+    TEMPORARY_RETURN_IGNORED mICDManager.SetModeDurations(MakeOptional(oldActiveModeDuration), NullOptional);
 }
 
 /**
@@ -355,7 +356,7 @@ TEST_F(TestICDManager, TestICDModeDurationsWith0ActiveModeDurationWithActiveSub)
 
     // Set New durations for test case
     Milliseconds32 oldActiveModeDuration = icdConfigData.GetActiveModeDuration();
-    mICDManager.SetModeDurations(MakeOptional<Milliseconds32>(0), NullOptional);
+    TEMPORARY_RETURN_IGNORED mICDManager.SetModeDurations(MakeOptional<Milliseconds32>(0), NullOptional);
 
     // Verify That ICDManager starts in Idle
     EXPECT_EQ(mICDManager.GetOperaionalState(), ICDManager::OperationalState::IdleMode);
@@ -424,7 +425,7 @@ TEST_F(TestICDManager, TestICDModeDurationsWith0ActiveModeDurationWithActiveSub)
     EXPECT_EQ(mICDManager.GetOperaionalState(), ICDManager::OperationalState::IdleMode);
 
     // Reset Old durations
-    mICDManager.SetModeDurations(MakeOptional<Milliseconds32>(oldActiveModeDuration), NullOptional);
+    TEMPORARY_RETURN_IGNORED mICDManager.SetModeDurations(MakeOptional<Milliseconds32>(oldActiveModeDuration), NullOptional);
 }
 #endif // CHIP_CONFIG_ENABLE_ICD_CIP
 
@@ -835,8 +836,7 @@ TEST_F(TestICDManager, TestHandleTestEventTriggerActiveModeReq)
     // Verify That ICDManager starts in Idle
     EXPECT_EQ(mICDManager.GetOperaionalState(), ICDManager::OperationalState::IdleMode);
 
-    // Add ActiveMode req for the Test event trigger event
-    mICDManager.HandleEventTrigger(static_cast<uint64_t>(ICDTestEventTriggerEvent::kAddActiveModeReq));
+    EXPECT_SUCCESS(mICDManager.HandleEventTrigger(static_cast<uint64_t>(ICDTestEventTriggerEvent::kAddActiveModeReq)));
     EXPECT_EQ(mICDManager.GetOperaionalState(), ICDManager::OperationalState::ActiveMode);
 
     // Advance clock by the ActiveModeDuration and check that the device is still in ActiveMode
@@ -844,7 +844,7 @@ TEST_F(TestICDManager, TestHandleTestEventTriggerActiveModeReq)
     EXPECT_EQ(mICDManager.GetOperaionalState(), ICDManager::OperationalState::ActiveMode);
 
     // Remove req and device should go to IdleMode
-    mICDManager.HandleEventTrigger(static_cast<uint64_t>(ICDTestEventTriggerEvent::kRemoveActiveModeReq));
+    EXPECT_SUCCESS(mICDManager.HandleEventTrigger(static_cast<uint64_t>(ICDTestEventTriggerEvent::kRemoveActiveModeReq)));
     EXPECT_EQ(mICDManager.GetOperaionalState(), ICDManager::OperationalState::IdleMode);
 }
 
@@ -862,7 +862,8 @@ TEST_F(TestICDManager, TestHandleTestEventTriggerInvalidateHalfCounterValues)
     EXPECT_EQ(ICDConfigurationData::GetInstance().GetICDCounter().GetValue(), startValue);
 
     // Trigger ICD kInvalidateHalfCounterValues event
-    mICDManager.HandleEventTrigger(static_cast<uint64_t>(ICDTestEventTriggerEvent::kInvalidateHalfCounterValues));
+    TEMPORARY_RETURN_IGNORED mICDManager.HandleEventTrigger(
+        static_cast<uint64_t>(ICDTestEventTriggerEvent::kInvalidateHalfCounterValues));
 
     // Validate counter has the expected value
     EXPECT_EQ(ICDConfigurationData::GetInstance().GetICDCounter().GetValue(), expectedValue);
@@ -881,7 +882,8 @@ TEST_F(TestICDManager, TestHandleTestEventTriggerInvalidateAllCounterValues)
     EXPECT_EQ(ICDConfigurationData::GetInstance().GetICDCounter().GetValue(), startValue);
 
     // Trigger ICD kInvalidateAllCounterValues event
-    mICDManager.HandleEventTrigger(static_cast<uint64_t>(ICDTestEventTriggerEvent::kInvalidateAllCounterValues));
+    TEMPORARY_RETURN_IGNORED mICDManager.HandleEventTrigger(
+        static_cast<uint64_t>(ICDTestEventTriggerEvent::kInvalidateAllCounterValues));
 
     // Validate counter has the expected value
     EXPECT_EQ(ICDConfigurationData::GetInstance().GetICDCounter().GetValue(), expectedValue);
@@ -1100,8 +1102,8 @@ TEST_F(TestICDManager, TestICDStateObserverOnTransitionToIdleModeGreaterActiveMo
 
     // Set New durations for test case - ActiveModeDuration must be longuer than ICD_ACTIVE_TIME_JITTER_MS
     Milliseconds32 oldActiveModeDuration = ICDConfigurationData::GetInstance().GetActiveModeDuration();
-    mICDManager.SetModeDurations(MakeOptional<Milliseconds32>(Milliseconds32(200) + Milliseconds32(ICD_ACTIVE_TIME_JITTER_MS)),
-                                 NullOptional);
+    EXPECT_SUCCESS(mICDManager.SetModeDurations(
+        MakeOptional<Milliseconds32>(Milliseconds32(200) + Milliseconds32(ICD_ACTIVE_TIME_JITTER_MS)), NullOptional));
 
     // Advance clock just before IdleMode timer expires
     AdvanceClockAndRunEventLoop(ICDConfigurationData::GetInstance().GetModeBasedIdleModeDuration() - 1_s);
@@ -1138,7 +1140,7 @@ TEST_F(TestICDManager, TestICDStateObserverOnTransitionToIdleModeGreaterActiveMo
     EXPECT_FALSE(mICDStateObserver.mOnTransitionToIdleCalled);
 
     // Reset Old durations
-    mICDManager.SetModeDurations(MakeOptional(oldActiveModeDuration), NullOptional);
+    EXPECT_SUCCESS(mICDManager.SetModeDurations(MakeOptional(oldActiveModeDuration), NullOptional));
 }
 
 /**
@@ -1151,7 +1153,8 @@ TEST_F(TestICDManager, TestICDStateObserverOnTransitionToIdleModeEqualActiveMode
 
     // Set New durations for test case - ActiveModeDuration must be equal to ICD_ACTIVE_TIME_JITTER_MS
     Milliseconds32 oldActiveModeDuration = ICDConfigurationData::GetInstance().GetActiveModeDuration();
-    mICDManager.SetModeDurations(MakeOptional<Milliseconds32>(Milliseconds32(ICD_ACTIVE_TIME_JITTER_MS)), NullOptional);
+    EXPECT_SUCCESS(
+        mICDManager.SetModeDurations(MakeOptional<Milliseconds32>(Milliseconds32(ICD_ACTIVE_TIME_JITTER_MS)), NullOptional));
 
     // Advance clock just before IdleMode timer expires
     AdvanceClockAndRunEventLoop(ICDConfigurationData::GetInstance().GetModeBasedIdleModeDuration() - 1_s);
@@ -1171,7 +1174,7 @@ TEST_F(TestICDManager, TestICDStateObserverOnTransitionToIdleModeEqualActiveMode
     EXPECT_TRUE(mICDStateObserver.mOnTransitionToIdleCalled);
 
     // Reset Old durations
-    mICDManager.SetModeDurations(MakeOptional(oldActiveModeDuration), NullOptional);
+    EXPECT_SUCCESS(mICDManager.SetModeDurations(MakeOptional(oldActiveModeDuration), NullOptional));
 }
 
 /**
@@ -1183,7 +1186,7 @@ TEST_F(TestICDManager, TestICDStateObserverOnTransitionToIdleMode0ActiveModeDura
 
     // Set New durations for test case - ActiveModeDuration equal 0
     Milliseconds32 oldActiveModeDuration = ICDConfigurationData::GetInstance().GetActiveModeDuration();
-    mICDManager.SetModeDurations(MakeOptional<Milliseconds32>(0), NullOptional);
+    EXPECT_SUCCESS(mICDManager.SetModeDurations(MakeOptional<Milliseconds32>(0), NullOptional));
 
     // Advance clock just before IdleMode timer expires
     AdvanceClockAndRunEventLoop(ICDConfigurationData::GetInstance().GetModeBasedIdleModeDuration() - 1_s);
@@ -1203,7 +1206,7 @@ TEST_F(TestICDManager, TestICDStateObserverOnTransitionToIdleMode0ActiveModeDura
     EXPECT_TRUE(mICDStateObserver.mOnTransitionToIdleCalled);
 
     // Reset Old durations
-    mICDManager.SetModeDurations(MakeOptional(oldActiveModeDuration), NullOptional);
+    EXPECT_SUCCESS(mICDManager.SetModeDurations(MakeOptional(oldActiveModeDuration), NullOptional));
 }
 
 #if CHIP_CONFIG_ENABLE_ICD_LIT
@@ -1226,10 +1229,9 @@ TEST_F(TestICDManager, TestShortIdleModeBehaviorSITvsLIT)
     EXPECT_EQ(icdConfigData.GetICDMode(), ICDConfigurationData::ICDMode::SIT);
 
     // Configure IdleModeDuration = 10s, ShortIdleModeDuration = 2s (Active to 1000 to ensure transitions to active)
-    EXPECT_EQ(CHIP_NO_ERROR,
-              privateIcdConfigData.SetModeDurations(std::optional<System::Clock::Milliseconds32>(Milliseconds32(1000)),
-                                                    std::optional<System::Clock::Seconds32>(10_s),
-                                                    std::optional<System::Clock::Seconds32>(2_s)));
+    EXPECT_SUCCESS(privateIcdConfigData.SetModeDurations(std::optional<System::Clock::Milliseconds32>(Milliseconds32(1000)),
+                                                         std::optional<System::Clock::Seconds32>(10_s),
+                                                         std::optional<System::Clock::Seconds32>(2_s)));
 
     // In SIT with ShortIdleModeDuration < IdleModeDuration and LIT feature present we shall use the ShortIdleModeDuration
     EXPECT_TRUE(icdConfigData.ShouldUseShortIdle());

@@ -21,12 +21,13 @@ include:
     -   path: TextOnlyLogging.h
   - path: third_party/matter_sdk/src/lib/support
     file_list:
+    -   path: Assertions.h
     -   path: AutoRelease.h
     -   path: StringSplitter.h
     -   path: PersistentStorageAudit.h
     -   path: CHIPPlatformMemory.h
     -   path: SafeString.h
-    -   path: ScopedBuffer.h
+    -   path: ScopedMemoryBuffer.h
     -   path: IntrusiveList.h
     -   path: Pool.h
     -   path: CHIPMemString.h
@@ -34,6 +35,7 @@ include:
     -   path: TestPersistentStorageDelegate.h
     -   path: JniTypeWrappers.h
     -   path: Base64.h
+    -   path: Base85.h
     -   path: UnitTestUtils.h
     -   path: SetupDiscriminator.h
     -   path: CHIPJNIError.h
@@ -75,7 +77,6 @@ include:
     -   path: SortUtils.h
     -   path: ZclString.h
     -   path: PersistentStorageMacros.h
-    -   path: VerificationMacrosNoLogging.h
     -   path: CommonIterator.h
     -   path: Iterators.h
     -   path: PersistentData.h
@@ -92,6 +93,11 @@ include:
     -   path: SpanSearchValue.h
     -   path: ReadOnlyBuffer.h
     -   path: ReferenceCountedPtr.h
+    -   path: TimerDelegate.h
+    -   path: attribute-storage-null-handling.h
+    -   path: odd-sized-integers.h
+    -   path: FixedBuffer.h
+    -   path: ThreadDiscoveryCode.h
   - path: third_party/matter_sdk/src/lib/support/verhoeff
     file_list:
     -   path: Verhoeff.h
@@ -105,6 +111,7 @@ metadata:
     license: "Apache 2.0"
 source:
 -   path: third_party/matter_sdk/src/lib/support/Base64.cpp
+-   path: third_party/matter_sdk/src/lib/support/Base85.cpp
 -   path: third_party/matter_sdk/src/lib/support/BufferReader.cpp
 -   path: third_party/matter_sdk/src/lib/support/BufferWriter.cpp
 -   path: third_party/matter_sdk/src/lib/support/BytesCircularBuffer.cpp

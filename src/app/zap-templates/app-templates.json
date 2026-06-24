@@ -1,7 +1,7 @@
 {
     "name": "CHIP Application templates",
     "version": "chip-v1",
-    "requiredFeatureLevel": 109,
+    "requiredFeatureLevel": 110,
     "category": "matter",
     "options": {
         "generator": {
@@ -298,11 +298,11 @@
             "output": "CodeDrivenInitShutdown.cpp"
         },
         {
-            "path": "templates/app/slc_compatibility/static-cluster-config-Descriptor.zapt",
-            "name": "Descriptor static cluster configuration",
-            "output": "app/static-cluster-config/Descriptor.h"
+            "path": "templates/app/slc_compatibility/static-cluster-config.h.zapt",
+            "name": "Static cluster configuration per server cluster",
+            "output": "app/static-cluster-config/{name:tokensintouppercamelcase}.h",
+            "iterator": "selectedServerCluster"
         }
-
     ],
     "zcl": {
         "cluster": {

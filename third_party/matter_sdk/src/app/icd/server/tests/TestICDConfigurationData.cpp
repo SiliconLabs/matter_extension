@@ -23,11 +23,12 @@
 #include <app/icd/server/tests/ICDConfigurationDataTestAccess.h>
 #include <lib/core/StringBuilderAdapters.h>
 #include <lib/support/TimeUtils.h>
+#include <lib/support/tests/ExtraPwTestMacros.h>
 #include <messaging/tests/MessagingContext.h>
 #include <system/SystemLayerImpl.h>
 
 using namespace chip;
-using namespace chip::Test;
+using namespace chip::Testing;
 using namespace chip::app;
 using namespace chip::System;
 using namespace chip::System::Clock;
@@ -38,7 +39,7 @@ namespace {} // namespace
 namespace chip {
 namespace app {
 
-class TestICDConfigurationData : public Test::LoopbackMessagingContext
+class TestICDConfigurationData : public LoopbackMessagingContext
 {
 public:
     // Performs shared setup for all tests in the test suite
@@ -74,7 +75,7 @@ public:
 TEST_F(TestICDConfigurationData, TestICDModeSwitching)
 {
     auto & configData = ICDConfigurationData::GetInstance();
-    chip::Test::ICDConfigurationDataTestAccess privateConfigData(&configData);
+    Testing::ICDConfigurationDataTestAccess privateConfigData(&configData);
 
     // Default mode should be SIT
     EXPECT_EQ(configData.GetICDMode(), ICDConfigurationData::ICDMode::SIT);
@@ -90,7 +91,7 @@ TEST_F(TestICDConfigurationData, TestICDModeSwitching)
 
 TEST_F(TestICDConfigurationData, TestSetSITPollingInterval)
 {
-    ICDConfigurationDataTestAccess privateConfigData(&ICDConfigurationData::GetInstance());
+    Testing::ICDConfigurationDataTestAccess privateConfigData(&ICDConfigurationData::GetInstance());
     System::Clock::Milliseconds32 validSITPollInterval(10000);
     System::Clock::Milliseconds32 invalidSITPollInterval =
         privateConfigData.GetSitSlowPollMaximum() + System::Clock::Milliseconds32(1000); // Above SIT threshold
@@ -105,7 +106,7 @@ TEST_F(TestICDConfigurationData, TestSetSITPollingInterval)
 TEST_F(TestICDConfigurationData, TestGetAndSetSlowPollingInterval)
 {
     auto & configData = ICDConfigurationData::GetInstance();
-    ICDConfigurationDataTestAccess privateConfigData(&configData);
+    Testing::ICDConfigurationDataTestAccess privateConfigData(&configData);
 
     // Set featuremap to include LIT support
     using Feature = Clusters::IcdManagement::Feature;
@@ -138,7 +139,7 @@ TEST_F(TestICDConfigurationData, TestGetAndSetSlowPollingInterval)
 
     // Reduce slow polling interval to 5s, shorter than SITPollingInterval
     System::Clock::Milliseconds32 shortSlowPollInterval(5000);
-    privateConfigData.SetSlowPollingInterval(shortSlowPollInterval);
+    EXPECT_SUCCESS(privateConfigData.SetSlowPollingInterval(shortSlowPollInterval));
     EXPECT_EQ(privateConfigData.SetSlowPollingInterval(shortSlowPollInterval), CHIP_NO_ERROR);
     EXPECT_EQ(configData.GetSlowPollingInterval(), shortSlowPollInterval);
 
@@ -174,7 +175,7 @@ TEST_F(TestICDConfigurationData, TestGetAndSetSlowPollingInterval)
 TEST_F(TestICDConfigurationData, TestSetModeDurations)
 {
     auto & configData = ICDConfigurationData::GetInstance();
-    ICDConfigurationDataTestAccess privateConfigData(&configData);
+    Testing::ICDConfigurationDataTestAccess privateConfigData(&configData);
     using namespace System::Clock;
 
     // Save original values

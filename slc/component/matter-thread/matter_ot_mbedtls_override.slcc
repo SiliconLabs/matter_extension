@@ -10,6 +10,7 @@ metadata:
 provides:
   - name: ot_mbedtls
   - name: matter_ot_mbedtls_override
-
+requires:
+  - name: ot_crypto_ecdsa_nondeterministic
 ui_hints:
   visibility: never

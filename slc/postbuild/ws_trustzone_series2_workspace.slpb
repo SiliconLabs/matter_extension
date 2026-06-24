@@ -1,0 +1,22 @@
+parameters: []
+constants:
+  - name: workspace_name
+    value: matter_trustzone_workspace
+steps:
+  # Mirrors simplicity_sdk ot-tz-workspace.slpb, artifact suffixes use _ not -
+  - task: convert
+    input:
+      - "{{trustzone_secure_binary}}"
+      - "{{trustzone_nonsecure_binary}}"
+    output: artifact/{{workspace_name}}_app_only.s37
+
+  - task: convert
+    input:
+      - "{{trustzone_secure_binary}}"
+      - "{{trustzone_nonsecure_binary}}"
+      - "{{bootloader_main_stage}}"
+    output: artifact/{{workspace_name}}_full.s37
+
+  - task: create_gbl
+    app: "artifact/{{workspace_name}}_app_only.s37"
+    output: artifact/{{workspace_name}}_app_only.gbl

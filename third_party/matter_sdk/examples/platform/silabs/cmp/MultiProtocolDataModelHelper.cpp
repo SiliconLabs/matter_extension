@@ -23,6 +23,7 @@
 #include <cmsis_os2.h>
 #include <lib/support/TypeTraits.h>
 #include <lib/support/logging/CHIPLogging.h>
+#include <lib/support/CodeUtils.h>
 #include <platform/CHIPDeviceLayer.h>
 #include <platform/PlatformManager.h>
 #include <protocols/interaction_model/StatusCode.h>
@@ -31,6 +32,9 @@
 #include <system/SystemClock.h>
 #include <system/SystemLayer.h>
 #include <zap-config.h>
+#include <cinttypes>
+
+static constexpr std::size_t UINT64_SIZE = sizeof(std::uint64_t);
 
 namespace MultiProtocolDataModel {
 #ifdef SL_CATALOG_ZIGBEE_ZCL_FRAMEWORK_CORE_PRESENT
@@ -77,16 +81,9 @@ void WriteMatterAttributeValueToZigbee(chip::EndpointId endpointId, chip::Cluste
     VerifyOrReturn(mpAttributeMetadata != nullptr);
     // TODO handle MFG specific attributes
 
-    // TODO MATTER-5844  remove the check below once the Zigbee stack support overriding CLI and logs outputs.
-    // They first need to decouple the output of both so that the Matter team can retrieve them separately.
-    // Otherwise either the logs are blocking and causing major delays or the CLI output will be completely mangle
-    // and some string might be lost.
-    if (sl_zigbee_af_contains_attribute(endpointId, mpClusterMetadata->zigbeeClusterId, mpAttributeMetadata->zigbeeAttributeId,
-                                        CLUSTER_MASK_SERVER, mpAttributeMetadata->zigbeeMfgAttributeId))
-    {
-        sl_zigbee_af_write_server_attribute_without_sync(endpointId, mpClusterMetadata->zigbeeClusterId,
-                                                         mpAttributeMetadata->zigbeeAttributeId, attributeValue, dataType);
-    }
+    sl_zigbee_af_write_server_attribute_without_sync(endpointId, mpClusterMetadata->zigbeeClusterId,
+                                                     mpAttributeMetadata->zigbeeAttributeId, attributeValue, dataType);
+
 }
 
 void SynchMultiProtocolAttributes(chip::EndpointId endpointId, const MpClusterMetadata * mpClusterMetadata)
@@ -100,8 +97,10 @@ void SynchMultiProtocolAttributes(chip::EndpointId endpointId, const MpClusterMe
         if (sl_zigbee_af_contains_attribute(endpointId, mpClusterMetadata->zigbeeClusterId, mpAttributeMap[i].zigbeeAttributeId,
                                             CLUSTER_MASK_SERVER, mpAttributeMap[i].zigbeeMfgAttributeId))
         {
-            uint8_t attributeSize                 = sl_zigbee_af_get_data_size(mpAttributeMap[i].zigbeeAttributeType);
-            uint8_t attributeValue[attributeSize] = { 0 };
+            uint8_t attributeSize = sl_zigbee_af_get_data_size(mpAttributeMap[i].zigbeeAttributeType);
+            VerifyOrDieWithMsg(attributeSize <= UINT64_SIZE, NotSpecified,"Attribute Size Unsupported");
+            uint8_t attributeValue[UINT64_SIZE];
+            memset(attributeValue, 0, attributeSize);
 
             chip::DeviceLayer::PlatformMgr().LockChipStack();
             // Read the Matter attribute value and write it to Zigbee
@@ -137,6 +136,7 @@ void Initialize()
     uint8_t zbEndpointCount              = sl_zigbee_af_endpoint_count();
     if (zbEndpointCount == 0 && initAttemptsRemaining-- > 0)
     {
+        // Zb datamodel not initialized yet, schedule a retry
         chip::DeviceLayer::SystemLayer().StartTimer(chip::System::Clock::Milliseconds16(100), InitializeRetryCallback, nullptr);
         return;
     }
@@ -185,7 +185,7 @@ extern "C" sl_status_t sli_matter_af_write_attribute(uint16_t endpointId, uint32
     sl_status_t slStatus = SL_STATUS_OK;
     if (imStatus != chip::Protocols::InteractionModel::Status::Success)
     {
-        ChipLogError(Zcl, "Failed to write Matter cluster %ld attribute %ld from multiprotocol update. Err:0x%02x", matterClusterId,
+        ChipLogError(Zcl, "Failed to write Matter cluster %" PRIu32 " attribute %" PRIu32 " from multiprotocol update. Err:0x%02x", matterClusterId,
                      attributeId, chip::to_underlying(imStatus));
         slStatus = SL_STATUS_FAIL;
     }

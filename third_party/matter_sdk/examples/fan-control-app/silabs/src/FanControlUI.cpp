@@ -58,13 +58,13 @@ void FanControlUI::DrawUI(GLIB_Context_t * glibContext)
     DrawHeader(glibContext);
     DrawCurrentFanMode(glibContext);
 
-#if SL_LCDCTRL_MUX
+#if defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     sl_wfx_host_pre_lcd_spi_transfer();
-#endif // SL_LCDCTRL_MUX
+#endif // defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     DMD_updateDisplay();
-#if SL_LCDCTRL_MUX
+#if defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     sl_wfx_host_post_lcd_spi_transfer();
-#endif // SL_LCDCTRL_MUX
+#endif // defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
 }
 
 void FanControlUI::DrawHeader(GLIB_Context_t * glibContext)
@@ -78,13 +78,13 @@ void FanControlUI::DrawHeader(GLIB_Context_t * glibContext)
                     WIFI_BITMAP_HEIGHT, (UI_WIFI) ? wifiLogo : threadLogo);
     // Draw Matter Icon
     GLIB_drawBitmap(glibContext, MATTER_ICON_POSITION_X, STATUS_ICON_LINE, MATTER_LOGO_WIDTH, MATTER_LOGO_HEIGHT, matterLogoBitmap);
-#if SL_LCDCTRL_MUX
+#if defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     sl_wfx_host_pre_lcd_spi_transfer();
-#endif // SL_LCDCTRL_MUX
+#endif // defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     DMD_updateDisplay();
-#if SL_LCDCTRL_MUX
+#if defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     sl_wfx_host_post_lcd_spi_transfer();
-#endif // SL_LCDCTRL_MUX
+#endif // defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
 }
 
 /**
@@ -140,13 +140,13 @@ void FanControlUI::DrawCurrentFanMode(GLIB_Context_t * glibContext)
         break;
     }
 
-#if SL_LCDCTRL_MUX
+#if defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     sl_wfx_host_pre_lcd_spi_transfer();
-#endif // SL_LCDCTRL_MUX
+#endif // defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     DMD_updateDisplay();
-#if SL_LCDCTRL_MUX
+#if defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     sl_wfx_host_post_lcd_spi_transfer();
-#endif // SL_LCDCTRL_MUX
+#endif // defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
 }
 
 void FanControlUI::DrawFont(GLIB_Context_t * glibContext, uint8_t initial_x, uint8_t initial_y, uint8_t width, uint8_t * data,

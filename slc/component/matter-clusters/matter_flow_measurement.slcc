@@ -1,0 +1,26 @@
+category: Clusters|Measurement
+description: >
+  Implementation of the Flow Measurement Server Cluster.
+  The user has to enable the Flow Measurement Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_flow_measurement
+package: matter
+label: Flow Measurement Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_flow_measurement
+source:
+  - path: third_party/matter_sdk/src/app/clusters/flow-measurement-server/CodegenIntegration.cpp
+    unless: [matter_code_driven_dm]
+  - path: third_party/matter_sdk/src/app/clusters/flow-measurement-server/FlowMeasurementCluster.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/flow-measurement-server
+    file_list:
+      - path: CodegenIntegration.h
+        unless: [matter_code_driven_dm]
+      - path: FlowMeasurementCluster.h
+template_contribution:
+  - name: component_catalog
+    value: matter_flow_measurement

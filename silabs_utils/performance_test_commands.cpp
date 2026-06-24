@@ -185,7 +185,7 @@ void MatterPerfTest::PingPerfTestOnConnnection(Messaging::ExchangeManager & exch
     requestsSent++;
     pingStartTime = chip::System::SystemClock().GetMonotonicMilliseconds64().count();
 
-    err = Controller::InvokeCommandRequest(&exchangeMgr, sessionHandle, chip::EndpointId(0), EmptyCommand, onSuccess, onFailure,
+    err = Controller::InvokeCommandRequest(&exchangeMgr, sessionHandle, chip::EndpointId(1), EmptyCommand, onSuccess, onFailure,
                                            NullOptional,
                                            MakeOptional(chip::System::Clock::Timeout(timeoutMs)));
 
@@ -292,7 +292,7 @@ void MatterPerfTest::MxPerfTest(intptr_t  params)
     Clusters::PerformanceTesting::Commands::EmptyCommand::Type EmptyCommand;
     EmptyCommand.payload =  chip::MakeOptional(chip::Span<const uint8_t>(buf, MAX(4, data->length)));
 
-    Controller::InvokeGroupCommandRequest(&exchangeMgr, data->fabricIndex, data->groupId, EmptyCommand);
+    TEMPORARY_RETURN_IGNORED Controller::InvokeGroupCommandRequest(&exchangeMgr, data->fabricIndex, data->groupId, EmptyCommand);
 
     Platform::Delete(data);
 }

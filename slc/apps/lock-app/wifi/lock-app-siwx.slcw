@@ -1,8 +1,0 @@
-label: lock-app-siwx
-quality: production
-package: matter
-description: Matter Lock Wi-Fi SoC solution
-project:
-  - path: ./lock-app-siwx.slcp
-    id: application
-    output: lock-app-siwx

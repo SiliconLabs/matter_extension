@@ -1,0 +1,31 @@
+category: Matter|Examples
+package: matter
+description: >
+  Provides example component that enables support for the Electrical Sensor device type.
+id: matter_electrical_sensor
+quality: production
+metadata:
+  sbom:
+    license: MSLA
+requires:
+  - name: matter_electrical_energy_measurement
+  - name: matter_electrical_power_measurement
+  - name: matter_power_topology
+provides:
+  - name: matter_electrical_sensor
+include:
+  - path: third_party/matter_sdk/examples/energy-management/electrical-sensor/include
+    file_list:
+      - path: ElectricalEnergyMeasurementDelegateImpl.h
+      - path: ElectricalPowerMeasurementDelegateImpl.h
+      - path: PowerTopologyDelegateImpl.h
+      - path: ElectricalSensorManager.h
+
+
+source:
+  - path: third_party/matter_sdk/examples/energy-management/electrical-sensor/src/ElectricalEnergyMeasurementDelegateImpl.cpp
+  - path: third_party/matter_sdk/examples/energy-management/electrical-sensor/src/ElectricalPowerMeasurementDelegateImpl.cpp
+  - path: third_party/matter_sdk/examples/energy-management/electrical-sensor/src/PowerTopologyDelegateImpl.cpp
+  - path: third_party/matter_sdk/examples/energy-management/electrical-sensor/src/ElectricalSensorManager.cpp
+ui_hints:
+  visibility: never

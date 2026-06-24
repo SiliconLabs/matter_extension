@@ -17,7 +17,7 @@ include:
   - path: third_party/nlio/include
   - path: third_party/matter_sdk/src/app
     file_list:
-    -   path: AttributeAccessToken.h
+    -   path: ReadClient.h # Unless we refactor everything matter needs this header even if the content is not compiled.
     -   path: InteractionModelDelegatePointers.h
     -   path: InteractionModelTimeout.h
     -   path: SubscriptionsInfoProvider.h
@@ -33,7 +33,6 @@ include:
     -   path: OperationalSessionSetup.h
     -   path: ConcreteEventPath.h
     -   path: AttributePathExpandIterator.h
-    -   path: DefaultTimerDelegate.h
     -   path: ConcreteClusterPath.h
     -   path: PendingResponseTrackerImpl.h
     -   path: SubscriptionResumptionSessionEstablisher.h
@@ -54,12 +53,10 @@ include:
     -   path: InteractionModelHelper.h
     -   path: InteractionModelEngine.h
     -   path: EventLoggingTypes.h
-    -   path: ReadClient.h
     -   path: CommandResponseSender.h
     -   path: StatusResponse.h
     -   path: ReadPrepareParams.h
     -   path: WriteClient.h
-    -   path: BufferedReadCallback.h
     -   path: EventPathParams.h
     -   path: CommandResponseHelper.h
     -   path: CommandHandlerInterface.h
@@ -71,7 +68,6 @@ include:
     -   path: AttributeAccessInterface.h
     -   path: SafeAttributePersistenceProvider.h
     -   path: EventHeader.h
-    -   path: ClusterStateCache.h
     -   path: CASEClientPool.h
     -   path: SpecificationDefinedRevisions.h
     -   path: OperationalSessionSetupPool.h
@@ -101,7 +97,6 @@ source:
 -   path: third_party/matter_sdk/src/app/InteractionModelEngine.cpp
 -   path: third_party/matter_sdk/src/app/OperationalSessionSetup.cpp
 -   path: third_party/matter_sdk/src/app/PendingResponseTrackerImpl.cpp
--   path: third_party/matter_sdk/src/app/ReadClient.cpp
 -   path: third_party/matter_sdk/src/app/SimpleSubscriptionResumptionStorage.cpp
 -   path: third_party/matter_sdk/src/app/StatusResponse.cpp
 -   path: third_party/matter_sdk/src/app/SubscriptionResumptionSessionEstablisher.cpp

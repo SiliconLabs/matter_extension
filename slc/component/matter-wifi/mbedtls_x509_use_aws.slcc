@@ -1,0 +1,19 @@
+id: mbedtls_x509_use_aws
+package: matter
+label: X.509 Use certificates for Matter + AWS
+description: >-
+  This component provides support for using X.509 standard-based certificates in
+  Mbed TLS specifically for Matter+AWS component. This component avoids tight
+  coupling of mbedtls and PSA.
+category: Platform|Security|Mbed TLS|Upper Layer
+quality: production
+provides:
+- name: mbedtls_x509_use
+  condition: [matter_aws]
+requires:
+- name: mbedtls_asn1_parse
+- name: mbedtls_oid
+- name: mbedtls_pk_parse
+template_contribution:
+- name: mbedtls_config
+  value: MBEDTLS_X509_USE_C

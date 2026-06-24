@@ -1,4 +1,4 @@
-category: Clusters|General
+category: Clusters|Appliances
 description: >
   Implementation of the Laundry Washer Mode Server Cluster.
   The user has to enable the Laundry Washer Mode Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.

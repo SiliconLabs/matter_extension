@@ -122,7 +122,7 @@ class ProvisionManager:
         # Manufacturing Date
         mdate = args.get(ID.kManufacturingDate)
         if mdate.value is None:
-            mdate.set("{:%Y-%m-%d}".format(datetime.date.today()))
+            mdate.set("{:%Y%m%d}".format(datetime.date.today()))
 
         #
         # SPAKE2+
@@ -151,7 +151,7 @@ class ProvisionManager:
     def generateIterations(self, arg):
         # Upper limit is reduced here to improve performace by default
         min_value = arg.min
-        max_value = arg.min + (arg.max - arg.min) / 4
+        max_value = int(arg.min + (arg.max - arg.min) / 4)
         arg.set(random.randint(min_value, max_value))
 
     def generatePasscode(self, arg):

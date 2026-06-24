@@ -27,6 +27,13 @@
 
 #define BLE_DEV_NAME "SL-" APP_TASK_NAME
 
+#define ONOFF_PLUG_ENDPOINT 1
+
+// Application-defined error codes in the CHIP_ERROR space.
+#define APP_ERROR_EVENT_QUEUE_FAILED CHIP_APPLICATION_ERROR(0x01)
+#define APP_ERROR_CREATE_TASK_FAILED CHIP_APPLICATION_ERROR(0x02)
+#define APP_ERROR_UNHANDLED_EVENT CHIP_APPLICATION_ERROR(0x03)
+
 // Time it takes in ms for the simulated actuator to move from one
 // state to another.
 #define ACTUATOR_MOVEMENT_PERIOS_MS 1

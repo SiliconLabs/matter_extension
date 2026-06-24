@@ -36,15 +36,15 @@ void RGBLEDWidget::SetColor(uint8_t red, uint8_t green, uint8_t blue)
 {
     if (GetPlatform().GetRGBLedState(GetLED()))
     {
-        ChipLogProgress(Zcl, "SetColor : R:%u|G:%u|B:%u", red, green, blue);
-        GetPlatform().SetLedColor(GetLED(), red, green, blue);
+        ChipLogDetail(Zcl, "SetColor : R:%u|G:%u|B:%u", red, green, blue);
+        TEMPORARY_RETURN_IGNORED GetPlatform().SetLedColor(GetLED(), red, green, blue);
     }
 }
 
 void RGBLEDWidget::GetColor(uint16_t & r, uint16_t & g, uint16_t & b)
 {
     uint16_t rawR, rawG, rawB;
-    GetPlatform().GetLedColor(GetLED(), rawR, rawG, rawB);
+    TEMPORARY_RETURN_IGNORED GetPlatform().GetLedColor(GetLED(), rawR, rawG, rawB);
 
     // Scale down PWM values by TICK_DELAY to bring them back to the expected range
     // Clamp to 8-bit range (0-255)
@@ -52,7 +52,7 @@ void RGBLEDWidget::GetColor(uint16_t & r, uint16_t & g, uint16_t & b)
     g = static_cast<uint16_t>((rawG / TICK_DELAY) & 0xFF);
     b = static_cast<uint16_t>((rawB / TICK_DELAY) & 0xFF);
 
-    ChipLogProgress(Zcl, "RGB Values: R=%u G=%u B=%u", r, g, b);
+    ChipLogDetail(Zcl, "RGB Values: R=%u G=%u B=%u", r, g, b);
 }
 /**
  * @brief Convert Data model hue and saturation to RGB and set the color
@@ -129,7 +129,7 @@ void RGBLEDWidget::SetColorFromHSV(uint8_t hue, uint8_t saturation)
 
 void RGBLEDWidget::SetColorFromXY(uint16_t currentX, uint16_t currentY)
 {
-    ChipLogProgress(Zcl, "SetColorFromXY: %u|%u", currentX, currentY);
+    ChipLogDetail(Zcl, "SetColorFromXY: %u|%u", currentX, currentY);
     RGBLEDWidget::RgbColor_t rgb = RGBLEDWidget::XYToRgb(GetLevel(), currentX, currentY);
     SetColor(rgb.r, rgb.g, rgb.b);
 }
@@ -137,7 +137,7 @@ void RGBLEDWidget::SetColorFromXY(uint16_t currentX, uint16_t currentY)
 void RGBLEDWidget::SetColorFromCT(uint16_t ctMireds)
 {
     RGBLEDWidget::RgbColor_t rgb = RGBLEDWidget::CTToRgb(ctMireds);
-    ChipLogProgress(Zcl, "SetColorFromCT: %u", ctMireds);
+    ChipLogDetail(Zcl, "SetColorFromCT: %u", ctMireds);
     SetColor(rgb.r, rgb.g, rgb.b);
 }
 

@@ -21,7 +21,6 @@
 
 #include "AppConfig.h"
 #include "AppTask.h"
-#include "RangeHoodManager.h"
 #include "RangeHoodUI.h"
 #include "demo-ui-bitmaps.h"
 #include "dmd.h"
@@ -62,13 +61,13 @@ void RangeHoodUI::DrawUI(GLIB_Context_t * glibContext)
     DrawHeader(glibContext);
     DrawRangehoodStatus(glibContext);
 
-#if SL_LCDCTRL_MUX
+#if defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     sl_wfx_host_pre_lcd_spi_transfer();
-#endif // SL_LCDCTRL_MUX
+#endif // defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     DMD_updateDisplay();
-#if SL_LCDCTRL_MUX
+#if defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     sl_wfx_host_post_lcd_spi_transfer();
-#endif // SL_LCDCTRL_MUX
+#endif // defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
 }
 
 void RangeHoodUI::DrawHeader(GLIB_Context_t * glibContext)
@@ -85,13 +84,13 @@ void RangeHoodUI::DrawHeader(GLIB_Context_t * glibContext)
 
     // Draw application name on a dedicated line below icons.
     GLIB_drawStringOnLine(glibContext, APP_TASK_NAME, 3, GLIB_ALIGN_CENTER, 0, 0, true);
-#if SL_LCDCTRL_MUX
+#if defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     sl_wfx_host_pre_lcd_spi_transfer();
-#endif // SL_LCDCTRL_MUX
+#endif // defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     DMD_updateDisplay();
-#if SL_LCDCTRL_MUX
+#if defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     sl_wfx_host_post_lcd_spi_transfer();
-#endif // SL_LCDCTRL_MUX
+#endif // defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
 }
 
 /**
@@ -106,8 +105,8 @@ void RangeHoodUI::DrawRangehoodStatus(GLIB_Context_t * glibContext)
     bool lightOn     = false;
 
     PlatformMgr().LockChipStack();
-    CHIP_ERROR fanStatus   = RangeHoodMgr().GetExtractorHoodEndpoint().GetFanMode(mode);
-    CHIP_ERROR lightStatus = RangeHoodMgr().GetLightEndpoint().GetOnOffState(lightOn);
+    CHIP_ERROR fanStatus   = AppTask::GetExtractorHoodEndpoint().GetFanMode(mode);
+    CHIP_ERROR lightStatus = AppTask::GetLightEndpoint().GetOnOffState(lightOn);
     PlatformMgr().UnlockChipStack();
 
     if (fanStatus != CHIP_NO_ERROR)
@@ -157,11 +156,11 @@ void RangeHoodUI::DrawRangehoodStatus(GLIB_Context_t * glibContext)
     // Draw Light status below fan information
     GLIB_drawStringOnLine(glibContext, lightOn ? "LIGHT : ON" : "LIGHT : OFF", 7, GLIB_ALIGN_LEFT, 0, 0, true);
 
-#if SL_LCDCTRL_MUX
+#if defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     sl_wfx_host_pre_lcd_spi_transfer();
-#endif // SL_LCDCTRL_MUX
+#endif // defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     DMD_updateDisplay();
-#if SL_LCDCTRL_MUX
+#if defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
     sl_wfx_host_post_lcd_spi_transfer();
-#endif // SL_LCDCTRL_MUX
+#endif // defined (SL_LCDCTRL_MUX) && SL_LCDCTRL_MUX
 }

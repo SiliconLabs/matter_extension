@@ -1,0 +1,32 @@
+/**
+ *  To enable these credentias, compile the app with option
+ *  "chip_build_device_attestation_credentials=true".
+ */
+
+#ifndef SL_PROVISION_VERSION_1_0
+#define SL_PROVISION_VERSION_1_0    {{use_legacy_certs_format}}
+#endif
+
+#ifndef SL_CREDENTIALS_DAC_OFFSET
+#define SL_CREDENTIALS_DAC_OFFSET   {{dac_offset}}
+#endif
+
+#ifndef SL_CREDENTIALS_DAC_SIZE
+#define SL_CREDENTIALS_DAC_SIZE     {{dac_size}}
+#endif
+
+#ifndef SL_CREDENTIALS_PAI_OFFSET
+#define SL_CREDENTIALS_PAI_OFFSET   {{pai_offset}}
+#endif
+
+#ifndef SL_CREDENTIALS_PAI_SIZE
+#define SL_CREDENTIALS_PAI_SIZE     {{pai_size}}
+#endif
+
+#ifndef SL_CREDENTIALS_CD_OFFSET
+#define SL_CREDENTIALS_CD_OFFSET    {{cd_offset}}
+#endif
+
+#ifndef SL_CREDENTIALS_CD_SIZE
+#define SL_CREDENTIALS_CD_SIZE      {{cd_size}}
+#endif

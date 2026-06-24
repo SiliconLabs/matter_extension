@@ -1,4 +1,4 @@
-category: Clusters|CHIP
+category: Clusters|General
 description: >
   Implementation of the Basic Information Cluster.
   The user has to enable the Basic Information Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
@@ -12,12 +12,17 @@ metadata:
 provides:
   - name: matter_basic_information
 source:
-  - path: third_party/matter_sdk/src/app/clusters/basic-information/BasicInformationCluster.cpp
   - path: third_party/matter_sdk/src/app/clusters/basic-information/CodegenIntegration.cpp
+    unless: [matter_code_driven_dm]
 include:
   - path: third_party/matter_sdk/src/app/clusters/basic-information
     file_list:
       - path: BasicInformationCluster.h
+      - path: BasicInformationOptionalAttributes.h
+      - path: CodegenIntegration.h
+        unless: [matter_code_driven_dm]
+      - path: DeviceLayerBasicInformationPolicy.h
+      - path: PolicyBased.h
 template_contribution:
   - name: component_catalog
     value: matter_basic_information

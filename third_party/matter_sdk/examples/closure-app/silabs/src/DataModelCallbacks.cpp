@@ -31,17 +31,18 @@
 #include <app/CommandHandler.h>
 #include <app/ConcreteAttributePath.h>
 #include <app/ConcreteCommandPath.h>
-#include <app/clusters/closure-control-server/closure-control-server.h>
+#include <app/clusters/closure-control-server/CodegenIntegration.h>
 
 using namespace ::chip;
+using namespace ::chip::app;
 using namespace ::chip::app::Clusters::ClosureControl;
 
-void MatterPostAttributeChangeCallback(const app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
+void MatterPostAttributeChangeCallback(const ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
                                        uint8_t * value)
 {
     switch (attributePath.mClusterId)
     {
-    case app::Clusters::Identify::Id:
+    case Clusters::Identify::Id:
         ChipLogProgress(Zcl, "Identify cluster ID: " ChipLogFormatMEI " Type: %u Value: %u, length %u",
                         ChipLogValueMEI(attributePath.mAttributeId), type, *value, size);
         break;
@@ -51,11 +52,11 @@ void MatterPostAttributeChangeCallback(const app::ConcreteAttributePath & attrib
 }
 
 /* Forwards all attributes changes */
-void MatterClosureControlClusterServerAttributeChangedCallback(const app::ConcreteAttributePath & attributePath)
+void MatterClosureControlClusterServerAttributeChangedCallback(const ConcreteAttributePath & attributePath)
 {
     ChipLogProgress(Zcl, "Closure Control cluster ID: " ChipLogFormatMEI, ChipLogValueMEI(attributePath.mAttributeId));
 #ifdef DISPLAY_ENABLED
-    using namespace chip::app::Clusters::ClosureControl::Attributes;
+    using namespace Clusters::ClosureControl::Attributes;
 
     switch (attributePath.mAttributeId)
     {
@@ -73,7 +74,7 @@ void MatterClosureControlClusterServerAttributeChangedCallback(const app::Concre
 #endif // DISPLAY_ENABLED
 }
 
-void MatterClosureDimensionClusterServerAttributeChangedCallback(const app::ConcreteAttributePath & attributePath)
+void MatterClosureDimensionClusterServerAttributeChangedCallback(const ConcreteAttributePath & attributePath)
 {
     ChipLogProgress(Zcl, "Closure Dimension cluster ID: " ChipLogFormatMEI, ChipLogValueMEI(attributePath.mAttributeId));
 }

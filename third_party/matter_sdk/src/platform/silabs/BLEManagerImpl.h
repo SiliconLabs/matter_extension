@@ -26,7 +26,7 @@
 #if CHIP_DEVICE_CONFIG_ENABLE_CHIPOBLE
 #include "FreeRTOS.h"
 #include "timers.h"
-#if SLI_SI91X_ENABLE_BLE
+#if defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE
 #include "sl_si91x_ble_init.h"
 #else
 #include "gatt_db.h"
@@ -34,7 +34,7 @@
 #include "sl_bt_api.h"
 #include <BLEChannel.h>
 #include <lib/core/Optional.h>
-#endif //   SLI_SI91X_ENABLE_BLE
+#endif // defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE
 
 namespace chip {
 namespace DeviceLayer {
@@ -58,8 +58,8 @@ public:
 
     void HandleBootEvent(void);
 
-    CHIP_ERROR PrintBLEInfo();
-#if SLI_SI91X_ENABLE_BLE
+    CHIP_ERROR PrintBLEInfo() const;
+#if defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE
     // Used for posting the event in the BLE queue
     void BlePostEvent(SilabsBleWrapper::BleEvent_t * event);
     void HandleConnectEvent(const SilabsBleWrapper::sl_wfx_msg_t & evt);
@@ -81,7 +81,7 @@ public:
     EventFilter HandleSoftTimerEvent(volatile sl_bt_msg_t * evt);
     bool CanHandleEvent(uint32_t event);
     EventFilter ParseEvent(volatile sl_bt_msg_t * evt);
-#endif // SLI_SI91X_ENABLE_BLE
+#endif // #if defined (SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE
     CHIP_ERROR StartAdvertising(void);
     CHIP_ERROR StopAdvertising(void);
 
@@ -150,7 +150,7 @@ public:
 #endif // SL_BLE_SIDE_CHANNEL_ENABLED
 
 #if CHIP_ENABLE_ADDITIONAL_DATA_ADVERTISING
-#if SLI_SI91X_ENABLE_BLE
+#if defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE
     static void HandleC3ReadRequest(const SilabsBleWrapper::sl_wfx_msg_t & rsi_ble_read_req);
 #else
     static EventFilter HandleC3ReadRequest(volatile sl_bt_msg_t * evt);
@@ -162,7 +162,7 @@ private:
     // the implementation methods provided by this class.
     friend BLEManager;
 
-#if SLI_SI91X_ENABLE_BLE
+#if defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE
     // rs91x BLE task handling
     osMessageQueueId_t sBleEventQueue = NULL;
     static void sl_ble_event_handling_task(void * args);
@@ -228,7 +228,7 @@ private:
     static constexpr uint8_t kUUIDTlvSize       = 4; // 1 byte for length, 1b for type and 2b for the UUID value
     static constexpr uint8_t kDeviceNameTlvSize = (2 + kMaxDeviceNameLength); // 1 byte for length, 1b for type and + device name
 
-#if (SLI_SI91X_ENABLE_BLE)
+#if defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE
     // Declared in BLEChannel.h now.
     struct BLEConState
     {
@@ -239,7 +239,7 @@ private:
         uint8_t connectionHandle;
         uint8_t bondingHandle;
     };
-#endif
+#endif // defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE
 
     BLEConState mBleConnections[kMaxConnections];
     uint8_t mIndConfId[kMaxConnections];
@@ -252,9 +252,9 @@ private:
     PacketBufferHandle c3AdditionalDataBufferHandle;
 #endif
 
-#if !(SLI_SI91X_ENABLE_BLE)
+#if !(defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE)
     BLEChannel * mBleSideChannel = nullptr;
-#endif // !(SLI_SI91X_ENABLE_BLE)
+#endif // !(defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE)
 
     CHIP_ERROR MapBLEError(int bleErr);
     void DriveBLEState(void);
@@ -263,7 +263,7 @@ private:
     CHIP_ERROR EncodeAdditionalDataTlv();
 #endif
 
-#if SLI_SI91X_ENABLE_BLE
+#if defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE
     void HandleRXCharWrite(const SilabsBleWrapper::sl_wfx_msg_t & evt);
 #else
     void HandleRXCharWrite(volatile sl_bt_msg_t * evt);
@@ -277,7 +277,7 @@ private:
     static void BleAdvTimeoutHandler(void * arg);
     uint8_t GetTimerHandle(uint8_t connectionHandle, bool allocate);
 
-#if SLI_SI91X_ENABLE_BLE
+#if defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE
 protected:
     static void OnSendIndicationTimeout(System::Layer * aLayer, void * appState);
 #endif

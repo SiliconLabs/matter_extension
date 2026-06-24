@@ -24,3 +24,6 @@ define:
     value: "OT_LOG_LEVEL_NONE"
   - name: OPENTHREAD_CONFIG_LOG_LEVEL
     value: "OPENTHREAD_CONFIG_LOG_OUTPUT_NONE"
+  - name: SL_MATTER_CLI_ARG_PARSER
+    value: 0
+    unless: [matter_shell]

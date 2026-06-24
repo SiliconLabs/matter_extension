@@ -1,0 +1,9 @@
+workspace_name: matter_wifi_soc_light_switch_app_freertos
+label: Matter WiFi - SoC Light Switch FreeRTOS
+quality: production
+package: matter
+description: Demonstrates a sample implementation of a Matter over Wi-Fi light switch app
+project:
+  - path: ./matter_wifi_soc_light_switch_app_freertos.slcp
+    id: application
+    output: light_switch_app_siwx

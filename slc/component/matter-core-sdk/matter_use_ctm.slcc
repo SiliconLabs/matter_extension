@@ -1,0 +1,14 @@
+id: matter_use_ctm
+label: Common Token Manager Config Storage
+description: >
+  Uses the Common Token Manager (CTM) backed SilabsConfig implementation instead of direct NVM3 access.
+package: matter
+category: Matter|Core
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_use_ctm
+source:
+  - path: third_party/matter_sdk/src/platform/silabs/SilabsConfigCTM.cpp

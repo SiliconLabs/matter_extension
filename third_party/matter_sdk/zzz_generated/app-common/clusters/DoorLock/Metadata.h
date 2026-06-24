@@ -17,7 +17,7 @@ namespace app {
 namespace Clusters {
 namespace DoorLock {
 
-inline constexpr uint32_t kRevision = 9;
+inline constexpr uint32_t kRevision = 10;
 
 namespace Attributes {
 

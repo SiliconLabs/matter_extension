@@ -1,0 +1,14 @@
+workspace_name: matter_thread_soc_fan_control_app_series_2_freertos
+label: Matter Thread - SoC Fan Control with external Bootloader FreeRTOS
+quality: production
+package: matter
+description: Demonstrates a sample implementation of a Matter over Thread fan control app with external bootloader
+project:
+  - path: ./matter_thread_soc_fan_control_app_freertos.slcp
+    id: application
+    output: fan_control_app
+  - path: ../../bootloaders/bootloader_storage_external_single_series_2/matter_bootloader_external_series_2.slcp
+    id: bootloader
+    output: matter_bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb

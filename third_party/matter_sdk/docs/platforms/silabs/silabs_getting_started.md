@@ -17,18 +17,19 @@ sample app.
 > Developers can find more resources on the
 > [Silicon Labs Matter Community Page](https://community.silabs.com/s/article/connected-home-over-ip-chip-faq?language=en_US).
 
--   [Introduction](#introduction)
--   [Requirements](#requirements)
-    -   [Hardware Requirements](#hardware-requirements)
-    -   [Software Requirements](#software-requirements)
-    -   [Software Artifacts](#software-artifacts)
--   [Building](#building)
-    -   [Build Script](#build-script)
-    -   [Build Arguments](#build-arguments)
--   [Flashing](#flashing)
-    -   [Flasher Arguments](#flasher-arguments)
--   [Standard Application Behavior](#standard-application-behavior)
--   [Silabs CLI](#silabs-cli)
+-   [Silicon Labs Matter Solution Guide](#silicon-labs-matter-solution-guide)
+    -   [Introduction](#introduction)
+    -   [Requirements](#requirements)
+        -   [Hardware Requirements](#hardware-requirements)
+        -   [Software Requirements](#software-requirements)
+            -   [Software Artifacts](#software-artifacts)
+    -   [Building](#building)
+        -   [Build Script](#build-script)
+            -   [Build Arguments](#build-arguments)
+    -   [Flashing](#flashing)
+        -   [Flasher Arguments](#flasher-arguments)
+    -   [Standard Application Behavior](#standard-application-behavior)
+    -   [Silabs CLI](#silabs-cli)
 
 ## Requirements
 
@@ -79,7 +80,8 @@ offers extra sample applications for different device-types
                 <li> <a href="../../../examples/air-quality-sensor-app/silabs/README.md">Air Quality Sensor App</a></li>
                 <li> <a href="../../../examples/closure-app/silabs/README.md">Closure App</a></li>
                 <li> <a href="../../../examples/dishwasher-app/silabs/README.md">Dishwasher App</a></li>
-                <li> <a href="../../../examples/energy-management-app/silabs/README.md">Energy Management App</a></li>
+                <li> <a href="../../../examples/evse-app/silabs/README.md">EVSE App</a></li>
+                <li> <a href="../../../examples/water-heater-app/silabs/README.md">Water Heater App</a></li>
                 <li> <a href="../../../examples/lit-icd-app/silabs/README.md">LIT ICD App</a></li>
                 <li> <a href="../../../examples/refrigerator-app/silabs/README.md">Refrigerator App</a></li>
                 <li> <a href="../../../examples/window-app/silabs/README.md">Window App</a></li>
@@ -123,9 +125,9 @@ for the BRD4187C is
 ```
 
 > **Note**: The build argument `--wifi SiWx917` is necessary to build BRD4187C
-> image with the necessary code for the NCP
-> combo.`sl_matter_enable_siwx_ble=true` enables the SiWx NCP bluetooth. The
-> MG24 + SiWx NCP combo does not yet support external flash.
+> image with the necessary code for the NCP combo. `chip_enable_ble_siwx=true`
+> enables the SiWx NCP bluetooth. The MG24 + SiWx NCP combo does not yet support
+> external flash.
 
 To build the lighting app as an Wi-Fi MG24 + wf200 NCP, the default build
 command for the BRD4187C is
@@ -174,17 +176,17 @@ command.
 > **Note**: All GN arguments can be added to the build.
 > `gn args --list <output_directory>` can be used to list all GN arguments.
 
-|      GN argument       | Description                                                                                                                     | Default Value                       |
-| :--------------------: | :------------------------------------------------------------------------------------------------------------------------------ | :---------------------------------- |
-|  chip_build_libshell   | Enables the Matter Shell                                                                                                        | false                               |
-|  chip_openthread_ftd   | Defines if the OpenThread device is an FTD (true) or an MTD (false)                                                             | true                                |
-|     efr32_sdk_root     | Location for an alternate Simplicity SDK                                                                                        | ./third_party/silabs/simplicity_sdk |
-| enable_heap_monitoring | Monitor & log memory usage at runtime                                                                                           | false                               |
-| enable_openthread_cli  | Enables the OpenThread cli                                                                                                      | true                                |
-|    kvs_max_entries     | Set the maximum KVS entries that can be stored in NVM <br /> Thresholds: 30 <= kvs_max_entries <= 255                           | 255                                 |
-| chip_enable_icd_server | Configure device as an intermittently connected device <br /> For Thread builds, chip_openthread_ftd must also be set to false. | false                               |
-|      disable_lcd       | Disable the LCD on devices with an LCD                                                                                          | false                               |
-|      show_qr_code      | Enables QR code on LCD for devices with an LCD                                                                                  | true                                |
+|      GN argument       | Description                                                                                                                     | Default Value                  |
+| :--------------------: | :------------------------------------------------------------------------------------------------------------------------------ | :----------------------------- |
+|  chip_build_libshell   | Enables the Matter Shell                                                                                                        | false                          |
+|  chip_openthread_ftd   | Defines if the OpenThread device is an FTD (true) or an MTD (false)                                                             | true                           |
+|     efr32_sdk_root     | Location for an alternate Gecko SDK                                                                                             | ./third_party/silabs/gecko_sdk |
+| enable_heap_monitoring | Monitor & log memory usage at runtime                                                                                           | false                          |
+| enable_openthread_cli  | Enables the OpenThread cli                                                                                                      | true                           |
+|    kvs_max_entries     | Set the maximum KVS entries that can be stored in NVM <br /> Thresholds: 30 <= kvs_max_entries <= 255                           | 255                            |
+| chip_enable_icd_server | Configure device as an intermittently connected device <br /> For Thread builds, chip_openthread_ftd must also be set to false. | false                          |
+|      disable_lcd       | Disable the LCD on devices with an LCD                                                                                          | false                          |
+|      show_qr_code      | Enables QR code on LCD for devices with an LCD                                                                                  | true                           |
 
 On top of the GN arguments specified here, each sample app will specify, if need
 be, the GN arguments specific to it.

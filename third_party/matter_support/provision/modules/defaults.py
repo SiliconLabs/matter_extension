@@ -1,5 +1,5 @@
-import modules.util as _util
 import modules.tools as _tools
+import modules.util as _util
 
 
 class ProvisionDefaults:
@@ -13,4 +13,3 @@ class ProvisionDefaults:
         info = comm.info()
         if info is not None:
             return info['Part Number'].lower()
-

@@ -1,0 +1,20 @@
+category: Matter|Core|Config
+description: >
+  Disable the need for the codegen Integration code when using ZAP driven only implementation
+id: matter_codegen_dm
+package: matter
+label: Matter ZAP Driven DM
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_codegen_dm
+define:
+  - name: SL_MATTER_USE_CODE_DRIVEN_DATA_MODEL
+    value: '0'
+template_contribution:
+  - name: component_catalog
+    value: matter_codegen_dm
+conflicts:
+  - name: matter_code_driven_dm

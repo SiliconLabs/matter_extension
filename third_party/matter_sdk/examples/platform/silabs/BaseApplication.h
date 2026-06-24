@@ -27,7 +27,6 @@
 #include <stdint.h>
 
 #include "AppEvent.h"
-#include <app/clusters/identify-server/identify-server.h>
 #include <app/server/AppDelegate.h>
 #include <app/util/config.h>
 #include <ble/Ble.h>
@@ -62,6 +61,10 @@
 #define APP_ERROR_CREATE_TIMER_FAILED CHIP_APPLICATION_ERROR(0x04)
 #define APP_ERROR_START_TIMER_FAILED CHIP_APPLICATION_ERROR(0x05)
 #define APP_ERROR_STOP_TIMER_FAILED CHIP_APPLICATION_ERROR(0x06)
+#define APP_ERROR_ALLOCATION_FAILED CHIP_APPLICATION_ERROR(0x07)
+#if defined(ENABLE_CHIP_SHELL)
+#define APP_ERROR_TOO_MANY_SHELL_ARGUMENTS CHIP_APPLICATION_ERgaROR(0x08)
+#endif // ENABLE_CHIP_SHELL
 
 class BaseApplicationDelegate : public AppDelegate, public chip::FabricTable::Delegate
 {
@@ -118,6 +121,13 @@ public:
      * @brief Remove the app Led linkage form the baseApplication context
      */
     void UnlinkAppLed() { sAppActionLed = nullptr; }
+
+    /**
+     * @brief Check if the application is initialized
+     *
+     * @return Set to true when Init() was called successfully
+     */
+    bool IsApplicationInitialized() { return mIsApplicationInitialized; }
 
     /**
      * @brief PostEvent function that add event to AppTask queue for processing
@@ -294,5 +304,6 @@ protected:
     bool mSyncClusterToButtonAction;
 
 private:
+    bool mIsApplicationInitialized = false;
     static void InitOTARequestorHandler(chip::System::Layer * systemLayer, void * appState);
 };

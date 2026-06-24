@@ -46,6 +46,20 @@ toolchain_settings:
   - option: gcc_compiler_option
     value: -Wno-unused-parameter
 
+  # LLVM specific compiler options
+  - option: llvm_compiler_option
+    value: -Wno-missing-field-initializers
+  - option: llvm_compiler_option
+    value: "-Wno-unused-parameter"
+  - option: llvm_compiler_option
+    value: "-Wno-missing-declarations"
+  - option: llvm_compiler_option
+    value: "-Wno-inconsistent-missing-override"
+  - option: llvm_compiler_option
+    value: "-femulated-tls"
+  - option: llvm_linker_option
+    value: "--rtlib=compiler-rt"
+
 provides:
   - name: matter
 define:
@@ -71,8 +85,6 @@ requires:
     condition: [matter_wifi]
 
   - name: matter_libinetlayer
-    condition: [matter_thread]
-  - name: matter_thread_network_diagnostics
     condition: [matter_thread]
   - name: matter_libinetlayer_wifi
     condition: [matter_wifi]
@@ -106,6 +118,7 @@ requires:
   - name: matter_ot_mbedtls_override
   - name: matter_server_cluster
   - name: matter_syscall_stubs
+    condition: [matter_efr32]
   - name: matter_nlassert
   - name: matter_nlio
   - name: matter_includes
@@ -115,6 +128,9 @@ requires:
   - name: matter_callbacks
   - name: matter_check_in_message
   - name: matter_codegen_data_model_sources
+    condition: [matter_codegen_dm]
+  - name: matter_code_driven_data_model_sources
+    condition: [matter_code_driven_dm]
   - name: matter_data_model
   - name: matter_data_model_provider
   - name: matter_encode_decode
@@ -125,8 +141,6 @@ requires:
   - name: matter_naming
   - name: matter_text_only_logging
   - name: matter_tracing_headers
-  # TODO: Remove once Zap issue is fixed
-  - name: matter_zap_include
 recommends:
   - id: matter_configuration_over_swo
   - id: matter_ot_mbedtls_override

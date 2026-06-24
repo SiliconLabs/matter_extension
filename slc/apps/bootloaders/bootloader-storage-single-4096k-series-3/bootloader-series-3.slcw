@@ -1,8 +1,0 @@
-label: bootloader-series-3
-quality: internal
-package: matter
-description: Solution for Matter Series 3 Bootloader
-project:
-  - path: ./bootloader-storage-single-4096k-series-3.slcp
-    id: bootloader
-    output: matter-bootloader

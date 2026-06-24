@@ -1,0 +1,55 @@
+id: matter_dual_stack
+package: matter
+description: >
+  Matter Wi-Fi network stack provider for dual-stack configurations on
+  SiWx917-based platforms (IPv4 over NWP offload + IPv6 over host LwIP).
+  Drop-in alternative to matter_lwip; selected in place of it for dual-stack
+  Matter applications. Defines SL_MATTER_ENABLE_DUAL_STACK=1, mirroring the
+  enable_matter_dual_stack flag in the GN build system.
+label: Matter Dual Stack
+category: Matter-WiFi|lwip
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+
+provides:
+  - name: matter_dual_stack
+  - name: matter_lwip
+  - name: lwip
+  - name: lwip_port_freertos
+  - name: netstack_silabs_lwip_port_freertos
+  - name: sl_si91x_errno
+
+requires:
+  - name: sl_si91x_network_dual_stack
+  - name: sl_si91x_asynchronous_socket
+
+include:
+  - path: third_party/matter_sdk/src/lwip/silabs
+    file_list:
+      - path: lwipopts.h
+      - path: lwipopts-siwx.h
+      - path: arch/cc.h
+      - path: arch/perf.h
+      - path: lwippools.h
+  - path: slc/inc/lwip
+    file_list:
+      - path: lwip_buildconfig.h
+  - path: slc/inc/wifi
+    file_list:
+      - path: brd4186c.h
+      - path: brd4187c.h
+      - path: sl_custom_board.h
+  - path: third_party/matter_sdk/src/lwip/freertos
+    file_list:
+      - path: arch/sys_arch.h
+
+source:
+  - path: third_party/matter_sdk/src/lwip/freertos/sys_arch.c
+
+define:
+  - name: LWIP_NETIF_API
+    value: 1
+  - name: SL_MATTER_ENABLE_DUAL_STACK
+    value: "1"

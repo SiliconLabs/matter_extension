@@ -10,6 +10,8 @@ import shutil
 import json
 import yaml
 
+from remove_obsolete_cluster_components import remove_obsolete_cluster_components
+
 root  = str(pathlib.Path(os.path.realpath(__file__)).parent.parent.parent)
 os.chdir(root)
 cluster_dir_path = "third_party/matter_sdk/src/app/clusters"
@@ -28,28 +30,42 @@ for subdir in subdirs:
     clustername = ""
     clientOrServer = ""
 
-    for file in os.listdir(os.path.join(cluster_dir_path, subdir)):
-        # Check if the file is a header file
+    subdir_path = os.path.join(cluster_dir_path, subdir)
+
+    # Skip non-directory entries (e.g. BUILD.gn)
+    if not os.path.isdir(subdir_path):
+        continue
+
+    codegen_path = os.path.join(subdir_path, "codegen")
+    has_codegen = os.path.isdir(codegen_path)
+
+    # TEMP: for sources only codegen/ when it exists,else cluster root only.
+    for file in os.listdir(subdir_path):
         if file.endswith(".h") or file.endswith(".hpp") or file.endswith(".ipp"):
             headers.append(file)
-        # Check if the file is a source file
-        elif file.endswith(".c") or file.endswith(".cpp"):
-            sources.append(os.path.join(cluster_dir_path, subdir, file))
-        
-        # Replace hyphens with underscores in the subdirectory name to form the cluster component name
-        clustercomponentname = subdir.replace("-", "_")
-        clustername = clustercomponentname
-        
-        # Determine if the cluster is a server or client
-        if "server" in clustercomponentname:
-            clientOrServer = " Server"
-            clustername = clustercomponentname.replace("_server", "")
-        if "client" in clustername:
-            clientOrServer = " Client"
-            clustername = clustercomponentname.replace("_client", "")
-        
-        # Set the include path for the cluster
-        include = os.path.join(cluster_dir_path, subdir)
+        elif not has_codegen and (file.endswith(".c") or file.endswith(".cpp")):
+            sources.append(os.path.join(subdir_path, file))
+    if has_codegen:
+        for codegen_file in os.listdir(codegen_path):
+            if codegen_file.endswith(".h") or codegen_file.endswith(".hpp") or codegen_file.endswith(".ipp"):
+                headers.append(os.path.join("codegen", codegen_file))
+            elif codegen_file.endswith(".c") or codegen_file.endswith(".cpp"):
+                sources.append(os.path.join(codegen_path, codegen_file))
+    
+    # Replace hyphens with underscores in the subdirectory name to form the cluster component name
+    clustercomponentname = subdir.replace("-", "_")
+    clustername = clustercomponentname
+    
+    # Determine if the cluster is a server or client
+    if "server" in clustercomponentname:
+        clientOrServer = " Server"
+        clustername = clustercomponentname.replace("_server", "")
+    if "client" in clustername:
+        clientOrServer = " Client"
+        clustername = clustercomponentname.replace("_client", "")
+    
+    # Set the include path for the cluster
+    include = subdir_path
 
     # If a cluster component name is found and there are source or header files
     if clustercomponentname != "":
@@ -61,6 +77,7 @@ for subdir in subdirs:
             cluster_data[clustercomponentname]["include"] = include
             cluster_data[clustercomponentname]["sources"] = sources
             cluster_data[clustercomponentname]["clientOrServer"] = clientOrServer
+            cluster_data[clustercomponentname]["has_codegen"] = has_codegen
 
 # Get the categories of clusters through the chip data
 # Create list of clusternames
@@ -76,7 +93,9 @@ for xml_path in cluster_xml_path:
         filename = xmlfile.split(".")[0]
 
         # Handle special cases for filename differences
-        if "ota" in filename:
+        if "ota-provider" in filename:
+            clustername = "ota_provider"
+        elif "ota-requestor" in filename:
             clustername = "ota_requestor"
         elif "occupancy" in filename:
             clustername = "occupancy_sensor"
@@ -117,18 +136,9 @@ for xml_path in cluster_xml_path:
                     name = line.split("<name>")[-1].split("<")[0]
             # If both category and name are found, store them in the dictionary
             if category != "" and name != "":
-                if "ota" in clustername:
-                    namecategories[clustername] = {}
-                    namecategories[clustername]["category"] = category
-                    namecategories[clustername]["name"] = name
-                    clustername = "ota_provider"
-                    namecategories[clustername] = {}
-                    namecategories[clustername]["category"] = category
-                    namecategories[clustername]["name"] = name.replace("Requestor", "Provider")
-                else:
-                    namecategories[clustername] = {}
-                    namecategories[clustername]["category"] = category
-                    namecategories[clustername]["name"] = name
+                namecategories[clustername] = {}
+                namecategories[clustername]["category"] = category
+                namecategories[clustername]["name"] = name
             else :
                 namecategories[clustername] = {}
                 namecategories[clustername]["category"] = "General"
@@ -181,6 +191,8 @@ for clustercomponentname in sorted(cluster_data.keys()):
     includes = []
     source_data = []
     defines = []
+    requires_data = []
+    config_file_data = []
     try:
         with open(component_location, 'r') as file:
             content = yaml.safe_load(file)
@@ -188,6 +200,8 @@ for clustercomponentname in sorted(cluster_data.keys()):
         current_source_data = content.get('source', [])
         current_include_data = content.get('include', [])
         current_define_data = content.get('define', [])
+        requires_data = content.get('requires', []) or []
+        config_file_data = content.get('config_file', []) or []
 
         #merge with extracted source and include data and remove duplicates
         for path in current_source_data:
@@ -195,11 +209,16 @@ for clustercomponentname in sorted(cluster_data.keys()):
         if len(current_include_data)>1:
             include = {}
             for i in range(len(current_include_data)):
-                if current_include_data[i]["path"] not in cluster_data[clustercomponentname]["include"]:
-                    headers = []
-                    for header in current_include_data[i]["file_list"]:
-                        headers.append(header["path"])
-                    include = {"path": current_include_data[i]["path"], "file_list": headers}
+                inc_path = current_include_data[i]["path"]
+                if not os.path.isdir(inc_path) or inc_path == cluster_data[clustercomponentname]["include"]:
+                    continue
+                headers = []
+                for header in current_include_data[i]["file_list"]:
+                    if not os.path.isfile(os.path.join(inc_path, header["path"])):
+                        continue
+                    headers.append(header["path"])
+                if headers:
+                    include = {"path": inc_path, "file_list": headers}
                     includes.append(include)
         
         #merge with extracted define data and remove duplicates
@@ -213,6 +232,19 @@ for clustercomponentname in sorted(cluster_data.keys()):
         print("EXCEPTION for component ", e , component_location)
 
     source_data = list(set(source_data + cluster_data[clustercomponentname]["sources"]))
+    if cluster_data[clustercomponentname].get("has_codegen"):
+        include_dir = cluster_data[clustercomponentname]["include"]
+        inc_prefix = os.path.normpath(include_dir) + os.sep
+        cg_prefix = os.path.normpath(os.path.join(include_dir, "codegen")) + os.sep
+
+        def _keep_codegen_src(p):
+            pn = os.path.normpath(p)
+            return (not pn.startswith(inc_prefix)) or pn.startswith(cg_prefix)
+
+        source_data = [p for p in source_data if _keep_codegen_src(p)]
+
+    source_data = [p for p in source_data if os.path.isfile(p)]
+
     if len(cluster_data[clustercomponentname]["headers"]) > 0:
         include = {"path": cluster_data[clustercomponentname]["include"], "file_list": cluster_data[clustercomponentname]["headers"]}
         includes.append(include)
@@ -225,11 +257,7 @@ for clustercomponentname in sorted(cluster_data.keys()):
     
     label_str = "label: {}".format(label)
     filedata.append(label_str)
-    # special case as only component with experimental quality
-    if clustername == "scenes":
-        filedata.append("quality: experimental")
-    else:
-        filedata.append("quality: production")
+    filedata.append("quality: production")
 
     filedata.append("metadata:")
     filedata.append("  sbom:")
@@ -237,12 +265,25 @@ for clustercomponentname in sorted(cluster_data.keys()):
     filedata.append("provides:")
     provides = "  - name: {}".format(id_str)
     filedata.append(provides)
+    if requires_data:
+        filedata.append("requires:")
+        for req in requires_data:
+            req_yaml = yaml.dump([req], default_flow_style=False, sort_keys=False).strip()
+            for line in req_yaml.split("\n"):
+                filedata.append("  " + line)
 
     if len(source_data) > 0:
         filedata.append("source:")
         for src in sorted(source_data,key=str.casefold):
+            if os.path.basename(src) == "GenericFaultTestEventTriggerHandler.cpp":
+                continue
             path = "  - path: {}".format(src)
             filedata.append(path)
+            if os.path.basename(src) == "CodegenIntegration.cpp":
+                filedata.append("    unless: [matter_code_driven_dm]")
+            if os.path.basename(src) == "CodegenInstance.cpp":
+                filedata.append("    unless: [matter_code_driven_dm]")
+
 
     if len(includes) > 0:
         filedata.append("include:")
@@ -251,8 +292,21 @@ for clustercomponentname in sorted(cluster_data.keys()):
             filedata.append(path)
             filedata.append("    file_list:")
             for header in sorted(include["file_list"],key=str.casefold):
+                if os.path.basename(header) == "GenericFaultTestEventTriggerHandler.h":
+                    continue
                 path = "      - path: {}".format(header)
                 filedata.append(path)
+                if os.path.basename(header) == "CodegenIntegration.h":
+                    filedata.append("        unless: [matter_code_driven_dm]")
+                if os.path.basename(header) == "CodegenInstance.h":
+                    filedata.append("        unless: [matter_code_driven_dm]")
+
+    if config_file_data:
+        filedata.append("config_file:")
+        for cf in config_file_data:
+            cf_yaml = yaml.dump([cf], default_flow_style=False, sort_keys=False).strip()
+            for line in cf_yaml.split("\n"):
+                filedata.append("  " + line)
 
     filedata.append("template_contribution:")
     filedata.append("  - name: component_catalog")
@@ -329,6 +383,12 @@ matter_extension_zcl_file_path = "src/app/zap-templates/zcl/zcl.json"
 with open(matter_sdk_zcl_file_path, 'r') as file:
     data = json.load(file)
 
+# TEMP: Retain feature level from matter_extension zcl.json
+# Can revisit once zap updated in CSA
+with open(matter_extension_zcl_file_path, 'r') as file:
+    ext_data = json.load(file)
+data["requiredFeatureLevel"] = ext_data["requiredFeatureLevel"]
+
 # Update paths in the list
 data['xmlRoot'] = [f"./../../../../third_party/matter_sdk/src/app/zap-templates/zcl/{path.replace('./','')}" for path in data['xmlRoot']]
 
@@ -340,3 +400,8 @@ with open(matter_extension_zcl_file_path, 'w') as file:
     json.dump(data, file, indent=4)
 
 print("Updated zcl.json file successfully.")
+
+# Remove component files for clusters no longer in the SDK
+rc = remove_obsolete_cluster_components()
+if rc != 0:
+    raise SystemExit(rc)

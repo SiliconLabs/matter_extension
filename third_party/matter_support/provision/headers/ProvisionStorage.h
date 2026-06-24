@@ -156,7 +156,8 @@ struct Storage : public GenericStorage,
     static constexpr size_t kDeviceAttestationKeySizeMax = 128;
     static constexpr size_t kSetupPayloadSizeMax         = 32;
     static constexpr size_t kCsrLengthMax                = 512;
-    static constexpr size_t kCommonNameMax               = 128;
+    // X.509 (RFC 5280, Appendix A.1): CommonName attribute value is limited to 64 characters
+    static constexpr size_t kCommonNameMax = 64;
     static constexpr size_t kTotalPayloadDataSizeInBits =
         (kVersionFieldLengthInBits + kVendorIDFieldLengthInBits + kProductIDFieldLengthInBits +
          kCommissioningFlowFieldLengthInBits + kRendezvousInfoFieldLengthInBits + kPayloadDiscriminatorFieldLengthInBits +
@@ -165,11 +166,11 @@ struct Storage : public GenericStorage,
 
 public:
     friend class Manager;
-    friend class Protocol1;
-    friend class Command;
-    friend class CsrCommand;
-    friend class ReadCommand;
-    friend class WriteCommand;
+    friend struct Protocol1;
+    friend struct Command;
+    friend struct CsrCommand;
+    friend struct ReadCommand;
+    friend struct WriteCommand;
 
     //
     // Initialization
@@ -203,6 +204,7 @@ public:
     CHIP_ERROR GetHardwareVersion(uint16_t & value) override;
     CHIP_ERROR GetHardwareVersionString(char * value, size_t max) override;
     CHIP_ERROR GetManufacturingDate(uint16_t & year, uint8_t & month, uint8_t & day) override;
+    CHIP_ERROR GetManufacturingDateSuffix(MutableCharSpan & suffixBuffer) override;
     CHIP_ERROR GetRotatingDeviceIdUniqueId(MutableByteSpan & value) override;
 
     //
@@ -238,7 +240,7 @@ public:
     CHIP_ERROR SetTestEventTriggerKey(const ByteSpan & value);
     CHIP_ERROR GetTestEventTriggerKey(MutableByteSpan & keySpan) override;
 
-    CHIP_ERROR DecryptUsingOtaTlvEncryptionKey(MutableByteSpan & block, uint32_t & mIVOffset);
+    CHIP_ERROR DecryptUsingOtaTlvEncryptionKey(MutableByteSpan & block, uint32_t & mIVOffset) override;
     CHIP_ERROR GetOtaTlvEncryptionKeyId(uint32_t & value) override;
 
     //

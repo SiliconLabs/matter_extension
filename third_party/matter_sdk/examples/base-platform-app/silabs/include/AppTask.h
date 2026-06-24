@@ -36,17 +36,6 @@
 #include <app/icd/server/ICDStateObserver.h>
 #endif // defined(CHIP_CONFIG_ENABLE_ICD_SERVER) && CHIP_CONFIG_ENABLE_ICD_SERVER
 
-/**********************************************************
- * Defines
- *********************************************************/
-
-// Application-defined error codes in the CHIP_ERROR space.
-#define APP_ERROR_EVENT_QUEUE_FAILED CHIP_APPLICATION_ERROR(0x01)
-#define APP_ERROR_CREATE_TASK_FAILED CHIP_APPLICATION_ERROR(0x02)
-#define APP_ERROR_UNHANDLED_EVENT CHIP_APPLICATION_ERROR(0x03)
-#define APP_ERROR_CREATE_TIMER_FAILED CHIP_APPLICATION_ERROR(0x04)
-#define APP_ERROR_START_TIMER_FAILED CHIP_APPLICATION_ERROR(0x05)
-#define APP_ERROR_STOP_TIMER_FAILED CHIP_APPLICATION_ERROR(0x06)
 
 /**********************************************************
  * AppTask Declaration
@@ -62,7 +51,8 @@ class AppTask : public BaseApplication
 public:
     AppTask() = default;
 
-    static AppTask & GetAppTask() { return sAppTask; }
+    /** @brief Returns the active app instance */
+    static AppTask & GetAppTask();
 
     /**
      * @brief AppTask task main loop function
@@ -71,6 +61,7 @@ public:
      */
     static void AppTaskMain(void * pvParameter);
 
+    /** @brief Creates and starts the AppTask thread */
     CHIP_ERROR StartAppTask();
 
     /**
@@ -83,32 +74,18 @@ public:
      */
     static void ButtonEventHandler(uint8_t button, uint8_t btnAction);
 
+protected:
 #if defined(CHIP_CONFIG_ENABLE_ICD_SERVER) && CHIP_CONFIG_ENABLE_ICD_SERVER
     /**
-     * @brief When the ICD enters ActiveMode, update LCD to reflect the ICD current state.
-     *        Set LCD to ActiveMode UI.
+     * @brief Default platform ICD behavior (LCD demo UI, logs). Used by AppTaskImpl::*Impl()
+     *        when CustomerAppTask does not override. ICDStateObserver is satisfied by
+     *        AppTaskImpl overrides, not by AppTask.
      */
-    void OnEnterActiveMode();
-
-    /**
-     * @brief When the ICD enters IdleMode, update LCD to reflect the ICD current state.
-     *        Set LCD to IdleMode UI.
-     */
-    void OnEnterIdleMode();
-
-    /**
-     * @brief AppTask logs the transition to iddle happening.
-     */
-    void OnTransitionToIdle();
-
-    /**
-     * @brief AppTask logs the ICD mode on mode change.
-     */
-    void OnICDModeChange();
+    void OnEnterActiveModeDefault();
+    void OnEnterIdleModeDefault();
+    void OnTransitionToIdleDefault();
+    void OnICDModeChangeDefault();
 #endif // defined(CHIP_CONFIG_ENABLE_ICD_SERVER) && CHIP_CONFIG_ENABLE_ICD_SERVER
-private:
-    static AppTask sAppTask;
-
     /**
      * @brief Override of BaseApplication::AppInit() virtual method, called by BaseApplication::Init()
      *

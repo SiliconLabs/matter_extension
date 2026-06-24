@@ -1,0 +1,100 @@
+project_name: matter_thread_soc_lighting_app_trustzone_s_freertos
+label: Matter Thread - SoC Lighting TrustZone Secure FreeRTOS
+description: Demonstrates a sample implementation of a Matter over Thread lighting app with TrustZone support
+category: Matter Application
+quality: production
+package: matter
+
+sdk_extension:
+  - id: matter
+    version: "2.9.0"
+    vendor: silabs
+
+component:
+  - id: tz_secure_key_library_s
+
+requires:
+  - name: armv8m.main # Armv8-M Supports TrustZone
+
+configuration:
+  - name: SL_MAIN_START_TASK_STACK_SIZE_BYTES
+    value: 3072
+    condition: [sl_main]
+  - name: SL_STACK_SIZE
+    value: 3072
+  - name: SL_HEAP_SIZE
+    value: 3072
+
+define:
+  # PSA Crypto configuration:
+  - name: TFM_CRYPTO_CONC_OPER_NUM
+    value: 4
+
+template_contribution:
+  - name: application_type
+    value: "APPLICATION_TYPE_MCU"
+    condition:
+      - bootloader_app_properties
+
+  - name: memory_flash_start
+    value: 0x0
+    condition: [device_sdid_200]
+    unless: [bootloader_interface]
+  - name: memory_flash_start
+    value: 0x08000000
+    unless: [device_sdid_200, bootloader_interface]
+  - name: memory_flash_start
+    value: 0x4000
+    condition: [device_sdid_200, bootloader_interface]
+  - name: memory_flash_start
+    value: 0x08006000
+    condition: [bootloader_interface]
+    unless: [device_sdid_200]
+
+  - name: memory_flash_size
+    value: 0x20000
+
+  - name: memory_ram_start
+    value: 0x20000000
+  - name: memory_ram_size
+    value: 0x6000
+
+import:
+  # Import the config files from the TZ Non-Secure application
+  - id: application
+
+export:
+  library:
+    - path: artifact/trustzone_secure_library.o
+
+filter:
+  - name: Type
+    value:
+      - SoC Project
+  - name: Difficulty
+    value:
+      - Advanced
+  - name: Wireless Technology
+    value:
+      - Matter
+
+tag:
+  - companion:nonsecure_app # Needs a companion app and cannot be built alone
+  - hardware:rf:band:2400
+  - hardware:component:button:2+
+  - hardware:component:led:2+
+  - hwfilter:device:device_supports_bluetooth
+  - hwfilter:device:device_supports_thread
+  - hwfilter:device:device_family_efr32mg24
+  - hidden
+
+post_build:
+  profile: tz_secure_application
+
+readme:
+  - path: ../README.md
+
+ui_hints:
+  highlight:
+    - path: ../README.md
+      focus: true

@@ -1,0 +1,36 @@
+category: Matter|Core
+description: Provides code-driven Matter data model provider sources for cluster integration and attribute access.
+id: code_driven_data_model_sources
+include:
+-   path: third_party/matter_sdk/src/data-model-providers/codedriven
+    file_list:
+    -   path: CodeDrivenDataModelProvider.h
+-   path: third_party/matter_sdk/src/data-model-providers/codedriven/endpoint
+    file_list:
+    -   path: EndpointInterface.h
+    -   path: EndpointInterfaceRegistry.h
+    -   path: SpanEndpoint.h
+label: code_driven_data_model_sources
+package: matter
+provides:
+-   name: matter_code_driven_data_model_sources
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+source:
+-   path: third_party/matter_sdk/src/data-model-providers/codedriven/CodeDrivenDataModelProvider.cpp
+-   path: third_party/matter_sdk/src/data-model-providers/codedriven/endpoint/SpanEndpoint.cpp
+-   path: third_party/matter_sdk/src/data-model-providers/codedriven/endpoint/EndpointInterfaceRegistry.cpp
+-   path: third_party/matter_sdk/zzz_generated/app-common/app-common/zap-generated/cluster-objects.cpp
+-   path: third_party/matter_sdk/zzz_generated/app-common/app-common/zap-generated/cluster-enums.h
+-   path: third_party/matter_sdk/zzz_generated/app-common/app-common/zap-generated/cluster-enums-check.h
+-   path: third_party/matter_sdk/zzz_generated/app-common/app-common/zap-generated/cluster-objects.h
+-   path: third_party/matter_sdk/zzz_generated/app-common/app-common/zap-generated/ids/Attributes.h
+-   path: third_party/matter_sdk/zzz_generated/app-common/app-common/zap-generated/ids/Clusters.h
+-   path: third_party/matter_sdk/zzz_generated/app-common/app-common/zap-generated/attributes/Accessors.h
+-   path: third_party/matter_sdk/zzz_generated/app-common/app-common/zap-generated/attribute-type.h
+ui_hints:
+    visibility: never
+conflicts:
+  - name: matter_codegen_data_model_sources

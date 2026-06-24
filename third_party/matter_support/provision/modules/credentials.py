@@ -8,8 +8,6 @@ from modules.parameters import ID, Formats, Types
 
 
 class Credentials:
-    DEFAULT_CD_CERT = "credentials/test/certification-declaration/Chip-Test-CD-Signing-Cert.pem"
-    DEFAULT_CD_KEY = "credentials/test/certification-declaration/Chip-Test-CD-Signing-Key.pem"
     PKCS_GENERATED = 'certs.p12'
     DEFAULT_HEADER_TEMPLATE = 'silabs_creds.tmpl'
     DEFAULT_HEADER_FILE = 'silabs_creds.h'
@@ -75,7 +73,7 @@ class Credentials:
             cd_offset = 0x0400
 
         # Generate header
-        header = _util.File(self.paths.base(Credentials.DEFAULT_HEADER_TEMPLATE)).read()
+        header = _util.File(self.paths.config(Credentials.DEFAULT_HEADER_TEMPLATE)).read()
         header = header.replace('{{use_legacy_certs_format}}', use_legacy_format and '1' or '0')
         header = header.replace('{{dac_offset}}', "0x{:04x}".format(dac_offset))
         header = header.replace('{{pai_offset}}', "0x{:04x}".format(pai_offset))
@@ -94,10 +92,16 @@ class Credentials:
         elif self.generate:
             # Signing Certificate
             if cdc.value is None:
-                cdc.set(self.paths.matter(Credentials.DEFAULT_CD_CERT))
+                cd_cert = self.args.str(ID.kCdCert)
+                if not cd_cert:
+                    _util.fail("Missing: Certification Declaration Certificate")
+                cdc.set(self.paths.matter(cd_cert))
             # Signing Key
             if cdk.value is None:
-                cdk.set(self.paths.matter(Credentials.DEFAULT_CD_KEY))
+                cd_key = self.args.str(ID.kCdKey)
+                if not cd_key:
+                    _util.fail("Missing: Certification Declaration Key")
+                cdk.set(self.paths.matter(cd_key))
             # Generate CD
             cd.set(cd_temp, None, False)
             self.cert_tool.generateCD(cdc.value, cdk.value, cd.value)

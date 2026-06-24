@@ -18,15 +18,7 @@ requires:
   - name: mbedtls_entropy_hardware
     condition: [device_series_2]
   - name: mbedtls_entropy_hardware
-    condition: [device_generic_family_sixx301]
-  # PLATFORM_HYD-5151
-  - name: mbedtls_entropy_dummy_nvseed
-    condition: [device_generic_family_sixx353]
-  - name: mbedtls_entropy_dummy_nvseed
-    condition: [device_family_sixg300xiwifi74000]
-documentation:
-  docset: mbed-tls
-  document: group-rng-module
+    condition: [device_series_3]
 metadata:
   sbom:
     license: Zlib AND Apache-2.0

@@ -136,7 +136,8 @@ void ReadHandler::OnSubscriptionResumed(const SessionHandle & sessionHandle,
     SingleLinkedListNode<AttributePathParams> * attributePath = mpAttributePathList;
     while (attributePath)
     {
-        mManagementCallback.GetInteractionModelEngine()->GetReportingEngine().SetDirty(attributePath->mValue);
+        TEMPORARY_RETURN_IGNORED mManagementCallback.GetInteractionModelEngine()->GetReportingEngine().SetDirty(
+            attributePath->mValue);
         attributePath = attributePath->mpNext;
     }
 }
@@ -171,7 +172,8 @@ void ReadHandler::Close(CloseOptions options)
         auto * subscriptionResumptionStorage = mManagementCallback.GetInteractionModelEngine()->GetSubscriptionResumptionStorage();
         if (subscriptionResumptionStorage)
         {
-            subscriptionResumptionStorage->Delete(GetInitiatorNodeId(), GetAccessingFabricIndex(), mSubscriptionId);
+            TEMPORARY_RETURN_IGNORED subscriptionResumptionStorage->Delete(GetInitiatorNodeId(), GetAccessingFabricIndex(),
+                                                                           mSubscriptionId);
         }
     }
 #endif // CHIP_CONFIG_PERSIST_SUBSCRIPTIONS
@@ -210,7 +212,7 @@ void ReadHandler::OnInitialRequest(System::PacketBufferHandle && aPayload)
         {
             status = StatusIB(err).mStatus;
         }
-        StatusResponse::Send(status, mExchangeCtx.Get(), /* aExpectResponse = */ false);
+        TEMPORARY_RETURN_IGNORED StatusResponse::Send(status, mExchangeCtx.Get(), /* aExpectResponse = */ false);
         // At this point we can't have a persisted subscription, since that
         // happens only when ProcessSubscribeRequest returns success. And our
         // subscription id is almost certainly not actually useful at this
@@ -280,15 +282,21 @@ exit:
     return err;
 }
 
-CHIP_ERROR ReadHandler::SendStatusReport(Protocols::InteractionModel::Status aStatus)
+CHIP_ERROR ReadHandler::AcquireExchangeForSend()
 {
-    VerifyOrReturnLogError(mState == HandlerState::CanStartReporting, CHIP_ERROR_INCORRECT_STATE);
     if (IsPriming() || IsChunkedReport())
     {
+        // We already hold mExchangeCtx from the inbound request. The underlying
+        // session can be released while a send is pending (e.g. TCP teardown);
+        // guard before grabbing it to avoid crashing in UseSuggestedResponseTimeout.
+        VerifyOrReturnLogError(mExchangeCtx->HasSessionHandle(), CHIP_ERROR_MISSING_SECURE_SESSION);
         mSessionHandle.Grab(mExchangeCtx->GetSessionHandle());
     }
     else
     {
+        // For subscription re-reports, the previous exchange was released after
+        // the last send. mExchangeCtx must be null here; open a fresh exchange
+        // from the stored session handle.
         VerifyOrReturnLogError(!mExchangeCtx, CHIP_ERROR_INCORRECT_STATE);
         VerifyOrReturnLogError(mSessionHandle, CHIP_ERROR_INCORRECT_STATE);
 #if CHIP_CONFIG_UNSAFE_SUBSCRIPTION_EXCHANGE_MANAGER_USE
@@ -300,8 +308,13 @@ CHIP_ERROR ReadHandler::SendStatusReport(Protocols::InteractionModel::Status aSt
         VerifyOrReturnLogError(exchange != nullptr, CHIP_ERROR_INCORRECT_STATE);
         mExchangeCtx.Grab(exchange);
     }
+    return CHIP_NO_ERROR;
+}
 
-    VerifyOrReturnLogError(mExchangeCtx, CHIP_ERROR_INCORRECT_STATE);
+CHIP_ERROR ReadHandler::SendStatusReport(Protocols::InteractionModel::Status aStatus)
+{
+    VerifyOrReturnLogError(mState == HandlerState::CanStartReporting, CHIP_ERROR_INCORRECT_STATE);
+    ReturnErrorOnFailure(AcquireExchangeForSend());
     return StatusResponse::Send(aStatus, mExchangeCtx.Get(), /* aExpectResponse = */ false);
 }
 
@@ -309,25 +322,7 @@ CHIP_ERROR ReadHandler::SendReportData(System::PacketBufferHandle && aPayload, b
 {
     VerifyOrReturnLogError(mState == HandlerState::CanStartReporting, CHIP_ERROR_INCORRECT_STATE);
     VerifyOrDie(!IsAwaitingReportResponse()); // Should not be reportable!
-    if (IsPriming() || IsChunkedReport())
-    {
-        mSessionHandle.Grab(mExchangeCtx->GetSessionHandle());
-    }
-    else
-    {
-        VerifyOrReturnLogError(!mExchangeCtx, CHIP_ERROR_INCORRECT_STATE);
-        VerifyOrReturnLogError(mSessionHandle, CHIP_ERROR_INCORRECT_STATE);
-#if CHIP_CONFIG_UNSAFE_SUBSCRIPTION_EXCHANGE_MANAGER_USE
-        auto exchange = mExchangeMgr->NewContext(mSessionHandle.Get().Value(), this);
-#else  // CHIP_CONFIG_UNSAFE_SUBSCRIPTION_EXCHANGE_MANAGER_USE
-        auto exchange =
-            mManagementCallback.GetInteractionModelEngine()->GetExchangeManager()->NewContext(mSessionHandle.Get().Value(), this);
-#endif // CHIP_CONFIG_UNSAFE_SUBSCRIPTION_EXCHANGE_MANAGER_USE
-        VerifyOrReturnLogError(exchange != nullptr, CHIP_ERROR_INCORRECT_STATE);
-        mExchangeCtx.Grab(exchange);
-    }
-
-    VerifyOrReturnLogError(mExchangeCtx, CHIP_ERROR_INCORRECT_STATE);
+    ReturnErrorOnFailure(AcquireExchangeForSend());
 
     if (!IsReporting())
     {
@@ -337,7 +332,7 @@ CHIP_ERROR ReadHandler::SendReportData(System::PacketBufferHandle && aPayload, b
     SetStateFlag(ReadHandlerFlags::ChunkedReport, aMoreChunks);
     bool responseExpected = IsType(InteractionType::Subscribe) || aMoreChunks;
 
-    mExchangeCtx->UseSuggestedResponseTimeout(app::kExpectedIMProcessingTime);
+    ReturnErrorOnFailure(mExchangeCtx->UseSuggestedResponseTimeout(app::kExpectedIMProcessingTime));
     CHIP_ERROR err = mExchangeCtx->SendMessage(Protocols::InteractionModel::MsgType::ReportData, std::move(aPayload),
                                                responseExpected ? Messaging::SendMessageFlags::kExpectResponse
                                                                 : Messaging::SendMessageFlags::kNone);
@@ -388,7 +383,7 @@ CHIP_ERROR ReadHandler::OnMessageReceived(Messaging::ExchangeContext * apExchang
 
     if (sendStatusResponse)
     {
-        StatusResponse::Send(Status::InvalidAction, apExchangeContext, false /*aExpectResponse*/);
+        TEMPORARY_RETURN_IGNORED StatusResponse::Send(Status::InvalidAction, apExchangeContext, false /*aExpectResponse*/);
     }
 
     if (err != CHIP_NO_ERROR)
@@ -419,7 +414,7 @@ void ReadHandler::OnResponseTimeout(Messaging::ExchangeContext * apExchangeConte
             ChipLogError(DataManagement, "Trigger check-in message when non-priming subscription report times out");
             if (mSessionHandle)
             {
-                ICDNotifier::GetInstance().NotifySendCheckIn(GetSubjectDescriptor());
+                ICDNotifier::GetInstance().NotifySendCheckIn(MakeOptional(GetSubjectDescriptor()));
             }
             else
             {
@@ -656,7 +651,7 @@ void ReadHandler::MoveToState(const HandlerState aTargetState)
     {
         if (ShouldReportUnscheduled())
         {
-            mManagementCallback.GetInteractionModelEngine()->GetReportingEngine().ScheduleRun();
+            TEMPORARY_RETURN_IGNORED mManagementCallback.GetInteractionModelEngine()->GetReportingEngine().ScheduleRun();
         }
         else
         {

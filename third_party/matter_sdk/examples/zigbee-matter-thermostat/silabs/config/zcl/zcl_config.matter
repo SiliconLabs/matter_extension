@@ -4054,7 +4054,7 @@ endpoint 1 {
   }
 
   server cluster Thermostat {
-    ram      attribute localTemperature;
+    ram      attribute localTemperature default = 2550;
     ram      attribute absMinHeatSetpointLimit default = 0x02BC;
     ram      attribute absMaxHeatSetpointLimit default = 0x0BB8;
     ram      attribute absMinCoolSetpointLimit default = 0x0640;

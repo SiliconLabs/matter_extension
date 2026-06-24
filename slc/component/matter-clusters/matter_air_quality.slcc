@@ -12,11 +12,16 @@ metadata:
 provides:
   - name: matter_air_quality
 source:
-  - path: third_party/matter_sdk/src/app/clusters/air-quality-server/air-quality-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/air-quality-server/AirQualityCluster.cpp
+  - path: third_party/matter_sdk/src/app/clusters/air-quality-server/CodegenIntegration.cpp
+    unless: [matter_code_driven_dm]
 include:
   - path: third_party/matter_sdk/src/app/clusters/air-quality-server
     file_list:
       - path: air-quality-server.h
+      - path: AirQualityCluster.h
+      - path: CodegenIntegration.h
+        unless: [matter_code_driven_dm]
 config_file:
   - path: third_party/matter_sdk/examples/air-quality-sensor-app/silabs/include/AirQualityConfig.h
     file_id: matter_air_quality_config

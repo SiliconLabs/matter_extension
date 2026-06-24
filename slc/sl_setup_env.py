@@ -19,11 +19,12 @@
  *
  * @section usage Usage
  *   @code{.sh}
- *   python3 slc/sl_setup_env.py [--verbose]
+ *   python3 slc/sl_setup_env.py [--verbose] [-c|--clean-reinstall]
  *   @endcode
  *
  * @section options Options
  *   - `--verbose` : Enable verbose (debug) logging output
+ *   - `-c` / `--clean-reinstall` : Remove `slc/tools` and reinstall all downloaded tools
  *
  * @section output Output
  *   Generates a `.env` file in `slc/tools/` containing all required environment
@@ -58,13 +59,16 @@ if sys.version_info < (3, 9):
 class MatterEnvSetup:
     """Class for setting up the Matter development environment with all required tools."""
 
-    def __init__(self, verbose=False):
+    def __init__(self, verbose=False, clean_reinstall=False):
         """Initialize MatterEnvSetup instance.
 
         Args:
             verbose: Enable verbose (debug) logging if True
+            clean_reinstall: If True, remove slc/tools before setup (fresh tool install)
         """
         self.verbose = verbose
+        self.clean_reinstall = clean_reinstall
+        os.environ["SLT_CI"] = "true"
         self.setup_logging()
         self.set_root_paths()
         self.set_platform_vars()
@@ -113,7 +117,7 @@ class MatterEnvSetup:
         else:
             logging.error(f"ERROR: Platform {platform} is not supported")
             sys.exit(1)
-        self.slt_cli_url = f"https://www.silabs.com/documents/public/software/slt-cli-1.0.1-{self.__platform}-x64.zip"
+        self.slt_cli_url = f"https://www.silabs.com/documents/public/software/slt-cli-1.1.1-{self.__platform}-x64.zip"
         if platform == "win32":
             self.slt_cli_path = os.path.join(self.tools_folder_path, "slt.exe")
         else:
@@ -121,6 +125,18 @@ class MatterEnvSetup:
         self.sisdk_root = os.path.join(self.silabs_chip_root, "third_party", "simplicity_sdk")
         self.wiseconnect_root = os.path.join(self.silabs_chip_root, "third_party", "wifi_sdk")
         self.zap_path = os.path.join(self.silabs_chip_root, "slc", "tools", "zap")
+
+    def remove_tools_directory(self):
+        """Remove slc/tools and recreate an empty directory (cross-platform)."""
+        tools = Path(self.tools_folder_path)
+        if tools.exists():
+            logging.info(f"Removing tools directory for clean reinstall: {tools}")
+            try:
+                shutil.rmtree(tools)
+            except OSError as e:
+                logging.error(f"Failed to remove tools directory {tools}: {e}")
+                sys.exit(1)
+        tools.mkdir(parents=True, exist_ok=True)
 
     def download_and_extract_slt_cli(self):
         """Download and extract SLT CLI tool."""
@@ -214,6 +230,45 @@ class MatterEnvSetup:
                 logging.error(
                     f"Error while deleting zap located at {self.zap_path}: {e}. Using older version of zap may lead to errors.")
 
+    def _tool_executable_relpath(self, tool):
+        """Return the executable path relative to the tool install root."""
+        if tool == "slc-cli":
+            return "slc.bat" if self.platform == "win32" else "slc"
+        if tool == "java21":
+            if self.platform == "darwin":
+                return os.path.join("jre", "bin", "java")
+            java_executable = "java.exe" if self.platform == "win32" else "java"
+            return os.path.join("jre", "bin", java_executable)
+        if tool == "gcc-arm-none-eabi":
+            gcc_executable = "arm-none-eabi-gcc.exe" if self.platform == "win32" else "arm-none-eabi-gcc"
+            return os.path.join("bin", gcc_executable)
+        if tool == "commander":
+            if self.platform == "darwin":
+                return os.path.join("Contents", "MacOS", "commander")
+            return "commander.exe" if self.platform == "win32" else "commander"
+        if tool == "ninja":
+            return "ninja.exe" if self.platform == "win32" else "ninja"
+        if tool == "cmake":
+            if self.platform == "darwin":
+                return os.path.join("CMake.app", "Contents", "bin", "cmake")
+            else:
+                cmake_executable = "cmake.exe" if self.platform == "win32" else "cmake"
+                return os.path.join("bin", cmake_executable)
+        return ""
+
+    def _resolve_tool_paths(self, tool, location):
+        """Normalize a tool location into install root and executable path."""
+        resolved_location = location.strip().strip('"')
+        if not resolved_location:
+            return "", ""
+
+        if os.path.isfile(resolved_location):
+            return os.path.dirname(resolved_location), resolved_location
+
+        executable_relpath = self._tool_executable_relpath(tool)
+        executable_path = os.path.join(resolved_location, executable_relpath) if executable_relpath else resolved_location
+        return resolved_location, executable_path
+
     def write_env_file(self):
         """Write environment variables to .env file."""
         env_path = os.path.expanduser(os.path.join(self.tools_folder_path, ".env"))
@@ -223,29 +278,32 @@ class MatterEnvSetup:
             if not path or not os.path.exists(path):
                 logging.error(f"Tool path for {tool} is invalid or does not exist: {path}")
                 sys.exit(1)
+        for tool, executable_path in self.executables.items():
+            if not executable_path or not os.path.exists(executable_path):
+                logging.error(f"Tool executable for {tool} is invalid or does not exist: {executable_path}")
+                sys.exit(1)
 
         arm_gcc_bin = os.path.join(self.paths.get('gcc-arm-none-eabi'), "bin")
         path_separator = ";" if self.platform == "win32" else ":"
 
         if self.platform == "darwin":
             java_path = os.path.join(self.paths.get('java21'), "jre", "Contents", "Home")
-            commander_path = os.path.join(self.paths.get('commander'), "Contents", "MacOS")
         else:
             java_path = os.path.join(self.paths.get('java21'), "jre")
-            commander_path = self.paths.get('commander')
-
-        if self.platform == "win32":
-            slc_executable = "slc.bat"
-            ninja_executable = "ninja.exe"
-            commander_executable = "commander.exe"
-            ninja_path = os.path.join(self.paths.get('ninja'), ninja_executable)
-        else:
-            slc_executable = "slc"
-            ninja_executable = "ninja"
-            commander_executable = "commander"
-            ninja_path = ninja_executable
+        slc_executable = self.executables.get('slc-cli')
+        ninja_executable = self.executables.get('ninja')
+        commander_executable = self.executables.get('commander')
+        commander_path = os.path.dirname(commander_executable)
 
         cmake_bin = os.path.join(self.paths.get('cmake'), "bin")
+        tools_path_entries = [
+            arm_gcc_bin,
+            os.path.dirname(slc_executable),
+            os.path.join(java_path, 'bin'),
+            commander_path,
+            os.path.dirname(ninja_executable),
+            cmake_bin,
+        ]
 
         try:
             with open(env_path, "w") as outfile:
@@ -253,10 +311,11 @@ class MatterEnvSetup:
                 outfile.write(f"ARM_GCC_DIR={self.paths.get('gcc-arm-none-eabi')}\n")
                 outfile.write(f"JAVA_HOME={java_path}\n")
                 outfile.write(f"ZAP_INSTALL_PATH={self.zap_path}\n")
-                outfile.write(
-                    f"TOOLS_PATH={arm_gcc_bin}{path_separator}{self.paths.get('slc-cli')}{path_separator}{os.path.join(java_path, 'bin')}{path_separator}{commander_path}{path_separator}{self.paths.get('ninja')}{path_separator}{cmake_bin}{path_separator}\n")
+                outfile.write(f"TOOLS_PATH={path_separator.join(tools_path_entries)}\n")
                 outfile.write(f"silabs_chip_root={self.silabs_chip_root}\n")
-                outfile.write(f"NINJA_PATH={ninja_path}\n")
+                outfile.write(f"NINJA_PATH={ninja_executable}\n")
+                outfile.write(f"NINJA_EXE_PATH={ninja_executable}\n")
+                outfile.write(f"NINJA_EXECUTABLE={ninja_executable}\n")
                 outfile.write(f"SISDK_ROOT={self.sisdk_root}\n")
                 outfile.write(f"WISECONNECT_ROOT={self.wiseconnect_root}\n")
                 outfile.write(f"SLC_EXECUTABLE={slc_executable}\n")
@@ -274,30 +333,38 @@ class MatterEnvSetup:
             tool: Tool name to install
 
         Returns:
-            str: Path to installed tool
+            tuple[str, str]: Tool install root and executable path
 
         Raises:
             SystemExit: If tool installation fails
         """
-        try:
-            result = subprocess.run([self.slt_cli_path, "where", tool], capture_output=True, text=True, check=True)
-            tool_dir = result.stdout.strip()
-        except subprocess.CalledProcessError as e:
-            logging.error(f"Failed to query tool location for {tool}: {e}")
-            sys.exit(1)
+        result = subprocess.run(
+            [self.slt_cli_path, "where", tool],
+            capture_output=True,
+            text=True,
+        )
+        tool_dir = result.stdout.strip()
 
         if not tool_dir:
             logging.info(f"Downloading {tool}")
             try:
-                subprocess.run([self.slt_cli_path, "install", tool], check=True)
-                result = subprocess.run([self.slt_cli_path, "where", tool], capture_output=True, text=True, check=True)
+                command = [self.slt_cli_path, "install", tool]
+                logging.debug(f"Running command: {command}")
+                subprocess.run(command, check=True)
+                result = subprocess.run(
+                    [self.slt_cli_path, "where", tool],
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
                 tool_dir = result.stdout.strip()
             except subprocess.CalledProcessError as e:
                 logging.error(f"Failed to install {tool}: {e}")
                 sys.exit(1)
 
-        logging.info(f"{tool} = {tool_dir}")
-        return tool_dir
+        tool_root, tool_executable = self._resolve_tool_paths(tool, tool_dir)
+        logging.info(f"{tool} = {tool_executable or tool_root}")
+        return tool_root, tool_executable
 
     def _make_executable(self, path):
         """Make a file executable on Unix-like systems."""
@@ -314,16 +381,19 @@ class MatterEnvSetup:
         """Install and configure all required development tools."""
         tools_list = ["slc-cli", "java21", "gcc-arm-none-eabi", "commander", "ninja", "cmake"]
         self.paths = {}
+        self.executables = {}
         for tool in tools_list:
-            self.paths[tool] = self.install_tools(tool)
+            self.paths[tool], self.executables[tool] = self.install_tools(tool)
         if self.platform == "darwin":
-            self._make_executable(os.path.join(self.paths.get('ninja'), "ninja"))
-            self._make_executable(os.path.join(self.paths.get('java21'), "jre", "Contents", "Home", "bin", "java"))
+            self._make_executable(self.executables.get('ninja'))
+            self._make_executable(self.executables.get('java21'))
         self.download_and_extract_zap()
         self.check_and_update_zap_version()
 
     def run_setup(self):
         """Execute the complete environment setup process."""
+        if self.clean_reinstall:
+            self.remove_tools_directory()
         self.sync_submodules()
         self.download_and_extract_slt_cli()
         self.setup_tools()
@@ -332,9 +402,15 @@ class MatterEnvSetup:
 
 def main():
     parser = argparse.ArgumentParser(description="Setup environment for Matter project using Silicon Labs Configurator.")
-    parser.add_argument('--verbose', action='store_true', help='Enable verbose (debug) logging')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Enable verbose (debug) logging')
+    parser.add_argument(
+        '-c',
+        '--clean-reinstall',
+        action='store_true',
+        help='Remove slc/tools then run a full tool setup',
+    )
     args = parser.parse_args()
-    env_setup = MatterEnvSetup(verbose=args.verbose)
+    env_setup = MatterEnvSetup(verbose=args.verbose, clean_reinstall=args.clean_reinstall)
     env_setup.run_setup()
 
 

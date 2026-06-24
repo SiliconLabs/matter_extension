@@ -129,7 +129,6 @@ silabs_executable("fan-control-app") {
   }
 
   sources = [
-    "${examples_common_plat_dir}/main.cpp",
     "src/AppTask.cpp",
     "src/DataModelCallbacks.cpp",
     "src/FanControlManager.cpp",

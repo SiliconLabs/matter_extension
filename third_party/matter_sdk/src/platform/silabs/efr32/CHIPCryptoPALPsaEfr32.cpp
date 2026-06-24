@@ -27,7 +27,6 @@
 #include <lib/core/CHIPSafeCasts.h>
 #include <lib/support/BufferWriter.h>
 #include <lib/support/BytesToHex.h>
-#include <lib/support/CHIPArgParser.hpp>
 #include <lib/support/CodeUtils.h>
 #include <lib/support/SafeInt.h>
 #include <lib/support/SafePointerCast.h>
@@ -40,6 +39,7 @@
 #include <mbedtls/error.h>
 #include <mbedtls/x509_csr.h>
 
+#include <cinttypes>
 #include <string.h>
 #include <type_traits>
 
@@ -119,14 +119,15 @@ CHIP_ERROR AES_CCM_encrypt(const uint8_t * plaintext, size_t plaintext_length, c
 
     status = psa_aead_encrypt_setup(&operation, key.As<psa_key_id_t>(), algorithm);
     VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
-                        ChipLogError(Crypto, "psa_aead_encrypt_setup failed: %ld", status));
+                        ChipLogError(Crypto, "psa_aead_encrypt_setup failed: %" PRId32, status));
 
     status = psa_aead_set_lengths(&operation, aad_length, plaintext_length);
     VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
-                        ChipLogError(Crypto, "psa_aead_set_lengths failed: %ld", status));
+                        ChipLogError(Crypto, "psa_aead_set_lengths failed: %" PRId32, status));
 
     status = psa_aead_set_nonce(&operation, nonce, nonce_length);
-    VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL, ChipLogError(Crypto, "psa_aead_set_nonce failed: %ld", status));
+    VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
+                        ChipLogError(Crypto, "psa_aead_set_nonce failed: %" PRId32, status));
 
     if (0 == aad_length)
     {
@@ -136,7 +137,7 @@ CHIP_ERROR AES_CCM_encrypt(const uint8_t * plaintext, size_t plaintext_length, c
     {
         status = psa_aead_update_ad(&operation, aad, aad_length);
         VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
-                            ChipLogError(Crypto, "psa_aead_update_ad failed: %ld", status));
+                            ChipLogError(Crypto, "psa_aead_update_ad failed: %" PRId32, status));
     }
 
     if (0 == plaintext_length)
@@ -165,7 +166,7 @@ CHIP_ERROR AES_CCM_encrypt(const uint8_t * plaintext, size_t plaintext_length, c
         // Add the aligned part of the plaintext
         status = psa_aead_update(&operation, plaintext, block_aligned_length, ciphertext, block_aligned_length, &out_length);
         VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
-                            ChipLogError(Crypto, "psa_aead_update failed: %ld", status));
+                            ChipLogError(Crypto, "psa_aead_update failed: %" PRId32, status));
         VerifyOrReturnError(
             out_length <= block_aligned_length, CHIP_ERROR_INTERNAL,
             ChipLogError(Crypto, "psa_aead_update out_length is not compliant with PSA's output size requirements"));
@@ -182,7 +183,7 @@ CHIP_ERROR AES_CCM_encrypt(const uint8_t * plaintext, size_t plaintext_length, c
             status =
                 psa_aead_update(&operation, &plaintext[block_aligned_length], partial_block_length, temp, max_output, &out_length);
             VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
-                                ChipLogError(Crypto, "psa_aead_update failed: %ld", status));
+                                ChipLogError(Crypto, "psa_aead_update failed: %" PRId32, status));
             VerifyOrReturnError(
                 ciphertext_length + out_length <= plaintext_length, CHIP_ERROR_INTERNAL,
                 ChipLogError(Crypto, "psa_aead_update out_length is not compliant with PSA's output size requirements"));
@@ -198,7 +199,7 @@ CHIP_ERROR AES_CCM_encrypt(const uint8_t * plaintext, size_t plaintext_length, c
         // The finish may return the last part of the ciphertext
         status = psa_aead_finish(&operation, temp, max_finish, &out_length, tag, tag_length, &tag_out_length);
         VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
-                            ChipLogError(Crypto, "psa_aead_finish failed: %ld", status));
+                            ChipLogError(Crypto, "psa_aead_finish failed: %" PRId32, status));
         VerifyOrReturnError(
             ciphertext_length + out_length <= plaintext_length, CHIP_ERROR_INTERNAL,
             ChipLogError(Crypto, "psa_aead_finish out_length is not compliant with PSA's output size requirements"));
@@ -229,14 +230,15 @@ CHIP_ERROR AES_CCM_decrypt(const uint8_t * ciphertext, size_t ciphertext_length,
 
     status = psa_aead_decrypt_setup(&operation, key.As<psa_key_id_t>(), algorithm);
     VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
-                        ChipLogError(Crypto, "psa_aead_decrypt_setup failed: %ld", status));
+                        ChipLogError(Crypto, "psa_aead_decrypt_setup failed: %" PRId32, status));
 
     status = psa_aead_set_lengths(&operation, aad_length, ciphertext_length);
     VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
-                        ChipLogError(Crypto, "psa_aead_set_lengths failed: %ld", status));
+                        ChipLogError(Crypto, "psa_aead_set_lengths failed: %" PRId32, status));
 
     status = psa_aead_set_nonce(&operation, nonce, nonce_length);
-    VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL, ChipLogError(Crypto, "psa_aead_set_nonce failed: %ld", status));
+    VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
+                        ChipLogError(Crypto, "psa_aead_set_nonce failed: %" PRId32, status));
 
     if (0 == aad_length)
     {
@@ -246,7 +248,7 @@ CHIP_ERROR AES_CCM_decrypt(const uint8_t * ciphertext, size_t ciphertext_length,
     {
         status = psa_aead_update_ad(&operation, aad, aad_length);
         VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
-                            ChipLogError(Crypto, "psa_aead_update_ad failed: %ld", status));
+                            ChipLogError(Crypto, "psa_aead_update_ad failed: %" PRId32, status));
     }
 
     if (0 == ciphertext_length)
@@ -274,7 +276,7 @@ CHIP_ERROR AES_CCM_decrypt(const uint8_t * ciphertext, size_t ciphertext_length,
         // Add the aligned part of the ciphertext
         status = psa_aead_update(&operation, ciphertext, block_aligned_length, plaintext, block_aligned_length, &out_length);
         VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
-                            ChipLogError(Crypto, "psa_aead_update failed: %ld", status));
+                            ChipLogError(Crypto, "psa_aead_update failed: %" PRId32, status));
         VerifyOrReturnError(
             out_length <= block_aligned_length, CHIP_ERROR_INTERNAL,
             ChipLogError(Crypto, "psa_aead_update out_length is not compliant with PSA's output size requirements"));
@@ -291,7 +293,7 @@ CHIP_ERROR AES_CCM_decrypt(const uint8_t * ciphertext, size_t ciphertext_length,
             status =
                 psa_aead_update(&operation, &ciphertext[block_aligned_length], partial_block_length, temp, max_output, &out_length);
             VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
-                                ChipLogError(Crypto, "psa_aead_update failed: %ld", status));
+                                ChipLogError(Crypto, "psa_aead_update failed: %" PRId32, status));
             VerifyOrReturnError(
                 plaintext_length + out_length <= ciphertext_length, CHIP_ERROR_INTERNAL,
                 ChipLogError(Crypto, "psa_aead_update out_length is not compliant with PSA's output size requirements"));
@@ -307,7 +309,7 @@ CHIP_ERROR AES_CCM_decrypt(const uint8_t * ciphertext, size_t ciphertext_length,
         // Complete verification
         status = psa_aead_verify(&operation, temp, max_verify, &out_length, tag, tag_length);
         VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
-                            ChipLogError(Crypto, "psa_aead_verify failed: %ld", status));
+                            ChipLogError(Crypto, "psa_aead_verify failed: %" PRId32, status));
         VerifyOrReturnError(
             plaintext_length + out_length <= ciphertext_length, CHIP_ERROR_INTERNAL,
             ChipLogError(Crypto, "psa_aead_verify out_length is not compliant with PSA's output size requirements"));
@@ -406,7 +408,8 @@ CHIP_ERROR Hash_SHA256_stream::Finish(MutableByteSpan & out_buffer)
     size_t outLength;
 
     const psa_status_t status = psa_hash_finish(toHashOperation(&mContext), out_buffer.data(), out_buffer.size(), &outLength);
-    VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL, ChipLogError(Crypto, "psa_hash_finish failed: %ld", status));
+    VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
+                        ChipLogError(Crypto, "psa_hash_finish failed: %" PRId32, status));
     out_buffer.reduce_size(outLength);
 
     return CHIP_NO_ERROR;
@@ -433,7 +436,7 @@ CHIP_ERROR FindFreeKeySlotInRange(psa_key_id_t & keyId, psa_key_id_t start, uint
         }
         else if (status != PSA_SUCCESS)
         {
-            ChipLogError(Crypto, "psa_get_key_attributes failed: %ld", status);
+            ChipLogError(Crypto, "psa_get_key_attributes failed: %" PRId32, status);
             return CHIP_ERROR_INTERNAL;
         }
     }
@@ -452,7 +455,8 @@ CHIP_ERROR PsaKdf::Init(const ByteSpan & secret, const ByteSpan & salt, const By
     status = psa_import_key(&attrs, secret.data(), secret.size(), &mSecretKeyId);
     LogPsaError(status);
     psa_reset_key_attributes(&attrs);
-    VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL, ChipLogError(Crypto, "psa_import_key failed: %ld", status));
+    VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
+                        ChipLogError(Crypto, "psa_import_key failed: %" PRId32, status));
 
     return InitOperation(mSecretKeyId, salt, info);
 }
@@ -466,22 +470,22 @@ CHIP_ERROR PsaKdf::InitOperation(psa_key_id_t hkdfKey, const ByteSpan & salt, co
 {
     psa_status_t status = psa_key_derivation_setup(&mOperation, PSA_ALG_HKDF(PSA_ALG_SHA_256));
     VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
-                        ChipLogError(Crypto, "psa_key_derivation_setup failed: %ld", status));
+                        ChipLogError(Crypto, "psa_key_derivation_setup failed: %" PRId32, status));
 
     if (salt.size() > 0)
     {
         status = psa_key_derivation_input_bytes(&mOperation, PSA_KEY_DERIVATION_INPUT_SALT, salt.data(), salt.size());
         VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
-                            ChipLogError(Crypto, "psa_key_derivation_input_bytes failed: %ld", status));
+                            ChipLogError(Crypto, "psa_key_derivation_input_bytes failed: %" PRId32, status));
     }
 
     status = psa_key_derivation_input_key(&mOperation, PSA_KEY_DERIVATION_INPUT_SECRET, hkdfKey);
     VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
-                        ChipLogError(Crypto, "psa_key_derivation_input_key failed: %ld", status));
+                        ChipLogError(Crypto, "psa_key_derivation_input_key failed: %" PRId32, status));
 
     status = psa_key_derivation_input_bytes(&mOperation, PSA_KEY_DERIVATION_INPUT_INFO, info.data(), info.size());
     VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
-                        ChipLogError(Crypto, "psa_key_derivation_input_bytes failed: %ld", status));
+                        ChipLogError(Crypto, "psa_key_derivation_input_bytes failed: %" PRId32, status));
 
     return CHIP_NO_ERROR;
 }
@@ -568,7 +572,8 @@ CHIP_ERROR HMAC_sha::HMAC_SHA256(const Hmac128KeyHandle & key, const uint8_t * m
     psa_status_t status             = PSA_SUCCESS;
 
     status = psa_mac_compute(key.As<psa_key_id_t>(), algorithm, message, message_length, out_buffer, out_length, &out_length);
-    VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL, ChipLogError(Crypto, "psa_mac_compute failed: %ld", status));
+    VerifyOrReturnError(status == PSA_SUCCESS, CHIP_ERROR_INTERNAL,
+                        ChipLogError(Crypto, "psa_mac_compute failed: %" PRId32, status));
 
     return CHIP_NO_ERROR;
 }
@@ -1224,7 +1229,7 @@ CHIP_ERROR Spake2p_P256_SHA256_HKDF_HMAC::PointMul(void * R, const void * P1, co
         sl_status = sl_se_ecdh_compute_shared_secret(&cmd_ctx, &priv_desc, &pub_desc, &shared_desc);
         if (sl_status != SL_STATUS_OK)
         {
-            ChipLogError(Crypto, "ECDH SL failure %lx", sl_status);
+            ChipLogError(Crypto, "ECDH SL failure %" PRIx32, sl_status);
             if (sl_status == SL_STATUS_COMMAND_IS_INVALID)
             {
                 // This error will be returned if the key type isn't supported.
@@ -2387,7 +2392,7 @@ CHIP_ERROR VerifyCertificateSigningRequest(const uint8_t * csr_buf, size_t csr_l
 
     VerifyOrExit(error == CHIP_NO_ERROR, error = CHIP_ERROR_INVALID_ARGUMENT);
     VerifyOrExit(out_raw_sig_span.size() == (kP256_FE_Length * 2), error = CHIP_ERROR_INTERNAL);
-    signature.SetLength(out_raw_sig_span.size());
+    TEMPORARY_RETURN_IGNORED signature.SetLength(out_raw_sig_span.size());
 
     // Verify the signature using the public key
     error = pubkey.ECDSA_validate_msg_signature(csr.CHIP_CRYPTO_PAL_PRIVATE_X509(cri).CHIP_CRYPTO_PAL_PRIVATE_X509(p),

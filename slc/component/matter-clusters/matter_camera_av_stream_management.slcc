@@ -12,11 +12,11 @@ metadata:
 provides:
   - name: matter_camera_av_stream_management
 source:
-  - path: third_party/matter_sdk/src/app/clusters/camera-av-stream-management-server/camera-av-stream-management-server.cpp
+  - path: third_party/matter_sdk/src/app/clusters/camera-av-stream-management-server/CameraAVStreamManagementCluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/camera-av-stream-management-server
     file_list:
-      - path: camera-av-stream-management-server.h
+      - path: CameraAVStreamManagementCluster.h
 template_contribution:
   - name: component_catalog
     value: matter_camera_av_stream_management

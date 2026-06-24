@@ -1,0 +1,9 @@
+workspace_name: matter_wifi_soc_oven_app_freertos
+label: Matter WiFi - SoC Oven FreeRTOS
+quality: production
+package: matter
+description: Demonstrates a sample implementation of a Matter over Wi-Fi oven app
+project:
+  - path: ./matter_wifi_soc_oven_app_freertos.slcp
+    id: application
+    output: oven_app_siwx

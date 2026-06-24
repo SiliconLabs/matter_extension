@@ -1,0 +1,282 @@
+project_name: matter_thread_soc_wake_on_matter_freertos
+label: Matter Thread - SoC Wake on Matter FreeRTOS
+description: Demonstrates a POC of receiving Matter subscription on a Thread NCP
+quality: experimental
+package: matter
+category: Matter Application
+
+sdk_extension:
+  - id: matter
+    version: "2.9.0"
+    vendor: silabs
+
+component:
+  - id: device_init
+  - id: sl_main
+  - id: clock_manager
+  - id: common_token_manager_dynamic
+    condition: [device_series_3]
+  - id: common_token_manager
+    condition: [device_series_3]
+  - id: matter_buttons
+  - id: matter_leds
+  # Data Model
+  - id: matter_code_driven_dm
+  - id: matter_access_control
+  - id: matter_administrator_commissioning
+  - id: matter_basic_information
+  - id: matter_descriptor
+  - id: matter_general_commissioning
+  - id: matter_general_diagnostics
+  - id: matter_group_key_mgmt
+  - id: matter_identify
+  - id: matter_localization_configuration
+  - id: matter_network_commissioning
+  - id: matter_operational_credentials
+  - id: matter_log_uart
+  - id: matter_read_client
+
+  - id: matter
+  - id: matter_platform_mg
+  - id: matter_ble
+  - id: ot_stack_ftd
+
+  - id: matter_thread
+  - id: rail_util_pti
+  - id: matter_crypto
+  - id: matter_shell
+  - id: matter_gatt_static
+  - id: matter_provision_default
+  - id: app_common
+  - id: bootloader_interface
+  - id: bootloader_interface_s2
+    condition: [matter_platform_mg, device_series_2]
+  - id: bootloader_interface_s3
+    condition: [matter_platform_mg, device_series_3]
+
+  # OT-NCP components
+  - id: ot_reset_utils
+  - id: mbedtls_jpake
+  - id: mbedtls_tls
+  - id: mbedtls_dtls
+  - id: ot_ncp_source
+  - id: ot_cli_source
+  - id: iostream_usart
+    instance:
+      - vcom # Temp fix for Matter CLI
+    condition:
+      - device_series_2
+  - id: iostream_eusart
+    instance:
+      - vcom # Need this by default for OTBR communication
+    condition:
+      - device_series_3
+
+  # Override configuration for JTAG use
+  - id: matter_segger_rtt
+  - id: configuration_over_swo
+  - id: matter_test_event_trigger
+requires:
+  # On Series 2 LCD and external flash run over USART, VCOM runs over EUSART
+  # Select UART/EUART drivers based on device series
+  - name: matter_drivers_series_2
+    condition:
+      - device_series_2
+  - name: matter_drivers_series_2
+    condition:
+      - device_series_3
+      
+config_file:
+  - path: ../../../../provision.mattpconf
+    directory: provision
+    file_id: provision_config
+
+include:
+  - path: ../../../../third_party/matter_sdk/examples/wake-on-matter/silabs/include
+    file_list:
+      - path: AppConfig.h
+      - path: AppEvent.h
+      - path: AppTask.h
+      - path: CHIPProjectConfig.h
+    directory: include
+
+source:
+  - path: ../../../../third_party/matter_sdk/examples/wake-on-matter/silabs/src/AppTask.cpp
+    directory: src
+  - path: ../../../../third_party/matter_sdk/examples/wake-on-matter/silabs/src/iostream_uart.c
+    directory: src  
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
+    directory: src
+
+define:
+  - name: SL_OPENTHREAD_MULTI_PAN_ENABLE
+    value: 1
+  - name: OPENTHREAD_CONFIG_NCP_HDLC_ENABLE
+    value: 1
+  - name: SL_MATTER_OPENTHREAD_NCP_ENABLE
+    value: 1
+  - name: SL_MATTER_FORWARD_OT_LOGS
+    value: 0
+  - name: CHIP_CRYPTO_PLATFORM
+    value: "1"
+  - name: _WANT_REENT_SMALL
+    value: "1"
+  - name: NVM3_DEFAULT_NVM_SIZE
+    value: "40960"
+  - name: NVM3_DEFAULT_MAX_OBJECT_SIZE
+    value: "4092"
+
+configuration:
+  - name: SL_BOARD_ENABLE_VCOM
+    value: '1'
+  - name: SL_IOSTREAM_USART_VCOM_RX_BUFFER_SIZE
+    value: '1024'
+    condition: [device_series_2]
+  - name: SL_BT_CONFIG_USER_ADVERTISERS
+    value: 2
+    condition: [matter_ble_side_channel]
+  - name: SL_TOKEN_MANAGER_STATIC_SECURE_TOKEN_SIZE
+    value: 8192
+    condition: [device_series_3]
+  - name: SL_OPENTHREAD_ENABLE_APP_TASK
+    value: 0
+  - name: SL_OPENTHREAD_ENABLE_SERIAL_TASK
+    value: 1
+  - name: SL_MBEDTLS_KEY_EXCHANGE_ECDHE_ECDSA_ENABLED
+    value: 1
+  - name: SL_MBEDTLS_KEY_EXCHANGE_PSK_ENABLED
+    value: 1
+  - name: OPENTHREAD_CONFIG_COAP_API_ENABLE
+    value: 1
+    condition: [matter_thread_coap_cert_libs]
+  - name: OPENTHREAD_CONFIG_COAP_OBSERVE_API_ENABLE
+    value: 1
+    condition: [matter_thread_coap_cert_libs]
+  - name: OPENTHREAD_CONFIG_COAP_SECURE_API_ENABLE
+    value: 1
+    condition: [matter_thread_coap_cert_libs]
+  - name: SL_STACK_SIZE
+    value: "4608"
+  - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+    value: "1536"
+    unless: [device_series_3]
+  - name: SL_BT_RTOS_EVENT_HANDLER_STACK_SIZE
+    value: "1856"
+    condition: [device_series_3]
+  - name: CIRCULAR_QUEUE_LEN_MAX
+    value: 16
+  - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS
+    value: 1
+
+  # Default ICD configurations
+  - name: SL_IDLE_MODE_DURATION_S
+    value: "600"
+  - name: SL_ACTIVE_MODE_DURATION_MS
+    value: "0"
+  - name: SL_ACTIVE_MODE_THRESHOLD
+    value: "5000"
+
+  - name: SL_TRANSPORT_IDLE_INTERVAL
+    value: "90000"
+  - name: SL_TRANSPORT_ACTIVE_INTERVAL
+    value: "1000"
+
+  - name: CHIP_CONFIG_ENABLE_ICD_LIT
+    value: 0
+  - name: CHIP_CONFIG_ENABLE_ICD_CIP
+    value: 0
+  - name: CHIP_CONFIG_ENABLE_ICD_UAT
+    value: 0
+
+  - name: CHIP_CONFIG_SYNCHRONOUS_REPORTS_ENABLED
+    value: "1"
+  - name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION
+    value: "0"
+
+  # Wake on Matter specific configurations
+  # Temporary solution this project has 2 VCOM instances even if the board only has 1,
+  # the vcom instance for the Matter CLI/Logs is rerouted to EUSART1 with only RX and TX pin enabled
+  # This setup works because the VCOM instance for OT-CLI uses the IOSTREAM driver 
+  # while the vcom instance for Matter uses the legacy UARTDRV. This is a stop gap solution until this samples app support CPC.
+  - name: SL_IOSTREAM_USART_VCOM_BAUDRATE
+    value: 460800
+  - name: SL_IOSTREAM_USART_VCOM_FLOW_CONTROL_TYPE
+    value: usartHwFlowControlCtsAndRts  
+  - name: EMDRV_UARTDRV_FLOW_CONTROL_ENABLE
+    value: 0
+  - name: SL_UARTDRV_EUSART_VCOM_FLOW_CONTROL_TYPE
+    value: "uartdrvFlowControlNone"
+  - name: SL_UARTDRV_EUSART_VCOM_PERIPHERAL
+    value: "EUSART1"  
+  - name: SL_UARTDRV_EUSART_VCOM_TX_PORT
+    value: "SL_GPIO_PORT_A"  
+  - name: SL_UARTDRV_EUSART_VCOM_TX_PIN
+    value: "6"    
+  - name: SL_UARTDRV_EUSART_VCOM_RX_PORT
+    value: "SL_GPIO_PORT_A"  
+  - name: SL_UARTDRV_EUSART_VCOM_RX_PIN
+    value: "5"
+  - name: SL_UARTDRV_EUSART_VCOM_CTS_PORT
+    value: "SL_GPIO_PORT_C"
+  - name: SL_UARTDRV_EUSART_VCOM_CTS_PIN
+    value: "5"
+  - name: SL_UARTDRV_EUSART_VCOM_RTS_PORT
+    value: "SL_GPIO_PORT_C"
+  - name: SL_UARTDRV_EUSART_VCOM_RTS_PIN
+    value: "7"
+  - condition:
+    - ot_rtt_log
+    name: OPENTHREAD_CONFIG_LOG_OUTPUT
+    value: OPENTHREAD_CONFIG_LOG_OUTPUT_PLATFORM_DEFINED
+  - condition:
+    - ot_rtt_log
+    name: BUFFER_SIZE_UP
+    value: '768'
+  - condition:
+    - ot_rtt_log
+    name: BUFFER_SIZE_DOWN
+    value: '0'    
+  - name: OPENTHREAD_CONFIG_MULTIPLE_INSTANCE_ENABLE
+    value: 1
+  - name: OPENTHREAD_CONFIG_MULTIPLE_STATIC_INSTANCE_ENABLE
+    value: 1  
+
+toolchain_settings:
+  - option: cxx_standard
+    value: gnu++17
+  - option: optimize
+    value: debug
+
+filter:  
+  - name: Type    
+    value: 
+      - SoC Project
+  - name: Difficulty
+    value: 
+      - Advanced
+  - name: Wireless Technology
+    value: 
+      - Matter
+
+tag:
+  - hardware:rf:band:2400
+  - hardware:component:button:2+
+  - hardware:component:led:2+
+  - hwfilter:device:device_supports_bluetooth
+  - hwfilter:device:device_supports_thread
+  - hwfilter:!device:device_series_3
+  - hwfilter:!device:device_family_mgm24
+  - hwfilter:!device:device_family_mgm26
+  - hidden
+
+readme:
+  - path: ./README.md
+ui_hints:
+  highlight:
+    - path: README.md
+      focus: false
+post_build:
+  profile: application
+
+other_file:
+  - path: ../../../image/qr_code_img.png

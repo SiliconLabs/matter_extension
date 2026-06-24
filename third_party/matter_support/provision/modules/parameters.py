@@ -120,6 +120,7 @@ class ID:
     kBufferSize = 0x013b
     kReset = 0x013c
     kCommanderNoClose = 0x013d
+    kRttAddr = 0x013e
     # Instance Info
     kSerialNumber = 0x0141
     kVendorId = 0x0142
@@ -169,7 +170,7 @@ class ID:
 class Parameter:
     kKnownFlag = 0x1000
 
-    def __init__(self, y) -> None:
+    def __init__(self) -> None:
         self.id = None
         self.desc = None
         self.name = None
@@ -316,7 +317,10 @@ class ParameterList:
 
     PARAMS_FILENAME = 'parameters.yaml'
 
-    def __init__(self, paths, custom_path=None) -> None:
+    def __init__(self, paths, custom_path) -> None:
+        if custom_path and isinstance(custom_path, _util.Paths):
+            # _util.fail("Invalid custom path: {}".format(custom_path))
+            raise ValueError("Invalid custom path: {}".format(custom_path))
         self.paths = paths
         self.names = {}
         self.longs = {}
@@ -324,7 +328,8 @@ class ParameterList:
         self.groups = {}
         self.custom = {}
         # Default parameters
-        self.load(paths.base('modules/' + ParameterList.PARAMS_FILENAME))
+        params_path = self.paths.config(ParameterList.PARAMS_FILENAME)
+        self.load(params_path)
         # Custom parameters
         self.load(custom_path, True)
 
@@ -364,7 +369,7 @@ class ParameterList:
         return p
 
     def create(self, y):
-        return Parameter(y)
+        return Parameter()
 
     def get(self, k):
         if k in self.ids:

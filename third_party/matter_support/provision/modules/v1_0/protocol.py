@@ -1,10 +1,12 @@
 import os
-import modules.util as _util
-import modules.manager as _base
+
 import modules.credentials as _creds
+import modules.manager as _base
 import modules.signing_server as _pki
-from modules.parameters import Types, Formats, ID
+import modules.util as _util
 import modules.v1_0.encoding as _enc
+from modules.parameters import ID, Formats, Types
+
 from .exporter import *
 
 
@@ -42,22 +44,26 @@ class Protocol(_base.ProvisionProtocol):
         else:
             # DAC key
             dac_key = args.str(ID.kDacKey)
-            if dac_key is None: _util.fail("Missing: DAC key")
+            if dac_key is None:
+                _util.fail("Missing: DAC key")
             imp = ImportCommand(paths, args, ImportCommand.KEY, key_id, dac_key)
             imp.execute(chan)
         # DAC certificate
         dac_cert = args.str(ID.kDacCert)
-        if dac_cert is None: _util.fail("Missing: DAC cert")
+        if dac_cert is None:
+            _util.fail("Missing: DAC cert")
         imp = ImportCommand(paths, args, ImportCommand.DAC, key_id, dac_cert)
         imp.execute(chan)
         # PAI certificate
         pai_cert = args.str(ID.kPaiCert)
-        if pai_cert is None: _util.fail("Missing: PAI cert")
+        if pai_cert is None:
+            _util.fail("Missing: PAI cert")
         imp = ImportCommand(paths, args, ImportCommand.PAI, key_id,  pai_cert)
         imp.execute(chan)
         # Certification Declaration
         cd = args.str(ID.kCertification)
-        if cd is None: _util.fail("Missing: Certification Declaration")
+        if cd is None:
+            _util.fail("Missing: Certification Declaration")
         imp = ImportCommand(paths, args, ImportCommand.CD, key_id, cd, True)
         imp.execute(chan)
         # Setup
@@ -176,7 +182,7 @@ class CsrCommand(Command):
         # Read CSR
         super().execute(chan)
         # Sign
-        signer = _pki.SigningServer(self.base_dir, self.csr_path, self.pai_cert_path, self.pai_key_path, self.dac_path)
+        signer = _pki.SigningServer(self.paths, self.csr_path, self.pai_cert_path, self.pai_key_path, self.dac_path)
         signer.sign()
 
     def encode(self):
@@ -198,9 +204,9 @@ class ImportCommand(Command):
     DAC = 2
     PAI = 3
     CD = 4
-    STRINGS = [ '?', 'KEY', 'DAC', 'PAI', 'CD' ]
+    STRINGS = ['?', 'KEY', 'DAC', 'PAI', 'CD']
 
-    def __init__(self, paths, args, fid, kid, path, do_flash = False):
+    def __init__(self, paths, args, fid, kid, path, do_flash=False):
         super().__init__(paths, args, Command.IMPORT, 'Import')
         self.file_id = fid
         self.key_id = kid
@@ -219,6 +225,7 @@ class ImportCommand(Command):
         off = self.getInt32u()
         size = self.getInt32u()
         print("{}+ key:{}, off:{}, size:{}".format(_util.MARGIN, kid, hex(off), size))
+
 
 class SetupCommand(Command):
 

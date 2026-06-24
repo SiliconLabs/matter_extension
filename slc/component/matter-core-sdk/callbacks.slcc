@@ -31,8 +31,6 @@ include:
     -   path: util/privilege-storage.h
     -   path: util/MatterCallbacks.h
     -   path: util/basic-types.h
-    -   path: util/attribute-storage-null-handling.h
-    -   path: util/odd-sized-integers.h
     -   path: util/generic-callbacks.h
 label: callbacks
 package: matter

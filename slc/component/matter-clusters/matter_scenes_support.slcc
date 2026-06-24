@@ -1,0 +1,35 @@
+category: Clusters|General
+description: >
+  Support of the Scenes Management Server Cluster.
+  This component provide the support for the Scenes clusters when the cluster is not enabled but it is needed for Groups cluster
+id: matter_scenes_support
+package: matter
+label: Scenes Management Server Cluster Support for Groups
+quality: experimental
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_scenes_support
+requires:
+  - name: matter_fabric_table
+source:
+  - path: third_party/matter_sdk/src/app/clusters/scenes-server/ExtensionFieldSetsImpl.cpp
+  - path: third_party/matter_sdk/src/app/clusters/scenes-server/SceneHandlerImpl.cpp
+  - path: third_party/matter_sdk/src/app/clusters/scenes-server/ScenesManagementCluster.cpp
+  - path: third_party/matter_sdk/src/app/clusters/scenes-server/SceneTableImpl.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/scenes-server
+    file_list:
+      - path: AttributeValuePairValidator.h
+      - path: Constants.h
+      - path: ExtensionFieldSets.h
+      - path: ExtensionFieldSetsImpl.h
+      - path: SceneHandlerImpl.h
+      - path: scenes-server.h
+      - path: ScenesIntegrationDelegate.h
+      - path: ScenesManagementCluster.h
+      - path: SceneTable.h
+      - path: SceneTableImpl.h
+ui_hints:
+  visibility: never

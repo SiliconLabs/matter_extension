@@ -1,0 +1,9 @@
+workspace_name: matter_wifi_soc_platform_template_freertos
+label: Matter WiFi - SoC Platform Template FreeRTOS
+quality: production
+package: matter
+description: Demonstrates a sample implementation of a Matter over Wi-Fi platform template app
+project:
+  - path: ./matter_wifi_soc_platform_template_freertos.slcp
+    id: application
+    output: platform_template_siwx

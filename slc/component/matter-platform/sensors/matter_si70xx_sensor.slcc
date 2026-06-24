@@ -17,7 +17,10 @@ include:
       - path: Si70xxSensor.h
 
 source:
-  - path: third_party/matter_sdk/examples/platform/silabs/Si70xxSensor.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/Si70xxSensorGsdk.cpp
+    condition: [matter_platform_mg]
+  - path: third_party/matter_sdk/examples/platform/silabs/Si70xxSensorWiseMcu.cpp
+    condition: [matter_platform_siwx917]
 
 define:
   - name: SL_MATTER_USE_SI70XX_SENSOR
@@ -25,3 +28,8 @@ define:
 
 requires:
   - name: si70xx_driver
+    condition: [matter_platform_mg]
+  - name: sl_si70xx
+    condition: [matter_platform_siwx917]
+  - name: sl_i2c
+    condition: [matter_platform_siwx917]

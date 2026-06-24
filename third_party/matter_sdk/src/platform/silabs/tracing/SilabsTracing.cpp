@@ -365,7 +365,7 @@ CHIP_ERROR SilabsTracer::TimeTraceEnd(TimeTraceOperation aOperation, CHIP_ERROR 
 
         auto & metric = mMetrics[to_underlying(aOperation)];
 
-        FinishMetric(metric, duration);
+        TEMPORARY_RETURN_IGNORED FinishMetric(metric, duration);
     }
     return OutputTrace(tracker);
 }
@@ -477,7 +477,7 @@ CHIP_ERROR SilabsTracer::OutputTimeTracker(const TimeTracker & tracker)
 CHIP_ERROR SilabsTracer::OutputTrace(const TimeTracker & tracker)
 {
     // We allow error here as we want to buffer even if the logs are currently uninitialized
-    OutputTimeTracker(tracker);
+    TEMPORARY_RETURN_IGNORED OutputTimeTracker(tracker);
 
     if (mBufferedTrackerCount < kMaxBufferedTraces - 1)
     {
@@ -758,14 +758,18 @@ CHIP_ERROR SilabsTracer::FindOrCreateTrace(const CharSpan label, const CharSpan 
 
 CHIP_ERROR SilabsTracer::FindExistingTrace(const CharSpan label, const CharSpan group, size_t & outIdx) const
 {
+    const size_t groupLen = std::min(group.size(), NamedTrace::kMaxGroupLength - 1);
+    const size_t labelLen = std::min(label.size(), NamedTrace::kMaxLabelLength - 1);
+
     for (size_t i = 0; i < kMaxNamedTraces; ++i)
     {
         const auto & t = mNamedTraces[i];
         if (t.labelLen == 0)
             return CHIP_ERROR_NOT_FOUND; // empty slot
 
-        // prefix semantics: stored must fit within incoming, then bytes must match
-        if (std::memcmp(t.group, group.data(), t.groupLen) == 0 && std::memcmp(t.label, label.data(), t.labelLen) == 0)
+        if (groupLen == t.groupLen && labelLen == t.labelLen &&
+            std::memcmp(t.group, group.data(), groupLen) == 0 &&
+            std::memcmp(t.label, label.data(), labelLen) == 0)
         {
             outIdx = i;
             return CHIP_NO_ERROR;

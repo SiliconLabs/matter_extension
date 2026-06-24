@@ -1,0 +1,30 @@
+category: Matter|Examples
+package: matter
+description: >
+  Provides example component that enables support for the Device Energy Management (DEM) device type.
+id: matter_dem
+quality: production
+metadata:
+  sbom:
+    license: MSLA
+requires:
+  - name: matter_device_energy_management
+provides:
+  - name: matter_dem
+include:
+  - path: third_party/matter_sdk/examples/energy-management/device-energy-management/include
+    file_list:
+      - path: DEMConfig.h
+      - path: DEMManufacturerDelegate.h
+      - path: device-energy-management-modes.h            
+      - path: DeviceEnergyManagementDelegateImpl.h
+      - path: DeviceEnergyManagementManager.h
+      - path: EnergyManagementAppCmdLineOptions.h
+
+
+source:
+  - path: third_party/matter_sdk/examples/energy-management/device-energy-management/src/DeviceEnergyManagementDelegateImpl.cpp
+  - path: third_party/matter_sdk/examples/energy-management/device-energy-management/src/DeviceEnergyManagementManager.cpp
+  - path: third_party/matter_sdk/examples/energy-management/device-energy-management/src/device-energy-management-mode.cpp
+ui_hints:
+  visibility: never

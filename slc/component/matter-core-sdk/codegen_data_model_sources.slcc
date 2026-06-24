@@ -26,3 +26,5 @@ source:
 -   path: third_party/matter_sdk/src/data-model-providers/codegen/Instance.cpp
 ui_hints:
     visibility: never
+conflicts:
+  - name: code_driven_data_model_sources

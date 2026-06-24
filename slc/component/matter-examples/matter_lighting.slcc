@@ -7,6 +7,13 @@ id: matter_lighting
 quality: production
 provides:
   - name: matter_lighting
+metadata:
+  sbom:
+    license: "Apache 2.0"
+template_file:
+  - path: third_party/matter_sdk/examples/lighting-app/silabs/include/AppTask.h
+  - path: third_party/matter_sdk/examples/lighting-app/silabs/include/AppTaskImpl.h
+  - path: third_party/matter_sdk/examples/lighting-app/silabs/src/AppTask.cpp
 define:
   - name: IS_DEMO_LIGHT
     value: "1"

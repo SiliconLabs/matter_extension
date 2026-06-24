@@ -13,11 +13,12 @@ provides:
   - name: matter_time_format_localization
 source:
   - path: third_party/matter_sdk/src/app/clusters/time-format-localization-server/CodegenIntegration.cpp
-  - path: third_party/matter_sdk/src/app/clusters/time-format-localization-server/time-format-localization-cluster.cpp
+    unless: [matter_code_driven_dm]
+  - path: third_party/matter_sdk/src/app/clusters/time-format-localization-server/TimeFormatLocalizationCluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/time-format-localization-server
     file_list:
-      - path: time-format-localization-cluster.h
+      - path: TimeFormatLocalizationCluster.h
 template_contribution:
   - name: component_catalog
     value: matter_time_format_localization

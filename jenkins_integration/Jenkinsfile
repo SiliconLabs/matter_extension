@@ -4,10 +4,7 @@
 def pipelineProperties = []
 
 // Configure pollSCM triggers
-if(env.BRANCH_NAME == 'release_2.8-1.5'){
-    // Trigger daily at 10:05pm EDT (2 hrs after github trigger)
-    pipelineProperties << pipelineTriggers([pollSCM('5 2 * * *')])
-} else if(env.BRANCH_NAME == 'main'){
+if(env.BRANCH_NAME == 'main'){
     // Trigger Thursday at 10:05pm EDT (2 hrs after github trigger)
     pipelineProperties << pipelineTriggers([pollSCM('5 2 * * 5')])
 } 
@@ -20,6 +17,19 @@ def workflow_id = ""
 def pr_number = ""
 def bypass_send_results_gh = ""
 def build_description = ""
+def commit_change_summary = ""
+
+// svc_matter credential ID.
+def sonarqubeTokenCredentialId = 'sonarqube_token'
+
+def combineSlackSummary(String commitSummary, String extra) {
+    def c = commitSummary?.trim() ?: ''
+    def e = extra?.trim() ?: ''
+    if (c && e) {
+        return "${c}\n\n---\n\n${e}"
+    }
+    return c ?: e ?: ''
+}
 
 def sendSlackNotification(String messageType, String status, String summary = "", String color = "", String commitSha = "", String runNumber = "", String workflowId = "") {
     def currentTime = new Date().format("yyyy-MM-dd HH:mm:ss", TimeZone.getTimeZone('UTC'))
@@ -86,7 +96,8 @@ pipeline
                     build_description = "SISDK build number: ${sisdk_build_number}"
                     build_description += "\nWiFi Extension build number: ${wiseconnect_build_number}"
                     buildDescription(build_description)
-                }
+                    commit_change_summary = pipelineFunctions.buildCommitChangeSummaryForSlack()
+                                    }
             }
         }
         stage('Upload Artifacts') {
@@ -110,14 +121,59 @@ pipeline
                 }
             }
         }
-        stage('Code Size Analysis') {
+        stage('Coverage and Code Size') {
             when {
                 expression { env.BRANCH_NAME == "main" || env.BRANCH_NAME.startsWith("release_") }
             }
-            steps {
-                script {
-                    withDockerContainer(image: 'artifactory.silabs.net/gsdk-docker-production/gsdk_nomad_containers/gsdk_ubai:latest') {
-                        pipelineFunctions.run_code_size_analysis()
+            parallel {
+                stage('Code Coverage & Static Code Analysis') {
+                    when {
+                        expression { env.BRANCH_NAME == "main" }
+                    }
+                    steps {
+                        script {
+                            withDockerContainer(image: 'artifactory.silabs.net/gsdk-docker-production/gsdk_nomad_containers/gsdk_ubai:latest') {
+                                pipelineFunctions.actionWithRetry {
+                                    pipelineFunctions.download_coverage_artifact(workflow_id)
+                                }
+                                sh '''
+                                    if [ -f coverage/coverage.info ]; then
+                                        echo "[SUCCESS] GitHub LCOV coverage artifact downloaded to ./coverage"
+                                        ls -la coverage/
+                                        if [ -f coverage/sonarqube-coverage.xml ]; then
+                                            echo "[SUCCESS] sonarqube-coverage.xml present (from GitHub Actions)"
+                                        else
+                                            echo "[WARN] sonarqube-coverage.xml missing; run a workflow that includes the gcovr step in coverage-builder.yaml"
+                                        fi
+                                    fi
+                                '''
+                                archiveArtifacts artifacts: 'coverage/**', allowEmptyArchive: true, fingerprint: false
+                            }
+                            if (fileExists('coverage/sonarqube-coverage.xml')) {
+                                withCredentials([string(credentialsId: sonarqubeTokenCredentialId, variable: 'SONAR_TOKEN')]) {
+                                    sh '''
+                                        docker run --rm \
+                                            -e SONAR_HOST_URL="https://sonarqube.silabs.net" \
+                                            -e SONAR_TOKEN="$SONAR_TOKEN" \
+                                            -v "$WORKSPACE:/usr/src" \
+                                            sonarsource/sonar-scanner-cli:11 \
+                                            -Dsonar.scm.disabled=true \
+                                            -Dsonar.coverageReportPaths=coverage/sonarqube-coverage.xml
+                                    '''
+                                }
+                            } else {
+                                echo '[SKIP] No coverage/sonarqube-coverage.xml; skipping SonarQube analysis.'
+                            }
+                        }
+                    }
+                }
+                stage('Code Size Analysis') {
+                    steps {
+                        script {
+                            withDockerContainer(image: 'artifactory.silabs.net/gsdk-docker-production/gsdk_nomad_containers/gsdk_ubai:latest') {
+                                pipelineFunctions.run_code_size_analysis()
+                            }
+                        }
                     }
                 }
             }
@@ -191,10 +247,10 @@ pipeline
                     }
                     if (env.BRANCH_NAME.startsWith("main") || env.BRANCH_NAME.startsWith("release_")) {
                         if (sqa_tests_result == "FAIL") {
-                            sendSlackNotification("SQA Tests Failed", "FAIL", sqa_tests_summary, "", commit_sha, run_number, workflow_id)
+                            sendSlackNotification("SQA Tests Failed", "FAIL", combineSlackSummary(commit_change_summary, sqa_tests_summary), "", commit_sha, run_number, workflow_id)
                             error("[FAIL] Sanity Tests failed. See summary:\n${sqa_tests_summary}")
                         } else {
-                            sendSlackNotification("SQA Tests Passed", "PASS", "All tests passed successfully.", "", commit_sha, run_number, workflow_id)
+                            sendSlackNotification("SQA Tests Passed", "PASS", combineSlackSummary(commit_change_summary, "All tests passed successfully."), "", commit_sha, run_number, workflow_id)
                             echo "All tests passed successfully."
                         }
                     }
@@ -214,11 +270,11 @@ pipeline
         }
         stage('Upload SQA Artifacts') {
             when {
-                expression { env.BRANCH_NAME.startsWith("release_") }
+                expression { env.BRANCH_NAME == "main" || env.BRANCH_NAME.startsWith("release_") || env.BRANCH_NAME.startsWith("SL_compatibility")}
             }
             steps {
                 script {
-                    retry(12) {
+                    retry(15) {
                         withDockerContainer(image: 'artifactory.silabs.net/gsdk-docker-production/gsdk_nomad_containers/gsdk_ubai:latest') {
                             def result = pipelineFunctions.upload_artifacts(sqa=true, commit_sha=commit_sha, workflow_id=workflow_id)
                         }
@@ -229,7 +285,7 @@ pipeline
         stage('Trigger SQA Regression Pipelines')
         {
             when {
-                expression { env.BRANCH_NAME.startsWith("release_") }
+                expression { env.BRANCH_NAME == "main" || env.BRANCH_NAME.startsWith("release_") }
             }
             steps {
                 script {
@@ -242,7 +298,7 @@ pipeline
         failure {
             script {
                 if ((env.BRANCH_NAME == "main" || env.BRANCH_NAME.startsWith("release_"))) {
-                    sendSlackNotification("Pipeline Failure", "FAIL", "Pipeline execution failed. Please check the console output for details.", "", "${commit_sha ?: ''}", "${run_number ?: ''}", "${workflow_id ?: ''}")
+                    sendSlackNotification("Pipeline Failure", "FAIL", combineSlackSummary(commit_change_summary, "Pipeline execution failed. Please check the console output for details."), "", "${commit_sha ?: ''}", "${run_number ?: ''}", "${workflow_id ?: ''}")
                 }
             }
         }

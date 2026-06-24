@@ -1,19 +1,21 @@
 import os
-import modules.util as _util
 from abc import ABC, abstractmethod
-from modules.parameters import Types, Formats
+
+import modules.util as _util
+from modules.parameters import Formats, Types
 
 
 class Formatter:
 
-    def __init__(self, args, is_user_input = False) -> None:
+    def __init__(self, args, is_user_input=False) -> None:
         self.args = args
         self.is_user_input = is_user_input
         self.paths = None
 
     @staticmethod
     def read(filename):
-        if filename is None: return {}
+        if filename is None:
+            return {}
         if not os.path.exists(filename):
             raise ValueError("Missing inputs file \"{}\"".format(filename))
         return _util.JsonFile(filename).read()
@@ -61,7 +63,7 @@ class Formatter:
         self.extract(options, 'cert_tool')
         self.extract(options, 'pylink_lib')
 
-    def format(self, main = {}):
+    def format(self, main={}):
         # Version
         self.insert(main, 'version')
         # Options
@@ -79,7 +81,8 @@ class Formatter:
         self.insert(options, 'prod_fw')
         self.insert(options, 'cert_tool')
         self.insert(options, 'pylink_lib')
-        if len(options) > 0: main['options'] = options
+        if len(options) > 0:
+            main['options'] = options
         # Matter
         main['matter'] = matter = {}
         return main
@@ -100,19 +103,21 @@ class Formatter:
                 main[g] = data
         return main
 
-    def extract(self, data, tag, tag2 = None):
-        if data is None: return
+    def extract(self, data, tag, tag2=None):
+        if data is None:
+            return
         arg = self.args.find(tag2 or tag)
         if tag in data:
             value = data[tag]
             if (Formats.PATH == arg.format) and self.paths:
                 # Paths are relative to the JSON file
                 value = self.paths.base(value)
-            arg.set(value)
+            arg.set(value, validate=self.is_user_input)
             arg.is_user_input = self.is_user_input
 
-    def insert(self, data, tag, tag2 = None):
-        if data is None: return
+    def insert(self, data, tag, tag2=None):
+        if data is None:
+            return
         arg = self.args.find(tag)
         if (arg.value is not None) and (not arg.hidden):
             if isinstance(arg.value, bytes):

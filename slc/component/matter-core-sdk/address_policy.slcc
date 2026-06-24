@@ -29,6 +29,7 @@ include:
       - path: AddressPolicy_LibNlImpl.h
       - path: Server.h
       - path: RecordData.h
+      - path: MinMdnsConfig.h
 label: address_policy
 package: matter
 provides:

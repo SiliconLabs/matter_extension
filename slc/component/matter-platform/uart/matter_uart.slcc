@@ -14,7 +14,7 @@ requires:
       - matter_platform_mg
   - name: si91x_debug
     condition:
-      - matter_platform_si91x
+      - matter_platform_siwx917
 
 provides:
   - name: matter_uart

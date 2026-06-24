@@ -1,0 +1,14 @@
+workspace_name: matter_thread_soc_light_switch_app_series_3_freertos
+label: Matter Thread - SoC Light Switch with internal Bootloader FreeRTOS
+quality: production
+package: matter
+description: Demonstrates a sample implementation of a Matter over Thread light switch app with internal bootloader
+project:
+  - path: ./matter_thread_soc_light_switch_app_freertos.slcp
+    id: application
+    output: light_switch_app
+  - path: ../../bootloaders/bootloader_storage_single_4096k_series_3/matter_bootloader_internal_series_3.slcp
+    id: bootloader
+    output: matter_bootloader
+post_build:
+  path: ../../../postbuild/ws_default_application_bootloader.slpb
