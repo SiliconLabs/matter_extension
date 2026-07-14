@@ -1,0 +1,602 @@
+# Matter Fan Control Example
+
+An example showing the use of CHIP on the Silicon Labs EFR32 MG24.
+
+<hr>
+
+-   [Matter Fan Control Example](#matter-efr32-fan-control-example)
+    -   [Introduction](#introduction)
+    -   [Extending Base App Implementation](#extending-base-app-implementation)
+        -   [CustomerAppTask](#customerapptask)
+        -   [How to Override APIs](#how-to-override-apis)
+        -   [DataModelCallbacks and CustomerAppTask](#datamodelcallbacks-and-customerapptask)
+        -   [Sample Implementation](#sample-implementation)
+        -   [Override API Reference](#override-api-reference)
+    -   [Building](#building)
+        -   [Linux](#linux)
+        -   [Mac OS X](#mac-os-x)
+    -   [Flashing the Application](#flashing-the-application)
+    -   [Viewing Logging Output](#viewing-logging-output)
+        -   [SEGGER RTT](#segger-rtt)
+        -   [Console Log](#console-log)
+            -   [Configuring the VCOM](#configuring-the-vcom)
+        -   [Using the console](#using-the-console)
+    -   [Running the Complete Example](#running-the-complete-example)
+        -   [Notes](#notes)
+            -   [On Border Router:](#on-border-router)
+            -   [On PC(Linux):](#on-pclinux)
+    -   [Running RPC console](#running-rpc-console)
+    -   [Memory settings](#memory-settings)
+    -   [OTA Software Update](#ota-software-update)
+    -   [Building options](#building-options)
+        -   [Disabling logging](#disabling-logging)
+        -   [Debug build / release build](#debug-build--release-build)
+        -   [Disabling LCD](#disabling-lcd)
+        -   [KVS maximum entry count](#kvs-maximum-entry-count)
+
+<hr>
+
+> **NOTE:** Silicon Laboratories now maintains a public matter GitHub repo with
+> frequent releases thoroughly tested and validated. Developers looking to
+> develop matter products with silabs hardware are encouraged to use our latest
+> release with added tools and documentation.
+> [Silabs matter_sdk Github](https://github.com/SiliconLabsSoftware/matter_sdk/tags)
+
+## Introduction
+
+The fan control example provides a baseline demonstration of a fan
+device, built using Matter and the Silicon Labs gecko SDK. It can be controlled
+by a CHIP controller over an OpenThread or Wi-Fi network.
+
+The device exposes a single fan endpoint (see
+[`include/FanControlConfig.h`](include/FanControlConfig.h)) with the
+**Fan Control** cluster. The default configuration uses endpoint `1` and maps
+speed ranges into the `Low`, `Medium`, and `High` fan modes.
+
+The EFR32 device can be commissioned over Bluetooth Low Energy where the device
+and the CHIP controller will exchange security information with the Rendez-vous
+procedure. If using Thread, Thread network credentials are then provided to the
+EFR32 device which will then join the Thread network.
+
+If the LCD is enabled, the LCD on the Silabs WSTK shows a QR Code containing the
+needed commissioning information for the BLE connection and starting the
+Rendez-vous procedure. After commissioning, the LCD can show the current fan
+state using [`FanControlUI`](include/FanControlUI.h).
+
+The fan control example is intended to serve both as a means to explore the
+workings of Matter as well as a template for creating real products based on the
+Silicon Labs platform.
+
+## Extending Base App Implementation
+
+### CustomerAppTask
+
+To implement custom app behavior you can override any Silicon Labs implemented
+API in the CustomerAppTask file. This example provides
+[`CustomerAppTask.h`](../../platform/silabs/customer/CustomerAppTask.h) and
+[`CustomerAppTask.cpp`](../../platform/silabs/customer/CustomerAppTask.cpp) for
+that purpose. The base implementation and the full set of overridable `*Impl()`
+APIs live in this example's source tree under
+[`include/AppTaskImpl.h`](include/AppTaskImpl.h) and
+[`src/AppTask.cpp`](src/AppTask.cpp). Any `*Impl()` you do not override keeps
+the Silicon Labs default behavior. To customize behavior, copy
+[`CustomerAppTask.h`](../../platform/silabs/customer/CustomerAppTask.h) and
+[`CustomerAppTask.cpp`](../../platform/silabs/customer/CustomerAppTask.cpp) from
+`examples/platform/silabs/customer/` into this app's `include/` and `src/`
+folders, then update the corresponding paths in `BUILD.gn`.
+
+### How to Override APIs
+
+`CustomerAppTask` derives from the base AppTask through the Curiously Recurring
+Template Pattern (CRTP). You override only the `*Impl()` methods you need, the
+base declares one `*Impl()` per overridable API. Steps:
+
+1. Find the method to override in the base API (see
+   [Override API reference](#override-api-reference) below).
+2. Declare the same method signature in `CustomerAppTask` in your
+   `CustomerAppTask.h` under `private:`. Match the base `*Impl()` signature
+   exactly — note that `*Impl()` overrides are **non-static instance methods**
+   even when the public dispatcher (e.g. `ButtonEventHandler`) is `static`.
+3. Implement the method in `CustomerAppTask.cpp`.
+4. Build. The CRTP layer automatically routes each call to your `*Impl()` if
+   present, otherwise to the Silicon Labs default.
+
+### DataModelCallbacks and CustomerAppTask
+
+What used to live in `DataModelCallbacks.cpp` now lives in `AppTask.cpp`. The
+Matter SDK's `MatterPostAttributeChangeCallback` is implemented in
+`examples/platform/silabs/BaseApplication.cpp` and forwards to
+`AppTask::DMPostAttributeChangeCallback` (defined in `AppTask.cpp`), which you
+can customize via `DMPostAttributeChangeCallbackImpl()` in `CustomerAppTask`.
+
+Forwarding into `AppTask` still goes through CRTP as in
+[How to Override APIs](#how-to-override-apis).
+
+-   **Methods that already exist in the AppTask** — Customize them by overriding
+    the matching `*Impl()` method in `CustomerAppTask`. Do not edit the
+    `AppTask.cpp` for app-specific behavior.
+
+-   **New custom data model methods** — Add them in `CustomerAppTask` directly.
+    Do not add new application logic in autogenerated sources; those edits will
+    not survive regeneration or project upgrades.
+
+### Sample Implementation
+
+The following shows a minimal example `CustomerAppTask` that overrides
+`AppInitImpl()` and `ButtonEventHandlerImpl()`.
+
+**CustomerAppTask.h**
+
+```cpp
+#pragma once
+#include "AppTaskImpl.h"
+
+/** Minimal AppTaskImpl-derived class. Override only the *Impl() methods you need **/
+class CustomerAppTask : public AppTaskImpl<CustomerAppTask>
+{
+public:
+    static CustomerAppTask & GetAppTask() { return sAppTask; }
+
+private:
+    friend class AppTaskImpl<CustomerAppTask>;
+    CHIP_ERROR AppInitImpl();
+    void ButtonEventHandlerImpl(uint8_t button, uint8_t btnAction);
+    static CustomerAppTask sAppTask;
+};
+```
+
+**CustomerAppTask.cpp**
+
+```cpp
+#include "CustomerAppTask.h"
+#include "AppTask.h"
+#include "AppConfig.h"
+#include "AppEvent.h"
+#include <platform/CHIPDeviceLayer.h>
+#include <platform/silabs/platformAbstraction/SilabsPlatform.h>
+
+using namespace ::chip::DeviceLayer::Silabs;
+
+#define APP_FUNCTION_BUTTON 0
+
+CustomerAppTask CustomerAppTask::sAppTask;
+
+AppTask & AppTask::GetAppTask()
+{
+    return CustomerAppTask::GetAppTask();
+}
+
+CHIP_ERROR CustomerAppTask::AppInitImpl()
+{
+    SILABS_LOG("CustomerAppTask: custom implementation (AppInitImpl)");
+    CHIP_ERROR err = AppTask::AppInit();
+    if (err == CHIP_NO_ERROR)
+    {
+        chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(CustomerAppTask::ButtonEventHandler);
+    }
+    return err;
+}
+
+void CustomerAppTask::ButtonEventHandlerImpl(uint8_t button, uint8_t btnAction)
+{
+    SILABS_LOG("CustomerAppTask: custom implementation (ButtonEventHandlerImpl)");
+    AppEvent aEvent           = {};
+    aEvent.Type               = AppEvent::kEventType_Button;
+    aEvent.ButtonEvent.Action = btnAction;
+
+    if (button == APP_FUNCTION_BUTTON)
+    {
+        aEvent.Handler = BaseApplication::ButtonHandler;
+        AppTask::GetAppTask().PostEvent(&aEvent);
+    }
+}
+```
+
+### Override API Reference
+
+`CHIP_ERROR StartAppTask()` is declared on `AppTask` only. It is not an
+`*Impl()` hook: platform code (for example `MatterConfig`) calls
+`AppTask::GetAppTask().StartAppTask()` with static type `AppTask &`, which runs
+the implementation in `AppTask.cpp` (creating the FreeRTOS app task via
+`BaseApplication::StartAppTask(...)`). To change startup behavior, edit
+`AppTask::StartAppTask()` or `BaseApplication::StartAppTask` in your product
+sources.
+
+The base API and default AppTask behavior for this example are maintained under
+[`include/`](include/AppTaskImpl.h) and [`src/`](src/AppTask.cpp). Use them as
+the reference for overridable methods and app configuration.
+
+| File                                             | Purpose                                                                                                                                              |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`include/AppTaskImpl.h`](include/AppTaskImpl.h) | Declarations of every overridable `*Impl()` method. Copy the signatures you need from here into `CustomerAppTask.h`.                                 |
+| [`src/AppTask.cpp`](src/AppTask.cpp)             | Silicon Labs default implementation of AppTask. This is what runs for any `*Impl()` you do not override. Use as reference when customizing behavior. |
+
+## Building
+
+-   Download the
+    [Simplicity Commander](https://www.silabs.com/mcu/programming-options)
+    command line tool, and ensure that `commander` is your shell search path.
+    (For Mac OS X, `commander` is located inside
+    `Commander.app/Contents/MacOS/`.)
+
+-   Download and install a suitable ARM gcc tool chain (For most Host, the
+    bootstrap already installs the toolchain):
+    [GNU Arm Embedded Toolchain 12.2 Rel1](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
+
+-   Install some additional tools(likely already present for CHIP developers):
+
+#### Linux
+
+    $ sudo apt-get install git ninja-build
+
+#### Mac OS X
+
+    $ brew install ninja
+
+-   Supported hardware:
+
+    -   > For the latest supported hardware please refer to the
+        > [Hardware Requirements](https://docs.silabs.com/matter/latest/matter-prerequisites/hardware-requirements)
+        > in the Silicon Labs Matter Documentation
+
+    MG24 boards :
+
+    -   BRD2601B / SLWSTK6000B / Wireless Starter Kit / 2.4GHz@10dBm
+    -   BRD2703A / SLWSTK6000B / Wireless Starter Kit / 2.4GHz@10dBm
+    -   BRD4186A / SLWSTK6006A / Wireless Starter Kit / 2.4GHz@10dBm
+    -   BRD4186C / SLWSTK6006A / Wireless Starter Kit / 2.4GHz@10dBm
+    -   BRD4187A / SLWSTK6006A / Wireless Starter Kit / 2.4GHz@20dBm
+    -   BRD4187C / SLWSTK6006A / Wireless Starter Kit / 2.4GHz@20dBm
+
+*   Region code Setting (917 WiFi projects)
+
+    -   In Wifi configurations, the region code can be set in this
+        [file](https://github.com/project-chip/connectedhomeip/blob/85e9d5fd42071d52fa3940238739544fd2a3f717/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp#L104).
+        The available region codes can be found
+        [here](https://github.com/SiliconLabs/wiseconnect/blob/f675628eefa1ac4990e94146abb75dd08b522571/components/device/silabs/si91x/wireless/inc/sl_si91x_types.h#L71)
+
+*   Build the example application:
+
+              cd ~/connectedhomeip
+              ./scripts/examples/gn_silabs_example.sh ./examples/fan-control-app/silabs/ ./out/fan-control-app BRD4187C
+
+-   To delete generated executable, libraries and object files use:
+
+              $ cd ~/connectedhomeip
+              $ rm -rf ./out/
+
+    OR use GN/Ninja directly
+
+              $ cd ~/connectedhomeip/examples/fan-control-app/silabs
+              $ git submodule update --init
+              $ source third_party/connectedhomeip/scripts/activate.sh
+              $ export SILABS_BOARD=BRD4187C
+              $ gn gen out/debug
+              $ ninja -C out/debug
+
+-   To delete generated executable, libraries and object files use:
+
+              $ cd ~/connectedhomeip/examples/fan-control-app/silabs
+              $ rm -rf out/
+
+*   Build the example with Matter shell
+
+              ./scripts/examples/gn_silabs_example.sh examples/fan-control-app/silabs/ out/fan-control-app BRD4187C chip_build_libshell=true
+
+*   Build the example as Intermittently Connected Device (ICD)
+
+              $ ./scripts/examples/gn_silabs_example.sh ./examples/fan-control-app/silabs/ ./out/fan-control-app_ICD BRD4187C --icd
+
+    or use gn as previously mentioned but adding the following arguments:
+
+              $ gn gen out/debug '--args=SILABS_BOARD="BRD4187C" enable_sleepy_device=true chip_openthread_ftd=false chip_build_libshell=true'
+
+*   Build the example with pigweed RCP
+
+              $ ./scripts/examples/gn_silabs_example.sh examples/fan-control-app/silabs/ out/fan-control-app_rpc BRD4187C 'import("//with_pw_rpc.gni")'
+
+    or use GN/Ninja Directly
+
+              $ cd ~/connectedhomeip/examples/fan-control-app/silabs
+              $ git submodule update --init
+              $ source third_party/connectedhomeip/scripts/activate.sh
+              $ export SILABS_BOARD=BRD4187C
+              $ gn gen out/debug --args='import("//with_pw_rpc.gni")'
+              $ ninja -C out/debug
+
+For more build options, help is provided when running the build script without
+arguments
+
+    ./scripts/examples/gn_silabs_example.sh
+
+## Flashing the Application
+
+-   On the command line:
+
+              $ cd ~/connectedhomeip/examples/fan-control-app/silabs
+              $ python3 out/debug/matter-silabs-fan-control-example.flash.py
+
+-   Or with the Ozone debugger, just load the .out file.
+
+All EFR32 boards require a bootloader, see Silicon Labs documentation for more
+info. Pre-built bootloader binaries are available on the
+[Matter Software Artifacts page](https://docs.silabs.com/matter/latest/matter-prerequisites/matter-artifacts#matter-bootloader-binaries).
+
+## Viewing Logging Output
+
+### SEGGER RTT
+
+The example application is built to use the SEGGER Real Time Transfer (RTT)
+facility for log output. RTT is a feature built-in to the J-Link Interface MCU
+on the WSTK development board. It allows bi-directional communication with an
+embedded application without the need for a dedicated UART.
+
+Using the RTT facility requires downloading and installing the _SEGGER J-Link
+Software and Documentation Pack_
+([web site](https://www.segger.com/downloads/jlink#J-LinkSoftwareAndDocumentationPack)).
+
+Alternatively, SEGGER Ozone J-Link debugger can be used to view RTT logs too
+after flashing the .out file.
+
+-   Download the J-Link installer by navigating to the appropriate URL and
+    agreeing to the license agreement.
+
+-   [JLink_Linux_x86_64.deb](https://www.segger.com/downloads/jlink/JLink_Linux_x86_64.deb)
+-   [JLink_MacOSX.pkg](https://www.segger.com/downloads/jlink/JLink_MacOSX.pkg)
+
+*   Install the J-Link software
+
+              $ cd ~/Downloads
+              $ sudo dpkg -i JLink_Linux_V*_x86_64.deb
+
+*   In Linux, grant the logged in user the ability to talk to the development
+    hardware via the linux tty device (/dev/ttyACMx) by adding them to the
+    dialout group.
+
+              $ sudo usermod -a -G dialout ${USER}
+
+Once the above is complete, log output can be viewed using the JLinkExe tool in
+combination with JLinkRTTClient as follows:
+
+-   Run the JLinkExe tool with arguments to autoconnect to the WSTK board:
+
+    For MG24 use:
+
+              ```
+              $ JLinkExe -device EFR32MG24AXXXF1536 -if SWD -speed 4000 -autoconnect 1
+              ```
+
+-   In a second terminal, run the JLinkRTTClient to view logs:
+
+              $ JLinkRTTClient
+
+### Console Log
+
+If the binary was built with this option or if you're using the SiWx917 WiFi
+SoC, the logs and the CLI (if enabled) will be available on the serial console.
+
+This console required a baudrate of **115200** with CTS/RTS. This is the default
+configuration of Silicon Labs dev kits.
+
+**HOWEVER** the console will required a baudrate of **921600** with CTS/RTS if
+the verbose mode is selected (--verbose)
+
+#### Configuring the VCOM
+
+-   Using (Simplicity
+    Studio)[https://community.silabs.com/s/article/wstk-virtual-com-port-baudrate-setting?language=en_US]
+-   Using commander-cli
+    ```
+    commander vcom config --baudrate 921600 --handshake rtscts
+    ```
+
+### Using the console
+
+With any serial terminal application such as screen, putty, minicom etc.
+
+## Running the Complete Example
+
+-   It is assumed here that you already have an OpenThread border router
+    configured and running. If not see the following guide
+    [Openthread_border_router](https://github.com/project-chip/connectedhomeip/blob/master/docs/platforms/openthread/openthread_border_router_pi.md)
+    for more information on how to setup a border router on a raspberryPi.
+
+    Take note that the RCP code is available directly through
+    [Simplicity Studio 5](https://www.silabs.com/products/development-tools/software/simplicity-studio/simplicity-studio-5)
+    under File->New->Project Wizard->Examples->Thread : ot-rcp
+
+-   User interface : **LCD** The LCD on Silabs WSTK shows a QR Code. This QR
+    Code is scanned by the CHIP Tool app for the Rendez-vous procedure over BLE
+
+            * On devices that do not have or support the LCD Display like the BRD4166A Thunderboard Sense 2,
+              a URL can be found in the RTT logs.
+
+              <info  > [SVR] Copy/paste the below URL in a browser to see the QR Code:
+              <info  > [SVR] https://project-chip.github.io/connectedhomeip/qrcode.html?data=CH%3AI34NM%20-00%200C9SS0
+
+    When the LCD is enabled and the device is commissioned, the display shows
+    the current fan state via the custom `FanControlUI` handler.
+
+    **LED 0** shows the overall state of the device and its connectivity. The
+    following states are possible:
+
+            -   Short Flash On (50 ms on/950 ms off): The device is in the
+                unprovisioned (unpaired) state and is waiting for a commissioning
+                application to connect.
+
+            -   Rapid Even Flashing (100 ms on/100 ms off): The device is in the
+                unprovisioned state and a commissioning application is connected through
+                Bluetooth LE.
+
+            -   Short Flash Off (950ms on/50ms off): The device is fully
+                provisioned, but does not yet have full Thread network or service
+                connectivity.
+
+            -   Solid On: The device is fully provisioned and has full Thread
+                network and service connectivity.
+
+    **Fan LED** reflects the current fan state. On boards with two LEDs this is
+    typically **LED 1**; on boards with a single application LED it may share
+    **LED 0**:
+
+            -   _On_ : Fan mode is not `Off`
+            -   _Off_ : Fan mode is `Off`
+
+    **Push Button 0**
+
+            -   _Press and Release_ : Start, or restart, BLE advertisement in fast mode. It will advertise in this mode
+                for 30 seconds. The device will then switch to a slower interval advertisement.
+                After 15 minutes, the advertisement stops.
+                Additionally, it will cycle through the QR code, application status screen and device status screen, respectively.
+
+            -   _Pressed and hold for 6 s_ : Initiates the factory reset of the device.
+                Releasing the button within the 6-second window cancels the factory reset
+                procedure. **LEDs** blink in unison when the factory reset procedure is
+                initiated.
+
+-   You can provision and control the CHIP device using the Python controller,
+    [CHIPTool](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
+    standalone, Android or iOS app
+
+    Here are some CHIPTool examples (node id `1`, fan endpoint
+    [`FAN_CONTROL_ENDPOINT`](include/FanControlConfig.h) default `1`):
+
+    Pairing with chip-tool:
+
+    ```
+    chip-tool pairing ble-thread 1 hex:<operationalDataset> 20202021 3840
+    ```
+
+    Set fan mode to Off:
+
+    ```
+    chip-tool fancontrol write fan-mode 0 1 1
+    ```
+
+    Set fan mode to Low:
+
+    ```
+    chip-tool fancontrol write fan-mode 1 1 1
+    ```
+
+    Set fan mode to Medium:
+
+    ```
+    chip-tool fancontrol write fan-mode 2 1 1
+    ```
+
+    Set fan mode to High:
+
+    ```
+    chip-tool fancontrol write fan-mode 3 1 1
+    ```
+
+    Set percent setting to 50%:
+
+    ```
+    chip-tool fancontrol write percent-setting 50 1 1
+    ```
+
+    Read fan mode:
+
+    ```
+    chip-tool fancontrol read fan-mode 1 1
+    ```
+
+    Read percent setting:
+
+    ```
+    chip-tool fancontrol read percent-setting 1 1
+    ```
+
+### Notes
+
+-   Depending on your network settings your router might not provide native ipv6
+    addresses to your devices (Border router / PC). If this is the case, you
+    need to add a static ipv6 addresses on both device and then an ipv6 route to
+    the border router on your PC
+
+#### On Border Router:
+
+`$ sudo ip addr add dev <Network interface> 2002::2/64`
+
+#### On PC(Linux):
+
+`$ sudo ip addr add dev <Network interface> 2002::1/64`
+
+#Add Ipv6 route on PC(Linux) \$ sudo ip route add <Thread global ipv6 prefix>/64
+via 2002::2
+
+## Running RPC console
+
+-   As part of building the example with RPCs enabled the chip_rpc python
+    interactive console is installed into your venv. The python wheel files are
+    also created in the output folder: out/debug/chip_rpc_console_wheels. To
+    install the wheel files without rebuilding:
+
+    `pip3 install out/debug/chip_rpc_console_wheels/*.whl`
+
+-   To use the chip-rpc console after it has been installed run:
+
+    `chip-console --device /dev/tty.<SERIALDEVICE> -b 115200 -o /<YourFolder>/pw_log.out`
+
+-   Then you can simulate a button press or release using the following command
+    where : idx = 0 or 1 for Button PB0 or PB1 action = 0 for PRESSED, 1 for
+    RELEASE
+
+    `rpcs.chip.rpc.Button.Event(idx=1, pushed=True)`
+
+## Memory settings
+
+While most of the RAM usage in CHIP is static, allowing easier debugging and
+optimization with symbols analysis, we still need some HEAP for the crypto and
+OpenThread. Size of the HEAP can be modified by changing the value of the
+`configTOTAL_HEAP_SIZE` define inside of the FreeRTOSConfig.h file of this
+example. Please take note that a HEAP size smaller than 13k can and will cause a
+Mbedtls failure during the BLE rendez-vous or CASE session
+
+To track memory usage you can set `enable_heap_monitoring = true` either in the
+BUILD.gn file or pass it as a build argument to gn. This will print on the RTT
+console the RAM usage of each individual task and the number of Memory
+allocation and Free. While this is not extensive monitoring you're welcome to
+modify `examples/platform/efr32/MemMonitoring.cpp` to add your own memory
+tracking code inside the `trackAlloc` and `trackFree` function
+
+## OTA Software Update
+
+For the description of Software Update process with EFR32 example applications
+see
+[EFR32 OTA Software Update](../../../docs/platforms/silabs/silabs_efr32_software_update.md)
+
+## Building options
+
+All of Silabs's examples within the Matter repo have all the features enabled by
+default, as to provide the best end user experience. However some of those
+features can easily be toggled on or off. Here is a short list of options :
+
+### Disabling logging
+
+chip_progress_logging, chip_detail_logging, chip_automation_logging
+
+    $ ./scripts/examples/gn_silabs_example.sh ./examples/fan-control-app/silabs ./out/fan-control-app BRD4187C "chip_detail_logging=false chip_automation_logging=false chip_progress_logging=false"
+
+### Debug build / release build
+
+is_debug
+
+    $ ./scripts/examples/gn_silabs_example.sh ./examples/fan-control-app/silabs ./out/fan-control-app BRD4187C "is_debug=false"
+
+### Disabling LCD
+
+show_qr_code
+
+    $ ./scripts/examples/gn_silabs_example.sh ./examples/fan-control-app/silabs ./out/fan-control-app BRD4187C "show_qr_code=false"
+
+### KVS maximum entry count
+
+kvs_max_entries
+
+    Set the maximum Kvs entries that can be stored in NVM (Default 75)
+    Thresholds: 30 <= kvs_max_entries <= 255
+
+    $ ./scripts/examples/gn_silabs_example.sh ./examples/fan-control-app/silabs ./out/fan-control-app BRD4187C kvs_max_entries=50

@@ -21,16 +21,16 @@ For information about multiple storage slot support, see the "SPI Flash Storage 
 
 ### HW Requirements
 
-For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.0/matter-overview/#hardware-requirements) documentation. This bootloader requires a board with external SPI flash of at least 1 MB.
+For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.1/matter-overview/#hardware-requirements) documentation. This bootloader requires a board with external SPI flash of at least 1 MB.
 
 ### SW Requirements
 
-For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.0/matter-overview/#software-requirements) documentation.
+For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.1/matter-overview/#software-requirements) documentation.
 
 ## Steps to Run Demo
 
 1. Build the bootloader project for your target board, or use a pre-built binary.
-2. Flash the bootloader to the device before flashing the application. Pre-built bootloader binaries for supported devices are available at [Matter Bootloader Binaries](https://docs.silabs.com/matter/2.9.0/matter-prerequisites/matter-artifacts#matter-bootloader-binaries).
+2. Flash the bootloader to the device before flashing the application. Pre-built bootloader binaries for supported devices are available at [Matter Bootloader Binaries](https://docs.silabs.com/matter/2.9.1/matter-prerequisites/matter-artifacts#matter-bootloader-binaries).
 
 ## Troubleshooting
 
@@ -39,8 +39,8 @@ For a full list of software requirements, see [Matter Software Requirements](htt
 ## Resources
 
 - [UG489: Simplicity Bootloader User's Guide](https://www.silabs.com/documents/public/user-guides/ug489-gecko-bootloader-user-guide-gsdk-4.pdf)
-- [Matter Bootloader Binaries](https://docs.silabs.com/matter/2.9.0/matter-prerequisites/matter-artifacts#matter-bootloader-binaries)
-- [Matter Prerequisites](https://docs.silabs.com/matter/2.9.0/matter-prerequisites)
+- [Matter Bootloader Binaries](https://docs.silabs.com/matter/2.9.1/matter-prerequisites/matter-artifacts#matter-bootloader-binaries)
+- [Matter Prerequisites](https://docs.silabs.com/matter/2.9.1/matter-prerequisites)
 
 ## Report Bugs & Get Support
 

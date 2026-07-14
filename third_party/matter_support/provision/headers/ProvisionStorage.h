@@ -156,7 +156,8 @@ struct Storage : public GenericStorage,
     static constexpr size_t kDeviceAttestationKeySizeMax = 128;
     static constexpr size_t kSetupPayloadSizeMax         = 32;
     static constexpr size_t kCsrLengthMax                = 512;
-    static constexpr size_t kCommonNameMax               = 128;
+    // X.509 (RFC 5280, Appendix A.1): CommonName attribute value is limited to 64 characters
+    static constexpr size_t kCommonNameMax = 64;
     static constexpr size_t kTotalPayloadDataSizeInBits =
         (kVersionFieldLengthInBits + kVendorIDFieldLengthInBits + kProductIDFieldLengthInBits +
          kCommissioningFlowFieldLengthInBits + kRendezvousInfoFieldLengthInBits + kPayloadDiscriminatorFieldLengthInBits +

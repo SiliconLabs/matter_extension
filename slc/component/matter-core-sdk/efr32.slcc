@@ -190,12 +190,10 @@ source:
   # positioning with the generator firmware. The Common Token Manager is
   # not used in the current implementation as it worsens NVM3 performance
   # and is doesn't support all the features we need. If we want to change
-  # this in the future, we can add "provide: use_ctm" in the slcp file to
-  # use the sources using the Common Token Manager.
+  # this in the future, we can add "matter_use_ctm" component to choose
+  # SilabsConfigCTM.cpp. By default SilabsConfig.cpp is selected.
   - path: third_party/matter_sdk/src/platform/silabs/SilabsConfig.cpp
-    unless: [use_ctm]
-  - path: third_party/matter_sdk/src/platform/silabs/SilabsConfigCTM.cpp
-    condition: [use_ctm]
+    unless: [matter_use_ctm]
   - path: third_party/matter_sdk/src/platform/silabs/efr32/BLEManagerImpl.cpp
   - path: third_party/matter_sdk/src/platform/silabs/efr32/CHIPCryptoPALPsaEfr32.cpp
   - path: third_party/matter_sdk/src/platform/silabs/efr32/ConnectivityManagerImpl.cpp

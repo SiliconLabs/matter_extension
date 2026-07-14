@@ -1665,20 +1665,6 @@ CHIP_ERROR ComplexArgumentParser::Setup(const char * label,
     ReturnErrorOnFailure(ComplexArgumentParser::Setup(labelWithMember, request.connected, value["connected"]));
     valueCopy.removeMember("connected");
 
-    if (value.isMember("networkIdentifier"))
-    {
-        snprintf(labelWithMember, sizeof(labelWithMember), "%s.%s", label, "networkIdentifier");
-        ReturnErrorOnFailure(ComplexArgumentParser::Setup(labelWithMember, request.networkIdentifier, value["networkIdentifier"]));
-    }
-    valueCopy.removeMember("networkIdentifier");
-
-    if (value.isMember("clientIdentifier"))
-    {
-        snprintf(labelWithMember, sizeof(labelWithMember), "%s.%s", label, "clientIdentifier");
-        ReturnErrorOnFailure(ComplexArgumentParser::Setup(labelWithMember, request.clientIdentifier, value["clientIdentifier"]));
-    }
-    valueCopy.removeMember("clientIdentifier");
-
     return ComplexArgumentParser::EnsureNoMembersRemaining(label, valueCopy);
 }
 
@@ -1686,8 +1672,6 @@ void ComplexArgumentParser::Finalize(chip::app::Clusters::NetworkCommissioning::
 {
     ComplexArgumentParser::Finalize(request.networkID);
     ComplexArgumentParser::Finalize(request.connected);
-    ComplexArgumentParser::Finalize(request.networkIdentifier);
-    ComplexArgumentParser::Finalize(request.clientIdentifier);
 }
 
 CHIP_ERROR
@@ -6702,6 +6686,8 @@ CHIP_ERROR ComplexArgumentParser::Setup(const char * label,
         ComplexArgumentParser::EnsureMemberExist("ClientStruct.clientIndex", "clientIndex", value.isMember("clientIndex")));
     ReturnErrorOnFailure(ComplexArgumentParser::EnsureMemberExist("ClientStruct.clientIdentifier", "clientIdentifier",
                                                                   value.isMember("clientIdentifier")));
+    ReturnErrorOnFailure(ComplexArgumentParser::EnsureMemberExist("ClientStruct.clientIdentityType", "clientIdentityType",
+                                                                  value.isMember("clientIdentityType")));
     ReturnErrorOnFailure(ComplexArgumentParser::EnsureMemberExist("ClientStruct.networkIdentityIndex", "networkIdentityIndex",
                                                                   value.isMember("networkIdentityIndex")));
 
@@ -6713,6 +6699,10 @@ CHIP_ERROR ComplexArgumentParser::Setup(const char * label,
     snprintf(labelWithMember, sizeof(labelWithMember), "%s.%s", label, "clientIdentifier");
     ReturnErrorOnFailure(ComplexArgumentParser::Setup(labelWithMember, request.clientIdentifier, value["clientIdentifier"]));
     valueCopy.removeMember("clientIdentifier");
+
+    snprintf(labelWithMember, sizeof(labelWithMember), "%s.%s", label, "clientIdentityType");
+    ReturnErrorOnFailure(ComplexArgumentParser::Setup(labelWithMember, request.clientIdentityType, value["clientIdentityType"]));
+    valueCopy.removeMember("clientIdentityType");
 
     snprintf(labelWithMember, sizeof(labelWithMember), "%s.%s", label, "networkIdentityIndex");
     ReturnErrorOnFailure(
@@ -6726,6 +6716,7 @@ void ComplexArgumentParser::Finalize(chip::app::Clusters::NetworkIdentityManagem
 {
     ComplexArgumentParser::Finalize(request.clientIndex);
     ComplexArgumentParser::Finalize(request.clientIdentifier);
+    ComplexArgumentParser::Finalize(request.clientIdentityType);
     ComplexArgumentParser::Finalize(request.networkIdentityIndex);
 }
 

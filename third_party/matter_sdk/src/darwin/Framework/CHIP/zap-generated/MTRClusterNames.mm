@@ -141,6 +141,9 @@ NSString * MTRClusterNameForID(MTRClusterIDType clusterID)
     case MTRClusterIDTypeLaundryDryerControlsID:
         result = @"LaundryDryerControls";
         break;
+    case MTRClusterIDTypeTemperatureControlledCabinetTopologyID:
+        result = @"TemperatureControlledCabinetTopology";
+        break;
     case MTRClusterIDTypeModeSelectID:
         result = @"ModeSelect";
         break;
@@ -2923,6 +2926,46 @@ NSString * MTRAttributeNameForID(MTRClusterIDType clusterID, MTRAttributeIDType 
 
         default:
             // Not a known LaundryDryerControls attribute.
+            result = [NSString stringWithFormat:@"<Unknown attributeID %u>", attributeID];
+            break;
+        }
+        break;
+
+    case MTRClusterIDTypeTemperatureControlledCabinetTopologyID:
+
+        switch (attributeID) {
+
+            // Cluster TemperatureControlledCabinetTopology attributes
+        case MTRAttributeIDTypeClusterTemperatureControlledCabinetTopologyAttributeDisabledCabinetsID:
+            result = @"DisabledCabinets";
+            break;
+
+        case MTRAttributeIDTypeClusterTemperatureControlledCabinetTopologyAttributeTopologyID:
+            result = @"Topology";
+            break;
+
+        case MTRAttributeIDTypeClusterTemperatureControlledCabinetTopologyAttributeGeneratedCommandListID:
+            result = @"GeneratedCommandList";
+            break;
+
+        case MTRAttributeIDTypeClusterTemperatureControlledCabinetTopologyAttributeAcceptedCommandListID:
+            result = @"AcceptedCommandList";
+            break;
+
+        case MTRAttributeIDTypeClusterTemperatureControlledCabinetTopologyAttributeAttributeListID:
+            result = @"AttributeList";
+            break;
+
+        case MTRAttributeIDTypeClusterTemperatureControlledCabinetTopologyAttributeFeatureMapID:
+            result = @"FeatureMap";
+            break;
+
+        case MTRAttributeIDTypeClusterTemperatureControlledCabinetTopologyAttributeClusterRevisionID:
+            result = @"ClusterRevision";
+            break;
+
+        default:
+            // Not a known TemperatureControlledCabinetTopology attribute.
             result = [NSString stringWithFormat:@"<Unknown attributeID %u>", attributeID];
             break;
         }
@@ -10704,10 +10747,6 @@ NSString * MTRRequestCommandNameForID(MTRClusterIDType clusterID, MTRCommandIDTy
             result = @"ReorderNetwork";
             break;
 
-        case MTRCommandIDTypeClusterNetworkCommissioningCommandQueryIdentityID:
-            result = @"QueryIdentity";
-            break;
-
         default:
             result = [NSString stringWithFormat:@"<Unknown commandID %u>", commandID];
             break;
@@ -11043,6 +11082,16 @@ NSString * MTRRequestCommandNameForID(MTRClusterIDType clusterID, MTRCommandIDTy
         break;
 
     case MTRClusterIDTypeLaundryDryerControlsID:
+
+        switch (commandID) {
+
+        default:
+            result = [NSString stringWithFormat:@"<Unknown commandID %u>", commandID];
+            break;
+        }
+        break;
+
+    case MTRClusterIDTypeTemperatureControlledCabinetTopologyID:
 
         switch (commandID) {
 
@@ -13690,10 +13739,6 @@ NSString * MTRResponseCommandNameForID(MTRClusterIDType clusterID, MTRCommandIDT
             result = @"ConnectNetworkResponse";
             break;
 
-        case MTRCommandIDTypeClusterNetworkCommissioningCommandQueryIdentityResponseID:
-            result = @"QueryIdentityResponse";
-            break;
-
         default:
             result = [NSString stringWithFormat:@"<Unknown commandID %u>", commandID];
             break;
@@ -13941,6 +13986,16 @@ NSString * MTRResponseCommandNameForID(MTRClusterIDType clusterID, MTRCommandIDT
         break;
 
     case MTRClusterIDTypeLaundryDryerControlsID:
+
+        switch (commandID) {
+
+        default:
+            result = [NSString stringWithFormat:@"<Unknown commandID %u>", commandID];
+            break;
+        }
+        break;
+
+    case MTRClusterIDTypeTemperatureControlledCabinetTopologyID:
 
         switch (commandID) {
 
@@ -15995,6 +16050,16 @@ NSString * MTREventNameForID(MTRClusterIDType clusterID, MTREventIDType eventID)
         break;
 
     case MTRClusterIDTypeLaundryDryerControlsID:
+
+        switch (eventID) {
+
+        default:
+            result = [NSString stringWithFormat:@"<Unknown eventID %u>", eventID];
+            break;
+        }
+        break;
+
+    case MTRClusterIDTypeTemperatureControlledCabinetTopologyID:
 
         switch (eventID) {
 

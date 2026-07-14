@@ -21,16 +21,12 @@
  """
 
 import argparse
-import json
 import logging
 import os
 import re
 import subprocess
 import sys
-from pathlib import Path
-
 import shutil
-import yaml
 from dotenv import load_dotenv
 
 class CreateApp:
@@ -58,154 +54,10 @@ class CreateApp:
         logging.info(f"Example usage: {self.EXAMPLE_USAGE}")
         sys.exit(1)
 
-    def extract_from_slcp(self, app_slcp_full_path):
-        """Extract source, include paths and project name from a .slcp file."""
-        src_paths = []
-        include_paths = []
-        project_name = None
-        try:
-            with open(app_slcp_full_path, 'r') as f:
-                doc = yaml.safe_load(f)
-            # Parse project_name
-            if 'project_name' in doc:
-                project_name = doc['project_name']
-            # Extract 'source' paths
-            if 'source' in doc:
-                for entry in doc['source']:
-                    if isinstance(entry, dict) and 'path' in entry:
-                        src_paths.append(entry['path'])
-            # Extract 'include' file_list paths, prepending the parent include path
-            if 'include' in doc:
-                for entry in doc['include']:
-                    if isinstance(entry, dict):
-                        include_base = entry.get('path', '')
-                        if 'file_list' in entry and isinstance(entry['file_list'], list):
-                            for file_entry in entry['file_list']:
-                                if isinstance(file_entry, dict) and 'path' in file_entry:
-                                    file_path = file_entry['path']
-                                    if include_base and not file_path.startswith(include_base):
-                                        file_path = os.path.join(include_base, file_path)
-                                    include_paths.append(file_path)
-            return src_paths, include_paths, project_name
-        except (IOError, yaml.YAMLError) as e:
-            logging.error(f"Failed to extract from slcp: {e}")
-            return [], [], None
-
-    def trim_to_str(self, path, substr):
-        """Keep only the paths starting from a specific substring."""
-        idx = path.find(substr)
-        return path[idx:] if idx != -1 else path
-
-    def extract_and_save_paths(self):
-        """Extract paths from .slcp and save to JSON file."""
-        self.app_slcp_full_path = self.get_project_name_from_slcp()
-        matter_sdk_src, matter_sdk_inc, project_name = self.extract_from_slcp(self.app_slcp_full_path)
-
-        if self.use_solutions:
-            with open(self.reference_project_file, 'r') as f:
-                content = f.read()
-            match = re.search(r'id:\s*application.*?output:\s*(\S+)', content, re.DOTALL)
-            app_output_dir = match.group(1) if match else project_name
-            self.sample_app_out_path = os.path.join(self.new_app_name, app_output_dir)
-        else:
-            self.sample_app_out_path = self.new_app_name
-
-        # Copy the folder self.sample_app_out_path/src to .bak/original/src/
-        try:
-            src_dir = os.path.join(self.sample_app_out_path, 'src')
-            dest_dir = os.path.join(self.sample_app_out_path, '.bak', 'original', 'src')
-            if os.path.exists(src_dir):
-                shutil.copytree(src_dir, dest_dir, dirs_exist_ok=True)
-                logging.info(f"Copied {src_dir} to {dest_dir}")
-            else:
-                logging.warning(f"Source directory {src_dir} does not exist, skipping copy.")
-        except OSError as e:
-            logging.error(f"Failed to copy src directory: {e}")
-            sys.exit(1)
-
-        # Copy the folder self.sample_app_out_path/include to .bak/original/include/
-        try:
-            include_dir = os.path.join(self.sample_app_out_path, 'include')
-            dest_include_dir = os.path.join(self.sample_app_out_path, '.bak', 'original', 'include')
-            if os.path.exists(include_dir):
-                shutil.copytree(include_dir, dest_include_dir, dirs_exist_ok=True)
-                logging.info(f"Copied {include_dir} to {dest_include_dir}")
-            else:
-                logging.warning(f"Include directory {include_dir} does not exist, skipping copy.")
-        except OSError as e:
-            logging.error(f"Failed to copy include directory: {e}")
-            sys.exit(1)
-
-        trimmed_src_paths = [self.trim_to_str(p, 'third_party') for p in matter_sdk_src]
-        trimmed_inc_paths = [self.trim_to_str(p, 'third_party') for p in matter_sdk_inc]
-        customer_src = [os.path.join(self.sample_app_out_path, 'src', os.path.basename(p)) for p in trimmed_src_paths]
-        customer_inc = [os.path.join(self.sample_app_out_path, 'include', os.path.basename(p)) for p in trimmed_inc_paths]
-        upgrade_src_dir = os.path.join(self.sample_app_out_path, '.bak', 'original', 'src')
-        upgrade_inc_dir = os.path.join(self.sample_app_out_path, '.bak', 'original', 'include')
-        upgrade_src = []
-        upgrade_inc = []
-        if os.path.exists(upgrade_src_dir):
-            for fname in os.listdir(upgrade_src_dir):
-                fpath = os.path.join(upgrade_src_dir, fname)
-                if os.path.isfile(fpath):
-                    upgrade_src.append(fpath)
-        if os.path.exists(upgrade_inc_dir):
-            for fname in os.listdir(upgrade_inc_dir):
-                fpath = os.path.join(upgrade_inc_dir, fname)
-                if os.path.isfile(fpath):
-                    upgrade_inc.append(fpath)
-        output_data = {
-            'matter_sdk_paths': {
-                'source': trimmed_src_paths,
-                'include': trimmed_inc_paths
-            },
-            'customer_paths': {
-                'source': customer_src,
-                'include': customer_inc
-            },
-            'backups_paths': {
-                'source': upgrade_src,
-                'include': upgrade_inc
-            }
-        }
-        output_file_json = os.path.join(self.sample_app_out_path, '.bak', 'source_and_include_paths.json')
-        os.makedirs(self.sample_app_out_path, exist_ok=True)
-        try:
-            with open(output_file_json, 'w') as out_json:
-                json.dump(output_data, out_json, indent=2)
-            logging.info(f"Saved source and include paths to {output_file_json}")
-        except IOError as e:
-            logging.error(f"Failed to write paths file: {e}")
-            sys.exit(1)
-        
-    def get_project_name_from_slcp(self):
-        """Extract project name from .slcp or .slcw file."""
-        # If .slcp, extract directly; if .slcw, find application .slcp and extract from that
-        if not self.use_solutions:
-            return self.reference_project_file
-        else:
-            try:
-                with open(self.reference_project_file, 'r') as f:
-                    doc = yaml.safe_load(f)
-                app_slcp_path = None
-                if 'project' in doc and isinstance(doc['project'], list):
-                    for proj in doc['project']:
-                        if isinstance(proj, dict) and proj.get('id') == 'application' and 'path' in proj:
-                            app_slcp_path = proj['path']
-                            break
-                if app_slcp_path is None:
-                    logging.error("No application project with .slcp path found in .slcw file.")
-                    sys.exit(1)
-
-                self.app_slcp_full_path = os.path.join(os.path.dirname(self.reference_project_file), app_slcp_path)
-                if not os.path.exists(self.app_slcp_full_path):
-                    logging.error(f"Application .slcp file does not exist: {self.app_slcp_full_path}")
-                    sys.exit(1)
-
-                return self.app_slcp_full_path
-            except (IOError, yaml.YAMLError) as e:
-                logging.error(f"Failed to parse .slcw file for application .slcp: {e}")
-                sys.exit(1)
+    @staticmethod
+    def _tool_exists(tool):
+        """Return True when a tool name or explicit executable path is usable."""
+        return bool(tool) and (os.path.isfile(tool) or shutil.which(tool) is not None)
 
     @staticmethod
     def validate_tools():
@@ -221,9 +73,9 @@ class CreateApp:
         Raises:
             SystemExit: If any required tool is not found
         """
-        slc_exe = os.getenv("SLC_EXECUTABLE", "slc")
-        ninja_exe = os.getenv("NINJA_EXECUTABLE", "ninja") 
-        commander_exe = os.getenv("COMMANDER_EXECUTABLE", "commander")
+        slc_exe = os.getenv("SLC_EXECUTABLE") or "slc"
+        ninja_exe = os.getenv("NINJA_EXECUTABLE") or os.getenv("NINJA_EXE_PATH") or os.getenv("NINJA_PATH") or "ninja"
+        commander_exe = os.getenv("COMMANDER_EXECUTABLE") or "commander"
         
         tools = [
             (slc_exe, "slc not detected on host. Please run slc/sl_setup_env.py to install slc."),
@@ -235,7 +87,7 @@ class CreateApp:
         
         missing_tools = []
         for tool, error_msg in tools:
-            if not shutil.which(tool):
+            if not CreateApp._tool_exists(tool):
                 logging.error(error_msg)
                 missing_tools.append(tool)
         
@@ -310,11 +162,14 @@ class CreateApp:
         try:
             env_path = os.path.join(os.getcwd(), "slc", "tools", ".env")
             load_dotenv(env_path, override=True)
-            os.environ["PATH"] = os.getenv("TOOLS_PATH") + os.environ["PATH"]
+            tools_path = os.getenv("TOOLS_PATH")
+            if not tools_path:
+                raise TypeError("TOOLS_PATH is missing")
+            os.environ["PATH"] = os.pathsep.join([tools_path, os.environ["PATH"]])
             self.java_path = os.getenv("JAVA_HOME")
             self.silabs_chip_root = os.getenv("silabs_chip_root")
             self.POST_BUILD_EXE = os.getenv("POST_BUILD_EXE")
-            self.NINJA_EXE_PATH = os.getenv("NINJA_EXE_PATH")
+            self.NINJA_EXE_PATH = os.getenv("NINJA_EXE_PATH") or os.getenv("NINJA_PATH")
             self.sisdk_root = os.getenv("SISDK_ROOT")
             self.wiseconnect_root = os.getenv("WISECONNECT_ROOT")
             self.arm_toolchain_path = os.path.join(os.getenv("ARM_GCC_DIR"))
@@ -350,8 +205,6 @@ class CreateApp:
             cmd += ["--with", self.silabs_board, "--new-project", "--generator-timeout=180", "-o", output_type]
             logging.info(f"Running command: {' '.join(cmd)}")
             subprocess.run(cmd, check=True)
-            # After generation, extract and save src/include paths
-            self.extract_and_save_paths()
         except subprocess.CalledProcessError as e:
             logging.error(f"Error running 'slc generate': {e}")
             sys.exit(1)

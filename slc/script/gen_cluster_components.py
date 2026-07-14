@@ -93,7 +93,9 @@ for xml_path in cluster_xml_path:
         filename = xmlfile.split(".")[0]
 
         # Handle special cases for filename differences
-        if "ota" in filename:
+        if "ota-provider" in filename:
+            clustername = "ota_provider"
+        elif "ota-requestor" in filename:
             clustername = "ota_requestor"
         elif "occupancy" in filename:
             clustername = "occupancy_sensor"
@@ -134,18 +136,9 @@ for xml_path in cluster_xml_path:
                     name = line.split("<name>")[-1].split("<")[0]
             # If both category and name are found, store them in the dictionary
             if category != "" and name != "":
-                if "ota" in clustername:
-                    namecategories[clustername] = {}
-                    namecategories[clustername]["category"] = category
-                    namecategories[clustername]["name"] = name
-                    clustername = "ota_provider"
-                    namecategories[clustername] = {}
-                    namecategories[clustername]["category"] = category
-                    namecategories[clustername]["name"] = name.replace("Requestor", "Provider")
-                else:
-                    namecategories[clustername] = {}
-                    namecategories[clustername]["category"] = category
-                    namecategories[clustername]["name"] = name
+                namecategories[clustername] = {}
+                namecategories[clustername]["category"] = category
+                namecategories[clustername]["name"] = name
             else :
                 namecategories[clustername] = {}
                 namecategories[clustername]["category"] = "General"

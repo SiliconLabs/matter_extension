@@ -79,7 +79,7 @@ void GetTemperatureHumidityWork(intptr_t contextPtr)
         GLIB_drawStringOnLine(context->glibContext, "Temp. Sensor", context->line++, GLIB_ALIGN_LEFT, 0, 0, true);
 
         // Get and Write Temperature MeasuredValue
-        status = SensorManager::GetMeasuredTemperature(value);
+        status = AppTask::GetAppTask().GetMeasuredTemperature(value);
         if (status == Status::Success && !value.IsNull())
         {
             DrawValue(context->glibContext, "Current", value.Value(), "C", context->line++);
@@ -87,7 +87,7 @@ void GetTemperatureHumidityWork(intptr_t contextPtr)
         }
 
         // Get and write temperature max measured value
-        status = SensorManager::GetMaxMeasuredTemperature(value);
+        status = AppTask::GetAppTask().GetMaxMeasuredTemperature(value);
         if (status == Status::Success && !value.IsNull())
         {
             DrawValue(context->glibContext, "Max", value.Value(), "C", context->line++);
@@ -95,7 +95,7 @@ void GetTemperatureHumidityWork(intptr_t contextPtr)
         }
 
         // Get and write temperature min measured value
-        status = SensorManager::GetMinMeasuredTemperature(value);
+        status = AppTask::GetAppTask().GetMinMeasuredTemperature(value);
         if (status == Status::Success && !value.IsNull())
         {
             DrawValue(context->glibContext, "Min", value.Value(), "C", context->line++);
@@ -110,7 +110,7 @@ void GetTemperatureHumidityWork(intptr_t contextPtr)
         GLIB_drawStringOnLine(context->glibContext, "Humidity Sensor", context->line++, GLIB_ALIGN_LEFT, 0, 0, true);
 
         // Get and write humidity measured value
-        status = SensorManager::GetMeasuredHumidity(value);
+        status = AppTask::GetAppTask().GetMeasuredHumidity(value);
         if (status == Status::Success && !value.IsNull())
         {
             DrawValue(context->glibContext, "Current", value.Value(), "%", context->line++);
@@ -118,7 +118,7 @@ void GetTemperatureHumidityWork(intptr_t contextPtr)
         }
 
         // Get and write humidity max measured value
-        status = SensorManager::GetMaxMeasuredHumidity(value);
+        status = AppTask::GetAppTask().GetMaxMeasuredHumidity(value);
         if (status == Status::Success && !value.IsNull())
         {
             DrawValue(context->glibContext, "Max", value.Value(), "%", context->line++);
@@ -126,7 +126,7 @@ void GetTemperatureHumidityWork(intptr_t contextPtr)
         }
 
         // Get and write humidity min measured value
-        status = SensorManager::GetMinMeasuredHumidity(value);
+        status = AppTask::GetAppTask().GetMinMeasuredHumidity(value);
         if (status == Status::Success && !value.IsNull())
         {
             DrawValue(context->glibContext, "Min", value.Value(), "%", context->line++);

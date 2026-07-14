@@ -17,7 +17,3 @@ requires:
 template_contribution:
 - name: mbedtls_config
   value: MBEDTLS_X509_CREATE_C
-metadata:
-  sbom:
-    reference: mbedtls_sbom
-root_path: platform_core

@@ -37,6 +37,7 @@ def sendSlackNotification(String messageType, String status, String summary = ""
     def alertEmoji = status == "PASS" ? "🎉" : "🚨"
     
     def notificationColor = color ?: (status == "PASS" ? "good" : "danger")
+    def reportedCommitSha = env.GIT_COMMIT ?: commitSha
     
     def message = """${alertEmoji} *${messageType.toUpperCase()}* ${alertEmoji}
                     
@@ -48,8 +49,8 @@ def sendSlackNotification(String messageType, String status, String summary = ""
 
 📋 *Details:*"""
     
-    if (commitSha) {
-        message += "\n• *Commit SHA:* `${commitSha}`"
+    if (reportedCommitSha) {
+        message += "\n• *Commit SHA:* `${reportedCommitSha}`"
     }
     if (runNumber) {
         message += "\n• *GitHub Workflow Run:* #${runNumber}"
@@ -66,8 +67,8 @@ def sendSlackNotification(String messageType, String status, String summary = ""
     message += "\n• <${env.BUILD_URL}|Jenkins Build>"
     message += "\n• <${env.BUILD_URL}console|Console Output>"
     
-    if (commitSha) {
-        message += "\n• <https://github.com/SiliconLabsSoftware/matter_extension/commit/${commitSha}|GitHub Commit>"
+    if (reportedCommitSha) {
+        message += "\n• <https://github.com/SiliconLabsSoftware/matter_extension/commit/${reportedCommitSha}|GitHub Commit>"
     }
     
     if (status == "FAIL") {

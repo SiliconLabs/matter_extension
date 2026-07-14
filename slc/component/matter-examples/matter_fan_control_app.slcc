@@ -5,7 +5,17 @@ description: >
   included in all Fan control applications to help resolve SLC dependencies. Only applicable to Fan control applications.
 id: matter_fan_control_app
 quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+
+template_file:
+  - path: third_party/matter_sdk/examples/fan-control-app/silabs/include/AppTask.h
+  - path: third_party/matter_sdk/examples/fan-control-app/silabs/include/AppTaskImpl.h
+  - path: third_party/matter_sdk/examples/fan-control-app/silabs/src/AppTask.cpp
+
+config_file:
+  - path: third_party/matter_sdk/examples/fan-control-app/silabs/include/FanControlConfig.h
+    file_id: fan_control_config
 provides:
   - name: matter_fan_control_app
-ui_hints:
-  visibility: never

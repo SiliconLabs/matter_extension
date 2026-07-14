@@ -55,7 +55,6 @@ class Protocol(_base.ProvisionProtocol):
         chan.close()
 
     def csr(self, paths, args, chan):
-        base_dir = paths.base()
         # PAI cert
         pai_cert_path = args.str(ID.kPaiCert)
         if pai_cert_path is None:
@@ -78,7 +77,7 @@ class Protocol(_base.ProvisionProtocol):
         csr_path = args.value(ID.kCsrFile)
         if csr_path is None:
             raise ValueError("Missing CSR")
-        signer = _pki.SigningServer(base_dir, csr_path, pai_cert_path, pai_key_path, dac_path)
+        signer = _pki.SigningServer(paths, csr_path, pai_cert_path, pai_key_path, dac_path)
         signer.sign()
 
 

@@ -46,7 +46,7 @@ Connect a USB-to-UART adapter to these pins to access the Matter shell and logs.
   connected via USB to serve as the NCP.
 - A USB-to-UART adapter to access the Matter debug interface on the EXP header.
 
-For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.0/matter-overview/#hardware-requirements) documentation.
+For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.1/matter-overview/#hardware-requirements) documentation.
 
 ### SW Requirements
 
@@ -54,7 +54,7 @@ For a full list of hardware requirements, see [Matter Hardware Requirements](htt
   [Build and Installation Instructions for the Border Router Host](https://docs.silabs.com/openthread/3.0.2/using-sl-coprocessors-with-openthread-border-routers/build-and-installation-instructions-for-the-border-router-host)
   for more details.
 
-For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.0/matter-overview/#software-requirements) documentation.
+For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.1/matter-overview/#software-requirements) documentation.
 
 ## Steps to Run Demo
 
@@ -65,12 +65,12 @@ artifact.
 
 If building the sample application on its own, a bootloader must be flashed separately
 before the application. Pre-built bootloader binaries for all supported devices are
-available at [Matter Bootloader Binaries](https://docs.silabs.com/matter/2.9.0/matter-prerequisites/matter-artifacts#matter-bootloader-binaries).
+available at [Matter Bootloader Binaries](https://docs.silabs.com/matter/2.9.1/matter-prerequisites/matter-artifacts#matter-bootloader-binaries).
 
 ### Configuration and Setup
 
 This sample app works out of the box with no additional configuration required. To customize the device, see the
-[Custom Matter Device Development](https://docs.silabs.com/matter/2.9.0/matter-references/custom-matter-device#custom-matter-device-development) guide.
+[Custom Matter Device Development](https://docs.silabs.com/matter/2.9.1/matter-references/custom-matter-device#custom-matter-device-development) guide.
 
 ### Steps for Execution
 
@@ -84,7 +84,7 @@ This sample app works out of the box with no additional configuration required. 
 
    **chip-tool (standalone or pre-built):** The pre-built chip-tool instance ships
    with the Matter Hub image. More information on using the Matter Hub is in the
-   [Silicon Labs Matter Hub Documentation](https://docs.silabs.com/matter/2.9.0/matter-thread/raspi-img).
+   [Silicon Labs Matter Hub Documentation](https://docs.silabs.com/matter/2.9.1/matter-thread/raspi-img).
    ```shell
    chip-tool pairing ble-thread 1 hex:<operationalDataset> 20202021 3840
    ```
@@ -159,8 +159,8 @@ to receive state changes and to act accordingly.
 
 ## Resources
 
-- [Silicon Labs Matter over Thread Documentation](https://docs.silabs.com/matter/2.9.0/matter-thread)
-- [Matter Hub Setup](https://docs.silabs.com/matter/2.9.0/matter-thread/raspi-img)
+- [Silicon Labs Matter over Thread Documentation](https://docs.silabs.com/matter/2.9.1/matter-thread)
+- [Matter Hub Setup](https://docs.silabs.com/matter/2.9.1/matter-thread/raspi-img)
 - [chip-tool README](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
 
 ## Report Bugs & Get Support

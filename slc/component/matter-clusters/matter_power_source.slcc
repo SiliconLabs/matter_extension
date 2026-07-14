@@ -17,7 +17,10 @@ include:
   - path: third_party/matter_sdk/src/app/clusters/power-source-server
     file_list:
       - path: codegen/power-source-server.h
+      - path: Modules.h
+      - path: NamedPowerSourceClusters.h
       - path: power-source-server.h
+      - path: PowerSourceCluster.h
 template_contribution:
   - name: component_catalog
     value: matter_power_source

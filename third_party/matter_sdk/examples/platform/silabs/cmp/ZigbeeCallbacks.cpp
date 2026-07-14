@@ -45,6 +45,12 @@
 #include "MultiProtocolDataModelHelper.h"
 #include "ZigbeeCallbacks.h"
 
+#define ZB_LOG 0x00 // Zigbee Log default category
+
+#if SILABS_LOG_ENABLED
+#include "zcl-debug-print.h"
+#endif
+
 #if SL_MATTER_CMP_SECURE_ZIGBEE
 #include "sl_token_manager_api.h"
 #include "sl_token_manager_defines.h"
@@ -193,27 +199,23 @@ extern "C" void start_zigbee_event_handler(sl_zigbee_af_event_t * event)
             if (sl_zigbee_af_network_state() == SL_ZIGBEE_JOINED_NETWORK)
             {
                 pendingRestart = true;
-                SILABS_LOG(" [ZB] Leaving Network");
                 sl_zigbee_leave_network(SL_ZIGBEE_LEAVE_NWK_WITH_NO_OPTION);
                 return;
             }
             sl_status_t status = sl_zigbee_af_network_creator_network_form(distributedNetwork, 0xABCD, 1, channel);
-            SILABS_LOG(" [ZB] Form network start: 0x%X", status);
         }
     }
     else if (sl_zigbee_af_network_state() == SL_ZIGBEE_JOINED_NETWORK)
     {
 #if SL_MATTER_CMP_SECURE_ZIGBEE
-        SILABS_LOG(" [ZB] Open network with key status: 0x%X", open_network_with_key());
+        sl_zigbee_af_print(ZB_LOG,"Open network with key status: 0x%X", open_network_with_key());
 #else
-        SILABS_LOG(" [ZB] Start_evt_handler: Permitting Join");
         sl_zigbee_af_permit_join(254, false);
 #endif
     }
     else
     {
         sl_status_t status = sl_zigbee_af_network_creator_network_form(distributedNetwork, 0xABCD, 1, 11);
-        SILABS_LOG(" [ZB] Form network start: 0x%X", status);
     }
 }
 
@@ -223,7 +225,7 @@ extern "C" void finding_and_binding_event_handler(sl_zigbee_af_event_t * event)
     {
         sl_zigbee_af_event_set_inactive(&finding_and_binding_event);
 
-        SILABS_LOG(" [ZB] Find and bind target start: 0x%X", sl_zigbee_af_find_and_bind_target_start(SL_CMP_ENDPOINT));
+        sl_zigbee_af_print(ZB_LOG,"Find and bind target start: 0x%X", sl_zigbee_af_find_and_bind_target_start(SL_CMP_ENDPOINT));
     }
 }
 
@@ -275,11 +277,9 @@ extern "C" void sl_zigbee_af_main_init_cb(void)
  */
 extern "C" void sl_zigbee_af_network_creator_complete_cb(const sl_zigbee_network_parameters_t * network, bool usedSecondaryChannels)
 {
-    SILABS_LOG(" [ZB] Form Network Complete");
 #if SL_MATTER_CMP_SECURE_ZIGBEE
-    SILABS_LOG(" [ZB] Open network with key status: 0x%X", open_network_with_key());
+    sl_zigbee_af_print(ZB_LOG,"Open network with key status: 0x%X", open_network_with_key());
 #else
-    SILABS_LOG(" [ZB] Permitting Join");
     sl_zigbee_af_permit_join(254, false);
 #endif // SL_MATTER_CMP_SECURE_ZIGBEE
 }

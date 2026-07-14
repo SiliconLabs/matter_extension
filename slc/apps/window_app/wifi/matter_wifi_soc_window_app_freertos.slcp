@@ -7,10 +7,10 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.9.0"
+    version: "2.9.1"
     vendor: silabs
   - id: wiseconnect3_sdk
-    version: "4.1.0"
+    version: "4.1.1"
     vendor: silabs
 
 provides:

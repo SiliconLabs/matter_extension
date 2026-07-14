@@ -2557,6 +2557,26 @@ include:
   - path: third_party/matter_sdk/zzz_generated/app-common
     unless: [matter_zap_custom_generation]
     file_list:
+      - path: clusters/TemperatureControlledCabinetTopology/AttributeIds.h
+      - path: clusters/TemperatureControlledCabinetTopology/Attributes.h
+      - path: clusters/TemperatureControlledCabinetTopology/Attributes.ipp
+      - path: clusters/TemperatureControlledCabinetTopology/ClusterId.h
+      - path: clusters/TemperatureControlledCabinetTopology/CommandIds.h
+      - path: clusters/TemperatureControlledCabinetTopology/Commands.h
+      - path: clusters/TemperatureControlledCabinetTopology/Commands.ipp
+      - path: clusters/TemperatureControlledCabinetTopology/Enums.h
+      - path: clusters/TemperatureControlledCabinetTopology/EnumsCheck.h
+      - path: clusters/TemperatureControlledCabinetTopology/EventIds.h
+      - path: clusters/TemperatureControlledCabinetTopology/Events.h
+      - path: clusters/TemperatureControlledCabinetTopology/Events.ipp
+      - path: clusters/TemperatureControlledCabinetTopology/Ids.h
+      - path: clusters/TemperatureControlledCabinetTopology/Metadata.h
+      - path: clusters/TemperatureControlledCabinetTopology/MetadataProvider.h
+      - path: clusters/TemperatureControlledCabinetTopology/Structs.h
+      - path: clusters/TemperatureControlledCabinetTopology/Structs.ipp
+  - path: third_party/matter_sdk/zzz_generated/app-common
+    unless: [matter_zap_custom_generation]
+    file_list:
       - path: clusters/TemperatureMeasurement/AttributeIds.h
       - path: clusters/TemperatureMeasurement/Attributes.h
       - path: clusters/TemperatureMeasurement/Attributes.ipp

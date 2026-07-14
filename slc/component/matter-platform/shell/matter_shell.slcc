@@ -91,8 +91,6 @@ source:
     condition: [matter_wifi_ble]
   - path: third_party/matter_sdk/src/lib/shell/commands/WiFi.cpp
     condition: [matter_wifi]
-  - path: third_party/matter_sdk/src/lib/shell/commands/NFC.cpp
-    condition: [matter_nfc]
   - path: third_party/matter_sdk/src/lib/shell/commands/Ota.cpp
     condition: [matter_ota_support]
   - path: third_party/matter_sdk/src/lib/shell/commands/Ota.cpp

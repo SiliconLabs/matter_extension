@@ -176,8 +176,11 @@ configuration:
     condition: [device_series_3]
   - name: SL_BT_RTOS_LINK_LAYER_TASK_STACK_SIZE
     value: 1088
-    condition:
-      - device_series_2
+    condition: [device_series_2]
+    unless: [matter_ble_dmp_test]
+  - name: SL_BT_RTOS_LINK_LAYER_TASK_STACK_SIZE
+    value: 1400
+    condition: [device_series_2, matter_ble_dmp_test]
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: 16
   - name: SL_MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS
@@ -281,5 +284,5 @@ ui_hints:
 
 sdk_extension:
   - id: matter
-    version: "2.9.0"
+    version: "2.9.1"
     vendor: silabs

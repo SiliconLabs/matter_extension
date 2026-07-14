@@ -12,12 +12,17 @@ metadata:
 provides:
   - name: matter_fan_control
 source:
+  - path: third_party/matter_sdk/src/app/clusters/fan-control-server/CodegenIntegration.cpp
+    unless: [matter_code_driven_dm]
   - path: third_party/matter_sdk/src/app/clusters/fan-control-server/FanControlCluster.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/fan-control-server
     file_list:
+      - path: CodegenIntegration.h
+        unless: [matter_code_driven_dm]
       - path: fan-control-delegate.h
       - path: fan-control-server.h
+      - path: FanControlCluster.h
 template_contribution:
   - name: component_catalog
     value: matter_fan_control

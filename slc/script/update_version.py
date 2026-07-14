@@ -121,6 +121,7 @@ if __name__ == '__main__':
     # REGEX FORMAT:
     # https://docs.silabs.com/matter/1.0.4
     # https://github.com/SiliconLabsSoftware/matter_sdk/blob/v2.8.1/...
+    # https://github.com/SiliconLabsSoftware/matter_extension/blob/v2.8.1/...
     # https://github.com/SiliconLabs/wiseconnect/blob/v4.0.1-content-for-docs/...
     if(UPDATE_README):
         readme_files = [os.path.abspath(f) for f in pathlib.Path(ROOT).glob("slc/**/*.md")]
@@ -129,6 +130,7 @@ if __name__ == '__main__':
 
             replace_text(file,"https://docs.silabs.com/matter/"+VERSION_REGEX_FORMAT,"https://docs.silabs.com/matter/"+EXTENSION_NEW_VERSION)
             replace_text(file,"matter_sdk/blob/v"+VERSION_REGEX_FORMAT,"matter_sdk/blob/v"+EXTENSION_NEW_VERSION, warning_if_unchanged=False)
+            replace_text(file,"matter_extension/blob/v"+VERSION_REGEX_FORMAT,"matter_extension/blob/v"+EXTENSION_NEW_VERSION, warning_if_unchanged=False)
             replace_text(file,"wiseconnect/blob/v"+VERSION_REGEX_FORMAT+"-content-for-docs","wiseconnect/blob/v"+WISECONNECT_NEW_VERSION+"-content-for-docs", warning_if_unchanged=False)
             if FULL_VERSION:
                 replace_text(file,"https://www.silabs.com/documents/public/software/SilabsMatterPi_"+FULL_VERSION_REGEX+"-extension.zip", "https://www.silabs.com/documents/public/software/SilabsMatterPi_"+EXTENSION_NEW_VERSION+"-"+AUX_VERSION+"-extension.zip", False)

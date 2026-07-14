@@ -7,10 +7,10 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.9.0"
+    version: "2.9.1"
     vendor: silabs
   - id: wiseconnect3_sdk
-    version: "4.1.0"
+    version: "4.1.1"
     vendor: silabs
 
 component:
@@ -102,18 +102,23 @@ config_file:
   - path: ../../../../provision.mattpconf
     directory: provision
     file_id: provision_config
+  - path: ../../../../third_party/matter_sdk/examples/evse-app/silabs/include/EvseConfig.h
+    file_id: evse_config
 
 include:
   - path: ../../../../third_party/matter_sdk/examples/evse-app/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
-      - path: AppTask.h
       - path: CHIPProjectConfig.h
+    directory: include
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/customer
+    file_list:
+      - path: CustomerAppTask.h
     directory: include
 
 source:
-  - path: ../../../../third_party/matter_sdk/examples/evse-app/silabs/src/AppTask.cpp
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/customer/CustomerAppTask.cpp
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
     directory: src

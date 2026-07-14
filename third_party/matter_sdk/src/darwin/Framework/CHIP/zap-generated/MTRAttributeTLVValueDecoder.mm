@@ -2564,24 +2564,6 @@ static id _Nullable DecodeAttributeValueForNetworkCommissioningCluster(Attribute
                 newElement_0 = [MTRNetworkCommissioningClusterNetworkInfoStruct new];
                 newElement_0.networkID = AsData(entry_0.networkID);
                 newElement_0.connected = [NSNumber numberWithBool:entry_0.connected];
-                if (entry_0.networkIdentifier.HasValue()) {
-                    if (entry_0.networkIdentifier.Value().IsNull()) {
-                        newElement_0.networkIdentifier = nil;
-                    } else {
-                        newElement_0.networkIdentifier = AsData(entry_0.networkIdentifier.Value().Value());
-                    }
-                } else {
-                    newElement_0.networkIdentifier = nil;
-                }
-                if (entry_0.clientIdentifier.HasValue()) {
-                    if (entry_0.clientIdentifier.Value().IsNull()) {
-                        newElement_0.clientIdentifier = nil;
-                    } else {
-                        newElement_0.clientIdentifier = AsData(entry_0.clientIdentifier.Value().Value());
-                    }
-                } else {
-                    newElement_0.clientIdentifier = nil;
-                }
                 [array_0 addObject:newElement_0];
             }
             CHIP_ERROR err = iter_0.GetStatus();
@@ -5797,6 +5779,56 @@ static id _Nullable DecodeAttributeValueForLaundryDryerControlsCluster(Attribute
     }
     default: {
         // Not a known LaundryDryerControls attribute.
+        break;
+    }
+    }
+
+    *aError = CHIP_ERROR_IM_MALFORMED_ATTRIBUTE_PATH_IB;
+    return nil;
+}
+static id _Nullable DecodeAttributeValueForTemperatureControlledCabinetTopologyCluster(AttributeId aAttributeId, TLV::TLVReader & aReader, CHIP_ERROR * aError)
+{
+    using namespace Clusters::TemperatureControlledCabinetTopology;
+    switch (aAttributeId) {
+    case Attributes::DisabledCabinets::Id: {
+        using TypeInfo = Attributes::DisabledCabinets::TypeInfo;
+        TypeInfo::DecodableType cppValue;
+        *aError = DataModel::Decode(aReader, cppValue);
+        if (*aError != CHIP_NO_ERROR) {
+            return nil;
+        }
+        NSArray * _Nonnull value;
+        { // Scope for our temporary variables
+            auto * array_0 = [NSMutableArray new];
+            auto iter_0 = cppValue.begin();
+            while (iter_0.Next()) {
+                auto & entry_0 = iter_0.GetValue();
+                NSNumber * newElement_0;
+                newElement_0 = [NSNumber numberWithUnsignedShort:entry_0];
+                [array_0 addObject:newElement_0];
+            }
+            CHIP_ERROR err = iter_0.GetStatus();
+            if (err != CHIP_NO_ERROR) {
+                *aError = err;
+                return nil;
+            }
+            value = array_0;
+        }
+        return value;
+    }
+    case Attributes::Topology::Id: {
+        using TypeInfo = Attributes::Topology::TypeInfo;
+        TypeInfo::DecodableType cppValue;
+        *aError = DataModel::Decode(aReader, cppValue);
+        if (*aError != CHIP_NO_ERROR) {
+            return nil;
+        }
+        NSNumber * _Nonnull value;
+        value = [NSNumber numberWithUnsignedChar:chip::to_underlying(cppValue)];
+        return value;
+    }
+    default: {
+        // Not a known TemperatureControlledCabinetTopology attribute.
         break;
     }
     }
@@ -18101,6 +18133,7 @@ static id _Nullable DecodeAttributeValueForNetworkIdentityManagementCluster(Attr
                 newElement_0 = [MTRNetworkIdentityManagementClusterClientStruct new];
                 newElement_0.clientIndex = [NSNumber numberWithUnsignedShort:entry_0.clientIndex];
                 newElement_0.clientIdentifier = AsData(entry_0.clientIdentifier);
+                newElement_0.clientIdentityType = [NSNumber numberWithUnsignedChar:chip::to_underlying(entry_0.clientIdentityType)];
                 if (entry_0.networkIdentityIndex.IsNull()) {
                     newElement_0.networkIdentityIndex = nil;
                 } else {
@@ -25305,6 +25338,9 @@ id _Nullable MTRDecodeAttributeValue(const ConcreteAttributePath & aPath, TLV::T
     }
     case Clusters::LaundryDryerControls::Id: {
         return DecodeAttributeValueForLaundryDryerControlsCluster(aPath.mAttributeId, aReader, aError);
+    }
+    case Clusters::TemperatureControlledCabinetTopology::Id: {
+        return DecodeAttributeValueForTemperatureControlledCabinetTopologyCluster(aPath.mAttributeId, aReader, aError);
     }
     case Clusters::ModeSelect::Id: {
         return DecodeAttributeValueForModeSelectCluster(aPath.mAttributeId, aReader, aError);

@@ -49,7 +49,7 @@ def parse_project_file(reference_project_file):
         silabs_app = os.path.basename(reference_project_file)[:-5]
         output_dir = os.path.dirname(reference_project_file)
         makefile_path = f"{silabs_app}.solution.Makefile"
-        cmake_folder_path = f"{silabs_app}_cmake"
+        cmake_folder_path = "cmake_gcc"
     else:
         logging.error("Project file must be a .slcp or .slcw file")
         logging.info("Example usage: python slc/sl_build.py <PathToReferenceProjectFile(.slcp or .slcw)> <SilabsBoard>")

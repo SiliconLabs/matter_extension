@@ -350,8 +350,10 @@ CHIP_ERROR BaseApplication::Init()
     if (nbOfMatterFabric != 0)
     {
         Zigbee::RequestLeave();
+        PlatformMgr().LockChipStack();
         RETURN_SAFELY_IGNORED DeviceLayer::SystemLayer().StartTimer(
             kZbLeaveAnnouceDelay, [](System::Layer *, void *) { Zigbee::ZLLNotFactoryNew(); }, nullptr);
+        PlatformMgr().UnlockChipStack();
     }
     else
 #endif // SL_MATTER_ZIGBEE_SEQUENTIAL

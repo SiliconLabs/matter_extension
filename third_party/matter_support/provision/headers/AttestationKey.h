@@ -29,6 +29,15 @@ namespace Provision {
 
 static constexpr uint32_t kCreds_KeyId_Default = 2; //(PSA_KEY_ID_USER_MIN + 1);
 
+// Size of the buffer holding the CSR subject name:
+//   "CN=<cn>, 1.3.6.1.4.1.37244.2.1=VVVV, 1.3.6.1.4.1.37244.2.2=PPPP\0"
+//   - <cn>:       X.509 ub-common-name limit of 64 chars (RFC 5280, Appendix A.1)
+//   - VVVV/PPPP:  Matter VID/PID OID values, 4 uppercase-hex chars each
+//   - literals:   "CN=", ", " separators and the two OID prefixes = 59 chars
+//   - NUL:        1 char
+// Worst case: 64 + 59 + 1 = 124, rounded up to 128.
+static constexpr size_t kSubjectNameLengthMax = 128;
+
 class AttestationKey
 {
 public:

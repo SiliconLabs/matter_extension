@@ -323,7 +323,7 @@ void SilabsPlatform::SleepButtonActionHandler()
 {
     const uint8_t btnAction = (sl_si91x_gpio_get_uulp_npss_pin(SL_BUTTON_BTN0_PIN) == LOW) ? BUTTON_PRESSED : BUTTON_RELEASED;
     // If the button state is the same as the last state, return
-    VerifyOrReturn(btnAction != GetButtonState(SL_BUTTON_BTN0_NUMBER));
+    VerifyOrReturn(btnAction != sButtonStates[SL_BUTTON_BTN0_NUMBER]);
     if (btnAction == BUTTON_PRESSED)
     {
 #if SL_MATTER_GN_BUILD == 0

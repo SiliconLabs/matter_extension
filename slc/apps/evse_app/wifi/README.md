@@ -7,6 +7,7 @@ The Matter over Wi-Fi EVSE example is a baseline demonstration of electric vehic
 - [Purpose/Scope](#purposescope)
 - [Prerequisites/Setup Requirements](#prerequisitessetup-requirements)
 - [Steps to Run Demo](#steps-to-run-demo)
+- [Extending Base App Implementation](#extending-base-app-implementation)
 - [Troubleshooting](#troubleshooting)
 - [Resources](#resources)
 - [Report Bugs & Get Support](#report-bugs--get-support)
@@ -31,20 +32,20 @@ starting point for building production products on the Silicon Labs platform.
 
 ### HW Requirements
 
-For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.0/matter-overview/#hardware-requirements) documentation.
+For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.1/matter-overview/#hardware-requirements) documentation.
 
 ### SW Requirements
 
-For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.0/matter-overview/#software-requirements) documentation.
+For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.1/matter-overview/#software-requirements) documentation.
 
 ## Steps to Run Demo
 
 ### Configuration and Setup
 
 This sample app works out of the box with no additional configuration required. To customize the device, see the
-[Custom Matter Device Development](https://docs.silabs.com/matter/2.9.0/matter-references/custom-matter-device#custom-matter-device-development) guide.
+[Custom Matter Device Development](https://docs.silabs.com/matter/2.9.1/matter-references/custom-matter-device#custom-matter-device-development) guide.
 
-**Region code (SiWx917 Wi-Fi):** For Wi-Fi configurations, the region code can be set in this [file](https://github.com/SiliconLabsSoftware/matter_sdk/blob/v2.9.0/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp). The available region codes can be found [here](https://github.com/SiliconLabs/wiseconnect/blob/v4.1.0-content-for-docs/components/protocol/wifi/inc/sl_wifi_constants.h#L739).
+**Region code (SiWx917 Wi-Fi):** For Wi-Fi configurations, the region code can be set in this [file](https://github.com/SiliconLabsSoftware/matter_sdk/blob/v2.9.1/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp). The available region codes can be found [here](https://github.com/SiliconLabs/wiseconnect/blob/v4.1.1-content-for-docs/components/protocol/wifi/inc/sl_wifi_constants.h#L739).
 
 ### Steps for Execution
 
@@ -55,7 +56,7 @@ This sample app works out of the box with no additional configuration required. 
 
    **chip-tool (standalone or pre-built):** The pre-built chip-tool instance ships
    with the Matter Hub image. More information on using the Matter Hub is in the
-   [Silicon Labs Matter Hub Documentation](https://docs.silabs.com/matter/2.9.0/matter-thread/raspi-img).
+   [Silicon Labs Matter Hub Documentation](https://docs.silabs.com/matter/2.9.1/matter-thread/raspi-img).
    ```shell
    chip-tool pairing ble-wifi <Node-ID> $SSID $PSK 20202021 3840
    ```
@@ -96,6 +97,148 @@ This sample app works out of the box with no additional configuration required. 
 | LED 0   | Solid on          | Fully provisioned with service connectivity                     |
 | LED 1   | —                 | Currently unused                                                |
 
+## Extending Base App Implementation
+
+### CustomerAppTask
+
+To implement custom app behavior you can override any Silicon Labs implemented API in the CustomerAppTask file. This example provides `CustomerAppTask.h` and `CustomerAppTask.cpp` for that purpose. The base implementation and the full set of overridable `*Impl()` APIs are supplied by the build system in `AppTask.cpp` and `AppTaskImpl.h` under `autogen/`. Any `*Impl()` you do not override keeps the Silicon Labs default behavior.
+
+### How to Override APIs
+
+`CustomerAppTask` derives from the base AppTask through the Curiously Recurring
+Template Pattern (CRTP). You override only the `*Impl()` methods you need, the
+base declares one `*Impl()` per overridable API. Steps:
+
+1. Find the method to override in the base API (see
+   [Override API reference](#override-api-reference) below).
+2. Declare the same method signature in `CustomerAppTask` in your
+   `CustomerAppTask.h` under `private:`. Match the base `*Impl()` signature
+   exactly — note that `*Impl()` overrides are **non-static instance methods**
+   even when the public dispatcher (e.g. `ButtonEventHandler`) is `static`.
+3. Implement the method in `CustomerAppTask.cpp`.
+4. Build. The CRTP layer automatically routes each call to your `*Impl()` if
+   present, otherwise to the Silicon Labs default.
+
+### DataModelCallbacks and CustomerAppTask
+
+What used to live in `DataModelCallbacks.cpp` now lives in `AppTask.cpp`. The
+Matter SDK's `MatterPostAttributeChangeCallback` is implemented in
+`examples/platform/silabs/BaseApplication.cpp` and forwards to
+`AppTask::DMPostAttributeChangeCallback` (defined in `AppTask.cpp`), which you
+can customize via `DMPostAttributeChangeCallbackImpl()` in `CustomerAppTask`.
+
+Forwarding into `AppTask` still goes through CRTP as in
+[How to Override APIs](#how-to-override-apis).
+
+-   **Methods that already exist in the AppTask** — Customize them by overriding
+    the matching `*Impl()` method in `CustomerAppTask`. Do not edit the
+    `AppTask.cpp` for app-specific behavior.
+
+-   **New custom data model methods** — Add them in `CustomerAppTask` directly.
+    Do not add new application logic in autogenerated sources; those edits will
+    not survive regeneration or project upgrades.
+
+### Sample Implementation
+
+The following shows a minimal example `CustomerAppTask` that overrides
+`AppInitImpl()` and `ButtonEventHandlerImpl()`.
+
+**CustomerAppTask.h**
+
+```cpp
+#pragma once
+#include "AppTaskImpl.h"
+
+/** Minimal AppTaskImpl-derived class. Override only the *Impl() methods you need **/
+class CustomerAppTask : public AppTaskImpl<CustomerAppTask>
+{
+public:
+    static CustomerAppTask & GetAppTask() { return sAppTask; }
+
+private:
+    friend class AppTaskImpl<CustomerAppTask>;
+    CHIP_ERROR AppInitImpl();
+    void ButtonEventHandlerImpl(uint8_t button, uint8_t btnAction);
+    static CustomerAppTask sAppTask;
+};
+```
+
+**CustomerAppTask.cpp**
+
+```cpp
+#include "CustomerAppTask.h"
+#include "AppTask.h"
+#include "AppEvent.h"
+#include <platform/CHIPDeviceLayer.h>
+#include <platform/silabs/platformAbstraction/SilabsPlatform.h>
+
+#define APP_FUNCTION_BUTTON 0
+#define APP_CONTROL_BUTTON 1
+
+CustomerAppTask CustomerAppTask::sAppTask;
+
+AppTask & AppTask::GetAppTask()
+{
+    return CustomerAppTask::GetAppTask();
+}
+
+CHIP_ERROR CustomerAppTask::AppInitImpl()
+{
+    SILABS_LOG("CustomerAppTask: custom implementation (AppInitImpl)");
+    CHIP_ERROR err = AppTask::AppInit();
+    if (err == CHIP_NO_ERROR)
+    {
+        // Override the SDK default button handler registered in AppTask::AppInit().
+        chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(CustomerAppTask::ButtonEventHandler);
+    }
+    return err;
+}
+
+void CustomerAppTask::ButtonEventHandlerImpl(uint8_t button, uint8_t btnAction)
+{
+    SILABS_LOG("CustomerAppTask: custom implementation (ButtonEventHandlerImpl)");
+    AppEvent aEvent           = {};
+    aEvent.Type               = AppEvent::kEventType_Button;
+    aEvent.ButtonEvent.Action = btnAction;
+
+    if (button == APP_CONTROL_BUTTON && btnAction == static_cast<uint8_t>(SilabsPlatform::ButtonAction::ButtonPressed))
+    {
+        aEvent.Handler = &CustomerAppTask::EnergyManagementActionEventHandler;
+        AppTask::GetAppTask().PostEvent(&aEvent);
+    }
+    else if (button == APP_FUNCTION_BUTTON)
+    {
+        aEvent.Handler = BaseApplication::ButtonHandler;
+        AppTask::GetAppTask().PostEvent(&aEvent);
+    }
+}
+```
+
+### Override API Reference
+
+The base API and implementation are generated into your project and live under `autogen/` directory. These files are regenerated on every project upgrade and match your installed SDK version. Use them as the reference for overridable methods and app configuration.
+
+| File | Purpose |
+|------|--------|
+| `autogen/AppTaskImpl.h` | Declarations of every overridable `*Impl()` method. Copy the signatures you need from here into `CustomerAppTask.h`. |
+| `autogen/AppTask.cpp` | Silicon Labs default implementation of AppTask. This is what runs for any `*Impl()` you do not override. Use as reference when customizing behavior. |
+
+### Energy Management Hardware Integration
+
+The CRTP `CustomerAppTask` pattern covers AppTask behavior. Energy management hardware
+integration (Power and Energy Measurement, Power Topology, and
+activating/deactivating the charging hardware in response to cluster commands) is not 
+currently routed through CRTP. Work is planned to route this functionality through the
+CRTP `CustomerAppTask` interface in the future.
+
+Until that follow up work is complete, manufacturers who need to connect real
+energy management hardware must edit the following shared delegate implementations
+directly:
+
+- `examples/energy-management/electrical-sensor/src/ElectricalEnergyMeasurementDelegateImpl.cpp`
+- `examples/energy-management/electrical-sensor/src/ElectricalPowerMeasurementDelegateImpl.cpp`
+- `examples/energy-management/electrical-sensor/src/PowerTopologyDelegateImpl.cpp`
+
 ## Troubleshooting
 
 **Device does not advertise over BLE**
@@ -116,8 +259,8 @@ This sample app works out of the box with no additional configuration required. 
 
 ## Resources
 
-- [Silicon Labs Matter over Wi-Fi Documentation](https://docs.silabs.com/matter/2.9.0/matter-wifi)
-- [Matter Hub Setup](https://docs.silabs.com/matter/2.9.0/matter-thread/raspi-img)
+- [Silicon Labs Matter over Wi-Fi Documentation](https://docs.silabs.com/matter/2.9.1/matter-wifi)
+- [Matter Hub Setup](https://docs.silabs.com/matter/2.9.1/matter-thread/raspi-img)
 - [chip-tool README](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
 
 ## Report Bugs & Get Support

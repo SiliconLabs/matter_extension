@@ -1859,9 +1859,6 @@ class ChipClusters:
                     "ssid": "bytes",
                     "credentials": "bytes",
                     "breadcrumb": "int",
-                    "networkIdentity": "bytes",
-                    "clientIdentifier": "bytes",
-                    "possessionNonce": "bytes",
                 },
             },
             0x00000003: {
@@ -1895,14 +1892,6 @@ class ChipClusters:
                     "networkID": "bytes",
                     "networkIndex": "int",
                     "breadcrumb": "int",
-                },
-            },
-            0x00000009: {
-                "commandId": 0x00000009,
-                "commandName": "QueryIdentity",
-                "args": {
-                    "keyIdentifier": "bytes",
-                    "possessionNonce": "bytes",
                 },
             },
         },
@@ -4129,6 +4118,56 @@ class ChipClusters:
                 "type": "int",
                 "reportable": True,
                 "writable": True,
+            },
+            0x0000FFF8: {
+                "attributeName": "GeneratedCommandList",
+                "attributeId": 0x0000FFF8,
+                "type": "int",
+                "reportable": True,
+            },
+            0x0000FFF9: {
+                "attributeName": "AcceptedCommandList",
+                "attributeId": 0x0000FFF9,
+                "type": "int",
+                "reportable": True,
+            },
+            0x0000FFFB: {
+                "attributeName": "AttributeList",
+                "attributeId": 0x0000FFFB,
+                "type": "int",
+                "reportable": True,
+            },
+            0x0000FFFC: {
+                "attributeName": "FeatureMap",
+                "attributeId": 0x0000FFFC,
+                "type": "int",
+                "reportable": True,
+            },
+            0x0000FFFD: {
+                "attributeName": "ClusterRevision",
+                "attributeId": 0x0000FFFD,
+                "type": "int",
+                "reportable": True,
+            },
+        },
+    }
+    _TEMPERATURE_CONTROLLED_CABINET_TOPOLOGY_CLUSTER_INFO = {
+        "clusterName": "TemperatureControlledCabinetTopology",
+        "clusterId": 0x0000004B,
+        "commands": {
+        },
+        "attributes": {
+            0x00000000: {
+                "attributeName": "DisabledCabinets",
+                "attributeId": 0x00000000,
+                "type": "int",
+                "reportable": True,
+            },
+            0x00000001: {
+                "attributeName": "Topology",
+                "attributeId": 0x00000001,
+                "type": "int",
+                "reportable": True,
             },
             0x0000FFF8: {
                 "attributeName": "GeneratedCommandList",
@@ -12337,6 +12376,7 @@ class ChipClusters:
                 "args": {
                     "networkIdentityIndex": "int",
                     "networkIdentityType": "int",
+                    "clientIndex": "int",
                     "identifier": "bytes",
                 },
             },
@@ -17006,6 +17046,7 @@ class ChipClusters:
         0x00000048: _OVEN_CAVITY_OPERATIONAL_STATE_CLUSTER_INFO,
         0x00000049: _OVEN_MODE_CLUSTER_INFO,
         0x0000004A: _LAUNDRY_DRYER_CONTROLS_CLUSTER_INFO,
+        0x0000004B: _TEMPERATURE_CONTROLLED_CABINET_TOPOLOGY_CLUSTER_INFO,
         0x00000050: _MODE_SELECT_CLUSTER_INFO,
         0x00000051: _LAUNDRY_WASHER_MODE_CLUSTER_INFO,
         0x00000052: _REFRIGERATOR_AND_TEMPERATURE_CONTROLLED_CABINET_MODE_CLUSTER_INFO,
@@ -17161,6 +17202,7 @@ class ChipClusters:
         "OvenCavityOperationalState": _OVEN_CAVITY_OPERATIONAL_STATE_CLUSTER_INFO,
         "OvenMode": _OVEN_MODE_CLUSTER_INFO,
         "LaundryDryerControls": _LAUNDRY_DRYER_CONTROLS_CLUSTER_INFO,
+        "TemperatureControlledCabinetTopology": _TEMPERATURE_CONTROLLED_CABINET_TOPOLOGY_CLUSTER_INFO,
         "ModeSelect": _MODE_SELECT_CLUSTER_INFO,
         "LaundryWasherMode": _LAUNDRY_WASHER_MODE_CLUSTER_INFO,
         "RefrigeratorAndTemperatureControlledCabinetMode": _REFRIGERATOR_AND_TEMPERATURE_CONTROLLED_CABINET_MODE_CLUSTER_INFO,
