@@ -519,7 +519,9 @@ def _process_board_app(app_name_folder, app_name_path, board_id, branch_name, bu
         build_number (int): Build number for upload
     """
     try:
-        board_id = board_id.split(",")[0] # Handles 1019A 3MB BRD1019A,SIMG301M113WIH
+        # build.sh converts BRD1019A,part -> BRD1019A_part for clang-safe out dirs.
+        if board_id.startswith("BRD1019A"):
+            board_id = board_id.split("_")[0]
         ubai_app_name = determine_ubai_app_name(app_name_folder)
         artifact_solution_folder = os.path.join(app_name_path, 'artifact')
         if os.path.exists(artifact_solution_folder) and os.path.isdir(artifact_solution_folder):

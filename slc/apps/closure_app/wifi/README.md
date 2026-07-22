@@ -7,6 +7,7 @@ The Matter over Wi-Fi closure example is a baseline demonstration of a closure d
 - [Purpose/Scope](#purposescope)
 - [Prerequisites/Setup Requirements](#prerequisitessetup-requirements)
 - [Steps to Run Demo](#steps-to-run-demo)
+- [Extending Base App Implementation](#extending-base-app-implementation)
 - [Troubleshooting](#troubleshooting)
 - [Resources](#resources)
 - [Report Bugs & Get Support](#report-bugs--get-support)
@@ -91,12 +92,193 @@ This sample app works out of the box with no additional configuration required. 
 
 | Control | Action            | Result                                                          |
 |---------|-------------------|-----------------------------------------------------------------|
-| BTN0    | Press and release | Start/restart BLE advertisement, print QR code URL to device logs |
+| BTN0    | Press and release | Start/restart BLE advertisement, print QR code URL to RTT logs |
 | BTN0    | Hold 6 s          | Initiate factory reset (release within 6 s to cancel)           |
+| BTN1    | Press and release | Toggle closure fully open / fully closed (stops motion if already in progress) |
 | LED 0   | Short flash on    | Unprovisioned, waiting for commissioning                        |
 | LED 0   | Rapid even flash  | BLE connected, commissioning in progress                        |
-| LED 0   | Short flash off   | Provisioned, no full service connectivity                        |
+| LED 0   | Short flash off   | Provisioned, no full service connectivity                       |
 | LED 0   | Solid on          | Fully provisioned with service connectivity                     |
+
+## Extending Base App Implementation
+
+| Concern | Base | CRTP hook layer | Customer leaf |
+| ------- | ---- | --------------- | ------------- |
+| Lifecycle / UI / buttons / DM callbacks | `AppTask` | `AppTaskImpl` | `CustomerAppTask` |
+| Closure domain logic (motion, latch, panels) | `ClosureManager` | `ClosureManagerImpl` | `CustomerAppManager` |
+
+### CustomerAppTask
+
+To implement custom app behavior you can override any Silicon Labs implemented API in the CustomerAppTask file. This example provides `CustomerAppTask.h` and `CustomerAppTask.cpp` for that purpose. The base implementation and the full set of overridable `*Impl()` APIs are supplied by the build system in `AppTask.cpp` and `AppTaskImpl.h` under `autogen/`. Any `*Impl()` you do not override keeps the Silicon Labs default behavior.
+
+### CustomerAppManager
+
+Closure domain logic lives on `ClosureManager`. The customer leaf is provided as
+`CustomerAppManager.h` and `CustomerAppManager.cpp`. Override `*Impl()` hooks
+there; do not edit `ClosureManager.cpp` for app-specific behavior. See
+`autogen/ClosureManagerImpl.h` for the full hook list.
+
+### How to Override APIs
+
+Both leaves use the Curiously Recurring Template Pattern (CRTP). You override only the `*Impl()` methods you need; each base declares one `*Impl()` per overridable API. Steps:
+
+1. Find the method to override in the base API (see [Override API reference](#override-api-reference) below).
+2. Declare the same method signature in `CustomerAppTask.h` or `CustomerAppManager.h` under `private:`. Match the base `*Impl()` signature exactly — note that `*Impl()` overrides are non-static instance methods even when the public dispatcher (e.g. `ButtonEventHandler`) is static.
+3. Implement the method in the corresponding `.cpp`.
+4. Build the project. Each overridable API is resolved as follows: **if you implemented that `*Impl()` in the customer leaf, your implementation is used, otherwise the Silicon Labs default implementation is used.** You only implement what you need, everything else falls back to the default automatically.
+
+Some `ClosureManager` APIs (`Init`, cluster `On*Command` handlers) are virtual
+so shared `closure-common/` code can reach your leaf. Override the matching
+`*Impl()` on `CustomerAppManager` — do not override the virtuals directly.
+
+### DataModelCallbacks and CustomerAppTask
+
+What used to live in `DataModelCallbacks.cpp` now lives in `AppTask.cpp`. The
+Matter SDK's `MatterPostAttributeChangeCallback` is implemented in
+`examples/platform/silabs/BaseApplication.cpp` and forwards to
+`AppTask::DMPostAttributeChangeCallback` (defined in `AppTask.cpp`), which you
+can customize via `DMPostAttributeChangeCallbackImpl()` in `CustomerAppTask`.
+
+Closure-specific cluster attribute-changed callbacks
+(`MatterClosureControlClusterServerAttributeChangedCallback`,
+`MatterClosureDimensionClusterServerAttributeChangedCallback`) are forwarders
+in `AppTask.cpp` and dispatch to
+`DMClosureControlClusterAttributeChangedCallback` /
+`DMClosureDimensionClusterAttributeChangedCallback`, customized via the
+matching `*Impl()` hooks on `CustomerAppTask`.
+
+Forwarding into `AppTask` still goes through CRTP as in
+[How to Override APIs](#how-to-override-apis).
+
+-   **Methods that already exist in the AppTask** — Customize them by overriding
+    the matching `*Impl()` method in `CustomerAppTask`. Do not edit the
+    `AppTask.cpp` for app-specific behavior.
+
+-   **Methods that already exist in the ClosureManager** — Customize them by
+    overriding the matching `*Impl()` method in `CustomerAppManager`. Do not
+    edit `ClosureManager.cpp` for app-specific behavior.
+
+-   **New custom data model methods** — Add them in `CustomerAppTask` or
+    `CustomerAppManager` directly. Do not add new application logic in
+    autogenerated sources; those edits will not survive regeneration or project
+    upgrades.
+
+### Sample Implementation
+
+The following shows a minimal example that overrides `AppInitImpl()` and
+`ButtonEventHandlerImpl()` on `CustomerAppTask`, and adds
+`OnMoveToCommandImpl()` to the existing `CustomerAppManager` leaf. Declare the
+manager hook under `private:` without replacing `GetInstance` / `sInstance`.
+
+**CustomerAppTask.h**
+
+```cpp
+#pragma once
+#include "AppTaskImpl.h"
+
+/**
+ * Minimal AppTaskImpl-derived class. Override only the *Impl() methods you need;
+ * add AppInitImpl(), GetAppTask(), and sAppTask as required by the CRTP base.
+ */
+class CustomerAppTask : public AppTaskImpl<CustomerAppTask>
+{
+public:
+    static CustomerAppTask & GetAppTask() { return sAppTask; }
+
+private:
+    friend class AppTaskImpl<CustomerAppTask>;
+    CHIP_ERROR AppInitImpl();
+    void ButtonEventHandlerImpl(uint8_t button, uint8_t btnAction);
+    static CustomerAppTask sAppTask;
+};
+```
+
+**CustomerAppTask.cpp**
+
+```cpp
+#include "CustomerAppTask.h"
+#include "AppTask.h"
+#include "AppConfig.h"
+#include "AppEvent.h"
+#include <platform/CHIPDeviceLayer.h>
+#include <platform/silabs/platformAbstraction/SilabsPlatform.h>
+
+using namespace ::chip::DeviceLayer::Silabs;
+
+#define APP_FUNCTION_BUTTON 0
+#define APP_CLOSURE_BUTTON  1
+
+CustomerAppTask CustomerAppTask::sAppTask;
+
+AppTask & AppTask::GetAppTask()
+{
+    return CustomerAppTask::GetAppTask();
+}
+
+CHIP_ERROR CustomerAppTask::AppInitImpl()
+{
+    SILABS_LOG("CustomerAppTask: custom implementation (AppInitImpl)");
+    CHIP_ERROR err = this->AppTask::AppInit();
+    if (err == CHIP_NO_ERROR)
+    {
+        // Override the SDK default button handler registered in AppTask::AppInit().
+        chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(CustomerAppTask::ButtonEventHandler);
+    }
+    return err;
+}
+
+void CustomerAppTask::ButtonEventHandlerImpl(uint8_t button, uint8_t btnAction)
+{
+    SILABS_LOG("CustomerAppTask: custom implementation (ButtonEventHandlerImpl)");
+    AppEvent button_event           = {};
+    button_event.Type               = AppEvent::kEventType_Button;
+    button_event.ButtonEvent.Action = btnAction;
+    if (button == APP_CLOSURE_BUTTON && btnAction == static_cast<uint8_t>(SilabsPlatform::ButtonAction::ButtonPressed))
+    {
+        button_event.Handler = &CustomerAppTask::ClosureButtonActionEventHandler;
+        AppTask::GetAppTask().PostEvent(&button_event);
+    }
+    else if (button == APP_FUNCTION_BUTTON)
+    {
+        button_event.Handler = BaseApplication::ButtonHandler;
+        AppTask::GetAppTask().PostEvent(&button_event);
+    }
+}
+```
+
+**CustomerAppManager.h**
+
+```cpp
+chip::Protocols::InteractionModel::Status OnMoveToCommandImpl(
+    const chip::Optional<chip::app::Clusters::ClosureControl::TargetPositionEnum> position,
+    const chip::Optional<bool> latch,
+    const chip::Optional<chip::app::Clusters::Globals::ThreeLevelAutoEnum> speed);
+```
+
+**CustomerAppManager.cpp**
+
+```cpp
+chip::Protocols::InteractionModel::Status CustomerAppManager::OnMoveToCommandImpl(
+    const chip::Optional<chip::app::Clusters::ClosureControl::TargetPositionEnum> position,
+    const chip::Optional<bool> latch,
+    const chip::Optional<chip::app::Clusters::Globals::ThreeLevelAutoEnum> speed)
+{
+    SILABS_LOG("CustomerAppManager: custom implementation (OnMoveToCommandImpl)");
+    // Call through for default motion behavior, or drive real hardware here.
+    return ClosureManager::OnMoveToCommand(position, latch, speed);
+}
+```
+
+### Override API Reference
+
+The base API and implementation are generated into your project and live under `autogen/` directory. These files are regenerated on every project upgrade and match your installed SDK version. Use them as the reference for overridable methods and app configuration.
+
+| File | Purpose |
+|------|--------|
+| `autogen/AppTaskImpl.h` | Declarations of every overridable `*Impl()` method. Copy the signatures you need from here into `CustomerAppTask.h`. |
+| `autogen/AppTask.cpp` | Silicon Labs default implementation of AppTask. This is what runs for any `*Impl()` you do not override. Use as reference when customizing behavior. |
+| `autogen/ClosureManagerImpl.h` | Declarations of every overridable `*Impl()` method. Copy the signatures you need from here into `CustomerAppManager.h`. |
+| `autogen/ClosureManager.cpp` | Silicon Labs default implementation of ClosureManager. This is what runs for any `*Impl()` you do not override. Use as reference when customizing behavior. |
 
 ## Troubleshooting
 

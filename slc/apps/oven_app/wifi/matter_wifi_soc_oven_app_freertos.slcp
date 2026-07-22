@@ -100,29 +100,21 @@ include:
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
-      - path: AppTask.h
-      - path: OvenManager.h
-      - path: AppSupportedTemperatureLevelsDelegate.h
-      - path: OvenBindingHandler.h
       - path: CHIPProjectConfig.h
     directory: include
   - path: ../../../../third_party/matter_sdk/examples/oven-app/oven-app-common/include
     file_list:
     - path: CookEndpoints.h
     - path: OvenEndpoint.h
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/customer
+    file_list:
+      - path: CustomerAppTask.h
+    directory: include
 
 source:
-  - path: ../../../../third_party/matter_sdk/examples/oven-app/silabs/src/AppTask.cpp
-    directory: src
-  - path: ../../../../third_party/matter_sdk/examples/oven-app/silabs/src/OvenManager.cpp
-    directory: src
-  - path: ../../../../third_party/matter_sdk/examples/oven-app/silabs/src/DataModelCallbacks.cpp
-    directory: src
-  - path: ../../../../third_party/matter_sdk/examples/oven-app/silabs/src/OvenBindingHandler.cpp
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/customer/CustomerAppTask.cpp
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
-    directory: src
-  - path: ../../../../third_party/matter_sdk/examples/oven-app/silabs/src/AppSupportedTemperatureLevelsDelegate.cpp
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/oven-app/oven-app-common/src/CookEndpoints.cpp
     directory: src

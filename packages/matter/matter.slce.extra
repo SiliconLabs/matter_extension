@@ -134,6 +134,8 @@ components:
   - matter_door_lock
   - matter_drivers_series_2
   - matter_dual_stack
+  - matter_ecdsa_deterministic_default
+  - matter_ecdsa_deterministic_stub
   - matter_ecosystem_information
   - matter_efr32_ncp
   - matter_electrical_energy_measurement
@@ -397,6 +399,7 @@ extra_files:
   - slc/apps/closure_app/wifi/matter_wifi_soc_closure_app_freertos.slcp
   - slc/apps/closure_app/wifi/matter_wifi_soc_closure_app_freertos.slcw
   - slc/apps/closure_app/wifi/pkg.slt
+  - slc/apps/code_size_sensor/thread/README.md
   - slc/apps/code_size_sensor/thread/config/sl_matter_sensor_config.h
   - slc/apps/code_size_sensor/thread/data_model/multi-sensor-thread-app.zap
   - slc/apps/code_size_sensor/thread/include/AppConfig.h
@@ -836,6 +839,8 @@ extra_files:
   - slc/component/matter-platform/buttons/matter_buttons.slcc
   - slc/component/matter-platform/config/matter_includes.slcc
   - slc/component/matter-platform/crypto/matter_crypto.slcc
+  - slc/component/matter-platform/crypto/matter_ecdsa_deterministic_default.slcc
+  - slc/component/matter-platform/crypto/matter_ecdsa_deterministic_stub.slcc
   - slc/component/matter-platform/device-attestation-credentials/matter_provision_default.slcc
   - slc/component/matter-platform/device-attestation-credentials/matter_provision_flash.slcc
   - slc/component/matter-platform/display/matter_default_lcd_config.slcc
@@ -923,6 +928,7 @@ extra_files:
   - slc/script/build_ot_rcp.py
   - slc/script/code_size_diff_check.py
   - slc/script/code_size_result.sh
+  - slc/script/confluence_inline_styles.sh
   - slc/script/demos.xml.j2
   - slc/script/dependency_versions.yaml
   - slc/script/em1-augmentation.py
@@ -947,9 +953,8 @@ extra_files:
   - slc/script/templates.xml.j2
   - slc/script/update_version.py
   - slc/script/validate_app_standardization.py
-  - slc/script/validate_components.py
   - slc/script/validate_demo_images.py
-  - slc/script/validate_matter_templates.py
+  - slc/script/validate_extension.py
   - slc/script/verify_package_matter.py
   - slc/script/verify_vendor_silabs.py
   - slc/sl_build.py

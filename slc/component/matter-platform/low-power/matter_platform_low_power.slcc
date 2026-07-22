@@ -11,6 +11,9 @@ metadata:
     license: Zlib
 provides:
   - name: matter_platform_low_power
+requires:
+  - name: si91x_debug_uc
+    condition: [matter_platform_siwx917]
 conflicts:
   - name: matter_shell
   - name: matter_thread_cli

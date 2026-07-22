@@ -15,7 +15,7 @@ template_file:
   - path: third_party/matter_sdk/examples/fan-control-app/silabs/src/AppTask.cpp
 
 config_file:
-  - path: third_party/matter_sdk/examples/fan-control-app/silabs/include/FanControlConfig.h
+  - path: third_party/matter_sdk/examples/fan-control-app/silabs/config/FanControlConfig.h
     file_id: fan_control_config
 provides:
   - name: matter_fan_control_app

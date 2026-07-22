@@ -105,6 +105,13 @@ public:
      */
     OvenModeDelegate & GetOvenModeDelegate() { return mOvenModeDelegate; }
 
+    /**
+     * @brief Get the oven mode cluster instance.
+     *
+     * @return Reference to the oven mode cluster instance.
+     */
+    ModeBase::Instance & GetOvenModeInstance() { return mOvenModeInstance; }
+
 private:
     EndpointId mEndpointId = kInvalidEndpointId;
     OvenModeDelegate mOvenModeDelegate;

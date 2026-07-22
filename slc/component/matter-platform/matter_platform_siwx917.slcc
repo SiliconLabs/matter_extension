@@ -8,7 +8,7 @@ metadata:
   sbom:
     license: Zlib
 config_file:
-  - path: third_party/matter_sdk/src/lwip/silabs/lwipopts.h
+  - path: third_party/matter_sdk/src/lwip/silabs/config/lwipopts.h
     override:
       component: "wifi_resources"
       file_id: lwipopts
@@ -53,12 +53,6 @@ source:
 define:
   - name: SUPPORT_CPLUSPLUS
     value: 1
-  - name: SL_WFX_CONFIG_SCAN
-    value: 1
-  - name: CHIP_9117
-    value: 1
-  - name: DEBUG_UART
-    value: "1"
   - name: SL_MATTER_SIWX_WIFI_ENABLE
   - name: SL_SI91x_DUAL_INTERRUPTS_ERRATA
   - name: NVM3_LOCK_OVERRIDE

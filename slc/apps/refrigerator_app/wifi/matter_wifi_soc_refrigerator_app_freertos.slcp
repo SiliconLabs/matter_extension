@@ -96,30 +96,27 @@ config_file:
   - path: ../../../../provision.mattpconf
     directory: provision
     file_id: provision_config
+  - path: ../../../../third_party/matter_sdk/examples/refrigerator-app/silabs/include/RefrigeratorConfig.h
+    file_id: refrigerator_config
 
 include:
   - path: ../../../../third_party/matter_sdk/examples/refrigerator-app/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
-      - path: AppTask.h
       - path: CHIPProjectConfig.h
-      - path: RefrigeratorManager.h
-      - path: refrigerator-and-temperature-controlled-cabinet-mode.h
   - path: ../../../../third_party/matter_sdk/examples/refrigerator-app/refrigerator-common/include
     file_list:
       - path: static-supported-temperature-levels.h
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/customer
+    file_list:
+      - path: CustomerAppTask.h
+    directory: include
 
 source:
-  - path: ../../../../third_party/matter_sdk/examples/refrigerator-app/silabs/src/AppTask.cpp
-    directory: src
-  - path: ../../../../third_party/matter_sdk/examples/refrigerator-app/silabs/src/RefrigeratorManager.cpp
+  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/customer/CustomerAppTask.cpp
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
-    directory: src
-  - path: ../../../../third_party/matter_sdk/examples/refrigerator-app/silabs/src/DataModelCallbacks.cpp
-    directory: src
-  - path: ../../../../third_party/matter_sdk/examples/refrigerator-app/silabs/src/refrigerator-and-temperature-controlled-cabinet-mode.cpp
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/refrigerator-app/refrigerator-common/src/static-supported-temperature-levels.cpp
     directory: src

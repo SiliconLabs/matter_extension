@@ -30,12 +30,11 @@ enabled_variants:
     blurb_suffix: ""
     description_suffix: ""
 
-# Apps that should appear in demos xml but not in templates xml
-templates_exclude:
+# Apps that should be hidden in templates xml but not internal quality
+templates_hidden:
   - matter_thread_soc_zigbee_light_series_2_freertos
-  - matter_thread_soc_code_size_sensor_freertos
 
-# Apps that should appear in templates xml but not in demos xml (as they are not built in ci)
+# Apps that should not appear in demos xml (as they are not built in ci)
 demos_exclude:
   - matter_thread_soc_lighting_app_trustzone_series_3_freertos
   - matter_wifi_917_ncp_lock_app_dual_stack_freertos

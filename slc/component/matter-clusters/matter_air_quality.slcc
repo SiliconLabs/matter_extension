@@ -23,7 +23,7 @@ include:
       - path: CodegenIntegration.h
         unless: [matter_code_driven_dm]
 config_file:
-  - path: third_party/matter_sdk/examples/air-quality-sensor-app/silabs/include/AirQualityConfig.h
+  - path: third_party/matter_sdk/examples/air-quality-sensor-app/silabs/config/AirQualityConfig.h
     file_id: matter_air_quality_config
 template_contribution:
   - name: component_catalog

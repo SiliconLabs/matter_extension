@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="ASCII"?>
 <model:MDescriptors xmlns:model="http://www.silabs.com/ss/Studio.ecore">
 {%- for example in examples %}
-{%- if templates_exclude is not defined or example.name not in templates_exclude %}
 {%- if board_overrides is defined and example.name in board_overrides %}
 {%- set board_list = board_overrides[example.name].boards %}
 {%- else %}
@@ -48,10 +47,12 @@
     <properties key="filters" value="{{ example.filter | filters | list }}"/>
 {%- if example.projects %}
     <properties key="solutionProjects" value="{{ project_ref_list | list }}"/>
+{%- if example.quality == 'internal' or (templates_hidden is defined and example.name in templates_hidden) %}
+    <properties key="core.hidden" value="true"/>
+{%- endif %}
 {%- elif 'matter_thread_host_openthread_border_router_doc' not in example.name %}
     <properties key="core.hidden" value="true"/>
 {%- endif %}
   </descriptors>
-{%- endif %}
 {%- endfor %}
 </model:MDescriptors>

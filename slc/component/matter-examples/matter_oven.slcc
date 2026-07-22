@@ -7,5 +7,12 @@ id: matter_oven
 quality: production
 provides:
   - name: matter_oven
+metadata:
+  sbom:
+    license: "Apache 2.0"
+template_file:
+  - path: third_party/matter_sdk/examples/oven-app/silabs/include/AppTask.h
+  - path: third_party/matter_sdk/examples/oven-app/silabs/include/AppTaskImpl.h
+  - path: third_party/matter_sdk/examples/oven-app/silabs/src/AppTask.cpp
 ui_hints:
   visibility: never
