@@ -145,8 +145,6 @@ def _readme_steps_demo_subsections_required(rel_posix: str, project_name: str) -
     rp = rel_posix.replace("\\", "/")
     if _is_bootloaderish(rel_posix, project_name):
         return False
-    if "/openthread_border_router_doc/" in rp:
-        return False
     return True
 
 def _app_name_taxonomy_ok(app_name: str, rel_posix: str) -> bool:
@@ -179,16 +177,6 @@ def _label_taxonomy_error(app_name: str, label: str, rel_posix: str) -> Optional
     if name_l.startswith("matter_bootloader_") or "/bootloaders/" in rp:
         if "Bootloader" not in lb:
             return "label taxonomy: Matter bootloader labels must contain 'Bootloader'"
-        return None
-
-    if "openthread_border_router" in name_l:
-        if not re.search(r"\bHost\b", lb):
-            return "label taxonomy: OpenThread border router template label must include Host role"
-        if "OpenThread" not in lb or "Border" not in lb:
-            return (
-                "label taxonomy: OpenThread border router label should reference "
-                "OpenThread and Border Router"
-            )
         return None
 
     if name_l.startswith("matter_thread_"):
@@ -433,9 +421,7 @@ def _validate_common_studio_fields(
     )
     if desc is not None:
         rp = rel_posix.replace("\\", "/")
-        skip_desc_shape = _is_bootloaderish(rel_posix, app_name_for_taxonomy) or (
-            "/openthread_border_router_doc/" in rp
-        )
+        skip_desc_shape = _is_bootloaderish(rel_posix, app_name_for_taxonomy)
         if not skip_desc_shape and not any(
             desc.startswith(p) for p in _DESCRIPTION_ALLOWED_PREFIXES
         ):

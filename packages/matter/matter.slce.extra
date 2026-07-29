@@ -502,9 +502,6 @@ extra_files:
   - slc/apps/onoff_plug_app/wifi/matter_wifi_soc_onoff_plug_app_freertos.slcp
   - slc/apps/onoff_plug_app/wifi/matter_wifi_soc_onoff_plug_app_freertos.slcw
   - slc/apps/onoff_plug_app/wifi/pkg.slt
-  - slc/apps/openthread_border_router_doc/README.md
-  - slc/apps/openthread_border_router_doc/matter_thread_host_openthread_border_router_doc.slcp
-  - slc/apps/openthread_border_router_doc/pkg.slt
   - slc/apps/oven_app/wifi/README.md
   - slc/apps/oven_app/wifi/matter_wifi_soc_oven_app_freertos.slcp
   - slc/apps/oven_app/wifi/matter_wifi_soc_oven_app_freertos.slcw

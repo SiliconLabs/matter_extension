@@ -36,7 +36,6 @@ class VerifyVendorSilabs:
         """
         self.logger = logging.getLogger(__name__)
         self.configure_logging(verbose)
-        self.ignore_files = ["openthread-border-router-doc.slcp"]
 
     def configure_logging(self, verbose):
         """

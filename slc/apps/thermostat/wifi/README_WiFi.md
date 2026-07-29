@@ -13,6 +13,7 @@ The Matter over Wi-Fi thermostat example is a baseline demonstration of a thermo
   - [Steps to Run Demo](#steps-to-run-demo)
     - [Configuration and Setup](#configuration-and-setup)
     - [Steps for Execution](#steps-for-execution)
+  - [Extending Base App Implementation](#extending-base-app-implementation)
   - [Troubleshooting](#troubleshooting)
   - [Resources](#resources)
   - [Report Bugs \& Get Support](#report-bugs--get-support)
@@ -112,6 +113,13 @@ This sample app works out of the box with no additional configuration required. 
 | LED 0   | Rapid even flash  | BLE connected, commissioning in progress                        |
 | LED 0   | Short flash off   | Provisioned, no full Wi-Fi connectivity                          |
 | LED 0   | Solid on          | Fully provisioned with Wi-Fi connectivity                        |
+
+## Extending Base App Implementation
+
+See [Extending Base App Implementation](https://docs.silabs.com/matter/2.9.1/matter-references/custom-matter-device#extending-base-app-implementation)
+for how to customize application behavior using `CustomerAppTask` and CRTP `*Impl()` hooks.
+
+Per-example override API references: `autogen/AppTaskImpl.h`, `autogen/AppTask.cpp`.
 
 ## Troubleshooting
 

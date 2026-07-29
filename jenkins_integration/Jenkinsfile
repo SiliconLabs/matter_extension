@@ -90,10 +90,8 @@ pipeline
                 script {
                     pipelineFunctions = load 'jenkins_integration/jenkinsFunctions.groovy'
                     echo "pipelineFunctions loaded: ${pipelineFunctions != null}"
-                    sh 'git submodule update --init --checkout third_party/simplicity_sdk'
-                    sh 'git submodule update --init --checkout third_party/wifi_sdk'
-                    sisdk_build_number = sh(script: 'cat third_party/simplicity_sdk/.build-number', returnStdout: true).trim()
-                    wiseconnect_build_number = sh(script: 'cat third_party/wifi_sdk/.build-number', returnStdout: true).trim()
+                    sisdk_build_number = sh(script: "git config -f .gitmodules --get submodule.third_party/simplicity_sdk.tag | sed 's/.*-//'", returnStdout: true).trim()
+                    wiseconnect_build_number = sh(script: "git config -f .gitmodules --get submodule.third_party/wifi_sdk.tag | sed 's/.*-//'", returnStdout: true).trim()
                     build_description = "SISDK build number: ${sisdk_build_number}"
                     build_description += "\nWiFi Extension build number: ${wiseconnect_build_number}"
                     buildDescription(build_description)

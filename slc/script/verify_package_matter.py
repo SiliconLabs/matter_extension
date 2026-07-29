@@ -7,13 +7,14 @@ check for the presence of `vendor: silabs` in the same files. It excludes the `t
 
 Usage:
     python3 verify_package_matter.py --directory <directory_to_scan> [--verbose]
+    python3 verify_package_matter.py -d <directory_to_scan> [-v]
 
 Example:
     python3 verify_package_matter.py --directory /example/directory --verbose
 
 Arguments:
-    - --directory: The directory to scan for `.slcc`, `.slcp`, `.slce`, and `.slcw` files.
-    - --verbose: Enable detailed output.
+    - -d, --directory: The directory to scan for `.slcc`, `.slcp`, `.slce`, and `.slcw` files.
+    - -v, --verbose: Enable detailed output.
 
 Output:
     - Warnings for files missing the required strings are printed to the console.
@@ -98,8 +99,8 @@ def main():
     Also triggers `VerifyVendorSilabs` for additional checks.
     """
     parser = argparse.ArgumentParser(description="Scan .slcc, .slcp, .slce, and .slcw files for 'package: matter' or 'id: matter'.")
-    parser.add_argument("--directory", type=str, required=True, help="Directory to scan for .slcc, .slcp, .slce, and .slcw files.")
-    parser.add_argument("--verbose", action="store_true", help="Enable verbose logging.")
+    parser.add_argument("-d", "--directory", type=str, required=True, help="Directory to scan for .slcc, .slcp, .slce, and .slcw files.")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose logging.")
     parser.add_argument("--ci", action="store_true", help="CI mode: exit with status 0 on success, 1 on failure.")
     args = parser.parse_args()
 

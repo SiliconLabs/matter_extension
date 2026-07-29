@@ -39,6 +39,7 @@ public:
     // Bring frequently-used cluster types into class scope. Available to derived classes
     // (e.g. AppTaskImpl, CustomerAppTask) without re-qualification.
     using FanModeEnum       = chip::app::Clusters::FanControl::FanModeEnum;
+    using Percent           = chip::Percent;
     using StepDirectionEnum = chip::app::Clusters::FanControl::StepDirectionEnum;
     using Status            = chip::Protocols::InteractionModel::Status;
 
@@ -103,20 +104,55 @@ public:
     static void FanUiUpdateEventHandler(AppEvent * aEvent);
 
     /**
-     * @brief Reconcile PercentSetting whenever FanMode changes so the new mode lands
-     *        inside its configured speed band. Invoked from DMPostAttributeChangeCallback.
+     * @brief Reconcile PercentSetting or SpeedSetting when FanMode changes, depending on
+     *        MultiSpeed feature support. Invoked from DMPostAttributeChangeCallback when
+     *        MultiSpeed is disabled.
      */
     void HandleFanModeChange(FanModeEnum aNewFanMode);
 
     /**
      * @brief Mirror PercentSetting writes onto PercentCurrent (when not in Auto and not a no-op).
+     *        FanMode is updated by the cluster on PercentSetting writes; the app does not re-derive it.
      */
     void HandlePercentSettingChange(uint8_t aNewPercentSetting);
 
     /**
-     * @brief Mirror SpeedSetting writes onto SpeedCurrent and refresh FanMode from the new speed.
+     * @brief Derive FanMode from a PercentSetting value using SpeedMax-derived bands.
+     *        Optional customer override hook; default handlers rely on cluster FanMode updates.
+     */
+    FanModeEnum DeriveFanModeFromPercent(Percent percent);
+
+    /**
+     * @brief Mirror SpeedSetting writes onto SpeedCurrent when MultiSpeed is enabled.
      */
     void HandleSpeedSettingChange(uint8_t aNewSpeedSetting);
+
+    /**
+     * @brief Read MultiSpeed support from the FanControl FeatureMap and refresh the
+     *        sSupportsMultiSpeed cache. Call during InitFanControl() (including custom
+     *        overrides) with the chip stack locked. Exposed for customer code; not overridable.
+     */
+    bool ReadSupportsMultiSpeedFromFeatureMap();
+
+    /**
+     * @brief Convert a discrete speed step into a percent using SpeedMax.
+     */
+    static uint8_t SpeedToPercent(uint8_t speed, uint8_t speedMax);
+
+    chip::app::DataModel::Nullable<uint8_t> GetSpeedSetting();
+    chip::app::DataModel::Nullable<Percent> GetPercentSetting();
+
+    /**
+     * @brief Write SpeedSetting synchronously on the Matter thread. No-op when MultiSpeed is
+     *        disabled. Exposed for customer code; not overridable.
+     */
+    Status SetSpeedSetting(uint8_t aNewSpeedSetting);
+
+    /**
+     * @brief Schedule a PercentSetting write on the Matter thread. Exposed for customer code;
+     *        not overridable.
+     */
+    Status SetPercentSetting(Percent aNewPercentSetting);
 
     /**
      * @brief PlatformMgr().ScheduleWork() callback that flushes pending FanControl attribute writes
@@ -132,4 +168,10 @@ public:
 protected:
     /** Override of `BaseApplication::AppInit()`. */
     CHIP_ERROR AppInit() override;
+
+    /**
+     * @brief Write FanMode when it differs from the data model. Used by default attribute
+     *        handlers; exposed for customer overrides that reuse SDK sync behavior.
+     */
+    void SyncFanMode(FanModeEnum aNewFanMode);
 };

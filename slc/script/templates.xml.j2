@@ -40,9 +40,6 @@
     <properties key="toolchainCompatibility" value="gcc"/>
     <properties key="category" value="{{ example.category }}"/>
     <properties key="quality" value="{{ example.quality | upper }}"/>
-{%- if example.name == 'matter_thread_host_openthread_border_router_doc' %}
-    <properties key="noBuild" value="true"/>
-{%- endif %}
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="{{ example.filter | filters | list }}"/>
 {%- if example.projects %}
@@ -50,7 +47,7 @@
 {%- if example.quality == 'internal' or (templates_hidden is defined and example.name in templates_hidden) %}
     <properties key="core.hidden" value="true"/>
 {%- endif %}
-{%- elif 'matter_thread_host_openthread_border_router_doc' not in example.name %}
+{%- else %}
     <properties key="core.hidden" value="true"/>
 {%- endif %}
   </descriptors>

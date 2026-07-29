@@ -7,6 +7,7 @@ The Matter over Wi-Fi fan control example is a baseline demonstration of a fan d
 - [Purpose/Scope](#purposescope)
 - [Prerequisites/Setup Requirements](#prerequisitessetup-requirements)
 - [Steps to Run Demo](#steps-to-run-demo)
+- [Extending Base App Implementation](#extending-base-app-implementation)
 - [Troubleshooting](#troubleshooting)
 - [Resources](#resources)
 - [Report Bugs & Get Support](#report-bugs--get-support)
@@ -93,6 +94,13 @@ This sample app works out of the box with no additional configuration required. 
 | LED 0   | Solid on         | Fully provisioned with service connectivity                     |
 | LED 1   | Solid on         | Fan is on                                                      |
 | LED 1   | Off              | Fan is off                                                     |
+
+## Extending Base App Implementation
+
+See [Extending Base App Implementation](https://docs.silabs.com/matter/2.9.1/matter-references/custom-matter-device#extending-base-app-implementation)
+for how to customize application behavior using `CustomerAppTask` and CRTP `*Impl()` hooks.
+
+Per-example override API references: `autogen/AppTaskImpl.h`, `autogen/AppTask.cpp`.
 
 ## Troubleshooting
 

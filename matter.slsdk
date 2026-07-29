@@ -5,6 +5,6 @@ prop.file.zcl.matterZclJsonFile=src/app/zap-templates/zcl/zcl.json
 
 prop.file.docsFile=matter_docs.xml
 prop.file.demosFile=matter_demos.xml
-prop.subLabel=Silicon\\ Labs\\ Matter\\ 2.9.1-1.6-fc
+prop.subLabel=Silicon\\ Labs\\ Matter\\ 2.9.1-1.6-cf
 
 prop.file.adapterPacks=provision

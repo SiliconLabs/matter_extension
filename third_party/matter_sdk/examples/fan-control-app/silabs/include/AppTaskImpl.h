@@ -35,6 +35,8 @@ template <typename Derived>
 class AppTaskImpl : public AppTask
 {
 public:
+    using Percent = AppTask::Percent;
+
     // Common AppTask bring up
     CHIP_ERROR AppInit() override { CRTP_OPTIONAL_DISPATCH(AppTaskImpl, Derived, AppInitImpl); }
 
@@ -69,6 +71,12 @@ public:
     void HandlePercentSettingChange(uint8_t aNewPercentSetting)
     {
         CRTP_OPTIONAL_VOID_DISPATCH(AppTaskImpl, Derived, HandlePercentSettingChangeImpl, aNewPercentSetting);
+    }
+
+    // Derive FanMode from PercentSetting
+    FanModeEnum DeriveFanModeFromPercent(Percent percent)
+    {
+        CRTP_OPTIONAL_DISPATCH_ARGS(AppTaskImpl, Derived, DeriveFanModeFromPercentImpl, percent);
     }
 
     // Handle SpeedSetting attribute changes
@@ -106,6 +114,8 @@ private:
     {
         AppTask::HandlePercentSettingChange(aNewPercentSetting);
     }
+
+    FanModeEnum DeriveFanModeFromPercentImpl(Percent percent) { return AppTask::DeriveFanModeFromPercent(percent); }
 
     void HandleSpeedSettingChangeImpl(uint8_t aNewSpeedSetting) { AppTask::HandleSpeedSettingChange(aNewSpeedSetting); }
 
