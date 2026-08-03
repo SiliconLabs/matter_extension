@@ -101,7 +101,6 @@ include:
   file_list:
   - path: lwipopts-siwx.h
   - path: lwippools.h
-  - path: lwipopts.h
 - path: third_party/matter_sdk/examples/platform/silabs
   file_list:
   - path: board_config.h

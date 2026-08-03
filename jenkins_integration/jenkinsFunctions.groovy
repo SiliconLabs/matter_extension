@@ -81,8 +81,10 @@ def run_code_size_analysis() {
                         echo "-lto"
                     elif [[ "$path" == *"_solution_llvm-lto/"* ]]; then
                         echo "-lto"
+                    elif [[ "$path" == *"_solution_nolto/"* ]]; then
+                        echo "-nolto"
                     else
-                        echo ""
+                        echo "-debug"
                     fi
                 }
 
@@ -157,14 +159,16 @@ def run_code_size_analysis() {
                         target_part="siwg917m111mgtba"
                     fi
                     
-                    application_name="slc-${app}-release-${family}"
                     output_file="${app}-${example_type}-${family}.json"
-                    
+
                     if [ "$options" = "-lto" ]; then
-                        : # no-op
-                    else
-                        application_name="${application_name}-nolto"
+                        application_name="slc-${app}-release-${family}"
+                    elif [ "$options" = "-nolto" ]; then
+                        application_name="slc-${app}-release-${family}-nolto"
                         output_file="${output_file%.json}-nolto.json"
+                    else
+                        application_name="slc-${app}-debug-${family}"
+                        output_file="${output_file%.json}-debug.json"
                     fi
                     
                     echo "  Running analysis:"
@@ -219,7 +223,7 @@ def run_code_size_analysis() {
                 PATTERN=""
                 for build in $CODE_SIZE_BUILDS; do
                 [ -n "$PATTERN" ] && PATTERN="${PATTERN}|"
-                PATTERN="${PATTERN}${build}/.*\\.map\\$|${build}_lto/.*\\.map\\$"
+                PATTERN="${PATTERN}${build}/.*\\.map\\$|${build}_lto/.*\\.map\\$|${build}_nolto/.*\\.map\\$"
                 done
 
                 filtered_map_files=$(echo "$map_files_found" | grep -E "$PATTERN")

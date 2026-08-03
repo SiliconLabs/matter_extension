@@ -26,11 +26,11 @@ The device is commissioned over Bluetooth Low Energy (BLE), during which the Mat
 
 ### HW Requirements
 
-For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.0/matter-overview/#hardware-requirements) documentation.
+For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.1/matter-overview/#hardware-requirements) documentation.
 
 ### SW Requirements
 
-For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.0/matter-overview/#software-requirements) documentation. Host build prerequisites include ARM GCC 12.2, ZAP (2024.05.07 or greater), SLC-CLI, and environment variables (ARM_GCC_DIR, TOOLDIR, STUDIO_ADAPTER_PACK_PATH).
+For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.1/matter-overview/#software-requirements) documentation. Host build prerequisites include ARM GCC 12.2, ZAP (2024.05.07 or greater), SLC-CLI, and environment variables (ARM_GCC_DIR, TOOLDIR, STUDIO_ADAPTER_PACK_PATH).
 
 ## Steps to Run Demo
 
@@ -38,11 +38,11 @@ For a full list of software requirements, see [Matter Software Requirements](htt
 
 If building a solution, the bootloader is included and flashed as part of the combined artifact.
 
-If building the sample application on its own, a bootloader must be flashed separately before the application. Pre-built bootloader binaries for all supported devices are available at [Matter Bootloader Binaries](https://docs.silabs.com/matter/2.9.0/matter-prerequisites/matter-artifacts#matter-bootloader-binaries).
+If building the sample application on its own, a bootloader must be flashed separately before the application. Pre-built bootloader binaries for all supported devices are available at [Matter Bootloader Binaries](https://docs.silabs.com/matter/2.9.1/matter-prerequisites/matter-artifacts#matter-bootloader-binaries).
 
 ### Configuration and Setup
 
-This sample app works out of the box with no additional configuration required. To customize the device, see the [Custom Matter Device Development](https://docs.silabs.com/matter/2.9.0/matter-references/custom-matter-device#custom-matter-device-development) guide.
+This sample app works out of the box with no additional configuration required. To customize the device, see the [Custom Matter Device Development](https://docs.silabs.com/matter/2.9.1/matter-references/custom-matter-device#custom-matter-device-development) guide.
 
 **Building:** Build steps are in the project root README. Example (Linux/Mac): `python3 slc/sl_build.py MyNewApp/platform-app.slcw brd4187c`.
 
@@ -61,115 +61,10 @@ This app does not define application-specific buttons or LEDs. If WSTK LED Suppo
 
 ## Extending Base App Implementation
 
-### CustomerAppTask
+See [Extending Base App Implementation](https://docs.silabs.com/matter/2.9.1/matter-references/custom-matter-device#extending-base-app-implementation)
+for how to customize application behavior using `CustomerAppTask` and CRTP `*Impl()` hooks.
 
-To implement custom app behavior you can override any Silicon Labs implemented API in the CustomerAppTask file. This example provides `CustomerAppTask.h` and `CustomerAppTask.cpp` for that purpose. The base implementation and the full set of overridable `*Impl()` APIs are supplied by the build system in `AppTask.cpp` and `AppTaskImpl.h` under `autogen/`. Any `*Impl()` you do not override keeps the Silicon Labs default behavior.
-
-### How to Override APIs
-
-`CustomerAppTask` derives from the base AppTask through the Curiously Recurring
-Template Pattern (CRTP). You override only the `*Impl()` methods you need, the
-base declares one `*Impl()` per overridable API. Steps:
-
-1. Find the method to override in the base API (see
-   [Override API reference](#override-api-reference) below).
-2. Declare the same method signature in `CustomerAppTask` in your
-   `CustomerAppTask.h` under `private:`. Match the base `*Impl()` signature
-   exactly — note that `*Impl()` overrides are **non-static instance methods**
-   even when the public dispatcher (e.g. `ButtonEventHandler`) is `static`.
-3. Implement the method in `CustomerAppTask.cpp`.
-4. Build. The CRTP layer automatically routes each call to your `*Impl()` if
-   present, otherwise to the Silicon Labs default.
-
-### Sample Implementation
-
-The following shows a minimal example `CustomerAppTask` that overrides
-`AppInitImpl()` and `ButtonEventHandlerImpl()`.
-
-**CustomerAppTask.h**
-
-```cpp
-#pragma once
-#include "AppTaskImpl.h"
-
-/**
- * Minimal AppTaskImpl-derived class. Override only the *Impl() methods you need **/
-class CustomerAppTask : public AppTaskImpl<CustomerAppTask>
-{
-public:
-    static CustomerAppTask & GetAppTask() { return sAppTask; }
-
-private:
-    friend class AppTaskImpl<CustomerAppTask>;
-    CHIP_ERROR AppInitImpl();
-    void ButtonEventHandlerImpl(uint8_t button, uint8_t btnAction);
-    static CustomerAppTask sAppTask;
-};
-```
-
-**CustomerAppTask.cpp**
-
-```cpp
-#include "CustomerAppTask.h"
-#include "AppTask.h"
-#include "AppConfig.h"
-#include "AppEvent.h"
-#include <platform/CHIPDeviceLayer.h>
-#include <platform/silabs/platformAbstraction/SilabsPlatform.h>
-
-using namespace ::chip::DeviceLayer::Silabs;
-
-#define APP_FUNCTION_BUTTON 0
-#define APP_USER_ACTION 1
-
-CustomerAppTask CustomerAppTask::sAppTask;
-
-AppTask & AppTask::GetAppTask()
-{
-    return CustomerAppTask::GetAppTask();
-}
-
-CHIP_ERROR CustomerAppTask::AppInitImpl()
-{
-    SILABS_LOG("CustomerAppTask: custom implementation (AppInitImpl)");
-    CHIP_ERROR err = AppTask::AppInit();
-    if (err == CHIP_NO_ERROR)
-    {
-        // Override the SDK default button handler registered in AppTask::AppInit().
-        chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(CustomerAppTask::ButtonEventHandler);
-    }
-    return err;
-}
-
-void CustomerAppTask::ButtonEventHandlerImpl(uint8_t button, uint8_t btnAction)
-{
-    SILABS_LOG("CustomerAppTask: custom implementation (ButtonEventHandlerImpl)");
-    AppEvent button_event           = {};
-    button_event.Type               = AppEvent::kEventType_Button;
-    button_event.ButtonEvent.Action = btnAction;
-
-    if (button == APP_USER_ACTION)
-    {
-        button_event.Handler = &CustomerAppTask::ApplicationEventHandler;
-        AppTask::GetAppTask().PostEvent(&button_event);
-    }
-    if (button == APP_FUNCTION_BUTTON)
-    {
-        button_event.Handler = BaseApplication::ButtonHandler;
-        AppTask::GetAppTask().PostEvent(&button_event);
-    }
-}
-```
-
-### Override API Reference
-
-The base API and implementation are generated into your project and live under `autogen/` directory. These files are regenerated on every project upgrade and match your installed SDK version. Use them as the reference for overridable methods and app configuration.
-
-| File | Purpose |
-|------|--------|
-| `autogen/AppTaskImpl.h` | Declarations of every overridable `*Impl()` method. Copy the signatures you need from here into `CustomerAppTask.h`. |
-| `autogen/AppTask.cpp` | Silicon Labs default implementation of AppTask. This is what runs for any `*Impl()` you do not override. Use as reference when customizing behavior. |
-
+Per-example override API references: `autogen/AppTaskImpl.h`, `autogen/AppTask.cpp`.
 
 ## Troubleshooting
 
@@ -186,8 +81,8 @@ The base API and implementation are generated into your project and live under `
 
 ## Resources
 
-- [Silicon Labs Matter over Thread Documentation](https://docs.silabs.com/matter/2.9.0/matter-thread)
-- [Matter Hub Setup](https://docs.silabs.com/matter/2.9.0/matter-thread/raspi-img)
+- [Silicon Labs Matter over Thread Documentation](https://docs.silabs.com/matter/2.9.1/matter-thread)
+- [Matter Hub Setup](https://docs.silabs.com/matter/2.9.1/matter-thread/raspi-img)
 - [chip-tool README](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
 
 ## Report Bugs & Get Support

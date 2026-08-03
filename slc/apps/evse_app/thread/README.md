@@ -7,6 +7,8 @@ The Matter over Thread EVSE example is a baseline demonstration of electric vehi
 - [Purpose/Scope](#purposescope)
 - [Prerequisites/Setup Requirements](#prerequisitessetup-requirements)
 - [Steps to Run Demo](#steps-to-run-demo)
+- [Extending Base App Implementation](#extending-base-app-implementation)
+  - [Energy Management Hardware Integration](#energy-management-hardware-integration)
 - [Troubleshooting](#troubleshooting)
 - [Resources](#resources)
 - [Report Bugs & Get Support](#report-bugs--get-support)
@@ -31,11 +33,11 @@ starting point for building production products on the Silicon Labs platform.
 
 ### HW Requirements
 
-For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.0/matter-overview/#hardware-requirements) documentation.
+For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.1/matter-overview/#hardware-requirements) documentation.
 
 ### SW Requirements
 
-For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.0/matter-overview/#software-requirements) documentation.
+For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.1/matter-overview/#software-requirements) documentation.
 
 ## Steps to Run Demo
 
@@ -46,12 +48,12 @@ artifact.
 
 If building the sample application on its own, a bootloader must be flashed separately
 before the application. Pre-built bootloader binaries for all supported devices are
-available at [Matter Bootloader Binaries](https://docs.silabs.com/matter/2.9.0/matter-prerequisites/matter-artifacts#matter-bootloader-binaries).
+available at [Matter Bootloader Binaries](https://docs.silabs.com/matter/2.9.1/matter-prerequisites/matter-artifacts#matter-bootloader-binaries).
 
 ### Configuration and Setup
 
 This sample app works out of the box with no additional configuration required. To customize the device, see the
-[Custom Matter Device Development](https://docs.silabs.com/matter/2.9.0/matter-references/custom-matter-device#custom-matter-device-development) guide.
+[Custom Matter Device Development](https://docs.silabs.com/matter/2.9.1/matter-references/custom-matter-device#custom-matter-device-development) guide.
 
 ### Steps for Execution
 
@@ -62,7 +64,7 @@ This sample app works out of the box with no additional configuration required. 
 
    **chip-tool (standalone or pre-built):** The pre-built chip-tool instance ships
    with the Matter Hub image. More information on using the Matter Hub is in the
-   [Silicon Labs Matter Hub Documentation](https://docs.silabs.com/matter/2.9.0/matter-thread/raspi-img).
+   [Silicon Labs Matter Hub Documentation](https://docs.silabs.com/matter/2.9.1/matter-thread/raspi-img).
    ```shell
    chip-tool pairing ble-thread 1 hex:<operationalDataset> 20202021 3840
    ```
@@ -103,6 +105,29 @@ This sample app works out of the box with no additional configuration required. 
 | LED 0   | Solid on          | Fully provisioned with Thread connectivity                      |
 | LED 1   | —                 | Currently unused                                                |
 
+## Extending Base App Implementation
+
+See [Extending Base App Implementation](https://docs.silabs.com/matter/2.9.1/matter-references/custom-matter-device#extending-base-app-implementation)
+for how to customize application behavior using `CustomerAppTask` and CRTP `*Impl()` hooks.
+
+Per-example override API references: `autogen/AppTaskImpl.h`, `autogen/AppTask.cpp`.
+
+### Energy Management Hardware Integration
+
+The CRTP `CustomerAppTask` pattern covers AppTask behavior. Energy management hardware
+integration (Power and Energy Measurement, Power Topology, and
+activating/deactivating the charging hardware in response to cluster commands) is not 
+currently routed through CRTP. Work is planned to route this functionality through the
+CRTP `CustomerAppTask` interface in the future.
+
+Until that follow up work is complete, manufacturers who need to connect real
+energy management hardware must edit the following shared delegate implementations
+directly:
+
+- `examples/energy-management/electrical-sensor/src/ElectricalEnergyMeasurementDelegateImpl.cpp`
+- `examples/energy-management/electrical-sensor/src/ElectricalPowerMeasurementDelegateImpl.cpp`
+- `examples/energy-management/electrical-sensor/src/PowerTopologyDelegateImpl.cpp`
+
 ## Troubleshooting
 
 **Device does not advertise over BLE**
@@ -125,8 +150,8 @@ This sample app works out of the box with no additional configuration required. 
 
 ## Resources
 
-- [Silicon Labs Matter over Thread Documentation](https://docs.silabs.com/matter/2.9.0/matter-thread)
-- [Matter Hub Setup](https://docs.silabs.com/matter/2.9.0/matter-thread/raspi-img)
+- [Silicon Labs Matter over Thread Documentation](https://docs.silabs.com/matter/2.9.1/matter-thread)
+- [Matter Hub Setup](https://docs.silabs.com/matter/2.9.1/matter-thread/raspi-img)
 - [chip-tool README](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
 
 ## Report Bugs & Get Support

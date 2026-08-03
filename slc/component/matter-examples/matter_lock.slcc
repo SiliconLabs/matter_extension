@@ -15,7 +15,7 @@ template_file:
   - path: third_party/matter_sdk/examples/lock-app/silabs/src/AppTask.cpp
 
 config_file:
-  - path: third_party/matter_sdk/examples/lock-app/silabs/include/LockConfig.h
+  - path: third_party/matter_sdk/examples/lock-app/silabs/config/LockConfig.h
     file_id: matter_lock_config
 provides:
   - name: matter_lock

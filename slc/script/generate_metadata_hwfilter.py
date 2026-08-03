@@ -450,8 +450,8 @@ def prepare_template_with_version(
     app_variant_rules: List[dict] = []
     board_overrides: Dict[str, Dict[str, List[str]]] = {}
 
-    templates_exclude = variants_config.get("templates_exclude", []) or []
     demos_exclude = variants_config.get("demos_exclude", []) or []
+    templates_hidden = variants_config.get("templates_hidden", []) or []
 
     if template_name == "templates.xml.j2":
         for app, config in (variants_config.get("templates_board_overrides") or {}).items():
@@ -486,8 +486,8 @@ def prepare_template_with_version(
         lines.append(f'{{% set app_variant_rules = {app_variant_rules} -%}}')
     if board_overrides:
         lines.append(f'{{% set board_overrides = {board_overrides} -%}}')
-    if templates_exclude:
-        lines.append(f'{{% set templates_exclude = {templates_exclude} -%}}')
+    if templates_hidden:
+        lines.append(f'{{% set templates_hidden = {templates_hidden} -%}}')
     if demos_exclude:
         lines.append(f'{{% set demos_exclude = {demos_exclude} -%}}')
 
@@ -513,8 +513,9 @@ def _run_hwstudio(
         "slc/apps/**/*.slc[pw]",
         "-c", str(config_path),
         "-t", str(template_path),
-        "-q", "internal",
     ])
+    if demo:
+        cmd.extend(["-q", "internal"])
 
     out_path = Path(output_file)
     mtime_before = out_path.stat().st_mtime if out_path.exists() else None

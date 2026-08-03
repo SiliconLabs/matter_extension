@@ -29,10 +29,8 @@ requires:
   - name: mbedtls_cmac
   - name: mbedtls_sha256
     condition: [matter_provision]
-  - name: mbedtls_ecdsa_deterministic
+  - name: matter_ecdsa_deterministic_selection
     condition: [matter_provision]
-    unless: [matter_aws]
-
 
   # OT CoAP Cert libs
   - name: mbedtls_tls
@@ -54,12 +52,17 @@ requires:
   - name: mbedtls_jpake
     condition: [ot_multi_instance_cert_libs]
 
+# matter_aws requires stub and conflicts default matter_ecdsa_deterministic
+# to override this default when matter_ecdsa_deterministic is unsupported
+recommends:
+  - id: matter_ecdsa_deterministic_default
+
 config_file:
   - path: slc/config/sli_psa_builtin_config.h
     file_id: sli_psa_builtin_config
-  - path: third_party/matter_sdk/src/platform/silabs/efr32/efr32-chip-mbedtls-config.h
+  - path: third_party/matter_sdk/src/platform/silabs/efr32/config/efr32-chip-mbedtls-config.h
     file_id: efr32-chip-mbedtls-config
-  - path: third_party/matter_sdk/src/platform/silabs/efr32/efr32-psa-crypto-config.h
+  - path: third_party/matter_sdk/src/platform/silabs/efr32/config/efr32-psa-crypto-config.h
     file_id: efr32-psa-crypto-config
 
 define:

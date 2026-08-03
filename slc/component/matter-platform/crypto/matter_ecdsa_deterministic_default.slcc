@@ -1,0 +1,21 @@
+id: matter_ecdsa_deterministic_default
+label: Matter Deterministic ECDSA (Enabled)
+description: >
+  Default provider of matter_ecdsa_deterministic_selection. Selects
+  deterministic ECDSA via mbedtls_ecdsa_deterministic for
+  Matter provisioning. Overridden by matter_ecdsa_deterministic_stub
+  when matter_aws is present, since mbedtls_ecdsa_deterministic is incompatible
+  with matter_aws.
+package: matter
+category: Platform|Security
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+
+provides:
+  - name: matter_ecdsa_deterministic_default
+  - name: matter_ecdsa_deterministic_selection
+
+requires:
+  - name: mbedtls_ecdsa_deterministic

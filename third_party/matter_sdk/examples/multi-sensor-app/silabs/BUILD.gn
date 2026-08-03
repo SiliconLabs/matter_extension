@@ -79,6 +79,7 @@ if (wifi_soc) {
       "${examples_plat_dir}",
       "${chip_root}/src/lib",
       "${examples_common_plat_dir}",
+      "${examples_common_plat_dir}/customer",
       "${examples_common_plat_dir}/freertos_config",
     ]
   }
@@ -95,6 +96,7 @@ if (wifi_soc) {
       "${examples_plat_dir}",
       "${chip_root}/src/lib",
       "${examples_common_plat_dir}",
+      "${examples_common_plat_dir}/customer",
       "${examples_common_plat_dir}/freertos_config",
     ]
 
@@ -120,9 +122,8 @@ silabs_executable("multi-sensor-app") {
   }
 
   sources = [
+    "${examples_common_plat_dir}/customer/CustomerAppTask.cpp",
     "src/AppTask.cpp",
-    "src/DataModelCallbacks.cpp",
-    "src/SensorManager.cpp",
   ]
 
   if (!disable_lcd) {

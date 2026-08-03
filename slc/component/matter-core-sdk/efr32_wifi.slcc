@@ -100,7 +100,6 @@ include:
   file_list:
   - path: lwipopts-siwx.h
   - path: lwippools.h
-  - path: lwipopts.h
 - path: third_party/matter_sdk/examples/platform/silabs
   file_list:
   - path: board_config.h
@@ -129,8 +128,6 @@ include:
   file_list:
   - path: Efr32PsaOperationalKeystore.h
   - path: Efr32OpaqueKeypair.h
-  - path: efr32-psa-crypto-config.h
-  - path: efr32-chip-mbedtls-config.h
   - path: BLEChannel.h
 
 - path: third_party/matter_sdk/src/platform/silabs

@@ -76,6 +76,7 @@ if (wifi_soc) {
       "${examples_plat_dir}",
       "${chip_root}/src/lib",
       "${examples_common_plat_dir}",
+      "${examples_common_plat_dir}/customer",
       "${examples_common_plat_dir}/freertos_config",
       "${example_oven_dir}/oven-app-common/include",
     ]
@@ -105,11 +106,8 @@ silabs_executable("oven_app") {
   sources = [
     "${example_oven_dir}/oven-app-common/src/CookEndpoints.cpp",
     "${example_oven_dir}/oven-app-common/src/OvenEndpoint.cpp",
-    "src/AppSupportedTemperatureLevelsDelegate.cpp",
+    "${examples_common_plat_dir}/customer/CustomerAppTask.cpp",
     "src/AppTask.cpp",
-    "src/DataModelCallbacks.cpp",
-    "src/OvenBindingHandler.cpp",
-    "src/OvenManager.cpp",
   ]
   if (!disable_lcd) {
     sources += [ "src/OvenUI.cpp" ]

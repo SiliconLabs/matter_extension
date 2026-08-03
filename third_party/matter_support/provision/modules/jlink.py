@@ -12,6 +12,7 @@ from modules.parameters import ID, Formats, Types
 
 class JLinkChannel(_base.Channel):
     DEFAULT_PORT = 19020
+    DEFAULT_RTT_SEARCH_SIZE = 0x1000
 
     def __init__(self, paths, args, conn, dev) -> None:
         super().__init__(_base.Channel.RTT)
@@ -25,7 +26,6 @@ class JLinkChannel(_base.Channel):
             self.link = pylink.JLink()
         else:
             self.link = pylink.JLink(lib=pylink.library.Library(dllpath=lib_path))
-        self.link.disable_dialog_boxes()
         self.support_dir = paths.support()
 
     def open(self):
@@ -39,14 +39,18 @@ class JLinkChannel(_base.Channel):
         else:
             print("* Open DEFAULT connection to {}\n".format(self.part_number))
             self.link.open()
+        self.link.disable_dialog_boxes()
 
         self.link.set_tif(interface=pylink.JLinkInterfaces.SWD)
         self.link.connect(chip_name=self.part_number, speed="auto", verbose=True)
-        # Use custom RTT control block address, if configured
-        if self.device.rtt_addr.value is None:
-            self.link.rtt_start()
-        else:
-            self.link.rtt_start(self.device.rtt_addr.value)
+        # Always auto-search the RTT control block
+        # Use RTT start address if configured
+        if self.device.rtt_addr.value is not None:
+            print("\n* RTT auto-search 0x{:x}..0x{:x}\n".format(
+                self.device.rtt_addr.value, self.device.rtt_addr.value + JLinkChannel.DEFAULT_RTT_SEARCH_SIZE))
+            self.link.exec_command("SetRTTSearchRanges 0x{:x} 0x{:x}".format(
+                self.device.rtt_addr.value, JLinkChannel.DEFAULT_RTT_SEARCH_SIZE))
+        self.link.rtt_start()
 
     def close(self):
         print("* Connection closed.\n")

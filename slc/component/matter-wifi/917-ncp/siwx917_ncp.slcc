@@ -9,7 +9,7 @@ metadata:
   sbom:
     license: Zlib
 config_file:
-  - path: third_party/matter_sdk/src/lwip/silabs/lwipopts.h
+  - path: third_party/matter_sdk/src/lwip/silabs/config/lwipopts.h
     override:
       component: "wifi_resources"
       file_id: lwipopts
@@ -68,11 +68,6 @@ define:
   value: 1
 - name: CHIP_9117
   value: 1
-- name: SL_WFX_CONFIG_SCAN
-  value: 1
-- name: SL_WFX_USE_SPI
-- name: RSI_WITH_OS
-- name: SL_WIFI_COMPONENT_INCLUDED
 - name: __WEAK
   value: "__attribute__((weak))"
 

@@ -2,7 +2,7 @@
 
 """
 @file sl_project_upgrade.py
-@brief Script to upgrade a Matter project to a specified Matter extension version.
+@brief Script to upgrade a Matter project using the checked-out Matter extension and SDKs.
 
 @details
 Prerequisites:
@@ -10,10 +10,10 @@ Prerequisites:
   2. Run the slc/sl_setup_env.py script to check out dependencies of that target tag/branch.
 
 @usage
-  python sl_project_upgrade.py <PathToReferenceProjectFile(.slcp)> <extensionVersion>
+  python sl_project_upgrade.py <PathToReferenceProjectFile(.slcp)>
 
 @example
-  python3 sl_project_upgrade.py out/lgt/thread/lighting-app.slcp 2.6.0
+  python3 sl_project_upgrade.py out/lgt/thread/lighting-app.slcp
 """
 
 import argparse
@@ -21,14 +21,13 @@ import logging
 import os
 import sys
 import subprocess
-from sl_create_new_app import createApp
+from sl_create_new_app import CreateApp
 
 class Upgrade:
-    def __init__(self, reference_project_file, matter_extension_version, verbose=False):
-        self.EXAMPLE_USAGE = "python slc/sl_project_upgrade.py <PathToReferenceProjectFile(.slcp)> <matterExtensionVersion>"
-        self.app = createApp()
+    def __init__(self, reference_project_file, verbose=False):
+        self.EXAMPLE_USAGE = "python slc/sl_project_upgrade.py <PathToReferenceProjectFile(.slcp)>"
+        self.app = CreateApp()
         self.reference_project_file = reference_project_file
-        self.matter_extension_version = matter_extension_version
         self.verbose = verbose
         self.setup_logging()
         self.validate_arguments()
@@ -40,9 +39,6 @@ class Upgrade:
     def validate_arguments(self):
         if not self.reference_project_file:
             logging.error("Missing reference project file argument.")
-            self.print_usage_and_exit()
-        if not self.matter_extension_version:
-            logging.error("Missing matter extension version argument.")
             self.print_usage_and_exit()
         if not os.path.exists(self.reference_project_file):
             logging.error(f"Reference Project File does not exist: {self.reference_project_file}")
@@ -56,18 +52,30 @@ class Upgrade:
         sys.exit(1)
 
     def upgrade_project(self):
-        SimplicitySDKpath = "third_party/simplicity_sdk"
+        SimplicitySDKpath = self.app.sisdk_root
+        WiseconnectPath = self.app.wiseconnect_root
+        MatterExtensionPath = self.app.silabs_chip_root
+        if not SimplicitySDKpath:
+            logging.error("SISDK_ROOT is not set. Run slc/sl_setup_env.py to generate the .env file.")
+            sys.exit(1)
+        if not WiseconnectPath:
+            logging.error("WISECONNECT_ROOT is not set. Run slc/sl_setup_env.py to generate the .env file.")
+            sys.exit(1)
+        if not MatterExtensionPath:
+            logging.error("silabs_chip_root is not set. Run slc/sl_setup_env.py to generate the .env file.")
+            sys.exit(1)
         upgrade_cmd = [
-            self.app.slc_path, "upgrade", "-s", SimplicitySDKpath, "-p",
-            self.reference_project_file, "-extid", f"matter:{self.matter_extension_version}"
+            self.app.slc_path, "upgrade", "-p", self.reference_project_file,
+            "--sdk-package-path", SimplicitySDKpath,
+            "--sdk-package-path", MatterExtensionPath,
+            "--sdk-package-path", WiseconnectPath,
         ]
         subprocess.run(upgrade_cmd)
-        logging.info(f"Project {self.reference_project_file} upgraded to Matter Extension v{self.matter_extension_version}")
+        logging.info(f"Project {self.reference_project_file} upgraded")
 
 def main():
-    parser = argparse.ArgumentParser(description="Upgrade a Matter project to a specified Matter extension version.")
+    parser = argparse.ArgumentParser(description="Upgrade a Matter project using the checked-out Matter extension and SDKs.")
     parser.add_argument("-p", "--reference_project_file", dest="reference_project_file", required=False, help="Path to the reference .slcp project file")
-    parser.add_argument("-m", "--matter_extension_version", dest="matter_extension_version", required=False, help="Matter extension version to upgrade to")
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose (debug) logging")
     # Accept positional arguments for backward compatibility
     parser.add_argument("args", nargs="*", help=argparse.SUPPRESS)
@@ -75,16 +83,14 @@ def main():
 
     # Support both positional and optional arguments for main required fields
     # Priority: optional flags > positional
-    if not args.reference_project_file or not args.matter_extension_version:
-        if len(args.args) >= 2:
+    if not args.reference_project_file:
+        if len(args.args) >= 1:
             args.reference_project_file = args.args[0]
-            args.matter_extension_version = args.args[1]
         else:
-            parser.error("reference_project_file and matter_extension_version are required.")
+            parser.error("reference_project_file is required.")
 
     upgrade = Upgrade(
         reference_project_file=args.reference_project_file,
-        matter_extension_version=args.matter_extension_version,
         verbose=args.verbose
     )
     upgrade.upgrade_project()

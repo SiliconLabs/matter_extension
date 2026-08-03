@@ -6,7 +6,7 @@ description: Demonstrates a bootloader configuration using external SPI flash st
 category: Matter Application
 sdk_extension:
   - id: matter
-    version: "2.9.0"
+    version: "2.9.1"
     vendor: silabs
 
 component:

@@ -19,7 +19,6 @@
 
 #ifdef DISPLAY_ENABLED
 #include <AppTask.h>
-#include <SensorManager.h>
 #include <glib.h>
 #include <lcd.h>
 

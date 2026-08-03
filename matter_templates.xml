@@ -70,7 +70,7 @@
     <properties key="solutionReferenceId" value="slc.apps.air_quality_sensor_app.wifi.matter_wifi_soc_air_quality_sensor_app_freertos.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/air_quality_sensor_app/wifi/matter_wifi_soc_air_quality_sensor_app_freertos.slcp"/>
     <properties key="readmeFiles" value="slc/apps/air_quality_sensor_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -86,7 +86,7 @@
     <properties key="solutionReferenceId" value="slc.apps.air_quality_sensor_app.wifi.matter_wifi_soc_air_quality_sensor_app_freertos.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/air_quality_sensor_app/wifi/matter_wifi_soc_air_quality_sensor_app_freertos.slcw"/>
     <properties key="readmeFiles" value="slc/apps/air_quality_sensor_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -142,6 +142,23 @@
     <properties key="quality" value="PRODUCTION"/>
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Difficulty|Advanced Type|SoC\ Project Wireless\ Technology|Matter"/>
+    <properties key="core.hidden" value="true"/>
+  </descriptors>
+  <descriptors name="matter_bootloader_internal_series_3" label="Matter - SoC Bootloader Internal Storage Series 3" description="Demonstrates a bootloader solution using internal storage for Matter firmware updates on Series 3 devices">
+    <properties key="namespace" value="template.solution.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.apps.bootloaders.bootloader_storage_single_4096k_series_3.matter_bootloader_internal_series_3.slcw"/>
+    <properties key="projectFilePaths" value="slc/apps/bootloaders/bootloader_storage_single_4096k_series_3/matter_bootloader_internal_series_3.slcw"/>
+    <properties key="readmeFiles" value="slc/apps/bootloaders/bootloader_storage_single_4096k_series_3/readme.md"/>
+    <properties key="boardCompatibility" value="brd1019a brd2719a brd4407a brd4408a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*simg301m103lih.* .*simg301m103wih.* .*simg301m104lgh.* .*simg301m104lgl.* .*simg301m104lih.* .*simg301m104lil.* .*simg301m104xil.* .*simg301m113wih.* .*simg301m114kgh.* .*simg301m114kih.* .*simg301m114lgh.* .*simg301m114lih.*"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="INTERNAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Difficulty|Advanced Type|SoC\ Project Wireless\ Technology|Matter"/>
+    <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader_storage_single_4096k_series_3.matter_bootloader_internal_series_3.slcp"/>
     <properties key="core.hidden" value="true"/>
   </descriptors>
   <descriptors name="matter_thread_soc_closure_app_freertos" label="Matter Thread - SoC Closure FreeRTOS" description="Demonstrates a sample implementation of a Matter over Thread closure app">
@@ -214,7 +231,7 @@
     <properties key="solutionReferenceId" value="slc.apps.closure_app.wifi.matter_wifi_soc_closure_app_freertos.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/closure_app/wifi/matter_wifi_soc_closure_app_freertos.slcp"/>
     <properties key="readmeFiles" value="slc/apps/closure_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -230,7 +247,7 @@
     <properties key="solutionReferenceId" value="slc.apps.closure_app.wifi.matter_wifi_soc_closure_app_freertos.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/closure_app/wifi/matter_wifi_soc_closure_app_freertos.slcw"/>
     <properties key="readmeFiles" value="slc/apps/closure_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -239,6 +256,122 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Difficulty|Advanced Type|SoC\ Project Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.apps.closure_app.wifi.matter_wifi_soc_closure_app_freertos.slcp"/>
+  </descriptors>
+  <descriptors name="matter_thread_soc_code_size_sensor_freertos" label="Matter Thread - SoC Code Size Sensor FreeRTOS" description="Demonstrates a sample implementation of a minimal sensor app used for code size analysis">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.apps.code_size_sensor.thread.matter_thread_soc_code_size_sensor_freertos.slcp"/>
+    <properties key="projectFilePaths" value="slc/apps/code_size_sensor/thread/matter_thread_soc_code_size_sensor_freertos.slcp"/>
+    <properties key="readmeFiles" value="slc/apps/code_size_sensor/thread/README.md"/>
+    <properties key="boardCompatibility" value="brd1019a brd2601b brd2608a brd2703a brd2704a brd2709a brd2719a brd4116a brd4117a brd4118a brd4120a brd4121a brd4186c brd4187c brd4316a brd4317a brd4318a brd4319a brd4337a brd4350a brd4351a brd4407a brd4408a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*efr32mg24a010f1536gm40.* .*efr32mg24a010f1536gm48.* .*efr32mg24a010f1536im40.* .*efr32mg24a010f1536im48.* .*efr32mg24a020f1536gm40.* .*efr32mg24a020f1536gm48.* .*efr32mg24a020f1536im40.* .*efr32mg24a020f1536im48.* .*efr32mg24a110f1536gm48.* .*efr32mg24a111f1536gm48.* .*efr32mg24a120f1536gm48.* .*efr32mg24a121f1536gm48.* .*efr32mg24a410f1536im40.* .*efr32mg24a410f1536im48.* .*efr32mg24a420f1536im40.* .*efr32mg24a420f1536im48.* .*efr32mg24a610f1536im40.* .*efr32mg24a620f1536im40.* .*efr32mg24b010f1536im40.* .*efr32mg24b010f1536im48.* .*efr32mg24b020f1536im40.* .*efr32mg24b020f1536im48.* .*efr32mg24b110f1536gm48.* .*efr32mg24b110f1536im48.* .*efr32mg24b120f1536im48.* .*efr32mg24b210f1536im40.* .*efr32mg24b210f1536im48.* .*efr32mg24b220f1536im48.* .*efr32mg24b310f1536im48.* .*efr32mg24b610f1536im40.* .*efr32mg26b211f2048im68.* .*efr32mg26b211f3200im48.* .*efr32mg26b221f2048im68.* .*efr32mg26b221f3200im48.* .*efr32mg26b311f3200il136.* .*efr32mg26b410f3200im48.* .*efr32mg26b410f3200im68.* .*efr32mg26b411f3200im48.* .*efr32mg26b411f3200im68.* .*efr32mg26b420f3200im48.* .*efr32mg26b420f3200im68.* .*efr32mg26b421f3200im48.* .*efr32mg26b421f3200im68.* .*efr32mg26b510f3200il136.* .*efr32mg26b510f3200im48.* .*efr32mg26b510f3200im68.* .*efr32mg26b511f3200il136.* .*efr32mg26b511f3200im48.* .*efr32mg26b511f3200im68.* .*efr32mg26b520f3200im48.* .*efr32mg26b520f3200im68.* .*efr32mg26b521f3200im48.* .*efr32mg26b521f3200im68.* .*efr32mg26b610f3200im48.* .*efr32mg26b611f2048im48.* .*mgm240l022rnf.* .*mgm240l022vif.* .*mgm240l022vnf.* .*mgm240la22uif.* .*mgm240la22vif.* .*mgm240ld22vif.* .*mgm240pa22vna.* .*mgm240pa32vna.* .*mgm240pa32vnn.* .*mgm240pb22vna.* .*mgm240pb32vna.* .*mgm240pb32vnn.* .*mgm240sa22vna.* .*mgm240sb22vna.* .*mgm240sd22vna.* .*mgm260pb22vna.* .*mgm260pb32vna.* .*mgm260pb32vnn.* .*mgm260pd22vna.* .*mgm260pd32vna.* .*mgm260pd32vnn.* .*simg301m103lih.* .*simg301m103wih.* .*simg301m104lgh.* .*simg301m104lgl.* .*simg301m104lih.* .*simg301m104lil.* .*simg301m104xil.* .*simg301m113wih.* .*simg301m114kgh.* .*simg301m114kih.* .*simg301m114lgh.* .*simg301m114lih.*"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Difficulty|Advanced Type|SoC\ Project Wireless\ Technology|Matter"/>
+    <properties key="core.hidden" value="true"/>
+  </descriptors>
+  <descriptors name="matter_thread_soc_dishwasher_app_freertos" label="Matter Thread - SoC Dishwasher FreeRTOS" description="Demonstrates a sample implementation of a Matter over Thread dishwasher app">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.apps.dishwasher_app.thread.matter_thread_soc_dishwasher_app_freertos.slcp"/>
+    <properties key="projectFilePaths" value="slc/apps/dishwasher_app/thread/matter_thread_soc_dishwasher_app_freertos.slcp"/>
+    <properties key="readmeFiles" value="slc/apps/dishwasher_app/thread/README.md"/>
+    <properties key="boardCompatibility" value="brd1019a brd2601b brd2608a brd2703a brd2704a brd2709a brd2719a brd4116a brd4117a brd4118a brd4120a brd4121a brd4186c brd4187c brd4316a brd4317a brd4318a brd4319a brd4337a brd4350a brd4351a brd4407a brd4408a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*efr32mg24a010f1536gm40.* .*efr32mg24a010f1536gm48.* .*efr32mg24a010f1536im40.* .*efr32mg24a010f1536im48.* .*efr32mg24a020f1536gm40.* .*efr32mg24a020f1536gm48.* .*efr32mg24a020f1536im40.* .*efr32mg24a020f1536im48.* .*efr32mg24a110f1536gm48.* .*efr32mg24a111f1536gm48.* .*efr32mg24a120f1536gm48.* .*efr32mg24a121f1536gm48.* .*efr32mg24a410f1536im40.* .*efr32mg24a410f1536im48.* .*efr32mg24a420f1536im40.* .*efr32mg24a420f1536im48.* .*efr32mg24a610f1536im40.* .*efr32mg24a620f1536im40.* .*efr32mg24b010f1536im40.* .*efr32mg24b010f1536im48.* .*efr32mg24b020f1536im40.* .*efr32mg24b020f1536im48.* .*efr32mg24b110f1536gm48.* .*efr32mg24b110f1536im48.* .*efr32mg24b120f1536im48.* .*efr32mg24b210f1536im40.* .*efr32mg24b210f1536im48.* .*efr32mg24b220f1536im48.* .*efr32mg24b310f1536im48.* .*efr32mg24b610f1536im40.* .*efr32mg26b211f2048im68.* .*efr32mg26b211f3200im48.* .*efr32mg26b221f2048im68.* .*efr32mg26b221f3200im48.* .*efr32mg26b311f3200il136.* .*efr32mg26b410f3200im48.* .*efr32mg26b410f3200im68.* .*efr32mg26b411f3200im48.* .*efr32mg26b411f3200im68.* .*efr32mg26b420f3200im48.* .*efr32mg26b420f3200im68.* .*efr32mg26b421f3200im48.* .*efr32mg26b421f3200im68.* .*efr32mg26b510f3200il136.* .*efr32mg26b510f3200im48.* .*efr32mg26b510f3200im68.* .*efr32mg26b511f3200il136.* .*efr32mg26b511f3200im48.* .*efr32mg26b511f3200im68.* .*efr32mg26b520f3200im48.* .*efr32mg26b520f3200im68.* .*efr32mg26b521f3200im48.* .*efr32mg26b521f3200im68.* .*efr32mg26b610f3200im48.* .*efr32mg26b611f2048im48.* .*mgm240l022rnf.* .*mgm240l022vif.* .*mgm240l022vnf.* .*mgm240la22uif.* .*mgm240la22vif.* .*mgm240ld22vif.* .*mgm240pa22vna.* .*mgm240pa32vna.* .*mgm240pa32vnn.* .*mgm240pb22vna.* .*mgm240pb32vna.* .*mgm240pb32vnn.* .*mgm240sa22vna.* .*mgm240sb22vna.* .*mgm240sd22vna.* .*mgm260pb22vna.* .*mgm260pb32vna.* .*mgm260pb32vnn.* .*mgm260pd22vna.* .*mgm260pd32vna.* .*mgm260pd32vnn.* .*simg301m103lih.* .*simg301m103wih.* .*simg301m104lgh.* .*simg301m104lgl.* .*simg301m104lih.* .*simg301m104lil.* .*simg301m104xil.* .*simg301m113wih.* .*simg301m114kgh.* .*simg301m114kih.* .*simg301m114lgh.* .*simg301m114lih.*"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="INTERNAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Difficulty|Advanced Type|SoC\ Project Wireless\ Technology|Matter"/>
+    <properties key="core.hidden" value="true"/>
+  </descriptors>
+  <descriptors name="matter_thread_soc_dishwasher_app_series_2_freertos" label="Matter Thread - SoC Dishwasher with external Bootloader FreeRTOS" description="Demonstrates a sample implementation of a Matter over Thread dishwasher app with external bootloader">
+    <properties key="namespace" value="template.solution.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.apps.dishwasher_app.thread.matter_thread_soc_dishwasher_app_series_2_freertos.slcw"/>
+    <properties key="projectFilePaths" value="slc/apps/dishwasher_app/thread/matter_thread_soc_dishwasher_app_series_2_freertos.slcw"/>
+    <properties key="readmeFiles" value="slc/apps/dishwasher_app/thread/README.md"/>
+    <properties key="boardCompatibility" value="brd2601b brd2608a brd4116a brd4117a brd4118a brd4120a brd4121a brd4186c brd4187c brd4316a brd4317a brd4318a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*efr32mg24a010f1536gm40.* .*efr32mg24a010f1536gm48.* .*efr32mg24a010f1536im40.* .*efr32mg24a010f1536im48.* .*efr32mg24a020f1536gm40.* .*efr32mg24a020f1536gm48.* .*efr32mg24a020f1536im40.* .*efr32mg24a020f1536im48.* .*efr32mg24a110f1536gm48.* .*efr32mg24a111f1536gm48.* .*efr32mg24a120f1536gm48.* .*efr32mg24a121f1536gm48.* .*efr32mg24a410f1536im40.* .*efr32mg24a410f1536im48.* .*efr32mg24a420f1536im40.* .*efr32mg24a420f1536im48.* .*efr32mg24a610f1536im40.* .*efr32mg24a620f1536im40.* .*efr32mg24b010f1536im40.* .*efr32mg24b010f1536im48.* .*efr32mg24b020f1536im40.* .*efr32mg24b020f1536im48.* .*efr32mg24b110f1536gm48.* .*efr32mg24b110f1536im48.* .*efr32mg24b120f1536im48.* .*efr32mg24b210f1536im40.* .*efr32mg24b210f1536im48.* .*efr32mg24b220f1536im48.* .*efr32mg24b310f1536im48.* .*efr32mg24b610f1536im40.* .*efr32mg26b211f2048im68.* .*efr32mg26b211f3200im48.* .*efr32mg26b221f2048im68.* .*efr32mg26b221f3200im48.* .*efr32mg26b311f3200il136.* .*efr32mg26b410f3200im48.* .*efr32mg26b410f3200im68.* .*efr32mg26b411f3200im48.* .*efr32mg26b411f3200im68.* .*efr32mg26b420f3200im48.* .*efr32mg26b420f3200im68.* .*efr32mg26b421f3200im48.* .*efr32mg26b421f3200im68.* .*efr32mg26b510f3200il136.* .*efr32mg26b510f3200im48.* .*efr32mg26b510f3200im68.* .*efr32mg26b511f3200il136.* .*efr32mg26b511f3200im48.* .*efr32mg26b511f3200im68.* .*efr32mg26b520f3200im48.* .*efr32mg26b520f3200im68.* .*efr32mg26b521f3200im48.* .*efr32mg26b521f3200im68.* .*efr32mg26b610f3200im48.* .*efr32mg26b611f2048im48.* .*mgm240l022rnf.* .*mgm240l022vif.* .*mgm240l022vnf.* .*mgm240la22uif.* .*mgm240la22vif.* .*mgm240ld22vif.* .*mgm240pa22vna.* .*mgm240pa32vna.* .*mgm240pa32vnn.* .*mgm240pb22vna.* .*mgm240pb32vna.* .*mgm240pb32vnn.* .*mgm240sa22vna.* .*mgm240sb22vna.* .*mgm240sd22vna.* .*mgm260pb22vna.* .*mgm260pb32vna.* .*mgm260pb32vnn.* .*mgm260pd22vna.* .*mgm260pd32vna.* .*mgm260pd32vnn.*"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="INTERNAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Difficulty|Advanced Type|SoC\ Project Wireless\ Technology|Matter"/>
+    <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader_storage_external_single_series_2.matter_bootloader_external_series_2.slcp slc.apps.dishwasher_app.thread.matter_thread_soc_dishwasher_app_freertos.slcp"/>
+    <properties key="core.hidden" value="true"/>
+  </descriptors>
+  <descriptors name="matter_thread_soc_dishwasher_app_series_2_internal_freertos" label="Matter Thread - SoC Dishwasher with internal Bootloader FreeRTOS" description="Demonstrates a sample implementation of a Matter over Thread dishwasher app with internal bootloader">
+    <properties key="namespace" value="template.solution.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.apps.dishwasher_app.thread.matter_thread_soc_dishwasher_app_series_2_internal_freertos.slcw"/>
+    <properties key="projectFilePaths" value="slc/apps/dishwasher_app/thread/matter_thread_soc_dishwasher_app_series_2_internal_freertos.slcw"/>
+    <properties key="readmeFiles" value="slc/apps/dishwasher_app/thread/README.md"/>
+    <properties key="boardCompatibility" value="brd2703a brd2704a brd2709a brd4319a brd4337a brd4350a brd4351a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*efr32mg24a010f1536gm40.* .*efr32mg24a010f1536gm48.* .*efr32mg24a010f1536im40.* .*efr32mg24a010f1536im48.* .*efr32mg24a020f1536gm40.* .*efr32mg24a020f1536gm48.* .*efr32mg24a020f1536im40.* .*efr32mg24a020f1536im48.* .*efr32mg24a110f1536gm48.* .*efr32mg24a111f1536gm48.* .*efr32mg24a120f1536gm48.* .*efr32mg24a121f1536gm48.* .*efr32mg24a410f1536im40.* .*efr32mg24a410f1536im48.* .*efr32mg24a420f1536im40.* .*efr32mg24a420f1536im48.* .*efr32mg24a610f1536im40.* .*efr32mg24a620f1536im40.* .*efr32mg24b010f1536im40.* .*efr32mg24b010f1536im48.* .*efr32mg24b020f1536im40.* .*efr32mg24b020f1536im48.* .*efr32mg24b110f1536gm48.* .*efr32mg24b110f1536im48.* .*efr32mg24b120f1536im48.* .*efr32mg24b210f1536im40.* .*efr32mg24b210f1536im48.* .*efr32mg24b220f1536im48.* .*efr32mg24b310f1536im48.* .*efr32mg24b610f1536im40.* .*efr32mg26b211f2048im68.* .*efr32mg26b211f3200im48.* .*efr32mg26b221f2048im68.* .*efr32mg26b221f3200im48.* .*efr32mg26b311f3200il136.* .*efr32mg26b410f3200im48.* .*efr32mg26b410f3200im68.* .*efr32mg26b411f3200im48.* .*efr32mg26b411f3200im68.* .*efr32mg26b420f3200im48.* .*efr32mg26b420f3200im68.* .*efr32mg26b421f3200im48.* .*efr32mg26b421f3200im68.* .*efr32mg26b510f3200il136.* .*efr32mg26b510f3200im48.* .*efr32mg26b510f3200im68.* .*efr32mg26b511f3200il136.* .*efr32mg26b511f3200im48.* .*efr32mg26b511f3200im68.* .*efr32mg26b520f3200im48.* .*efr32mg26b520f3200im68.* .*efr32mg26b521f3200im48.* .*efr32mg26b521f3200im68.* .*efr32mg26b610f3200im48.* .*efr32mg26b611f2048im48.* .*mgm240l022rnf.* .*mgm240l022vif.* .*mgm240l022vnf.* .*mgm240la22uif.* .*mgm240la22vif.* .*mgm240ld22vif.* .*mgm240pa22vna.* .*mgm240pa32vna.* .*mgm240pa32vnn.* .*mgm240pb22vna.* .*mgm240pb32vna.* .*mgm240pb32vnn.* .*mgm240sa22vna.* .*mgm240sb22vna.* .*mgm240sd22vna.* .*mgm260pb22vna.* .*mgm260pb32vna.* .*mgm260pb32vnn.* .*mgm260pd22vna.* .*mgm260pd32vna.* .*mgm260pd32vnn.*"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="INTERNAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Difficulty|Advanced Type|SoC\ Project Wireless\ Technology|Matter"/>
+    <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader_storage_internal_single_series_2.matter_bootloader_internal_series_2.slcp slc.apps.dishwasher_app.thread.matter_thread_soc_dishwasher_app_freertos.slcp"/>
+    <properties key="core.hidden" value="true"/>
+  </descriptors>
+  <descriptors name="matter_thread_soc_dishwasher_app_series_3_freertos" label="Matter Thread - SoC Dishwasher with internal Bootloader FreeRTOS" description="Demonstrates a sample implementation of a Matter over Thread dishwasher app with internal bootloader">
+    <properties key="namespace" value="template.solution.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.apps.dishwasher_app.thread.matter_thread_soc_dishwasher_app_series_3_freertos.slcw"/>
+    <properties key="projectFilePaths" value="slc/apps/dishwasher_app/thread/matter_thread_soc_dishwasher_app_series_3_freertos.slcw"/>
+    <properties key="readmeFiles" value="slc/apps/dishwasher_app/thread/README.md"/>
+    <properties key="boardCompatibility" value="brd1019a brd2719a brd4407a brd4408a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*simg301m103lih.* .*simg301m103wih.* .*simg301m104lgh.* .*simg301m104lgl.* .*simg301m104lih.* .*simg301m104lil.* .*simg301m104xil.* .*simg301m113wih.* .*simg301m114kgh.* .*simg301m114kih.* .*simg301m114lgh.* .*simg301m114lih.*"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="INTERNAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Difficulty|Advanced Type|SoC\ Project Wireless\ Technology|Matter"/>
+    <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader_storage_single_4096k_series_3.matter_bootloader_internal_series_3.slcp slc.apps.dishwasher_app.thread.matter_thread_soc_dishwasher_app_freertos.slcp"/>
+    <properties key="core.hidden" value="true"/>
+  </descriptors>
+  <descriptors name="matter_wifi_soc_dishwasher_app_freertos" label="Matter WiFi - SoC Dishwasher FreeRTOS" description="Demonstrates a sample implementation of a Matter over Wi-Fi dishwasher app">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.apps.dishwasher_app.wifi.matter_wifi_soc_dishwasher_app_freertos.slcp"/>
+    <properties key="projectFilePaths" value="slc/apps/dishwasher_app/wifi/matter_wifi_soc_dishwasher_app_freertos.slcp"/>
+    <properties key="readmeFiles" value="slc/apps/dishwasher_app/wifi/README.md"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="INTERNAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Difficulty|Advanced Type|SoC\ Project Wireless\ Technology|Matter"/>
+    <properties key="core.hidden" value="true"/>
+  </descriptors>
+  <descriptors name="matter_wifi_soc_dishwasher_app_freertos_solution" label="Matter WiFi - SoC Dishwasher FreeRTOS" description="Demonstrates a sample implementation of a Matter over Wi-Fi dishwasher app">
+    <properties key="namespace" value="template.solution.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.apps.dishwasher_app.wifi.matter_wifi_soc_dishwasher_app_freertos.slcw"/>
+    <properties key="projectFilePaths" value="slc/apps/dishwasher_app/wifi/matter_wifi_soc_dishwasher_app_freertos.slcw"/>
+    <properties key="readmeFiles" value="slc/apps/dishwasher_app/wifi/README.md"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="INTERNAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Difficulty|Advanced Type|SoC\ Project Wireless\ Technology|Matter"/>
+    <properties key="solutionProjects" value="slc.apps.dishwasher_app.wifi.matter_wifi_soc_dishwasher_app_freertos.slcp"/>
+    <properties key="core.hidden" value="true"/>
   </descriptors>
   <descriptors name="matter_thread_soc_evse_app_freertos" label="Matter Thread - SoC EVSE FreeRTOS" description="Demonstrates a sample implementation of a Matter over Thread EVSE app">
     <properties key="namespace" value="template.uc"/>
@@ -310,7 +443,7 @@
     <properties key="solutionReferenceId" value="slc.apps.evse_app.wifi.matter_wifi_soc_evse_app_freertos.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/evse_app/wifi/matter_wifi_soc_evse_app_freertos.slcp"/>
     <properties key="readmeFiles" value="slc/apps/evse_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -326,7 +459,7 @@
     <properties key="solutionReferenceId" value="slc.apps.evse_app.wifi.matter_wifi_soc_evse_app_freertos.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/evse_app/wifi/matter_wifi_soc_evse_app_freertos.slcw"/>
     <properties key="readmeFiles" value="slc/apps/evse_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -438,7 +571,7 @@
     <properties key="solutionReferenceId" value="slc.apps.fan_control_app.wifi.matter_wifi_soc_fan_control_app_freertos.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/fan_control_app/wifi/matter_wifi_soc_fan_control_app_freertos.slcp"/>
     <properties key="readmeFiles" value="slc/apps/fan_control_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -454,7 +587,7 @@
     <properties key="solutionReferenceId" value="slc.apps.fan_control_app.wifi.matter_wifi_soc_fan_control_app_freertos.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/fan_control_app/wifi/matter_wifi_soc_fan_control_app_freertos.slcw"/>
     <properties key="readmeFiles" value="slc/apps/fan_control_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -534,7 +667,7 @@
     <properties key="solutionReferenceId" value="slc.apps.light_switch_app.wifi.matter_wifi_soc_light_switch_app_freertos.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/light_switch_app/wifi/matter_wifi_soc_light_switch_app_freertos.slcp"/>
     <properties key="readmeFiles" value="slc/apps/light_switch_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -550,7 +683,7 @@
     <properties key="solutionReferenceId" value="slc.apps.light_switch_app.wifi.matter_wifi_soc_light_switch_app_freertos.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/light_switch_app/wifi/matter_wifi_soc_light_switch_app_freertos.slcw"/>
     <properties key="readmeFiles" value="slc/apps/light_switch_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -678,7 +811,7 @@
     <properties key="solutionReferenceId" value="slc.apps.lighting_app.wifi.matter_wifi_soc_lighting_app_freertos.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/lighting_app/wifi/matter_wifi_soc_lighting_app_freertos.slcp"/>
     <properties key="readmeFiles" value="slc/apps/lighting_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -694,7 +827,7 @@
     <properties key="solutionReferenceId" value="slc.apps.lighting_app.wifi.matter_wifi_soc_lighting_app_freertos.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/lighting_app/wifi/matter_wifi_soc_lighting_app_freertos.slcw"/>
     <properties key="readmeFiles" value="slc/apps/lighting_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -838,7 +971,7 @@
     <properties key="solutionReferenceId" value="slc.apps.lock_app.wifi.matter_wifi_soc_lock_app_freertos.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/lock_app/wifi/matter_wifi_soc_lock_app_freertos.slcp"/>
     <properties key="readmeFiles" value="slc/apps/lock_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -854,7 +987,7 @@
     <properties key="solutionReferenceId" value="slc.apps.lock_app.wifi.matter_wifi_soc_lock_app_freertos.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/lock_app/wifi/matter_wifi_soc_lock_app_freertos.slcw"/>
     <properties key="readmeFiles" value="slc/apps/lock_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -934,7 +1067,7 @@
     <properties key="solutionReferenceId" value="slc.apps.multi_sensor_app.wifi.matter_wifi_soc_multi_sensor_app_freertos.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/multi_sensor_app/wifi/matter_wifi_soc_multi_sensor_app_freertos.slcp"/>
     <properties key="readmeFiles" value="slc/apps/multi_sensor_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -950,7 +1083,7 @@
     <properties key="solutionReferenceId" value="slc.apps.multi_sensor_app.wifi.matter_wifi_soc_multi_sensor_app_freertos.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/multi_sensor_app/wifi/matter_wifi_soc_multi_sensor_app_freertos.slcw"/>
     <properties key="readmeFiles" value="slc/apps/multi_sensor_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1030,7 +1163,7 @@
     <properties key="solutionReferenceId" value="slc.apps.onoff_plug_app.wifi.matter_wifi_soc_onoff_plug_app_freertos.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/onoff_plug_app/wifi/matter_wifi_soc_onoff_plug_app_freertos.slcp"/>
     <properties key="readmeFiles" value="slc/apps/onoff_plug_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1046,7 +1179,7 @@
     <properties key="solutionReferenceId" value="slc.apps.onoff_plug_app.wifi.matter_wifi_soc_onoff_plug_app_freertos.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/onoff_plug_app/wifi/matter_wifi_soc_onoff_plug_app_freertos.slcw"/>
     <properties key="readmeFiles" value="slc/apps/onoff_plug_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1056,29 +1189,13 @@
     <properties key="filters" value="Difficulty|Advanced Type|SoC\ Project Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.apps.onoff_plug_app.wifi.matter_wifi_soc_onoff_plug_app_freertos.slcp"/>
   </descriptors>
-  <descriptors name="matter_thread_host_openthread_border_router_doc" label="Matter - Host OpenThread Border Router" description="Guides users to main documentation for setting up the OpenThread Border Router">
-    <properties key="namespace" value="template.uc"/>
-    <properties key="keywords" value="Matter"/>
-    <properties key="solutionReferenceId" value="slc.apps.openthread_border_router_doc.matter_thread_host_openthread_border_router_doc.slcp"/>
-    <properties key="projectFilePaths" value="slc/apps/openthread_border_router_doc/matter_thread_host_openthread_border_router_doc.slcp"/>
-    <properties key="readmeFiles" value="slc/apps/openthread_border_router_doc/README.md"/>
-    <properties key="boardCompatibility" value="brd1019a brd2601b brd2608a brd2703a brd2704a brd2709a brd2719a brd4116a brd4117a brd4118a brd4120a brd4121a brd4186c brd4187c brd4316a brd4317a brd4318a brd4319a brd4337a brd4350a brd4351a brd4407a brd4408a com.silabs.board.none"/>
-    <properties key="partCompatibility" value=".*efr32mg24a010f1536gm40.* .*efr32mg24a010f1536gm48.* .*efr32mg24a010f1536im40.* .*efr32mg24a010f1536im48.* .*efr32mg24a020f1536gm40.* .*efr32mg24a020f1536gm48.* .*efr32mg24a020f1536im40.* .*efr32mg24a020f1536im48.* .*efr32mg24a110f1536gm48.* .*efr32mg24a111f1536gm48.* .*efr32mg24a120f1536gm48.* .*efr32mg24a121f1536gm48.* .*efr32mg24a410f1536im40.* .*efr32mg24a410f1536im48.* .*efr32mg24a420f1536im40.* .*efr32mg24a420f1536im48.* .*efr32mg24a610f1536im40.* .*efr32mg24a620f1536im40.* .*efr32mg24b010f1536im40.* .*efr32mg24b010f1536im48.* .*efr32mg24b020f1536im40.* .*efr32mg24b020f1536im48.* .*efr32mg24b110f1536gm48.* .*efr32mg24b110f1536im48.* .*efr32mg24b120f1536im48.* .*efr32mg24b210f1536im40.* .*efr32mg24b210f1536im48.* .*efr32mg24b220f1536im48.* .*efr32mg24b310f1536im48.* .*efr32mg24b610f1536im40.* .*efr32mg26b211f2048im68.* .*efr32mg26b211f3200im48.* .*efr32mg26b221f2048im68.* .*efr32mg26b221f3200im48.* .*efr32mg26b311f3200il136.* .*efr32mg26b410f3200im48.* .*efr32mg26b410f3200im68.* .*efr32mg26b411f3200im48.* .*efr32mg26b411f3200im68.* .*efr32mg26b420f3200im48.* .*efr32mg26b420f3200im68.* .*efr32mg26b421f3200im48.* .*efr32mg26b421f3200im68.* .*efr32mg26b510f3200il136.* .*efr32mg26b510f3200im48.* .*efr32mg26b510f3200im68.* .*efr32mg26b511f3200il136.* .*efr32mg26b511f3200im48.* .*efr32mg26b511f3200im68.* .*efr32mg26b520f3200im48.* .*efr32mg26b520f3200im68.* .*efr32mg26b521f3200im48.* .*efr32mg26b521f3200im68.* .*efr32mg26b610f3200im48.* .*efr32mg26b611f2048im48.* .*mgm240l022rnf.* .*mgm240l022vif.* .*mgm240l022vnf.* .*mgm240la22uif.* .*mgm240la22vif.* .*mgm240ld22vif.* .*mgm240pa22vna.* .*mgm240pa32vna.* .*mgm240pa32vnn.* .*mgm240pb22vna.* .*mgm240pb32vna.* .*mgm240pb32vnn.* .*mgm240sa22vna.* .*mgm240sb22vna.* .*mgm240sd22vna.* .*mgm260pb22vna.* .*mgm260pb32vna.* .*mgm260pb32vnn.* .*mgm260pd22vna.* .*mgm260pd32vna.* .*mgm260pd32vnn.* .*simg301m103lih.* .*simg301m103wih.* .*simg301m104lgh.* .*simg301m104lgl.* .*simg301m104lih.* .*simg301m104lil.* .*simg301m104xil.* .*simg301m113wih.* .*simg301m114kgh.* .*simg301m114kih.* .*simg301m114lgh.* .*simg301m114lih.*"/>
-    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
-    <properties key="toolchainCompatibility" value="gcc"/>
-    <properties key="category" value="Matter Documentation"/>
-    <properties key="quality" value="PRODUCTION"/>
-    <properties key="noBuild" value="true"/>
-    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
-    <properties key="filters" value="Difficulty|Advanced Type|Host Wireless\ Technology|Matter"/>
-  </descriptors>
   <descriptors name="matter_wifi_soc_oven_app_freertos" label="Matter WiFi - SoC Oven FreeRTOS" description="Demonstrates a sample implementation of a Matter over Wi-Fi oven app">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="Matter"/>
     <properties key="solutionReferenceId" value="slc.apps.oven_app.wifi.matter_wifi_soc_oven_app_freertos.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/oven_app/wifi/matter_wifi_soc_oven_app_freertos.slcp"/>
     <properties key="readmeFiles" value="slc/apps/oven_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1094,7 +1211,7 @@
     <properties key="solutionReferenceId" value="slc.apps.oven_app.wifi.matter_wifi_soc_oven_app_freertos.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/oven_app/wifi/matter_wifi_soc_oven_app_freertos.slcw"/>
     <properties key="readmeFiles" value="slc/apps/oven_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1103,6 +1220,73 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Difficulty|Advanced Type|SoC\ Project Wireless\ Technology|Matter"/>
     <properties key="solutionProjects" value="slc.apps.oven_app.wifi.matter_wifi_soc_oven_app_freertos.slcp"/>
+  </descriptors>
+  <descriptors name="matter_thread_soc_performance_test_app_freertos" label="Matter Thread - SoC Performance Test FreeRTOS" description="Demonstrates a sample implementation of a Matter over Thread performance test app">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.apps.performance_test_app.thread.matter_thread_soc_performance_test_app_freertos.slcp"/>
+    <properties key="projectFilePaths" value="slc/apps/performance_test_app/thread/matter_thread_soc_performance_test_app_freertos.slcp"/>
+    <properties key="readmeFiles" value="slc/apps/performance_test_app/thread/README.md"/>
+    <properties key="boardCompatibility" value="brd1019a brd2601b brd2608a brd2703a brd2704a brd2709a brd2719a brd4116a brd4117a brd4118a brd4120a brd4121a brd4186c brd4187c brd4316a brd4317a brd4318a brd4319a brd4337a brd4350a brd4351a brd4407a brd4408a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*efr32mg24a010f1536gm40.* .*efr32mg24a010f1536gm48.* .*efr32mg24a010f1536im40.* .*efr32mg24a010f1536im48.* .*efr32mg24a020f1536gm40.* .*efr32mg24a020f1536gm48.* .*efr32mg24a020f1536im40.* .*efr32mg24a020f1536im48.* .*efr32mg24a110f1536gm48.* .*efr32mg24a111f1536gm48.* .*efr32mg24a120f1536gm48.* .*efr32mg24a121f1536gm48.* .*efr32mg24a410f1536im40.* .*efr32mg24a410f1536im48.* .*efr32mg24a420f1536im40.* .*efr32mg24a420f1536im48.* .*efr32mg24a610f1536im40.* .*efr32mg24a620f1536im40.* .*efr32mg24b010f1536im40.* .*efr32mg24b010f1536im48.* .*efr32mg24b020f1536im40.* .*efr32mg24b020f1536im48.* .*efr32mg24b110f1536gm48.* .*efr32mg24b110f1536im48.* .*efr32mg24b120f1536im48.* .*efr32mg24b210f1536im40.* .*efr32mg24b210f1536im48.* .*efr32mg24b220f1536im48.* .*efr32mg24b310f1536im48.* .*efr32mg24b610f1536im40.* .*efr32mg26b211f2048im68.* .*efr32mg26b211f3200im48.* .*efr32mg26b221f2048im68.* .*efr32mg26b221f3200im48.* .*efr32mg26b311f3200il136.* .*efr32mg26b410f3200im48.* .*efr32mg26b410f3200im68.* .*efr32mg26b411f3200im48.* .*efr32mg26b411f3200im68.* .*efr32mg26b420f3200im48.* .*efr32mg26b420f3200im68.* .*efr32mg26b421f3200im48.* .*efr32mg26b421f3200im68.* .*efr32mg26b510f3200il136.* .*efr32mg26b510f3200im48.* .*efr32mg26b510f3200im68.* .*efr32mg26b511f3200il136.* .*efr32mg26b511f3200im48.* .*efr32mg26b511f3200im68.* .*efr32mg26b520f3200im48.* .*efr32mg26b520f3200im68.* .*efr32mg26b521f3200im48.* .*efr32mg26b521f3200im68.* .*efr32mg26b610f3200im48.* .*efr32mg26b611f2048im48.* .*mgm240l022rnf.* .*mgm240l022vif.* .*mgm240l022vnf.* .*mgm240la22uif.* .*mgm240la22vif.* .*mgm240ld22vif.* .*mgm240pa22vna.* .*mgm240pa32vna.* .*mgm240pa32vnn.* .*mgm240pb22vna.* .*mgm240pb32vna.* .*mgm240pb32vnn.* .*mgm240sa22vna.* .*mgm240sb22vna.* .*mgm240sd22vna.* .*mgm260pb22vna.* .*mgm260pb32vna.* .*mgm260pb32vnn.* .*mgm260pd22vna.* .*mgm260pd32vna.* .*mgm260pd32vnn.* .*simg301m103lih.* .*simg301m103wih.* .*simg301m104lgh.* .*simg301m104lgl.* .*simg301m104lih.* .*simg301m104lil.* .*simg301m104xil.* .*simg301m113wih.* .*simg301m114kgh.* .*simg301m114kih.* .*simg301m114lgh.* .*simg301m114lih.*"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="INTERNAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Difficulty|Advanced Type|SoC\ Project Wireless\ Technology|Matter"/>
+    <properties key="core.hidden" value="true"/>
+  </descriptors>
+  <descriptors name="matter_thread_soc_performance_test_app_series_2_freertos" label="Matter Thread - SoC Performance Test with external Bootloader FreeRTOS" description="Demonstrates a sample implementation of a Matter over Thread performance test app with external bootloader">
+    <properties key="namespace" value="template.solution.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.apps.performance_test_app.thread.matter_thread_soc_performance_test_app_series_2_freertos.slcw"/>
+    <properties key="projectFilePaths" value="slc/apps/performance_test_app/thread/matter_thread_soc_performance_test_app_series_2_freertos.slcw"/>
+    <properties key="readmeFiles" value="slc/apps/performance_test_app/thread/README.md"/>
+    <properties key="boardCompatibility" value="brd2601b brd2608a brd4116a brd4117a brd4118a brd4120a brd4121a brd4186c brd4187c brd4316a brd4317a brd4318a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*efr32mg24a010f1536gm40.* .*efr32mg24a010f1536gm48.* .*efr32mg24a010f1536im40.* .*efr32mg24a010f1536im48.* .*efr32mg24a020f1536gm40.* .*efr32mg24a020f1536gm48.* .*efr32mg24a020f1536im40.* .*efr32mg24a020f1536im48.* .*efr32mg24a110f1536gm48.* .*efr32mg24a111f1536gm48.* .*efr32mg24a120f1536gm48.* .*efr32mg24a121f1536gm48.* .*efr32mg24a410f1536im40.* .*efr32mg24a410f1536im48.* .*efr32mg24a420f1536im40.* .*efr32mg24a420f1536im48.* .*efr32mg24a610f1536im40.* .*efr32mg24a620f1536im40.* .*efr32mg24b010f1536im40.* .*efr32mg24b010f1536im48.* .*efr32mg24b020f1536im40.* .*efr32mg24b020f1536im48.* .*efr32mg24b110f1536gm48.* .*efr32mg24b110f1536im48.* .*efr32mg24b120f1536im48.* .*efr32mg24b210f1536im40.* .*efr32mg24b210f1536im48.* .*efr32mg24b220f1536im48.* .*efr32mg24b310f1536im48.* .*efr32mg24b610f1536im40.* .*efr32mg26b211f2048im68.* .*efr32mg26b211f3200im48.* .*efr32mg26b221f2048im68.* .*efr32mg26b221f3200im48.* .*efr32mg26b311f3200il136.* .*efr32mg26b410f3200im48.* .*efr32mg26b410f3200im68.* .*efr32mg26b411f3200im48.* .*efr32mg26b411f3200im68.* .*efr32mg26b420f3200im48.* .*efr32mg26b420f3200im68.* .*efr32mg26b421f3200im48.* .*efr32mg26b421f3200im68.* .*efr32mg26b510f3200il136.* .*efr32mg26b510f3200im48.* .*efr32mg26b510f3200im68.* .*efr32mg26b511f3200il136.* .*efr32mg26b511f3200im48.* .*efr32mg26b511f3200im68.* .*efr32mg26b520f3200im48.* .*efr32mg26b520f3200im68.* .*efr32mg26b521f3200im48.* .*efr32mg26b521f3200im68.* .*efr32mg26b610f3200im48.* .*efr32mg26b611f2048im48.* .*mgm240l022rnf.* .*mgm240l022vif.* .*mgm240l022vnf.* .*mgm240la22uif.* .*mgm240la22vif.* .*mgm240ld22vif.* .*mgm240pa22vna.* .*mgm240pa32vna.* .*mgm240pa32vnn.* .*mgm240pb22vna.* .*mgm240pb32vna.* .*mgm240pb32vnn.* .*mgm240sa22vna.* .*mgm240sb22vna.* .*mgm240sd22vna.* .*mgm260pb22vna.* .*mgm260pb32vna.* .*mgm260pb32vnn.* .*mgm260pd22vna.* .*mgm260pd32vna.* .*mgm260pd32vnn.*"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="INTERNAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Difficulty|Advanced Type|SoC\ Project Wireless\ Technology|Matter"/>
+    <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader_storage_external_single_series_2.matter_bootloader_external_series_2.slcp slc.apps.performance_test_app.thread.matter_thread_soc_performance_test_app_freertos.slcp"/>
+    <properties key="core.hidden" value="true"/>
+  </descriptors>
+  <descriptors name="matter_thread_soc_performance_test_app_series_2_internal_freertos" label="Matter Thread - SoC Performance Test with internal Bootloader FreeRTOS" description="Demonstrates a sample implementation of a Matter over Thread performance test app with internal bootloader">
+    <properties key="namespace" value="template.solution.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.apps.performance_test_app.thread.matter_thread_soc_performance_test_app_series_2_internal_freertos.slcw"/>
+    <properties key="projectFilePaths" value="slc/apps/performance_test_app/thread/matter_thread_soc_performance_test_app_series_2_internal_freertos.slcw"/>
+    <properties key="readmeFiles" value="slc/apps/performance_test_app/thread/README.md"/>
+    <properties key="boardCompatibility" value="brd2703a brd2704a brd2709a brd4319a brd4337a brd4350a brd4351a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*efr32mg24a010f1536gm40.* .*efr32mg24a010f1536gm48.* .*efr32mg24a010f1536im40.* .*efr32mg24a010f1536im48.* .*efr32mg24a020f1536gm40.* .*efr32mg24a020f1536gm48.* .*efr32mg24a020f1536im40.* .*efr32mg24a020f1536im48.* .*efr32mg24a110f1536gm48.* .*efr32mg24a111f1536gm48.* .*efr32mg24a120f1536gm48.* .*efr32mg24a121f1536gm48.* .*efr32mg24a410f1536im40.* .*efr32mg24a410f1536im48.* .*efr32mg24a420f1536im40.* .*efr32mg24a420f1536im48.* .*efr32mg24a610f1536im40.* .*efr32mg24a620f1536im40.* .*efr32mg24b010f1536im40.* .*efr32mg24b010f1536im48.* .*efr32mg24b020f1536im40.* .*efr32mg24b020f1536im48.* .*efr32mg24b110f1536gm48.* .*efr32mg24b110f1536im48.* .*efr32mg24b120f1536im48.* .*efr32mg24b210f1536im40.* .*efr32mg24b210f1536im48.* .*efr32mg24b220f1536im48.* .*efr32mg24b310f1536im48.* .*efr32mg24b610f1536im40.* .*efr32mg26b211f2048im68.* .*efr32mg26b211f3200im48.* .*efr32mg26b221f2048im68.* .*efr32mg26b221f3200im48.* .*efr32mg26b311f3200il136.* .*efr32mg26b410f3200im48.* .*efr32mg26b410f3200im68.* .*efr32mg26b411f3200im48.* .*efr32mg26b411f3200im68.* .*efr32mg26b420f3200im48.* .*efr32mg26b420f3200im68.* .*efr32mg26b421f3200im48.* .*efr32mg26b421f3200im68.* .*efr32mg26b510f3200il136.* .*efr32mg26b510f3200im48.* .*efr32mg26b510f3200im68.* .*efr32mg26b511f3200il136.* .*efr32mg26b511f3200im48.* .*efr32mg26b511f3200im68.* .*efr32mg26b520f3200im48.* .*efr32mg26b520f3200im68.* .*efr32mg26b521f3200im48.* .*efr32mg26b521f3200im68.* .*efr32mg26b610f3200im48.* .*efr32mg26b611f2048im48.* .*mgm240l022rnf.* .*mgm240l022vif.* .*mgm240l022vnf.* .*mgm240la22uif.* .*mgm240la22vif.* .*mgm240ld22vif.* .*mgm240pa22vna.* .*mgm240pa32vna.* .*mgm240pa32vnn.* .*mgm240pb22vna.* .*mgm240pb32vna.* .*mgm240pb32vnn.* .*mgm240sa22vna.* .*mgm240sb22vna.* .*mgm240sd22vna.* .*mgm260pb22vna.* .*mgm260pb32vna.* .*mgm260pb32vnn.* .*mgm260pd22vna.* .*mgm260pd32vna.* .*mgm260pd32vnn.*"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="INTERNAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Difficulty|Advanced Type|SoC\ Project Wireless\ Technology|Matter"/>
+    <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader_storage_internal_single_series_2.matter_bootloader_internal_series_2.slcp slc.apps.performance_test_app.thread.matter_thread_soc_performance_test_app_freertos.slcp"/>
+    <properties key="core.hidden" value="true"/>
+  </descriptors>
+  <descriptors name="matter_thread_soc_performance_test_app_series_3_freertos" label="Matter Thread - SoC Performance Test with internal Bootloader FreeRTOS" description="Demonstrates a sample implementation of a Matter over Thread performance test app with internal bootloader">
+    <properties key="namespace" value="template.solution.uc"/>
+    <properties key="keywords" value="Matter"/>
+    <properties key="solutionReferenceId" value="slc.apps.performance_test_app.thread.matter_thread_soc_performance_test_app_series_3_freertos.slcw"/>
+    <properties key="projectFilePaths" value="slc/apps/performance_test_app/thread/matter_thread_soc_performance_test_app_series_3_freertos.slcw"/>
+    <properties key="readmeFiles" value="slc/apps/performance_test_app/thread/README.md"/>
+    <properties key="boardCompatibility" value="brd1019a brd2719a brd4407a brd4408a com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*simg301m103lih.* .*simg301m103wih.* .*simg301m104lgh.* .*simg301m104lgl.* .*simg301m104lih.* .*simg301m104lil.* .*simg301m104xil.* .*simg301m113wih.* .*simg301m114kgh.* .*simg301m114kih.* .*simg301m114lgh.* .*simg301m114lih.*"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="INTERNAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Difficulty|Advanced Type|SoC\ Project Wireless\ Technology|Matter"/>
+    <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader_storage_single_4096k_series_3.matter_bootloader_internal_series_3.slcp slc.apps.performance_test_app.thread.matter_thread_soc_performance_test_app_freertos.slcp"/>
+    <properties key="core.hidden" value="true"/>
   </descriptors>
   <descriptors name="matter_thread_soc_platform_template_freertos" label="Matter Thread - SoC Platform Template FreeRTOS" description="Demonstrates a sample implementation of a Matter over Thread platform template app">
     <properties key="namespace" value="template.uc"/>
@@ -1174,7 +1358,7 @@
     <properties key="solutionReferenceId" value="slc.apps.platform_template.wifi.matter_wifi_soc_platform_template_freertos.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/platform_template/wifi/matter_wifi_soc_platform_template_freertos.slcp"/>
     <properties key="readmeFiles" value="slc/apps/platform_template/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1190,7 +1374,7 @@
     <properties key="solutionReferenceId" value="slc.apps.platform_template.wifi.matter_wifi_soc_platform_template_freertos.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/platform_template/wifi/matter_wifi_soc_platform_template_freertos.slcw"/>
     <properties key="readmeFiles" value="slc/apps/platform_template/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1270,7 +1454,7 @@
     <properties key="solutionReferenceId" value="slc.apps.rangehood_app.wifi.matter_wifi_soc_rangehood_app_freertos.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/rangehood_app/wifi/matter_wifi_soc_rangehood_app_freertos.slcp"/>
     <properties key="readmeFiles" value="slc/apps/rangehood_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1286,7 +1470,7 @@
     <properties key="solutionReferenceId" value="slc.apps.rangehood_app.wifi.matter_wifi_soc_rangehood_app_freertos.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/rangehood_app/wifi/matter_wifi_soc_rangehood_app_freertos.slcw"/>
     <properties key="readmeFiles" value="slc/apps/rangehood_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1366,7 +1550,7 @@
     <properties key="solutionReferenceId" value="slc.apps.refrigerator_app.wifi.matter_wifi_soc_refrigerator_app_freertos.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/refrigerator_app/wifi/matter_wifi_soc_refrigerator_app_freertos.slcp"/>
     <properties key="readmeFiles" value="slc/apps/refrigerator_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1382,7 +1566,7 @@
     <properties key="solutionReferenceId" value="slc.apps.refrigerator_app.wifi.matter_wifi_soc_refrigerator_app_freertos.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/refrigerator_app/wifi/matter_wifi_soc_refrigerator_app_freertos.slcw"/>
     <properties key="readmeFiles" value="slc/apps/refrigerator_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1494,7 +1678,7 @@
     <properties key="solutionReferenceId" value="slc.apps.thermostat.wifi.matter_wifi_soc_thermostat_freertos.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/thermostat/wifi/matter_wifi_soc_thermostat_freertos.slcp"/>
     <properties key="readmeFiles" value="slc/apps/thermostat/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1510,7 +1694,7 @@
     <properties key="solutionReferenceId" value="slc.apps.thermostat.wifi.matter_wifi_soc_thermostat_freertos.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/thermostat/wifi/matter_wifi_soc_thermostat_freertos.slcw"/>
     <properties key="readmeFiles" value="slc/apps/thermostat/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1654,7 +1838,7 @@
     <properties key="solutionReferenceId" value="slc.apps.window_app.wifi.matter_wifi_soc_window_app_freertos.slcp"/>
     <properties key="projectFilePaths" value="slc/apps/window_app/wifi/matter_wifi_soc_window_app_freertos.slcp"/>
     <properties key="readmeFiles" value="slc/apps/window_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1670,7 +1854,7 @@
     <properties key="solutionReferenceId" value="slc.apps.window_app.wifi.matter_wifi_soc_window_app_freertos.slcw"/>
     <properties key="projectFilePaths" value="slc/apps/window_app/wifi/matter_wifi_soc_window_app_freertos.slcw"/>
     <properties key="readmeFiles" value="slc/apps/window_app/wifi/README.md"/>
-    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c com.silabs.board.none"/>
+    <properties key="boardCompatibility" value="brd2605a brd2708a brd2911a brd4338a brd4342a brd4343a brd4343c brd4343s com.silabs.board.none"/>
     <properties key="partCompatibility" value=".*siwg917m100mgtba.* .*siwg917m100xntba.* .*siwg917m111mgtba.* .*siwg917m111xgtba.* .*siwg917y111mgab.* .*siwg917y111mgaba.* .*siwg917y111mgaxa.* .*siwg917y111mgnba.* .*siwg917y111mgnxa.* .*siwg917y121mgaba.* .*siwg917y121mgaxa.* .*siwg917y121mgnb.* .*siwg917y121mgnba.* .*siwg917y121mgnxa.*"/>
     <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
     <properties key="toolchainCompatibility" value="gcc"/>
@@ -1694,6 +1878,23 @@
     <properties key="quality" value="PRODUCTION"/>
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Difficulty|Advanced Type|SoC\ Project Wireless\ Technology|Matter"/>
+    <properties key="core.hidden" value="true"/>
+  </descriptors>
+  <descriptors name="matter_thread_soc_zigbee_light_series_2_freertos" label="Matter Thread - SoC Zigbee Light with external Bootloader FreeRTOS" description="Demonstrates a sample implementation of a Matter and Zigbee multiprotocol lighting app over Thread with external bootloader">
+    <properties key="namespace" value="template.solution.uc"/>
+    <properties key="keywords" value="Matter Zigbee"/>
+    <properties key="solutionReferenceId" value="slc.apps.zigbee_light.thread.matter_thread_soc_zigbee_light_series_2_freertos.slcw"/>
+    <properties key="projectFilePaths" value="slc/apps/zigbee_light/thread/matter_thread_soc_zigbee_light_series_2_freertos.slcw"/>
+    <properties key="readmeFiles" value="slc/apps/zigbee_light/thread/README.md"/>
+    <properties key="boardCompatibility" value="brd2601b brd2608a brd4116a brd4117a brd4118a brd4120a brd4121a brd4186c brd4187c com.silabs.board.none"/>
+    <properties key="partCompatibility" value=".*efr32mg24a010f1536gm40.* .*efr32mg24a010f1536gm48.* .*efr32mg24a010f1536im40.* .*efr32mg24a010f1536im48.* .*efr32mg24a020f1536gm40.* .*efr32mg24a020f1536gm48.* .*efr32mg24a020f1536im40.* .*efr32mg24a020f1536im48.* .*efr32mg24a110f1536gm48.* .*efr32mg24a111f1536gm48.* .*efr32mg24a120f1536gm48.* .*efr32mg24a121f1536gm48.* .*efr32mg24a410f1536im40.* .*efr32mg24a410f1536im48.* .*efr32mg24a420f1536im40.* .*efr32mg24a420f1536im48.* .*efr32mg24a610f1536im40.* .*efr32mg24a620f1536im40.* .*efr32mg24b010f1536im40.* .*efr32mg24b010f1536im48.* .*efr32mg24b020f1536im40.* .*efr32mg24b020f1536im48.* .*efr32mg24b110f1536gm48.* .*efr32mg24b110f1536im48.* .*efr32mg24b120f1536im48.* .*efr32mg24b210f1536im40.* .*efr32mg24b210f1536im48.* .*efr32mg24b220f1536im48.* .*efr32mg24b310f1536im48.* .*efr32mg24b610f1536im40.* .*efr32mg26b211f2048im68.* .*efr32mg26b211f3200im48.* .*efr32mg26b221f2048im68.* .*efr32mg26b221f3200im48.* .*efr32mg26b311f3200il136.* .*efr32mg26b410f3200im48.* .*efr32mg26b410f3200im68.* .*efr32mg26b411f3200im48.* .*efr32mg26b411f3200im68.* .*efr32mg26b420f3200im48.* .*efr32mg26b420f3200im68.* .*efr32mg26b421f3200im48.* .*efr32mg26b421f3200im68.* .*efr32mg26b510f3200il136.* .*efr32mg26b510f3200im48.* .*efr32mg26b510f3200im68.* .*efr32mg26b511f3200il136.* .*efr32mg26b511f3200im48.* .*efr32mg26b511f3200im68.* .*efr32mg26b520f3200im48.* .*efr32mg26b520f3200im68.* .*efr32mg26b521f3200im48.* .*efr32mg26b521f3200im68.* .*efr32mg26b610f3200im48.* .*efr32mg26b611f2048im48.* .*mgm260pb22vna.* .*mgm260pb32vna.* .*mgm260pb32vnn.* .*mgm260pd22vna.* .*mgm260pd32vna.* .*mgm260pd32vnn.*"/>
+    <properties key="ideCompatibility" value="generic-template makefile-ide simplicity-ide visual-studio-code visual-studio-code-cmake"/>
+    <properties key="toolchainCompatibility" value="gcc"/>
+    <properties key="category" value="Matter Application"/>
+    <properties key="quality" value="PRODUCTION"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Difficulty|Advanced Type|SoC\ Project Wireless\ Technology|Matter"/>
+    <properties key="solutionProjects" value="slc.apps.bootloaders.bootloader_storage_external_single_series_2.matter_bootloader_external_series_2.slcp slc.apps.zigbee_light.thread.matter_thread_soc_zigbee_light_freertos.slcp"/>
     <properties key="core.hidden" value="true"/>
   </descriptors>
   <descriptors name="matter_thread_soc_zigbee_light_series_2_internal_freertos" label="Matter Thread - SoC Zigbee Light with internal Bootloader FreeRTOS" description="Demonstrates a sample implementation of a Matter and Zigbee multiprotocol lighting app over Thread with internal bootloader">

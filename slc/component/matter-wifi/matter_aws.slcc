@@ -26,6 +26,11 @@ requires:
   - name: mbedtls_ecc_secp256r1
   - name: mbedtls_gcm
   - name: mbedtls_debug
+  - name: matter_ecdsa_deterministic_stub
+    condition: [matter_provision]
+
+conflicts:
+  - name: matter_ecdsa_deterministic_default
 
 define:
   - name: SL_MATTER_ENABLE_AWS

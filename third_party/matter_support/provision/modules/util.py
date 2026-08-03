@@ -78,6 +78,79 @@ class Paths:
         s = path and path.strip().strip('"') or ''
         return os.path.normpath(s)
 
+    def _normalizeDir(self, path):
+        if not path:
+            return None
+        path = os.path.abspath(os.path.normpath(str(path).strip().strip('"')))
+        return path if os.path.isdir(path) else None
+
+    # Require an explicit override to be an existing directory.
+    # Returns None when unset/blank so callers can fall back. A non-empty
+    # invalid path fails immediately (no silent fallback to env/SLT).
+    def _explicitDir(self, path, label):
+        if path is None:
+            return None
+        raw = str(path).strip().strip('"')
+        if not raw:
+            return None
+        found = self._normalizeDir(raw)
+        if not found:
+            fail(
+                'Invalid {}: {!r} (path must exist and be a directory)'.format(
+                    label, path),
+                self)
+        return found
+
+    # Return the first environment variable that points at an existing directory.
+    def _environmentDir(self, *names):
+        for name in names:
+            found = self._normalizeDir(os.environ.get(name))
+            if found:
+                return found
+        return None
+
+    def _sltSilabsDir(self, name):
+        return self.root(os.path.join(
+            'third_party', 'matter_sdk', 'third_party', 'silabs', name))
+
+    # Resolve Simplicity SDK root.
+    # Priority:
+    #   1. Explicit override (CLI argument) — must be valid if set
+    #   2. GSDK_ROOT or SISDK_ROOT (chip-build-efr32 / local exports)
+    #   3. SLT install-packages symlink under matter_sdk/third_party/silabs/
+    def siSdk(self, override=None):
+        path = (
+            self._explicitDir(override, 'Simplicity SDK path (--sisdk / -s)')
+            or self._environmentDir('GSDK_ROOT', 'SISDK_ROOT')
+            or self._normalizeDir(self._sltSilabsDir('simplicity_sdk'))
+        )
+        if not path:
+            fail(
+                'Missing Simplicity SDK (pass --sisdk / -s, set GSDK_ROOT or '
+                'SISDK_ROOT, or run '
+                'third_party/matter_sdk/scripts/setup/silabs/install-packages.py)',
+                self)
+        return path
+
+    # Resolve WiSeConnect SDK root.
+    # Priority:
+    #   1. Explicit override (CLI argument) — must be valid if set
+    #   2. WIFI_SDK_ROOT (chip-build-efr32 / local exports)
+    #   3. SLT install-packages symlink under matter_sdk/third_party/silabs/
+    def wifiSdk(self, override=None):
+        path = (
+            self._explicitDir(override, 'WiSeConnect SDK path (--wifi-sdk)')
+            or self._environmentDir('WIFI_SDK_ROOT')
+            or self._normalizeDir(self._sltSilabsDir('wifi_sdk'))
+        )
+        if not path:
+            fail(
+                'Missing WiSeConnect SDK (pass --wifi-sdk, set WIFI_SDK_ROOT, '
+                'or run '
+                'third_party/matter_sdk/scripts/setup/silabs/install-packages.py)',
+                self)
+        return path
+
 
 class File:
 

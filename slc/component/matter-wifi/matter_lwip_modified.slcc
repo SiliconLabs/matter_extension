@@ -19,7 +19,6 @@ provides:
 include:
   - path: third_party/matter_sdk/src/lwip/silabs
     file_list:
-      - path: lwipopts.h
       - path: lwipopts-siwx.h
       - path: arch/cc.h
       - path: arch/perf.h

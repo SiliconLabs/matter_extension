@@ -15,7 +15,7 @@ Matter performance testing via "perf ping" and "perf mx" Matter Shell commands. 
 
 This example enables Matter performance testing on Silicon Labs EFR32 SoC over Thread. The **perf ping** and **perf mx** Matter Shell CLI commands send the EmptyCommand to the custom Performance Testing cluster on Endpoint 1 of the destination node. For ping, the command is sent to a destination NodeId and the response is the ping reply. For multicast, the command is sent to a groupId with no response expected. The node issuing commands is the "sender", the node processing the command is the "receiver."
 
-The device is commissioned over BLE. Credentials are then provided so the device joins the Thread network. Enable the functionality by installing the Performance Testing Utilities and CLI component and adding the custom Performance Testing cluster (see [Defining a Custom Cluster](https://docs.silabs.com/matter/2.9.0/matter-references/matter-zap#defining-a-custom-cluster)), cluster XML: [`performance-test-cluster.xml`](https://github.com/SiliconLabsSoftware/matter_extension/blob/v2.9.0/slc/apps/performance-test-app/thread/performance-test-cluster.xml). For multicast, enable the Groups cluster server on Endpoint 1 in ZAP.
+The device is commissioned over BLE. Credentials are then provided so the device joins the Thread network. Enable the functionality by installing the Performance Testing Utilities and CLI component and adding the custom Performance Testing cluster (see [Defining a Custom Cluster](https://docs.silabs.com/matter/2.9.1/matter-references/matter-zap#defining-a-custom-cluster)), cluster XML: [`performance-test-cluster.xml`](https://github.com/SiliconLabsSoftware/matter_extension/blob/v2.9.1/slc/apps/performance-test-app/thread/performance-test-cluster.xml). For multicast, enable the Groups cluster server on Endpoint 1 in ZAP.
 
 **Commands:** `perf ping <count> <fabricIndex> <destNodeId> <timeout_ms>`,`perf mx <fabricIndex> <destGroupId> <sequence number>`.
 
@@ -23,11 +23,11 @@ The device is commissioned over BLE. Credentials are then provided so the device
 
 ### HW Requirements
 
-For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.0/matter-overview/#hardware-requirements) documentation.
+For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.1/matter-overview/#hardware-requirements) documentation.
 
 ### SW Requirements
 
-For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.0/matter-overview/#software-requirements) documentation.
+For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.1/matter-overview/#software-requirements) documentation.
 
 ## Steps to Run Demo
 
@@ -35,16 +35,16 @@ For a full list of software requirements, see [Matter Software Requirements](htt
 
 If building a solution, the bootloader is included and flashed as part of the combined artifact.
 
-If building the sample application on its own, a bootloader must be flashed separately before the application. Pre-built bootloader binaries for all supported devices are available at [Matter Bootloader Binaries](https://docs.silabs.com/matter/2.9.0/matter-prerequisites/matter-artifacts#matter-bootloader-binaries).
+If building the sample application on its own, a bootloader must be flashed separately before the application. Pre-built bootloader binaries for all supported devices are available at [Matter Bootloader Binaries](https://docs.silabs.com/matter/2.9.1/matter-prerequisites/matter-artifacts#matter-bootloader-binaries).
 
 ### Configuration and Setup
 
 **Enabling the functionality**
 
-- **Simplicity Studio:** Create a Matter over Thread project. Install the Performance Testing Utilities component under _Silicon Labs Matter > Platform_. In ZAP (Configuration Tools > Zigbee Cluster Configurator) enable the Groups cluster server on Endpoint 1 (required for multicast). Add the custom Performance Testing cluster per [Defining a Custom Cluster](https://docs.silabs.com/matter/2.9.0/matter-references/matter-zap#defining-a-custom-cluster), cluster XML: [`performance-test-cluster.xml`](https://github.com/SiliconLabsSoftware/matter_extension/blob/v2.9.0/slc/apps/performance-test-app/thread/performance-test-cluster.xml). Build, the same binary can act as sender and receiver.
+- **Simplicity Studio:** Create a Matter over Thread project. Install the Performance Testing Utilities component under _Silicon Labs Matter > Platform_. In ZAP (Configuration Tools > Zigbee Cluster Configurator) enable the Groups cluster server on Endpoint 1 (required for multicast). Add the custom Performance Testing cluster per [Defining a Custom Cluster](https://docs.silabs.com/matter/2.9.1/matter-references/matter-zap#defining-a-custom-cluster), cluster XML: [`performance-test-cluster.xml`](https://github.com/SiliconLabsSoftware/matter_extension/blob/v2.9.1/slc/apps/performance-test-app/thread/performance-test-cluster.xml). Build, the same binary can act as sender and receiver.
 - **SLC CLI:** In a Thread sample app, edit the ZAP file (see project .slcp), set Groups server enabled on the  endpoint 1, add the custom Performance Testing cluster as above, then run `slc generate` with `--with "matter_performance_testing"`. The same binary can act as sender and receiver.
 
-See [Custom Matter Device Development](https://docs.silabs.com/matter/2.9.0/matter-references/custom-matter-device#custom-matter-device-development) for customization.
+See [Custom Matter Device Development](https://docs.silabs.com/matter/2.9.1/matter-references/custom-matter-device#custom-matter-device-development) for customization.
 
 ### Steps for Execution
 
@@ -87,8 +87,8 @@ This app focuses on performance-test CLI commands, button/LED behavior follows t
 
 ## Resources
 
-- [Silicon Labs Matter over Thread Documentation](https://docs.silabs.com/matter/2.9.0/matter-thread)
-- [Matter Hub Setup](https://docs.silabs.com/matter/2.9.0/matter-thread/raspi-img)
+- [Silicon Labs Matter over Thread Documentation](https://docs.silabs.com/matter/2.9.1/matter-thread)
+- [Matter Hub Setup](https://docs.silabs.com/matter/2.9.1/matter-thread/raspi-img)
 - [chip-tool README](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
 
 ## Report Bugs & Get Support

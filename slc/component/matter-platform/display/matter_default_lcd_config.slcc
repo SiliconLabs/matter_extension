@@ -29,6 +29,9 @@ requires:
   - name: matter_lcd_917SOC
     condition:
       - brd4343c
+  - name: matter_lcd_917SOC
+    condition:
+      - brd4343s
 
 # Keep this requirement under matter_lcd_917SOC's
   - name: matter_qr_code
