@@ -38,20 +38,20 @@ Sample endpoint configuration for Closure: see [Closure Sample Endpoint](/slc/im
 
 ### HW Requirements
 
-For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.1/matter-overview/#hardware-requirements) documentation.
+For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.2/matter-overview/#hardware-requirements) documentation.
 
 ### SW Requirements
 
-For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.1/matter-overview/#software-requirements) documentation.
+For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.2/matter-overview/#software-requirements) documentation.
 
 ## Steps to Run Demo
 
 ### Configuration and Setup
 
 This sample app works out of the box with no additional configuration required. To customize the device, see the
-[Custom Matter Device Development](https://docs.silabs.com/matter/2.9.1/matter-references/custom-matter-device#custom-matter-device-development) guide.
+[Custom Matter Device Development](https://docs.silabs.com/matter/2.9.2/matter-references/custom-matter-device#custom-matter-device-development) guide.
 
-**Region code (SiWx917 Wi-Fi):** For Wi-Fi configurations, the region code can be set in this [file](https://github.com/SiliconLabsSoftware/matter_sdk/blob/v2.9.1/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp). The available region codes can be found [here](https://github.com/SiliconLabs/wiseconnect/blob/v4.1.1-content-for-docs/components/protocol/wifi/inc/sl_wifi_constants.h#L739).
+**Region code (SiWx917 Wi-Fi):** For Wi-Fi configurations, the region code can be set in this [file](https://github.com/SiliconLabsSoftware/matter_sdk/blob/v2.9.2/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp). The available region codes can be found [here](https://github.com/SiliconLabs/wiseconnect/blob/v4.1.2-content-for-docs/components/protocol/wifi/inc/sl_wifi_constants.h#L739).
 
 ### Sample Endpoint Configuration for Closure
 
@@ -66,7 +66,7 @@ This sample app works out of the box with no additional configuration required. 
 
    **chip-tool (standalone or pre-built):** The pre-built chip-tool instance ships
    with the Matter Hub image. More information on using the Matter Hub is in the
-   [Silicon Labs Matter Hub Documentation](https://docs.silabs.com/matter/2.9.1/matter-thread/raspi-img).
+   [Silicon Labs Matter Hub Documentation](https://docs.silabs.com/matter/2.9.2/matter-thread/raspi-img).
    ```shell
    chip-tool pairing ble-wifi 1 <SSID> <PSK> 20202021 3840
    ```
@@ -107,7 +107,7 @@ This sample app works out of the box with no additional configuration required. 
 
 ## Extending Base App Implementation
 
-See [Extending Base App Implementation](https://docs.silabs.com/matter/2.9.1/matter-references/custom-matter-device#extending-base-app-implementation)
+See [Extending Base App Implementation](https://docs.silabs.com/matter/2.9.2/matter-references/custom-matter-device#extending-base-app-implementation)
 for `CustomerAppTask` customization, CRTP `*Impl()` hooks, and data model
 callback routing. Per-example AppTask API references:
 `autogen/AppTaskImpl.h`, `autogen/AppTask.cpp`.
@@ -140,7 +140,7 @@ so shared `closure-common/` code can reach your leaf. Override the matching
 ### DataModelCallbacks and CustomerAppManager
 
 In addition to the general data model callback routing described in
-[Extending Base App Implementation](https://docs.silabs.com/matter/2.9.1/matter-references/custom-matter-device#datamodelcallbacks-and-customerapptask),
+[Extending Base App Implementation](https://docs.silabs.com/matter/2.9.2/matter-references/custom-matter-device#datamodelcallbacks-and-customerapptask),
 this app forwards closure-specific cluster attribute-changed callbacks
 (`MatterClosureControlClusterServerAttributeChangedCallback`,
 `MatterClosureDimensionClusterServerAttributeChangedCallback`) from `AppTask.cpp`
@@ -270,7 +270,7 @@ chip::Protocols::InteractionModel::Status CustomerAppManager::OnMoveToCommandImp
 
 This example has a ClosureManager CRTP chain in addition to the AppTask chain
 documented in
-[Extending Base App Implementation](https://docs.silabs.com/matter/2.9.1/matter-references/custom-matter-device#override-api-reference):
+[Extending Base App Implementation](https://docs.silabs.com/matter/2.9.2/matter-references/custom-matter-device#override-api-reference):
 
 | File | Purpose |
 |------|--------|
@@ -297,8 +297,8 @@ documented in
 
 ## Resources
 
-- [Silicon Labs Matter over Wi-Fi Documentation](https://docs.silabs.com/matter/2.9.1/matter-wifi)
-- [Matter Hub Setup](https://docs.silabs.com/matter/2.9.1/matter-thread/raspi-img)
+- [Silicon Labs Matter over Wi-Fi Documentation](https://docs.silabs.com/matter/2.9.2/matter-wifi)
+- [Matter Hub Setup](https://docs.silabs.com/matter/2.9.2/matter-thread/raspi-img)
 - [chip-tool README](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
 
 ## Report Bugs & Get Support

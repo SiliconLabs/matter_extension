@@ -33,7 +33,9 @@
 #define SL_ICD_SUPPORTED_CLIENTS_PER_FABRIC 2
 
 // <o SL_TRANSPORT_IDLE_INTERVAL>  Transport Idle Interval (ms)
-// <i> Controllers wait this long before retrying communication with sleeping device
+// <i> ICD slow poll interval (Thread SED / Wi-Fi LI) while the device is in idle mode
+// <i> For LIT devices, set this to SL_IDLE_MODE_DURATION_S * 1000
+// <i> For SIT devices, this must be <= 15000
 // <i> Default: 15000 milliseconds (15 seconds)
 #define SL_TRANSPORT_IDLE_INTERVAL 15000
 

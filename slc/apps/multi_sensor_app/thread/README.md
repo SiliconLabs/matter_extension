@@ -30,11 +30,11 @@ starting point for building production products on the Silicon Labs platform.
 
 ### HW Requirements
 
-For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.1/matter-overview/#hardware-requirements) documentation.
+For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.2/matter-overview/#hardware-requirements) documentation.
 
 ### SW Requirements
 
-For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.1/matter-overview/#software-requirements) documentation.
+For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.2/matter-overview/#software-requirements) documentation.
 
 ## Steps to Run Demo
 
@@ -45,12 +45,12 @@ artifact.
 
 If building the sample application on its own, a bootloader must be flashed separately
 before the application. Pre-built bootloader binaries for all supported devices are
-available at [Matter Bootloader Binaries](https://docs.silabs.com/matter/2.9.1/matter-prerequisites/matter-artifacts#matter-bootloader-binaries).
+available at [Matter Bootloader Binaries](https://docs.silabs.com/matter/2.9.2/matter-prerequisites/matter-artifacts#matter-bootloader-binaries).
 
 ### Configuration and Setup
 
 This sample app works out of the box with no additional configuration required. To customize the device, see the
-[Custom Matter Device Development](https://docs.silabs.com/matter/2.9.1/matter-references/custom-matter-device#custom-matter-device-development) guide.
+[Custom Matter Device Development](https://docs.silabs.com/matter/2.9.2/matter-references/custom-matter-device#custom-matter-device-development) guide.
 
 **Multi-Sensor-app configuration:** In `sl_matter_sensor_config.h`: `SL_MATTER_SENSOR_TIMER_PERIOD_S` configures how often the device reads sensor values (default 1 minute). `SL_MATTER_SENSOR_REPORT_THRESHOLD` is the change from the last reported value required to trigger a subscription update, in centi-units (default 100. With default, the device reports when there is 1 unit of change from the last reported value).
 
@@ -58,10 +58,10 @@ This sample app works out of the box with no additional configuration required. 
 
 | Parameter | Default |
 |-----------|---------|
-| IdleModeDuration | 10 minutes |
+| IdleModeDuration | 30 minutes |
 | ActiveModeDuration | 0 minutes |
 | ActiveModeThreshold | 5 seconds |
-| OpenThread Idle polling interval | 15 minutes |
+| OpenThread Idle polling interval | 30 minutes |
 | OpenThread Active polling interval | 1 second |
 
 ### Steps for Execution
@@ -73,7 +73,7 @@ This sample app works out of the box with no additional configuration required. 
 
    **chip-tool (standalone or pre-built):** The pre-built chip-tool instance ships
    with the Matter Hub image. More information on using the Matter Hub is in the
-   [Silicon Labs Matter Hub Documentation](https://docs.silabs.com/matter/2.9.1/matter-thread/raspi-img).
+   [Silicon Labs Matter Hub Documentation](https://docs.silabs.com/matter/2.9.2/matter-thread/raspi-img).
    ```shell
    chip-tool pairing ble-thread 1 hex:<operationalDataset> 20202021 3840
    ```
@@ -119,7 +119,7 @@ When configured as ICD, LED 0 flashes only during factory reset.
 
 ## Extending Base App Implementation
 
-See [Extending Base App Implementation](https://docs.silabs.com/matter/2.9.1/matter-references/custom-matter-device#extending-base-app-implementation)
+See [Extending Base App Implementation](https://docs.silabs.com/matter/2.9.2/matter-references/custom-matter-device#extending-base-app-implementation)
 for how to customize application behavior using `CustomerAppTask` and CRTP `*Impl()` hooks.
 
 Per-example override API references: `autogen/AppTaskImpl.h`, `autogen/AppTask.cpp`.
@@ -146,8 +146,8 @@ Per-example override API references: `autogen/AppTaskImpl.h`, `autogen/AppTask.c
 
 ## Resources
 
-- [Silicon Labs Matter over Thread Documentation](https://docs.silabs.com/matter/2.9.1/matter-thread)
-- [Matter Hub Setup](https://docs.silabs.com/matter/2.9.1/matter-thread/raspi-img)
+- [Silicon Labs Matter over Thread Documentation](https://docs.silabs.com/matter/2.9.2/matter-thread)
+- [Matter Hub Setup](https://docs.silabs.com/matter/2.9.2/matter-thread/raspi-img)
 - [chip-tool README](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
 
 ## Report Bugs & Get Support

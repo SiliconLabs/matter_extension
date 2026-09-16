@@ -1,5 +1,5 @@
 id: matter
-version: 2.9.1
+version: 2.9.2
 description: "Matter extension for Simplicity SDK Suite"
 label: "Silicon Labs Matter"
 vendor: silabs
@@ -45,4 +45,4 @@ component_path:
   - path: slc/component/sdk-content/zap
 documentation:
   - docset: matter
-    version: 2.9.1
+    version: 2.9.2

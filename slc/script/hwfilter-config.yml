@@ -25,8 +25,8 @@ hwfilter:
 board_allowlist:
     - brd1019a
     - brd2601b
-    - brd2605a
-    - brd2608a
+    - brd2605b
+    - brd2608b
     - brd2703a
     - brd2704a
     - brd2708a

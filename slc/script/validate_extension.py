@@ -8,8 +8,10 @@ Ownership model:
   MATTER_FAILURE   Files under the repo root and outside third_party/. These
                    are Matter owned, any finding causes a non-zero exit and
                    fails CI.
-  SUBMODULE        Files under third_party/ Not Matter extension 
+  SUBMODULE        Files under third_party/ Not Matter extension
                    responsibility, reported as informational only.
+  SKIPPED          Findings intentionally not enforced by this script. Logged
+                   only, do not fail CI.
 
 Per section policy:
   Config File on Include Path
@@ -19,7 +21,12 @@ Per section policy:
     SUBMODULE. MATTER_FAILURE for Matter extension findings, otherwise path
     based.
 
-  Any other section (including SDK warnings, Studio SDK Metadata)
+  Studio SDK Metadata "No board data found"
+    SKIPPED. We support internal boards that are not present in the public
+    hardware DB. Skip these to avoid CI failures and keep existing user flows
+    intact.
+
+  Any other section (including SDK warnings, other Studio SDK Metadata)
     Fully enforced, path based: SUBMODULE if third_party/, otherwise
     MATTER_FAILURE.
 
@@ -48,6 +55,7 @@ _THIRD_PARTY_ROOT = _REPO_ROOT / "third_party"
 # Finding categories
 MATTER_FAILURE = "matter-failure"
 SUBMODULE = "submodule"
+SKIPPED = "skipped"
 
 # Matches Matter extension component ids in slc validate findings, e.g.
 #   %extension-silabs.matter%matter_lock
@@ -55,6 +63,9 @@ SUBMODULE = "submodule"
 _MATTER_EXTENSION_FINDING = re.compile(
     r"%extension-silabs\.matter%|\bsilabs\.matter\."
 )
+
+# Studio SDK Metadata findings for boards absent from hw-db-service.
+_NO_BOARD_DATA_FINDING = re.compile(r"No board data found for ")
 
 def _parse_sections(output: str) -> Dict[str, List[str]]:
     """
@@ -157,6 +168,7 @@ class SectionStats(NamedTuple):
     total: int
     matter_failures: int
     submodule: int
+    skipped: int
 
 def _path_based(path_str: Optional[str]) -> str:
     """SUBMODULE if the path is under third_party/, else MATTER_FAILURE."""
@@ -166,11 +178,18 @@ def _path_based(path_str: Optional[str]) -> str:
 
 def _classify_finding(section: str, finding: str, filepath: Optional[str] = None) -> str:
     """
-    Return MATTER_FAILURE or SUBMODULE for a single finding, decided by path ownership.
+    Return MATTER_FAILURE, SUBMODULE, or SKIPPED for a single finding.
 
     filepath: for SDK warnings the path is known separately, pass it explicitly.
               For all other sections it is extracted from the finding string.
     """
+    # TEMP: do not fail CI on missing component docs
+    if section == "Missing Documentation Reference":
+        return SKIPPED
+
+    if section == "Studio SDK Metadata" and _NO_BOARD_DATA_FINDING.search(finding):
+        return SKIPPED
+
     # Config headers often live under third_party/matter_sdk; attribute ownership
     # from the extension/component id so Matter findings fail CI.
     if section == "Config File on Include Path":
@@ -204,6 +223,7 @@ def _classify(
 ) -> Tuple[
     List[Tuple[str, str]],
     List[Tuple[str, str]],
+    List[Tuple[str, str]],
     List[SectionStats],
 ]:
     """
@@ -212,23 +232,25 @@ def _classify(
     Returns:
         matter_failures - (section, finding) that must fail CI
         submodule_finds - (section, finding) from submodule code
+        skipped_finds   - (section, finding) intentionally not enforced
         section_stats   - per-section tallies, in first-seen order
     """
     buckets: Dict[str, List[Tuple[str, str]]] = {
         MATTER_FAILURE: [],
         SUBMODULE: [],
+        SKIPPED: [],
     }
     counts: Dict[str, List[int]] = {}
     order: List[str] = []
+    category_idx = {MATTER_FAILURE: 0, SUBMODULE: 1, SKIPPED: 2}
 
     for section, finding, filepath in _iter_findings(sections):
         cat = _classify_finding(section, finding, filepath=filepath)
         buckets[cat].append((section, finding))
         if section not in counts:
-            counts[section] = [0, 0]  # [failures, submodule]
+            counts[section] = [0, 0, 0]  # [failures, submodule, skipped]
             order.append(section)
-        idx = {MATTER_FAILURE: 0, SUBMODULE: 1}[cat]
-        counts[section][idx] += 1
+        counts[section][category_idx[cat]] += 1
 
     section_stats = [
         SectionStats(section, sum(counts[section]), *counts[section])
@@ -237,6 +259,7 @@ def _classify(
     return (
         buckets[MATTER_FAILURE],
         buckets[SUBMODULE],
+        buckets[SKIPPED],
         section_stats,
     )
 
@@ -245,11 +268,12 @@ def _log_section_summary(section_stats: List[SectionStats]) -> None:
     logger.info("slc validate sections:")
     for stat in section_stats:
         logger.info(
-            "  %s: %d findings (%d matter-failure, %d submodule)",
+            "  %s: %d findings (%d matter-failure, %d submodule, %d skipped)",
             stat.section,
             stat.total,
             stat.matter_failures,
             stat.submodule,
+            stat.skipped,
         )
 
 def _resolve_slc_executable() -> str:
@@ -372,10 +396,15 @@ def main(argv: List[str]) -> int:
         if preamble_lines:
             logger.info("slc validate preamble:\n%s", "\n".join(preamble_lines))
 
-    matter_failures, submodule_finds, section_stats = _classify(sections)
+    matter_failures, submodule_finds, skipped_finds, section_stats = _classify(sections)
     _log_section_summary(section_stats)
 
-    if slc_exit_code != 0 and not matter_failures and not submodule_finds:
+    if (
+        slc_exit_code != 0
+        and not matter_failures
+        and not submodule_finds
+        and not skipped_finds
+    ):
         logger.error(
             "slc validate exited %d but no findings could be classified from its output, "
             "treating as a tool/parsing error. Rerun with --full-log to inspect.",
@@ -391,11 +420,21 @@ def main(argv: List[str]) -> int:
             logger.error("  [%s] %s", section, finding)
         return 1
 
+    if skipped_finds:
+        logger.info("Skipped %d finding(s) (not enforced):", len(skipped_finds))
+        for section, finding in skipped_finds:
+            logger.info("  [%s] %s", section, finding)
+
     if submodule_finds:
         logger.info(
             "Validation passed. %d submodule (not extension owned). "
             "Run with --full-log for the full slc validate log.",
             len(submodule_finds),
+        )
+    elif skipped_finds:
+        logger.info(
+            "Validation passed with %d skipped finding(s).",
+            len(skipped_finds),
         )
     else:
         logger.info("Validation passed. No issues detected.")

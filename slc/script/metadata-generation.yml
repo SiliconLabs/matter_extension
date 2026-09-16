@@ -53,7 +53,7 @@ templates_board_overrides:
     boards: [brd4186c, brd4187c, brd4120a]
   
   matter_thread_soc_zigbee_light_series_2_internal_freertos:
-    boards: [brd2608a, brd4116a, brd4117a, brd4118a, brd4120a, brd4121a, brd4187c]
+    boards: [brd2608b, brd4116a, brd4117a, brd4118a, brd4120a, brd4121a, brd4187c]
 
 # Apps where demo boards should be derived from CI json files instead of hwfilter
 # Handles special cases where CI only builds subset of boards that support the app based on hwfilter tags

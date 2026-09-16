@@ -31,7 +31,10 @@ requires:
       - hardware_board_has_rgb
   - name: matter_rgb_leds
     condition:
-      - brd2605a
+      - brd2605b
+  - name: matter_rgb_leds
+    condition:
+      - brd2608b
 
 define:
   # This should cover all supported boards that use simple LEDs
@@ -94,4 +97,8 @@ define:
   - name: ENABLE_WSTK_LEDS
     value: "1"
     condition:
-      - brd2605a
+      - brd2605b
+  - name: ENABLE_WSTK_LEDS
+    value: "1"
+    condition:
+      - brd2608b

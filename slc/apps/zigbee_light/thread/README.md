@@ -22,11 +22,11 @@ This example demonstrates Matter and Silicon Labs Zigbee running together on EFR
 
 ### HW Requirements
 
-For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.1/matter-overview/#hardware-requirements) documentation.
+For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.2/matter-overview/#hardware-requirements) documentation.
 
 ### SW Requirements
 
-For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.1/matter-overview/#software-requirements) documentation. The following prerequisites must be installed on the host: ARM GCC 12.2, ZAP (version 2024.05.07 or greatest), SLC-CLI, environment variables set (e.g. ARM_GCC_DIR, TOOLDIR, STUDIO_ADAPTER_PACK_PATH).
+For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.2/matter-overview/#software-requirements) documentation. The following prerequisites must be installed on the host: ARM GCC 12.2, ZAP (version 2024.05.07 or greatest), SLC-CLI, environment variables set (e.g. ARM_GCC_DIR, TOOLDIR, STUDIO_ADAPTER_PACK_PATH).
 
 ## Steps to Run Demo
 
@@ -34,7 +34,7 @@ For a full list of software requirements, see [Matter Software Requirements](htt
 
 If building a solution, the bootloader is included and flashed as part of the combined artifact.
 
-If building the sample application on its own, a bootloader must be flashed separately before the application. Pre-built bootloader binaries for all supported devices are available at [Matter Bootloader Binaries](https://docs.silabs.com/matter/2.9.1/matter-prerequisites/matter-artifacts#matter-bootloader-binaries).
+If building the sample application on its own, a bootloader must be flashed separately before the application. Pre-built bootloader binaries for all supported devices are available at [Matter Bootloader Binaries](https://docs.silabs.com/matter/2.9.2/matter-prerequisites/matter-artifacts#matter-bootloader-binaries).
 
 ### Configuration and Setup
 
@@ -75,7 +75,7 @@ This sample app can be customized to fit most of your need. Here is how:
 - **Zigbee:** Just like any other Zigbee sample app you can add and remove the Matter extension components that you need. However if you want to support install code, you need to actually modify the configuration file present within this project to set `SL_MATTER_CMP_SECURE_ZIGBEE` to 1. This will disable TouchLink and use the provided install code and EUID64 present in the same configuration file (`sl_cmp_config.h`)
 - **DataModel:** Since Matter and Zigbee data model are quite similar this project only needs a single zap file for both protocol. For the best user experience it is recommended that the endpoint configuration match as close as possible on the two protocols (except for endpoint 0 which is protocol specific)
 
-For Matter customization see also [Custom Matter Device Development](https://docs.silabs.com/matter/2.9.1/matter-references/custom-matter-device#custom-matter-device-development).
+For Matter customization see also [Custom Matter Device Development](https://docs.silabs.com/matter/2.9.2/matter-references/custom-matter-device#custom-matter-device-development).
 
 ### Steps for Execution
 
@@ -90,7 +90,7 @@ Button and LED behavior depends on the project configuration, refer to the light
 
 ## Extending Base App Implementation
 
-See [Extending Base App Implementation](https://docs.silabs.com/matter/2.9.1/matter-references/custom-matter-device#extending-base-app-implementation)
+See [Extending Base App Implementation](https://docs.silabs.com/matter/2.9.2/matter-references/custom-matter-device#extending-base-app-implementation)
 for how to customize application behavior using `CustomerAppTask` and CRTP `*Impl()` hooks.
 
 Per-example override API references: `autogen/AppTaskImpl.h`, `autogen/AppTask.cpp`.
@@ -111,8 +111,8 @@ Per-example override API references: `autogen/AppTaskImpl.h`, `autogen/AppTask.c
 
 ## Resources
 
-- [Silicon Labs Matter over Thread Documentation](https://docs.silabs.com/matter/2.9.1/matter-thread)
-- [Matter Hub Setup](https://docs.silabs.com/matter/2.9.1/matter-thread/raspi-img)
+- [Silicon Labs Matter over Thread Documentation](https://docs.silabs.com/matter/2.9.2/matter-thread)
+- [Matter Hub Setup](https://docs.silabs.com/matter/2.9.2/matter-thread/raspi-img)
 - [chip-tool README](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
 
 ## Report Bugs & Get Support
