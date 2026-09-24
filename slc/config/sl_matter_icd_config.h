@@ -63,4 +63,13 @@
 
 // <<< end of configuration section >>>
 
+// OpenThread overrides to align child timeouts with the Matter ICD idle duration.
+// Included by OpenThread through SL_OPENTHREAD_APPLICATION_CONFIG_FILE.
+
+// MLE child timeout (sec): two missed idle periods plus one second.
+#define OPENTHREAD_CONFIG_MLE_CHILD_TIMEOUT_DEFAULT ((SL_IDLE_MODE_DURATION_S * 2) + 1)
+
+// Child supervision check timeout (sec): one idle period, so it cannot wake the device mid-idle.
+#define OPENTHREAD_CONFIG_CHILD_SUPERVISION_CHECK_TIMEOUT SL_IDLE_MODE_DURATION_S
+
 #endif // SL_MATTER_ICD_CONFIG_H

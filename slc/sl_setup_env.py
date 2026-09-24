@@ -44,6 +44,7 @@ import subprocess
 import shutil
 import re
 from datetime import datetime
+from platform import machine
 from zipfile import ZipFile
 from pathlib import Path
 from script.get_zap_version import get_zap_version
@@ -103,22 +104,23 @@ class MatterEnvSetup:
 
     def set_platform_vars(self):
         """Set platform-specific variables and URLs for tool downloads."""
-        platform = sys.platform
-        self.platform = platform
-        if platform == "win32":
+        self.platform = sys.platform
+        self.host_arch = "x64"
+        if self.platform == "win32":
             self._platform = "win"
             self.__platform = "windows"
-        elif platform == "darwin":
+        elif self.platform == "darwin":
             self._platform = "mac"
             self.__platform = "mac"
-        elif platform == "linux":
-            self._platform = platform
-            self.__platform = platform
+            self.host_arch = "arm64" if machine() == "arm64" else "x64"
+        elif self.platform == "linux":
+            self._platform = self.platform
+            self.__platform = self.platform
         else:
-            logging.error(f"ERROR: Platform {platform} is not supported")
+            logging.error(f"ERROR: Platform {self.platform} is not supported")
             sys.exit(1)
-        self.slt_cli_url = f"https://www.silabs.com/documents/public/software/slt-cli-1.1.1-{self.__platform}-x64.zip"
-        if platform == "win32":
+        self.slt_cli_url = f"https://www.silabs.com/documents/public/software/slt-cli-1.2.2-{self.__platform}-{self.host_arch}.zip"
+        if self.platform == "win32":
             self.slt_cli_path = os.path.join(self.tools_folder_path, "slt.exe")
         else:
             self.slt_cli_path = os.path.join(self.tools_folder_path, "slt")
@@ -167,7 +169,7 @@ class MatterEnvSetup:
             install_without_checking: Force download even if tool exists
         """
         # Using Non-SLT zap as we often need newer zap than the one from SLT
-        zap_url = f"https://github.com/project-chip/zap/releases/download/{self.MINIMUM_ZAP_REQUIRED}/zap-{self._platform}-x64.zip"
+        zap_url = f"https://github.com/project-chip/zap/releases/download/{self.MINIMUM_ZAP_REQUIRED}/zap-{self._platform}-{self.host_arch}.zip"
         zap_cli_path = os.path.join(self.zap_path, "zap-cli")
         zap_exe_path = os.path.join(self.zap_path, "zap.exe")
 
