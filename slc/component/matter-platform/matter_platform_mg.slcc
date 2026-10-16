@@ -70,3 +70,17 @@ requires:
     condition: [device_series_3]
   - name: hal_emu
     condition: [device_series_3]
+
+# MATTER-7181: Series 3 concurrent uses the Matter RAIL archive.
+# Series 2, and Series 3 sequential, keep the SiSDK component.
+recommends:
+  - id: matter_rail_lib_multiprotocol_sixg301
+    vendor: silabs
+    condition: [matter_zigbee_concurrent, device_series_3]
+  - id: rail_lib_multiprotocol
+    vendor: silabs
+    unless: [matter_zigbee_concurrent]
+  - id: rail_lib_multiprotocol
+    vendor: silabs
+    condition: [matter_zigbee_concurrent]
+    unless: [device_series_3]

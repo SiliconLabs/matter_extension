@@ -34,6 +34,13 @@ configuration:
     value: 0
   - name: SLOT0_SIZE
     value: 1048576
+  # Temporary workaround for BRD2608A/B until the platform fix is available.
+  - name: BTL_STORAGE_SPIFLASH_MACRONIX_MX25R6435F
+    value: "1"
+    condition: [brd2608a]
+  - name: BTL_STORAGE_SPIFLASH_MACRONIX_MX25R6435F
+    value: "1"
+    condition: [brd2608b]
 
 filter:
   - name: Type

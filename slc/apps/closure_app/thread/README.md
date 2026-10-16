@@ -113,7 +113,7 @@ This sample app works out of the box with no additional configuration required. 
 
 ## Extending Base App Implementation
 
-See [Extending Base App Implementation](https://docs.silabs.com/matter/2.9.2/matter-references/custom-matter-device#extending-base-app-implementation)
+See [Extending Base App Implementation](https://docs.silabs.com/matter/2.9.2/matter-api-reference#extending-base-app-implementation)
 for `CustomerAppTask` customization, CRTP `*Impl()` hooks, and data model
 callback routing. Per-example AppTask API references:
 `autogen/AppTaskImpl.h`, `autogen/AppTask.cpp`.
@@ -146,7 +146,7 @@ so shared `closure-common/` code can reach your leaf. Override the matching
 ### DataModelCallbacks and CustomerAppManager
 
 In addition to the general data model callback routing described in
-[Extending Base App Implementation](https://docs.silabs.com/matter/2.9.2/matter-references/custom-matter-device#datamodelcallbacks-and-customerapptask),
+[Extending Base App Implementation](https://docs.silabs.com/matter/2.9.2/matter-api-reference#datamodelcallbacks-and-customerapptask),
 this app forwards closure-specific cluster attribute-changed callbacks
 (`MatterClosureControlClusterServerAttributeChangedCallback`,
 `MatterClosureDimensionClusterServerAttributeChangedCallback`) from `AppTask.cpp`
@@ -276,7 +276,7 @@ chip::Protocols::InteractionModel::Status CustomerAppManager::OnMoveToCommandImp
 
 This example has a ClosureManager CRTP chain in addition to the AppTask chain
 documented in
-[Extending Base App Implementation](https://docs.silabs.com/matter/2.9.2/matter-references/custom-matter-device#override-api-reference):
+[Extending Base App Implementation](https://docs.silabs.com/matter/2.9.2/matter-api-reference/closure-app):
 
 | File | Purpose |
 |------|--------|

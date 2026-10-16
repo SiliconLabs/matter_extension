@@ -118,7 +118,7 @@ commander flash out/brd4187c/lighting-app-solution/artifact/lighting-app-combine
 
 ## Extending Base App Implementation
 
-See [Extending Base App Implementation](https://docs.silabs.com/matter/2.9.2/matter-references/custom-matter-device#extending-base-app-implementation)
+See [Extending Base App Implementation](https://docs.silabs.com/matter/2.9.2/matter-api-reference#extending-base-app-implementation)
 for how to customize application behavior using `CustomerAppTask` and CRTP `*Impl()` hooks.
 
 Per-example override API references: `autogen/AppTaskImpl.h`, `autogen/AppTask.cpp`.
