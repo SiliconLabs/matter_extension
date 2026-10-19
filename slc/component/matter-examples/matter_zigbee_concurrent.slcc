@@ -13,6 +13,8 @@ requires:
   # RAIL component that enable Fast channel switching on Series3
   - name: sl_rail_util_ieee802154_fast_channel_switching
     condition: [ device_generic_family_sixx301 ]
+  - name: ram_code_select_dma_channel_performance
+    condition: [brd4408a]
 define:
   - name: SL_MATTER_ZIGBEE_CMP
     value: "1"
