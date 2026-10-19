@@ -6,7 +6,7 @@ description: Demonstrates a bootloader configuration using internal storage for 
 category: Matter Application
 sdk_extension:
   - id: matter
-    version: "2.9.1"
+    version: "2.9.2"
     vendor: silabs
 
 component:
@@ -28,38 +28,38 @@ configuration:
 
 # The OTA storage slot address and size are set based in the flash size of the Series-3 chip.
 
-# The 3MB variant 
+# The 3MB variant
   - name: SLOT0_SIZE
     value: 1208320
-    condition: [simg301m113wih]
+    condition: [device_has_2880kb_flash]
   - name: SLOT0_START
     value: 0x01168000
-    condition: [simg301m113wih]
+    condition: [device_has_2880kb_flash]
   - name: BTL_STORAGE_BASE_ADDRESS
     value: 0x01168000
-    condition: [simg301m113wih]
+    condition: [device_has_2880kb_flash]
 
 # The 4MB variant
   - name: SLOT0_SIZE
     value: 1576960
-    unless: [simg301m113wih, simg301m104xil_8mb]
+    condition: [device_has_3904kb_flash]
   - name: SLOT0_START
     value: 0x011F8000
-    unless: [simg301m113wih, simg301m104xil_8mb]
+    condition: [device_has_3904kb_flash]
   - name: BTL_STORAGE_BASE_ADDRESS
     value: 0x011F8000
-    unless: [simg301m113wih, simg301m104xil_8mb]
+    condition: [device_has_3904kb_flash]
 
 # The 8MB variant
   - name: SLOT0_SIZE
     value: 2732032
-    condition: [simg301m104xil_8mb]
+    condition: [device_has_8000kb_flash]
   - name: SLOT0_START
     value: 0x01378000
-    condition: [simg301m104xil_8mb]
+    condition: [device_has_8000kb_flash]
   - name: BTL_STORAGE_BASE_ADDRESS
     value: 0x01378000
-    condition: [simg301m104xil_8mb]
+    condition: [device_has_8000kb_flash]
 
 filter:
   - name: Type

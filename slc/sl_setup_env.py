@@ -38,12 +38,12 @@ import argparse
 import logging
 import os
 import sys
-import dload
 import stat
 import subprocess
 import shutil
 import re
 from datetime import datetime
+from platform import machine
 from zipfile import ZipFile
 from pathlib import Path
 from script.get_zap_version import get_zap_version
@@ -103,22 +103,23 @@ class MatterEnvSetup:
 
     def set_platform_vars(self):
         """Set platform-specific variables and URLs for tool downloads."""
-        platform = sys.platform
-        self.platform = platform
-        if platform == "win32":
+        self.platform = sys.platform
+        self.host_arch = "x64"
+        if self.platform == "win32":
             self._platform = "win"
             self.__platform = "windows"
-        elif platform == "darwin":
+        elif self.platform == "darwin":
             self._platform = "mac"
             self.__platform = "mac"
-        elif platform == "linux":
-            self._platform = platform
-            self.__platform = platform
+            self.host_arch = "arm64" if machine() == "arm64" else "x64"
+        elif self.platform == "linux":
+            self._platform = self.platform
+            self.__platform = self.platform
         else:
-            logging.error(f"ERROR: Platform {platform} is not supported")
+            logging.error(f"ERROR: Platform {self.platform} is not supported")
             sys.exit(1)
-        self.slt_cli_url = f"https://www.silabs.com/documents/public/software/slt-cli-1.1.1-{self.__platform}-x64.zip"
-        if platform == "win32":
+        self.slt_cli_url = f"https://www.silabs.com/documents/public/software/slt-cli-1.2.2-{self.__platform}-{self.host_arch}.zip"
+        if self.platform == "win32":
             self.slt_cli_path = os.path.join(self.tools_folder_path, "slt.exe")
         else:
             self.slt_cli_path = os.path.join(self.tools_folder_path, "slt")
@@ -138,16 +139,27 @@ class MatterEnvSetup:
                 sys.exit(1)
         tools.mkdir(parents=True, exist_ok=True)
 
+    def _download_file(self, url, destination):
+        """Download url to destination with curl (www.silabs.com only allows curl for scripted downloads)."""
+        subprocess.run(["curl", "-fsSL", url, "-o", destination], check=True)
+
+    def _download_and_extract_zip(self, url, destination):
+        """Download a ZIP archive and extract it into destination."""
+        zip_path = destination + ".zip"
+        try:
+            self._download_file(url, zip_path)
+            with ZipFile(zip_path, 'r') as zObject:
+                zObject.extractall(path=destination)
+        finally:
+            if os.path.exists(zip_path):
+                os.remove(zip_path)
+
     def download_and_extract_slt_cli(self):
         """Download and extract SLT CLI tool."""
         if not os.path.isfile(self.slt_cli_path):
             logging.info(f"Downloading and unzipping slt-cli...")
-            slt_zip_path = os.path.join(self.tools_folder_path, "slt.zip")
             try:
-                dload.save(self.slt_cli_url, slt_zip_path)
-                with ZipFile(slt_zip_path, 'r') as zObject:
-                    zObject.extractall(path=self.tools_folder_path)
-                os.remove(slt_zip_path)
+                self._download_and_extract_zip(self.slt_cli_url, self.tools_folder_path)
                 if self.platform != "win32":
                     self._make_executable(self.slt_cli_path)
             except Exception as e:
@@ -167,7 +179,7 @@ class MatterEnvSetup:
             install_without_checking: Force download even if tool exists
         """
         # Using Non-SLT zap as we often need newer zap than the one from SLT
-        zap_url = f"https://github.com/project-chip/zap/releases/download/{self.MINIMUM_ZAP_REQUIRED}/zap-{self._platform}-x64.zip"
+        zap_url = f"https://github.com/project-chip/zap/releases/download/{self.MINIMUM_ZAP_REQUIRED}/zap-{self._platform}-{self.host_arch}.zip"
         zap_cli_path = os.path.join(self.zap_path, "zap-cli")
         zap_exe_path = os.path.join(self.zap_path, "zap.exe")
 
@@ -176,18 +188,18 @@ class MatterEnvSetup:
             try:
                 if self.platform == "darwin":
                     zap_zip = self.zap_path + ".zip"
-                    dload.save(zap_url, zap_zip)
+                    self._download_file(zap_url, zap_zip)
                     subprocess.run(["unzip", zap_zip, "-d", self.zap_path], check=True)
                     os.remove(zap_zip)
                     self._make_executable(zap_cli_path)
                     zap_root = os.path.join(self.zap_path, "zap.app", "Contents", "MacOS", "zap")
                     self._make_executable(zap_root)
                 elif self.platform == "linux":
-                    dload.save_unzip(zap_url, os.path.join(self.tools_folder_path, "zap"), delete_after=True)
+                    self._download_and_extract_zip(zap_url, self.zap_path)
                     self._make_executable(zap_cli_path)
-                    self._make_executable(os.path.join(self.tools_folder_path, "zap", "zap"))
+                    self._make_executable(os.path.join(self.zap_path, "zap"))
                 elif self.platform == "win32":
-                    dload.save_unzip(zap_url, os.path.join(self.tools_folder_path, "zap"), delete_after=True)
+                    self._download_and_extract_zip(zap_url, self.zap_path)
             except Exception as e:
                 logging.error(f"Failed to download/extract zap: {e}")
                 sys.exit(1)

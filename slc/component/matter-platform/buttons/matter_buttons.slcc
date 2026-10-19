@@ -43,6 +43,9 @@ requires:
       - brd2608a
   - name: simple_button_recommended_instance
     condition:
+      - brd2608b
+  - name: simple_button_recommended_instance
+    condition:
       - brd4121a
   - name: simple_button_recommended_instance
     condition:

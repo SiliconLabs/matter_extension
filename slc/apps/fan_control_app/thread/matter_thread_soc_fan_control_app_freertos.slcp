@@ -7,7 +7,7 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.9.1"
+    version: "2.9.2"
     vendor: silabs
 
 component:
@@ -84,7 +84,6 @@ include:
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
-      - path: AppTaskImpl.h
       - path: CHIPProjectConfig.h
     directory: include
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/customer

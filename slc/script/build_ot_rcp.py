@@ -29,6 +29,7 @@ boards = [
     "BRD4117A", 
     "BRD4118A", 
     "BRD2608A",
+    "BRD2608B",
     "BRD4120A",
     "BRD4121A",
     "BRD2709A", # MGM26

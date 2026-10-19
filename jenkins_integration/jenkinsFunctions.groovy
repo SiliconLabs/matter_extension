@@ -305,21 +305,34 @@ def execute_sanity_tests(nomadNode, deviceGroup, deviceGroupId, appName, matterT
                 dir('utf_app_matter')
                 {
                     def commanderDir = ""
+                    checkout scm: [$class                            : 'GitSCM',
+                                    branches                         : [[name: 'main']],
+                                    browser                          : [$class: 'GithubWeb',
+                                    repoUrl: 'https://github.com/SiliconLabsInternal/utf_app_matter'],
+                                    extensions                       : [
+                                        [$class: 'SubmoduleOption',
+                                            disableSubmodules: true,
+                                            parentCredentials: true,
+                                            recursiveSubmodules: false],
+                                        [$class: 'CleanBeforeCheckout',
+                                            deleteUntrackedNestedRepositories: true]],
+                                    userRemoteConfigs                : [[credentialsId: 'github-app',
+                                                    url: 'https://github.com/SiliconLabsInternal/utf_app_matter.git']]]
+
+                    sh 'git submodule sync --recursive'
+                    withCredentials([usernamePassword(credentialsId: 'github-app', usernameVariable: 'GITHUB_APP', passwordVariable: 'GITHUB_ACCESS_TOKEN')]) {
+                        sh '''
+                            git -c credential.helper='!f() { [ -n "$GITHUB_ACCESS_TOKEN" ] && { echo "username=x-access-token"; echo "password=$GITHUB_ACCESS_TOKEN"; }; }; f' submodule update --init --recursive -q
+                        '''
+                        sh '''
+                            git -c credential.helper='!f() { [ -n "$GITHUB_ACCESS_TOKEN" ] && { echo "username=x-access-token"; echo "password=$GITHUB_ACCESS_TOKEN"; }; }; f' submodule foreach --recursive git fetch --tags
+                        '''
+                    }
+                    sh ''' git clean -ffdx
+                        git submodule foreach --recursive -q git reset --hard -q
+                        git submodule foreach --recursive -q git clean -ffdx -q '''
+
                     sshagent(['svc_gsdk-ssh']) {
-                        checkout scm: [$class                            : 'GitSCM',
-                                        branches                         : [[name: 'main']],
-                                        browser                          : [$class: 'Stash',
-                                        repoUrl: 'https://stash.silabs.com/scm/utf/utf_app_matter.git/'],
-                                        userRemoteConfigs                : [[credentialsId: 'svc_gsdk-ssh',
-                                                        url: 'ssh://git@stash.silabs.com/utf/utf_app_matter.git']]]
-
-                        sh ''' git submodule sync --recursive
-                            git submodule update --init --recursive -q '''
-                        sh 'git submodule foreach --recursive git fetch --tags'
-                        sh ''' git clean -ffdx
-                            git submodule foreach --recursive -q git reset --hard -q
-                            git submodule foreach --recursive -q git clean -ffdx -q '''
-
                         dir('commander'){
                             checkout scm: [$class               : 'GitSCM',
                                             branches            : [[name: 'master']],

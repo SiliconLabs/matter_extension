@@ -47,6 +47,9 @@ define:
     condition: [matter_platform_siwx917]
   - name: SLI_SI91X_MCU_ENABLE_PSRAM_FEATURE
     condition: [psram_core]
+  - name: SL_OPENTHREAD_APPLICATION_CONFIG_FILE
+    value: '"sl_matter_icd_config.h"'
+    condition: [matter_thread]
 
 documentation:
   docset: matter

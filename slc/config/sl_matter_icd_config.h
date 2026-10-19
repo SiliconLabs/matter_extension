@@ -33,7 +33,9 @@
 #define SL_ICD_SUPPORTED_CLIENTS_PER_FABRIC 2
 
 // <o SL_TRANSPORT_IDLE_INTERVAL>  Transport Idle Interval (ms)
-// <i> Controllers wait this long before retrying communication with sleeping device
+// <i> ICD slow poll interval (Thread SED / Wi-Fi LI) while the device is in idle mode
+// <i> For LIT devices, set this to SL_IDLE_MODE_DURATION_S * 1000
+// <i> For SIT devices, this must be <= 15000
 // <i> Default: 15000 milliseconds (15 seconds)
 #define SL_TRANSPORT_IDLE_INTERVAL 15000
 
@@ -60,5 +62,14 @@
 #define SL_ICD_ENABLE_SELECTIVE_SLEEP 1
 
 // <<< end of configuration section >>>
+
+// OpenThread overrides to align child timeouts with the Matter ICD idle duration.
+// Included by OpenThread through SL_OPENTHREAD_APPLICATION_CONFIG_FILE.
+
+// MLE child timeout (sec): two missed idle periods plus one second.
+#define OPENTHREAD_CONFIG_MLE_CHILD_TIMEOUT_DEFAULT ((SL_IDLE_MODE_DURATION_S * 2) + 1)
+
+// Child supervision check timeout (sec): one idle period, so it cannot wake the device mid-idle.
+#define OPENTHREAD_CONFIG_CHILD_SUPERVISION_CHECK_TIMEOUT SL_IDLE_MODE_DURATION_S
 
 #endif // SL_MATTER_ICD_CONFIG_H

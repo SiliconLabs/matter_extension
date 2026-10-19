@@ -254,14 +254,6 @@ def check_prerequisites():
         sys.exit(1)
     
     check_virtualenv()
-    
-    if not check_command_exists("slt"):
-        log_error("slt is not installed")
-        sys.exit(1)
-    
-    if not check_command_exists("conan"):
-        log_error("Conan is not installed")
-        sys.exit(1)
 
     update_hwfilter()
 
@@ -269,79 +261,50 @@ def check_prerequisites():
         log_error("envsubst not installed (part of gettext package)")
         sys.exit(1)
 
-def log_conan_download_notice() -> None:
-    log_info(
-        "Apply Conan remotes from packages/, then `slt update` for simplicity-sdk and wiseconnect."
-    )
+def get_sdk_paths(repo_root: Path) -> dict:
+    """Resolve hwfilter device/board paths from extension git submodules."""
+    paths: dict[str, str] = {}
 
-def setup_conan_environment():
-    """Set up Conan environment variables"""
-    conan_home = os.path.expanduser("~/.silabs/slt/installs/conan")
-    os.environ["CONAN_HOME"] = conan_home
-    os.environ["SLT_CI"] = "true"
-    log_info(f"CONAN_HOME: {conan_home}")
-
-def configure_conan_remotes(repo_root: Path):
-    """Configure Conan remotes from packages/"""
-    log_info("Configuring Conan remotes...")
-    packages_dir = repo_root / "packages"
-    
-    returncode, _, stderr = run_command(
-        ["conan", "config", "install", str(packages_dir)],
-        check=False, capture=True, cwd=Path.home()
-    )
-    
-    if returncode != 0:
-        log_error(f"Failed to configure Conan remotes: {stderr}")
+    simpl = repo_root / "third_party" / "simplicity_sdk"
+    if not simpl.is_dir():
+        log_error(f"Simplicity SDK submodule not found: {simpl}")
+        log_error("Run: git submodule update --init third_party/simplicity_sdk")
         sys.exit(1)
 
-def _slt_where(package: str) -> str | None:
-    """Return the install path for an slt package, or None if not found."""
-    rc, out, _ = run_command(["slt", "where", package], check=False, capture=True)
-    return out.strip() if rc == 0 and out.strip() else None
-
-def update_slt_packages():
-    """Update required slt packages"""
-    log_info("Updating slt packages...")
-
-    for package in ["simplicity-sdk", "wiseconnect"]:
-        if not _slt_where(package):
-            log_error(f"{package} not found; run: slt install {package}")
-            sys.exit(1)
-        run_command(["slt", "update", package], check=False, capture=True)
-
-def get_slt_paths() -> dict:
-    """Get slt package paths from simplicity-sdk and wiseconnect"""
-    paths = {}
-
-    simpl = _slt_where("simplicity-sdk")
-    if not simpl:
-        log_error("simplicity-sdk not found; run: slt install simplicity-sdk")
-        sys.exit(1)
-
-    device_component_dir = Path(simpl) / "platform_core" / "platform" / "Device" / "component"
-    if not device_component_dir.exists():
+    device_component_dir = simpl / "platform_core" / "platform" / "Device" / "component"
+    if not device_component_dir.is_dir():
         log_error(f"Device component path not found: {device_component_dir}")
         sys.exit(1)
     paths["THREAD_DEVICE_PATH"] = str(device_component_dir)
 
-    board_component_dir = Path(simpl) / "boards" / "hardware" / "board" / "component"
-    if not board_component_dir.exists():
+    board_component_dir = simpl / "boards" / "hardware" / "board" / "component"
+    if not board_component_dir.is_dir():
         log_error(f"Board component path not found: {board_component_dir}")
         sys.exit(1)
     paths["THREAD_BOARD_PATH"] = str(board_component_dir)
 
-    # SiWx91x components from wiseconnect
-    wiseconnect = _slt_where("wiseconnect")
-    if not wiseconnect:
-        log_error("wiseconnect not found; run: slt install wiseconnect")
+    wiseconnect = repo_root / "third_party" / "wifi_sdk"
+    if not wiseconnect.is_dir():
+        log_error(f"WiseConnect submodule not found: {wiseconnect}")
+        log_error("Run: git submodule update --init third_party/wifi_sdk")
         sys.exit(1)
-    paths["SI91X_DEVICE_PATH"] = f"{wiseconnect}/components/device/silabs/si91x/mcu/core/chip/component"
-    paths["SI91X_BOARD_PATH"] = f"{wiseconnect}/components/board/silabs/component"
 
+    si91x_device = wiseconnect / "components" / "device" / "silabs" / "si91x" / "mcu" / "core" / "chip" / "component"
+    si91x_board = wiseconnect / "components" / "board" / "silabs" / "component"
+    if not si91x_device.is_dir():
+        log_error(f"Si91x device component path not found: {si91x_device}")
+        sys.exit(1)
+    if not si91x_board.is_dir():
+        log_error(f"Si91x board component path not found: {si91x_board}")
+        sys.exit(1)
+    paths["SI91X_DEVICE_PATH"] = str(si91x_device)
+    paths["SI91X_BOARD_PATH"] = str(si91x_board)
+
+    log_info("simplicity_sdk: %s", simpl)
+    log_info("wiseconnect (wifi_sdk): %s", wiseconnect)
     return paths
 
-def prepare_config(slt_paths: dict) -> Path:
+def prepare_config(sdk_paths: dict) -> Path:
     """Substitute environment variables in config file"""
     config_source = _SCRIPT_DIR / "hwfilter-config.yml"
     
@@ -350,7 +313,7 @@ def prepare_config(slt_paths: dict) -> Path:
         sys.exit(1)
     
     env = os.environ.copy()
-    env.update(slt_paths)
+    env.update(sdk_paths)
     
     temp_fd, temp_path = tempfile.mkstemp(suffix='_hwfilter-config.yml', text=True)
     with os.fdopen(temp_fd, 'w') as f_out:
@@ -359,10 +322,10 @@ def prepare_config(slt_paths: dict) -> Path:
     
     return Path(temp_path)
 
-def get_wifi_boards(slt_paths: dict) -> List[str]:
+def get_wifi_boards(sdk_paths: dict) -> List[str]:
     """Get WiFi boards using hwfilter"""
-    si91x_device = slt_paths.get("SI91X_DEVICE_PATH")
-    si91x_board = slt_paths.get("SI91X_BOARD_PATH")
+    si91x_device = sdk_paths.get("SI91X_DEVICE_PATH")
+    si91x_board = sdk_paths.get("SI91X_BOARD_PATH")
     
     if not si91x_device or not si91x_board:
         log_error("Missing Si91x paths")
@@ -442,7 +405,7 @@ def _demo_variant_rules_from_ci(
 def prepare_template_with_version(
     repo_root: Path,
     template_name: str,
-    slt_paths: dict,
+    sdk_paths: dict,
     ci_records: tuple[CiJsonRecord, ...],
     variants_config: Dict,
 ) -> Path:
@@ -472,7 +435,7 @@ def prepare_template_with_version(
     if not matter_version:
         log_error("Version not found in matter.slce")
         sys.exit(1)
-    wifi_boards = get_wifi_boards(slt_paths)
+    wifi_boards = get_wifi_boards(sdk_paths)
 
     template_path = _SCRIPT_DIR / template_name
     with open(template_path, "r", encoding="utf-8") as f:
@@ -542,7 +505,7 @@ def _run_hwstudio(
 
 def generate_metadata(
     repo_root: Path,
-    slt_paths: dict,
+    sdk_paths: dict,
     config_path: Path,
     ci_records: tuple[CiJsonRecord, ...],
     variants_config: Dict,
@@ -554,7 +517,7 @@ def generate_metadata(
 
     try:
         temp_templates = prepare_template_with_version(
-            repo_root, "templates.xml.j2", slt_paths, ci_records, variants_config
+            repo_root, "templates.xml.j2", sdk_paths, ci_records, variants_config
         )
         temp_files.append(temp_templates)
 
@@ -565,7 +528,7 @@ def generate_metadata(
             failures.append("matter_templates.xml")
 
         temp_demos = prepare_template_with_version(
-            repo_root, "demos.xml.j2", slt_paths, ci_records, variants_config
+            repo_root, "demos.xml.j2", sdk_paths, ci_records, variants_config
         )
         temp_files.append(temp_demos)
 
@@ -617,25 +580,18 @@ def main():
     
     check_prerequisites()
     print()
-    
-    log_conan_download_notice()
+
+    log_info("Using SDK board/device trees from git submodules")
+    sdk_paths = get_sdk_paths(repo_root)
     print()
 
-    setup_conan_environment()
-    configure_conan_remotes(repo_root)
-    update_slt_packages()
-    print()
-    
-    slt_paths = get_slt_paths()
-    print()
-    
-    config_path = prepare_config(slt_paths)
+    config_path = prepare_config(sdk_paths)
 
     variants_config = load_variants_config()
     ci_records = load_ci_json_records(repo_root / ".github", "full")
 
     try:
-        generate_metadata(repo_root, slt_paths, config_path, ci_records, variants_config)
+        generate_metadata(repo_root, sdk_paths, config_path, ci_records, variants_config)
     finally:
         if config_path and config_path.exists():
             config_path.unlink()

@@ -2661,6 +2661,7 @@ extra_files:
   - third_party/matter_sdk/src/app/tests/TestEventPathParams.cpp
   - third_party/matter_sdk/src/app/tests/TestExtensionFieldSets.cpp
   - third_party/matter_sdk/src/app/tests/TestFabricScopedEventLogging.cpp
+  - third_party/matter_sdk/src/app/tests/TestFabricSensitiveAttributeRead.cpp
   - third_party/matter_sdk/src/app/tests/TestFailSafeContext.cpp
   - third_party/matter_sdk/src/app/tests/TestInteractionModelEngine.cpp
   - third_party/matter_sdk/src/app/tests/TestMessageDef.cpp

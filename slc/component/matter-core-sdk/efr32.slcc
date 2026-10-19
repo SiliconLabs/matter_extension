@@ -117,6 +117,7 @@ include:
     -   path: BaseAppEvent.h
   - path: third_party/matter_sdk/src/platform/silabs
     file_list:
+      - path: BootloaderError.h
       - path: OTAImageProcessorImpl.h
       - path: InetPlatformConfig.h
       - path: DiagnosticDataProviderImpl.h
@@ -196,6 +197,8 @@ source:
   - path: third_party/matter_sdk/src/platform/silabs/efr32/ConnectivityManagerImpl.cpp
   - path: third_party/matter_sdk/src/platform/silabs/efr32/Efr32PsaOpaqueKeypair.cpp
   - path: third_party/matter_sdk/src/platform/silabs/efr32/Efr32PsaOperationalKeystore.cpp
+  - path: third_party/matter_sdk/src/platform/silabs/BootloaderError.cpp
+    condition: [matter_ota_support]
   - path: third_party/matter_sdk/src/platform/silabs/efr32/OTAImageProcessorImpl.cpp
     condition: [matter_ota_support]
   - path: third_party/matter_sdk/src/platform/silabs/PlatformManagerImpl.cpp
