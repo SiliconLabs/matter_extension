@@ -20,14 +20,22 @@ silabs_sdk_target = get_label_info(":sdk", "label_no_toolchain")
 
 chip_enable_thread = true
 chip_enable_ota_requestor = false
-chip_build_libshell = true
+
+# Since this app uses CPC, disable Uart log, shell, etc..
+chip_build_libshell = false
+sl_uart_log_output = false
+enable_openthread_cli = false
 
 # For subscription to another node
 chip_enable_read_client = true
 chip_access_control_policy_logging_verbosity = 2
 
-sl_uart_log_output = true
+sl_use_base_application = false
 sl_matter_use_code_driven_dm = true
+sl_cpc_enabled = true
+
+# Disable BLE advertisement since Thread credentials are already present
+chip_config_network_layer_ble = false
 
 openthread_external_platform =
     "${chip_root}/third_party/openthread/platforms/efr32:libopenthread-efr32"

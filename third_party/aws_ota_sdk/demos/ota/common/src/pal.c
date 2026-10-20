@@ -34,10 +34,6 @@
 #ifdef EFR32MG24 //For efr32 NCP combos
 #include "btl_interface.h"
 #include "em_bus.h" // For CORE_CRITICAL_SECTION
-#if (defined(EFR32MG24) && defined(WF200_WIFI))
-#include "sl_wfx_host_api.h"
-#include "spi_multiplex.h"
-#endif // EFR32MG24 && WF200_WIFI
 #else
 #ifdef __cplusplus
 extern "C" {
@@ -143,13 +139,8 @@ int16_t otaPal_WriteBlock_efr32(OtaFileContext_t *const C,
                  writeBufOffset);
       writeBufOffset = 0;
 
-#if (defined(EFR32MG24) && defined(WF200_WIFI))
-      sl_wfx_host_pre_bootloader_spi_transfer();
-#endif
       CORE_CRITICAL_SECTION(err = bootloader_eraseWriteStorage(mSlotId, mWriteOffset, writeBuffer, kAlignmentBytes);)
-#if (defined(EFR32MG24) && defined(WF200_WIFI))
-      sl_wfx_host_post_bootloader_spi_transfer();
-#endif
+
       if (err) {
         SILABS_LOG("otaPal_WriteBlock bootloader_eraseWriteStorage FAILED: %ld", err);
         filerc = -1;
@@ -170,13 +161,7 @@ int16_t otaPal_WriteBlock_efr32(OtaFileContext_t *const C,
           writeBufOffset++;
         }
         SILABS_LOG("while loop final reminder (blockReadOffset == ulBlockSize)writeBufOffset %d", writeBufOffset);
-#if (defined(EFR32MG24) && defined(WF200_WIFI))
-        sl_wfx_host_pre_bootloader_spi_transfer();
-#endif
         CORE_CRITICAL_SECTION(err = bootloader_eraseWriteStorage(mSlotId, mWriteOffset, writeBuffer, kAlignmentBytes);)
-#if (defined(EFR32MG24) && defined(WF200_WIFI))
-        sl_wfx_host_post_bootloader_spi_transfer();
-#endif
         if (err) {
           SILABS_LOG("ERROR: In HandleFinalize bootloader_eraseWriteStorage() error %ld", err);
           return -1;
@@ -297,9 +282,6 @@ OtaPalStatus_t otaPal_ActivateNewImage_efr32(OtaFileContext_t *const C)
   int32_t err     = 0;
   SILABS_LOG("otaPal_ActivateNewImage OTAImageProcessorImpl::HandleApply()");
 
-#if (defined(EFR32MG24) && defined(WF200_WIFI))
-  sl_wfx_host_pre_bootloader_spi_transfer();
-#endif
   CORE_CRITICAL_SECTION(err = bootloader_verifyImage(mSlotId, NULL);)
   if (err != 0) {
     SILABS_LOG("otaPal_ActivateNewImage ERROR: bootloader_verifyImage() error %ld", err);

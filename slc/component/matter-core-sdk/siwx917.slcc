@@ -19,8 +19,6 @@ include:
 - path: third_party/matter_sdk/src/lib
 - path: third_party/matter_sdk/src/platform/silabs/SiWx
 - path: third_party/matter_sdk/src/platform/silabs/wifi
-- path: third_party/nlassert/include
-- path: third_party/nlio/include
 - path: third_party/matter_sdk/src/include/platform
   file_list:
   - path: RuntimeOptionsProvider.h
@@ -99,7 +97,6 @@ include:
   - path: CompatClusterObjects.h
 - path: third_party/matter_sdk/src/lwip/silabs
   file_list:
-  - path: lwipopts-siwx.h
   - path: lwippools.h
 - path: third_party/matter_sdk/examples/platform/silabs
   file_list:
@@ -167,6 +164,7 @@ include:
 - path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx
   file_list:
   - path: WifiInterfaceImpl.h
+  - path: SlNetConfig.h
 
 source:
 - path: third_party/matter_sdk/src/platform/FreeRTOS/SystemTimeSupport.cpp
@@ -188,6 +186,7 @@ source:
 - path: third_party/matter_sdk/src/platform/silabs/SiWx/ble/BLEManagerImpl.cpp
 - path: third_party/matter_sdk/src/platform/silabs/SiWx/ble/sl_si91x_ble_init.cpp
 - path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp
+- path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx/SlNetConfig.cpp
 - path: third_party/matter_sdk/src/platform/silabs/wifi/WifiInterface.cpp
 - path: third_party/matter_sdk/src/platform/silabs/ChipDie.cpp
 define:

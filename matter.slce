@@ -1,8 +1,11 @@
 id: matter
-version: 2.9.2
+version: 2.10.0
 description: "Matter extension for Simplicity SDK Suite"
 label: "Silicon Labs Matter"
 vendor: silabs
+sdk:
+  id: simplicity_sdk
+  version: 2026.12.0
 upgrade_manifest:
   - path: upgrade.slcu
 supplier: Silicon Laboratories Inc.
@@ -19,7 +22,9 @@ component_path:
   - path: slc/component/matter-platform/device-attestation-credentials
   - path: slc/component/matter-platform/low-power
   - path: slc/component/matter-platform/logging
+  - path: slc/component/matter-platform/cpc
   - path: slc/component/matter-platform/crypto
+  - path: slc/component/matter-platform/mmic
   - path: slc/component/matter-platform/ota
   - path: slc/component/matter-platform/segger
   - path: slc/component/matter-platform/shell
@@ -45,4 +50,4 @@ component_path:
   - path: slc/component/sdk-content/zap
 documentation:
   - docset: matter
-    version: 2.9.2
+    version: 2.10.0

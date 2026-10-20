@@ -23,7 +23,9 @@
 
 // <i> Default: 0
 // <q CHIP_CONFIG_ENABLE_GROUPCAST> Groupcast
+#ifndef CHIP_CONFIG_ENABLE_GROUPCAST
 #define CHIP_CONFIG_ENABLE_GROUPCAST 0
+#endif
 // <<< end of configuration section >>>
 
 #endif  // APP_APPBUILDCONFIG_H_

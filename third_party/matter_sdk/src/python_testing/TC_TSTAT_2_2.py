@@ -28,6 +28,7 @@
 #       --discriminator 1234
 #       --passcode 20202021
 #       --endpoint 1
+#       --PICS src/app/tests/suites/certification/ci-pics-values
 #       --trace-to json:${TRACE_TEST_JSON}.json
 #       --trace-to perfetto:${TRACE_TEST_PERFETTO}.perfetto
 #     factory-reset: true
@@ -57,7 +58,7 @@ class TC_TSTAT_2_2(MatterBaseTest):
 
     def pics_TC_TSTAT_2_2(self):
         """This function returns a list of PICS for this test case that must be True for the test to be run"""
-        return [self.check_pics("TSTAT.S")]
+        return ["TSTAT.S"]
 
     def steps_TC_TSTAT_2_2(self) -> list[TestStep]:
         return [

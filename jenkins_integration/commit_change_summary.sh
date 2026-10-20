@@ -3,6 +3,7 @@
 # PREV_BASELINE: previous Jenkins Git commit (GIT_PREVIOUS_SUCCESSFUL_COMMIT or GIT_PREVIOUS_COMMIT).
 
 set +e
+export GIT_TERMINAL_PROMPT=0
 MAX=10
 PREV="${PREV_BASELINE:-}"
 HEADS=$(git rev-parse --short HEAD 2>/dev/null || echo "?")
@@ -21,7 +22,7 @@ else # valid baseline commit
   fi
 fi
 
-git submodule update --init --quiet third_party/matter_sdk 2>/dev/null || true
+# Gitlinks on the parent repo; no submodule checkout or fetch required.
 CURR_SM=$(git rev-parse HEAD:third_party/matter_sdk 2>/dev/null)
 PREV_SM=
 if [ -n "$PREV_FULL" ]; then # baseline resolved; read gitlink at that commit
@@ -29,7 +30,6 @@ if [ -n "$PREV_FULL" ]; then # baseline resolved; read gitlink at that commit
 fi
 
 if [ -n "$PREV_SM" ] && [ -n "$CURR_SM" ] && [ "$PREV_SM" != "$CURR_SM" ]; then # submodule pointer moved
-  git -C third_party/matter_sdk fetch --quiet origin "$PREV_SM" "$CURR_SM" 2>/dev/null || true
   PS=$(echo "$PREV_SM" | cut -c1-7)
   CS=$(echo "$CURR_SM" | cut -c1-7)
   printf "*matter_sdk (%s..%s)*\n" "$PS" "$CS"

@@ -1,15 +1,31 @@
 def upload_artifacts(sqa=false, commit_sha="null", workflow_id="null", run_number="null") {
     withCredentials([
-    usernamePassword(credentialsId: 'svc_gsdk', passwordVariable: 'SL_PASSWORD', usernameVariable: 'SL_USERNAME'),
-    usernamePassword(credentialsId: 'Matter-Extension-GitHub', usernameVariable: 'GITHUB_APP', passwordVariable: 'GITHUB_ACCESS_TOKEN')
+        usernamePassword(credentialsId: 'svc_gsdk', passwordVariable: 'SL_PASSWORD', usernameVariable: 'SL_USERNAME'),
+        usernamePassword(credentialsId: 'Matter-Extension-GitHub', usernameVariable: 'GITHUB_APP', passwordVariable: 'GITHUB_ACCESS_TOKEN')
     ])
     {
-        def output = sh(script: "python3 -u jenkins_integration/artifacts/upload_artifacts.py --branch_name ${env.BRANCH_NAME} --build_number ${env.BUILD_NUMBER} --sqa ${sqa} --commit_sha ${commit_sha} --workflow_id ${workflow_id} --run_number ${run_number}", returnStdout: true).trim()
-        echo "Output from upload_artifacts.py: ${output}"
+        def logFile = "upload_artifacts_${env.BUILD_NUMBER}.log"
+        sh(script: """
+            bash -eo pipefail -c "python3 -u jenkins_integration/artifacts/upload_artifacts.py --branch_name ${env.BRANCH_NAME} --build_number ${env.BUILD_NUMBER} --sqa ${sqa} --commit_sha ${commit_sha} --workflow_id ${workflow_id} --run_number ${run_number} 2>&1 | tee '${logFile}'"
+        """)
+        def output = readFile(logFile).trim()
         if(!sqa){
             result = parse_upload_artifacts_output(output)
             return [commit_sha: result.commit_sha, run_number: result.run_number, workflow_id: result.workflow_id, bypass_results: result.bypass_send_results_gh, pr_number: result.pr_number]
         }
+    }
+}
+
+def upload_zephyr_artifacts() {
+    withCredentials([
+        usernamePassword(credentialsId: 'svc_gsdk', passwordVariable: 'SL_PASSWORD', usernameVariable: 'SL_USERNAME'),
+        usernamePassword(credentialsId: 'Matter-Extension-GitHub', usernameVariable: 'GITHUB_APP', passwordVariable: 'GITHUB_ACCESS_TOKEN')
+    ])
+    {
+        def logFile = "upload_zephyr_artifacts_${env.BUILD_NUMBER}.log"
+        sh(script: """
+            bash -eo pipefail -c "python3 -u jenkins_integration/artifacts/upload_zephyr_artifacts.py --branch_name ${env.BRANCH_NAME} --build_number ${env.BUILD_NUMBER} 2>&1 | tee '${logFile}'"
+        """)
     }
 }
 
@@ -24,28 +40,28 @@ def download_coverage_artifact(workflow_id) {
 
 def run_code_size_analysis() {
     echo "Starting code size analysis for branch: ${env.BRANCH_NAME}"
-        
+
     sh 'python3 -m venv code_size_analysis_venv'
     sh '. code_size_analysis_venv/bin/activate && python3 -m pip install --upgrade pip'
     sh '. code_size_analysis_venv/bin/activate && pip3 install code_size_analyzer_client-python>=1.0.1'
-    
+
     echo "Build number: ${env.BUILD_NUMBER}"
     echo "Branch name: ${env.BRANCH_NAME}"
-    
+
     withEnv([
         "BRANCH_NAME=${env.BRANCH_NAME}",
         "BUILD_NUMBER=${env.BUILD_NUMBER}"
-    ]) {            
+    ]) {
             sh '''
                 extract_app_from_path() {
                     local path=$1
                     local app_name
-                    
+
                     local solution_dir=\$(echo "\$path" | grep -oE "[^/]*_solution(_lto|_llvm(-lto)?)?" | head -1)
-                    
+
                     if [ -n "$solution_dir" ]; then
                         local base_name=\$(echo "\$solution_dir" | sed -E 's/_solution(_lto|_llvm(-lto)?)?\$//')
-                        
+
                         # Extract app name from file name
                         case "\$base_name" in
                             *zigbee_light*)
@@ -57,15 +73,18 @@ def run_code_size_analysis() {
                             *lock_app*)
                                 app_name="lock-app"
                                 ;;
+                            *multi_sensor_app*)
+                                app_name="multi-sensor-app"
+                                ;;
                         esac
                     else
                         echo "ERROR: Could not find solution directory in path: \$path" >&2
                         return 1
                     fi
-                    
+
                     echo "\$app_name"
                 }
-                
+
                 determine_protocol() {
                     local path=$1
                     if [[ "$path" == *"wifi_soc"* ]]; then
@@ -74,15 +93,15 @@ def run_code_size_analysis() {
                         echo "thread"
                     fi
                 }
-                
+
                 determine_build_options() {
                     local path=$1
                     if [[ "$path" == *"_solution_lto/"* ]]; then
                         echo "-lto"
-                    elif [[ "$path" == *"_solution_llvm-lto/"* ]]; then
-                        echo "-lto"
                     elif [[ "$path" == *"_solution_nolto/"* ]]; then
                         echo "-nolto"
+                    elif [[ "$path" == *"_solution_llvm-lto/"* ]]; then
+                        echo "-lto"
                     else
                         echo "-debug"
                     fi
@@ -96,10 +115,19 @@ def run_code_size_analysis() {
                         echo "gcc"
                     fi
                 }
-                
+
+                determine_compiler() {
+                    local path=$1
+                    if [[ "$path" == *"_solution_llvm"* ]]; then
+                        echo "llvm"
+                    else
+                        echo "gcc"
+                    fi
+                }
+
                 perform_code_analysis() {
                     local map_file_path=$1
-                    
+
                     local brd
                     case "$map_file_path" in
                         *brd4187c*)
@@ -116,20 +144,20 @@ def run_code_size_analysis() {
                             return 0
                             ;;
                     esac
-                    
+
                     local app=\$(extract_app_from_path "\$map_file_path")
                     if [ $? -ne 0 ] || [ -z "$app" ]; then
                         echo "ERROR: Failed to extract app name from $map_file_path"
                         return 1
                     fi
-                    
+
                     local protocol=\$(determine_protocol "\$map_file_path")
                     local options=\$(determine_build_options "\$map_file_path")
                     local compiler=\$(determine_compiler "\$map_file_path")
-                    
+
                     echo "Processing: $map_file_path"
                     echo "  Board: $brd, App: $app, Protocol: $protocol, Options: $options, Compiler: $compiler"
-                    
+
                     if [ "$brd" = "BRD4338A" ]; then
                         if [[ "$app" == *"-app" ]]; then
                             app_stripped=\$(echo "$app" | sed 's/-app\$//')
@@ -138,7 +166,7 @@ def run_code_size_analysis() {
                             app="SiWx917-${app}"
                         fi
                     fi
-                    
+
                     if [ "$protocol" = "thread" ]; then
                         example_type="OpenThread"
                     elif [ "$protocol" = "wifi" ]; then
@@ -147,18 +175,18 @@ def run_code_size_analysis() {
                         echo "ERROR: Unknown protocol: $protocol"
                         return 1
                     fi
-                    
+
                     if [ "$brd" = "BRD4187C" ]; then
                         family="MG24"
                         target_part="efr32mg24b210f1536im48"
                     elif [ "$brd" = "BRD4407A" ]; then
-                        family="MG301"  
+                        family="MG301"
                         target_part="simg301m114lih"
                     elif [ "$brd" = "BRD4338A" ]; then
                         family="Si917"
                         target_part="siwg917m111mgtba"
                     fi
-                    
+
                     output_file="${app}-${example_type}-${family}.json"
 
                     if [ "$options" = "-lto" ]; then
@@ -170,11 +198,11 @@ def run_code_size_analysis() {
                         application_name="slc-${app}-debug-${family}"
                         output_file="${output_file%.json}-debug.json"
                     fi
-                    
+
                     echo "  Running analysis:"
                     echo "    Application name: $application_name"
                     echo "    Output file: $output_file"
-                    
+
                     . code_size_analysis_venv/bin/activate
                     unset OTEL_EXPORTER_OTLP_ENDPOINT || true
                     if code_size_analyzer_cli \\
@@ -196,10 +224,10 @@ def run_code_size_analysis() {
                         echo "  Analysis failed"
                     fi
                 }
-                
+
                 echo "Cleaning up leftover JSON files"
                 rm -f *.json
-                
+
                 echo "Available map files:"
                 map_files_found=\$(find . -name "*.map" | grep -v "sqa-artifacts" | sort)
                 if [ -z "$map_files_found" ]; then
@@ -208,18 +236,20 @@ def run_code_size_analysis() {
                 fi
                 echo "$map_files_found"
                 echo ""
-                
+
                 CODE_SIZE_BUILDS='
-                    brd4187c/matter_thread_soc_lighting_app_series_2_freertos_solution   
-                    brd4187c/matter_thread_soc_lock_app_series_2_freertos_solution   
-                    brd4187c/matter_thread_soc_zigbee_light_series_2_freertos_solution   
-                    brd4407a/matter_thread_soc_lighting_app_series_3_freertos_solution   
-                    brd4407a/matter_thread_soc_lock_app_series_3_freertos_solution   
-                    brd4407a/matter_thread_soc_zigbee_light_series_3_freertos_solution   
-                    brd4338a/matter_wifi_soc_lighting_app_freertos_solution   
-                    brd4338a/matter_wifi_soc_lock_app_freertos_solution   
+                    brd4187c/matter_thread_soc_lighting_app_series_2_freertos_solution
+                    brd4187c/matter_thread_soc_lock_app_series_2_freertos_solution
+                    brd4187c/matter_thread_soc_zigbee_light_series_2_freertos_solution
+                    brd4187c/matter_thread_soc_multi_sensor_app_series_2_freertos_solution
+                    brd4407a/matter_thread_soc_lighting_app_series_3_freertos_solution
+                    brd4407a/matter_thread_soc_lock_app_series_3_freertos_solution
+                    brd4407a/matter_thread_soc_multi_sensor_app_series_3_freertos_solution
+                    brd4407a/matter_thread_soc_zigbee_light_series_3_freertos_solution
+                    brd4338a/matter_wifi_soc_lighting_app_freertos_solution
+                    brd4338a/matter_wifi_soc_lock_app_freertos_solution
                 '
-                
+
                 PATTERN=""
                 for build in $CODE_SIZE_BUILDS; do
                 [ -n "$PATTERN" ] && PATTERN="${PATTERN}|"
@@ -234,18 +264,18 @@ def run_code_size_analysis() {
                 echo "$map_files_found" | sed -E 's|.*/([^/]*_solution[^/]*)/.*|\1|' | sort -u
                 exit 0
                 fi
-                
+
                 echo "Target app map files to process:"
                 echo "$filtered_map_files"
                 echo ""
-                
+
                 echo "Processing map files for target apps only..."
                 echo "$filtered_map_files" | while read map_file; do
                     perform_code_analysis "$map_file"
                 done
             '''
         }
-        
+
         echo "Code size analysis completed"
     }
 
@@ -383,7 +413,7 @@ def execute_sanity_tests(nomadNode, deviceGroup, deviceGroupId, appName, matterT
                             "UTF_COMMANDER_PATH=${commanderPath}",
                             "TCM_SIMPLICITYCOMMANDER=${commanderPath}",
                             "SECMGR_COMMANDER_PATH=${commanderPath}",
-                            "CSA_MATTER_VERSION=1.5",
+                            "CSA_MATTER_VERSION=1.6",
                             "PATH+COMMANDER_PATH=${commanderDir}"
                         ])
                         {
@@ -575,13 +605,34 @@ def buildCommitChangeSummaryForSlack() {
         prev = (env.GIT_PREVIOUS_COMMIT ?: '').trim()
     }
     def summary = ''
+    def logFile = "commit_change_summary_${env.BUILD_NUMBER}.log"
+    echo "Building commit change summary for Slack (baseline: ${prev ?: 'none'})..."
     withEnv(["PREV_BASELINE=${prev}"]) {
-        summary = sh(script: 'bash jenkins_integration/commit_change_summary.sh', returnStdout: true).trim()
+        sh(script: """
+            bash -eo pipefail -c "bash jenkins_integration/commit_change_summary.sh 2>&1 | tee '${logFile}'"
+        """)
+        summary = readFile(logFile).trim()
     }
     if (summary.length() > 3500) {
         summary = summary.substring(0, 3500) + '\n...(truncated)'
     }
     return summary
+}
+
+// Use build start time in America/New_York: evening nightlies cross midnight
+// before late stages, so wall-clock "today" would skip Thursday pipelines.
+def buildStartedOnWeekday(int calendarDay) {
+    def cal = Calendar.getInstance(TimeZone.getTimeZone('America/New_York'))
+    cal.setTime(new Date(currentBuild.startTimeInMillis))
+    return cal.get(Calendar.DAY_OF_WEEK) == calendarDay
+}
+
+def buildStartedOnThursday() {
+    return buildStartedOnWeekday(Calendar.THURSDAY)
+}
+
+def shouldTriggerSqaRegression() {
+    return env.BRANCH_NAME.startsWith("release_") && buildStartedOnThursday()
 }
 
 return this

@@ -62,6 +62,7 @@ class Formatter:
         self.extract(options, 'prod_fw')
         self.extract(options, 'cert_tool')
         self.extract(options, 'pylink_lib')
+        self.extract(options, 'rtos')
 
     def format(self, main={}):
         # Version
@@ -81,6 +82,7 @@ class Formatter:
         self.insert(options, 'prod_fw')
         self.insert(options, 'cert_tool')
         self.insert(options, 'pylink_lib')
+        self.insert(options, 'rtos')
         if len(options) > 0:
             main['options'] = options
         # Matter

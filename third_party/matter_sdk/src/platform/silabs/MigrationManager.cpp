@@ -189,6 +189,7 @@ void MigrateS3Certificates()
     if (CHIP_NO_ERROR == SilabsConfig::ReadConfigValue(SilabsConfig::kConfigKey_Creds_Base_Addr, credsBaseAddr) &&
         (credsBaseAddr >= tokenStartAddr && credsBaseAddr < secondPageAddr))
     {
+#if SL_MATTER_PROVISION_CHANNEL_ENABLED
         uint32_t cdSize                = 0;
         uint32_t dacSize               = 0;
         uint32_t paiSize               = 0;
@@ -230,6 +231,10 @@ void MigrateS3Certificates()
         ReturnOnFailure(provision.GetStorage().SetDeviceAttestationCert(dacBufferSpan));
         ReturnOnFailure(provision.GetStorage().SetProductAttestationIntermediateCert(paiBufferSpan));
         ReturnOnFailure(provision.GetStorage().SetCertificationDeclaration(cdBufferSpan));
+#else
+        ChipLogError(NotSpecified, "Your credentials must be migrated. This requires this require the ProvisionStorageWriter");
+        chipAbort();
+#endif // SL_MATTER_PROVISION_CHANNEL_ENABLED
     }
 #endif //_SILICON_LABS_32B_SERIES_3
 }

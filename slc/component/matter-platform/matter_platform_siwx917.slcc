@@ -20,10 +20,7 @@ requires:
   - name: matter_siwx917_common
   - name: sl_si91x_trng
   - name: nvm3_default
-  - name: memory_manager
-  - name: memory_manager_pool
-  - name: freertos_heap_4
-  - name: sl_si91x_memory_manager
+  - name: freertos_heap_3
   - name: psram_core
     condition: [device_supports_psram, device_supports_external_flash]
   - name: syscalls
@@ -53,6 +50,12 @@ source:
 define:
   - name: SUPPORT_CPLUSPLUS
     value: 1
+  - name: SL_WFX_CONFIG_SCAN
+    value: 1
+  - name: CHIP_9117
+    value: 1
+  - name: DEBUG_UART
+    value: "1"
   - name: SL_MATTER_SIWX_WIFI_ENABLE
   - name: SL_SI91x_DUAL_INTERRUPTS_ERRATA
   - name: NVM3_LOCK_OVERRIDE

@@ -62,7 +62,7 @@
       ],
       "deviceVersions": [
         1,
-        4
+        5
       ],
       "deviceIdentifiers": [
         17,
@@ -5933,7 +5933,7 @@
         }
       ],
       "deviceVersions": [
-        3,
+        4,
         1
       ],
       "deviceIdentifiers": [
@@ -8328,22 +8328,6 @@
               "maxInterval": 65534,
               "reportableChange": 0
             },
-            {
-              "name": "ManufacturerExtension",
-              "code": 4293984257,
-              "mfgCode": null,
-              "side": "server",
-              "type": "int8u",
-              "included": 1,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "255",
-              "reportable": 1,
-              "minInterval": 1,
-              "maxInterval": 65534,
-              "reportableChange": 0
-            }
           ]
         },
         {
@@ -22611,7 +22595,7 @@
         }
       ],
       "deviceVersions": [
-        3,
+        4,
         1
       ],
       "deviceIdentifiers": [

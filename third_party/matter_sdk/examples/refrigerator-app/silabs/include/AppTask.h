@@ -27,7 +27,7 @@
 #include <stdint.h>
 #include <utility>
 
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
 #include "RefrigeratorUI.h"
 #endif
 

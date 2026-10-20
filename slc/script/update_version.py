@@ -107,14 +107,16 @@ if __name__ == '__main__':
     #   version: 4.3.0
     replace_text(str(ROOT)+"/matter.slce","  *id: simplicity_sdk\n  *version: "+VERSION_REGEX_FORMAT,"  id: simplicity_sdk\n  version: "+SISDK_NEW_VERSION)
 
-    # Update matter.slsdk
+    # Update matter.slsdk and matter_app.slsdk
     #
     # REGEX FORMAT:
     # version=0.0.4
     # prop.subLabel=Silicon Labs Matter\\ 1.0.4-1.0
-    if FULL_VERSION:
-        replace_text(str(ROOT)+"/matter.slsdk",FULL_VERSION_REGEX,EXTENSION_NEW_VERSION+"-"+AUX_VERSION)
-    replace_text(str(ROOT)+"/matter.slsdk","version="+VERSION_REGEX_FORMAT,"version="+EXTENSION_NEW_VERSION)
+    for slsdk in ("matter.slsdk", "matter_app.slsdk"):
+        slsdk_path = str(ROOT) + "/" + slsdk
+        if FULL_VERSION:
+            replace_text(slsdk_path, FULL_VERSION_REGEX, EXTENSION_NEW_VERSION+"-"+AUX_VERSION)
+        replace_text(slsdk_path, "version="+VERSION_REGEX_FORMAT, "version="+EXTENSION_NEW_VERSION)
 
     # Update .md files in slc/ directory and root README.md
     #

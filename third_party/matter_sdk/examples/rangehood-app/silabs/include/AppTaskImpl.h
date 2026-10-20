@@ -38,31 +38,29 @@ template <typename Derived>
 class AppTaskImpl : public AppTask
 {
 public:
-    // Common AppTask bring up
     CHIP_ERROR AppInit() override { CRTP_OPTIONAL_DISPATCH(AppTaskImpl, Derived, AppInitImpl); }
 
-    // Rangehood specific initialization
     CHIP_ERROR InitRangeHood() { CRTP_OPTIONAL_DISPATCH(AppTaskImpl, Derived, InitRangeHoodImpl); }
 
-    // Handle button press
+    // Platform button callback, posts fan-control or base application events.
     static void ButtonEventHandler(uint8_t button, uint8_t btnAction)
     {
         CRTP_OPTIONAL_STATIC_DISPATCH(AppTaskImpl, Derived, ButtonEventHandlerImpl, button, btnAction);
     }
 
-    // AppTask thread event handler for a queued rangehood action event
+    // Applies light/fan actions to LED and display after attribute driven updates.
     static void ActionTriggerHandler(AppEvent * aEvent)
     {
         CRTP_OPTIONAL_STATIC_DISPATCH(AppTaskImpl, Derived, ActionTriggerHandlerImpl, aEvent);
     }
 
-    // AppTask thread event handler that drives the FanControl cluster from a button press
+    // Action button handler, toggles extractor hood fan mode.
     static void FanControlButtonHandler(AppEvent * aEvent)
     {
         CRTP_OPTIONAL_STATIC_DISPATCH(AppTaskImpl, Derived, FanControlButtonHandlerImpl, aEvent);
     }
 
-    // Data model hook invoked when a cluster attribute changes
+    // Matter stack callback after a server attribute change, forwards FanControl and OnOff updates.
     void DMPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
                                        uint8_t * value)
     {

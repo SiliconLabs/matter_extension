@@ -49,6 +49,10 @@ buildconfig_header("inet_buildconfig") {
     "INET_CONFIG_ENABLE_TCP_ENDPOINT=${chip_inet_config_enable_tcp_endpoint}",
     "INET_CONFIG_ENABLE_UDP_ENDPOINT=${chip_inet_config_enable_udp_endpoint}",
     "HAVE_LWIP_RAW_BIND_NETIF=true",
+
+    # [SL-ONLY] Queuing the UDP packets until the netif is up
+    "SL_INET_CONFIG_UDP_LWIP_QUEUE_UNTIL_NETIF_READY=${sl_inet_config_udp_lwip_queue_until_netif_ready}",
+    "SL_INET_CONFIG_UDP_LWIP_DEFERRED_SEND_QUEUE_SIZE=${sl_inet_config_udp_lwip_deferred_send_queue_size}",
   ]
 
   if (chip_inet_project_config_include != "") {
@@ -183,6 +187,7 @@ static_library("inet") {
     #  - UDPEndPointImplSockets.h
     sources += [
       "BasicPacketFilters.h",
+      "DeferredUdpSendRing.h",
       "EndpointQueueFilter.h",
       "UDPEndPoint.cpp",
       "UDPEndPoint.h",
@@ -192,6 +197,12 @@ static_library("inet") {
 
     if (!chip_system_config_use_network_framework) {
       sources += [ "UDPEndPointImpl${chip_system_config_inet}.cpp" ]
+      if (sl_inet_config_udp_lwip_queue_until_netif_ready) {
+        sources += [
+          "DeferredUdpSendQueueLwIP.cpp",
+          "DeferredUdpSendQueueLwIP.h",
+        ]
+      }
     }
   }
 

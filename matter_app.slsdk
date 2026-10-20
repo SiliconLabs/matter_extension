@@ -1,0 +1,13 @@
+# Properties file for Simplicity Studio metadata
+id=com.silabs.sdk.matter_app
+
+version=2.10.0
+
+label=Silicon Labs Matter Applications
+description=Matter sample applications package
+
+prop.file.templatesFile=matter_templates.xml
+
+prop.file.docsFile=matter_docs.xml
+prop.file.demosFile=matter_demos.xml
+prop.subLabel=Silicon\\ Labs\\ Matter\\ 2.10.0-1.6.1

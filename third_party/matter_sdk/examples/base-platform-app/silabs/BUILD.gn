@@ -92,10 +92,6 @@ if (wifi_soc) {
     sources = common_sources
     include_dirs =
         [ "${chip_root}/src/platform/silabs/efr32" ] + common_include_dirs
-
-    if (use_wf200) {
-      include_dirs += [ "${examples_plat_dir}/wf200" ]
-    }
     defines = common_defines
   }
 }

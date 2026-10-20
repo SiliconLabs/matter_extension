@@ -18,16 +18,23 @@
  */
 #pragma once
 
-#include "BaseApplication.h"
-#include <app/ConcreteAttributePath.h>
-#include <app/data-model-provider/AttributeChangeListener.h>
-#include <app/data-model/Nullable.h>
-#include <lib/core/CHIPError.h>
-#include <lib/core/DataModelTypes.h>
-#include <platform/CHIPDeviceLayer.h>
-#include <protocols/interaction_model/StatusCode.h>
+/**********************************************************
+ * Includes
+ *********************************************************/
 
-struct AppEvent;
+#include "AppEvent.h"
+#include "BaseApplication.h"
+#include <app/clusters/occupancy-sensor-server/CodegenIntegration.h>
+#include <ble/BLEEndPoint.h>
+#include <lib/core/CHIPError.h>
+#include <memory>
+#include <platform/CHIPDeviceLayer.h>
+#include <stdbool.h>
+#include <stdint.h>
+
+/**********************************************************
+ * Defines
+ *********************************************************/
 
 // Application-defined error codes in the CHIP_ERROR space.
 #define APP_ERROR_EVENT_QUEUE_FAILED CHIP_APPLICATION_ERROR(0x01)
@@ -37,14 +44,17 @@ struct AppEvent;
 #define APP_ERROR_START_TIMER_FAILED CHIP_APPLICATION_ERROR(0x05)
 #define APP_ERROR_STOP_TIMER_FAILED CHIP_APPLICATION_ERROR(0x06)
 
-class AppTask : public BaseApplication, public chip::app::DataModel::AttributeChangeListener
+/**********************************************************
+ * AppTask Declaration
+ *********************************************************/
+
+class AppTask : public BaseApplication
 {
 
 public:
     AppTask() = default;
 
-    /** @brief Returns the active app instance (defined in CustomerAppTask.cpp). */
-    static AppTask & GetAppTask();
+    static AppTask & GetAppTask() { return sAppTask; }
 
     /**
      * @brief AppTask task main loop function
@@ -70,125 +80,73 @@ public:
      *        Use the EventHandler structure to be used as a callback the Application events.
      *
      */
-    static void ProcessButtonEvent(AppEvent * aEvent);
-
-    /**
-     * @brief AttributeChangeListener hook invoked after a cluster attribute changes.
-     *        Posts application events for occupancy and sensor measurement updates.
-     */
-    void OnAttributeChanged(const chip::app::ConcreteAttributePath & path,
-                            chip::app::DataModel::AttributeChangeType type) override;
+    static void ProccessButtonEvent(AppEvent * event);
 
     /**
      * @brief Triggers necessary updates when the Sensor values have been changed.
      *        Use the EventHandler structure to be used as a callback the Application events.
      */
-    static void SensorAttributeUpdateEvent(AppEvent * aEvent);
+    static void SensorAttributeUpdateEvent(AppEvent * event);
 
     /**
      * @brief Triggers necessary updates when the Occupancy values have been changed.
      *        Use the EventHandler structure to be used as a callback the Application events.
      */
-    static void OccupancyAttributeUpdateEvent(AppEvent * aEvent);
+    static void OccupancyAttributeUpdateEvent(AppEvent * event);
 
-    /**
-     * @brief Reads the current temperature and humidity from the sensor (Si70xx) or,
-     *        when the sensor is not present returns simulated values.
-     */
-    CHIP_ERROR GetTemperatureAndHumidity(int16_t & temperature, uint16_t & humidity);
-
-    /** @brief Data model hook invoked when a cluster attribute changes */
-    void DMPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
-                                       uint8_t * value);
-
-    /**
-     * @brief Returns the DataModel TemperatureMeasurement::MeasuredValue attribute.
-     *        The caller MUST hold the lock on the Matter task.
-     */
-    chip::Protocols::InteractionModel::Status GetMeasuredTemperature(chip::app::DataModel::Nullable<int16_t> & value);
-
-    /**
-     * @brief Returns the DataModel TemperatureMeasurement::MaxMeasuredValue attribute.
-     *        The caller MUST hold the lock on the Matter task.
-     */
-    chip::Protocols::InteractionModel::Status GetMaxMeasuredTemperature(chip::app::DataModel::Nullable<int16_t> & value);
-
-    /**
-     * @brief Returns the DataModel TemperatureMeasurement::MinMeasuredValue attribute.
-     *        The caller MUST hold the lock on the Matter task.
-     */
-    chip::Protocols::InteractionModel::Status GetMinMeasuredTemperature(chip::app::DataModel::Nullable<int16_t> & value);
-
-    /**
-     * @brief Returns the DataModel RelativeHumidityMeasurement::MeasuredValue attribute.
-     *        The caller MUST hold the lock on the Matter task.
-     */
-    chip::Protocols::InteractionModel::Status GetMeasuredHumidity(chip::app::DataModel::Nullable<uint16_t> & value);
-
-    /**
-     * @brief Returns the DataModel RelativeHumidityMeasurement::MaxMeasuredValue attribute.
-     *        The caller MUST hold the lock on the Matter task.
-     */
-    chip::Protocols::InteractionModel::Status GetMaxMeasuredHumidity(chip::app::DataModel::Nullable<uint16_t> & value);
-
-    /**
-     * @brief Returns the DataModel RelativeHumidityMeasurement::MinMeasuredValue attribute.
-     *        The caller MUST hold the lock on the Matter task.
-     */
-    chip::Protocols::InteractionModel::Status GetMinMeasuredHumidity(chip::app::DataModel::Nullable<uint16_t> & value);
-
-    /**
-     * @brief Reads the Occupancy attribute and returns whether occupancy is currently detected.
-     */
-    bool IsOccupancyDetected();
-
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
     /**
      * @brief LCD callback function to cycle LCD display.
      *        Function switch to the next LCD UI and update the show values.
      */
     void UpdateDisplay() override;
-
-    /**
-     * @brief Trigger an LCD update to get the latest attribute values
-     *        Only the currently shown LCD image is updated.
-     */
-    void UpdateSensorDisplay();
-#endif // DISPLAY_ENABLED
-
-protected:
-    /**
-     * @brief Override of BaseApplication::AppInit(), called by BaseApplication::Init().
-     */
-    CHIP_ERROR AppInit() override;
-
-    /**
-     * @brief Initializes the sensor subsystem: registers the attribute change listener,
-     *        initializes the hardware sensor driver (if enabled), and schedules the
-     *        first sensor reading.
-     */
-    CHIP_ERROR InitSensorManager();
-
-    /**
-     * @brief chip::System::Layer timer callback that reads sensor values and updates
-     *        the TemperatureMeasurement / RelativeHumidityMeasurement clusters.
-     *        Must be called from the Matter task context.
-     */
-    static void TriggerSensorAction(chip::System::Layer * aLayer, void * aAppState);
+#endif // SL_MATTER_DISPLAY_ENABLED
 
 private:
+    static AppTask sAppTask;
+
     enum class kSensorUIEnum : uint8_t
     {
         kOccupancySensor = 0,
         kSensor          = 1,
         kStatusScreen    = 2,
-#ifdef QR_CODE_ENABLED
+#if SL_MATTER_QR_CODE_ENABLED
         kQrCode = 3,
         kCount  = 4,
 #else
         kCount = 3,
 #endif
     };
+
+    /**
+     * @brief Override of BaseApplication::AppInit() virtual method, called by BaseApplication::Init()
+     *
+     * @return CHIP_ERROR
+     */
+    CHIP_ERROR AppInit() override;
+
+#if SL_MATTER_DISPLAY_ENABLED
+    /**
+     * @brief Function cycle between the different LCD UIs.
+     *        The LCD order is : Occupancy -> Temp/Hum values -> Status Screen -> QR code (if enabled) -> Occupancy.
+     */
+    void CycleSensorUI();
+
+    /**
+     * @brief Trigger an LCD update to get the latest attribute values
+     *        Only the currently shown LCD image is updated.
+     */
+    void UpdateSensorDisplay(void);
+#endif // SL_MATTER_DISPLAY_ENABLED
+
+    /**
+     * @brief PB0 Button event processing function
+     *        Press and hold will trigger a factory reset timer start
+     *        Press and release will restart BLEAdvertising if not commisionned
+     *
+     * @param aEvent button event being processed
+     */
+    static void ButtonHandler(AppEvent * aEvent);
 
     kSensorUIEnum mCurrentSensorUI;
 };

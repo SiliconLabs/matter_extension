@@ -33,6 +33,7 @@ declare_args() {
 
   # OTA timeout in seconds
   ota_periodic_query_timeout_sec = 86400
+  sl_use_base_application = true
 }
 
 import("${silabs_common_plat_dir}/args.gni")
@@ -100,11 +101,15 @@ config("efr32-common-config") {
   if (!disable_lcd) {
     include_dirs = [ "${silabs_common_plat_dir}/display" ]
 
-    defines += [ "DISPLAY_ENABLED" ]
+    defines += [ "SL_MATTER_DISPLAY_ENABLED=1" ]
+  } else {
+    defines += [ "SL_MATTER_DISPLAY_ENABLED=0" ]
   }
 
   if (show_qr_code) {
-    defines += [ "QR_CODE_ENABLED" ]
+    defines += [ "SL_MATTER_QR_CODE_ENABLED=1" ]
+  } else {
+    defines += [ "SL_MATTER_QR_CODE_ENABLED=0" ]
   }
 
   if (chip_enable_ota_requestor) {
@@ -119,6 +124,10 @@ config("efr32-common-config") {
     defines += [ "SL_MATTER_USE_CODE_DRIVEN_DATA_MODEL=1" ]
   } else {
     defines += [ "SL_MATTER_USE_CODE_DRIVEN_DATA_MODEL=0" ]
+  }
+
+  if (!sl_use_base_application) {
+    defines += [ "SL_MATTER_CUSTOM_APPTASK=1" ]
   }
 
   ldflags = [ "-fno-lto" ]
@@ -162,7 +171,6 @@ source_set("efr32-common") {
   include_dirs = [ "." ]
 
   sources = [
-    "${silabs_common_plat_dir}/BaseApplication.cpp",
     "${silabs_common_plat_dir}/LEDWidget.cpp",
     "${silabs_common_plat_dir}/MatterConfig.cpp",
     "${silabs_common_plat_dir}/SoftwareFaultReports.cpp",
@@ -170,6 +178,10 @@ source_set("efr32-common") {
     "${silabs_common_plat_dir}/silabs_utils.cpp",
     "${silabs_common_plat_dir}/syscalls_stubs.cpp",
   ]
+
+  if (sl_use_base_application) {
+    sources += [ "${silabs_common_plat_dir}/BaseApplication.cpp" ]
+  }
 
   # FreeRTOS runtime statistics support
   if (matter_enable_tracing_support) {
@@ -224,7 +236,9 @@ source_set("efr32-common") {
     if (matter_enable_tracing_support) {
       public_deps += [ "${silabs_common_plat_dir}/shell:tracing" ]
     }
-    deps += [ "${silabs_common_plat_dir}/shell:ble" ]
+    if (chip_config_network_layer_ble) {
+      deps += [ "${silabs_common_plat_dir}/shell:ble" ]
+    }
   }
 
   public_deps += [

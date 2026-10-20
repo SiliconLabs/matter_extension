@@ -39,25 +39,23 @@ template <typename Derived>
 class AppTaskImpl : public AppTask
 {
 public:
-    // Common AppTask bring up
     CHIP_ERROR AppInit() override { CRTP_OPTIONAL_DISPATCH(AppTaskImpl, Derived, AppInitImpl); }
 
-    // Plug specific initialization
     CHIP_ERROR InitPlug() { CRTP_OPTIONAL_DISPATCH(AppTaskImpl, Derived, InitPlugImpl); }
 
-    // Handle button press
+    // Platform button callback, posts on/off toggle or base-application button events.
     static void ButtonEventHandler(uint8_t button, uint8_t btnAction)
     {
         CRTP_OPTIONAL_STATIC_DISPATCH(AppTaskImpl, Derived, ButtonEventHandlerImpl, button, btnAction);
     }
 
-    // AppTask thread event handler that applies an OnOff action
+    // Toggles plug on/off, updates LED/display, and schedules OnOff cluster sync on the Matter thread.
     static void OnOffActionEventHandler(AppEvent * aEvent)
     {
         CRTP_OPTIONAL_STATIC_DISPATCH(AppTaskImpl, Derived, OnOffActionEventHandlerImpl, aEvent);
     }
 
-    // Data model hook invoked when a cluster attribute changes
+    // Matter stack callback after a server attribute write, syncs plug LED and display on OnOff changes.
     void DMPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
                                        uint8_t * value)
     {

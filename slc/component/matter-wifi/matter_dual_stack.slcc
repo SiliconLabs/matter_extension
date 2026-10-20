@@ -18,7 +18,7 @@ provides:
   - name: matter_lwip
   - name: lwip
   - name: lwip_port_freertos
-  - name: netstack_silabs_lwip_port_freertos
+  - name: silabs_lwip_port_freertos
   - name: sl_si91x_errno
 
 requires:
@@ -28,7 +28,6 @@ requires:
 include:
   - path: third_party/matter_sdk/src/lwip/silabs
     file_list:
-      - path: lwipopts-siwx.h
       - path: arch/cc.h
       - path: arch/perf.h
       - path: lwippools.h

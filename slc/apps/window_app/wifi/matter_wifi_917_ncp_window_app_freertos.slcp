@@ -8,10 +8,10 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.9.2"
+    version: "2.10.0"
     vendor: silabs
   - id: wiseconnect3_sdk
-    version: "4.1.2"
+    version: "4.2.0"
     vendor: silabs
 
 provides:
@@ -67,7 +67,7 @@ component:
   - id: matter_window_covering
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
-  - id: matter_segger_rtt
+  - id: segger_rtt
 
   - id: matter_shell
   - id: matter_icd_core

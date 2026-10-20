@@ -7,7 +7,6 @@ The Matter over Wi-Fi fan control example is a baseline demonstration of a fan d
 - [Purpose/Scope](#purposescope)
 - [Prerequisites/Setup Requirements](#prerequisitessetup-requirements)
 - [Steps to Run Demo](#steps-to-run-demo)
-- [Extending Base App Implementation](#extending-base-app-implementation)
 - [Troubleshooting](#troubleshooting)
 - [Resources](#resources)
 - [Report Bugs & Get Support](#report-bugs--get-support)
@@ -31,20 +30,20 @@ starting point for building production products on the Silicon Labs platform.
 
 ### HW Requirements
 
-For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.2/matter-overview/#hardware-requirements) documentation.
+For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.10.0/matter-overview/#hardware-requirements) documentation.
 
 ### SW Requirements
 
-For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.2/matter-overview/#software-requirements) documentation.
+For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.10.0/matter-overview/#software-requirements) documentation.
 
 ## Steps to Run Demo
 
 ### Configuration and Setup
 
 This sample app works out of the box with no additional configuration required. To customize the device, see the
-[Custom Matter Device Development](https://docs.silabs.com/matter/2.9.2/matter-references/custom-matter-device#custom-matter-device-development) guide.
+[Custom Matter Device Development](https://docs.silabs.com/matter/2.10.0/matter-references/custom-matter-device#custom-matter-device-development) guide.
 
-**Region code (SiWx917 Wi-Fi):** For Wi-Fi configurations, the region code can be set in this [file](https://github.com/SiliconLabsSoftware/matter_sdk/blob/v2.9.2/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp). The available region codes can be found [here](https://github.com/SiliconLabs/wiseconnect/blob/v4.1.2-content-for-docs/components/protocol/wifi/inc/sl_wifi_constants.h#L739).
+**Region code (SiWx917 Wi-Fi):** For Wi-Fi configurations, the region code can be set in this [file](https://github.com/SiliconLabsSoftware/matter_sdk/blob/v2.10.0/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp). The available region codes can be found [here](https://github.com/SiliconLabs/wiseconnect/blob/v4.2.0-content-for-docs/components/protocol/wifi/inc/sl_wifi_constants.h#L739).
 
 ### Steps for Execution
 
@@ -55,7 +54,7 @@ This sample app works out of the box with no additional configuration required. 
 
    **chip-tool (standalone or pre-built):** The pre-built chip-tool instance ships
    with the Matter Hub image. More information on using the Matter Hub is in the
-   [Silicon Labs Matter Hub Documentation](https://docs.silabs.com/matter/2.9.2/matter-thread/raspi-img).
+   [Silicon Labs Matter Hub Documentation](https://docs.silabs.com/matter/2.10.0/matter-thread/raspi-img).
    ```shell
    chip-tool pairing ble-wifi 1 <SSID> <PSK> 20202021 3840
    ```
@@ -95,13 +94,6 @@ This sample app works out of the box with no additional configuration required. 
 | LED 1   | Solid on         | Fan is on                                                      |
 | LED 1   | Off              | Fan is off                                                     |
 
-## Extending Base App Implementation
-
-See [Extending Base App Implementation](https://docs.silabs.com/matter/2.9.2/matter-api-reference#extending-base-app-implementation)
-for how to customize application behavior using `CustomerAppTask` and CRTP `*Impl()` hooks.
-
-Per-example override API references: `autogen/AppTaskImpl.h`, `autogen/AppTask.cpp`.
-
 ## Troubleshooting
 
 **Device does not advertise over BLE**
@@ -122,8 +114,8 @@ Per-example override API references: `autogen/AppTaskImpl.h`, `autogen/AppTask.c
 
 ## Resources
 
-- [Silicon Labs Matter over Wi-Fi Documentation](https://docs.silabs.com/matter/2.9.2/matter-wifi)
-- [Matter Hub Setup](https://docs.silabs.com/matter/2.9.2/matter-thread/raspi-img)
+- [Silicon Labs Matter over Wi-Fi Documentation](https://docs.silabs.com/matter/2.10.0/matter-wifi)
+- [Matter Hub Setup](https://docs.silabs.com/matter/2.10.0/matter-thread/raspi-img)
 - [chip-tool README](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
 
 ## Report Bugs & Get Support

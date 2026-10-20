@@ -34,3 +34,7 @@ sl_active_mode_threshold_ms = 5000  # 5s Active Mode Threshold
 
 sl_use_subscription_syncing = true
 chip_subscription_timeout_resumption = false
+
+# Defer outbound UDP until Wi-Fi netif is link-up.
+sl_inet_config_udp_lwip_queue_until_netif_ready = true
+sl_inet_config_udp_lwip_deferred_send_queue_size = 8

@@ -422,6 +422,8 @@ def _process_individual_artifact(artifact_name, artifact_path, branch_name, buil
         _upload_provision_zip(artifact_path, branch_name, build_number)
     elif artifact_name == "ota-scripts.zip":
         _upload_ota_scripts(artifact_path, branch_name, build_number)
+    elif artifact_name == "mmic_host":
+        _upload_mmic_host(artifact_path, branch_name, build_number)
     elif os.path.isdir(artifact_path):
         if artifact_name == "WiFi-Firmware":
             _upload_wifi_firmware(artifact_path, branch_name, build_number)
@@ -433,6 +435,11 @@ def _upload_chip_tool(artifact_path, branch_name, build_number):
     """Upload chip-tool artifact to UBAI."""
     print("Uploading chip-tool to UBAI.")
     upload_to_ubai(artifact_path, "Chiptool", "linux-arm64-ipv6only-clang", branch_name, build_number)
+
+def _upload_mmic_host(artifact_path, branch_name, build_number):
+    """Upload mmic host artifact to UBAI."""
+    print("Uploading mmic host to UBAI.")
+    upload_to_ubai(artifact_path, "mmic", "host", branch_name, build_number)
 
 
 def _upload_chip_ota_provider(artifact_path, branch_name, build_number):

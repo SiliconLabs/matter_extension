@@ -19,10 +19,10 @@
 
 #include "AppTask.h"
 #include "AppConfig.h"
-#include "LockConfig.h"
 #include "AppEvent.h"
 #include "CHIPProjectConfig.h"
 #include "CustomerAppTask.h"
+#include "LockConfig.h"
 #ifdef SL_MATTER_ENABLE_AWS
 #include "MatterAws.h"
 #endif // SL_MATTER_ENABLE_AWS
@@ -32,12 +32,12 @@
 
 #include "LEDWidget.h"
 
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
 #include "lcd.h"
-#ifdef QR_CODE_ENABLED
+#if SL_MATTER_QR_CODE_ENABLED
 #include "qrcodegen.h"
-#endif // QR_CODE_ENABLED
-#endif // DISPLAY_ENABLED
+#endif // SL_MATTER_QR_CODE_ENABLED
+#endif // SL_MATTER_DISPLAY_ENABLED
 
 #include <app-common/zap-generated/attributes/Accessors.h>
 #include <app-common/zap-generated/cluster-objects.h>
@@ -67,6 +67,10 @@
 #define APP_FUNCTION_BUTTON 0
 #define APP_LOCK_SWITCH 1
 
+using chip::app::Clusters::DoorLock::DlLockState;
+using chip::app::Clusters::DoorLock::OperationErrorEnum;
+using chip::app::Clusters::DoorLock::OperationSourceEnum;
+
 using namespace chip;
 using namespace chip::app;
 using namespace Clusters;
@@ -86,7 +90,7 @@ CustomerAppTask & AppInstance()
 }
 
 // Defaults live in LockConfig.h; consumers tune via the Configuration Wizard.
-constexpr EndpointId kLockEndpoint              = EndpointId(LOCK_ENDPOINT);
+constexpr EndpointId kLockEndpoint           = EndpointId(LOCK_ENDPOINT);
 constexpr uint32_t kActuatorMovementPeriodMs = ACTUATOR_MOVEMENT_PERIOD_MS;
 constexpr uint32_t kUnlatchTimeMs            = UNLATCH_TIME_MS;
 
@@ -298,9 +302,9 @@ CHIP_ERROR AppTask::InitLock()
                         ChipLogError(AppServer, "sUnlatchTimer timer create failed"));
 
     // Update the LCD with the Stored value. Show QR Code if not provisioned
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
     GetLCD().WriteDemoUI(state.Value() != DlLockState::kUnlocked);
-#ifdef QR_CODE_ENABLED
+#if SL_MATTER_QR_CODE_ENABLED
 #ifdef SL_WIFI
     if (!ConnectivityMgr().IsWiFiStationProvisioned())
 #else
@@ -309,8 +313,8 @@ CHIP_ERROR AppTask::InitLock()
     {
         GetLCD().ShowQRCode(true);
     }
-#endif // QR_CODE_ENABLED
-#endif
+#endif // SL_MATTER_QR_CODE_ENABLED
+#endif // SL_MATTER_DISPLAY_ENABLED
 
     return CHIP_NO_ERROR;
 }
@@ -621,8 +625,7 @@ void emberAfPluginDoorLockOnAutoRelock(EndpointId endpointId)
     AppInstance().DMDoorLockOnAutoRelock(endpointId);
 }
 
-CHIP_ERROR AppTask::InitLockDomain(DataModel::Nullable<DlLockState> state, LockParam lockParam,
-                                   PersistentStorageDelegate * storage)
+CHIP_ERROR AppTask::InitLockDomain(DataModel::Nullable<DlLockState> state, LockParam lockParam, PersistentStorageDelegate * storage)
 {
     VerifyOrReturnError(storage != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
     mStorage = storage;
@@ -691,14 +694,12 @@ bool AppTask::IsActuatorBusy() const
 
 bool AppTask::IsAtTerminalLockOrUnlock() const
 {
-    return (mLockActuatorState == LockActuatorState::kLockCompleted ||
-            mLockActuatorState == LockActuatorState::kUnlockCompleted);
+    return (mLockActuatorState == LockActuatorState::kLockCompleted || mLockActuatorState == LockActuatorState::kUnlockCompleted);
 }
 
 bool AppTask::CanInitiateUnlockFromCurrentState() const
 {
-    return (mLockActuatorState == LockActuatorState::kLockCompleted ||
-            mLockActuatorState == LockActuatorState::kUnlatchCompleted);
+    return (mLockActuatorState == LockActuatorState::kLockCompleted || mLockActuatorState == LockActuatorState::kUnlatchCompleted);
 }
 
 bool AppTask::InitiateLockAction(LockAction aAction, bool fromButton)
@@ -737,9 +738,9 @@ bool AppTask::InitiateLockAction(LockAction aAction, bool fromButton)
         ChipLogDetail(Zcl, "%s Action has been initiated", locked ? "Lock" : "Unlock");
         sLockLED.Set(!locked);
 
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
         AppInstance().GetLCD().WriteDemoUI(locked);
-#endif // DISPLAY_ENABLED
+#endif // SL_MATTER_DISPLAY_ENABLED
     }
     else if (aAction == LockAction::kUnlatch)
     {
@@ -812,8 +813,7 @@ void AppTask::UnlockAfterUnlatch(intptr_t /* context */)
 void AppTask::UnlatchCallback(void * argument)
 {
     (void) argument;
-    TEMPORARY_RETURN_IGNORED PlatformMgr().ScheduleWork(&CustomerAppTask::UnlockAfterUnlatch,
-                                                                     reinterpret_cast<intptr_t>(nullptr));
+    TEMPORARY_RETURN_IGNORED PlatformMgr().ScheduleWork(&CustomerAppTask::UnlockAfterUnlatch, reinterpret_cast<intptr_t>(nullptr));
 }
 
 void AppTask::ActuatorMovementEventHandler(AppEvent * aEvent)
@@ -864,8 +864,8 @@ void AppTask::ActuatorMovementEventHandler(AppEvent * aEvent)
         {
             if (stateToReport != DlLockState::kUnknownEnumValue)
             {
-                TEMPORARY_RETURN_IGNORED PlatformMgr().ScheduleWork(
-                    UpdateClusterState, static_cast<intptr_t>(to_underlying(stateToReport)));
+                TEMPORARY_RETURN_IGNORED PlatformMgr().ScheduleWork(UpdateClusterState,
+                                                                    static_cast<intptr_t>(to_underlying(stateToReport)));
             }
             lock->mSyncClusterToButtonAction = false;
         }
@@ -973,13 +973,11 @@ void AppTask::HandleLockRequestOnAppTask(const LockRequest & request)
             (mLockActuatorState == LockActuatorState::kLockCompleted) ? DlLockState::kLocked : DlLockState::kUnlocked;
         if (request.targetClusterState == currentTerminal)
         {
-            ChipLogDetail(AppServer,
-                          "Door Lock App: remote request target (%u) matches current LockState; updating LockOperation",
+            ChipLogDetail(AppServer, "Door Lock App: remote request target (%u) matches current LockState; updating LockOperation",
                           to_underlying(request.targetClusterState));
             PlatformMgr().LockChipStack();
             PushClusterLockState(request.endpointId, request.targetClusterState, request.fabricIdx, request.nodeId,
-                                 request.userIndex, request.hasCredential ? &request.credential : nullptr,
-                                 request.hasCredential);
+                                 request.userIndex, request.hasCredential ? &request.credential : nullptr, request.hasCredential);
             PlatformMgr().UnlockChipStack();
             return;
         }

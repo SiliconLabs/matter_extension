@@ -24,10 +24,10 @@
 #endif
 
 // <q SILABS_LOG_ENABLED> Enable Silabs specific log used in matter
-// <i> Default: 1
+// <i> Default: 0
 // <i> Enables Silicon Labs platform-specific logging within the Matter stack
 #ifndef SILABS_LOG_ENABLED
-#define SILABS_LOG_ENABLED 1
+#define SILABS_LOG_ENABLED 0
 #endif
 
 // <q HARD_FAULT_LOG_ENABLE> Enable hard fault logging

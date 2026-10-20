@@ -104,6 +104,7 @@ private:
     CHIP_ERROR _GetAndLogWifiStatsCounters(void);
     void _OnWiFiScanDone();
     void _OnWiFiStationProvisionChange();
+    CHIP_ERROR _DisconnectNetwork(void);
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
     CHIP_ERROR _SetPollingInterval(System::Clock::Milliseconds32 pollingInterval);
 #endif /* CHIP_CONFIG_ENABLE_ICD_SERVER */
@@ -117,17 +118,25 @@ private:
 
     // ===== Private members reserved for use by this class only.
 #if CHIP_DEVICE_CONFIG_ENABLE_WIFI_STATION
-    System::Clock::Timestamp mLastStationConnectFailTime;
+    // variables for tracking the station mode and state
     WiFiStationMode mWiFiStationMode;
     WiFiStationState mWiFiStationState;
+    bool mWiFiStationAutoConnect;
+    // TODO: Remove this once the LIT disconnect is managed by the ConnectivityManager
+    bool mWiFiStationDisconnectPending;
+    // variables for tracking the last connection failure time and reconnect interval
+    System::Clock::Timestamp mLastStationConnectFailTime;
     System::Clock::Timeout mWiFiStationReconnectInterval;
+    uint8_t mWiFiStationReconnectCount;
+    // flags for tracking the internet connectivity state
     BitFlags<Flags> mFlags;
 
     void DriveStationState(void);
     void OnStationConnected(void);
     void OnStationDisconnected(void);
-    void ChangeWiFiStationState(WiFiStationState newState);
+    void ChangeWiFiStationState(WiFiStationState newState, bool driveStationState = true);
     static void DriveStationState(::chip::System::Layer * aLayer, void * aAppState);
+    void ResetReconnectionWiFiStationState(void);
 
     void UpdateInternetConnectivityState(void);
 #endif

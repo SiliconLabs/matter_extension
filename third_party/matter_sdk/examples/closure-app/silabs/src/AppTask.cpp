@@ -23,11 +23,11 @@
 #include "CustomerAppManager.h"
 #include "CustomerAppTask.h"
 
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
 #include "ClosureUI.h"
 #include "ClosureUIStrings.h"
 #include "lcd.h"
-#endif // DISPLAY_ENABLED
+#endif // SL_MATTER_DISPLAY_ENABLED
 
 #include <app-common/zap-generated/cluster-objects.h>
 #include <app-common/zap-generated/ids/Attributes.h>
@@ -59,7 +59,7 @@ CustomerAppManager & AppManagerInstance()
     return CustomerAppManager::GetInstance();
 }
 
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
 // AppEvent handler for kEventType_UpdateUI; pass nullptr to refresh from AppInit.
 void UpdateClosureUI(AppEvent * aEvent)
 {
@@ -155,7 +155,7 @@ void UpdateClosureUI(AppEvent * aEvent)
         AppInstance().GetLCD().WriteDemoUI(false); // State doesn't matter for custom UI
     }
 }
-#endif // DISPLAY_ENABLED
+#endif /* SL_MATTER_DISPLAY_ENABLED */
 } // namespace
 
 void MatterClosureControlClusterServerAttributeChangedCallback(const chip::app::ConcreteAttributePath & attributePath)
@@ -175,18 +175,18 @@ CHIP_ERROR AppTask::AppInit()
     CHIP_ERROR err = CHIP_NO_ERROR;
     chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(&CustomerAppTask::ButtonEventHandler);
 
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
     LogErrorOnFailure(GetLCD().Init((uint8_t *) "Closure-App"));
     GetLCD().SetCustomUI(ClosureUI::DrawUI);
-#endif
+#endif // SL_MATTER_DISPLAY_ENABLED
 
     // Initialization of Closure Manager and endpoints of closure and closurepanel.
     AppManagerInstance().Init();
 
 // Update the LCD with the Stored value. Show QR Code if not provisioned
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
     UpdateClosureUI(nullptr);
-#ifdef QR_CODE_ENABLED
+#if SL_MATTER_QR_CODE_ENABLED
 #ifdef SL_WIFI
     if (!ConnectivityMgr().IsWiFiStationProvisioned())
 #else
@@ -195,8 +195,8 @@ CHIP_ERROR AppTask::AppInit()
     {
         GetLCD().ShowQRCode(true);
     }
-#endif // QR_CODE_ENABLED
-#endif // DISPLAY_ENABLED
+#endif // SL_MATTER_QR_CODE_ENABLED
+#endif // SL_MATTER_DISPLAY_ENABLED
 
     BaseApplication::InitCompleteCallback(err);
     return err;
@@ -306,8 +306,8 @@ void AppTask::ClosureButtonActionEventHandler(AppEvent * aEvent)
                     }
 
                     // Move to the target position with latch set to false and preserved speed value
-                    auto status = AppManagerInstance().GetClosureControlCluster().HandleMoveTo(
-                        MakeOptional(targetPosition), latch, speed);
+                    auto status =
+                        AppManagerInstance().GetClosureControlCluster().HandleMoveTo(MakeOptional(targetPosition), latch, speed);
                     if (status != Protocols::InteractionModel::Status::Success)
                     {
                         ChipLogError(AppServer, "Failed to move closure to target position: %u", to_underlying(status));
@@ -340,7 +340,7 @@ void AppTask::DMPostAttributeChangeCallback(const chip::app::ConcreteAttributePa
 void AppTask::DMClosureControlClusterAttributeChangedCallback(const chip::app::ConcreteAttributePath & attributePath)
 {
     ChipLogProgress(Zcl, "Closure Control cluster ID: " ChipLogFormatMEI, ChipLogValueMEI(attributePath.mAttributeId));
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
     using namespace chip::app::Clusters::ClosureControl::Attributes;
     switch (attributePath.mAttributeId)
     {
@@ -355,7 +355,7 @@ void AppTask::DMClosureControlClusterAttributeChangedCallback(const chip::app::C
     default:
         break;
     }
-#endif // DISPLAY_ENABLED
+#endif // SL_MATTER_DISPLAY_ENABLED
 }
 
 void AppTask::DMClosureDimensionClusterAttributeChangedCallback(const chip::app::ConcreteAttributePath & attributePath)

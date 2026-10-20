@@ -19,6 +19,10 @@
 #include "AppEvent.h"
 #include "CHIPDeviceManager.h"
 #include "CommonDeviceCallbacks.h"
+#if CONFIG_CHIP_FACTORY_DATA
+#include <platform/Zephyr/ZephyrConfig.h>
+#include <provision/ProvisionStorageReader.h>
+#endif
 
 #include <app/server/Dnssd.h>
 #include <lib/dnssd/Advertiser.h>
@@ -450,14 +454,11 @@ void chip::Zephyr::App::AppTaskBase::PrintCurrentVersion()
 CHIP_ERROR chip::Zephyr::App::AppTaskBase::InitFactoryDataProvider(void)
 {
 #if CONFIG_CHIP_FACTORY_DATA
-#if CONFIG_CHIP_ENCRYPTED_FACTORY_DATA
-    FactoryDataPrvdImpl().SetEncryptionMode(FactoryDataProvider::encrypt_ecb);
-    FactoryDataPrvdImpl().SetAes128Key(&aes128TestKey[0]);
-#endif /* CONFIG_CHIP_ENCRYPTED_FACTORY_DATA */
-    ReturnErrorOnFailure(FactoryDataPrvdImpl().Init());
-    SetDeviceInstanceInfoProvider(&FactoryDataPrvd());
-    SetDeviceAttestationCredentialsProvider(&FactoryDataPrvd());
-    SetCommissionableDataProvider(&FactoryDataPrvd());
+    ReturnErrorOnFailure(Internal::ZephyrConfig::Init());
+    auto & storageReader = Silabs::Provision::ProvisionStorageReader::GetInstance();
+    SetDeviceInstanceInfoProvider(&storageReader);
+    SetDeviceAttestationCredentialsProvider(&storageReader);
+    SetCommissionableDataProvider(&storageReader);
 #else
     SetDeviceInstanceInfoProvider(&DeviceInstanceInfoProviderMgrImpl());
     SetDeviceAttestationCredentialsProvider(Examples::GetExampleDACProvider());

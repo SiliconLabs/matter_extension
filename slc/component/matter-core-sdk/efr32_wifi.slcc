@@ -18,8 +18,6 @@ include:
 - path: third_party/matter_sdk/src/include
 - path: third_party/matter_sdk/src/lib
 - path: third_party/matter_sdk/src/platform/silabs/efr32
-- path: third_party/nlassert/include
-- path: third_party/nlio/include
 - path: third_party/matter_sdk/src/include/platform
   file_list:
   - path: RuntimeOptionsProvider.h
@@ -98,7 +96,6 @@ include:
   - path: CompatClusterObjects.h
 - path: third_party/matter_sdk/src/lwip/silabs
   file_list:
-  - path: lwipopts-siwx.h
   - path: lwippools.h
 - path: third_party/matter_sdk/examples/platform/silabs
   file_list:
@@ -129,10 +126,8 @@ include:
   - path: Efr32PsaOperationalKeystore.h
   - path: Efr32OpaqueKeypair.h
   - path: BLEChannel.h
-
 - path: third_party/matter_sdk/src/platform/silabs
   file_list:
-  - path: BootloaderError.h
   - path: OTAImageProcessorImpl.h
   - path: InetPlatformConfig.h
   - path: DiagnosticDataProviderImpl.h
@@ -174,7 +169,6 @@ source:
   - path: third_party/matter_sdk/src/platform/silabs/efr32/CHIPCryptoPALPsaEfr32.cpp
   - path: third_party/matter_sdk/src/platform/silabs/efr32/Efr32PsaOpaqueKeypair.cpp
   - path: third_party/matter_sdk/src/platform/silabs/efr32/Efr32PsaOperationalKeystore.cpp
-  - path: third_party/matter_sdk/src/platform/silabs/BootloaderError.cpp
   - path: third_party/matter_sdk/src/platform/silabs/efr32/OTAImageProcessorImpl.cpp
   - path: third_party/matter_sdk/src/platform/silabs/PlatformManagerImpl.cpp
   - path: third_party/matter_sdk/src/platform/silabs/platformAbstraction/GsdkSpam.cpp

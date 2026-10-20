@@ -74,11 +74,15 @@ config("siwx917-common-config") {
   if (!disable_lcd) {
     include_dirs = [ "${silabs_common_plat_dir}/display" ]
 
-    defines += [ "DISPLAY_ENABLED" ]
+    defines += [ "SL_MATTER_DISPLAY_ENABLED=1" ]
+  } else {
+    defines += [ "SL_MATTER_DISPLAY_ENABLED=0" ]
   }
 
   if (show_qr_code) {
-    defines += [ "QR_CODE_ENABLED" ]
+    defines += [ "SL_MATTER_QR_CODE_ENABLED=1" ]
+  } else {
+    defines += [ "SL_MATTER_QR_CODE_ENABLED=0" ]
   }
 
   if (chip_enable_ota_requestor) {
@@ -183,8 +187,9 @@ source_set("siwx917-common") {
     if (chip_enable_read_client) {
       deps += [ "${silabs_common_plat_dir}/shell:im" ]
     }
-
-    deps += [ "${silabs_common_plat_dir}/shell:ble" ]
+    if (chip_config_network_layer_ble) {
+      deps += [ "${silabs_common_plat_dir}/shell:ble" ]
+    }
   }
 
   # MATTER_AWS

@@ -17,8 +17,9 @@
  */
 #pragma once
 
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
 #include <AppTask.h>
+#include <SensorManager.h>
 #include <glib.h>
 #include <lcd.h>
 
@@ -40,4 +41,4 @@ namespace SensorsUI {
 void SensorUI(GLIB_Context_t * glibContext);
 
 } // namespace SensorsUI
-#endif // DISPLAY_ENABLED
+#endif // SL_MATTER_DISPLAY_ENABLED

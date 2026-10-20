@@ -1,0 +1,22 @@
+id: matter_neutral_less_switch_wifi
+package: matter
+label: Neutral-less Switch Wi-Fi
+description: >
+  Enables Wi-Fi power optimizations for neutral-less Matter switch products on
+  SiWx917. Applies the neutral-less switch application profile, disables 802.11ax
+  (11n only), and tunes scan/join timing to meet the 30 mA over 250 ms power budget.
+  Requires ICD server support for coordinated Wi-Fi sleep/wake.
+category: Matter-WiFi|Features
+quality: production
+
+provides:
+  - name: matter_neutral_less_switch_wifi
+
+requires:
+  - name: matter_platform_siwx917
+  - name: matter_icd_core
+  - name: matter_icd_management
+
+define:
+  - name: SL_MATTER_NEUTRAL_LESS_SWITCH_WIFI
+    value: "1"

@@ -42,17 +42,10 @@ public:
 
     AppTask() = default;
 
-    /** @brief Returns the active app instance */
     static AppTask & GetAppTask();
 
-    /**
-     * @brief AppTask task main loop function
-     *
-     * @param pvParameter FreeRTOS task parameter
-     */
     static void AppTaskMain(void * pvParameter);
 
-    /** @brief Creates and starts the AppTask thread */
     CHIP_ERROR StartAppTask();
 
     /** @brief Platform button callback; posts fan-control or base application events. */
@@ -61,22 +54,30 @@ public:
     /** @brief Applies range-hood actions (light/fan) to LED and display after attribute changes. */
     static void ActionTriggerHandler(AppEvent * aEvent);
 
-    /** @brief Action-button handler; toggles extractor-hood fan mode. */
     static void FanControlButtonHandler(AppEvent * aEvent);
 
-    /** @brief Data-model attribute-change hook; forwards FanControl and OnOff updates. */
+    /**
+     * @brief Matter stack callback after a server attribute change, forwards @c FanControl and @c OnOff
+     *        updates to endpoint handlers to refresh range-hood UI and LEDs.
+     *
+     * @param attributePath Endpoint, cluster, and attribute that changed
+     * @param type          TLV encoding type of @p value
+     * @param size          Size in bytes of @p value
+     * @param value         Pointer to the new attribute value
+     */
     void DMPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
                                        uint8_t * value);
 
-    /** @brief Returns the extractor-hood endpoint (EP1) helper. */
     static ExtractorHoodEndpoint & GetExtractorHoodEndpoint();
-    /** @brief Returns the light endpoint (EP2) helper. */
     static LightEndpoint & GetLightEndpoint();
 
 protected:
-    /** @brief Override of `BaseApplication::AppInit()` */
     CHIP_ERROR AppInit() override;
 
-    /** @brief Rangehood specific initialization */
+    /**
+     * @brief Initializes extractor-hood/light endpoints and syncs the light LED to the OnOff cluster state.
+     *
+     * @return CHIP_NO_ERROR on success, or CHIP_ERROR_INTERNAL if ExtractorHoodEndpoint init fails.
+     */
     CHIP_ERROR InitRangeHood();
 };

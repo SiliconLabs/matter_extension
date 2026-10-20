@@ -13,19 +13,19 @@ provides:
 include:
 - path: third_party/matter_sdk/examples/platform/silabs
   file_list:
-  - path: PigweedLogger.h
-  - path: Rpc.h
   - path: silabs_utils.h
   - path: LEDWidget.h
   - path: MatterConfig.h
-  - path: OTAConfig.h
   - path: MemMonitoring.h
   - path: BaseApplication.h
+    unless: [matter_custom_apptask]
   - path: BaseAppEvent.h
+    unless: [matter_custom_apptask]
   - path: SoftwareFaultReports.h
 
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/BaseApplication.cpp
+    unless: [matter_custom_apptask]
   - path: third_party/matter_sdk/examples/platform/silabs/silabs_utils.cpp
   - path: third_party/matter_sdk/examples/platform/silabs/MatterConfig.cpp
   - path: third_party/matter_sdk/examples/platform/silabs/SoftwareFaultReports.cpp
@@ -52,6 +52,9 @@ requires:
   - name: freertos
   - name: sleeptimer
   - name: dmadrv
+    condition: [device_series_2]
+  - name: dmadrv
+    condition: [device_generic_family_sixx301]
   - name: nvm3_default
   - name: mpu
   - name: udelay
@@ -70,17 +73,3 @@ requires:
     condition: [device_series_3]
   - name: hal_emu
     condition: [device_series_3]
-
-# MATTER-7181: Series 3 concurrent uses the Matter RAIL archive.
-# Series 2, and Series 3 sequential, keep the SiSDK component.
-recommends:
-  - id: matter_rail_lib_multiprotocol_sixg301
-    vendor: silabs
-    condition: [matter_zigbee_concurrent, device_series_3]
-  - id: rail_lib_multiprotocol
-    vendor: silabs
-    unless: [matter_zigbee_concurrent]
-  - id: rail_lib_multiprotocol
-    vendor: silabs
-    condition: [matter_zigbee_concurrent]
-    unless: [device_series_3]

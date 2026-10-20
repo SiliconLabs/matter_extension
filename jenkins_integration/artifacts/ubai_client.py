@@ -10,6 +10,9 @@ This module handles all UBAI operations including:
 import subprocess
 import os
 
+UBAI_UPLOAD_TIMEOUT_SECONDS = 120
+UBAI_SEARCH_TIMEOUT_SECONDS = 300
+
 
 def upload_to_ubai(file_path, app_name, target, branch_name, build_number, stack="matter"):
     """
@@ -22,6 +25,9 @@ def upload_to_ubai(file_path, app_name, target, branch_name, build_number, stack
         branch_name (str): Branch name metadata.
         build_number (int): Build number metadata.
         stack (str): Stack metadata (default: 'matter').
+
+    Returns:
+        bool: True if the upload succeeded, False otherwise.
     """
     print(f"Uploading {file_path} to UBAI with build_number: {build_number}")
     try:
@@ -36,9 +42,14 @@ def upload_to_ubai(file_path, app_name, target, branch_name, build_number, stack
             '--metadata', 'target', target,
             '--username', os.environ.get("SL_USERNAME"),
             '--password', os.environ.get("SL_PASSWORD")
-        ], check=True)
+        ], check=True, timeout=UBAI_UPLOAD_TIMEOUT_SECONDS)
+        return True
+    except subprocess.TimeoutExpired:
+        print(f"Timed out uploading {file_path} to UBAI after {UBAI_UPLOAD_TIMEOUT_SECONDS}s")
+        return False
     except subprocess.CalledProcessError as e:
         print(f"Error uploading {file_path} to UBAI: {e}")
+        return False
 
 
 # TODO: Need to change or remove this
@@ -72,12 +83,15 @@ def search_file_in_ubai(branch_name, build_number, sqa):
             '--metadata', 'build_number', build_number,
             '--metadata', 'stack', "matter",
             '--metadata', 'target', "matter"
-        ], check=True, capture_output=True, text=True)
+        ], check=True, capture_output=True, text=True, timeout=UBAI_SEARCH_TIMEOUT_SECONDS)
         
         print(f"UBAI Search result: {result.stdout}")
         print(f"UBAI Search result: {result.stdout.strip().splitlines()}")
         return result.stdout.strip().splitlines()
         
+    except subprocess.TimeoutExpired:
+        print(f"Timed out searching for {build_binaries} in UBAI after {UBAI_SEARCH_TIMEOUT_SECONDS}s")
+        return None
     except subprocess.CalledProcessError as e:
         print(f"Error searching for {build_binaries} to UBAI: {e}")
         return None 

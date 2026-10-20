@@ -54,20 +54,28 @@ import yaml
 from pathlib import Path
 from typing import Iterable, List, Optional, Set
 
-def _is_excluded_path(path: str) -> bool:
-    """Return True for paths that should not appear in the extension package."""
+def _exclusion_reason(path: str) -> Optional[str]:
+    """Return skip reason for paths that should not appear in the matter package."""
     parts = path.split("/")
+    # Sample apps belong in the matter_app package, not matter.
+    if parts[:2] == ["slc", "apps"]:
+        return "sample-app content (owned by matter_app package)"
+    if path.endswith((".slcp", ".slcw")):
+        return "sample project/workspace (owned by matter_app package)"
+    # Internal helper scripts are for checkout use only.
+    if parts[:3] == ["slc", "script", "internal"]:
+        return "internal scripts (not packaged)"
     # Exclude hidden directories
     if any(part.startswith(".") for part in parts[:-1]):
-        return True
+        return "hidden directory"
     # Exclude git meta files
     basename = parts[-1]
     if basename in (".gitignore", ".gitmodules"):
-        return True
+        return "git meta file"
     # Exclude __pycache__ and bytecode
     if "__pycache__" in parts or basename.endswith(".pyc"):
-        return True
-    return False
+        return "python cache/bytecode"
+    return None
 
 def _git_tracked_extension_paths() -> List[str]:
     """Return sorted list of git tracked files, excluding submodule entries."""
@@ -84,10 +92,28 @@ def _git_tracked_extension_paths() -> List[str]:
         ["git", "ls-files", "--cached", "--others", "--exclude-standard"],
         capture_output=True, text=True, check=True,
     )
-    return sorted(
-        p for p in result.stdout.splitlines()
-        if p not in submodules and not _is_excluded_path(p) and os.path.exists(p)
+    kept: List[str] = []
+    skipped = 0
+    for p in result.stdout.splitlines():
+        if p in submodules:
+            print(f"skipped {p}: git submodule", file=sys.stderr)
+            skipped += 1
+            continue
+        reason = _exclusion_reason(p)
+        if reason:
+            print(f"skipped {p}: {reason}", file=sys.stderr)
+            skipped += 1
+            continue
+        if not os.path.exists(p):
+            print(f"skipped {p}: path does not exist", file=sys.stderr)
+            skipped += 1
+            continue
+        kept.append(p)
+    print(
+        f"extension path scan: kept {len(kept)}, skipped {skipped}",
+        file=sys.stderr,
     )
+    return sorted(kept)
 
 COMPONENT_ROOT = Path("slc/component")
 

@@ -7,10 +7,10 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.9.2"
+    version: "2.10.0"
     vendor: silabs
   - id: wiseconnect3_sdk
-    version: "4.1.2"
+    version: "4.2.0"
     vendor: silabs
 
 component:
@@ -59,6 +59,8 @@ component:
   - id: matter_lwip
   - id: matter_icd_core
   - id: matter_icd_management
+  - id: matter_icd_checkin_sender
+  - id: matter_check_in_message
   - id: matter_multi_sensor_app
 
   - id: wifi_resources
@@ -103,25 +105,25 @@ config_file:
   - path: ../../../../provision.mattpconf
     directory: provision
     file_id: provision_config
-  - path: ../../../../third_party/matter_sdk/examples/multi-sensor-app/silabs/include/SensorConfig.h
-    file_id: sensor_config
 
 include:
   - path: ../../../../third_party/matter_sdk/examples/multi-sensor-app/silabs/include
     file_list:
       - path: AppConfig.h
       - path: AppEvent.h
+      - path: AppTask.h
+      - path: SensorManager.h
       - path: CHIPProjectConfig.h
-    directory: include
-  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/customer
-    file_list:
-      - path: CustomerAppTask.h
     directory: include
 
 source:
-  - path: ../../../../third_party/matter_sdk/examples/platform/silabs/customer/CustomerAppTask.cpp
+  - path: ../../../../third_party/matter_sdk/examples/multi-sensor-app/silabs/src/AppTask.cpp
+    directory: src
+  - path: ../../../../third_party/matter_sdk/examples/multi-sensor-app/silabs/src/SensorManager.cpp
     directory: src
   - path: ../../../../third_party/matter_sdk/examples/platform/silabs/main.cpp
+    directory: src
+  - path: ../../../../third_party/matter_sdk/examples/multi-sensor-app/silabs/src/DataModelCallbacks.cpp
     directory: src
 
 define:
@@ -145,13 +147,19 @@ configuration:
   - name: CHIP_CONFIG_SUBSCRIPTION_TIMEOUT_RESUMPTION
     value: "0"
   - name: SL_IDLE_MODE_DURATION_S
-    value: "600"
+    value: "3600"
   - name: SL_ACTIVE_MODE_DURATION_MS
     value: "0"
   - name: SL_ACTIVE_MODE_THRESHOLD
-    value: "0"
+    value: "5000"
   - name: SL_TRANSPORT_IDLE_INTERVAL
-    value: "1000"
+    value: 1000
+  - name: CHIP_CONFIG_ENABLE_ICD_LIT
+    value: 1
+  - name: CHIP_CONFIG_ENABLE_ICD_CIP
+    value: 1
+  - name: CHIP_CONFIG_ENABLE_ICD_UAT
+    value: 1
   # Wakeup configurations
   - name: SL_ENABLE_GPIO_WAKEUP_SOURCE
     value: "1"

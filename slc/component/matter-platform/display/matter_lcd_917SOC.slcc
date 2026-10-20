@@ -94,6 +94,6 @@ source:
     condition:
       - matter_oven
 define:
-  - name: DISPLAY_ENABLED
+  - name: SL_MATTER_DISPLAY_ENABLED
   - name: SPI_MULTI_SLAVE
     value: "1"

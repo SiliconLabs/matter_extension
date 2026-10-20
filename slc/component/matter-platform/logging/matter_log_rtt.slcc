@@ -9,8 +9,11 @@ metadata:
     license: Zlib
 provides:
   - name: matter_log_rtt
+  - name: ot_platform_defined_logger
 define:
   - name: SILABS_LOG_OUT_UART
     value: 0
+  - name: SILABS_LOG_ENABLED
+    value: 1  
 conflicts:
   - name: matter_log_uart

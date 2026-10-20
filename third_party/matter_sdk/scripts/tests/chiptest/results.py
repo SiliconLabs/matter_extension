@@ -89,7 +89,8 @@ class TestResult:
         with log_config.fmt_context(task=name, level=log_config.level_tests):
             log.info("%s", "Would run test" if dry_run else "Starting test")
 
-            result = cls(name, iteration, TestStatus.FAILED, duration_seconds=0, exception=None)
+            result = cls(name, iteration, TestStatus.FAILED,
+                         duration_seconds=0, exception=None)
             test_start = test_end = time.monotonic()
             try:
                 test_func()
@@ -105,7 +106,8 @@ class TestResult:
                     result.status = TestStatus.FAILED
                     if (pcap_path := Path("thread.pcap")).exists():
                         print("base64 -d - >thread.pcap <<EOF")
-                        print(base64.b64encode(pcap_path.read_bytes()).decode("ascii"))
+                        print(base64.b64encode(
+                            pcap_path.read_bytes()).decode("ascii"))
                         print("EOF")
             finally:
                 result.duration_seconds = test_end - test_start
@@ -113,11 +115,14 @@ class TestResult:
                 symbol = result.status.symbol
                 match result.status:
                     case TestStatus.PASSED:
-                        log.info("%s Completed in %0.2f seconds", symbol, result.duration_seconds)
+                        log.info("%s Completed in %0.2f seconds",
+                                 symbol, result.duration_seconds)
                     case TestStatus.CANCELLED:
-                        log.warning("%s Cancelled after %0.2f seconds", symbol, result.duration_seconds)
+                        log.warning("%s Cancelled after %0.2f seconds",
+                                    symbol, result.duration_seconds)
                     case TestStatus.FAILED:
-                        assert isinstance(result.exception, BaseException), "Exception should be set for failed test results"
+                        assert isinstance(
+                            result.exception, BaseException), "Exception should be set for failed test results"
                         log.error("%s Failed in %0.2f seconds", symbol, result.duration_seconds,
                                   exc_info=(type(result.exception), result.exception, result.exception.__traceback__))
 
@@ -147,7 +152,8 @@ class RunStats:
         if self.cancelled:
             return f"{TestStatus.CANCELLED.symbol} Cancelled"
         if self.failed:
-            exc = self.exception_first if isinstance(self.exception_first, str) else repr(self.exception_first)
+            exc = self.exception_first if isinstance(
+                self.exception_first, str) else repr(self.exception_first)
             return f"{TestStatus.FAILED.symbol} {exc}"
         return TestStatus.PASSED.symbol
 
@@ -164,7 +170,8 @@ class RunStats:
                 self.cancelled += 1
 
         # Calculate cumulative average.
-        self.mean_duration += (result.duration_seconds - self.mean_duration) / self.total_runs
+        self.mean_duration += (result.duration_seconds -
+                               self.mean_duration) / self.total_runs
 
         # Save the exception if it's the first one.
         if result.exception is not None and self.exception_first is None:
@@ -180,10 +187,12 @@ class RunSummary(RunStats):
     """
     iterations: int
     tests_per_iteration: int
-    run_timestamp: datetime.datetime | str = field(default_factory=lambda: datetime.datetime.now(datetime.UTC))
+    run_timestamp: datetime.datetime | str = field(
+        default_factory=lambda: datetime.datetime.now(datetime.UTC))
     results: list[TestResult] = field(default_factory=list, init=False)
     test_stats: dict[str, RunStats] = field(default_factory=dict, init=False)
-    exceptions: defaultdict[int, dict[str, ExceptionInfoT]] = field(default_factory=lambda: defaultdict(dict), init=False)
+    exceptions: defaultdict[int, dict[str, ExceptionInfoT]] = field(
+        default_factory=lambda: defaultdict(dict), init=False)
 
     def __post_init__(self):
         self._lock = threading.Lock()
@@ -235,7 +244,8 @@ class RunSummary(RunStats):
             if isinstance(obj, datetime.datetime):
                 return obj.isoformat()
             if isinstance(obj, float):
-                return round(obj, 3)  # Round floats to 3 decimal places for better readability.
+                # Round floats to 3 decimal places for better readability.
+                return round(obj, 3)
             return obj
 
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -246,7 +256,8 @@ class RunSummary(RunStats):
     def from_json(cls, path: Path) -> RunSummary:
         """Read the test run summary from a JSON file."""
         raw = json.loads(path.read_text())
-        ret = RunSummary(iterations=raw.get("iterations", 1), tests_per_iteration=raw.get("tests_per_iteration", 0))
+        ret = RunSummary(iterations=raw.get("iterations", 1),
+                         tests_per_iteration=raw.get("tests_per_iteration", 0))
 
         # Recover a timestamp.
         timestamp = raw.get("run_timestamp", "unknown")
@@ -259,7 +270,8 @@ class RunSummary(RunStats):
             try:
                 ret.record(TestResult(**result))
             except Exception as e:
-                log.warning("Skipping result record %r due to an exception while parsing JSON file %s: %r", result, path, e)
+                log.warning(
+                    "Skipping result record %r due to an exception while parsing JSON file %s: %r", result, path, e)
         return ret
 
     @staticmethod
@@ -292,7 +304,8 @@ class RunSummary(RunStats):
             raise ValueError("There should be at least one row in the table")
 
         # If headers are not defined, prepare default alignment. Otherwise, unpack to headers and formats tuples.
-        headers, fmt = zip(*((("", "<") for _ in rows[0]) if headers_fmt is None else headers_fmt))
+        headers, fmt = zip(
+            *((("", "<") for _ in rows[0]) if headers_fmt is None else headers_fmt))
 
         # Check if number of columns is consistent for all rows.
         all_rows = (headers,) + rows
@@ -300,17 +313,23 @@ class RunSummary(RunStats):
             raise ValueError("All rows must have the same number of columns")
 
         # Calculate widths of columns, the table and rules.
-        col_widths = [max(len(row[i]) for row in all_rows) for i in range(len(rows[0]))]
+        col_widths = [max(len(row[i]) for row in all_rows)
+                      for i in range(len(rows[0]))]
         if last_col_max_width is not None:
             col_widths[-1] = min(col_widths[-1], last_col_max_width)
-        total_width = 2 * content_padding + max(len(title), sum(col_widths) + len(col_sep)*(len(col_widths) - 1))
+        total_width = 2 * content_padding + \
+            max(len(title), sum(col_widths) + len(col_sep)*(len(col_widths) - 1))
         rule_width = total_width - 2 * rule_padding
 
         # Prepare formatting strings.
         rule_pad_str = " " * rule_padding
-        top_btm_rule_str = f"{rule_pad_str}{top_btm_rule*rule_width}" if top_btm_rule and len(top_btm_rule) == 1 else top_btm_rule
-        mid_rule_str = f"{rule_pad_str}{mid_rule*rule_width}" if mid_rule and len(mid_rule) == 1 else mid_rule
-        row_format = content_padding_str + col_sep.join(f"{{:{fmt}{width}}}" for fmt, width in zip(fmt, col_widths))
+        top_btm_rule_str = f"{rule_pad_str}{top_btm_rule*rule_width}" if top_btm_rule and len(
+            top_btm_rule) == 1 else top_btm_rule
+        mid_rule_str = f"{rule_pad_str}{mid_rule*rule_width}" if mid_rule and len(
+            mid_rule) == 1 else mid_rule
+        row_format = content_padding_str + \
+            col_sep.join(f"{{:{fmt}{width}}}" for fmt,
+                         width in zip(fmt, col_widths))
 
         # Print the table.
         print()
@@ -350,18 +369,22 @@ class RunSummary(RunStats):
                                 (("Pass rate", f"{100 * self.pass_rate:.1f}%") if self.total_runs else ())))
 
         if show_failed:
-            failed_results = tuple(r for r in self.results if r.status == TestStatus.FAILED)
+            failed_results = tuple(
+                r for r in self.results if r.status == TestStatus.FAILED)
             self._print_table(title=f"FAILED TESTS ({len(failed_results)}):",
                               no_content_msg="No failures recorded",
-                              headers_fmt=(("Test name", "<"), ("Iter", ">"), ("Duration", ">")),
+                              headers_fmt=(("Test name", "<"),
+                                           ("Iter", ">"), ("Duration", ">")),
                               rows=((r.name_decorated, str(r.iteration), f"{r.duration_seconds:.2f}s")
                                     for r in sorted(failed_results, key=lambda x: x.name)))
 
         if show_flaky and self.iterations > 1:
-            flaky = tuple((name, stats) for name, stats in self.test_stats.items() if stats.failed > 0)
+            flaky = tuple((name, stats) for name,
+                          stats in self.test_stats.items() if stats.failed > 0)
             self._print_table(title=f"FAILURE RATE BY TEST (across {self.iterations} iterations)",
                               no_content_msg="No flaky results",
-                              headers_fmt=(("Test name", "<"), ("Failures", ">"), ("Rate", ">")),
+                              headers_fmt=(("Test name", "<"),
+                                           ("Failures", ">"), ("Rate", ">")),
                               rows=((name, f"{stats.failed}/{stats.total_runs:<2}", f"{100 * stats.fail_rate:.1f}%")
                                     for name, stats in sorted(flaky, key=lambda item: -item[1].failed)))
 
@@ -374,13 +397,15 @@ class RunSummary(RunStats):
                 slowest = slowest[:top_slowest]
 
             self._print_table(title=f"SLOWEST {len(slowest)} TEST RUNS:", no_content_msg="No tests to show for slowest list",
-                              headers_fmt=(("Test name", "<"), ("Status", "<"), ("Iter", ">"), ("Duration", ">")),
+                              headers_fmt=(
+                                  ("Test name", "<"), ("Status", "<"), ("Iter", ">"), ("Duration", ">")),
                               rows=((r.name_decorated, r.status, str(r.iteration), f"{r.duration_seconds:.2f}s")
                                     for r in slowest))
 
         if show_all:
             self._print_table(title="STATS OF ALL TESTS:", no_content_msg="No tests to show", last_col_max_width=20,
-                              headers_fmt=(("Test name", "<"), ("Passed", ">"), ("Mean time", ">"), ("Status", "<")),
+                              headers_fmt=(
+                                  ("Test name", "<"), ("Passed", ">"), ("Mean time", ">"), ("Status", "<")),
                               rows=((name, f"{stats.passed}/{stats.total_runs}", f"{stats.mean_duration:.2f}s", stats.status_msg)
                                     for name, stats in self.test_stats.items()))
 
@@ -416,7 +441,8 @@ class ResultProcessingThread(TerminableThread):
             while True:
                 self._process_result(self.result_queue.get())
         except EndOfQueue:
-            log.debug("No more results to process, finishing result processing thread")
+            log.debug(
+                "No more results to process, finishing result processing thread")
         except BaseException as e:
             self.exception = e
         finally:
@@ -429,13 +455,15 @@ class ResultProcessingThread(TerminableThread):
 
             # Check for keep going on failure.
             if result.exception is not None and not isinstance(result.exception, KeyboardInterrupt) and not self.keep_going:
-                raise ResultError("Test failed and --keep-going flag is not set.")
+                raise ResultError(
+                    "Test failed and --keep-going flag is not set.")
 
             # Check if all results for the iteration are in.
             if len(self.summary.exceptions[iteration]) < self.summary.tests_per_iteration:
                 return
 
-            log.debug("All results for iteration %i are in, checking failure count", iteration)
+            log.debug(
+                "All results for iteration %i are in, checking failure count", iteration)
             observed_failures = sum(exc is not None and not isinstance(exc, KeyboardInterrupt)
                                     for exc in self.summary.exceptions[iteration].values())
             if observed_failures != self.expected_failures:
@@ -448,8 +476,12 @@ class ResultProcessingThread(TerminableThread):
             # Close the result queue to unblock the thread if it's waiting for results.
             self.result_queue.close()
 
+            if self.exception is not None:
+                raise self.exception
+
             if not self.resource_thread_join():
-                raise RuntimeError("Result processing thread is still alive, it might be stuck on processing results")
+                raise RuntimeError(
+                    "Result processing thread is still alive, it might be stuck on processing results")
         except Exception as e:
             # Try to forcefully cancel the result queue to unblock the thread.
             self.result_queue.cancel()
@@ -458,9 +490,4 @@ class ResultProcessingThread(TerminableThread):
             if not self.resource_thread_join():
                 raise RuntimeError(
                     "Failed to terminate result processing thread. Result summary may be incomplete or corrupted") from e
-        finally:
-            # We don't take the lock to ensure there is no deadlock in case of the thread being stuck on acquiring the lock. This
-            # may lead to incomplete or corrupted summary, but it's better than hanging indefinitely.
-            self.summary.print_summary(show_failed=True, show_flaky=False, top_slowest=0, show_all=True)
-            if self.summary_file is not None:
-                self.summary.write_json(self.summary_file)
+            raise

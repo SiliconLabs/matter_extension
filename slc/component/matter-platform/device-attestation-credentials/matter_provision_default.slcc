@@ -1,6 +1,6 @@
 id: matter_provision_default
-label: Default Attestation Certificate provisioning configuration
-description: Default Configuration of the Attestation Certificate provisioning. Set ENABLE_EXAMPLE_CREDENTIALS in this component's configuration to select certificate provisioning options.
+label: Default Factory Data Reader
+description: Reads factory/manufacturing data and device attestation credentials from the default (NVM3/token) storage backend. Use this when the application only needs to consume provisioned data at runtime. Set SL_MATTER_ENABLE_EXAMPLE_CREDENTIALS to fall back to hardcoded test certificates when factory credentials are missing. Add matter_provision_channel when factory data must also be written during manufacturing.
 package: matter
 category: Platform|Security
 quality: production
@@ -16,10 +16,13 @@ config_file:
   - path: slc/config/sl_matter_provision_config.h
     file_id: matter_provision_config
 
+define:
+  - name: SL_MATTER_USE_FLASH_STORE
+    value: 0
+
 requires:
-  - name: iostream
-  - name: iostream_rtt
-  - name: matter_crypto_psa_siwx917 # Provisioning Default only support PSA crypto flavor
+  # Provisioning Default only support PSA crypto flavor
+  - name: matter_crypto_psa_siwx917
     condition: [device_family_siwg917]
 
 conflicts:
@@ -28,74 +31,20 @@ conflicts:
 include:
   - path: third_party/matter_support/provision
     file_list:
-      - path: headers/AttestationKey.h
-      - path: headers/ProvisionChannel.h
+      - path: headers/ProvisionChannelInterface.h
+      - path: headers/ProvisionCryptoInterface.h
       - path: headers/ProvisionEncoder.h
       - path: headers/ProvisionManager.h
       - path: headers/ProvisionProtocol.h
       - path: headers/ProvisionStorage.h
       - path: headers/ProvisionStorageGeneric.h
-      - path: headers/ProvisionedDataProvider.h
-  - path: third_party/matter_sdk/examples/platform/silabs/test-event-trigger
+      - path: headers/ProvisionStorageInterfaces.h
+  - path: third_party/matter_sdk/examples/platform/silabs
     file_list:
-      - path: SilabsTestEventTriggerDelegate.h
+      - path: provision/ProvisionCrypto.h
+      - path: provision/ProvisionStorageReader.h
 
 source:
-  - path: third_party/matter_sdk/examples/platform/silabs/provision/ProvisionStorageDefault.cpp
-  - path: third_party/matter_sdk/examples/platform/silabs/provision/ProvisionStorageCustom.cpp
-
-library:
-  - path: third_party/matter_support/provision/libs/libProvision-efr32mg24.a
-    condition:
-      - device_family_efr32mg24
-    unless: 
-      - toolchain_llvm
-  - path: third_party/matter_support/provision/libs/libProvision-efr32mg24-clang.a
-    condition:
-      - device_family_efr32mg24
-      - toolchain_llvm
-  - path: third_party/matter_support/provision/libs/libProvision-efr32mg26.a
-    condition:
-      - device_family_efr32mg26
-    unless:
-      - toolchain_llvm
-  - path: third_party/matter_support/provision/libs/libProvision-efr32mg26-clang.a
-    condition:
-      - device_family_efr32mg26
-      - toolchain_llvm
-  - path: third_party/matter_support/provision/libs/libProvision-mgm24.a
-    condition:
-      - device_family_mgm24
-    unless:
-      - toolchain_llvm
-  - path: third_party/matter_support/provision/libs/libProvision-mgm24-clang.a
-    condition:
-      - device_family_mgm24
-      - toolchain_llvm
-  - path: third_party/matter_support/provision/libs/libProvision-efr32mg26.a
-    condition:
-      - device_family_mgm26
-    unless:
-      - toolchain_llvm
-  - path: third_party/matter_support/provision/libs/libProvision-efr32mg26-clang.a
-    condition:
-      - device_family_mgm26
-      - toolchain_llvm
-  - path: third_party/matter_support/provision/libs/libProvisionPSA-si917.a
-    condition:
-      - device_family_siwg917
-    unless:
-      - toolchain_llvm
-  - path: third_party/matter_support/provision/libs/libProvisionPSA-si917-clang.a
-    condition:
-      - device_family_siwg917
-      - toolchain_llvm
-  - path: third_party/matter_support/provision/libs/libProvision-efr32mg24.a
-    condition:
-      - device_family_simg301
-    unless:
-      - toolchain_llvm
-  - path: third_party/matter_support/provision/libs/libProvision-efr32mg24-clang.a
-    condition:
-      - device_family_simg301
-      - toolchain_llvm
+  - path: third_party/matter_sdk/examples/platform/silabs/provision/default/ProvisionStorageReader.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/provision/ProvisionStorageReaderCommon.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/provision/ProvisionCryptoPSA.cpp

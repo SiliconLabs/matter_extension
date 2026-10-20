@@ -1,0 +1,23 @@
+category: Clusters|Media
+description: >
+  Implementation of the Media File Management Server Cluster.
+  The user has to enable the Media File Management Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_media_file_management
+package: matter
+label: Media File Management Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_media_file_management
+source:
+  - path: third_party/matter_sdk/src/app/clusters/media-file-management-server/media-file-management-server.cpp
+include:
+  - path: third_party/matter_sdk/src/app/clusters/media-file-management-server
+    file_list:
+      - path: media-file-management-delegate.h
+      - path: media-file-management-server.h
+template_contribution:
+  - name: component_catalog
+    value: matter_media_file_management

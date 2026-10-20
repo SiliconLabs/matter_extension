@@ -7,7 +7,7 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.9.2"
+    version: "2.10.0"
     vendor: silabs
 
 component:
@@ -50,7 +50,7 @@ component:
   # Optional feature
   - id: rail_util_pti
   - id: matter_shell
-  - id: matter_segger_rtt
+  - id: segger_rtt
   - id: matter_configuration_over_swo
   - id: matter_log_uart
   - id: matter_default_lcd_config
@@ -200,17 +200,6 @@ filter:
   - name: Wireless Technology
     value:
       - Matter
-
-tag:
-  - hardware:rf:band:2400
-  - hardware:component:button:2+
-  - hardware:component:led:2+
-  - hwfilter:device:device_supports_bluetooth
-  - hwfilter:device:device_supports_thread
-  - hidden
-
-readme:
-  - path: ./README.md
 
 post_build:
   profile: application

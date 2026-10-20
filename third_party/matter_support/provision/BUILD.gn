@@ -14,21 +14,17 @@
 
 config("provision-config") {
   include_dirs = [ "." ]
-
-  # TODO: Link this to a gn argument to be able to disable the example credentials
-  defines = [ "SL_MATTER_ENABLE_EXAMPLE_CREDENTIALS=1" ]
 }
-
 source_set("headers") {
   sources = [
-    "headers/AttestationKey.h",
-    "headers/ProvisionChannel.h",
+    "headers/ProvisionChannelInterface.h",
+    "headers/ProvisionCryptoInterface.h",
     "headers/ProvisionEncoder.h",
     "headers/ProvisionManager.h",
     "headers/ProvisionProtocol.h",
     "headers/ProvisionStorage.h",
-    "headers/ProvisionedDataProvider.h",
+    "headers/ProvisionStorageGeneric.h",
+    "headers/ProvisionStorageInterfaces.h",
   ]
-
   public_configs = [ ":provision-config" ]
 }

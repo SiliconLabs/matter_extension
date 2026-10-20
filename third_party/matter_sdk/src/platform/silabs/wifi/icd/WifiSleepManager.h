@@ -42,6 +42,9 @@ public:
         kGenericEvent          = 0,
         kCommissioningComplete = 1,
         kConnectivityChange    = 2,
+        kActiveMode            = 3,
+        kIdleMode              = 4,
+        kConnectedActiveMode   = 5,
     };
 
     /**
@@ -57,8 +60,8 @@ public:
          * @brief Function informs the WifiSleepManager in which Low Power mode the device can go to.
          *        The two supported sleep modes are DTIM based sleep and LI based sleep.
          *
-         *        When the function is called, the WifiSleepManager is about to go to sleep and using this function to make decision
-         *        as too wether it can go LI based sleep, lowest power mode, or DTIM based sleep.
+         *        When the function is called, the WifiSleepManager is about to go to sleep and uses this to choose LI sleep
+         *        (or LIT disconnect sleep when CHIP_CONFIG_ENABLE_ICD_LIT is enabled) versus DTIM based sleep.
          *
          *        DTIM based sleep requires the Wi-Fi devices to be synced with the DTIM beacon.
          *        In this mode, the broadcast filter is disabled and the device will process multicast and
@@ -88,30 +91,6 @@ public:
      *                    CHIP_ERROR_INTERNAL if an error occured
      */
     CHIP_ERROR Init(PowerSaveInterface * platformInterface, WifiStateProvider * wifiStateProvider);
-
-    inline void HandleCommissioningSessionStarted()
-    {
-        bool wasCommissioningInProgress = mIsCommissioningInProgress;
-        mIsCommissioningInProgress      = true;
-
-        if (!wasCommissioningInProgress)
-        {
-            // TODO: Remove High Performance Req during commissioning when sleep issues are resolved
-            TEMPORARY_RETURN_IGNORED WifiSleepManager::GetInstance().RequestHighPerformanceWithTransition();
-        }
-    }
-
-    inline void HandleCommissioningSessionStopped()
-    {
-        bool wasCommissioningInProgress = mIsCommissioningInProgress;
-        mIsCommissioningInProgress      = false;
-
-        if (wasCommissioningInProgress)
-        {
-            // TODO: Remove High Performance Req during commissioning when sleep issues are resolved
-            TEMPORARY_RETURN_IGNORED WifiSleepManager::GetInstance().RemoveHighPerformanceRequest();
-        }
-    }
 
     /**
      * @brief Set the Application Callback
@@ -169,9 +148,8 @@ public:
      *
      *        State machine logic:
      *        1. If there are high performance requests, configure high performance mode.
-     *        2. If commissioning is in progress, configure DTIM based sleep.
-     *        3. If no commissioning is in progress and the device is unprovisioned, configure deep sleep.
-     *        4. If the application callback allows, configure LI based sleep; otherwise, configure DTIM based sleep.
+     *        2. If the device is unprovisioned, configure deep sleep.
+     *        3. If the application callback allows, configure LI sleep or LIT disconnect sleep (GN); otherwise, DTIM based sleep.
      *
      * @param event PowerEvent triggering the Verify and transition to low power mode processing
      *
@@ -231,6 +209,15 @@ private:
      */
     CHIP_ERROR ConfigureLIBasedSleep();
 
+#if defined(CHIP_CONFIG_ENABLE_ICD_LIT) && (CHIP_CONFIG_ENABLE_ICD_LIT == 1)
+    /**
+     * @brief LIT path: intentional STA disconnect only (see PowerSaveInterface::ConfigureLITDisconnect).
+     */
+    CHIP_ERROR ConfigureLITDisconnect();
+
+    CHIP_ERROR ConfigureLITConnect();
+    #endif // CHIP_CONFIG_ENABLE_ICD_LIT
+
     /**
      * @brief Increments the HighPerformance request counter and triggers the transition to High Performance if requested.
      *
@@ -246,8 +233,8 @@ private:
 
     PowerSaveInterface * mPowerSaveInterface = nullptr;
     WifiStateProvider * mWifiStateProvider   = nullptr;
-    bool mIsCommissioningInProgress          = false;
     uint8_t mHighPerformanceRequestCounter   = 0;
+    bool mActiveMode                         = false;
 
     ApplicationCallback * mCallback = nullptr;
 };

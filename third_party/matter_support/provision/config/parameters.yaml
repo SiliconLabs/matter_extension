@@ -165,6 +165,13 @@ options:
       type: "int32u"
       format: "hex"
 
+    - id: 0x013f
+      desc:
+          "RTOS name matching a firmware key and device section in devices.yaml"
+      name: "rtos"
+      short: "os"
+      type: "string"
+
 instance_info:
     - id: 0x0141
       desc: "Serial Number"

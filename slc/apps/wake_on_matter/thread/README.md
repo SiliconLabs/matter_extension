@@ -46,7 +46,7 @@ Connect a USB-to-UART adapter to these pins to access the Matter shell and logs.
   connected via USB to serve as the NCP.
 - A USB-to-UART adapter to access the Matter debug interface on the EXP header.
 
-For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.9.2/matter-overview/#hardware-requirements) documentation.
+For a full list of hardware requirements, see [Matter Hardware Requirements](https://docs.silabs.com/matter/2.10.0/matter-overview/#hardware-requirements) documentation.
 
 ### SW Requirements
 
@@ -54,7 +54,7 @@ For a full list of hardware requirements, see [Matter Hardware Requirements](htt
   [Build and Installation Instructions for the Border Router Host](https://docs.silabs.com/openthread/3.0.2/using-sl-coprocessors-with-openthread-border-routers/build-and-installation-instructions-for-the-border-router-host)
   for more details.
 
-For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.9.2/matter-overview/#software-requirements) documentation.
+For a full list of software requirements, see [Matter Software Requirements](https://docs.silabs.com/matter/2.10.0/matter-overview/#software-requirements) documentation.
 
 ## Steps to Run Demo
 
@@ -65,12 +65,12 @@ artifact.
 
 If building the sample application on its own, a bootloader must be flashed separately
 before the application. Pre-built bootloader binaries for all supported devices are
-available at [Matter Bootloader Binaries](https://docs.silabs.com/matter/2.9.2/matter-prerequisites/matter-artifacts#matter-bootloader-binaries).
+available at [Matter Bootloader Binaries](https://docs.silabs.com/matter/2.10.0/matter-prerequisites/matter-artifacts#matter-bootloader-binaries).
 
 ### Configuration and Setup
 
 This sample app works out of the box with no additional configuration required. To customize the device, see the
-[Custom Matter Device Development](https://docs.silabs.com/matter/2.9.2/matter-references/custom-matter-device#custom-matter-device-development) guide.
+[Custom Matter Device Development](https://docs.silabs.com/matter/2.10.0/matter-references/custom-matter-device#custom-matter-device-development) guide.
 
 ### Steps for Execution
 
@@ -84,7 +84,7 @@ This sample app works out of the box with no additional configuration required. 
 
    **chip-tool (standalone or pre-built):** The pre-built chip-tool instance ships
    with the Matter Hub image. More information on using the Matter Hub is in the
-   [Silicon Labs Matter Hub Documentation](https://docs.silabs.com/matter/2.9.2/matter-thread/raspi-img).
+   [Silicon Labs Matter Hub Documentation](https://docs.silabs.com/matter/2.10.0/matter-thread/raspi-img).
    ```shell
    chip-tool pairing ble-thread 1 hex:<operationalDataset> 20202021 3840
    ```
@@ -157,10 +157,29 @@ to receive state changes and to act accordingly.
 - Verify the `operationalDataset` hex string matches your Thread network.
 - Factory reset the device (hold BTN0 for 6 s) and retry.
 
+## Building OTBR with CPC
+sudo INFRA_IF_NAME=eth0 OTBR_OPTIONS="-DOT_THREAD_VERSION=1.4 -DOT_MULTIPAN_RCP=ON -DCPCD_SOURCE_DIR=$CPCD_DIR -DOT_POSIX_RCP_HDLC_BUS=ON -DOT_POSIX_RCP_SPI_BUS=ON -DOT_POSIX_RCP_VENDOR_BUS=ON -DOT_POSIX_CONFIG_RCP_VENDOR_DEPS_PACKAGE=$SDK_DIR/openthread/platform-abstraction/posix/posix_vendor_rcp.cmake -DOT_POSIX_CONFIG_RCP_VENDOR_INTERFACE=$SDK_DIR/openthread/platform-abstraction/posix/cpc_interface.cpp -DOT_PLATFORM_CONFIG=$SDK_DIR/openthread/platform-abstraction/posix/openthread-core-silabs-posix-config.h -DOTBR_DUA_ROUTING=ON -DOTBR_DHCP6_PD=ON" ./script/setup
+
+
+sudo INFRA_IF_NAME=eth0 \
+     OTBR_OPTIONS="-DOT_THREAD_VERSION=1.4 \
+                   -DOT_MULTIPAN_RCP=ON \
+                   -DCPCD_SOURCE_DIR=$CPCD_DIR \
+                   -DOT_POSIX_RCP_HDLC_BUS=ON \
+                   -DOT_POSIX_RCP_SPI_BUS=ON \
+                   -DOT_POSIX_RCP_VENDOR_BUS=ON \
+                   -DOT_POSIX_CONFIG_RCP_VENDOR_DEPS_PACKAGE=$SDK_DIR/openthread/platform-abstraction/posix/posix_vendor_rcp.cmake \
+                   -DOT_POSIX_CONFIG_RCP_VENDOR_INTERFACE=$SDK_DIR/openthread/platform-abstraction/posix/cpc_interface.cpp \
+                   -DOT_PLATFORM_CONFIG=$SDK_DIR/openthread/platform-abstraction/posix/openthread-core-silabs-posix-config.h \
+                   -DOTBR_DUA_ROUTING=ON \
+                   -DOTBR_DHCP6_PD=ON \
+                   -DOTBR_NAME=SL-OPENTHREAD-BR -DOTBR_VERSION=3.0.1.0_GitHub-ab0c1351e -DOT_PACKAGE_NAME=SL-OPENTHREAD -DOT_PACKAGE_VERSION=3.0.1.0_GitHub-61e43cffb" \
+     ./script/setup
+
 ## Resources
 
-- [Silicon Labs Matter over Thread Documentation](https://docs.silabs.com/matter/2.9.2/matter-thread)
-- [Matter Hub Setup](https://docs.silabs.com/matter/2.9.2/matter-thread/raspi-img)
+- [Silicon Labs Matter over Thread Documentation](https://docs.silabs.com/matter/2.10.0/matter-thread)
+- [Matter Hub Setup](https://docs.silabs.com/matter/2.10.0/matter-thread/raspi-img)
 - [chip-tool README](https://github.com/project-chip/connectedhomeip/blob/master/examples/chip-tool/README.md)
 
 ## Report Bugs & Get Support

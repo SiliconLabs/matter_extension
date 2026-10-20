@@ -53,8 +53,9 @@ public:
     CHIP_ERROR GetMacAddress(sl_wfx_interface_t interface, chip::MutableByteSpan & addr) override;
     CHIP_ERROR StartNetworkScan(chip::ByteSpan ssid, ScanCallback callback) override;
     CHIP_ERROR StartWifiTask() override;
-    void ConfigureStationMode() override;
+    CHIP_ERROR EnableStationMode() override;
     bool IsStationConnected() override;
+    bool IsStationConnecting() override;
     bool IsStationModeEnabled() override;
     bool IsStationReady() override;
     void TriggerDisconnection() override;
@@ -70,12 +71,20 @@ public:
     CHIP_ERROR GetAccessPointInfo(chip::DeviceLayer::NetworkCommissioning::WiFiScanResponse & info) override;
     CHIP_ERROR GetAccessPointExtendedInfo(wfx_wifi_scan_ext_t & info) override;
     CHIP_ERROR ResetCounters() override;
-
+    chip::app::Clusters::NetworkCommissioning::NetworkCommissioningStatusEnum MapToNetworkCommissioningStatusEnum(uint32_t reason) override;
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
     CHIP_ERROR ConfigureBroadcastFilter(bool enableBroadcastFilter) override;
     CHIP_ERROR ConfigurePowerSave(PowerSaveInterface::PowerSaveConfiguration configuration, uint32_t listenInterval) override;
+#if defined(CHIP_CONFIG_ENABLE_ICD_LIT) && (CHIP_CONFIG_ENABLE_ICD_LIT == 1)
+    CHIP_ERROR ConfigureLITConnect() override;
+    CHIP_ERROR ConfigureLITDisconnect() override;
+    void CancelLitPrecheckInReconnectTimer() override;
+    void StartLitPrecheckInReconnectTimer() override;
+    CHIP_ERROR InitLitPrecheckInReconnectTimer() override;
+#endif // defined(CHIP_CONFIG_ENABLE_ICD_LIT) && (CHIP_CONFIG_ENABLE_ICD_LIT == 1)
 #endif // CHIP_CONFIG_ENABLE_ICD_SERVER
 
+public:
     /**
      * @brief Processes the wifi platform events for the SiWx platform
      *
@@ -91,6 +100,9 @@ protected:
      *                     SL_STATUS_FAILURE, otherwise
      */
     sl_status_t TriggerPlatformWifiDisconnection();
+
+    /** Software state after link down (used by kStationDisconnect and by synchronous disconnect paths). */
+    void ClearWifiDisconnectedState();
     /**
      * @brief Posts an event to the Wi-Fi task
      *
@@ -154,8 +166,6 @@ private:
     void NotifySuccessfulConnection();
 
     bool mHasNotifiedWifiConnectivity = false;
-    bool mUseQuickJoin                = false;
-
     static WifiInterfaceImpl mInstance;
 };
 

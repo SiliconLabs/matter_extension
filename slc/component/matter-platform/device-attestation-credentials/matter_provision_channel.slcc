@@ -1,0 +1,56 @@
+id: matter_provision_channel
+label: Factory Data Writer Channel
+description: Optional manufacturing write path for factory/manufacturing data and device attestation credentials. Adds the storage writer, custom storage hooks, and BLE transport, and defines SL_MATTER_PROVISION_CHANNEL_ENABLED. Pair with matter_provision_default or matter_provision_flash, which provide the matching reader backend.
+package: matter
+category: Platform|Security
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+
+provides:
+  - name: matter_provision_channel
+
+requires:
+  - name: matter_provision
+
+define:
+  - name: SL_MATTER_PROVISION_CHANNEL_ENABLED
+    value: 1
+
+include:
+  - path: third_party/matter_sdk/examples/platform/silabs
+    file_list:
+      - path: provision/ProvisionChannel.h
+      - path: provision/ProvisionStorageWriter.h
+
+source:
+  - path: third_party/matter_sdk/examples/platform/silabs/provision/default/ProvisionStorageWriter.cpp
+    condition: [matter_provision_default]
+  - path: third_party/matter_sdk/examples/platform/silabs/provision/flash/ProvisionStorageWriter.cpp
+    condition: [matter_provision_flash]
+  - path: third_party/matter_sdk/examples/platform/silabs/provision/ProvisionStorageCustom.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/provision/ProvisionChannelEFR32BLE.cpp
+    unless: [device_family_siwg917]
+  - path: third_party/matter_sdk/examples/platform/silabs/provision/ProvisionChannelSi917BLE.cpp
+    condition: [device_family_siwg917]
+
+library:
+  # Default storage only needs the proprietary library when the channel is enabled.
+  # Flash storage already links the library from matter_provision_flash.
+  - path: third_party/matter_support/provision/libs/libProvision-m33-hard.a
+    condition: [matter_provision_default, matter_platform_mg]
+    unless: [toolchain_llvm]
+  - path: third_party/matter_support/provision/libs/libProvision-m33-hard-clang.a
+    condition:
+      - matter_provision_default
+      - matter_platform_mg
+      - toolchain_llvm
+  - path: third_party/matter_support/provision/libs/libProvision-m4-softfp.a
+    condition: [matter_provision_default, device_family_siwg917]
+    unless: [toolchain_llvm]
+  - path: third_party/matter_support/provision/libs/libProvision-m4-softfp-clang.a
+    condition:
+      - matter_provision_default
+      - device_family_siwg917
+      - toolchain_llvm

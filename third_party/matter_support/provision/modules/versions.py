@@ -48,6 +48,9 @@ class VersionManager:
     def find(self, ver=None) -> Version:
         if ver is None:
             return VersionManager.DEFAULT
+        for version in self.versions:
+            if version.tag == ver:
+                return version
         v = None
         count = len(self.versions)
         # Order versions by tag

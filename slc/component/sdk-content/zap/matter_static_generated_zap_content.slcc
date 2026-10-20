@@ -217,6 +217,26 @@ include:
   - path: third_party/matter_sdk/zzz_generated/app-common
     unless: [matter_zap_custom_generation]
     file_list:
+      - path: clusters/AudioControl/AttributeIds.h
+      - path: clusters/AudioControl/Attributes.h
+      - path: clusters/AudioControl/Attributes.ipp
+      - path: clusters/AudioControl/ClusterId.h
+      - path: clusters/AudioControl/CommandIds.h
+      - path: clusters/AudioControl/Commands.h
+      - path: clusters/AudioControl/Commands.ipp
+      - path: clusters/AudioControl/Enums.h
+      - path: clusters/AudioControl/EnumsCheck.h
+      - path: clusters/AudioControl/EventIds.h
+      - path: clusters/AudioControl/Events.h
+      - path: clusters/AudioControl/Events.ipp
+      - path: clusters/AudioControl/Ids.h
+      - path: clusters/AudioControl/Metadata.h
+      - path: clusters/AudioControl/MetadataProvider.h
+      - path: clusters/AudioControl/Structs.h
+      - path: clusters/AudioControl/Structs.ipp
+  - path: third_party/matter_sdk/zzz_generated/app-common
+    unless: [matter_zap_custom_generation]
+    file_list:
       - path: clusters/AudioOutput/AttributeIds.h
       - path: clusters/AudioOutput/Attributes.h
       - path: clusters/AudioOutput/Attributes.ipp
@@ -574,6 +594,26 @@ include:
       - path: clusters/CommissionerControl/MetadataProvider.h
       - path: clusters/CommissionerControl/Structs.h
       - path: clusters/CommissionerControl/Structs.ipp
+  - path: third_party/matter_sdk/zzz_generated/app-common
+    unless: [matter_zap_custom_generation]
+    file_list:
+      - path: clusters/CommissioningProxy/AttributeIds.h
+      - path: clusters/CommissioningProxy/Attributes.h
+      - path: clusters/CommissioningProxy/Attributes.ipp
+      - path: clusters/CommissioningProxy/ClusterId.h
+      - path: clusters/CommissioningProxy/CommandIds.h
+      - path: clusters/CommissioningProxy/Commands.h
+      - path: clusters/CommissioningProxy/Commands.ipp
+      - path: clusters/CommissioningProxy/Enums.h
+      - path: clusters/CommissioningProxy/EnumsCheck.h
+      - path: clusters/CommissioningProxy/EventIds.h
+      - path: clusters/CommissioningProxy/Events.h
+      - path: clusters/CommissioningProxy/Events.ipp
+      - path: clusters/CommissioningProxy/Ids.h
+      - path: clusters/CommissioningProxy/Metadata.h
+      - path: clusters/CommissioningProxy/MetadataProvider.h
+      - path: clusters/CommissioningProxy/Structs.h
+      - path: clusters/CommissioningProxy/Structs.ipp
   - path: third_party/matter_sdk/zzz_generated/app-common
     unless: [matter_zap_custom_generation]
     file_list:
@@ -1554,6 +1594,26 @@ include:
       - path: clusters/LowPower/MetadataProvider.h
       - path: clusters/LowPower/Structs.h
       - path: clusters/LowPower/Structs.ipp
+  - path: third_party/matter_sdk/zzz_generated/app-common
+    unless: [matter_zap_custom_generation]
+    file_list:
+      - path: clusters/MediaFileManagement/AttributeIds.h
+      - path: clusters/MediaFileManagement/Attributes.h
+      - path: clusters/MediaFileManagement/Attributes.ipp
+      - path: clusters/MediaFileManagement/ClusterId.h
+      - path: clusters/MediaFileManagement/CommandIds.h
+      - path: clusters/MediaFileManagement/Commands.h
+      - path: clusters/MediaFileManagement/Commands.ipp
+      - path: clusters/MediaFileManagement/Enums.h
+      - path: clusters/MediaFileManagement/EnumsCheck.h
+      - path: clusters/MediaFileManagement/EventIds.h
+      - path: clusters/MediaFileManagement/Events.h
+      - path: clusters/MediaFileManagement/Events.ipp
+      - path: clusters/MediaFileManagement/Ids.h
+      - path: clusters/MediaFileManagement/Metadata.h
+      - path: clusters/MediaFileManagement/MetadataProvider.h
+      - path: clusters/MediaFileManagement/Structs.h
+      - path: clusters/MediaFileManagement/Structs.ipp
   - path: third_party/matter_sdk/zzz_generated/app-common
     unless: [matter_zap_custom_generation]
     file_list:
@@ -2594,6 +2654,26 @@ include:
       - path: clusters/TemperatureMeasurement/MetadataProvider.h
       - path: clusters/TemperatureMeasurement/Structs.h
       - path: clusters/TemperatureMeasurement/Structs.ipp
+  - path: third_party/matter_sdk/zzz_generated/app-common
+    unless: [matter_zap_custom_generation]
+    file_list:
+      - path: clusters/TestHiddenManufacturerSpecific/AttributeIds.h
+      - path: clusters/TestHiddenManufacturerSpecific/Attributes.h
+      - path: clusters/TestHiddenManufacturerSpecific/Attributes.ipp
+      - path: clusters/TestHiddenManufacturerSpecific/ClusterId.h
+      - path: clusters/TestHiddenManufacturerSpecific/CommandIds.h
+      - path: clusters/TestHiddenManufacturerSpecific/Commands.h
+      - path: clusters/TestHiddenManufacturerSpecific/Commands.ipp
+      - path: clusters/TestHiddenManufacturerSpecific/Enums.h
+      - path: clusters/TestHiddenManufacturerSpecific/EnumsCheck.h
+      - path: clusters/TestHiddenManufacturerSpecific/EventIds.h
+      - path: clusters/TestHiddenManufacturerSpecific/Events.h
+      - path: clusters/TestHiddenManufacturerSpecific/Events.ipp
+      - path: clusters/TestHiddenManufacturerSpecific/Ids.h
+      - path: clusters/TestHiddenManufacturerSpecific/Metadata.h
+      - path: clusters/TestHiddenManufacturerSpecific/MetadataProvider.h
+      - path: clusters/TestHiddenManufacturerSpecific/Structs.h
+      - path: clusters/TestHiddenManufacturerSpecific/Structs.ipp
   - path: third_party/matter_sdk/zzz_generated/app-common
     unless: [matter_zap_custom_generation]
     file_list:

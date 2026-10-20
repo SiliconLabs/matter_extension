@@ -647,10 +647,6 @@ DataModel::ActionReturnStatus GroupKeyManagementCluster::ReadAttribute(const Dat
         return encoder.Encode(kRevision);
     case Attributes::FeatureMap::Id: {
         BitFlags<GroupKeyManagement::Feature> features;
-        if (mContext.groupDataProvider.IsGroupcastEnabled())
-        {
-            features.Set(Clusters::GroupKeyManagement::Feature::kGroupcast);
-        }
         if (IsMCSPSupported())
         {
             features.Set(Clusters::GroupKeyManagement::Feature::kCacheAndSync);
@@ -677,7 +673,8 @@ DataModel::ActionReturnStatus GroupKeyManagementCluster::WriteAttribute(const Da
     {
     case GroupKeyMap::Id: {
         return NotifyAttributeChangedIfSuccess(request.path.mAttributeId,
-                                               WriteGroupKeyMap(mContext.groupDataProvider, request.path, decoder));
+                                               WriteGroupKeyMap(mContext.groupDataProvider, request.path, decoder),
+                                               DataModel::AttributeChangeType::kQuiet);
     }
     default:
         return Protocols::InteractionModel::Status::UnsupportedWrite;
@@ -687,8 +684,19 @@ DataModel::ActionReturnStatus GroupKeyManagementCluster::WriteAttribute(const Da
 CHIP_ERROR GroupKeyManagementCluster::Attributes(const ConcreteClusterPath & path,
                                                  ReadOnlyBufferBuilder<DataModel::AttributeEntry> & builder)
 {
+    // TODO(#72714): remove this override once the AttributeQualityFlags::kChangesOmitted quality is honored by the generator.
+    static constexpr DataModel::AttributeEntry kMandatoryMetadataWithChangesOmitted[] = {
+        DataModel::AttributeEntry(GroupKeyMap::Id,
+                                  BitFlags<DataModel::AttributeQualityFlags>(DataModel::AttributeQualityFlags::kListAttribute,
+                                                                             DataModel::AttributeQualityFlags::kChangesOmitted),
+                                  Access::Privilege::kView, Access::Privilege::kManage),
+        GroupTable::kMetadataEntry,
+        MaxGroupsPerFabric::kMetadataEntry,
+        MaxGroupKeysPerFabric::kMetadataEntry,
+    };
+
     AttributeListBuilder listBuilder(builder);
-    return listBuilder.Append(Span(GroupKeyManagement::Attributes::kMandatoryMetadata), {});
+    return listBuilder.Append(Span(kMandatoryMetadataWithChangesOmitted), {});
 }
 
 CHIP_ERROR GroupKeyManagementCluster::AcceptedCommands(const ConcreteClusterPath & path,

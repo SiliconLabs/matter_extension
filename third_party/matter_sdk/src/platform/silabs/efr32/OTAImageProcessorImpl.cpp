@@ -21,7 +21,6 @@
 #include <cinttypes>
 #include <platform/silabs/OTAImageProcessorImpl.h>
 #include <platform/silabs/SilabsConfig.h>
-#include <platform/silabs/BootloaderError.h>
 
 #if defined(SL_WIFI) && SL_WIFI
 #include <platform/silabs/wifi/ncp/spi_multiplex.h>
@@ -57,7 +56,6 @@ static chip::OTAImageProcessorImpl gImageProcessor;
 
 using namespace chip::DeviceLayer;
 using namespace chip::DeviceLayer::Internal;
-using chip::DeviceLayer::Silabs::LogBootloaderApiError;
 
 namespace chip {
 
@@ -174,7 +172,7 @@ void OTAImageProcessorImpl::HandlePrepareDownload(intptr_t context)
     WRAP_BL_DFU_CALL(err = bootloader_init())
     if (err != SL_BOOTLOADER_OK)
     {
-        LogBootloaderApiError("bootloader_init", static_cast<int32_t>(err));
+        ChipLogError(SoftwareUpdate, "bootloader_init Failed error: %" PRId32, err);
         SILABS_TRACE_END_ERROR(TimeTraceOperation::kImageUpload, CHIP_ERROR_INTERNAL);
     }
 
@@ -234,7 +232,7 @@ void OTAImageProcessorImpl::HandleFinalize(intptr_t context)
 #endif // SL_BTLCTRL_MUX
         if (err)
         {
-            LogBootloaderApiError("bootloader_eraseWriteStorage", static_cast<int32_t>(err));
+            ChipLogError(SoftwareUpdate, "bootloader_eraseWriteStorage() error: %" PRIu32, err);
             imageProcessor->mDownloader->EndDownload(CHIP_ERROR_WRITE_FAILED);
             SILABS_TRACE_END_ERROR(TimeTraceOperation::kImageUpload, CHIP_ERROR_WRITE_FAILED);
             return;
@@ -295,7 +293,7 @@ void OTAImageProcessorImpl::HandleApply(intptr_t context)
 
     if (err != SL_BOOTLOADER_OK)
     {
-        LogBootloaderApiError("bootloader_verifyImage", static_cast<int32_t>(err));
+        ChipLogError(SoftwareUpdate, "bootloader_verifyImage() error: %" PRIu32, err);
         // Call the OTARequestor API to reset the state
         GetRequestorInstance()->CancelImageUpdate();
 #if defined(SL_BTLCTRL_MUX) && SL_BTLCTRL_MUX
@@ -314,7 +312,7 @@ void OTAImageProcessorImpl::HandleApply(intptr_t context)
     UnlockRadioProcessing();
     if (err != SL_BOOTLOADER_OK)
     {
-        LogBootloaderApiError("bootloader_setImageToBootload", static_cast<int32_t>(err));
+        ChipLogError(SoftwareUpdate, "bootloader_setImageToBootload() error: %" PRIu32, err);
         // Call the OTARequestor API to reset the state
         GetRequestorInstance()->CancelImageUpdate();
 #if defined(SL_BTLCTRL_MUX) && SL_BTLCTRL_MUX
@@ -421,7 +419,7 @@ void OTAImageProcessorImpl::HandleProcessBlock(intptr_t context)
 #endif // SL_BTLCTRL_MUX
             if (err)
             {
-                LogBootloaderApiError("bootloader_eraseWriteStorage", static_cast<int32_t>(err));
+                ChipLogError(SoftwareUpdate, "bootloader_eraseWriteStorage() error: %" PRIu32, err);
                 imageProcessor->mDownloader->EndDownload(CHIP_ERROR_WRITE_FAILED);
                 return;
             }

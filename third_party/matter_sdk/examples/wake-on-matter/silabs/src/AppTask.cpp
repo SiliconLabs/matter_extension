@@ -19,6 +19,7 @@
 
 #include "AppTask.h"
 #include "AppConfig.h"
+#include "WakeUpMgr.h"
 
 #include <app/InteractionModelEngine.h>
 #include <app/clusters/access-control-server/access-control-cluster.h>
@@ -39,18 +40,20 @@
 
 #include <data-model-providers/codedriven/CodeDrivenDataModelProvider.h>
 #include <data-model-providers/codedriven/endpoint/EndpointInterfaceRegistry.h>
-
-#if CHIP_ENABLE_OPENTHREAD
 #include <platform/OpenThread/GenericNetworkCommissioningThreadDriver.h>
-#endif
-
 #include <platform/silabs/platformAbstraction/SilabsPlatform.h>
+
+#include <em_device.h>
+#include "sl_gpio.h"
+
+#include "mmic_task.h"
 
 using namespace chip;
 using namespace chip::app;
 using namespace chip::app::Clusters;
 using namespace chip::DeviceLayer;
 using namespace chip::DeviceLayer::Silabs;
+using chip::Silabs::WakeUpMgr;
 
 namespace {
 
@@ -84,9 +87,7 @@ private:
     EndpointInterfaceRegistration mEndpointRegistration;
 };
 
-#if CHIP_ENABLE_OPENTHREAD
 DeviceLayer::NetworkCommissioning::GenericThreadDriver sThreadDriver;
-#endif
 
 // Code-driven data model infrastructure
 DefaultAttributePersistenceProvider sAttributePersistence;
@@ -102,9 +103,7 @@ LazyRegisteredServerCluster<GeneralDiagnosticsCluster> sGeneralDiagnosticsCluste
 LazyRegisteredServerCluster<GroupKeyManagementCluster> sGroupKeyManagementCluster;
 LazyRegisteredServerCluster<AccessControlCluster> sAccessControlCluster;
 LazyRegisteredServerCluster<OperationalCredentialsCluster> sOperationalCredentialsCluster;
-#if CHIP_ENABLE_OPENTHREAD
 LazyRegisteredServerCluster<NetworkCommissioningCluster> sNetworkCommissioningCluster;
-#endif
 
 CHIP_ERROR RegisterRootNodeClusters(CodeDrivenDataModelProvider & provider, Credentials::GroupDataProvider * groupDataProvider)
 {
@@ -144,7 +143,6 @@ CHIP_ERROR RegisterRootNodeClusters(CodeDrivenDataModelProvider & provider, Cred
         GeneralCommissioningCluster::OptionalAttributes());
     ReturnErrorOnFailure(provider.AddCluster(sGeneralCommissioningCluster.Registration()));
 
-#if CHIP_ENABLE_OPENTHREAD
     // NetworkCommissioning (Thread)
     sNetworkCommissioningCluster.Create(kRootEndpointId, &sThreadDriver,
                                         NetworkCommissioningCluster::Context{
@@ -155,7 +153,6 @@ CHIP_ERROR RegisterRootNodeClusters(CodeDrivenDataModelProvider & provider, Cred
                                         });
     ReturnErrorOnFailure(sNetworkCommissioningCluster.Cluster().Init());
     ReturnErrorOnFailure(provider.AddCluster(sNetworkCommissioningCluster.Registration()));
-#endif
 
     // GeneralDiagnostics
     sGeneralDiagnosticsCluster.Create(GeneralDiagnosticsCluster::OptionalAttributeSet{}, BitFlags<GeneralDiagnostics::Feature>{},
@@ -245,14 +242,14 @@ void UnregisterRootNodeClusters(CodeDrivenDataModelProvider & provider)
         LogErrorOnFailure(provider.RemoveCluster(&sGeneralDiagnosticsCluster.Cluster()));
         sGeneralDiagnosticsCluster.Destroy();
     }
-#if CHIP_ENABLE_OPENTHREAD
+
     if (sNetworkCommissioningCluster.IsConstructed())
     {
         sNetworkCommissioningCluster.Cluster().Deinit();
         LogErrorOnFailure(provider.RemoveCluster(&sNetworkCommissioningCluster.Cluster()));
         sNetworkCommissioningCluster.Destroy();
     }
-#endif
+
     if (sGeneralCommissioningCluster.IsConstructed())
     {
         LogErrorOnFailure(provider.RemoveCluster(&sGeneralCommissioningCluster.Cluster()));
@@ -267,6 +264,55 @@ void UnregisterRootNodeClusters(CodeDrivenDataModelProvider & provider)
     {
         LogErrorOnFailure(provider.RemoveCluster(&sDescriptorCluster.Cluster()));
         sDescriptorCluster.Destroy();
+    }
+}
+
+// GPIO used to wake up the host. For now routed to the LED1 on the MG24 BRD4187c
+// Adjust port/pin as needed.
+constexpr sl_gpio_t kLightGpio         = { .port = gpioPortB, .pin = 4 };
+constexpr uint16_t kLedAutoOffTimeoutS = 5;
+
+void EnsureLightGpioInitialized()
+{
+    static bool initialized = false;
+    if (initialized)
+    {
+        return;
+    }
+    (void) sl_gpio_set_pin_mode(&kLightGpio, SL_GPIO_MODE_PUSH_PULL, false);
+    initialized = true;
+}
+
+void SetLight(bool on)
+{
+    EnsureLightGpioInitialized();
+    (void) (on ? sl_gpio_set_pin(&kLightGpio) : sl_gpio_clear_pin(&kLightGpio));
+}
+
+void LedAutoOffTimerHandler(chip::System::Layer * /*layer*/, void * /*appState*/)
+{
+    SetLight(false);
+}
+
+[[maybe_unused]] void subscriptionCallback(uint16_t endpointId, uint32_t clusterId, uint32_t attributeId, uint64_t value)
+{
+    (void) endpointId;
+
+    if (!WakeUpMgr::Instance().IsWakeUpNeeded(clusterId, attributeId, value))
+    {
+        ChipLogProgress(DeviceLayer, "Wake Up Not needed");
+        return;
+    }
+
+    SetLight(true);
+    // Cancel any pending auto-off before rearming so back-to-back reports extend the window.
+    chip::DeviceLayer::SystemLayer().CancelTimer(LedAutoOffTimerHandler, nullptr);
+    CHIP_ERROR err = chip::DeviceLayer::SystemLayer().StartTimer(
+        chip::System::Clock::Seconds16(kLedAutoOffTimeoutS), LedAutoOffTimerHandler, nullptr);
+    if (err != CHIP_NO_ERROR)
+    {
+        ChipLogError(DeviceLayer, "LED auto-off StartTimer failed: %" CHIP_ERROR_FORMAT, err.Format());
+        SetLight(false);
     }
 }
 
@@ -296,64 +342,111 @@ DataModel::Provider * AppTask::GetDataModelProvider()
     return sDataModelProvider.get();
 }
 
-CHIP_ERROR AppTask::AppInit()
+CHIP_ERROR AppTask::StartAppTask()
 {
-    GetPlatform().SetButtonsCb(AppTask::ButtonEventHandler);
+    // StartAppTask name is kept for compatibility even if this sample app
+    // doesn't have an App Task. All processing is made within the mmic Task context.
+
+    ReturnErrorOnFailure(WakeUpMgr::Instance().Init());
+
+    sl_status_t status = mmic_init(subscriptionCallback);
+    VerifyOrReturnError(status == SL_STATUS_OK, CHIP_ERROR_INTERNAL,
+                       ChipLogError(DeviceLayer, "Failed to Init Matter MMIC: 0x%02x", status));
+
+
     return CHIP_NO_ERROR;
 }
 
-CHIP_ERROR AppTask::StartAppTask()
-{
-    return BaseApplication::StartAppTask(AppTaskMain);
-}
+// To prevent linkage failure
+extern "C" void otAppNcpInit(otInstance * aInstance);
+extern "C" otInstance * otGetInstance(void);
+extern "C" void sl_ot_create_instance(void);
+extern "C" void efr32LogInit(void) {};
 
-void AppTask::AppTaskMain(void * pvParameter)
-{
-    AppEvent event;
-    osMessageQueueId_t sAppEventQueue = *(static_cast<osMessageQueueId_t *>(pvParameter));
+#include <openthread/dataset.h>
+#include <openthread/instance.h>
+#include <openthread/ip6.h>
+#include <openthread/thread.h>
 
-    CHIP_ERROR err = sAppTask.Init();
+#include <platform/ThreadStackManager.h>
+
+extern "C" void AppTaskThreadStateChangedHandler(otChangedFlags aFlags, void * aContext)
+{
+    if ((aFlags & OT_CHANGED_THREAD_ROLE) == 0)
+    {
+        return;
+    }
+
+    otInstance * instance = static_cast<otInstance *>(aContext);
+    otDeviceRole role     = otThreadGetDeviceRole(instance);
+    if (role != OT_DEVICE_ROLE_LEADER || !otIp6IsEnabled(instance))
+    {
+        return;
+    }
+
+    // Pull the active operational dataset from the NCP instance and push it to
+    // the Matter ThreadStackManager so both instances share the same network.
+    otOperationalDatasetTlvs datasetTlvs;
+    otError otErr = otDatasetGetActiveTlvs(instance, &datasetTlvs);
+    if (otErr != OT_ERROR_NONE)
+    {
+        SILABS_LOG("otDatasetGetActiveTlvs failed: %d", otErr);
+        return;
+    }
+
+    ByteSpan dataset(datasetTlvs.mTlvs, datasetTlvs.mLength);
+    CHIP_ERROR err = ThreadStackMgr().SetThreadProvision(dataset);
     if (err != CHIP_NO_ERROR)
     {
-        SILABS_LOG("AppTask.Init() failed");
-        appError(err);
+        SILABS_LOG("SetThreadProvision failed: %" CHIP_ERROR_FORMAT, err.Format());
+        return;
     }
 
-    SILABS_LOG("App Task started");
-
-    while (true)
+    err = ThreadStackMgr().SetThreadEnabled(true);
+    if (err != CHIP_NO_ERROR)
     {
-        osStatus_t eventReceived = osMessageQueueGet(sAppEventQueue, &event, NULL, osWaitForever);
-        while (eventReceived == osOK)
+        SILABS_LOG("SetThreadEnabled failed: %" CHIP_ERROR_FORMAT, err.Format());
+        return;
+    }
+
+    // Kick the Matter DNS-SD advertiser so records get (re)published now that
+    // the Thread interface is available.
+    const bool isCommissioned = (Server::GetInstance().GetFabricTable().FabricCount() > 0);
+
+    PlatformMgr().LockChipStack();
+    if (isCommissioned)
+    {
+        SILABS_LOG("Commissioned: restarting operational DNS-SD advertisement");
+        CHIP_ERROR advErr = DnssdServer::Instance().AdvertiseOperational();
+        if (advErr != CHIP_NO_ERROR)
         {
-            sAppTask.DispatchEvent(&event);
-            eventReceived = osMessageQueueGet(sAppEventQueue, &event, NULL, 0);
+            SILABS_LOG("AdvertiseOperational failed: %" CHIP_ERROR_FORMAT, advErr.Format());
         }
     }
+    else
+    {
+        SILABS_LOG("Not commissioned: restarting commissionable DNS-SD advertisement");
+        DnssdServer::Instance().StartServer(Dnssd::CommissioningMode::kEnabledBasic);
+    }
+    PlatformMgr().UnlockChipStack();
 }
-
-void AppTask::ButtonEventHandler(uint8_t button, uint8_t btnAction)
-{
-    AppEvent button_event           = {};
-    button_event.Type               = AppEvent::kEventType_Button;
-    button_event.ButtonEvent.Action = btnAction;
-    button_event.Handler            = BaseApplication::ButtonHandler;
-    AppTask::GetAppTask().PostEvent(&button_event);
-}
-
-// To prevent linkage failure
 #if SL_OPENTHREAD_MULTI_PAN_ENABLE
-extern "C" void otAppNcpInit(otInstance * aInstance);
-
 static otInstance * sInstance = NULL;
+extern "C" otInstance * otInstanceInitSingle(void) {}
 #endif
-
 extern "C" void sl_ot_ncp_init(void)
 {
+    if(otGetInstance() == nullptr)
+    {
+        sl_ot_create_instance();
+    }
 #if SL_OPENTHREAD_MULTI_PAN_ENABLE
     // Matter Stack uses instances at index 0
     // NCP instance will be at index 1
     sInstance = otInstanceInitMultiple(1);
     otAppNcpInit(sInstance);
-#endif
+    otSetStateChangedCallback(sInstance, AppTaskThreadStateChangedHandler, sInstance);
+#else
+    otAppNcpInit(otGetInstance());
+#endif // SL_OPENTHREAD_MULTI_PAN_ENABLE
 }

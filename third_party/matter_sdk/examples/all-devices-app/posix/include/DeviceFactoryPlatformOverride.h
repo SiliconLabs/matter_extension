@@ -19,10 +19,33 @@
 #include <lib/core/CHIPPersistentStorageDelegate.h>
 #include <lib/support/TimerDelegate.h>
 
+#include <PosixAudioManager.h>
+#include <PosixChime.h>
+#include <PosixSpeaker.h>
+#include <app_config/enabled_devices.h>
+#include <device-factory/DeviceFactory.h>
+
 namespace chip {
 namespace app {
 
-void RegisterDeviceFactoryOverrides(TimerDelegate & timerDelegate, PersistentStorageDelegate * storageDelegate);
+template <typename Factory>
+void RegisterDeviceFactoryOverrides(Factory & factory, TimerDelegate & timerDelegate, FabricTable & fabricTable,
+                                    PersistentStorageDelegate * storageDelegate, PosixAudioManager & audioManager)
+{
+    if constexpr (ALL_DEVICES_ENABLE_SPEAKER)
+    {
+        factory.RegisterCreator("speaker", [&timerDelegate, &audioManager]() {
+            return Factory::template MakeDevice<PosixSpeaker>(PosixSpeaker::Context{ timerDelegate }, audioManager);
+        });
+    }
+
+    if constexpr (ALL_DEVICES_ENABLE_CHIME)
+    {
+        factory.RegisterCreator("chime", [&timerDelegate, &audioManager]() {
+            return Factory::template MakeDevice<PosixChime>(timerDelegate, audioManager);
+        });
+    }
+}
 
 } // namespace app
 } // namespace chip

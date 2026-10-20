@@ -1,4 +1,4 @@
-category: Clusters|General
+category: Clusters|Closures
 description: >
   Implementation of the Closure Dimension Server Cluster.
   The user has to enable the Closure Dimension Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.

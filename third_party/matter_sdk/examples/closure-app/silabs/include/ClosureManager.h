@@ -31,7 +31,7 @@
 #include <AppEvent.h>
 #include <lib/core/DataModelTypes.h>
 
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
 #include "ClosureUI.h"
 #endif
 
@@ -147,9 +147,18 @@ public:
     /**
      * @brief Sets the current action being performed by the closure device.
      *
+     * Also bumps the action generation counter, so any ScheduleWork() callback captured
+     * for a previous action (identified by both action and generation) can be recognized
+     * as stale even if the new action happens to be the same Action_t value. See
+     * GetCurrentActionGeneration().
+     *
      * @param action The action to set, represented as chip::app::Clusters::ClosureControl::Action_t.
      */
-    void SetCurrentAction(Action_t newAction) { mCurrentAction = newAction; }
+    void SetCurrentAction(Action_t newAction)
+    {
+        mCurrentAction = newAction;
+        ++mActionGeneration;
+    }
 
     /**
      * @brief Retrieves the current action being performed by the closure device.
@@ -158,7 +167,19 @@ public:
      */
     const Action_t & GetCurrentAction() const { return mCurrentAction; }
 
-#ifdef DISPLAY_ENABLED
+    /**
+     * @brief Retrieves the generation counter for the current action.
+     *
+     * Incremented every time SetCurrentAction() is called, so it uniquely identifies a
+     * specific action instance even across two calls with the same Action_t value (e.g. a
+     * Stop immediately followed by a new action of the same type). Used to detect and skip
+     * stale ScheduleWork() callbacks scheduled for a since-superseded action.
+     *
+     * @return The generation counter for the current action.
+     */
+    uint32_t GetCurrentActionGeneration() const { return mActionGeneration; }
+
+#if SL_MATTER_DISPLAY_ENABLED
     /**
      * @brief Gets closure data specifically for UI display.
      *
@@ -166,7 +187,7 @@ public:
      */
     ClosureUIData GetClosureUIData();
 
-#endif // DISPLAY_ENABLED
+#endif // SL_MATTER_DISPLAY_ENABLED
 
     /**
      * @brief Checks if a MoveTo action is currently in progress.
@@ -222,7 +243,7 @@ protected:
      *
      * @param action The action that has completed, used to notify relevant endpoints.
      */
-    void HandleClosureActionComplete(Action_t action);
+    void HandleClosureActionCompleteDefault(Action_t action);
 
     /**
      * @brief Handles the motion action for closure endpoint.
@@ -231,7 +252,7 @@ protected:
      * to the next position towards their target positions and calls HandleClosureActionComplete if both endpoints
      * have reached their target positions.
      */
-    void HandleClosureMotionAction();
+    void HandleClosureMotionActionDefault();
 
     /**
      * @brief Handles the unlatch action for closure endpoint.
@@ -239,7 +260,7 @@ protected:
      * This method performs the unlatch action for closure endpoint if needed and updates the latch of endpoints 2 and 3
      * and calls HandleClosureMotionAction to continue the motion action.
      */
-    void HandleClosureUnlatchAction();
+    void HandleClosureUnlatchActionDefault();
 
     /**
      * @brief Calculates the next position for a panel based on the closure panel state.
@@ -254,9 +275,9 @@ protected:
      * @return true if the next position was updated and movement is required; false if no update is needed
      *         or if either the current or target position is not set.
      */
-    bool GetPanelNextPosition(const chip::app::Clusters::ClosureDimension::GenericDimensionStateStruct & currentState,
-                              const chip::app::Clusters::ClosureDimension::GenericDimensionStateStruct & targetState,
-                              chip::app::DataModel::Nullable<chip::Percent100ths> & nextPosition);
+    bool GetPanelNextPositionDefault(const chip::app::Clusters::ClosureDimension::GenericDimensionStateStruct & currentState,
+                                     const chip::app::Clusters::ClosureDimension::GenericDimensionStateStruct & targetState,
+                                     chip::app::DataModel::Nullable<chip::Percent100ths> & nextPosition);
 
     /**
      * @brief Handles the SetTarget motion action for a panel endpoint.
@@ -266,7 +287,7 @@ protected:
      *
      * @param endpointId The identifier of the endpoint for which the panel target action should be handled.
      */
-    void HandlePanelSetTargetAction(chip::EndpointId endpointId);
+    void HandlePanelSetTargetActionDefault(chip::EndpointId endpointId);
 
     /**
      * @brief Handles the unlatch action for a closure panel.
@@ -277,7 +298,7 @@ protected:
      *
      * @param endpointId The identifier of the endpoint for which the unlatch action should be handled.
      */
-    void HandlePanelUnlatchAction(chip::EndpointId endpointId);
+    void HandlePanelUnlatchActionDefault(chip::EndpointId endpointId);
 
     /**
      * @brief Handles a single step action for the panel associated with the specified endpoint.
@@ -287,7 +308,7 @@ protected:
      *
      * @param endpointId The identifier of the endpoint for which the panel step action is to be handled.
      */
-    void HandlePanelStepAction(chip::EndpointId endpointId);
+    void HandlePanelStepActionDefault(chip::EndpointId endpointId);
 
     // State, endpoints, and helpers available to CustomerAppManager *Impl() overrides.
     static constexpr chip::EndpointId kClosureEndpoint1      = 1;
@@ -332,11 +353,19 @@ protected:
     Action_t mCurrentAction                   = Action_t::INVALID_ACTION;
     chip::EndpointId mCurrentActionEndpointId = chip::kInvalidEndpointId;
 
+    // Bumped by SetCurrentAction() on every action transition. See GetCurrentActionGeneration().
+    uint32_t mActionGeneration = 0;
+
     /**
      * @brief Initiates a closure action based on the provided application event.
      *
      * This method sets the current action according to the action specified in the given AppEvent.
      * It logs the initiation of the corresponding action and, for certain actions, may start a timer.
+     *
+     * The event's Action and Generation (see AppEvent::ClosureEvent) are both validated against
+     * the current action/generation before proceeding, so a stale event (e.g. posted just before
+     * a Stop was immediately followed by a new action of the same Action_t value) is dropped
+     * instead of incorrectly initiating the new action's timer.
      *
      * @param event Pointer to the AppEvent containing the action to initiate.
      */
@@ -348,28 +377,37 @@ protected:
      * This method processes closure action complete event and schedules the completion of the closure action
      * to be executed asynchronously on the platform manager's work queue.
      *
+     * The event's Action and Generation (see AppEvent::ClosureEvent, and TimerEventHandler() which
+     * populates them) are both validated against the current action/generation before scheduling
+     * work, so a stale timer event does not schedule completion work for a since-superseded action.
+     *
      * @param event Pointer to the AppEvent containing closure event details.
      */
     static void HandleClosureActionCompleteEvent(AppEvent * event);
 
     /**
-     * @brief ScheduleWork handlers. `arg` is the expected Action_t at schedule time; work is
-     * skipped if the current action no longer matches (e.g. after Stop). Panel handlers read
-     * `mCurrentActionEndpointId` when the work runs, not a snapshotted endpoint.
+     * @brief ScheduleWork handlers. `actionToken` packs the expected Action_t together with the
+     * action generation counter captured at schedule time (see GetCurrentActionGeneration());
+     * work is skipped unless both still match the current action (e.g. after a Stop is
+     * immediately followed by a new action of the same Action_t value, the generation mismatch
+     * identifies the callback as stale). Panel handlers read `mCurrentActionEndpointId` when the
+     * work runs, not a snapshotted endpoint.
      */
-    static void HandleScheduledCalibrateComplete(intptr_t expectedAction);
-    static void HandleScheduledClosureMotion(intptr_t expectedAction);
-    static void HandleScheduledClosureUnlatch(intptr_t expectedAction);
-    static void HandleScheduledPanelSetTarget(intptr_t expectedAction);
-    static void HandleScheduledPanelUnlatch(intptr_t expectedAction);
-    static void HandleScheduledPanelStep(intptr_t expectedAction);
+    static void HandleScheduledCalibrateComplete(intptr_t actionToken);
+    static void HandleScheduledClosureMotion(intptr_t actionToken);
+    static void HandleScheduledClosureUnlatch(intptr_t actionToken);
+    static void HandleScheduledPanelSetTarget(intptr_t actionToken);
+    static void HandleScheduledPanelUnlatch(intptr_t actionToken);
+    static void HandleScheduledPanelStep(intptr_t actionToken);
 
     /**
      * @brief Timer event handler for the ClosureManager.
      *
      * This static function is called when the closure timer expires. The handler creates an AppEvent and
      * posts the event to the application task queue. This ensures that the closure event is processed in the context of the
-     * application task rather than the timer task.
+     * application task rather than the timer task. The posted event captures the current action generation
+     * (see GetCurrentActionGeneration()) so HandleClosureActionCompleteEvent() can detect if the action was
+     * superseded by the time the event is processed.
      *
      * @param timerCbArg Pointer to the callback argument (unused).
      */

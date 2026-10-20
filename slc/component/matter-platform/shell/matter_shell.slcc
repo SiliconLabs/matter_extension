@@ -12,8 +12,11 @@ metadata:
 provides:
   - name: matter_shell
 
+recommends:
+  - id: matter_uart
+
 requires:
-  - name: matter_uart
+  - name: matter_uart_interface
   - name: matter_thread_cli
     condition: [matter_thread]
   - name: matter_zigbee_debug
@@ -66,6 +69,10 @@ include:
   - path: third_party/matter_sdk/examples/platform/silabs/shell/im
     file_list:
       - path: IMShellCommands.h
+  - path: third_party/matter_sdk/examples/platform/silabs/subscription
+    condition: [matter_read_client]
+    file_list:
+      - path: SubscriptionManager.h
 
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/MatterShell.cpp
@@ -110,6 +117,8 @@ source:
   - path: third_party/matter_sdk/examples/platform/silabs/shell/ble/BLEShellCommands.cpp
   - path: third_party/matter_sdk/examples/platform/silabs/shell/im/IMShellCommands.cpp
     condition: [matter_read_client]
+  - path: third_party/matter_sdk/examples/platform/silabs/subscription/SubscriptionManager.cpp #required for IMShell
+    condition: [matter_read_client]  
     
 define:
   - name: ENABLE_CHIP_SHELL

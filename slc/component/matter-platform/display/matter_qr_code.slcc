@@ -24,4 +24,4 @@ conflicts:
   - name: matter_low_power
   - name: matter_no_lcd_shell
 define:
-  - name: QR_CODE_ENABLED
+  - name: SL_MATTER_QR_CODE_ENABLED

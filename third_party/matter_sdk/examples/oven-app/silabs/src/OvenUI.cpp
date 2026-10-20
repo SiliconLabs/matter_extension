@@ -20,6 +20,7 @@
 #include <string.h>
 
 #include "AppTask.h"
+#include "OvenManager.h"
 #include "OvenUI.h"
 #include "demo-ui-bitmaps.h"
 #include "dmd.h"
@@ -89,7 +90,8 @@ void OvenUI::DrawHeader(GLIB_Context_t * glibContext)
 
 void OvenUI::DrawCookTopState(GLIB_Context_t * glibContext)
 {
-    bool cookTopState = AppTask::GetAppTask().GetCookTopState();
+    // Get CookTop state from OvenManager
+    bool cookTopState = OvenManager::GetInstance().GetCookTopState();
 
     if (cookTopState)
     {
@@ -104,7 +106,7 @@ void OvenUI::DrawCookTopState(GLIB_Context_t * glibContext)
 void OvenUI::DrawOvenMode(GLIB_Context_t * glibContext)
 {
     // Get current oven mode from the Temperature Controlled Cabinet endpoint
-    uint8_t currentMode = AppTask::GetAppTask().GetCurrentOvenMode();
+    uint8_t currentMode = OvenManager::GetInstance().GetCurrentOvenMode();
 
     // LCD Display line max length is 16 characters, so allocate 17 bytes for the message (MODE: + mode text + null terminator)
     char message[LCD_MAX_LINE_LEN + 1];

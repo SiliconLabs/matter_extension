@@ -29,7 +29,6 @@ boards = [
     "BRD4117A", 
     "BRD4118A", 
     "BRD2608A",
-    "BRD2608B",
     "BRD4120A",
     "BRD4121A",
     "BRD2709A", # MGM26
@@ -45,7 +44,7 @@ def build_with_sisdk_slc(sdk_path, target_boards=None):
     root_path = os.getcwd()
     sisdk_path = os.path.join(root_path,sdk_path)
     ot_rcp_out_path = os.path.join(root_path,"ot-rcp")
-    slcp_file_path = os.path.join(sisdk_path, "openthread_app/ot-ncp/ot/ot-rcp.slcp")
+    slcp_file_path = os.path.join(sisdk_path, "thread_app/ot-ncp/ot/ot-rcp.slcp")
 
     if not os.path.exists(ot_rcp_out_path):
         os.makedirs(ot_rcp_out_path)

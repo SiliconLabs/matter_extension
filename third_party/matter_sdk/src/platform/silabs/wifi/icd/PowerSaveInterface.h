@@ -57,21 +57,56 @@ public:
     }
 
     /**
-     * @brief Configures the broadcast filter.
+     * @brief Configures broadcast and multicast filtering.
      *
-     * @param[in] enableBroadcastFilter Boolean to enable or disable the broadcast filter.
+     * Platforms that support filtering apply the same enable/disable state to both
+     * broadcast and multicast filters. When filtering is disabled, platforms may still allowlist
+     * required multicast traffic (e.g. Matter mDNS).
      *
-     * @return CHIP_ERROR CHIP_NO_ERROR, the counters were succesfully reset to 0.
-     *                    CHIP_ERROR_INTERNAL, if there was an error when configuring the broadcast filter
-     *                    CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE, if the platform does not support the requested power save mode
-     *                                                         or if it is a non-supported configuration
+     * @param[in] enableBroadcastFilter Boolean to enable or disable broadcast/multicast filtering.
+     *
+     * @return CHIP_ERROR CHIP_NO_ERROR, the filters were successfully configured
+     *                    CHIP_ERROR_INTERNAL, if there was an error when configuring the filters
+     *                    CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE, if the platform does not support the requested configuration
      */
     virtual CHIP_ERROR ConfigureBroadcastFilter(bool enableBroadcastFilter) { return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE; }
 
+#if defined(CHIP_CONFIG_ENABLE_ICD_LIT) && (CHIP_CONFIG_ENABLE_ICD_LIT == 1)
+
+    /**
+     * @brief Reconnect after Long Idle Time (LIT) sleep disconnect (ICD active mode / reporting window).
+     *        Platform implementations start join without periodic backoff used for unintended disconnects.
+     */
+    virtual CHIP_ERROR ConfigureLITConnect() { return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE; }
+
+    /**
+     * @brief Intentional STA disconnect for LIT disconnect sleep (CHIP_CONFIG_ENABLE_ICD_LIT).
+     *        Suppresses automatic reconnect until ConfigureLITConnect(); disconnect is processed on the Wi-Fi task.
+     */
+    virtual CHIP_ERROR ConfigureLITDisconnect() { return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE; }
+
+    /**
+     * @brief Stops the LIT precheck-in reconnect timer (e.g. when entering active mode before LIT connect).
+     */
+    virtual void CancelLitPrecheckInReconnectTimer() {}
+
+    /**
+     * @brief Schedules Wi-Fi reconnect before the ICD traffic window after LIT disconnect sleep is configured.
+     */
+    virtual void StartLitPrecheckInReconnectTimer() {}
+
+    /**
+     * @brief Creates OS resources for LIT precheck-in reconnect scheduling. Called during WifiSleepManager::Init.
+     *
+     * @return CHIP_NO_ERROR on success, CHIP_ERROR_INTERNAL if timer creation fails.
+     */
+    virtual CHIP_ERROR InitLitPrecheckInReconnectTimer() { return CHIP_NO_ERROR; }
+#endif // defined(CHIP_CONFIG_ENABLE_ICD_LIT) && (CHIP_CONFIG_ENABLE_ICD_LIT == 1)
 protected:
     // Default power save configuration is High Performance as the device starts in high power mode and low power modes need to be
     // explicitly configured
     PowerSaveConfiguration mCurrentPowerSaveConfiguration = PowerSaveConfiguration::kHighPerformance;
+    bool mBroadcastFilterEnabled                          = false;
 };
 
 } // namespace Silabs

@@ -1,0 +1,17 @@
+id: matter_em4
+label: Ultra Low Power Mode
+description: >
+  Enable EM4 support. Absolute minimum current during idle period. Will force a reboot upon exiting em4
+package: matter
+category: Matter|Platform|Low-power
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+provides:
+  - name: matter_em4
+define:
+  - name: SL_MATTER_EM4_SLEEP
+    value: "1"
+requires:
+  - name: matter_icd

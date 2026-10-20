@@ -61,8 +61,9 @@ extern "C" {
 #include <setup_payload/AdditionalDataPayloadGenerator.h>
 #endif
 
-#include <headers/ProvisionChannel.h>
+#if SL_MATTER_PROVISION_CHANNEL_ENABLED
 #include <headers/ProvisionManager.h>
+#endif // SL_MATTER_PROVISION_CHANNEL_ENABLED
 
 using namespace ::chip;
 using namespace ::chip::Ble;
@@ -892,20 +893,24 @@ BLEManagerImpl::EventFilter BLEManagerImpl::HandleWriteEvent(volatile sl_bt_msg_
     {
         eventFilter        = EventFilter::MatterReservedEvent;
         uint16_t attribute = evt->data.evt_gatt_server_user_write_request.characteristic;
-        bool do_provision  = chip::DeviceLayer::Silabs::Provision::Manager::GetInstance().IsProvisionRequired();
         ChipLogProgress(DeviceLayer, "Char Write Req, char : %d", attribute);
 
         if (gattdb_CHIPoBLEChar_Rx == attribute)
         {
-            if (do_provision)
+#if SL_MATTER_PROVISION_CHANNEL_ENABLED
+            auto & provisionManager = ::chip::DeviceLayer::Silabs::Provision::Manager::GetInstance();
+            if (provisionManager.IsProvisionRequired())
             {
-                TEMPORARY_RETURN_IGNORED chip::DeviceLayer::Silabs::Provision::Channel::Update(attribute);
-                chip::DeviceLayer::Silabs::Provision::Manager::GetInstance().Step();
+                TEMPORARY_RETURN_IGNORED provisionManager.OnChannelDataAvailable();
+                provisionManager.Step();
             }
             else
             {
                 HandleRXCharWrite(evt);
             }
+#else
+            HandleRXCharWrite(evt);
+#endif // SL_MATTER_PROVISION_CHANNEL_ENABLED
         }
     }
     else if (isMATTERoBLECharacteristic(evt->data.evt_gatt_server_user_write_request.characteristic))

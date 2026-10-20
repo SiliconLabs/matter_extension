@@ -19,6 +19,10 @@ requires:
 provides:
   - name: matter_uart
   - name: ot_uart_implementation
+  - name: matter_uart_interface
+
+conflicts:
+  - name: matter_cpc
 
 source:
   - path: third_party/matter_sdk/examples/platform/silabs/uart.cpp

@@ -75,7 +75,6 @@ if (wifi_soc) {
     include_dirs = [
       "${chip_root}/src/platform/silabs/SiWx",
       "${silabs_project_dir}/include",
-      "${silabs_project_dir}/config",
       "${examples_plat_dir}",
       "${chip_root}/src/lib",
       "${examples_common_plat_dir}",
@@ -101,18 +100,12 @@ if (wifi_soc) {
     include_dirs = [
       "${chip_root}/src/platform/silabs/efr32",
       "${silabs_project_dir}/include",
-      "${silabs_project_dir}/config",
       "${examples_plat_dir}",
       "${chip_root}/src/lib",
       "${examples_common_plat_dir}",
       "${examples_common_plat_dir}/customer",
       "${examples_common_plat_dir}/freertos_config",
     ]
-
-    if (use_wf200) {
-      # TODO efr32_sdk should not need a header from this location
-      include_dirs += [ "${examples_plat_dir}/wf200" ]
-    }
 
     defines = []
     if (chip_enable_pw_rpc) {
@@ -125,10 +118,7 @@ if (wifi_soc) {
 }
 silabs_executable("fan-control-app") {
   output_name = "matter-silabs-fan-control-example.out"
-  include_dirs = [
-    "include",
-    "config",
-  ]
+  include_dirs = [ "include" ]
   defines = []
 
   if (silabs_board == "BRD2704A") {

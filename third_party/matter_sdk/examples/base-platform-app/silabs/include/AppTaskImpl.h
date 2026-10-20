@@ -38,23 +38,22 @@ template <typename Derived>
 class AppTaskImpl : public AppTask
 {
 public:
-    // Common AppTask bring up
     CHIP_ERROR AppInit() override { CRTP_OPTIONAL_DISPATCH(AppTaskImpl, Derived, AppInitImpl); }
 
-    // Handle button press
+    // Platform button callback, posts an AppEvent to the AppTask queue for processing.
     static void ButtonEventHandler(uint8_t button, uint8_t btnAction)
     {
         CRTP_OPTIONAL_STATIC_DISPATCH(AppTaskImpl, Derived, ButtonEventHandlerImpl, button, btnAction);
     }
 
-    // AppTask thread event handler
+    // AppTask thread handler for PB1 button events, triggers application actions on the Matter task.
     static void ApplicationEventHandler(AppEvent * aEvent)
     {
         CRTP_OPTIONAL_STATIC_DISPATCH(AppTaskImpl, Derived, ApplicationEventHandlerImpl, aEvent);
     }
 
 #if defined(CHIP_CONFIG_ENABLE_ICD_SERVER) && CHIP_CONFIG_ENABLE_ICD_SERVER
-    // ICD lifecycle hooks invoked by the ICD manager
+    // ICDStateObserver callbacks invoked by the ICD manager
     // Override to react to power mode transitions
     void OnEnterActiveMode() override
     {
@@ -81,7 +80,6 @@ private:
     void ApplicationEventHandlerImpl(AppEvent * aEvent) { AppTask::ApplicationEventHandler(aEvent); }
 
 #if defined(CHIP_CONFIG_ENABLE_ICD_SERVER) && CHIP_CONFIG_ENABLE_ICD_SERVER
-    // Default ICD power mode hooks: forward to the AppTask::*Default() behavior
     void OnEnterActiveModeImpl() { AppTask::OnEnterActiveModeDefault(); }
 
     void OnEnterIdleModeImpl() { AppTask::OnEnterIdleModeDefault(); }

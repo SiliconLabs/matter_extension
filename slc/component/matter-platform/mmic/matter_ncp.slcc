@@ -1,0 +1,27 @@
+id: matter_mmic
+label: Matter Minimal Interface for Control
+description: Enables sources and defines for CPC as used by Matter components
+package: matter
+category: Matter|Platform|matter_mmic
+quality: production
+metadata:
+  sbom:
+    license: MSLA
+
+provides:
+  - name: matter_mmic
+
+requires:
+  - name: matter_cpc
+
+source:
+  - path: third_party/matter_sdk/examples/platform/silabs/mmic/mmic_task.cpp
+  - path: third_party/matter_sdk/examples/platform/silabs/mmic/mmic.cpp
+
+include:
+  - path: third_party/matter_sdk/examples/platform/silabs/mmic
+    file_list:
+      - path: mmic.h
+      - path: mmic_task.h
+
+

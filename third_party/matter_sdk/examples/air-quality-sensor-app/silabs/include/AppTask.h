@@ -27,7 +27,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
 #include "AirQualitySensorUI.h"
 #endif
 
@@ -59,7 +59,6 @@ class AppTask : public BaseApplication
 public:
     AppTask() = default;
 
-    /** @brief Returns the active app instance */
     static AppTask & GetAppTask();
 
     /**
@@ -69,7 +68,6 @@ public:
      */
     static void AppTaskMain(void * pvParameter);
 
-    /** @brief Creates and starts the AppTask thread */
     CHIP_ERROR StartAppTask();
 
     /**
@@ -78,8 +76,8 @@ public:
     void UpdateAirQualitySensorUI();
 
     /**
-    * @brief Update the Air Quality cluster attribute
-    */
+     * @brief Update the Air Quality cluster attribute
+     */
     static void WriteAirQualityToAttribute(intptr_t context);
 
     /**
@@ -92,7 +90,14 @@ public:
      */
     static void ButtonEventHandler(uint8_t button, uint8_t btnAction);
 
-    /** @brief Data model hook invoked when a cluster attribute changes */
+    /**
+     * @brief Matter stack callback triggered after a server attribute changes.
+     *
+     * @param attributePath Endpoint, cluster, and attribute that changed
+     * @param type          TLV encoding type of @p value
+     * @param size          Size in bytes of @p value
+     * @param value         Pointer to the new attribute value
+     */
     void DMPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
                                        uint8_t * value);
 
@@ -105,13 +110,22 @@ public:
      */
     CHIP_ERROR GetAirQualityValue(int32_t & air_quality);
 
-    /** @brief Reads new generated sensor value, stores it, and updates local Air Quality attribute */
+    /**
+     * @brief Reads new generated sensor value, stores it, and updates local Air Quality attribute.
+     *
+     * @param arg CMSIS timer callback argument
+     */
     static void SensorTimerEventHandler(void * arg);
 
 protected:
-    /** @brief Override of `BaseApplication::AppInit()` */
     CHIP_ERROR AppInit() override;
 
-    /** @brief Bring up the air quality sensor app: Matter manager, sensor timer, sensor driver, first reading. */
+    /**
+     * @brief Bring up the air quality sensor app: Matter manager, sensor timer, sensor driver, first reading.
+     *
+     * @return CHIP_NO_ERROR on success, otherwise APP_ERROR_CREATE_TIMER_FAILED if the sensor timer
+     *         could not be created, or MATTER_PLATFORM_ERROR(...) if the air quality sensor driver
+     *         init fails when USE_AIR_QUALITY_SENSOR is set.
+     */
     CHIP_ERROR InitAirQualitySensor();
 };

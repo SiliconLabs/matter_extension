@@ -107,12 +107,12 @@ def wait_for_artifacts(commit_sha, sqa=False):
     
     config_data = _get_wait_config(sqa)
     print(f"Waiting for artifacts to be built for commit: {commit_sha}")
-    print(f"Job to wait for: {config_data['job_name']}")
+    print(f"Job(s) to wait for: {config_data['job_names']}")
     print(f"Max wait time: {config_data['max_retries']} minutes")
     
     for attempt in range(1, config_data['max_retries'] + 2):
         try:
-            if _check_artifacts_ready(commit_sha, config_data['job_name']):
+            if _check_artifacts_ready(commit_sha, config_data['job_names']):
                 print(f"Artifacts are ready after {attempt} attempts!")
                 return
         except RuntimeError as e:
@@ -186,12 +186,17 @@ def _find_branch_workflow(workflow_runs, branch_name):
         ValueError: If wrong job type is triggered (PR found in branch workflow)
         RuntimeError: If no matching workflow is found or workflow data is invalid
     """
-    workflow_name = "Build Dev apps"
-    for workflow in workflow_runs:
-        if _matches_branch_workflow(workflow, branch_name, workflow_name):
-            _validate_branch_workflow(workflow)
-            return _extract_workflow_info(workflow)
-    raise RuntimeError(f"No matching branch workflow {workflow_name} found for branch: {branch_name}.")
+    # Prefer Create Matter Packages (caller) so artifact download uses the
+    # parent run id; reusable nested runs keep artifacts on the caller.
+    workflow_names = ("Create Matter Packages", "Build Dev apps")
+    for workflow_name in workflow_names:
+        for workflow in workflow_runs:
+            if _matches_branch_workflow(workflow, branch_name, workflow_name):
+                _validate_branch_workflow(workflow)
+                return _extract_workflow_info(workflow)
+    raise RuntimeError(
+        f"No matching branch workflow {workflow_names} found for branch: {branch_name}."
+    )
 
 
 def _find_pr_workflow(workflow_runs, pr_number):
@@ -208,11 +213,14 @@ def _find_pr_workflow(workflow_runs, pr_number):
     Raises:
         RuntimeError: If no matching workflow is found or workflow data is invalid
     """
-    workflow_name = "Build Dev apps"
-    for workflow in workflow_runs:
-        if _matches_pr_workflow(workflow, pr_number, workflow_name):
-            return _extract_workflow_info(workflow)
-    raise RuntimeError(f"No matching PR workflow {workflow_name} found for PR: {pr_number}.")
+    workflow_names = ("Create Matter Packages", "Build Dev apps")
+    for workflow_name in workflow_names:
+        for workflow in workflow_runs:
+            if _matches_pr_workflow(workflow, pr_number, workflow_name):
+                return _extract_workflow_info(workflow)
+    raise RuntimeError(
+        f"No matching PR workflow {workflow_names} found for PR: {pr_number}."
+    )
 
 
 def _matches_branch_workflow(workflow, branch_name, workflow_name):
@@ -298,22 +306,30 @@ def _get_wait_config(sqa):
         sqa (bool): Whether this is an SQA build
         
     Returns:
-        dict: Configuration containing job_name, max_retries, and wait_interval
+        dict: Configuration containing job_names, max_retries, and wait_interval
     """
+    if sqa:
+        job_names = ["Build SQA apps / Merge SQA App Artifacts"]
+    else:
+        # Direct "Build Dev apps" vs nested call from create-matter-packages.
+        job_names = [
+            "Merge App Artifacts",
+            "Build Dev Apps (from package cache) / Merge App Artifacts",
+        ]
     return {
-        'job_name': "Build SQA apps / Merge SQA App Artifacts" if sqa else "Merge App Artifacts",
+        'job_names': job_names,
         'max_retries': 20,
         'wait_interval': 60
     }
 
 
-def _check_artifacts_ready(commit_sha, job_name):
+def _check_artifacts_ready(commit_sha, job_names):
     """
     Check if artifacts are ready by examining GitHub check runs.
     
     Args:
         commit_sha (str): The commit SHA to check
-        job_name (str): The name of the job to wait for
+        job_names (list): Check-run names that indicate artifacts are ready
         
     Returns:
         bool: True if artifacts are ready, False otherwise
@@ -326,7 +342,7 @@ def _check_artifacts_ready(commit_sha, job_name):
         if _is_test_timeout(check_run):
             _handle_test_timeout()
             continue
-        if check_run.get('name') == job_name:
+        if check_run.get('name') in job_names:
             return _is_artifact_job_complete(check_run)
     return False
 

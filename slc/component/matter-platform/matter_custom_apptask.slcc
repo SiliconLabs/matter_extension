@@ -1,0 +1,15 @@
+id: matter_custom_apptask
+label: Custom AppTask
+description: Removes the BaseApplication from the build
+package: matter
+category: Matter|Examples
+quality: production
+metadata:
+  sbom:
+    license: Zlib
+provides:
+  - name: matter_custom_apptask
+
+define:
+  - name: SL_MATTER_CUSTOM_APPTASK
+    value: 1

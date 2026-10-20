@@ -11,8 +11,6 @@ include:
   - path: third_party/matter_sdk/src
   - path: third_party/matter_sdk/src/include
   - path: third_party/matter_sdk/src/lib
-  - path: third_party/nlassert/include
-  - path: third_party/nlio/include
   - path: third_party/matter_sdk/src/ble
     file_list:
       - path: BLEEndPoint.h
@@ -38,9 +36,14 @@ metadata:
     license: "Apache 2.0"
 source:
   - path: third_party/matter_sdk/src/ble/BLEEndPoint.cpp
+    unless: [bluetooth_hci_cpc]
   - path: third_party/matter_sdk/src/ble/BleError.cpp
+    unless: [bluetooth_hci_cpc]
   - path: third_party/matter_sdk/src/ble/BleLayer.cpp
+    unless: [bluetooth_hci_cpc]
   - path: third_party/matter_sdk/src/ble/BleUUID.cpp
+    unless: [bluetooth_hci_cpc]
   - path: third_party/matter_sdk/src/ble/BtpEngine.cpp
+    unless: [bluetooth_hci_cpc]
 ui_hints:
   visibility: never

@@ -33,7 +33,6 @@ class AppTask : public BaseApplication
 public:
     AppTask() = default;
 
-    /** @brief Returns the active app instance */
     static AppTask & GetAppTask();
 
     /**
@@ -43,10 +42,8 @@ public:
      */
     static void AppTaskMain(void * pvParameter);
 
-    /** @brief Creates and starts the AppTask thread */
     CHIP_ERROR StartAppTask();
 
-    /** @brief Requests a refresh of the thermostat LCD UI */
     static void UpdateThermoStatUI();
 
     /**
@@ -69,8 +66,13 @@ public:
     static void TemperatureUpdateEventHandler(AppEvent * aEvent);
 
     /**
-     * @brief Thermostat-cluster post-attribute-change callback. Logs per-attribute info and
-     *        triggers a UI refresh. Also fans out to the AWS hook when SL_MATTER_ENABLE_AWS is set.
+     * @brief Matter stack callback after a server attribute change, logs Thermostat attributes and
+     *        refreshes the UI.
+     *
+     * @param attributePath Endpoint, cluster, and attribute that changed
+     * @param type          TLV encoding type of @p value
+     * @param size          Size in bytes of @p value
+     * @param value         Pointer to the new attribute value
      */
     void DMPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & attributePath, uint8_t type, uint16_t size,
                                        uint8_t * value);
@@ -100,9 +102,13 @@ public:
     CHIP_ERROR GetTemperature(int16_t & temperature);
 
 protected:
-    /** @brief Override of `BaseApplication::AppInit()` */
     CHIP_ERROR AppInit() override;
 
-    /** Bring up the thermostat app: sensor timer, sensor driver, first UI paint. */
+    /**
+     * @brief Bring up the thermostat app: sensor timer, sensor driver, first UI paint.
+     *
+     * @return CHIP_NO_ERROR on success, otherwise APP_ERROR_CREATE_TIMER_FAILED if the sensor timer
+     *         could not be created, or an error propagated from InitSensor().
+     */
     CHIP_ERROR InitThermostat();
 };

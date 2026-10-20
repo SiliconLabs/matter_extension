@@ -1,0 +1,19 @@
+category: Matter|Core
+define: []
+description: Manages active subscriptions present on devices.
+id: matter_subscription_manager
+label: Subscription Manager
+package: matter
+provides:
+  - name: matter_subscription_manager
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+include:
+  - path: third_party/matter_sdk/examples/platform/silabs/subscription
+    file_list:
+      - path: SubscriptionManager.h
+source:
+  - path: third_party/matter_sdk/examples/platform/silabs/subscription/SubscriptionManager.cpp
+

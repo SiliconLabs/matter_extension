@@ -49,11 +49,13 @@ include:
 - path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx
   file_list:
   - path: WifiInterfaceImpl.h
+  - path: SlNetConfig.h
 
 source:
 
 - path: third_party/matter_sdk/src/platform/silabs/wifi/WifiInterface.cpp
 - path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx/WifiInterfaceImpl.cpp
+- path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx/SlNetConfig.cpp
 - path: third_party/matter_sdk/src/platform/silabs/wifi/SiWx/ncp/sl_si91x_ncp_utility.c
 - path: third_party/matter_sdk/src/platform/silabs/SiWx/ble/BLEManagerImpl.cpp
   unless: [matter_ble]
@@ -68,6 +70,11 @@ define:
   value: 1
 - name: CHIP_9117
   value: 1
+- name: SL_WFX_CONFIG_SCAN
+  value: 1
+- name: SL_WFX_USE_SPI
+- name: RSI_WITH_OS
+- name: SL_WIFI_COMPONENT_INCLUDED
 - name: __WEAK
   value: "__attribute__((weak))"
 

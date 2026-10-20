@@ -24,6 +24,12 @@ declare_args() {
   # Enable UDP endpoint.
   chip_inet_config_enable_udp_endpoint = true
 
+  # [SL-ONLY]: defer outbound UDP until a netif is link-up (DeferredUdpSendQueueLwIP).
+  sl_inet_config_udp_lwip_queue_until_netif_ready = false
+
+  # [SL-ONLY]: queue size for the UDP DeferredUdpSendQueueLwIP
+  sl_inet_config_udp_lwip_deferred_send_queue_size = 0
+
   # Enable TCP endpoint.
   chip_inet_config_enable_tcp_endpoint = true
 

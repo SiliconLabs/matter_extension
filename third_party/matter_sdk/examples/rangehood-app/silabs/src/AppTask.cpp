@@ -25,13 +25,13 @@
 
 #include "LEDWidget.h"
 
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
 #include "RangeHoodUI.h"
 #include "lcd.h"
-#ifdef QR_CODE_ENABLED
+#if SL_MATTER_QR_CODE_ENABLED
 #include "qrcodegen.h"
-#endif // QR_CODE_ENABLED
-#endif // DISPLAY_ENABLED
+#endif // SL_MATTER_QR_CODE_ENABLED
+#endif // SL_MATTER_DISPLAY_ENABLED
 
 #include <app-common/zap-generated/attribute-type.h>
 #include <app-common/zap-generated/attributes/Accessors.h>
@@ -148,17 +148,17 @@ CHIP_ERROR AppTask::AppInit()
     CHIP_ERROR err = CHIP_NO_ERROR;
     chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(&CustomerAppTask::ButtonEventHandler);
 
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
     SuccessOrLog(GetLCD().Init((uint8_t *) "Rangehood-App"), AppServer, "Failed to initialize LCD");
     GetLCD().SetCustomUI(RangeHoodUI::DrawUI);
-#endif // DISPLAY_ENABLED
+#endif // SL_MATTER_DISPLAY_ENABLED
 
     err = AppInstance().InitRangeHood();
     VerifyOrReturnError(err == CHIP_NO_ERROR, err, ChipLogError(AppServer, "InitRangeHood failed"));
 
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
     GetLCD().WriteDemoUI(false);
-#ifdef QR_CODE_ENABLED
+#if SL_MATTER_QR_CODE_ENABLED
 #ifdef SL_WIFI
     if (!ConnectivityMgr().IsWiFiStationProvisioned())
 #else
@@ -167,8 +167,8 @@ CHIP_ERROR AppTask::AppInit()
     {
         GetLCD().ShowQRCode(true);
     }
-#endif // QR_CODE_ENABLED
-#endif // DISPLAY_ENABLED
+#endif // SL_MATTER_QR_CODE_ENABLED
+#endif // SL_MATTER_DISPLAY_ENABLED
 
     return err;
 }
@@ -256,23 +256,23 @@ void AppTask::ActionTriggerHandler(AppEvent * aEvent)
     case LIGHT_ON_ACTION:
         ChipLogProgress(AppServer, "Light ON");
         sLightLED.Set(true);
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
         GetLCD().WriteDemoUI(false);
-#endif // DISPLAY_ENABLED
+#endif // SL_MATTER_DISPLAY_ENABLED
         break;
 
     case LIGHT_OFF_ACTION:
         ChipLogProgress(AppServer, "Light OFF");
         sLightLED.Set(false);
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
         GetLCD().WriteDemoUI(false);
-#endif // DISPLAY_ENABLED
+#endif // SL_MATTER_DISPLAY_ENABLED
         break;
 
     case FAN_MODE_CHANGE_ACTION:
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
         GetLCD().WriteDemoUI(false);
-#endif // DISPLAY_ENABLED
+#endif // SL_MATTER_DISPLAY_ENABLED
         break;
 
     case FAN_PERCENT_CHANGE_ACTION:

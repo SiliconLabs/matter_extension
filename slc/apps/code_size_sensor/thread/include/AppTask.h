@@ -89,7 +89,7 @@ private:
         kOccupancySensor = 0,
         kSensor          = 1,
         kStatusScreen    = 2,
-#ifdef QR_CODE_ENABLED
+#if SL_MATTER_QR_CODE_ENABLED
         kQrCode = 3,
         kCount  = 4,
 #else
@@ -104,7 +104,7 @@ private:
      */
     CHIP_ERROR AppInit() override;
 
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
     /**
      * @brief Function cycle between the different LCD UIs.
      *        The LCD order is : Occupancy -> Temp/Hum values -> Status Screen -> QR code (if enabled) -> Occupancy.
@@ -116,7 +116,7 @@ private:
      *        Only the currently shown LCD image is updated.
      */
     void UpdateSensorDisplay(void);
-#endif // DISPLAY_ENABLED
+#endif // SL_MATTER_DISPLAY_ENABLED
 
     /**
      * @brief PB0 Button event processing function

@@ -90,4 +90,4 @@ source:
     condition:
       - matter_rangehood
 define:
-  - name: DISPLAY_ENABLED
+  - name: SL_MATTER_DISPLAY_ENABLED

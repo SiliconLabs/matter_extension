@@ -252,9 +252,9 @@ private:
     PacketBufferHandle c3AdditionalDataBufferHandle;
 #endif
 
-#if !(defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE)
+#if defined(SL_BLE_SIDE_CHANNEL_ENABLED) && SL_BLE_SIDE_CHANNEL_ENABLED
     BLEChannel * mBleSideChannel = nullptr;
-#endif // !(defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE)
+#endif
 
     CHIP_ERROR MapBLEError(int bleErr);
     void DriveBLEState(void);

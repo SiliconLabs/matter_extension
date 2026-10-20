@@ -84,7 +84,10 @@ efr32_sdk("sdk") {
 
 silabs_executable("wake-on-matter") {
   output_name = "silabs-wake-on-matter.out"
-  include_dirs = [ "include" ]
+  include_dirs = [
+    "include",
+    "${chip_root}/examples/platform/silabs/mmic",
+  ]
   defines = []
 
   defines += [ "CHIP_CONFIG_SKIP_APP_SPECIFIC_GENERATED_HEADER_INCLUDES=1" ]
@@ -93,7 +96,15 @@ silabs_executable("wake-on-matter") {
     defines += [ "SL_STATUS_LED=0" ]
   }
 
-  sources = [ "src/AppTask.cpp" ]
+  sources = [
+    "${chip_root}/examples/platform/silabs/matter_cpc.cpp",
+    "${chip_root}/examples/platform/silabs/mmic/mmic.cpp",
+    "${chip_root}/examples/platform/silabs/mmic/mmic_task.cpp",
+    "${chip_root}/examples/platform/silabs/subscription/SubscriptionManager.cpp",
+    "${chip_root}/examples/platform/silabs/subscription/SubscriptionManager.h",
+    "src/AppTask.cpp",
+    "src/WakeUpMgr.cpp",
+  ]
 
   deps = [
     ":sdk",
@@ -118,7 +129,11 @@ silabs_executable("wake-on-matter") {
 
   deps += [ "${examples_plat_dir}:efr32-common" ]
 
-  ldscript = "${examples_common_plat_dir}/ldscripts/${silabs_family}.ld"
+  if (is_clang) {
+    ldscript = "${examples_common_plat_dir}/ldscripts/${silabs_family}-clang.ld"
+  } else {
+    ldscript = "${examples_common_plat_dir}/ldscripts/${silabs_family}.ld"
+  }
 
   inputs = [ ldscript ]
 

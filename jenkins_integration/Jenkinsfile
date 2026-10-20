@@ -114,6 +114,12 @@ pipeline
                                 echo "commit_sha: ${commit_sha}, run_number: ${run_number}, workflow_id: ${workflow_id}"
                                 build_description += "\nGitHub Workflow Run Number: ${run_number}"
                                 buildDescription(build_description)
+
+                                try{
+                                    pipelineFunctions.upload_zephyr_artifacts()
+                                } catch (e) {
+                                    unstable("Zephyr artifact upload to UBAI failed: ${e.message}")
+                                }
                             }
                         }
                     }
@@ -256,6 +262,227 @@ pipeline
                 }
             }
         }
+        stage('Create and Publish Matter Packages') {
+            // Replica of SiliconLabsInternal/action-conan-create-publish
+            // TODO: Check the action directly and use use action or uv base publish
+            // TODO: Remove this when the package manager implementation is complete.
+            when {
+                expression { false }
+            }
+            steps {
+                script {
+                    def isRelease = env.BRANCH_NAME?.startsWith('release_')
+                    def remoteName = isRelease ? 'silabs-conan-production' : 'matter-conan-dev'
+                    def remoteUrl = isRelease
+                        ? 'https://artifactory-local.silabs.net/artifactory/api/conan/silabs-conan-production'
+                        : 'https://artifactory-local.silabs.net/artifactory/api/conan/matter-conan-dev'
+
+                    withCredentials([string(credentialsId: 'artifactory_token', variable: 'CONAN_SECRET')]) {
+                        sh("""
+                            #!/usr/bin/env bash
+                            set -euo pipefail
+
+                            git config --global --add safe.directory "\${WORKSPACE}"
+                            git submodule update --init --depth 1 --jobs 8 \\
+                              third_party/matter_sdk \\
+                              third_party/matter_support \\
+                              third_party/QR-Code-generator \\
+                              third_party/mbedtls \\
+                              third_party/nlio \\
+                              third_party/nlassert
+
+                            # Setup SLT (mirrors SiliconLabsSoftware/action-setup-slt@v2)
+                            SLT_ARTIFACTORY_URL="\${SLT_ARTIFACTORY_URL:-https://www.silabs.com/documents/public/software}"
+                            SLT_PKG_NAME="\${SLT_PKG_NAME:-slt-cli-1.2.0-linux-x64.zip}"
+                            curl -fsSL "\${SLT_ARTIFACTORY_URL}/\${SLT_PKG_NAME}" --output "/tmp/\${SLT_PKG_NAME}"
+                            mkdir -p "\${HOME}/.local/bin"
+                            unzip -o "/tmp/\${SLT_PKG_NAME}" -d "\${HOME}/.local/bin"
+                            rm -f "/tmp/\${SLT_PKG_NAME}"
+                            export PATH="\${HOME}/.local/bin:\${PATH}"
+                            export SLT_CI=true
+                            slt update --self
+                            slt --version
+
+                            export CONAN_HOME="\${CONAN_HOME:-\${HOME}/.silabs/slt/installs/conan}"
+                            CONAN_HOME="\${CONAN_HOME/#\\~/\$HOME}"
+                            export CONAN_HOME
+                            export PATH="\${HOME}/.silabs/slt/engines/conan/conan:\${PATH}"
+
+                            slt install conan
+                            CONAN_BIN="\${HOME}/.silabs/slt/engines/conan/conan/conan"
+                            if [ ! -f "\${CONAN_BIN}" ]; then
+                              echo "Error: conan not found at \${CONAN_BIN}" >&2
+                              exit 1
+                            fi
+                            ln -fs "\${CONAN_BIN}" "\${HOME}/.local/bin/conan"
+                            conan --version
+                            for t in cmake ninja; do slt install "\$t" || true; done
+
+                            mkdir -p conan-settings
+                            printf 'core.download:parallel=6\\ncore.upload:parallel=4\\n' > conan-settings/global.conf
+                            conan config install ./conan-settings --type dir
+                            rm -rf conan-settings
+                            conan remote add -f conan-prerelease https://conan-prerelease.silabs.net/ || true
+
+                            REMOTE_NAME='${remoteName}'
+                            REMOTE_URL='${remoteUrl}'
+                            PACKAGE_USER='silabs'
+                            # Artifactory identity: username from env or svc_gsdk; token from artifactory_token
+                            CONAN_USER="\${CONAN_LOGIN_USERNAME:-svc_gsdk}"
+
+                            # Prerelease env (mirrors action prerelease.py)
+                            export SL_PRERELEASE="\${WORKSPACE}/packages/.prerelease"
+                            QUALIFIER="\$(tr -d '[:space:]' < "\${SL_PRERELEASE}" 2>/dev/null || true)"
+                            echo "SL_PRERELEASE qualifier=\${QUALIFIER:-(empty)}"
+
+                            # Temp number so conan inspect / recipe set_version does not fail
+                            if [[ -n "\${QUALIFIER}" && -z "\${SL_PRERELEASE_NUMBER:-}" ]]; then
+                              export SL_PRERELEASE_NUMBER=0
+                            fi
+
+                            # Optional one-off override (MatterBaseRecipe.set_version)
+                            if [[ -n "\${MATTER_PACKAGE_VERSION:-}" ]]; then
+                              export MATTER_PACKAGE_VERSION
+                              echo "MATTER_PACKAGE_VERSION=\${MATTER_PACKAGE_VERSION}"
+                            fi
+
+                            # Auth (mirrors authenticate_remote)
+                            conan remote add -f "\${REMOTE_NAME}" "\${REMOTE_URL}"
+                            conan remote login "\${REMOTE_NAME}" "\${CONAN_USER}" -p "\${CONAN_SECRET}"
+
+                            # Inspect base version from matter recipe
+                            INSPECT_JSON="\$(conan inspect packages/matter/conanfile.py --format=json)"
+                            BASE_VERSION="\$(python3 -c "
+                    import json,sys
+                    d=json.loads(sys.argv[1])
+                    v=d.get('version') or ''
+                    print(v.split('-')[0])
+                    " "\${INSPECT_JSON}")"
+                            [[ -n "\${BASE_VERSION}" ]] || { echo "could not resolve base version" >&2; exit 1; }
+                            echo "BASE_VERSION=\${BASE_VERSION}"
+
+                            # Next SL_PRERELEASE_NUMBER from remote (mirrors generate_prerelease_number)
+                            if [[ -n "\${QUALIFIER}" ]]; then
+                              if [[ "\${SL_PRERELEASE_NUMBER}" == "0" || -z "\${SL_PRERELEASE_NUMBER:-}" ]]; then
+                                PATTERN="matter/\${BASE_VERSION}-\${QUALIFIER}.*@\${PACKAGE_USER}"
+                                LIST_JSON="\$(conan list "\${PATTERN}" -r "\${REMOTE_NAME}" --format=json 2>/dev/null || echo '{}')"
+                                NEXT_N="\$(python3 -c "
+                    import json,re,sys
+                    data=json.loads(sys.argv[1])
+                    remote=sys.argv[2]
+                    base=sys.argv[3]
+                    qual=sys.argv[4]
+                    name='matter'
+                    pkgs=data.get(remote, data)
+                    nums=[]
+                    pat=re.compile(rf'{re.escape(name)}/{re.escape(base)}-{re.escape(qual)}\\.(\\d+)@')
+                    for ref in pkgs:
+                        m=pat.search(ref)
+                        if m:
+                            nums.append(int(m.group(1)))
+                    print(max(nums, default=0)+1)
+                    " "\${LIST_JSON}" "\${REMOTE_NAME}" "\${BASE_VERSION}" "\${QUALIFIER}")"
+                                export SL_PRERELEASE_NUMBER="\${NEXT_N}"
+                              fi
+                              VERSION="\${BASE_VERSION}-\${QUALIFIER}.\${SL_PRERELEASE_NUMBER}"
+                            else
+                              VERSION="\${MATTER_PACKAGE_VERSION:-\${BASE_VERSION}}"
+                            fi
+                            echo "Publishing VERSION=\${VERSION} SL_PRERELEASE_NUMBER=\${SL_PRERELEASE_NUMBER:-}"
+
+                            write_package_info() {
+                              local name="\$1"
+                              local ref="\${name}/\${VERSION}@\${PACKAGE_USER}"
+                              local meta_dir
+                              meta_dir="\$(conan cache path "\${ref}" --folder=metadata)"
+                              mkdir -p "\${meta_dir}"
+                              python3 - "\${meta_dir}/package-info.json" "\${name}" "\${VERSION}" "\${ref}" <<'PY'
+                    import json, os, sys
+                    from datetime import datetime, timezone
+                    out, name, version, ref = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
+                    info = {
+                      "repo": os.environ.get("REPOSITORY_NAME") or "matter_extension",
+                      "commitId": os.environ.get("GIT_COMMIT") or os.environ.get("COMMIT_HASH") or "",
+                      "branchName": os.environ.get("BRANCH_NAME") or "",
+                      "runId": os.environ.get("BUILD_ID") or "",
+                      "runNumber": os.environ.get("BUILD_NUMBER") or "",
+                      "runAttempt": "1",
+                      "datetime": datetime.now(timezone.utc).isoformat(),
+                      "fullPackageRef": ref,
+                      "buildFrom": "Jenkins",
+                      "releaseName": "2025.12.0",
+                      "jobUrl": os.environ.get("BUILD_URL") or "",
+                      "packageName": name,
+                      "packageVersion": version,
+                      "packageUser": "silabs",
+                      "packageChannel": None,
+                      "recipeRevision": None,
+                      "packageId": None,
+                      "packageRevision": None,
+                      "jiraProject": "MATTER",
+                      "stackName": "matter",
+                    }
+                    open(out, "w", encoding="utf-8").write(json.dumps(info, indent=2))
+                    print("wrote", out)
+                    PY
+                            }
+
+                            # Mirrors action upload_package lockfile copy into metadata/
+                            copy_lockfile_to_metadata() {
+                              local name="\$1"
+                              local ref="\${name}/\${VERSION}@\${PACKAGE_USER}"
+                              local meta_dir
+                              meta_dir="\$(conan cache path "\${ref}" --folder=metadata)"
+                              mkdir -p "\${meta_dir}"
+
+                              local lock="\${LOCKFILE_PATH:-}"
+                              if [[ -z "\${lock}" ]]; then
+                                for cand in \\
+                                  "\${WORKSPACE}/conan.lock" \\
+                                  "\${WORKSPACE}/packages/\${name}/conan.lock" \\
+                                  "\${WORKSPACE}/pkg.lock"
+                                do
+                                  if [[ -f "\${cand}" ]]; then
+                                    lock="\${cand}"
+                                    break
+                                  fi
+                                done
+                              fi
+
+                              if [[ -n "\${lock}" && -f "\${lock}" ]]; then
+                                cp -a "\${lock}" "\${meta_dir}/\$(basename "\${lock}")"
+                                echo "Copied lockfile \${lock} -> \${meta_dir}/"
+                              else
+                                echo "No lockfile found (LOCKFILE_PATH unset/missing); skipping lockfile copy"
+                              fi
+                            }
+
+                            publish_one() {
+                              local name="\$1"
+                              local recipe="\$2"
+                              local ref="\${name}/\${VERSION}@\${PACKAGE_USER}"
+
+                              conan remove "\${ref}" -c || true
+                              conan export-pkg "\${recipe}" \\
+                                --name="\${name}" --version="\${VERSION}" --user="\${PACKAGE_USER}"
+
+                              write_package_info "\${name}"
+                              copy_lockfile_to_metadata "\${name}"
+
+                              conan upload "\${ref}" -r "\${REMOTE_NAME}" --confirm
+                              echo "Uploaded \${ref}"
+                            }
+
+                            # Shared VERSION / SL_PRERELEASE_NUMBER for both packages
+                            publish_one matter     packages/matter/conanfile.py
+                            publish_one matter_app packages/matter_app/conanfile.py
+
+                            echo "Done. matter/\${VERSION}@silabs and matter_app/\${VERSION}@silabs -> \${REMOTE_NAME}"
+                        """.stripIndent().trim())
+                    }
+                }
+            }
+        }
         stage('Trigger SQA Smoke Pipeline')
         {
             when {
@@ -269,7 +496,10 @@ pipeline
         }
         stage('Upload SQA Artifacts') {
             when {
-                expression { env.BRANCH_NAME == "main" || env.BRANCH_NAME.startsWith("release_") || env.BRANCH_NAME.startsWith("SL_compatibility")}
+                expression {
+                    env.BRANCH_NAME.startsWith("SL_compatibility") ||
+                    env.BRANCH_NAME.startsWith("release_")
+                }
             }
             steps {
                 script {
@@ -284,7 +514,7 @@ pipeline
         stage('Trigger SQA Regression Pipelines')
         {
             when {
-                expression { env.BRANCH_NAME == "main" || env.BRANCH_NAME.startsWith("release_") }
+                expression { pipelineFunctions.shouldTriggerSqaRegression() }
             }
             steps {
                 script {

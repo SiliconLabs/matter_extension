@@ -1,0 +1,28 @@
+category: Clusters|Measurement
+description: >
+  Implementation of the Ambient Context Sensing Server Cluster.
+  The user has to enable the Ambient Context Sensing Server Cluster in the ZCL Advanced Platform (ZAP) tool in order to enable this functionality.
+id: matter_ambient_context_sensing
+package: matter
+label: Ambient Context Sensing Server Cluster
+quality: production
+metadata:
+  sbom:
+    license: "Apache 2.0"
+provides:
+  - name: matter_ambient_context_sensing
+source:
+  - path: third_party/matter_sdk/src/app/clusters/ambient-context-sensing-server/AmbientContextSensingCluster.cpp
+  - path: third_party/matter_sdk/src/app/clusters/ambient-context-sensing-server/CodegenIntegration.cpp
+    unless: [matter_code_driven_dm]
+include:
+  - path: third_party/matter_sdk/src/app/clusters/ambient-context-sensing-server
+    file_list:
+      - path: ambient-context-sensing-namespace.h
+      - path: AmbientContextSensingCluster.h
+      - path: AmbientContextSensingDelegate.h
+      - path: CodegenIntegration.h
+        unless: [matter_code_driven_dm]
+template_contribution:
+  - name: component_catalog
+    value: matter_ambient_context_sensing

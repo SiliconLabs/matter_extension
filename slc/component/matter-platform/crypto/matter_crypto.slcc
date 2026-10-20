@@ -29,8 +29,10 @@ requires:
   - name: mbedtls_cmac
   - name: mbedtls_sha256
     condition: [matter_provision]
-  - name: matter_ecdsa_deterministic_selection
+  - name: mbedtls_ecdsa_deterministic
     condition: [matter_provision]
+    unless: [matter_aws]
+
 
   # OT CoAP Cert libs
   - name: mbedtls_tls
@@ -51,11 +53,6 @@ requires:
     condition: [ot_multi_instance_cert_libs]
   - name: mbedtls_jpake
     condition: [ot_multi_instance_cert_libs]
-
-# matter_aws requires stub and conflicts default matter_ecdsa_deterministic
-# to override this default when matter_ecdsa_deterministic is unsupported
-recommends:
-  - id: matter_ecdsa_deterministic_default
 
 config_file:
   - path: slc/config/sli_psa_builtin_config.h

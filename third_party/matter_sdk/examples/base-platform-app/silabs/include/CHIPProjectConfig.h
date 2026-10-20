@@ -111,7 +111,7 @@
  */
 #define CHIP_CONFIG_ENABLE_ACL_EXTENSIONS 1
 
-// Route shared platform callbacks through CustomerAppTask
+// Temporary setting to use CustomerAppTask for apps which are not upgraded to new architecture
 #define CHIP_SILABS_APP_USE_CUSTOMER_APP_TASK
 
 // Setting to prevent required Data Model implementation in AppTask

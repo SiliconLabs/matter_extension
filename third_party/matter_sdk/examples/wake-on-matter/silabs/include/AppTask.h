@@ -23,7 +23,6 @@
 #include <stdint.h>
 
 #include "AppEvent.h"
-#include "BaseApplication.h"
 #include <app/data-model-provider/Provider.h>
 #include <cmsis_os2.h>
 #include <credentials/GroupDataProvider.h>
@@ -37,7 +36,7 @@
 #define APP_ERROR_START_TIMER_FAILED CHIP_APPLICATION_ERROR(0x05)
 #define APP_ERROR_STOP_TIMER_FAILED CHIP_APPLICATION_ERROR(0x06)
 
-class AppTask : public BaseApplication
+class AppTask
 {
 
 public:
@@ -45,7 +44,6 @@ public:
 
     static AppTask & GetAppTask() { return sAppTask; }
 
-    static void AppTaskMain(void * pvParameter);
 
     CHIP_ERROR StartAppTask();
 
@@ -74,6 +72,4 @@ public:
 
 private:
     static AppTask sAppTask;
-
-    CHIP_ERROR AppInit() override;
 };

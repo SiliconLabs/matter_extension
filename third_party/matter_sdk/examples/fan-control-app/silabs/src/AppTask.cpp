@@ -24,13 +24,13 @@
 #include "FanControlConfig.h"
 #include "LEDWidget.h"
 
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
 #include "FanControlUI.h"
 #include "lcd.h"
-#ifdef QR_CODE_ENABLED
+#if SL_MATTER_QR_CODE_ENABLED
 #include "qrcodegen.h"
-#endif // QR_CODE_ENABLED
-#endif // DISPLAY_ENABLED
+#endif // SL_MATTER_QR_CODE_ENABLED
+#endif // SL_MATTER_DISPLAY_ENABLED
 
 #include <app-common/zap-generated/attribute-type.h>
 #include <app-common/zap-generated/attributes/Accessors.h>
@@ -96,12 +96,12 @@ void UpdateFanControlLED()
     }
 }
 
-#if defined(DISPLAY_ENABLED) && DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
 void UpdateFanControlLCD()
 {
     BaseApplication::GetLCD().WriteDemoUI(false);
 }
-#endif
+#endif // SL_MATTER_DISPLAY_ENABLED
 
 void PostFanUiUpdateEvent()
 {
@@ -121,7 +121,7 @@ CHIP_ERROR AppTask::AppInit()
 {
     chip::DeviceLayer::Silabs::GetPlatform().SetButtonsCb(&CustomerAppTask::ButtonEventHandler);
 
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
     GetLCD().SetCustomUI(FanControlUI::DrawUI);
 #endif
 
@@ -133,15 +133,15 @@ CHIP_ERROR AppTask::AppInit()
     }
 
     // Update the LCD with the Stored value. Show QR Code if not provisioned.
-#ifdef DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
     GetLCD().WriteDemoUI(false);
-#ifdef QR_CODE_ENABLED
+#if SL_MATTER_QR_CODE_ENABLED
     if (!BaseApplication::GetProvisionStatus())
     {
         GetLCD().ShowQRCode(true);
     }
-#endif // QR_CODE_ENABLED
-#endif
+#endif // SL_MATTER_QR_CODE_ENABLED
+#endif // SL_MATTER_DISPLAY_ENABLED
 
     return CHIP_NO_ERROR;
 }
@@ -234,7 +234,8 @@ DataModel::Nullable<Percent> AppTask::GetPercentSetting()
 Status AppTask::SetPercentSetting(Percent aNewPercentSetting)
 {
     DataModel::Nullable<Percent> percentSettingNullable = GetPercentSetting();
-    VerifyOrReturnValue(!percentSettingNullable.IsNull() && percentSettingNullable.Value() == aNewPercentSetting, Status::Success);
+    // Skip write only when the stored value already matches the requested one.
+    VerifyOrReturnValue(percentSettingNullable.IsNull() || percentSettingNullable.Value() != aNewPercentSetting, Status::Success);
 
     AttributeUpdateInfo * data = chip::Platform::New<AttributeUpdateInfo>();
     data->percentSetting       = aNewPercentSetting;
@@ -255,7 +256,8 @@ Status AppTask::SetSpeedSetting(uint8_t aNewSpeedSetting)
     VerifyOrReturnValue(sSupportsMultiSpeed, Status::Success);
 
     DataModel::Nullable<uint8_t> speedSettingNullable = GetSpeedSetting();
-    VerifyOrReturnValue(!speedSettingNullable.IsNull() && speedSettingNullable.Value() == aNewSpeedSetting, Status::Success);
+    // Skip write only when the stored value already matches the requested one.
+    VerifyOrReturnValue(speedSettingNullable.IsNull() || speedSettingNullable.Value() != aNewSpeedSetting, Status::Success);
 
     Status status = Attributes::SpeedSetting::Set(kFanEndpoint, aNewSpeedSetting);
     VerifyOrReturnValue(status == Status::Success, status, ChipLogError(NotSpecified, "SetSpeedSetting: failed to set SpeedSetting attribute: %d", to_underlying(status)));
@@ -666,7 +668,7 @@ void AppTask::FanUiUpdateEventHandler(AppEvent * aEvent)
     }
 
     UpdateFanControlLED();
-#if defined(DISPLAY_ENABLED) && DISPLAY_ENABLED
+#if SL_MATTER_DISPLAY_ENABLED
     UpdateFanControlLCD();
-#endif
+#endif // SL_MATTER_DISPLAY_ENABLED
 }

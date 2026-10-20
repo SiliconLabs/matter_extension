@@ -63,24 +63,20 @@ __all__ = ["ChipDeviceController", "CommissioningParameters",
            "AttributeReadRequest", "AttributeReadRequestList", "SubscriptionTargetList"]
 
 # Type aliases for ReadAttribute method to improve type safety
-AttributeReadRequest = typing.Union[
-    None,  # Empty tuple, all wildcard
-    tuple[int],  # Endpoint
-    # Wildcard endpoint, Cluster id present
-    tuple[type[ClusterObjects.Cluster]],
-    # Wildcard endpoint, Cluster + Attribute present
-    tuple[type[ClusterObjects.ClusterAttributeDescriptor]],
-    tuple[int, type[ClusterObjects.Cluster]],  # Wildcard attribute id
-    # Concrete path
-    tuple[int, type[ClusterObjects.ClusterAttributeDescriptor]],
-    ClusterAttribute.TypedAttributePath  # Directly specified attribute path
-]
+AttributeReadRequest: typing.TypeAlias = (
+    None  # Empty tuple, all wildcard
+    | tuple[int]  # Endpoint
+    | tuple[type[ClusterObjects.Cluster]]  # Wildcard endpoint, Cluster id present
+    | tuple[type[ClusterObjects.ClusterAttributeDescriptor]]  # Wildcard endpoint, Cluster + Attribute present
+    | tuple[int, type[ClusterObjects.Cluster]]  # Wildcard attribute id
+    | tuple[int, type[ClusterObjects.ClusterAttributeDescriptor]]  # Concrete path
+    | ClusterAttribute.TypedAttributePath  # Directly specified attribute path
+)
 
 AttributeReadRequestList = typing.Optional[list[AttributeReadRequest]]
 
 # Type alias for subscription target specifications
-SubscriptionTargetList = list[tuple[int,
-                                    typing.Union[ClusterObjects.Cluster, ClusterObjects.ClusterAttributeDescriptor]]]
+SubscriptionTargetList = list[tuple[int, ClusterObjects.Cluster | ClusterObjects.ClusterAttributeDescriptor]]
 
 
 # Defined in $CHIP_ROOT/src/lib/core/CHIPError.h
@@ -500,6 +496,11 @@ DiscoveryType: typing.TypeAlias = discovery.DiscoveryType
 
 
 class ChipDeviceControllerBase:
+    # GroupInfo flags bitmask
+    GROUP_INFO_FLAG_NONE = 0x00
+    GROUP_INFO_FLAG_HAS_AUXILIARY_ACL = 0x01
+    GROUP_INFO_FLAG_PER_GROUP_ADDRESS_POLICY = 0x02
+
     activeList: set = set()
 
     def __init__(self, name: str = ''):
@@ -1261,7 +1262,8 @@ class ChipDeviceControllerBase:
     async def DiscoverCommissionableNodes(self,
                                             filterType: discovery.FilterType = discovery.FilterType.NONE,
                                             filter: typing.Any = None,  # noqa: A002
-                                            stopOnFirst: bool = False, timeoutSecond: int = 5) -> typing.Union[None, CommissionableNode, list[CommissionableNode]]:
+                                            stopOnFirst: bool = False, timeoutSecond: int = 5
+                                            ) -> None | CommissionableNode | list[CommissionableNode]:
         '''
         Discover commissionable nodes via DNS-SD with specified filters.
         Supported filters are:
@@ -1529,7 +1531,7 @@ class ChipDeviceControllerBase:
 
         return self._Cluster
 
-    async def FindOrEstablishPASESession(self, setupCode: str, nodeId: int, timeoutMs: typing.Optional[int] = None) -> typing.Optional[DeviceProxyWrapper]:
+    async def FindOrEstablishPASESession(self, setupCode: str, nodeId: int, timeoutMs: typing.Optional[int] = None, threadMeshCoPConfig: tuple[str, int] | None = None) -> typing.Optional[DeviceProxyWrapper]:
         '''
         Find or establish a PASE session.
 
@@ -1537,6 +1539,7 @@ class ChipDeviceControllerBase:
             setUpCode (str): The setup code of the device.
             nodeId (int): The node ID of the device.
             timeoutMs (Optional[int]): Optional timeout in milliseconds.
+            threadMeshCoPConfig (Optional[tuple[str, int]]): Optional Border Agent host and port for Thread MeshCoP PASE.
 
         Returns:
             DeviceProxyWrapper on success, if not is None.
@@ -1548,7 +1551,11 @@ class ChipDeviceControllerBase:
         if res.is_success:
             return DeviceProxyWrapper(returnDevice, DeviceProxyWrapper.DeviceProxyType.COMMISSIONEE, self._dmLib)
 
-        await self.EstablishPASESession(setupCode, nodeId)
+        if threadMeshCoPConfig is None:
+            await self.EstablishPASESession(setupCode, nodeId)
+        else:
+            threadBorderAgentHost, threadBorderAgentPort = threadMeshCoPConfig
+            await self.EstablishPASESessionThreadMeshcop(threadBorderAgentHost, setupCode, nodeId, threadBorderAgentPort)
 
         res = await self._ChipStack.CallAsyncWithResult(lambda: self._dmLib.pychip_GetDeviceBeingCommissioned(
             self.devCtrl, nodeId, byref(returnDevice)), timeoutMs)
@@ -1756,7 +1763,7 @@ class ChipDeviceControllerBase:
             commandRefsOverride: List of commandRefs to use for each command with the same index in `commands`.
 
         Returns:
-            TestOnlyBatchCommandResponse
+            TestOnlyBatchCommandResponse or None
         '''
         self.CheckIsActive()
 
@@ -1771,6 +1778,10 @@ class ChipDeviceControllerBase:
             interactionTimeoutMs=interactionTimeoutMs, busyWaitMs=busyWaitMs, suppressResponse=suppressResponse,
             remoteMaxPathsPerInvoke=remoteMaxPathsPerInvoke, suppressTimedRequestMessage=suppressTimedRequestMessage,
             commandRefsOverride=commandRefsOverride).raise_on_error()
+
+        if suppressResponse:
+            return None
+
         return await future
 
     async def TestOnlySendCommandTimedRequestFlagWithNoTimedInvoke(self, nodeId: int, endpoint: int,
@@ -1800,10 +1811,8 @@ class ChipDeviceControllerBase:
 
     def _prepare_write_attribute_requests(
         self,
-        attributes: list[typing.Union[
-            tuple[int, ClusterObjects.ClusterAttributeDescriptor],
-            tuple[int, ClusterObjects.ClusterAttributeDescriptor, int]
-        ]]
+        attributes: list[tuple[int, ClusterObjects.ClusterAttributeDescriptor]
+                         | tuple[int, ClusterObjects.ClusterAttributeDescriptor, int]]
     ) -> list[ClusterAttribute.AttributeWriteRequest]:
         """Helper method to prepare attribute write requests."""
         attrs = []
@@ -1825,12 +1834,10 @@ class ChipDeviceControllerBase:
         return attrs
 
     async def TestOnlyWriteAttributeWithMismatchedTimedRequestField(self, nodeid: int,
-                                                                    attributes: list[typing.Union[
-                                                                        tuple[int,
-                                                                                     ClusterObjects.ClusterAttributeDescriptor],
-                                                                        tuple[int,
-                                                                              ClusterObjects.ClusterAttributeDescriptor, int]
-                                                                    ]],
+                                                                    attributes: list[
+                                                                        tuple[int, ClusterObjects.ClusterAttributeDescriptor]
+                                                                        | tuple[int, ClusterObjects.ClusterAttributeDescriptor, int]
+                                                                    ],
                                                                     timedRequestTimeoutMs: int,
                                                                     timedRequestFieldValue: bool,
                                                                     interactionTimeoutMs: typing.Optional[int] = None, busyWaitMs: typing.Optional[int] = None,
@@ -1884,7 +1891,7 @@ class ChipDeviceControllerBase:
                               right timeout value based on transport characteristics as well as the responsiveness of the target.
 
         Returns:
-            command response. The type of the response is defined by the command.
+            command response or None. The type of the response is defined by the command.
 
         Raises:
             InteractionModelError on error
@@ -1893,19 +1900,26 @@ class ChipDeviceControllerBase:
         self.CheckIsActive()
 
         eventLoop = asyncio.get_running_loop()
-        future = eventLoop.create_future()
 
-        device = await self.GetConnectedDevice(nodeId, timeoutMs=interactionTimeoutMs, payloadCapability=payloadCapability)
-        allow_large_payload = payloadCapability == TransportPayloadCapability.LARGE_PAYLOAD or payloadCapability == TransportPayloadCapability.MRP_OR_TCP_PAYLOAD
-        res = await ClusterCommand.SendCommand(
-            future, eventLoop, responseType, device.deviceProxy, ClusterCommand.CommandPath(
-                EndpointId=endpoint,
-                ClusterId=payload.cluster_id,
-                CommandId=payload.command_id,
-            ), payload, timedRequestTimeoutMs=timedRequestTimeoutMs,
-            interactionTimeoutMs=interactionTimeoutMs, busyWaitMs=busyWaitMs, suppressResponse=suppressResponse, allowLargePayload=allow_large_payload)
-        res.raise_on_error()
-        return await future
+        async def _send_impl():
+            future = eventLoop.create_future()
+            device = await self.GetConnectedDevice(nodeId, timeoutMs=interactionTimeoutMs, payloadCapability=payloadCapability)
+            allow_large_payload = payloadCapability == TransportPayloadCapability.LARGE_PAYLOAD or payloadCapability == TransportPayloadCapability.MRP_OR_TCP_PAYLOAD
+            res = await ClusterCommand.SendCommand(
+                future, eventLoop, responseType, device.deviceProxy, ClusterCommand.CommandPath(
+                    EndpointId=endpoint,
+                    ClusterId=payload.cluster_id,
+                    CommandId=payload.command_id,
+                ), payload, timedRequestTimeoutMs=timedRequestTimeoutMs,
+                interactionTimeoutMs=interactionTimeoutMs, busyWaitMs=busyWaitMs, suppressResponse=suppressResponse, allowLargePayload=allow_large_payload)
+            res.raise_on_error()
+
+            if suppressResponse:
+                return None
+
+            return await future
+
+        return await self._run_with_session_retry(nodeId, _send_impl)
 
     async def SendBatchCommands(self, nodeId: int, commands: list[ClusterCommand.InvokeRequestInfo],
                                 timedRequestTimeoutMs: typing.Optional[int] = None,
@@ -1937,16 +1951,18 @@ class ChipDeviceControllerBase:
         self.CheckIsActive()
 
         eventLoop = asyncio.get_running_loop()
-        future = eventLoop.create_future()
 
-        device = await self.GetConnectedDevice(nodeId, timeoutMs=interactionTimeoutMs, payloadCapability=payloadCapability)
+        async def _batch_send_impl():
+            future = eventLoop.create_future()
+            device = await self.GetConnectedDevice(nodeId, timeoutMs=interactionTimeoutMs, payloadCapability=payloadCapability)
+            res = await ClusterCommand.SendBatchCommands(
+                future, eventLoop, device.deviceProxy, commands,
+                timedRequestTimeoutMs=timedRequestTimeoutMs,
+                interactionTimeoutMs=interactionTimeoutMs, busyWaitMs=busyWaitMs, suppressResponse=suppressResponse)
+            res.raise_on_error()
+            return await future
 
-        res = await ClusterCommand.SendBatchCommands(
-            future, eventLoop, device.deviceProxy, commands,
-            timedRequestTimeoutMs=timedRequestTimeoutMs,
-            interactionTimeoutMs=interactionTimeoutMs, busyWaitMs=busyWaitMs, suppressResponse=suppressResponse)
-        res.raise_on_error()
-        return await future
+        return await self._run_with_session_retry(nodeId, _batch_send_impl)
 
     def SendGroupCommand(self, groupid: int, payload: ClusterObjects.ClusterCommand, busyWaitMs: typing.Optional[int] = None):
         '''
@@ -1969,10 +1985,10 @@ class ChipDeviceControllerBase:
         return
 
     async def WriteAttribute(self, nodeId: int,
-                             attributes: list[typing.Union[
-                                 tuple[int, ClusterObjects.ClusterAttributeDescriptor],
-                                 tuple[int, ClusterObjects.ClusterAttributeDescriptor, int]
-                             ]],
+                             attributes: list[
+                                 tuple[int, ClusterObjects.ClusterAttributeDescriptor]
+                                 | tuple[int, ClusterObjects.ClusterAttributeDescriptor, int]
+                             ],
                              timedRequestTimeoutMs: typing.Optional[int] = None,
                              interactionTimeoutMs: typing.Optional[int] = None, busyWaitMs: typing.Optional[int] = None,
                              payloadCapability: int = TransportPayloadCapability.MRP_PAYLOAD):
@@ -2004,10 +2020,10 @@ class ChipDeviceControllerBase:
                                           forceLegacyListEncoding=False)
 
     async def _WriteAttribute(self, nodeId: int,
-                              attributes: list[typing.Union[
-                                  tuple[int, ClusterObjects.ClusterAttributeDescriptor],
-                                  tuple[int, ClusterObjects.ClusterAttributeDescriptor, int]
-                              ]],
+                              attributes: list[
+                                  tuple[int, ClusterObjects.ClusterAttributeDescriptor]
+                                  | tuple[int, ClusterObjects.ClusterAttributeDescriptor, int]
+                              ],
                               timedRequestTimeoutMs: typing.Optional[int] = None,
                               interactionTimeoutMs: typing.Optional[int] = None, busyWaitMs: typing.Optional[int] = None,
                               payloadCapability: int = TransportPayloadCapability.MRP_PAYLOAD, forceLegacyListEncoding: bool = False):
@@ -2015,22 +2031,23 @@ class ChipDeviceControllerBase:
         self.CheckIsActive()
 
         eventLoop = asyncio.get_running_loop()
-        future = eventLoop.create_future()
 
-        device = await self.GetConnectedDevice(nodeId, timeoutMs=interactionTimeoutMs, payloadCapability=payloadCapability)
+        async def _write_impl():
+            future = eventLoop.create_future()
+            device = await self.GetConnectedDevice(nodeId, timeoutMs=interactionTimeoutMs, payloadCapability=payloadCapability)
+            attrs = self._prepare_write_attribute_requests(attributes)
+            ClusterAttribute.WriteAttributes(
+                future, eventLoop, device.deviceProxy, attrs, timedRequestTimeoutMs=timedRequestTimeoutMs,
+                interactionTimeoutMs=interactionTimeoutMs, busyWaitMs=busyWaitMs, forceLegacyListEncoding=forceLegacyListEncoding).raise_on_error()
+            return await future
 
-        attrs = self._prepare_write_attribute_requests(attributes)
-
-        ClusterAttribute.WriteAttributes(
-            future, eventLoop, device.deviceProxy, attrs, timedRequestTimeoutMs=timedRequestTimeoutMs,
-            interactionTimeoutMs=interactionTimeoutMs, busyWaitMs=busyWaitMs, forceLegacyListEncoding=forceLegacyListEncoding).raise_on_error()
-        return await future
+        return await self._run_with_session_retry(nodeId, _write_impl)
 
     async def TestOnlyWriteAttributeWithLegacyList(self, nodeId: int,
-                                                   attributes: list[typing.Union[
-                                                       tuple[int, ClusterObjects.ClusterAttributeDescriptor],
-                                                       tuple[int, ClusterObjects.ClusterAttributeDescriptor, int]
-                                                   ]],
+                                                   attributes: list[
+                                                       tuple[int, ClusterObjects.ClusterAttributeDescriptor]
+                                                       | tuple[int, ClusterObjects.ClusterAttributeDescriptor, int]
+                                                   ],
                                                    timedRequestTimeoutMs: typing.Optional[int] = None,
                                                    interactionTimeoutMs: typing.Optional[int] = None, busyWaitMs: typing.Optional[int] = None,
                                                    payloadCapability: int = TransportPayloadCapability.MRP_PAYLOAD):
@@ -2141,20 +2158,15 @@ class ChipDeviceControllerBase:
     # Fixing these typing errors is a high risk to affect existing functionality.
     # these mismatches are intentional and safe within the current logic
     # TODO:  Explore proper typing for dynamic attributes in ChipDeviceCtrl.py #618
-    def _parseAttributePathTuple(self, pathTuple: typing.Union[
-        None,  # Empty tuple, all wildcard
-        tuple[int],  # Endpoint
-        # Wildcard endpoint, Cluster id present
-        tuple[type[ClusterObjects.Cluster]],
-        # Wildcard endpoint, Cluster + Attribute present
-        tuple[type[ClusterObjects.ClusterAttributeDescriptor]],
-        # Wildcard attribute id
-        tuple[int, type[ClusterObjects.Cluster]],
-        # Concrete path
-        tuple[int, type[ClusterObjects.ClusterAttributeDescriptor]],
-        # Directly specified attribute path
-        ClusterAttribute.AttributePath
-    ]):
+    def _parseAttributePathTuple(self, pathTuple: (
+        None  # Empty tuple, all wildcard
+        | tuple[int]  # Endpoint
+        | tuple[type[ClusterObjects.Cluster]]  # Wildcard endpoint, Cluster id present
+        | tuple[type[ClusterObjects.ClusterAttributeDescriptor]]  # Wildcard endpoint, Cluster + Attribute present
+        | tuple[int, type[ClusterObjects.Cluster]]  # Wildcard attribute id
+        | tuple[int, type[ClusterObjects.ClusterAttributeDescriptor]]  # Concrete path
+        | ClusterAttribute.AttributePath  # Directly specified attribute path
+    )):
         if isinstance(pathTuple, ClusterAttribute.AttributePath):
             return pathTuple
         if pathTuple == ('*') or pathTuple == ():
@@ -2199,20 +2211,15 @@ class ChipDeviceControllerBase:
         return ClusterAttribute.DataVersionFilter.from_cluster(
             EndpointId=endpoint, Cluster=cluster, DataVersion=dataVersion)  # type: ignore[arg-type]
 
-    def _parseEventPathTuple(self, pathTuple: typing.Union[
-        None,  # Empty tuple, all wildcard
-        tuple[str, int],  # all wildcard with urgency set
-        tuple[int, int],  # Endpoint,
-        # Wildcard endpoint, Cluster id present
-        tuple[type[ClusterObjects.Cluster], int],
-        # Wildcard endpoint, Cluster + Event present
-        tuple[type[ClusterObjects.ClusterEvent], int],
-        # Wildcard event id
-        tuple[int, type[ClusterObjects.Cluster], int],
-        # Concrete path
-        tuple[int,
-              type[ClusterObjects.ClusterEvent], int]
-    ]):
+    def _parseEventPathTuple(self, pathTuple: (
+        None  # Empty tuple, all wildcard
+        | tuple[str, int]  # all wildcard with urgency set
+        | tuple[int, int]  # Endpoint
+        | tuple[type[ClusterObjects.Cluster], int]  # Wildcard endpoint, Cluster id present
+        | tuple[type[ClusterObjects.ClusterEvent], int]  # Wildcard endpoint, Cluster + Event present
+        | tuple[int, type[ClusterObjects.Cluster], int]  # Wildcard event id
+        | tuple[int, type[ClusterObjects.ClusterEvent], int]  # Concrete path
+    )):
         if pathTuple in [('*'), ()]:
             # Wildcard
             return ClusterAttribute.EventPath()
@@ -2247,37 +2254,43 @@ class ChipDeviceControllerBase:
             )
         raise ValueError("Unsupported Attribute Path")
 
+    async def _run_with_session_retry(self, nodeId: int, fn):
+        """Runs the async function `fn` and retries up to 3 times if it fails with CHIP_ERROR_MISSING_SECURE_SESSION (0x77)."""
+        max_retries = 3
+        for attempt in range(max_retries + 1):
+            try:
+                return await fn()
+            except ChipStackError as e:
+                if e.err == 0x00000077 and attempt < max_retries:
+                    LOGGER.warning(
+                        "Session to node 0x%016X went defunct (Missing Secure Session), retrying connection (attempt %d/%d)...",
+                        nodeId, attempt + 1, max_retries
+                    )
+                    continue
+                raise
+        raise RuntimeError("Unreachable")
+
     async def Read(
         self,
         nodeId: int,
-        attributes: typing.Optional[list[typing.Union[
-            None,  # Empty tuple, all wildcard
-            tuple[int],  # Endpoint
-            # Wildcard endpoint, Cluster id present
-            tuple[type[ClusterObjects.Cluster]],
-            # Wildcard endpoint, Cluster + Attribute present
-            tuple[type[ClusterObjects.ClusterAttributeDescriptor]],
-            # Wildcard attribute id
-            tuple[int, type[ClusterObjects.Cluster]],
-            # Concrete path
-            tuple[int, type[ClusterObjects.ClusterAttributeDescriptor]],
-            # Directly specified attribute path
-            ClusterAttribute.AttributePath
-        ]]] = None,
+        attributes: typing.Optional[list[
+            None  # Empty tuple, all wildcard
+            | tuple[int]  # Endpoint
+            | tuple[type[ClusterObjects.Cluster]]  # Wildcard endpoint, Cluster id present
+            | tuple[type[ClusterObjects.ClusterAttributeDescriptor]]  # Wildcard endpoint, Cluster + Attribute present
+            | tuple[int, type[ClusterObjects.Cluster]]  # Wildcard attribute id
+            | tuple[int, type[ClusterObjects.ClusterAttributeDescriptor]]  # Concrete path
+            | ClusterAttribute.AttributePath  # Directly specified attribute path
+        ]] = None,
         dataVersionFilters: typing.Optional[list[tuple[int, type[ClusterObjects.Cluster], int]]] = None, events: typing.Optional[list[
-            typing.Union[
-            None,  # Empty tuple, all wildcard
-            tuple[str, int],  # all wildcard with urgency set
-            tuple[int, int],  # Endpoint,
-            # Wildcard endpoint, Cluster id present
-            tuple[type[ClusterObjects.Cluster], int],
-            # Wildcard endpoint, Cluster + Event present
-            tuple[type[ClusterObjects.ClusterEvent], int],
-            # Wildcard event id
-            tuple[int, type[ClusterObjects.Cluster], int],
-            # Concrete path
-            tuple[int, type[ClusterObjects.ClusterEvent], int]
-            ]]] = None,
+            None  # Empty tuple, all wildcard
+            | tuple[str, int]  # all wildcard with urgency set
+            | tuple[int, int]  # Endpoint
+            | tuple[type[ClusterObjects.Cluster], int]  # Wildcard endpoint, Cluster id present
+            | tuple[type[ClusterObjects.ClusterEvent], int]  # Wildcard endpoint, Cluster + Event present
+            | tuple[int, type[ClusterObjects.Cluster], int]  # Wildcard event id
+            | tuple[int, type[ClusterObjects.ClusterEvent], int]  # Concrete path
+        ]] = None,
         eventNumberFilter: typing.Optional[int] = None,
         returnClusterObject: bool = False, reportInterval: typing.Optional[tuple[int, int]] = None,
         fabricFiltered: bool = True, keepSubscriptions: bool = False, autoResubscribe: bool = True,
@@ -2347,49 +2360,61 @@ class ChipDeviceControllerBase:
         # TODO:  Explore proper typing for dynamic attributes in ChipDeviceCtrl.py #618
 
         eventLoop = asyncio.get_running_loop()
-        future = eventLoop.create_future()
 
-        device = await self.GetConnectedDevice(nodeId, payloadCapability=payloadCapability)
-        attributePaths = [self._parseAttributePathTuple(
-            v) for v in attributes] if attributes else None
-        clusterDataVersionFilters = [self._parseDataVersionFilterTuple(
-            v) for v in dataVersionFilters] if dataVersionFilters else None  # type: ignore[arg-type]
-        eventPaths = [self._parseEventPathTuple(
-            v) for v in events] if events else None
+        async def _read_impl():
+            future = eventLoop.create_future()
+            device = await self.GetConnectedDevice(nodeId, payloadCapability=payloadCapability)
+            attributePaths = [self._parseAttributePathTuple(
+                v) for v in attributes] if attributes else None
+            clusterDataVersionFilters = [self._parseDataVersionFilterTuple(
+                v) for v in dataVersionFilters] if dataVersionFilters else None  # type: ignore[arg-type]
+            eventPaths = [self._parseEventPathTuple(
+                v) for v in events] if events else None
 
-        allowLargePayload = payloadCapability in (TransportPayloadCapability.LARGE_PAYLOAD,
-                                                  TransportPayloadCapability.MRP_OR_TCP_PAYLOAD)
-        transaction = ClusterAttribute.AsyncReadTransaction(future, eventLoop, self, returnClusterObject)
-        ClusterAttribute.Read(transaction, device=device.deviceProxy,
-                              attributes=attributePaths, dataVersionFilters=clusterDataVersionFilters, events=eventPaths,
-                              eventNumberFilter=eventNumberFilter,
-                              subscriptionParameters=ClusterAttribute.SubscriptionParameters(
-                                  reportInterval[0], reportInterval[1]) if reportInterval else None,
-                              fabricFiltered=fabricFiltered,
-                              keepSubscriptions=keepSubscriptions, autoResubscribe=autoResubscribe, allowLargePayload=allowLargePayload).raise_on_error()
-        await future
+            # keepSubscriptions=False -> Server purges existing subscriptions.
+            # Proactively shut down corresponding client-side objects here to:
+            # - Prevent client-side liveness timeouts from marking the secure session defunct.
+            # - Free C++ ReadClient/Exchange context resources early.
+            if reportInterval is not None and not keepSubscriptions:
+                for subscription in list(builtins.chipStack._subscriptions.values()):
+                    if getattr(subscription, 'nodeId', None) == nodeId and subscription._devCtrl == self:
+                        LOGGER.info("Auto-cancelling previous subscription 0x%08x to node %d due to keepSubscriptions=False",
+                                    subscription.subscriptionId, nodeId)
+                        try:
+                            subscription.Shutdown()
+                        except Exception as e:
+                            # Benign: the obsolete subscription might already be terminated by the C++ stack or server.
+                            LOGGER.info("Failed to shut down obsolete subscription: %s", e)
 
-        if result := transaction.GetSubscriptionHandler():
-            return result
-        return transaction.GetReadResponse()
+            allowLargePayload = payloadCapability in (TransportPayloadCapability.LARGE_PAYLOAD,
+                                                      TransportPayloadCapability.MRP_OR_TCP_PAYLOAD)
+            transaction = ClusterAttribute.AsyncReadTransaction(future, eventLoop, self, returnClusterObject, nodeId=nodeId)
+            ClusterAttribute.Read(transaction, device=device.deviceProxy,
+                                  attributes=attributePaths, dataVersionFilters=clusterDataVersionFilters, events=eventPaths,
+                                  eventNumberFilter=eventNumberFilter,
+                                  subscriptionParameters=ClusterAttribute.SubscriptionParameters(
+                                      reportInterval[0], reportInterval[1]) if reportInterval else None,
+                                  fabricFiltered=fabricFiltered,
+                                  keepSubscriptions=keepSubscriptions, autoResubscribe=autoResubscribe, allowLargePayload=allowLargePayload).raise_on_error()
+            await future
+            if result := transaction.GetSubscriptionHandler():
+                return result
+            return transaction.GetReadResponse()
+
+        return await self._run_with_session_retry(nodeId, _read_impl)
 
     async def ReadAttribute(
         self,
         nodeId: int,
-        attributes: typing.Optional[list[typing.Union[
-            None,  # Empty tuple, all wildcard
-            tuple[int],  # Endpoint
-            # Wildcard endpoint, Cluster id present
-            tuple[type[ClusterObjects.Cluster]],
-            # Wildcard endpoint, Cluster + Attribute present
-            tuple[type[ClusterObjects.ClusterAttributeDescriptor]],
-            # Wildcard attribute id
-            tuple[int, type[ClusterObjects.Cluster]],
-            # Concrete path
-            tuple[int, type[ClusterObjects.ClusterAttributeDescriptor]],
-            # Directly specified attribute path
-            ClusterAttribute.AttributePath
-        ]]], dataVersionFilters: typing.Optional[list[tuple[int, type[ClusterObjects.Cluster], int]]] = None,
+        attributes: typing.Optional[list[
+            None  # Empty tuple, all wildcard
+            | tuple[int]  # Endpoint
+            | tuple[type[ClusterObjects.Cluster]]  # Wildcard endpoint, Cluster id present
+            | tuple[type[ClusterObjects.ClusterAttributeDescriptor]]  # Wildcard endpoint, Cluster + Attribute present
+            | tuple[int, type[ClusterObjects.Cluster]]  # Wildcard attribute id
+            | tuple[int, type[ClusterObjects.ClusterAttributeDescriptor]]  # Concrete path
+            | ClusterAttribute.AttributePath  # Directly specified attribute path
+        ]], dataVersionFilters: typing.Optional[list[tuple[int, type[ClusterObjects.Cluster], int]]] = None,
         returnClusterObject: bool = False,
         reportInterval: typing.Optional[tuple[int, int]] = None,
         fabricFiltered: bool = True, keepSubscriptions: bool = False, autoResubscribe: bool = True,
@@ -2465,19 +2490,15 @@ class ChipDeviceControllerBase:
     async def ReadEvent(
         self,
         nodeId: int,
-        events: list[typing.Union[
-            None,  # Empty tuple, all wildcard
-            tuple[str, int],  # all wildcard with urgency set
-            tuple[int, int],  # Endpoint,
-            # Wildcard endpoint, Cluster id present
-            tuple[type[ClusterObjects.Cluster], int],
-            # Wildcard endpoint, Cluster + Event present
-            tuple[type[ClusterObjects.ClusterEvent], int],
-            # Wildcard event id
-            tuple[int, type[ClusterObjects.Cluster], int],
-            # Concrete path
-            tuple[int, type[ClusterObjects.ClusterEvent], int]
-        ]], eventNumberFilter: typing.Optional[int] = None,
+        events: list[
+            None  # Empty tuple, all wildcard
+            | tuple[str, int]  # all wildcard with urgency set
+            | tuple[int, int]  # Endpoint
+            | tuple[type[ClusterObjects.Cluster], int]  # Wildcard endpoint, Cluster id present
+            | tuple[type[ClusterObjects.ClusterEvent], int]  # Wildcard endpoint, Cluster + Event present
+            | tuple[int, type[ClusterObjects.Cluster], int]  # Wildcard event id
+            | tuple[int, type[ClusterObjects.ClusterEvent], int]  # Concrete path
+        ], eventNumberFilter: typing.Optional[int] = None,
         fabricFiltered: bool = True,
         reportInterval: typing.Optional[tuple[int, int]] = None,
         keepSubscriptions: bool = False,
@@ -2591,7 +2612,7 @@ class ChipDeviceControllerBase:
                 epoch_key2, epoch_start_time2)
         ).raise_on_error()
 
-    def SetGroupInfo(self, group_id: int, group_name: str, flags: int = 0x02):
+    def SetGroupInfo(self, group_id: int, group_name: str, flags: int = GROUP_INFO_FLAG_PER_GROUP_ADDRESS_POLICY):
         '''
         Adds or updates a group entry in the controller's GroupDataProvider for this fabric.
 
@@ -2645,6 +2666,39 @@ class ChipDeviceControllerBase:
         self._ChipStack.Call(
             lambda: self._dmLib.pychip_OpCreds_SetGroupKey(
                 self.devCtrl, group_id, keyset_id)
+        ).raise_on_error()
+
+    def RemoveGroupInfo(self, group_id: int):
+        '''
+        Removes a group entry from the controller's GroupDataProvider for this fabric.
+        '''
+        self.CheckIsActive()
+
+        self._ChipStack.Call(
+            lambda: self._dmLib.pychip_OpCreds_RemoveGroupInfo(
+                self.devCtrl, group_id)
+        ).raise_on_error()
+
+    def RemoveKeySet(self, keyset_id: int):
+        '''
+        Removes a KeySet from the controller's GroupDataProvider for this fabric.
+        '''
+        self.CheckIsActive()
+
+        self._ChipStack.Call(
+            lambda: self._dmLib.pychip_OpCreds_RemoveKeySet(
+                self.devCtrl, keyset_id)
+        ).raise_on_error()
+
+    def RemoveGroupKeys(self):
+        '''
+        Removes all GroupKey mappings from the controller's GroupDataProvider for this fabric.
+        '''
+        self.CheckIsActive()
+
+        self._ChipStack.Call(
+            lambda: self._dmLib.pychip_OpCreds_RemoveGroupKeys(
+                self.devCtrl)
         ).raise_on_error()
 
     def CreateManualCode(self, discriminator: int, passcode: int) -> str:
@@ -2948,6 +3002,15 @@ class ChipDeviceControllerBase:
 
             self._dmLib.pychip_OpCreds_SetGroupKey.argtypes = [c_void_p, c_uint16, c_uint16]
             self._dmLib.pychip_OpCreds_SetGroupKey.restype = PyChipError
+
+            self._dmLib.pychip_OpCreds_RemoveGroupInfo.argtypes = [c_void_p, c_uint16]
+            self._dmLib.pychip_OpCreds_RemoveGroupInfo.restype = PyChipError
+
+            self._dmLib.pychip_OpCreds_RemoveKeySet.argtypes = [c_void_p, c_uint16]
+            self._dmLib.pychip_OpCreds_RemoveKeySet.restype = PyChipError
+
+            self._dmLib.pychip_OpCreds_RemoveGroupKeys.argtypes = [c_void_p]
+            self._dmLib.pychip_OpCreds_RemoveGroupKeys.restype = PyChipError
 
             self._dmLib.pychip_DeviceController_SetIssueNOCChainCallbackPythonCallback.argtypes = [
                 _IssueNOCChainCallbackPythonCallbackFunct]
@@ -3572,7 +3635,7 @@ class BareChipDeviceController(ChipDeviceControllerBase):
     '''
 
     def __init__(self, operationalKey: p256keypair.P256Keypair, noc: bytes,
-                 icac: typing.Union[bytes, None], rcac: bytes, ipk: typing.Union[bytes, None], adminVendorId: int, name: typing.Optional[str] = None):
+                 icac: bytes | None, rcac: bytes, ipk: bytes | None, adminVendorId: int, name: typing.Optional[str] = None):
         '''
         Creates a controller without AutoCommissioner.
 

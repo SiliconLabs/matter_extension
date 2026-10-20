@@ -13,10 +13,14 @@ provides:
   - name: matter_camera_av_stream_management
 source:
   - path: third_party/matter_sdk/src/app/clusters/camera-av-stream-management-server/CameraAVStreamManagementCluster.cpp
+  - path: third_party/matter_sdk/src/app/clusters/camera-av-stream-management-server/MigrationCameraAVStreamManagementCluster.cpp
+  - path: third_party/matter_sdk/src/app/clusters/camera-av-stream-management-server/MigratorCameraAVStreamManagementStorage.cpp
 include:
   - path: third_party/matter_sdk/src/app/clusters/camera-av-stream-management-server
     file_list:
       - path: CameraAVStreamManagementCluster.h
+      - path: MigrationCameraAVStreamManagementCluster.h
+      - path: MigratorCameraAVStreamManagementStorage.h
 template_contribution:
   - name: component_catalog
     value: matter_camera_av_stream_management

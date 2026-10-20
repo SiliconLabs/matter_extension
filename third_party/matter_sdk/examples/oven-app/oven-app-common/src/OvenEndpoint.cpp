@@ -19,7 +19,7 @@
 #include "OvenEndpoint.h"
 #include <app-common/zap-generated/cluster-objects.h>
 
-#include "AppTask.h"
+#include "OvenManager.h"
 #include <app/clusters/mode-base-server/mode-base-cluster-objects.h>
 #include <lib/core/CHIPError.h>
 #include <lib/support/CodeUtils.h>
@@ -90,7 +90,7 @@ CHIP_ERROR OvenModeDelegate::Init()
 
 void OvenModeDelegate::HandleChangeToMode(uint8_t NewMode, ModeBase::Commands::ChangeToModeResponse::Type & response)
 {
-    ChipLogProgress(Zcl, "OvenModeDelegate forwarding mode change to AppTask (ep=%u newMode=%u)", mEndpointId, NewMode);
+    ChipLogProgress(Zcl, "OvenModeDelegate forwarding mode change to OvenManager (ep=%u newMode=%u)", mEndpointId, NewMode);
     // Lambda helper to set response status and optional statusText
     auto setResponse = [&](ModeBase::StatusCode code, const char * text = nullptr) {
         response.status = to_underlying(code);
@@ -104,9 +104,9 @@ void OvenModeDelegate::HandleChangeToMode(uint8_t NewMode, ModeBase::Commands::C
 
     const uint8_t currentMode = GetInstance()->GetCurrentMode();
 
-    if (AppTask::GetAppTask().IsTransitionBlocked(currentMode, NewMode))
+    if (OvenManager::GetInstance().IsTransitionBlocked(currentMode, NewMode))
     {
-        ChipLogProgress(AppServer, "AppTask: Blocked transition %u -> %u", currentMode, NewMode);
+        ChipLogProgress(AppServer, "OvenManager: Blocked transition %u -> %u", currentMode, NewMode);
         setResponse(ModeBase::StatusCode::kGenericFailure, "Transition blocked");
         return;
     }

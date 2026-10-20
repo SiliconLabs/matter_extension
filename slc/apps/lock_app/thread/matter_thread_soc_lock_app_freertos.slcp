@@ -7,7 +7,7 @@ package: matter
 
 sdk_extension:
   - id: matter
-    version: "2.9.2"
+    version: "2.10.0"
     vendor: silabs
 
 component:
@@ -58,7 +58,7 @@ component:
   - id: matter_default_lcd_config
   # Override configuration for JTAG use
   - id: matter_configuration_over_swo
-  - id: matter_segger_rtt
+  - id: segger_rtt
 
   - id: matter_icd_core
   - id: matter_test_event_trigger

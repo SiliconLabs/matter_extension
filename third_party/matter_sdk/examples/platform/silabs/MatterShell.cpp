@@ -28,7 +28,12 @@
 #include "sl_cli_config.h"
 #include "sli_cli_io.h"
 #include <lib/support/StringBuilder.h>
-#endif
+#endif // SL_CATALOG_CLI_PRESENT
+#ifdef SL_WIFI
+#include <platform/CHIPDeviceLayer.h>
+#include <platform/silabs/NetworkCommissioningWiFiDriver.h>
+#include <lib/shell/commands/WiFi.h>
+#endif // SL_WIFI
 
 using namespace ::chip;
 using Shell::Engine;
@@ -193,6 +198,10 @@ void startShellTask()
 #ifdef SL_CATALOG_OPENTHREAD_CLI_PRESENT
     cmd_otcli_init();
 #endif
+
+#ifdef SL_WIFI
+    Shell::SetWiFiDriver(DeviceLayer::NetworkCommissioning::SlWiFiDriver::GetInstance());
+#endif // SL_WIFI
 
 #ifdef SL_CATALOG_CLI_PRESENT
     cmdSilabsInit();
